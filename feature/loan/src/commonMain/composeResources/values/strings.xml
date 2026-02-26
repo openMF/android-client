@@ -324,7 +324,6 @@
     <string name="field_empty">This field cannot be empty</string>
 
     <!-- Export Loan Transactions -->
-    <string name="feature_loan_export">Export</string>
     <string name="feature_loan_export_transactions">Export</string>
     <string name="feature_loan_from_date">From Date*</string>
     <string name="feature_loan_to_date">To Date*</string>

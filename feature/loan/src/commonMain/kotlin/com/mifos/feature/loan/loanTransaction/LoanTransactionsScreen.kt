@@ -11,7 +11,7 @@ package com.mifos.feature.loan.loanTransaction
 
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_break_down
-import androidclient.feature.loan.generated.resources.feature_loan_export
+import androidclient.feature.loan.generated.resources.feature_loan_export_transactions
 import androidclient.feature.loan.generated.resources.feature_loan_loan_transactions
 import androidclient.feature.loan.generated.resources.feature_loan_no_transactions
 import androidclient.feature.loan.generated.resources.feature_loan_table_header_amount
@@ -137,7 +137,7 @@ internal fun LoanTransactionsScreen(
             IconButton(onClick = { showExportDialog = true }) {
                 Icon(
                     imageVector = MifosIcons.FileUpload,
-                    contentDescription = stringResource(Res.string.feature_loan_export),
+                    contentDescription = stringResource(Res.string.feature_loan_export_transactions),
                 )
             }
         },
