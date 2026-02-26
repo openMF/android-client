@@ -112,6 +112,15 @@
 
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
+
+    <!-- MifosDatePickerDialog -->
+    <string name="core_ui_date_picker_select">Select</string>
+    <string name="core_ui_date_picker_cancel">Cancel</string>
+
+    <!-- MifosDateRangePicker -->
+    <string name="core_ui_from_date">From Date</string>
+    <string name="core_ui_to_date">To Date</string>
+    <string name="core_ui_invalid_date_range">To date must be after from date</string>
     <string name="name">Name</string>
     <string name="date">Date</string>
     <string name="amount">Amount</string>

@@ -51,10 +51,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -63,7 +60,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosBottomSheet
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -75,7 +71,6 @@ import com.mifos.core.model.objects.account.loan.Transaction
 import com.mifos.core.model.objects.account.loan.Type
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.components.MifosProgressIndicator
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -97,11 +92,7 @@ internal fun LoanTransactionsScreen(
     LoanTransactionsScreen(
         uiState = uiState,
         navigateBack = navigateBack,
-        onRetry = {
-            viewModel.viewModelScope.launch {
-                viewModel.loadLoanTransaction()
-            }
-        },
+        onRetry = { viewModel.loadLoanTransaction() },
         onDismissBottomSheet = { viewModel.dismissBottomSheet() },
         onTransactionActionClick = { action, id ->
             viewModel.onActionSelected(
@@ -110,6 +101,8 @@ internal fun LoanTransactionsScreen(
             )
         },
         onRowAction = { row -> viewModel.onRowAction(row) },
+        onExportClick = { viewModel.showExportDialog() },
+        onDismissExportDialog = { viewModel.hideExportDialog() },
     )
 }
 
@@ -121,20 +114,23 @@ internal fun LoanTransactionsScreen(
     onRetry: () -> Unit,
     onDismissBottomSheet: () -> Unit,
     onTransactionActionClick: (TransactionAction, Int) -> Unit,
+    onExportClick: () -> Unit = {},
+    onDismissExportDialog: () -> Unit = {},
     onRowAction: (LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData) -> Unit = {},
 ) {
     val snackbarHostState = remember {
         SnackbarHostState()
     }
 
-    var showExportDialog by rememberSaveable { mutableStateOf(false) }
+    val isExportDialogOpen = uiState is LoanTransactionsUiState.ShowLoanTransaction &&
+        uiState.isExportDialogOpen
 
     MifosScaffold(
         snackbarHostState = snackbarHostState,
         title = stringResource(Res.string.feature_loan_loan_transactions),
         onBackPressed = navigateBack,
         actions = {
-            IconButton(onClick = { showExportDialog = true }) {
+            IconButton(onClick = onExportClick) {
                 Icon(
                     imageVector = MifosIcons.FileUpload,
                     contentDescription = stringResource(Res.string.feature_loan_export_transactions),
@@ -187,11 +183,11 @@ internal fun LoanTransactionsScreen(
         }
     }
 
-    if (showExportDialog) {
+    if (isExportDialogOpen) {
         ExportTransactionsDialog(
-            onDismiss = { showExportDialog = false },
-            onGenerateReport = { fromDate, toDate ->
-                showExportDialog = false
+            onDismiss = onDismissExportDialog,
+            onGenerateReport = { _, _ ->
+                onDismissExportDialog()
             },
         )
     }
@@ -514,7 +510,7 @@ private fun TransactionActionsBottomSheet(
                             imageVector = getIconForAction(action),
                             contentDescription = null,
                         )
-                        Spacer(modifier = Modifier.width(DesignToken.padding.medium))
+                        Spacer(modifier = Modifier.width(KptTheme.spacing.md))
                         Text(text = getTextForAction(action))
                     }
                 }

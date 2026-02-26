@@ -12,8 +12,6 @@
     <string name="feature_loan_application">Loan Application</string>
     <string name="feature_loan_account_created_successfully">Loan account created successfully</string>
     <string name="feature_error_network_not_available">Network is not Available</string>
-
-
     <string name="feature_loan_product">Loan Product</string>
     <string name="feature_loan_purpose">Loan Purpose</string>
     <string name="feature_loan_officer">Loan Officer</string>
@@ -22,7 +20,6 @@
     <string name="feature_loan_disbursed_date">Disbursed Date</string>
     <string name="feature_loan_select">Select</string>
     <string name="feature_loan_cancel">Cancel</string>
-
     <string name="feature_loan_external_id">External ID</string>
     <string name="feature_loan_principal">Principal</string>
     <string name="feature_loan_number_of_repayments">Number of Repayments*</string>
@@ -324,6 +321,7 @@
     <string name="field_empty">This field cannot be empty</string>
 
     <!-- Export Loan Transactions -->
+    <string name="feature_loan_export">Export</string>
     <string name="feature_loan_export_transactions">Export</string>
     <string name="feature_loan_from_date">From Date*</string>
     <string name="feature_loan_to_date">To Date*</string>

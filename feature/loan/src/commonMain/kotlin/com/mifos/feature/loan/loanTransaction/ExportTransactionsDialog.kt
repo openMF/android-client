@@ -26,7 +26,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,7 +38,6 @@ import androidx.compose.ui.Modifier
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCustomDialog
 import com.mifos.core.designsystem.component.MifosOutlinedButton
-import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosDateRangePicker
 import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
@@ -60,21 +58,21 @@ internal fun ExportTransactionsDialog(
         onDismiss = onDismiss,
     ) {
         Surface(
-            shape = DesignToken.shapes.medium,
-            color = MaterialTheme.colorScheme.surface,
+            shape = KptTheme.shapes.medium,
+            color = KptTheme.colorScheme.surface,
             modifier = Modifier.fillMaxWidth(0.95f),
         ) {
             Box(
                 contentAlignment = Alignment.Center,
             ) {
-                Column(modifier = Modifier.padding(DesignToken.padding.large)) {
+                Column(modifier = Modifier.padding(KptTheme.spacing.lg)) {
                     Text(
                         text = stringResource(Res.string.feature_loan_export_transactions),
-                        style = MaterialTheme.typography.titleLarge,
+                        style = KptTheme.typography.titleLarge,
                         modifier = Modifier.fillMaxWidth(),
                     )
 
-                    Spacer(modifier = Modifier.height(DesignToken.padding.medium))
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
                     MifosDateRangePicker(
                         fromDate = fromDate,
@@ -87,7 +85,7 @@ internal fun ExportTransactionsDialog(
                         invalidDateRangeMessage = stringResource(Res.string.feature_loan_invalid_date_range),
                     )
 
-                    Spacer(modifier = Modifier.height(DesignToken.padding.medium))
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -99,7 +97,7 @@ internal fun ExportTransactionsDialog(
                         ) {
                             Text(
                                 text = stringResource(Res.string.feature_loan_cancel),
-                                style = MaterialTheme.typography.labelLarge,
+                                style = KptTheme.typography.labelLarge,
                                 maxLines = 1,
                             )
                         }
@@ -115,7 +113,7 @@ internal fun ExportTransactionsDialog(
                         ) {
                             Text(
                                 text = stringResource(Res.string.feature_loan_generate_report),
-                                style = MaterialTheme.typography.labelLarge,
+                                style = KptTheme.typography.labelLarge,
                                 maxLines = 1,
                             )
                         }

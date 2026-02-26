@@ -33,8 +33,8 @@ import kotlin.time.Instant
  * @param state The DatePickerState to manage the selected date
  * @param onDismiss Callback when the dialog is dismissed
  * @param onConfirm Callback when a date is confirmed, receives the selected date in milliseconds
- * @param confirmText Text for the confirm button (default: "Select")
- * @param dismissText Text for the dismiss button (default: "Cancel")
+ * @param confirmText Text for the confirm button
+ * @param dismissText Text for the dismiss button
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,8 +43,8 @@ fun MifosDatePickerDialog(
     state: DatePickerState,
     onDismiss: () -> Unit,
     onConfirm: (Long?) -> Unit,
-    confirmText: String = "Select",
-    dismissText: String = "Cancel",
+    confirmText: String,
+    dismissText: String,
 ) {
     if (show) {
         DatePickerDialog(
@@ -80,7 +80,7 @@ fun MifosDatePickerDialog(
 @OptIn(ExperimentalTime::class, ExperimentalMaterial3Api::class)
 fun createSelectableDatesRange(
     minDate: LocalDate,
-    maxDate: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
+    maxDate: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
 ) = object : SelectableDates {
     override fun isSelectableDate(utcTimeMillis: Long): Boolean {
         val selectedDate = Instant.fromEpochMilliseconds(utcTimeMillis)

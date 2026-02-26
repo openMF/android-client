@@ -19,6 +19,7 @@ sealed class LoanTransactionsUiState {
         val transactionsTableData: LoanTransactionsTableData? = null,
         val selectedRow: LoanTransactionsTableData.TransactionRowData? = null,
         val isBottomSheetOpen: Boolean = false,
+        val isExportDialogOpen: Boolean = false,
     ) : LoanTransactionsUiState()
 
     data class LoanTransactionsTableData(
@@ -50,7 +51,7 @@ enum class TransactionType(val value: String) {
     ;
 
     companion object {
-        fun fromValue(value: String): TransactionType? = entries.find { it.value == value }
+        fun fromValue(value: String): TransactionType = entries.find { it.value == value } ?: UNKNOWN
     }
 }
 

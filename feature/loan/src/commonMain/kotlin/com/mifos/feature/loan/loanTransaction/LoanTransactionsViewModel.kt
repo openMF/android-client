@@ -11,6 +11,7 @@ package com.mifos.feature.loan.loanTransaction
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
@@ -18,6 +19,7 @@ import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.LoanTransactionsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class LoanTransactionsViewModel(
     private val repository: LoanTransactionsRepository,
@@ -30,79 +32,82 @@ class LoanTransactionsViewModel(
         MutableStateFlow<LoanTransactionsUiState>(LoanTransactionsUiState.ShowProgressBar)
     val loanTransactionsUiState: StateFlow<LoanTransactionsUiState> get() = _loanTransactionsUiState
 
-    suspend fun loadLoanTransaction() {
-        repository.getLoanTransactions(loanId).collect { state ->
-            when (state) {
-                is DataState.Error ->
-                    _loanTransactionsUiState.value =
-                        LoanTransactionsUiState.ShowFetchingError(state.message)
+    fun loadLoanTransaction() {
+        viewModelScope.launch {
+            repository.getLoanTransactions(loanId).collect { state ->
+                when (state) {
+                    is DataState.Error ->
+                        _loanTransactionsUiState.value =
+                            LoanTransactionsUiState.ShowFetchingError(state.message)
 
-                DataState.Loading ->
-                    _loanTransactionsUiState.value = LoanTransactionsUiState.ShowProgressBar
+                    DataState.Loading ->
+                        _loanTransactionsUiState.value = LoanTransactionsUiState.ShowProgressBar
 
-                is DataState.Success -> {
-                    val loanWithAssociations = state.data
-                    val currencyCode = loanWithAssociations.currency.code
-                    val maxDigits = loanWithAssociations.currency.decimalPlaces
+                    is DataState.Success -> {
+                        val loanWithAssociations = state.data
+                        val currencyCode = loanWithAssociations.currency.code
+                        val maxDigits = loanWithAssociations.currency.decimalPlaces
 
-                    val transactionsData =
-                        loanWithAssociations.transactions.mapIndexed { index, transaction ->
+                        val transactionsData =
+                            loanWithAssociations.transactions.mapIndexed { index, transaction ->
 
-                            LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData(
-                                number = (index + 1).toString(),
-                                id = transaction.id?.toString() ?: "-",
-                                office = transaction.officeName ?: "-",
-                                externalId = "-",
-                                transactionDate = if (transaction.date.isNotEmpty()) {
-                                    DateHelper.getDateAsString(
-                                        transaction.date,
-                                    )
-                                } else {
-                                    "-"
-                                },
-                                transactionType = transaction.type?.value?.let {
-                                    TransactionType.fromValue(it)
-                                } ?: TransactionType.UNKNOWN,
-                                amount = CurrencyFormatter.format(
-                                    transaction.amount,
-                                    currencyCode,
-                                    maxDigits,
+                                LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData(
+                                    number = (index + 1).toString(),
+                                    id = transaction.id?.toString() ?: "-",
+                                    office = transaction.officeName ?: "-",
+                                    // TODO: map from transaction.externalId once the API field is available
+                                    externalId = "-",
+                                    transactionDate = if (transaction.date.isNotEmpty()) {
+                                        DateHelper.getDateAsString(
+                                            transaction.date,
+                                        )
+                                    } else {
+                                        "-"
+                                    },
+                                    transactionType = TransactionType.fromValue(
+                                        transaction.type?.value ?: "",
+                                    ),
+                                    amount = CurrencyFormatter.format(
+                                        transaction.amount,
+                                        currencyCode,
+                                        maxDigits,
+                                    ),
+                                    principal = CurrencyFormatter.format(
+                                        transaction.principalPortion,
+                                        currencyCode,
+                                        maxDigits,
+                                    ),
+                                    interest = CurrencyFormatter.format(
+                                        transaction.interestPortion,
+                                        currencyCode,
+                                        maxDigits,
+                                    ),
+                                    fees = CurrencyFormatter.format(
+                                        transaction.feeChargesPortion,
+                                        currencyCode,
+                                        maxDigits,
+                                    ),
+                                    penalties = CurrencyFormatter.format(
+                                        transaction.penaltyChargesPortion,
+                                        currencyCode,
+                                        maxDigits,
+                                    ),
+                                    loanBalance = CurrencyFormatter.format(
+                                        transaction.outstandingLoanBalance,
+                                        currencyCode,
+                                        maxDigits,
+                                    ),
+                                    manuallyReversed = transaction.manuallyReversed ?: false,
+                                )
+                            }
+
+                        _loanTransactionsUiState.value =
+                            LoanTransactionsUiState.ShowLoanTransaction(
+                                transactionsTableData = LoanTransactionsUiState.LoanTransactionsTableData(
+                                    transactions = transactionsData,
                                 ),
-                                principal = CurrencyFormatter.format(
-                                    transaction.principalPortion,
-                                    currencyCode,
-                                    maxDigits,
-                                ),
-                                interest = CurrencyFormatter.format(
-                                    transaction.interestPortion,
-                                    currencyCode,
-                                    maxDigits,
-                                ),
-                                fees = CurrencyFormatter.format(
-                                    transaction.feeChargesPortion,
-                                    currencyCode,
-                                    maxDigits,
-                                ),
-                                penalties = CurrencyFormatter.format(
-                                    transaction.penaltyChargesPortion,
-                                    currencyCode,
-                                    maxDigits,
-                                ),
-                                loanBalance = CurrencyFormatter.format(
-                                    transaction.outstandingLoanBalance,
-                                    currencyCode,
-                                    maxDigits,
-                                ),
-                                manuallyReversed = transaction.manuallyReversed ?: false,
                             )
-                        }
-
-                    _loanTransactionsUiState.value =
-                        LoanTransactionsUiState.ShowLoanTransaction(
-                            transactionsTableData = LoanTransactionsUiState.LoanTransactionsTableData(
-                                transactions = transactionsData,
-                            ),
-                        )
+                    }
                 }
             }
         }
@@ -121,6 +126,20 @@ class LoanTransactionsViewModel(
         if (currentState is LoanTransactionsUiState.ShowLoanTransaction) {
             _loanTransactionsUiState.value =
                 currentState.copy(isBottomSheetOpen = false, selectedRow = null)
+        }
+    }
+
+    fun showExportDialog() {
+        val currentState = _loanTransactionsUiState.value
+        if (currentState is LoanTransactionsUiState.ShowLoanTransaction) {
+            _loanTransactionsUiState.value = currentState.copy(isExportDialogOpen = true)
+        }
+    }
+
+    fun hideExportDialog() {
+        val currentState = _loanTransactionsUiState.value
+        if (currentState is LoanTransactionsUiState.ShowLoanTransaction) {
+            _loanTransactionsUiState.value = currentState.copy(isExportDialogOpen = false)
         }
     }
 
