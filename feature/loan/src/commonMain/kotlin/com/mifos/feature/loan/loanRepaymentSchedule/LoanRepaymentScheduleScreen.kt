@@ -10,35 +10,28 @@
 package com.mifos.feature.loan.loanRepaymentSchedule
 
 import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.due
-import androidclient.feature.loan.generated.resources.feature_loan_balance
+import androidclient.feature.loan.generated.resources.feature_loan_amount_paid
 import androidclient.feature.loan.generated.resources.feature_loan_complete
 import androidclient.feature.loan.generated.resources.feature_loan_date
-import androidclient.feature.loan.generated.resources.feature_loan_days
-import androidclient.feature.loan.generated.resources.feature_loan_in_advance
-import androidclient.feature.loan.generated.resources.feature_loan_late
-import androidclient.feature.loan.generated.resources.feature_loan_loan_fees
-import androidclient.feature.loan.generated.resources.feature_loan_loan_interest
-import androidclient.feature.loan.generated.resources.feature_loan_loan_penalty
-import androidclient.feature.loan.generated.resources.feature_loan_loan_principal
+import androidclient.feature.loan.generated.resources.feature_loan_loan_amount_due
 import androidclient.feature.loan.generated.resources.feature_loan_loan_repayment_schedule
-import androidclient.feature.loan.generated.resources.feature_loan_outstanding
 import androidclient.feature.loan.generated.resources.feature_loan_overdue
-import androidclient.feature.loan.generated.resources.feature_loan_paid_date
 import androidclient.feature.loan.generated.resources.feature_loan_pending
-import androidclient.feature.loan.generated.resources.paid
+import androidclient.feature.loan.generated.resources.feature_loan_status
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,9 +40,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.lerp
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DateHelper
@@ -125,40 +118,18 @@ internal fun LoanRepaymentScheduleScreen(
 
 @Composable
 private fun LoanRepaymentScheduleContent(
-    periods: List<Period>,
+    loanWithAssociations: LoanWithAssociationsEntity,
 ) {
     val periods = loanWithAssociations.repaymentSchedule.getListOfActualPeriods()
     val currencyCode = loanWithAssociations.currency.code
     val decimalPlaces = loanWithAssociations.currency.decimalPlaces
-    val scrollState = rememberScrollState()
-
-    val columnWidths = listOf(
-        DesignToken.sizes.tableCellWidthSmall,
-        DesignToken.sizes.tableCellWidthLarge,
-        DesignToken.sizes.tableCellWidthLarge,
-        DesignToken.sizes.tableCellWidthMedium,
-        DesignToken.sizes.tableCellWidthMedium,
-        DesignToken.sizes.tableCellWidthMedium,
-        DesignToken.sizes.tableCellWidthMedium,
-        DesignToken.sizes.tableCellWidthMedium,
-        DesignToken.sizes.tableCellWidthMedium,
-        DesignToken.sizes.tableCellWidthMedium,
-        DesignToken.sizes.tableCellWidthMedium,
-        DesignToken.sizes.tableCellWidthMedium,
-        DesignToken.sizes.tableCellWidthMedium,
-    )
 
     fun formatCurrency(amount: Double?): String {
         if (amount == null) return ""
-        if (currencyCode.isNullOrBlank()) {
-            val places = decimalPlaces ?: 2
-            return "%.${places}f".format(amount)
-        }
-
         return CurrencyFormatter.format(
             balance = amount,
-            currencyCode = currencyCode,
-            maximumFractionDigits = decimalPlaces,
+            currencyCode = currencyCode.orEmpty(),
+            maximumFractionDigits = decimalPlaces ?: 2,
         )
     }
 
@@ -169,46 +140,25 @@ private fun LoanRepaymentScheduleContent(
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(KptTheme.spacing.sm),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Canvas(
-                modifier = Modifier
-                    .size(DesignToken.sizes.dp20)
-                    .padding(DesignToken.padding.extraExtraSmall),
-                onDraw = {
-                    drawRect(
-                        color = color,
+        HeaderLoanRepaymentSchedule()
+
+        Box(modifier = Modifier.weight(1f)) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                items(periods) { period ->
+                    LoanRepaymentRowItem(
+                        color = when {
+                            period.complete != null && period.complete!! -> Color.Green
+                            period.totalOverdue != null && period.totalOverdue!! > 0 -> Color.Red
+                            else -> Color.Blue.copy(alpha = 0.7f)
+                        },
+                        date = formatDate(period.dueDate),
+                        amountDue = formatCurrency(period.totalDueForPeriod),
+                        amountPaid = formatCurrency(period.totalPaidForPeriod),
                     )
-                },
-            )
-
-            Text(
-                modifier = Modifier.weight(3f),
-                text = date ?: "",
-                style = KptTheme.typography.bodyLarge,
-                color = Color.Black,
-                textAlign = TextAlign.End,
-            )
-
-            Text(
-                modifier = Modifier.weight(3f),
-                text = amountDue,
-                style = KptTheme.typography.bodyLarge,
-                color = Color.Black,
-                textAlign = TextAlign.End,
-            )
-
-            Text(
-                modifier = Modifier.weight(3f),
-                text = amountPaid,
-                style = KptTheme.typography.bodyLarge,
-                color = Color.Black,
-                textAlign = TextAlign.End,
-            )
+                }
+            }
         }
 
         HorizontalDivider(
@@ -225,7 +175,7 @@ private fun LoanRepaymentScheduleContent(
 }
 
 @Composable
-private fun HeaderCell(text: String) {
+private fun HeaderLoanRepaymentSchedule() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -273,6 +223,63 @@ private fun HeaderCell(text: String) {
                 textAlign = TextAlign.End,
             )
         }
+    }
+}
+
+@Composable
+private fun LoanRepaymentRowItem(
+    color: Color,
+    date: String?,
+    amountDue: String,
+    amountPaid: String,
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(KptTheme.spacing.sm),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Canvas(
+                modifier = Modifier
+                    .size(DesignToken.sizes.dp20)
+                    .padding(DesignToken.padding.extraExtraSmall),
+                onDraw = {
+                    drawRect(color = color)
+                },
+            )
+
+            Text(
+                modifier = Modifier.weight(3f),
+                text = date ?: "",
+                style = KptTheme.typography.bodyLarge,
+                color = Color.Black,
+                textAlign = TextAlign.End,
+            )
+
+            Text(
+                modifier = Modifier.weight(3f),
+                text = amountDue,
+                style = KptTheme.typography.bodyLarge,
+                color = Color.Black,
+                textAlign = TextAlign.End,
+            )
+
+            Text(
+                modifier = Modifier.weight(3f),
+                text = amountPaid,
+                style = KptTheme.typography.bodyLarge,
+                color = Color.Black,
+                textAlign = TextAlign.End,
+            )
+        }
+
+        HorizontalDivider(
+            thickness = 1.dp,
+            color = MaterialTheme.colorScheme.outlineVariant,
+        )
     }
 }
 
