@@ -61,7 +61,6 @@ import com.mifos.core.model.objects.account.loan.Period
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
-
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -139,19 +138,19 @@ private fun LoanRepaymentScheduleContent(
     val largeWidth = DesignToken.sizes.tableCellWidthLarge
 
     val columnWidths = listOf(
-        smallWidth,   // Days
-        largeWidth,   // Date
-        largeWidth,   // Paid Date
-        mediumWidth,  // Balance
-        mediumWidth,  // Principal
-        mediumWidth,  // Interest
-        mediumWidth,  // Fees
-        mediumWidth,  // Penalties
-        mediumWidth,  // Due
-        mediumWidth,  // Paid
-        mediumWidth,  // In Advance
-        mediumWidth,  // Late
-        mediumWidth,  // Outstanding
+        smallWidth,
+        largeWidth,
+        largeWidth,
+        mediumWidth,
+        mediumWidth,
+        mediumWidth,
+        mediumWidth,
+        mediumWidth,
+        mediumWidth,
+        mediumWidth,
+        mediumWidth,
+        mediumWidth,
+        mediumWidth,
     )
 
     val headers = listOf(
