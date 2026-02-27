@@ -122,7 +122,7 @@ internal class LoanAccountProfileViewModel(
             LoanAccountAction.OnRetry -> loadLoanAccountDetails(route.loanId)
             LoanAccountAction.OnNextActionClick -> handleNextAction()
             is LoanAccountAction.OnDetailItemClick -> sendEvent(LoanAccountEvent.NavigateToDetail(action.item))
-            LoanAccountAction.OnAccountClick -> {}
+            LoanAccountAction.OnAccountClick -> sendEvent(LoanAccountEvent.NavigateToAccountDetails)
         }
     }
 
@@ -133,7 +133,7 @@ internal class LoanAccountProfileViewModel(
             LoanProfileStatus.PENDING -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Approve))
             LoanProfileStatus.OVERPAID -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Transfer))
             LoanProfileStatus.ACTIVE -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Repayment))
-            LoanProfileStatus.UNKNOWN -> { }
+            LoanProfileStatus.UNKNOWN -> sendEvent(LoanAccountEvent.NavigateToAccountDetails)
         }
     }
 
