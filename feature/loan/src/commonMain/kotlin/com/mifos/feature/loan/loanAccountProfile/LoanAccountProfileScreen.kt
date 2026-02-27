@@ -10,15 +10,16 @@
 package com.mifos.feature.loan.loanAccountProfile
 
 import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_account
-import androidclient.feature.loan.generated.resources.feature_loan_action_repayment
-import androidclient.feature.loan.generated.resources.feature_loan_label_arrears
-import androidclient.feature.loan.generated.resources.feature_loan_label_balance
-import androidclient.feature.loan.generated.resources.feature_loan_label_client_name_placeholder
-import androidclient.feature.loan.generated.resources.feature_loan_label_overpaid_by
-import androidclient.feature.loan.generated.resources.feature_loan_section_account_overview
-import androidclient.feature.loan.generated.resources.feature_loan_section_actions_details
-import androidclient.feature.loan.generated.resources.feature_loan_status_active
+import androidclient.feature.loan.generated.resources.feature_loan_profile_account
+import androidclient.feature.loan.generated.resources.feature_loan_profile_action_repayment
+import androidclient.feature.loan.generated.resources.feature_loan_profile_error_details_not_found
+import androidclient.feature.loan.generated.resources.feature_loan_profile_label_arrears
+import androidclient.feature.loan.generated.resources.feature_loan_profile_label_balance
+import androidclient.feature.loan.generated.resources.feature_loan_profile_label_client_name_placeholder
+import androidclient.feature.loan.generated.resources.feature_loan_profile_label_overpaid_by
+import androidclient.feature.loan.generated.resources.feature_loan_profile_section_account_overview
+import androidclient.feature.loan.generated.resources.feature_loan_profile_section_actions_details
+import androidclient.feature.loan.generated.resources.feature_loan_profile_status_active
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,9 +31,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardColors
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,6 +51,7 @@ import androidx.navigation.NavController
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCard
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
@@ -57,6 +61,7 @@ import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosRowCard
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.util.TextUtil
+import com.mifos.feature.loan.loanAccountProfile.components.LoanAccountProfileActionItem
 import com.mifos.feature.loan.loanAccountProfile.components.loanProfileActionItems
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
@@ -74,6 +79,7 @@ internal fun LoanAccountProfileScreen(
     onNavigateBack: () -> Unit,
     approveLoan: (Int, LoanWithAssociationsEntity) -> Unit,
     onRepaymentClick: (LoanWithAssociationsEntity) -> Unit,
+    onDetailItemClick: (LoanAccountProfileActionItem) -> Unit,
     navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: LoanAccountProfileViewModel = koinViewModel(),
@@ -94,9 +100,8 @@ internal fun LoanAccountProfileScreen(
                     }
                 }
             }
-            is LoanAccountEvent.NavigateToDetail -> {
-                // TODO: Will be implemented in other tickets
-            }
+            is LoanAccountEvent.NavigateToDetail -> onDetailItemClick(event.detailItem)
+            LoanAccountEvent.NavigateToAccountDetails -> {}
         }
     }
 
@@ -136,7 +141,7 @@ private fun LoanAccountContent(
             .padding(horizontal = KptTheme.spacing.md),
     ) {
         Text(
-            text = stringResource(Res.string.feature_loan_account),
+            text = stringResource(Res.string.feature_loan_profile_account),
             style = MifosTypography.labelLargeEmphasized,
         )
 
@@ -145,6 +150,7 @@ private fun LoanAccountContent(
         LoanAccountTopCard(
             loanAccount = loanAccount,
             statusUi = state.statusUiModel,
+            onClick = { onAction(LoanAccountAction.OnAccountClick) },
         )
 
         Spacer(Modifier.height(KptTheme.spacing.md))
@@ -163,7 +169,7 @@ private fun LoanAccountContent(
         Spacer(Modifier.height(KptTheme.spacing.lg))
 
         Text(
-            text = stringResource(Res.string.feature_loan_section_actions_details),
+            text = stringResource(Res.string.feature_loan_profile_section_actions_details),
             style = MifosTypography.labelMediumEmphasized,
         )
 
@@ -195,6 +201,7 @@ private fun LoanAccountContent(
 private fun LoanAccountTopCard(
     loanAccount: LoanWithAssociationsEntity,
     statusUi: LoanStatusUiModel?,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val currencyCode = loanAccount.currency?.code
@@ -205,7 +212,9 @@ private fun LoanAccountTopCard(
     val overpaid = CurrencyFormatter.format(loanAccount.totalOverpaid, currencyCode, decimalPlaces)
 
     MifosCard(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
         colors = CardColors(
             containerColor = KptTheme.colorScheme.primary,
             contentColor = AppColors.customWhite,
@@ -218,19 +227,33 @@ private fun LoanAccountTopCard(
                 .fillMaxWidth()
                 .padding(KptTheme.spacing.lg),
         ) {
-            Text(
-                text = "${loanAccount.loanProductName?.uppercase()} ${loanAccount.accountNo}",
-                style = MifosTypography.titleMediumEmphasized,
-                color = AppColors.customWhite,
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "${loanAccount.loanProductName?.uppercase().orEmpty()} ${loanAccount.accountNo}".trim(),
+                        style = MifosTypography.titleMediumEmphasized,
+                        color = AppColors.customWhite,
+                    )
 
-            Spacer(Modifier.height(KptTheme.spacing.xs))
+                    Spacer(Modifier.height(KptTheme.spacing.xs))
 
-            Text(
-                text = loanAccount.clientName ?: stringResource(Res.string.feature_loan_label_client_name_placeholder),
-                style = MifosTypography.bodyMedium,
-                color = AppColors.customWhite.copy(alpha = 0.8f),
-            )
+                    Text(
+                        text = loanAccount.clientName ?: stringResource(Res.string.feature_loan_profile_label_client_name_placeholder),
+                        style = MifosTypography.bodyMedium,
+                        color = AppColors.customWhite.copy(alpha = 0.8f),
+                    )
+                }
+
+                Icon(
+                    imageVector = MifosIcons.ChevronRight,
+                    contentDescription = null,
+                    modifier = Modifier.size(DesignToken.sizes.iconSmall),
+                    tint = KptTheme.colorScheme.onPrimary.copy(alpha = 0.6f),
+                )
+            }
 
             Spacer(Modifier.height(DesignToken.padding.medium))
 
@@ -261,20 +284,20 @@ private fun LoanAccountTopCard(
                     .padding(KptTheme.spacing.md),
             ) {
                 Text(
-                    text = stringResource(Res.string.feature_loan_section_account_overview),
+                    text = stringResource(Res.string.feature_loan_profile_section_account_overview),
                     style = MifosTypography.labelSmallEmphasized,
                     color = AppColors.customWhite.copy(alpha = 0.8f),
                 )
 
                 Spacer(Modifier.height(DesignToken.padding.medium))
 
-                OverviewRow(stringResource(Res.string.feature_loan_label_balance), balance)
-                OverviewRow(stringResource(Res.string.feature_loan_label_arrears), arrears)
+                OverviewRow(stringResource(Res.string.feature_loan_profile_label_balance), balance)
+                OverviewRow(stringResource(Res.string.feature_loan_profile_label_arrears), arrears)
 
                 OverviewRow(
-                    label = stringResource(Res.string.feature_loan_label_overpaid_by),
+                    label = stringResource(Res.string.feature_loan_profile_label_overpaid_by),
                     value = overpaid,
-                    valueColor = AppColors.activeStatus,
+                    valueColor = AppColors.loanActiveStatus,
                 )
             }
         }
@@ -316,7 +339,7 @@ private fun LoanAccountDialogs(
         is LoanAccountState.DialogState.Error -> {
             MifosErrorComponent(
                 isNetworkConnected = state.networkConnection,
-                message = state.dialogState.message,
+                message = stringResource(state.dialogState.message),
                 isRetryEnabled = true,
                 onRetry = onRetry,
             )
@@ -351,17 +374,17 @@ private class LoanAccountPreviewProvider : PreviewParameterProvider<LoanAccountS
                     ),
                 ),
                 statusUiModel = LoanStatusUiModel(
-                    labelRes = Res.string.feature_loan_status_active,
-                    color = AppColors.activeStatus,
+                    labelRes = Res.string.feature_loan_profile_status_active,
+                    color = AppColors.loanActiveStatus,
                 ),
-                nextActionButtonRes = Res.string.feature_loan_action_repayment,
+                nextActionButtonRes = Res.string.feature_loan_profile_action_repayment,
                 dialogState = null,
             ),
             LoanAccountState(
                 dialogState = LoanAccountState.DialogState.Loading,
             ),
             LoanAccountState(
-                dialogState = LoanAccountState.DialogState.Error("Network Timeout. Please check your connection."),
+                dialogState = LoanAccountState.DialogState.Error(Res.string.feature_loan_profile_error_details_not_found),
             ),
         )
 }

@@ -134,7 +134,7 @@
     <string name="feature_loan_loan_repayment">Repayment</string>
     <string name="feature_loan_payment_failed">Payment Failed</string>
 
-    <string name="feature_loan_account">Loan Account</string>
+    <string name="feature_loan_profile_account">Loan Account</string>
     <string name="feature_loan_profile_item_general_title">General</string>
     <string name="feature_loan_profile_item_general_subtitle">Basic Loan Information</string>
     <string name="feature_loan_profile_item_dashboard_title">Dashboard</string>
@@ -161,20 +161,21 @@
     <string name="feature_loan_profile_item_notes_subtitle">Additional internal comments</string>
     <string name="feature_loan_profile_item_standing_instructions_title">Standing Instructions</string>
     <string name="feature_loan_profile_item_standing_instructions_subtitle">Automated payment settings</string>
-    <string name="feature_loan_status_active">Active</string>
-    <string name="feature_loan_status_pending">Pending</string>
-    <string name="feature_loan_status_overpaid">Overpaid</string>
-    <string name="feature_loan_status_unknown">Unknown</string>
-    <string name="feature_loan_action_approve">Approve Account</string>
-    <string name="feature_loan_action_repayment">Make Repayment</string>
-    <string name="feature_loan_action_transfer">Transfer Funds</string>
-    <string name="feature_loan_action_view">View Action</string>
-    <string name="feature_loan_section_actions_details">ACTIONS &amp; DETAILS</string>
-    <string name="feature_loan_section_account_overview">ACCOUNT OVERVIEW</string>
-    <string name="feature_loan_label_balance">Current Balance</string>
-    <string name="feature_loan_label_arrears">Arrears By</string>
-    <string name="feature_loan_label_overpaid_by">Overpaid By</string>
-    <string name="feature_loan_label_client_name_placeholder">Client Name</string>
+    <string name="feature_loan_profile_status_active">Active</string>
+    <string name="feature_loan_profile_status_pending">Pending</string>
+    <string name="feature_loan_profile_status_overpaid">Overpaid</string>
+    <string name="feature_loan_profile_status_unknown">Unknown</string>
+    <string name="feature_loan_profile_action_approve">Approve Account</string>
+    <string name="feature_loan_profile_action_repayment">Make Repayment</string>
+    <string name="feature_loan_profile_action_transfer">Transfer Funds</string>
+    <string name="feature_loan_profile_action_view">View Action</string>
+    <string name="feature_loan_profile_section_actions_details">ACTIONS &amp; DETAILS</string>
+    <string name="feature_loan_profile_section_account_overview">ACCOUNT OVERVIEW</string>
+    <string name="feature_loan_profile_label_balance">Current Balance</string>
+    <string name="feature_loan_profile_label_arrears">Arrears By</string>
+    <string name="feature_loan_profile_label_overpaid_by">Overpaid By</string>
+    <string name="feature_loan_profile_label_client_name_placeholder">Client Name</string>
+    <string name="feature_loan_profile_error_details_not_found">Failed to load loan account details.</string>
 
     <string name="feature_loan_overdue">Overdue</string>
     <string name="feature_loan_pending">Pending</string>

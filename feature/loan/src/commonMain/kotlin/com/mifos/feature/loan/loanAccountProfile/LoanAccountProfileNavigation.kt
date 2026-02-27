@@ -1,5 +1,5 @@
 /*
- * Copyright 2026 Mifos Initiative
+ * Copyright 2025 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,6 +12,7 @@ package com.mifos.feature.loan.loanAccountProfile
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.mifos.feature.loan.loanAccountProfile.components.LoanAccountProfileActionItem
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.serialization.Serializable
 
@@ -25,6 +26,7 @@ fun NavGraphBuilder.loanProfileAccountDestination(
     navController: NavController,
     approveLoan: (Int, LoanWithAssociationsEntity) -> Unit,
     onRepaymentClick: (LoanWithAssociationsEntity) -> Unit,
+    onDetailItemClick: (LoanAccountProfileActionItem) -> Unit,
 ) {
     composable<LoanAccountRoute> {
         LoanAccountProfileScreen(
@@ -32,6 +34,7 @@ fun NavGraphBuilder.loanProfileAccountDestination(
             navController = navController,
             approveLoan = approveLoan,
             onRepaymentClick = onRepaymentClick,
+            onDetailItemClick = onDetailItemClick,
         )
     }
 }

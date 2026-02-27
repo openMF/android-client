@@ -10,14 +10,15 @@
 package com.mifos.feature.loan.loanAccountProfile
 
 import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_action_approve
-import androidclient.feature.loan.generated.resources.feature_loan_action_repayment
-import androidclient.feature.loan.generated.resources.feature_loan_action_transfer
-import androidclient.feature.loan.generated.resources.feature_loan_action_view
-import androidclient.feature.loan.generated.resources.feature_loan_status_active
-import androidclient.feature.loan.generated.resources.feature_loan_status_overpaid
-import androidclient.feature.loan.generated.resources.feature_loan_status_pending
-import androidclient.feature.loan.generated.resources.feature_loan_status_unknown
+import androidclient.feature.loan.generated.resources.feature_loan_profile_action_approve
+import androidclient.feature.loan.generated.resources.feature_loan_profile_action_repayment
+import androidclient.feature.loan.generated.resources.feature_loan_profile_action_transfer
+import androidclient.feature.loan.generated.resources.feature_loan_profile_action_view
+import androidclient.feature.loan.generated.resources.feature_loan_profile_error_details_not_found
+import androidclient.feature.loan.generated.resources.feature_loan_profile_status_active
+import androidclient.feature.loan.generated.resources.feature_loan_profile_status_overpaid
+import androidclient.feature.loan.generated.resources.feature_loan_profile_status_pending
+import androidclient.feature.loan.generated.resources.feature_loan_profile_status_unknown
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -62,11 +63,20 @@ internal class LoanAccountProfileViewModel(
             loanRepository.getLoanById(loanId).collect { result ->
                 when (result) {
                     is DataState.Success -> {
-                        val currentStatus = result.data?.status.toProfileStatus
+                        val loan = result.data
+                        if (loan == null) {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    dialogState = LoanAccountState.DialogState.Error(Res.string.feature_loan_profile_error_details_not_found),
+                                )
+                            }
+                            return@collect
+                        }
+                        val currentStatus = loan.status.toProfileStatus
 
                         mutableStateFlow.update {
                             it.copy(
-                                loanAccount = result.data,
+                                loanAccount = loan,
                                 dialogState = null,
                                 statusUiModel = calculateStatusUi(currentStatus),
                                 nextActionButtonRes = calculateNextActionResource(currentStatus),
@@ -75,7 +85,7 @@ internal class LoanAccountProfileViewModel(
                     }
                     is DataState.Error -> {
                         mutableStateFlow.update {
-                            it.copy(dialogState = LoanAccountState.DialogState.Error(result.message))
+                            it.copy(dialogState = LoanAccountState.DialogState.Error(Res.string.feature_loan_profile_error_details_not_found))
                         }
                     }
                     DataState.Loading -> {
@@ -90,19 +100,19 @@ internal class LoanAccountProfileViewModel(
 
     private fun calculateNextActionResource(status: LoanProfileStatus): StringResource {
         return when (status) {
-            LoanProfileStatus.PENDING -> Res.string.feature_loan_action_approve
-            LoanProfileStatus.OVERPAID -> Res.string.feature_loan_action_transfer
-            LoanProfileStatus.ACTIVE -> Res.string.feature_loan_action_repayment
-            LoanProfileStatus.UNKNOWN -> Res.string.feature_loan_action_view
+            LoanProfileStatus.PENDING -> Res.string.feature_loan_profile_action_approve
+            LoanProfileStatus.OVERPAID -> Res.string.feature_loan_profile_action_transfer
+            LoanProfileStatus.ACTIVE -> Res.string.feature_loan_profile_action_repayment
+            LoanProfileStatus.UNKNOWN -> Res.string.feature_loan_profile_action_view
         }
     }
 
     private fun calculateStatusUi(status: LoanProfileStatus): LoanStatusUiModel {
         return when (status) {
-            LoanProfileStatus.ACTIVE -> LoanStatusUiModel(Res.string.feature_loan_status_active, AppColors.activeStatus)
-            LoanProfileStatus.PENDING -> LoanStatusUiModel(Res.string.feature_loan_status_pending, AppColors.pendingStatus)
-            LoanProfileStatus.OVERPAID -> LoanStatusUiModel(Res.string.feature_loan_status_overpaid, AppColors.overpaidStatus)
-            LoanProfileStatus.UNKNOWN -> LoanStatusUiModel(Res.string.feature_loan_status_unknown, AppColors.unknownStatus)
+            LoanProfileStatus.ACTIVE -> LoanStatusUiModel(Res.string.feature_loan_profile_status_active, AppColors.loanActiveStatus)
+            LoanProfileStatus.PENDING -> LoanStatusUiModel(Res.string.feature_loan_profile_status_pending, AppColors.loanPendingStatus)
+            LoanProfileStatus.OVERPAID -> LoanStatusUiModel(Res.string.feature_loan_profile_status_overpaid, AppColors.loanOverpaidStatus)
+            LoanProfileStatus.UNKNOWN -> LoanStatusUiModel(Res.string.feature_loan_profile_status_unknown, AppColors.loanUnknownStatus)
         }
     }
 
@@ -112,6 +122,7 @@ internal class LoanAccountProfileViewModel(
             LoanAccountAction.OnRetry -> loadLoanAccountDetails(route.loanId)
             LoanAccountAction.OnNextActionClick -> handleNextAction()
             is LoanAccountAction.OnDetailItemClick -> sendEvent(LoanAccountEvent.NavigateToDetail(action.item))
+            LoanAccountAction.OnAccountClick -> {}
         }
     }
 
@@ -150,10 +161,10 @@ data class LoanAccountState(
     val dialogState: DialogState? = null,
     val networkConnection: Boolean = false,
     val statusUiModel: LoanStatusUiModel? = null,
-    val nextActionButtonRes: StringResource = Res.string.feature_loan_action_view,
+    val nextActionButtonRes: StringResource = Res.string.feature_loan_profile_action_view,
 ) {
     sealed interface DialogState {
-        data class Error(val message: String) : DialogState
+        data class Error(val message: StringResource) : DialogState
         data object Loading : DialogState
     }
 }
@@ -173,6 +184,7 @@ sealed interface LoanAccountEvent {
     data object NavigateBack : LoanAccountEvent
     data class NavigateToAction(val action: LoanProfileAction) : LoanAccountEvent
     data class NavigateToDetail(val detailItem: LoanAccountProfileActionItem) : LoanAccountEvent
+    data object NavigateToAccountDetails : LoanAccountEvent
 }
 
 sealed interface LoanAccountAction {
@@ -180,4 +192,5 @@ sealed interface LoanAccountAction {
     data object OnRetry : LoanAccountAction
     data object OnNextActionClick : LoanAccountAction
     data class OnDetailItemClick(val item: LoanAccountProfileActionItem) : LoanAccountAction
+    data object OnAccountClick : LoanAccountAction
 }

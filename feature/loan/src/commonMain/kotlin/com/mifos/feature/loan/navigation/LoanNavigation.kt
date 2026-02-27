@@ -79,6 +79,7 @@ fun NavGraphBuilder.loanDestination(
         navController = navController,
         approveLoan = navController::navigateToLoanApprovalScreen,
         onRepaymentClick = navController::navigateToLoanRepaymentScreen,
+        onDetailItemClick = { },
     )
 }
 
