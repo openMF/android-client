@@ -46,11 +46,12 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -59,6 +60,9 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTableRow
 import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.model.objects.account.loan.RepaymentScheduleRowData
+import com.mifos.core.model.objects.account.loan.RepaymentScheduleTableData
+import com.mifos.core.model.objects.account.loan.RepaymentScheduleTotalsData
 import com.mifos.core.ui.components.MifosProgressIndicator
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -74,10 +78,6 @@ internal fun LoanRepaymentScheduleScreen(
 ) {
     val uiState by viewModel.loanRepaymentScheduleUiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(viewModel.loanId) {
-        viewModel.loadLoanRepaySchedule()
-    }
-
     LoanRepaymentScheduleScreen(
         uiState = uiState,
         navigateBack = navigateBack,
@@ -91,31 +91,23 @@ internal fun LoanRepaymentScheduleScreen(
     navigateBack: () -> Unit,
     onRetry: () -> Unit,
 ) {
-    val snackbarHostState = remember {
-        SnackbarHostState()
-    }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     MifosScaffold(
         title = stringResource(Res.string.feature_loan_loan_repayment_schedule),
         snackbarHostState = snackbarHostState,
         onBackPressed = navigateBack,
-    ) {
-        Box(modifier = Modifier.padding(it)) {
+    ) { paddingValues ->
+        Box(modifier = Modifier.padding(paddingValues)) {
             when (uiState) {
-                is LoanRepaymentScheduleUiState.ShowFetchingError -> {
-                    MifosSweetError(
-                        message = uiState.message,
-                        onclick = onRetry,
-                    )
-                }
-
-                is LoanRepaymentScheduleUiState.ShowLoanRepaySchedule -> {
-                    LoanRepaymentScheduleContent(tableData = uiState.tableData)
-                }
-
-                LoanRepaymentScheduleUiState.ShowProgressbar -> {
-                    MifosProgressIndicator()
-                }
+                is LoanRepaymentScheduleUiState.ShowProgressbar -> MifosProgressIndicator()
+                is LoanRepaymentScheduleUiState.ShowFetchingError -> MifosSweetError(
+                    message = uiState.message,
+                    onclick = onRetry,
+                )
+                is LoanRepaymentScheduleUiState.ShowLoanRepaySchedule -> LoanRepaymentScheduleContent(
+                    tableData = uiState.tableData,
+                )
             }
         }
     }
@@ -132,40 +124,21 @@ private fun LoanRepaymentScheduleContent(
     val largeWidth = DesignToken.sizes.tableCellWidthLarge
 
     val columnWidths = listOf(
-        smallWidth,
-        smallWidth,
+        smallWidth, smallWidth,
+        largeWidth, largeWidth,
         largeWidth,
-        largeWidth,
-        largeWidth,
-        mediumWidth,
-        mediumWidth,
-        mediumWidth,
-        mediumWidth,
-        mediumWidth,
-        mediumWidth,
-        mediumWidth,
-        mediumWidth,
-        mediumWidth,
-    )
-
-    val groupHeaderWidths = listOf(
-        smallWidth,
-        smallWidth,
-        largeWidth,
-        largeWidth,
-        largeWidth + mediumWidth,
-        mediumWidth * 3,
-        mediumWidth * 5,
+        mediumWidth, mediumWidth, mediumWidth, mediumWidth, mediumWidth,
+        mediumWidth, mediumWidth, mediumWidth, mediumWidth,
     )
 
     val groupHeaders = listOf(
-        "",
-        "",
-        "",
-        "",
-        stringResource(Res.string.feature_loan_loan_amount_and_balance),
-        stringResource(Res.string.feature_loan_total_cost_of_loan),
-        stringResource(Res.string.feature_loan_installment_totals),
+        "" to smallWidth,
+        "" to smallWidth,
+        "" to largeWidth,
+        "" to largeWidth,
+        stringResource(Res.string.feature_loan_loan_amount_and_balance) to (largeWidth + mediumWidth),
+        stringResource(Res.string.feature_loan_total_cost_of_loan) to (mediumWidth * 3),
+        stringResource(Res.string.feature_loan_installment_totals) to (mediumWidth * 5),
     )
 
     val columnHeaders = listOf(
@@ -199,38 +172,21 @@ private fun LoanRepaymentScheduleContent(
                         .horizontalScroll(scrollState),
                 ) {
                     MifosTableRow(
-                        cells = groupHeaders.mapIndexed { index, text ->
+                        cells = groupHeaders.mapIndexed { index, (text, _) ->
                             {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .background(
-                                            if (text.isNotBlank()) {
-                                                lerp(
-                                                    KptTheme.colorScheme.surface,
-                                                    KptTheme.colorScheme.primary,
-                                                    0.3f,
-                                                )
-                                            } else {
-                                                KptTheme.colorScheme.background
-                                            },
-                                        )
-                                        .padding(
-                                            vertical = KptTheme.spacing.sm,
-                                            horizontal = KptTheme.spacing.xs,
-                                        ),
-                                ) {
-                                    Text(
-                                        text = text,
-                                        style = KptTheme.typography.titleSmall,
-                                        fontWeight = FontWeight.Bold,
-                                        modifier = Modifier.fillMaxWidth(),
-                                        textAlign = if (index in 4..6) TextAlign.Center else TextAlign.Left,
-                                    )
-                                }
+                                TableHeaderCell(
+                                    text = text,
+                                    backgroundColor = if (text.isNotBlank()) {
+                                        lerp(KptTheme.colorScheme.surface, KptTheme.colorScheme.primary, 0.3f)
+                                    } else {
+                                        KptTheme.colorScheme.background
+                                    },
+                                    textAlign = if (index in 4..6) TextAlign.Center else TextAlign.Left,
+                                    style = KptTheme.typography.titleSmall,
+                                )
                             }
                         },
-                        widths = groupHeaderWidths,
+                        widths = groupHeaders.map { it.second },
                         backgroundColor = KptTheme.colorScheme.background,
                         edgeOffset = DesignToken.padding.medium,
                         cornerShape = DesignToken.shapes.topMedium,
@@ -239,30 +195,16 @@ private fun LoanRepaymentScheduleContent(
                     MifosTableRow(
                         cells = columnHeaders.map { text ->
                             {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(
-                                            vertical = KptTheme.spacing.sm,
-                                            horizontal = KptTheme.spacing.xs,
-                                        ),
-                                ) {
-                                    Text(
-                                        text = text,
-                                        style = KptTheme.typography.titleSmall,
-                                        fontWeight = FontWeight.Bold,
-                                        modifier = Modifier.fillMaxWidth(),
-                                        textAlign = TextAlign.Left,
-                                    )
-                                }
+                                TableHeaderCell(
+                                    text = text,
+                                    backgroundColor = Color.Transparent,
+                                    textAlign = TextAlign.Left,
+                                    style = KptTheme.typography.titleSmall,
+                                )
                             }
                         },
                         widths = columnWidths,
-                        backgroundColor = lerp(
-                            KptTheme.colorScheme.surface,
-                            KptTheme.colorScheme.primary,
-                            0.08f,
-                        ),
+                        backgroundColor = lerp(KptTheme.colorScheme.surface, KptTheme.colorScheme.primary, 0.08f),
                         edgeOffset = DesignToken.padding.medium,
                     )
                 }
@@ -275,241 +217,153 @@ private fun LoanRepaymentScheduleContent(
                         .horizontalScroll(scrollState),
                 ) {
                     tableData.disbursementRow?.let { disbursement ->
-                        DisbursementRow(row = disbursement, widths = columnWidths)
+                        ScheduleTableRow(
+                            values = disbursement.toDisplayValues(),
+                            widths = columnWidths,
+                            backgroundColor = lerp(KptTheme.colorScheme.surface, KptTheme.colorScheme.primary, 0.05f),
+                            fontWeight = FontWeight.SemiBold,
+                            textStyle = KptTheme.typography.bodySmall,
+                        )
                     }
 
                     tableData.rows.forEach { row ->
-                        RepaymentScheduleRow(row = row, widths = columnWidths)
+                        ScheduleTableRow(
+                            values = row.toDisplayValues(),
+                            widths = columnWidths,
+                            backgroundColor = KptTheme.colorScheme.surface,
+                            fontWeight = FontWeight.Normal,
+                            textStyle = KptTheme.typography.bodySmall,
+                        )
                     }
 
-                    TotalsRow(totals = tableData.totals, widths = columnWidths)
+                    ScheduleTableRow(
+                        values = tableData.totals.toDisplayValues(
+                            totalLabel = stringResource(Res.string.feature_loan_total),
+                        ),
+                        widths = columnWidths,
+                        backgroundColor = lerp(KptTheme.colorScheme.surface, KptTheme.colorScheme.primary, 0.15f),
+                        fontWeight = FontWeight.Bold,
+                        textStyle = KptTheme.typography.bodyMedium,
+                    )
                 }
             }
         }
 
         HorizontalDivider(color = KptTheme.colorScheme.outlineVariant)
         BottomBarLoanRepaymentSchedule(
-            totalPaid = tableData.completeCount.toString(),
-            totalOverdue = tableData.overdueCount.toString(),
-            tvTotalUpcoming = tableData.pendingCount.toString(),
+            completeCount = tableData.completeCount.toString(),
+            overdueCount = tableData.overdueCount.toString(),
+            pendingCount = tableData.pendingCount.toString(),
             modifier = Modifier.background(color = KptTheme.colorScheme.surfaceVariant),
         )
     }
 }
 
+private fun RepaymentScheduleRowData.toDisplayValues() = listOf(
+    number, days, date, paidDate, balance,
+    principal, interest, fees, penalties,
+    due, paid, inAdvance, late, outstanding,
+)
+
+private fun RepaymentScheduleTotalsData.toDisplayValues(totalLabel: String) = listOf(
+    "", "", totalLabel, "", "",
+    principal, interest, fees, penalties,
+    due, paid, inAdvance, late, outstanding,
+)
+
 @Composable
-private fun DisbursementRow(
-    row: RepaymentScheduleRowData,
-    widths: List<Dp>,
+private fun TableHeaderCell(
+    text: String,
+    backgroundColor: Color,
+    textAlign: TextAlign,
+    style: TextStyle,
 ) {
-    val textValues = listOf(
-        row.number,
-        row.days,
-        row.date,
-        row.paidDate,
-        row.balance,
-        row.principal,
-        row.interest,
-        row.fees,
-        row.penalties,
-        row.due,
-        row.paid,
-        row.inAdvance,
-        row.late,
-        row.outstanding,
-    )
-
-    val cells: List<@Composable () -> Unit> = textValues.map { value ->
-        {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        lerp(
-                            KptTheme.colorScheme.surface,
-                            KptTheme.colorScheme.primary,
-                            0.05f,
-                        ),
-                    )
-                    .padding(
-                        vertical = KptTheme.spacing.sm,
-                        horizontal = KptTheme.spacing.xs,
-                    ),
-            ) {
-                Text(
-                    text = value,
-                    style = KptTheme.typography.bodySmall,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Left,
-                    color = KptTheme.colorScheme.onBackground,
-                    fontWeight = FontWeight.SemiBold,
-                )
-            }
-        }
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(backgroundColor)
+            .padding(vertical = KptTheme.spacing.sm, horizontal = KptTheme.spacing.xs),
+    ) {
+        Text(
+            text = text,
+            style = style,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = textAlign,
+        )
     }
-
-    MifosTableRow(
-        cells = cells,
-        widths = widths,
-        backgroundColor = KptTheme.colorScheme.surface,
-        edgeOffset = DesignToken.padding.medium,
-    )
 }
 
 @Composable
-private fun RepaymentScheduleRow(
-    row: RepaymentScheduleRowData,
+private fun ScheduleTableRow(
+    values: List<String>,
     widths: List<Dp>,
+    backgroundColor: Color,
+    fontWeight: FontWeight,
+    textStyle: TextStyle,
 ) {
-    val textValues = listOf(
-        row.number,
-        row.days,
-        row.date,
-        row.paidDate,
-        row.balance,
-        row.principal,
-        row.interest,
-        row.fees,
-        row.penalties,
-        row.due,
-        row.paid,
-        row.inAdvance,
-        row.late,
-        row.outstanding,
-    )
-
-    val cells: List<@Composable () -> Unit> = textValues.map { value ->
-        {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(KptTheme.colorScheme.surface)
-                    .padding(
-                        vertical = KptTheme.spacing.sm,
-                        horizontal = KptTheme.spacing.xs,
-                    ),
-            ) {
-                Text(
-                    text = value,
-                    style = KptTheme.typography.bodySmall,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Left,
-                    color = KptTheme.colorScheme.onBackground,
-                )
-            }
-        }
-    }
-
     MifosTableRow(
-        cells = cells,
-        widths = widths,
-        backgroundColor = KptTheme.colorScheme.surface,
-        edgeOffset = DesignToken.padding.medium,
-    )
-}
-
-@Composable
-private fun TotalsRow(
-    totals: RepaymentScheduleTotalsData,
-    widths: List<Dp>,
-) {
-    val textValues = listOf(
-        "",
-        "",
-        stringResource(Res.string.feature_loan_total),
-        "",
-        "",
-        totals.principal,
-        totals.interest,
-        totals.fees,
-        totals.penalties,
-        totals.due,
-        totals.paid,
-        totals.inAdvance,
-        totals.late,
-        totals.outstanding,
-    )
-
-    val cells: List<@Composable () -> Unit> = textValues.map { value ->
-        {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        lerp(
-                            KptTheme.colorScheme.surface,
-                            KptTheme.colorScheme.primary,
-                            0.15f,
-                        ),
+        cells = values.map { value ->
+            {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(backgroundColor)
+                        .padding(vertical = KptTheme.spacing.sm, horizontal = KptTheme.spacing.xs),
+                ) {
+                    Text(
+                        text = value,
+                        style = textStyle,
+                        fontWeight = fontWeight,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Left,
+                        color = KptTheme.colorScheme.onBackground,
                     )
-                    .padding(
-                        vertical = KptTheme.spacing.sm,
-                        horizontal = KptTheme.spacing.xs,
-                    ),
-            ) {
-                Text(
-                    text = value,
-                    style = KptTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Left,
-                    color = KptTheme.colorScheme.onBackground,
-                )
+                }
             }
-        }
-    }
-
-    MifosTableRow(
-        cells = cells,
+        },
         widths = widths,
-        backgroundColor = KptTheme.colorScheme.background,
+        backgroundColor = backgroundColor,
         edgeOffset = DesignToken.padding.medium,
     )
 }
 
 @Composable
 private fun BottomBarLoanRepaymentSchedule(
-    totalPaid: String,
-    totalOverdue: String,
-    tvTotalUpcoming: String,
+    completeCount: String,
+    overdueCount: String,
+    pendingCount: String,
     modifier: Modifier = Modifier,
 ) {
-    Box(modifier = modifier) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    horizontal = DesignToken.padding.medium,
-                    vertical = DesignToken.padding.small,
-                ),
-        ) {
-            Text(
-                modifier = Modifier.weight(1f),
-                text = stringResource(Res.string.feature_loan_complete_count, totalPaid),
-                style = KptTheme.typography.bodyMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = KptTheme.colorScheme.onSurface,
-                textAlign = TextAlign.Start,
-            )
-
-            Text(
-                modifier = Modifier.weight(1f),
-                text = stringResource(Res.string.feature_loan_pending_count, tvTotalUpcoming),
-                style = KptTheme.typography.bodyMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = KptTheme.colorScheme.onSurface,
-                textAlign = TextAlign.Center,
-            )
-
-            Text(
-                modifier = Modifier.weight(1f),
-                text = stringResource(Res.string.feature_loan_overdue_count, totalOverdue),
-                style = KptTheme.typography.bodyMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = KptTheme.colorScheme.onSurface,
-                textAlign = TextAlign.End,
-            )
-        }
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = DesignToken.padding.medium, vertical = DesignToken.padding.small),
+    ) {
+        Text(
+            modifier = Modifier.weight(1f),
+            text = stringResource(Res.string.feature_loan_complete_count, completeCount),
+            style = KptTheme.typography.bodyMedium,
+            fontWeight = FontWeight.SemiBold,
+            color = KptTheme.colorScheme.onSurface,
+            textAlign = TextAlign.Start,
+        )
+        Text(
+            modifier = Modifier.weight(1f),
+            text = stringResource(Res.string.feature_loan_pending_count, pendingCount),
+            style = KptTheme.typography.bodyMedium,
+            fontWeight = FontWeight.SemiBold,
+            color = KptTheme.colorScheme.onSurface,
+            textAlign = TextAlign.Center,
+        )
+        Text(
+            modifier = Modifier.weight(1f),
+            text = stringResource(Res.string.feature_loan_overdue_count, overdueCount),
+            style = KptTheme.typography.bodyMedium,
+            fontWeight = FontWeight.SemiBold,
+            color = KptTheme.colorScheme.onSurface,
+            textAlign = TextAlign.End,
+        )
     }
 }
 
@@ -522,55 +376,29 @@ private class LoanRepaymentSchedulePreviewProvider :
             LoanRepaymentScheduleUiState.ShowProgressbar,
             LoanRepaymentScheduleUiState.ShowLoanRepaySchedule(
                 tableData = RepaymentScheduleTableData(
+                    disbursementRow = null,
                     rows = listOf(
                         RepaymentScheduleRowData(
-                            number = "1",
-                            days = "30",
-                            date = "1 Jun 2024",
-                            paidDate = "1 Jun 2024",
-                            balance = "9,000.00",
-                            principal = "1,000.00",
-                            interest = "50.00",
-                            fees = "10.00",
-                            penalties = "0.00",
-                            due = "1,060.00",
-                            paid = "1,060.00",
-                            inAdvance = "0.00",
-                            late = "0.00",
-                            outstanding = "0.00",
+                            number = "1", days = "30", date = "1 Jun 2024", paidDate = "1 Jun 2024",
+                            balance = "9,000.00", principal = "1,000.00", interest = "50.00",
+                            fees = "10.00", penalties = "0.00", due = "1,060.00",
+                            paid = "1,060.00", inAdvance = "0.00", late = "0.00", outstanding = "0.00",
                         ),
                         RepaymentScheduleRowData(
-                            number = "2",
-                            days = "30",
-                            date = "1 Jul 2024",
-                            paidDate = "",
-                            balance = "8,000.00",
-                            principal = "1,000.00",
-                            interest = "45.00",
-                            fees = "10.00",
-                            penalties = "5.00",
-                            due = "1,060.00",
-                            paid = "500.00",
-                            inAdvance = "0.00",
-                            late = "0.00",
-                            outstanding = "560.00",
+                            number = "2", days = "30", date = "1 Jul 2024", paidDate = "",
+                            balance = "8,000.00", principal = "1,000.00", interest = "45.00",
+                            fees = "10.00", penalties = "5.00", due = "1,060.00",
+                            paid = "500.00", inAdvance = "0.00", late = "0.00", outstanding = "560.00",
                         ),
                     ),
                     totals = RepaymentScheduleTotalsData(
-                        principal = "2,000.00",
-                        interest = "95.00",
-                        fees = "20.00",
-                        penalties = "5.00",
-                        due = "2,120.00",
-                        paid = "1,560.00",
-                        inAdvance = "0.00",
-                        late = "0.00",
-                        outstanding = "560.00",
+                        principal = "2,000.00", interest = "95.00", fees = "20.00",
+                        penalties = "5.00", due = "2,120.00", paid = "1,560.00",
+                        inAdvance = "0.00", late = "0.00", outstanding = "560.00",
                     ),
                     completeCount = 1,
                     overdueCount = 1,
                     pendingCount = 0,
-                    disbursementRow = null,
                 ),
             ),
         )
@@ -579,11 +407,11 @@ private class LoanRepaymentSchedulePreviewProvider :
 @Composable
 @Preview
 private fun PreviewLoanRepaymentSchedule(
-    @PreviewParameter(LoanRepaymentSchedulePreviewProvider::class) loanRepaymentScheduleUiState: LoanRepaymentScheduleUiState,
+    @PreviewParameter(LoanRepaymentSchedulePreviewProvider::class) uiState: LoanRepaymentScheduleUiState,
 ) {
     LoanRepaymentScheduleScreen(
-        uiState = loanRepaymentScheduleUiState,
-        navigateBack = { },
+        uiState = uiState,
+        navigateBack = {},
         onRetry = {},
     )
 }

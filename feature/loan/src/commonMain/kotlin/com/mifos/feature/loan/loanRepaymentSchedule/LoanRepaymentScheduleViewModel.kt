@@ -19,6 +19,9 @@ import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.LoanRepaymentScheduleRepository
 import com.mifos.core.model.objects.account.loan.Period
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
+import com.mifos.core.model.objects.account.loan.RepaymentScheduleRowData
+import com.mifos.core.model.objects.account.loan.RepaymentScheduleTableData
+import com.mifos.core.model.objects.account.loan.RepaymentScheduleTotalsData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -28,91 +31,100 @@ class LoanRepaymentScheduleViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    val loanId = savedStateHandle.toRoute<LoanRepaymentScheduleScreenRoute>().loanAccountNumber
+    private val loanId = savedStateHandle.toRoute<LoanRepaymentScheduleScreenRoute>().loanAccountNumber
 
     private val _loanRepaymentScheduleUiState =
         MutableStateFlow<LoanRepaymentScheduleUiState>(LoanRepaymentScheduleUiState.ShowProgressbar)
     val loanRepaymentScheduleUiState: StateFlow<LoanRepaymentScheduleUiState> get() = _loanRepaymentScheduleUiState
 
+    init {
+        loadLoanRepaySchedule()
+    }
+
     fun loadLoanRepaySchedule() {
         viewModelScope.launch {
             repository.getLoanRepaySchedule(loanId).collect { state ->
-                when (state) {
-                    is DataState.Error ->
-                        _loanRepaymentScheduleUiState.value =
-                            LoanRepaymentScheduleUiState.ShowFetchingError(state.message)
-                    DataState.Loading ->
-                        _loanRepaymentScheduleUiState.value = LoanRepaymentScheduleUiState.ShowProgressbar
+                _loanRepaymentScheduleUiState.value = when (state) {
+                    is DataState.Loading -> LoanRepaymentScheduleUiState.ShowProgressbar
+                    is DataState.Error -> LoanRepaymentScheduleUiState.ShowFetchingError(state.message)
                     is DataState.Success -> {
-                        val loanWithAssociations = state.data
-                        val currencyCode = loanWithAssociations.currency?.code.orEmpty()
-                        val maxDigits = loanWithAssociations.currency?.decimalPlaces ?: 2
-                        val allPeriods = loanWithAssociations.repaymentSchedule.periods.orEmpty()
-                        val periods = loanWithAssociations.repaymentSchedule.getListOfActualPeriods()
-
-                        fun fmt(amount: Double?) = if (amount == null) {
-                            ""
-                        } else {
-                            CurrencyFormatter.format(
-                                balance = amount,
-                                currencyCode = currencyCode,
-                                maximumFractionDigits = maxDigits,
-                            )
-                        }
-
-                        fun fmtDate(date: List<Int>?) = date?.let { DateHelper.getDateAsString(it) } ?: ""
-
-                        fun periodToRowData(period: Period, number: String) = RepaymentScheduleRowData(
-                            number = number,
-                            days = period.daysInPeriod?.toString() ?: "",
-                            date = fmtDate(period.dueDate),
-                            paidDate = fmtDate(period.obligationsMetOnDate),
-                            balance = fmt(period.principalLoanBalanceOutstanding),
-                            principal = fmt(period.principalDue),
-                            interest = fmt(period.interestDue),
-                            fees = fmt(period.feeChargesDue),
-                            penalties = fmt(period.penaltyChargesDue),
-                            due = fmt(period.totalDueForPeriod),
-                            paid = fmt(period.totalPaidForPeriod),
-                            inAdvance = fmt(period.totalPaidInAdvanceForPeriod),
-                            late = fmt(period.totalPaidLateForPeriod),
-                            outstanding = fmt(period.totalOutstandingForPeriod),
-                        )
+                        val data = state.data
+                        val currencyCode = data.currency?.code.orEmpty()
+                        val maxDigits = data.currency?.decimalPlaces ?: 2
+                        val allPeriods = data.repaymentSchedule.periods.orEmpty()
+                        val periods = data.repaymentSchedule.getListOfActualPeriods()
 
                         val disbursementRow = allPeriods.firstOrNull()
                             ?.takeIf { it.period == null }
-                            ?.let { periodToRowData(it, "") }
+                            ?.let { buildRowData(it, "", currencyCode, maxDigits) }
 
                         val rows = periods.mapIndexed { index, period ->
-                            periodToRowData(period, (index + 1).toString())
+                            buildRowData(period, (index + 1).toString(), currencyCode, maxDigits)
                         }
 
-                        val totals = RepaymentScheduleTotalsData(
-                            principal = fmt(periods.sumOf { it.principalDue ?: 0.0 }),
-                            interest = fmt(periods.sumOf { it.interestDue ?: 0.0 }),
-                            fees = fmt(periods.sumOf { it.feeChargesDue ?: 0.0 }),
-                            penalties = fmt(periods.sumOf { it.penaltyChargesDue ?: 0.0 }),
-                            due = fmt(periods.sumOf { it.totalDueForPeriod ?: 0.0 }),
-                            paid = fmt(periods.sumOf { it.totalPaidForPeriod ?: 0.0 }),
-                            inAdvance = fmt(periods.sumOf { it.totalPaidInAdvanceForPeriod ?: 0.0 }),
-                            late = fmt(periods.sumOf { it.totalPaidLateForPeriod ?: 0.0 }),
-                            outstanding = fmt(periods.sumOf { it.totalOutstandingForPeriod ?: 0.0 }),
+                        LoanRepaymentScheduleUiState.ShowLoanRepaySchedule(
+                            tableData = RepaymentScheduleTableData(
+                                disbursementRow = disbursementRow,
+                                rows = rows,
+                                totals = buildTotalsData(periods, currencyCode, maxDigits),
+                                completeCount = RepaymentSchedule.getNumberOfRepaymentsComplete(periods),
+                                overdueCount = RepaymentSchedule.getNumberOfRepaymentsOverDue(periods),
+                                pendingCount = RepaymentSchedule.getNumberOfRepaymentsPending(periods),
+                            ),
                         )
-
-                        _loanRepaymentScheduleUiState.value =
-                            LoanRepaymentScheduleUiState.ShowLoanRepaySchedule(
-                                tableData = RepaymentScheduleTableData(
-                                    disbursementRow = disbursementRow,
-                                    rows = rows,
-                                    totals = totals,
-                                    completeCount = RepaymentSchedule.getNumberOfRepaymentsComplete(periods),
-                                    overdueCount = RepaymentSchedule.getNumberOfRepaymentsOverDue(periods),
-                                    pendingCount = RepaymentSchedule.getNumberOfRepaymentsPending(periods),
-                                ),
-                            )
                     }
                 }
             }
         }
     }
+
+    private fun buildRowData(
+        period: Period,
+        number: String,
+        currencyCode: String,
+        maxDigits: Int,
+    ) = RepaymentScheduleRowData(
+        number = number,
+        days = period.daysInPeriod?.toString().orEmpty(),
+        date = formatDate(period.dueDate),
+        paidDate = formatDate(period.obligationsMetOnDate),
+        balance = formatAmount(period.principalLoanBalanceOutstanding, currencyCode, maxDigits),
+        principal = formatAmount(period.principalDue, currencyCode, maxDigits),
+        interest = formatAmount(period.interestDue, currencyCode, maxDigits),
+        fees = formatAmount(period.feeChargesDue, currencyCode, maxDigits),
+        penalties = formatAmount(period.penaltyChargesDue, currencyCode, maxDigits),
+        due = formatAmount(period.totalDueForPeriod, currencyCode, maxDigits),
+        paid = formatAmount(period.totalPaidForPeriod, currencyCode, maxDigits),
+        inAdvance = formatAmount(period.totalPaidInAdvanceForPeriod, currencyCode, maxDigits),
+        late = formatAmount(period.totalPaidLateForPeriod, currencyCode, maxDigits),
+        outstanding = formatAmount(period.totalOutstandingForPeriod, currencyCode, maxDigits),
+    )
+
+    private fun buildTotalsData(
+        periods: List<Period>,
+        currencyCode: String,
+        maxDigits: Int,
+    ) = RepaymentScheduleTotalsData(
+        principal = formatAmount(periods.sumOf { it.principalDue ?: 0.0 }, currencyCode, maxDigits),
+        interest = formatAmount(periods.sumOf { it.interestDue ?: 0.0 }, currencyCode, maxDigits),
+        fees = formatAmount(periods.sumOf { it.feeChargesDue ?: 0.0 }, currencyCode, maxDigits),
+        penalties = formatAmount(periods.sumOf { it.penaltyChargesDue ?: 0.0 }, currencyCode, maxDigits),
+        due = formatAmount(periods.sumOf { it.totalDueForPeriod ?: 0.0 }, currencyCode, maxDigits),
+        paid = formatAmount(periods.sumOf { it.totalPaidForPeriod ?: 0.0 }, currencyCode, maxDigits),
+        inAdvance = formatAmount(periods.sumOf { it.totalPaidInAdvanceForPeriod ?: 0.0 }, currencyCode, maxDigits),
+        late = formatAmount(periods.sumOf { it.totalPaidLateForPeriod ?: 0.0 }, currencyCode, maxDigits),
+        outstanding = formatAmount(periods.sumOf { it.totalOutstandingForPeriod ?: 0.0 }, currencyCode, maxDigits),
+    )
+
+    private fun formatAmount(amount: Double?, currencyCode: String, maxDigits: Int): String {
+        amount ?: return ""
+        return CurrencyFormatter.format(
+            balance = amount,
+            currencyCode = currencyCode,
+            maximumFractionDigits = maxDigits,
+        )
+    }
+
+    private fun formatDate(date: List<Int>?): String =
+        date?.let { DateHelper.getDateAsString(it) }.orEmpty()
 }
