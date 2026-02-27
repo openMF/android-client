@@ -9,14 +9,51 @@
  */
 package com.mifos.feature.loan.loanRepaymentSchedule
 
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
-
 sealed class LoanRepaymentScheduleUiState {
 
     data object ShowProgressbar : LoanRepaymentScheduleUiState()
 
     data class ShowFetchingError(val message: String) : LoanRepaymentScheduleUiState()
 
-    data class ShowLoanRepaySchedule(val loanWithAssociations: LoanWithAssociationsEntity) :
-        LoanRepaymentScheduleUiState()
+    data class ShowLoanRepaySchedule(
+        val tableData: RepaymentScheduleTableData,
+    ) : LoanRepaymentScheduleUiState()
 }
+
+data class RepaymentScheduleTableData(
+    val disbursementRow: RepaymentScheduleRowData?,
+    val rows: List<RepaymentScheduleRowData>,
+    val totals: RepaymentScheduleTotalsData,
+    val completeCount: Int,
+    val overdueCount: Int,
+    val pendingCount: Int,
+)
+
+data class RepaymentScheduleRowData(
+    val number: String,
+    val days: String,
+    val date: String,
+    val paidDate: String,
+    val balance: String,
+    val principal: String,
+    val interest: String,
+    val fees: String,
+    val penalties: String,
+    val due: String,
+    val paid: String,
+    val inAdvance: String,
+    val late: String,
+    val outstanding: String,
+)
+
+data class RepaymentScheduleTotalsData(
+    val principal: String,
+    val interest: String,
+    val fees: String,
+    val penalties: String,
+    val due: String,
+    val paid: String,
+    val inAdvance: String,
+    val late: String,
+    val outstanding: String,
+)
