@@ -21,8 +21,6 @@ import androidclient.feature.client.generated.resources.delete_dialog_message
 import androidclient.feature.client.generated.resources.delete_dialog_title
 import androidclient.feature.client.generated.resources.delete_photo
 import androidclient.feature.client.generated.resources.dialog_continue
-import androidclient.feature.client.generated.resources.from_camera
-import androidclient.feature.client.generated.resources.from_gallery
 import androidclient.feature.client.generated.resources.gallery
 import androidclient.feature.client.generated.resources.remove
 import androidclient.feature.client.generated.resources.update_profile_photo_message
