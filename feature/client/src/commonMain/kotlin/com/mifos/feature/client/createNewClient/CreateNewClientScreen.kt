@@ -231,15 +231,17 @@ internal fun CreateNewClientScreen(
             }
 
             is CreateNewClientUiState.SetClientId -> {
-                if (createClientWithImage) {
-                    uploadImage(uiState.id)
-                } else {
-                    navigateToClientDetails(uiState.id)
+                LaunchedEffect(uiState.id) {
+                    if (createClientWithImage) {
+                        uploadImage(uiState.id)
+                    } else {
+                        navigateToClientDetails(uiState.id)
+                    }
                 }
             }
 
             is CreateNewClientUiState.ShowClientCreatedSuccessfully -> {
-                scope.launch {
+                LaunchedEffect(uiState.message) {
                     snackbarHostState.showSnackbar(
                         message = getString(Res.string.feature_client_client_created_successfully),
                         duration = SnackbarDuration.Long,
@@ -248,23 +250,23 @@ internal fun CreateNewClientScreen(
             }
 
             is CreateNewClientUiState.OnImageUploadSuccess -> {
-                scope.launch {
+                LaunchedEffect(uiState.clientId) {
                     snackbarHostState.showSnackbar(
                         message = getString(Res.string.feature_client_Image_Upload_Successful),
                         duration = SnackbarDuration.Long,
                     )
+                    navigateToClientDetails(uiState.clientId)
                 }
-                navigateToClientDetails(uiState.clientId)
             }
 
             is CreateNewClientUiState.ShowWaitingForCheckerApproval -> {
-                scope.launch {
+                LaunchedEffect(uiState.message) {
                     snackbarHostState.showSnackbar(
                         message = getString(Res.string.feature_client_waiting_for_checker_approval),
                         duration = SnackbarDuration.Long,
                     )
+                    navigateBack.invoke()
                 }
-                navigateBack.invoke()
             }
 
             is CreateNewClientUiState.ShowError -> {
