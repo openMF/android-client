@@ -26,8 +26,6 @@ import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.ui.components.Status
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.multipartRequestBody
-import com.mifos.feature.client.utils.toPlatformFile
-import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.extension
 import io.github.vinceglb.filekit.name
 import io.github.vinceglb.filekit.readBytes
@@ -271,7 +269,7 @@ class ClientIdentifiersAddUpdateViewModel(
     }
 
     private suspend fun createDocument(
-        file: PlatformFile,
+        file: ByteArray,
         name: String?,
         uniqueKeyForHandleDocument: String,
     ) {
@@ -280,7 +278,8 @@ class ClientIdentifiersAddUpdateViewModel(
             route.clientId,
             multipartRequestBody(
                 file = file,
-                name = name,
+                name = name ?: "",
+                extension = state.fileExtension ?: "",
                 description = uniqueKeyForHandleDocument,
             ),
         ).collect { state ->
@@ -317,7 +316,7 @@ class ClientIdentifiersAddUpdateViewModel(
     }
 
     private suspend fun updateDocument(
-        file: PlatformFile,
+        file: ByteArray,
         name: String?,
         uniqueKeyForHandleDocument: String?,
     ) {
@@ -328,7 +327,8 @@ class ClientIdentifiersAddUpdateViewModel(
                 documentId = documentId,
                 file = multipartRequestBody(
                     file = file,
-                    name = name,
+                    name = name.orEmpty(),
+                    extension = state.fileExtension.orEmpty(),
                     description = uniqueKeyForHandleDocument,
                 ),
             ).collect { dataState ->
@@ -525,9 +525,6 @@ class ClientIdentifiersAddUpdateViewModel(
 
             ClientIdentifiersAddUpdateAction.OnCreateDocument -> {
                 viewModelScope.launch {
-                    val fileName = state.imageFileName.orEmpty()
-                    val file = state.documentImageFile?.toPlatformFile(fileName) ?: return@launch
-
                     /**
                      * A unique key generated for document operations (update/delete).
                      *
@@ -542,18 +539,22 @@ class ClientIdentifiersAddUpdateViewModel(
                     val uniqueKey = state.documentType + state.documentKey + state.status
 
                     if (state.documentId == null) {
-                        createDocument(
-                            file = file,
-                            name = state.documentName,
-                            uniqueKeyForHandleDocument = route.uniqueKeyForHandleDocument
-                                ?: uniqueKey,
-                        )
+                        state.documentImageFile?.let {
+                            createDocument(
+                                file = it,
+                                name = state.documentName,
+                                uniqueKeyForHandleDocument = route.uniqueKeyForHandleDocument
+                                    ?: uniqueKey,
+                            )
+                        }
                     } else {
-                        updateDocument(
-                            file = file,
-                            name = state.documentName,
-                            uniqueKeyForHandleDocument = route.uniqueKeyForHandleDocument,
-                        )
+                        state.documentImageFile?.let {
+                            updateDocument(
+                                file = it,
+                                name = state.documentName,
+                                uniqueKeyForHandleDocument = route.uniqueKeyForHandleDocument,
+                            )
+                        }
                     }
                 }
             }

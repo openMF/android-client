@@ -43,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.attafitamim.krop.core.crop.AspectRatio
 import com.mifos.core.designsystem.component.BasicDialogState
 import com.mifos.core.designsystem.component.MifosBasicDialog
 import com.mifos.core.designsystem.component.MifosBottomSheet
@@ -155,6 +156,7 @@ fun ClientSignatureDialog(
             state.cropState.cropState?.let {
                 MifosImageCropperDialog(
                     state = it,
+                    AspectRatio(2, 1),
                 )
             }
         }

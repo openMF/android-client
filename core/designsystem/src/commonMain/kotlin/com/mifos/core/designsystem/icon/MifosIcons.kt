@@ -54,6 +54,7 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.Camera
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.CurrencyExchange
@@ -246,4 +247,5 @@ object MifosIcons {
     val Redo = Icons.AutoMirrored.Outlined.Redo
     val Copy = Icons.Outlined.ContentCopy
     val Currency = Icons.Outlined.CurrencyExchange
+    val Camera = Icons.Outlined.Camera
 }
