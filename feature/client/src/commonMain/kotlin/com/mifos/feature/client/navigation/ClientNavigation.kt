@@ -336,7 +336,7 @@ fun NavGraphBuilder.clientNavGraph(
             navigateToViewAccount = navController::navigateToLoanAccountSummaryScreen,
             navigateToMakeRepayment = {},
             navController = navController,
-            createAccount = { clientId -> navController.navigateToNewLoanAccountRoute(clientId) },
+            createAccount = { clientId, accountNo -> navController.navigateToNewLoanAccountRoute(clientId, accountNo) },
         )
         clientIdentifiersListDestination(
             addNewClientIdentity = navController::onNavigateToClientIdentifiersAddUpdateScreen,

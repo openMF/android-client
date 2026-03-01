@@ -85,7 +85,7 @@ internal fun ClientLoanAccountsScreenRoute(
     makeRepayment: (Int) -> Unit,
     viewAccount: (Int) -> Unit,
     navController: NavController,
-    createAccount: (Int) -> Unit,
+    createAccount: (Int, String) -> Unit,
     viewModel: ClientLoanAccountsViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -96,7 +96,7 @@ internal fun ClientLoanAccountsScreenRoute(
             is ClientLoanAccountsEvent.MakeRepayment -> makeRepayment(event.id)
             ClientLoanAccountsEvent.NavigateBack -> navigateBack()
             is ClientLoanAccountsEvent.ViewAccount -> viewAccount(event.id)
-            is ClientLoanAccountsEvent.AddAccount -> createAccount(event.clientId)
+            is ClientLoanAccountsEvent.AddAccount -> createAccount(event.clientId, event.accountNo)
         }
     }
 
@@ -136,19 +136,19 @@ private fun ClientLoanAccountsScreen(
     ) {
         MifosBreadcrumbNavBar(navController)
 
-            when (state.isLoading) {
-                true -> MifosProgressIndicator()
-                false -> {
-                    Column(
-                        modifier = Modifier.fillMaxSize()
-                            .padding(horizontal = KptTheme.spacing.md),
-                    ) {
-                        ClientsAccountHeader(
-                            totalItem = state.loanAccounts.size.toString(),
-                            onAction = onAction,
-                            isLoanScreenEmpty = state.loanAccounts.isEmpty(),
-                            isFilterActive = state.selectedStatus.isNotEmpty(),
-                        )
+        when (state.isLoading) {
+            true -> MifosProgressIndicator()
+            false -> {
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                        .padding(horizontal = KptTheme.spacing.md),
+                ) {
+                    ClientsAccountHeader(
+                        totalItem = state.loanAccounts.size.toString(),
+                        onAction = onAction,
+                        isLoanScreenEmpty = state.loanAccounts.isEmpty(),
+                        isFilterActive = state.selectedStatus.isNotEmpty(),
+                    )
 
                     if (state.isSearchBarActive) {
                         MifosSearchBar(

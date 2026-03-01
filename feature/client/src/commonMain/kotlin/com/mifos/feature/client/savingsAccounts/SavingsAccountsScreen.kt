@@ -47,7 +47,6 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.MifosActionsSavingsListingComponent
@@ -112,19 +111,19 @@ fun SavingsAccountsContent(
     ) {
         MifosBreadcrumbNavBar(navController)
 
-            when (state.isLoading) {
-                true -> MifosProgressIndicator()
-                false -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = KptTheme.spacing.md),
-                    ) {
-                        SavingsAccountsHeader(
-                            totalItem = state.savingsAccounts.size.toString(),
-                            onAction = onAction,
-                            isSavingsScreenEmpty = state.savingsAccounts.isEmpty(),
-                        )
+        when (state.isLoading) {
+            true -> MifosProgressIndicator()
+            false -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = KptTheme.spacing.md),
+                ) {
+                    SavingsAccountsHeader(
+                        totalItem = state.savingsAccounts.size.toString(),
+                        onAction = onAction,
+                        isSavingsScreenEmpty = state.savingsAccounts.isEmpty(),
+                    )
 
                     // todo implement search bar functionality
                     if (state.isSearchBarActive) {

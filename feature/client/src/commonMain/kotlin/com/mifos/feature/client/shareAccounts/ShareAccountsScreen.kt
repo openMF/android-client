@@ -95,18 +95,18 @@ internal fun ShareAccountsContent(
         when (state.isLoading) {
             true -> MifosProgressIndicator()
 
-                false -> {
-                    Column(
-                        modifier = Modifier.fillMaxSize()
-                            .padding(horizontal = KptTheme.spacing.md),
-                    ) {
-                        ShareAccountHeader(
-                            totalItem = state.accounts.size.toString(),
-                            onAction = onAction,
-                            isShareAccountsEmpty = state.accounts.isEmpty(),
-                        )
+            false -> {
+                Column(
+                    modifier = Modifier.fillMaxSize()
+                        .padding(horizontal = KptTheme.spacing.md),
+                ) {
+                    ShareAccountHeader(
+                        totalItem = state.accounts.size.toString(),
+                        onAction = onAction,
+                        isShareAccountsEmpty = state.accounts.isEmpty(),
+                    )
 
-                        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
                     if (state.accounts.isNotEmpty()) {
                         val emptyText = stringResource(Res.string.string_not_available)
@@ -143,22 +143,22 @@ internal fun ShareAccountsContent(
                                         },
                                     )
 
-                                        Spacer(Modifier.height(KptTheme.spacing.sm))
-                                    }
+                                    Spacer(Modifier.height(KptTheme.spacing.sm))
                                 }
                             }
-                        } else {
-                            MifosEmptyCard(
-                                msg = stringResource(Res.string.feature_share_account_empty_list_message),
-                                isButtonPresent = true,
-                                onClick = { onAction.invoke(ShareAccountsAction.AddAccount) },
-                            )
                         }
+                    } else {
+                        MifosEmptyCard(
+                            msg = stringResource(Res.string.feature_share_account_empty_list_message),
+                            isButtonPresent = true,
+                            onClick = { onAction.invoke(ShareAccountsAction.AddAccount) },
+                        )
                     }
                 }
             }
         }
     }
+}
 
 @Composable
 private fun ShareAccountHeader(
@@ -192,13 +192,13 @@ private fun ShareAccountHeader(
                 painter = painterResource(Res.drawable.search),
                 contentDescription = null,
             )
-            Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
+            Spacer(modifier = Modifier.width(KptTheme.spacing.lg))
             Icon(
                 modifier = Modifier.onClick { onAction.invoke(ShareAccountsAction.AddAccount) },
                 painter = painterResource(Res.drawable.add_icon),
                 contentDescription = null,
             )
-            Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
+            Spacer(modifier = Modifier.width(KptTheme.spacing.lg))
             Icon(
                 modifier = Modifier.onClick { onAction.invoke(ShareAccountsAction.ToggleFiler) },
                 painter = painterResource(Res.drawable.filter),

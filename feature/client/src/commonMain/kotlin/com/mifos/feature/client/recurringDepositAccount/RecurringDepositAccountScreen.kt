@@ -146,27 +146,27 @@ internal fun RecurringDepositAccountContent(
     ) {
         MifosBreadcrumbNavBar(navController)
 
-            when (state.isLoading) {
-                true -> MifosProgressIndicator()
-                false -> {
-                    Column(
-                        Modifier.fillMaxSize()
-                            .padding(horizontal = KptTheme.spacing.md),
-                    ) {
-                        val notAvailableText = stringResource(Res.string.client_savings_not_available)
-                        RecurringDepositAccountHeader(
-                            state.recurringDepositAccounts.size.toString(),
-                            onToggleSearch = {
-                                onAction(RecurringDepositAccountAction.ToggleSearch)
-                            },
-                            onToggleFilter = {
-                                onAction(RecurringDepositAccountAction.ToggleFilter)
-                            },
-                            addAccount = {
-                                onAction(RecurringDepositAccountAction.AddAccount)
-                            },
-                            isRecurringDepositScreenEmpty = state.recurringDepositAccounts.isEmpty(),
-                        )
+        when (state.isLoading) {
+            true -> MifosProgressIndicator()
+            false -> {
+                Column(
+                    Modifier.fillMaxSize()
+                        .padding(horizontal = KptTheme.spacing.md),
+                ) {
+                    val notAvailableText = stringResource(Res.string.client_savings_not_available)
+                    RecurringDepositAccountHeader(
+                        state.recurringDepositAccounts.size.toString(),
+                        onToggleSearch = {
+                            onAction(RecurringDepositAccountAction.ToggleSearch)
+                        },
+                        onToggleFilter = {
+                            onAction(RecurringDepositAccountAction.ToggleFilter)
+                        },
+                        addAccount = {
+                            onAction(RecurringDepositAccountAction.AddAccount)
+                        },
+                        isRecurringDepositScreenEmpty = state.recurringDepositAccounts.isEmpty(),
+                    )
 
                     // todo implement search bar functionality
                     if (state.isSearchBarActive) {
