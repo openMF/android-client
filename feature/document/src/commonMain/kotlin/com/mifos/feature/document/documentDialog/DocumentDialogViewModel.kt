@@ -18,6 +18,8 @@ import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.openFilePicker
+import io.github.vinceglb.filekit.extension
+import io.github.vinceglb.filekit.readBytes
 import io.ktor.utils.io.InternalAPI
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -66,14 +68,19 @@ class DocumentDialogViewModel(
         entityType: String,
         entityId: Int,
         documentName: String,
-        desciption: String,
+        description: String,
         file: PlatformFile,
     ) {
         viewModelScope.launch {
             repository.createDocument(
                 entityType = entityType,
                 entityId = entityId,
-                file = multipartRequestBody(file, documentName, desciption),
+                file = multipartRequestBody(
+                    file = file.readBytes(),
+                    name = documentName,
+                    extension = file.extension,
+                    description = description,
+                ),
             ).collect { result ->
                 when (result) {
                     is DataState.Error ->
@@ -105,7 +112,12 @@ class DocumentDialogViewModel(
                 entityType,
                 entityId,
                 documentId,
-                multipartRequestBody(file, documentName, description),
+                file = multipartRequestBody(
+                    file = file.readBytes(),
+                    name = documentName,
+                    extension = file.extension,
+                    description = description,
+                ),
             ).collect { result ->
                 when (result) {
                     is DataState.Error ->

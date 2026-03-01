@@ -26,6 +26,7 @@ import com.mifos.core.designsystem.theme.DesignToken
 @Composable
 fun MifosImageCropperDialog(
     state: CropState,
+    aspectRatio: AspectRatio,
 ) {
     ImageCropperDialog(
         state = state,
@@ -34,7 +35,7 @@ fun MifosImageCropperDialog(
                 RectCropShape,
             ),
             aspects = listOf(
-                AspectRatio(2, 1),
+                aspectRatio,
             ),
         ),
         topBar = {
