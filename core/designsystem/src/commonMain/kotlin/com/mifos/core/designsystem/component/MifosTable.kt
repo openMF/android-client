@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,19 +30,20 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.theme.DesignToken
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosTableRow(
     cells: List<@Composable () -> Unit>,
     widths: List<Dp>,
-    backgroundColor: Color,
     modifier: Modifier = Modifier,
     edgeOffset: Dp = 0.dp,
+    backgroundColor: Color = KptTheme.colorScheme.surfaceVariant,
     cornerShape: Shape = DesignToken.shapes.none,
     showTopBorder: Boolean = false,
     showBottomBorder: Boolean = true,
     showSideBorders: Boolean = true,
-    borderColor: Color = MaterialTheme.colorScheme.outlineVariant,
+    borderColor: Color = KptTheme.colorScheme.surfaceVariant,
     onClick: () -> Unit = {},
 ) {
     Column(

@@ -29,8 +29,6 @@ actual class PdfGenerator {
     private var context: Context? = null
 
     fun setContext(context: Context) {
-        // Keep the original context (Activity context) for PrintManager
-        // PrintManager.print() requires Activity context, not applicationContext
         this.context = context
     }
 
@@ -40,7 +38,7 @@ actual class PdfGenerator {
         pageConfig: PageConfig,
     ) {
         withContext(Dispatchers.Main) {
-            val activityContext = context ?: throw Exception("Context not initialized")
+            val appContext = context ?: throw Exception("Context not initialized")
 
             val finalHtml = run {
                 val orientation = if (pageConfig.orientation == Orientation.LANDSCAPE) {
@@ -57,7 +55,7 @@ actual class PdfGenerator {
                 htmlContent.replace("/* PAGE_CONFIG_PLACEHOLDER */", pageCss)
             }
 
-            var webView: WebView? = WebView(activityContext)
+            var webView: WebView? = WebView(appContext)
 
             try {
                 suspendCancellableCoroutine { continuation ->
@@ -73,7 +71,7 @@ actual class PdfGenerator {
                     currentWebView.webViewClient = object : WebViewClient() {
                         override fun onPageFinished(view: WebView?, url: String?) {
                             try {
-                                val printManager = activityContext.getSystemService<PrintManager>()
+                                val printManager = appContext.getSystemService<PrintManager>()
                                     ?: throw Exception("PrintManager not available")
 
                                 val attributes = createPrintAttributes(pageConfig)

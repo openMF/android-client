@@ -97,6 +97,7 @@
     <string name="feature_loan_disbursement_note">Disbursement Note</string>
     <string name="feature_loan_error_network_not_available">Network not available</string>
     <string name="feature_loan_error_amount_can_not_be_empty">Amount can not be empty</string>
+    <string name="feature_loan_error_fetching_repayment_schedule">Error fetching repayment schedule</string>
 
     <string name="feature_loan_loan_account_summary">Loan Account Summary</string>
     <string name="feature_loan_transactions">Transactions</string>

@@ -10,7 +10,7 @@
 package com.mifos.feature.loan.loanRepaymentSchedule.pdf
 
 import com.mifos.core.ui.util.pdf.HtmlTemplateGenerator
-import com.mifos.feature.loan.loanRepaymentSchedule.RepaymentScheduleTableData
+import com.mifos.feature.loan.loanRepaymentSchedule.LoanRepaymentScheduleState
 import kotlinx.html.BODY
 import kotlinx.html.TBODY
 import kotlinx.html.b
@@ -45,7 +45,6 @@ internal data class RepaymentSchedulePdfStrings(
     val loanAmountBalanceHeader: String,
     val totalCostLoanHeader: String,
     val installmentTotalsHeader: String,
-    val totalsLabel: String,
     val hNo: String,
     val hDays: String,
     val hDate: String,
@@ -66,7 +65,7 @@ internal data class RepaymentSchedulePdfStrings(
  * Generates HTML content for the Repayment Schedule PDF.
  */
 internal class RepaymentScheduleHtmlGenerator(
-    private val tableData: RepaymentScheduleTableData,
+    private val tableData: LoanRepaymentScheduleState.RepaymentScheduleTableData,
     private val strings: RepaymentSchedulePdfStrings,
 ) : HtmlTemplateGenerator() {
 
@@ -173,7 +172,7 @@ internal class RepaymentScheduleHtmlGenerator(
                     tr {
                         td {
                             attributes["colspan"] = "1"
-                            b { +strings.totalsLabel }
+                            b { +strings.totalLabel }
                         }
                         td {
                             attributes["colspan"] = "4"

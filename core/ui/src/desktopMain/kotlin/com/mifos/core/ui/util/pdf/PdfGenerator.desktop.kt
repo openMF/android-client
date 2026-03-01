@@ -10,6 +10,7 @@
 package com.mifos.core.ui.util.pdf
 
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
+import com.openhtmltopdf.svgsupport.BatikSVGDrawer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.awt.Desktop
@@ -81,6 +82,7 @@ actual class PdfGenerator {
 
                 FileOutputStream(outputFile).use { outputStream ->
                     PdfRendererBuilder()
+                        .useSVGDrawer(BatikSVGDrawer())
                         .useFastMode()
                         .withHtmlContent(finalHtml, null)
                         .toStream(outputStream)

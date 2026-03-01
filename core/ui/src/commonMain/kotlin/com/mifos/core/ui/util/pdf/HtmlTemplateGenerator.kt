@@ -9,9 +9,22 @@
  */
 package com.mifos.core.ui.util.pdf
 
+import androidclient.core.ui.generated.resources.Res
+import androidclient.core.ui.generated.resources.feature_pdf_generation_date
+import androidclient.core.ui.generated.resources.powered_by
+import kotlinx.datetime.number
+import kotlinx.datetime.toLocalDateTime
 import kotlinx.html.BODY
 import kotlinx.html.body
+import kotlinx.html.div
+import kotlinx.html.img
+import kotlinx.html.span
 import kotlinx.html.stream.createHTML
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.getString
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
+import kotlin.time.ExperimentalTime
 
 /**
  * Base class for HTML template generation using kotlinx-html.
@@ -24,9 +37,62 @@ abstract class HtmlTemplateGenerator {
      * Subclasses should implement this to create their specific HTML structure.
      * Generates XHTML-compliant HTML for OpenHTMLToPDF compatibility.
      */
-    fun generateHtml(): String {
-        val bodyContent = createHTML().body {
+    suspend fun generateHtml(): String {
+        val poweredBy = getPoweredByText()
+        val logoUri = getLogoDataUri()
+        val generationDateText = getGenerationDateText()
+        val bodyContent = createHTML(xhtmlCompatible = true).body {
+            div {
+                attributes["style"] =
+                    """
+                        display: table; 
+                        width: 100%; 
+                        border-bottom: 2px solid #33618D; 
+                        margin-bottom: 20px; 
+                        padding-bottom: 10px;
+                    """.trimIndent().replace("\n", " ")
+
+                div {
+                    attributes["style"] =
+                        "display: table-cell; text-align: left; vertical-align: bottom; width: 50%;"
+                    img(src = logoUri, alt = "brand-logo") {
+                        attributes["style"] = "width:129px; height:36px;"
+                    }
+                }
+
+                div {
+                    attributes["style"] = """
+                        display: table-cell; 
+                        text-align: right; 
+                        vertical-align: bottom; 
+                        width: 50%; 
+                        color: #555; 
+                        font-size: 8pt;
+                    """.trimIndent().replace("\n", " ")
+                    +generationDateText
+                }
+            }
+
             generateBody()
+
+            div("footer") {
+                div("powered-by center") {
+                    span {
+                        attributes["style"] = """
+                            color: #33618D; 
+                            font-weight: bold; 
+                            font-style: normal; 
+                            vertical-align: middle; 
+                            display: inline-block;
+                        """.trimIndent().replace("\n", " ")
+                        +(poweredBy)
+                    }
+                    img(src = logoUri, alt = "logo") {
+                        attributes["style"] =
+                            "width:50px;height:17px;vertical-align:middle;margin:0 6px; display: inline-block;"
+                    }
+                }
+            }
         }
 
         return """
@@ -57,6 +123,32 @@ $bodyContent
      * Subclasses should implement this to create their specific HTML structure.
      */
     protected abstract fun BODY.generateBody()
+
+    /**
+     * Provide the localized "Powered by" text.
+     */
+    protected suspend fun getPoweredByText(): String = getString(Res.string.powered_by)
+
+    /**
+     * Provide a data URI for the logo image. Return null to omit logo.
+     */
+    @OptIn(ExperimentalResourceApi::class, ExperimentalEncodingApi::class)
+    protected suspend fun getLogoDataUri(): String {
+        val bytes = Res.readBytes("drawable/ic_icon_mifos_logo.svg")
+        val base64String = Base64.encode(bytes)
+        return "data:image/svg+xml;base64,$base64String"
+    }
+
+    @OptIn(ExperimentalTime::class)
+    protected suspend fun getGenerationDateText(): String {
+        val currentDate = kotlin.time.Clock.System.now()
+            .toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault())
+            .date
+
+        val dateString = "${currentDate.day}/${currentDate.month.number}/${currentDate.year}"
+        val generationDateLabel = getString(Res.string.feature_pdf_generation_date)
+        return "$generationDateLabel: $dateString"
+    }
 
     /**
      * Get additional CSS styles specific to the subclass.
@@ -91,7 +183,7 @@ $bodyContent
         .header {
             margin-bottom: 12px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #1976d2;
+            border-bottom: 2px solid #33618D;
         }
         
         h1 {
@@ -162,7 +254,6 @@ $bodyContent
         .footer {
             margin-top: 20px;
             padding-top: 15px;
-            border-top: 1px solid #e0e0e0;
             text-align: center;
             font-size: 8pt;
             color: #666;
