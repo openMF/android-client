@@ -176,6 +176,8 @@
     <string name="feature_loan_profile_label_overpaid_by">Overpaid By</string>
     <string name="feature_loan_profile_label_client_name_placeholder">Client Name</string>
     <string name="feature_loan_profile_error_details_not_found">Failed to load loan account details.</string>
+    <string name="feature_loan_profile_failed_to_load_loan">Failed to load loan details. Please try again later.</string>
+    <string name="feature_loan_profile_error_network_not_available">Network is not available. Please check your connection.</string>
 
     <string name="feature_loan_overdue">Overdue</string>
     <string name="feature_loan_pending">Pending</string>

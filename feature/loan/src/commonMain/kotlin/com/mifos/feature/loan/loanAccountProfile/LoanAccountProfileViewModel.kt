@@ -15,6 +15,8 @@ import androidclient.feature.loan.generated.resources.feature_loan_profile_actio
 import androidclient.feature.loan.generated.resources.feature_loan_profile_action_transfer
 import androidclient.feature.loan.generated.resources.feature_loan_profile_action_view
 import androidclient.feature.loan.generated.resources.feature_loan_profile_error_details_not_found
+import androidclient.feature.loan.generated.resources.feature_loan_profile_error_network_not_available
+import androidclient.feature.loan.generated.resources.feature_loan_profile_failed_to_load_loan
 import androidclient.feature.loan.generated.resources.feature_loan_profile_status_active
 import androidclient.feature.loan.generated.resources.feature_loan_profile_status_overpaid
 import androidclient.feature.loan.generated.resources.feature_loan_profile_status_pending
@@ -31,6 +33,7 @@ import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.loan.loanAccountProfile.components.LoanAccountProfileActionItem
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
@@ -44,22 +47,32 @@ internal class LoanAccountProfileViewModel(
 ) {
 
     private val route = savedStateHandle.toRoute<LoanAccountRoute>()
+    private var loadJob: Job? = null
 
     init {
-        observeNetwork()
-        loadLoanAccountDetails(route.loanId)
+        observeNetworkAndLoad()
     }
 
-    private fun observeNetwork() {
+    private fun observeNetworkAndLoad() {
         viewModelScope.launch {
             networkMonitor.isOnline.collect { isConnected ->
                 mutableStateFlow.update { it.copy(networkConnection = isConnected) }
+                if (isConnected) {
+                    if (mutableStateFlow.value.loanAccount == null) {
+                        loadLoanAccountDetails(route.loanId)
+                    }
+                } else if (mutableStateFlow.value.loanAccount == null) {
+                    mutableStateFlow.update {
+                        it.copy(dialogState = LoanAccountState.DialogState.Error(Res.string.feature_loan_profile_error_network_not_available))
+                    }
+                }
             }
         }
     }
 
     private fun loadLoanAccountDetails(loanId: Int) {
-        viewModelScope.launch {
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
             loanRepository.getLoanById(loanId).collect { result ->
                 when (result) {
                     is DataState.Success -> {
@@ -72,7 +85,7 @@ internal class LoanAccountProfileViewModel(
                             }
                             return@collect
                         }
-                        val currentStatus = loan.status.toProfileStatus
+                        val currentStatus = loan.status.toProfileStatus()
 
                         mutableStateFlow.update {
                             it.copy(
@@ -85,7 +98,7 @@ internal class LoanAccountProfileViewModel(
                     }
                     is DataState.Error -> {
                         mutableStateFlow.update {
-                            it.copy(dialogState = LoanAccountState.DialogState.Error(Res.string.feature_loan_profile_error_details_not_found))
+                            it.copy(dialogState = LoanAccountState.DialogState.Error(Res.string.feature_loan_profile_failed_to_load_loan))
                         }
                     }
                     DataState.Loading -> {
@@ -119,7 +132,13 @@ internal class LoanAccountProfileViewModel(
     override fun handleAction(action: LoanAccountAction) {
         when (action) {
             LoanAccountAction.NavigateBack -> sendEvent(LoanAccountEvent.NavigateBack)
-            LoanAccountAction.OnRetry -> loadLoanAccountDetails(route.loanId)
+            LoanAccountAction.OnRetry -> if (stateFlow.value.networkConnection) {
+                loadLoanAccountDetails(route.loanId)
+            } else {
+                mutableStateFlow.update {
+                    it.copy(dialogState = LoanAccountState.DialogState.Error(Res.string.feature_loan_profile_error_details_not_found))
+                }
+            }
             LoanAccountAction.OnNextActionClick -> handleNextAction()
             is LoanAccountAction.OnDetailItemClick -> sendEvent(LoanAccountEvent.NavigateToDetail(action.item))
             LoanAccountAction.OnAccountClick -> sendEvent(LoanAccountEvent.NavigateToAccountDetails)
@@ -129,7 +148,7 @@ internal class LoanAccountProfileViewModel(
     private fun handleNextAction() {
         val account = mutableStateFlow.value.loanAccount ?: return
 
-        when (account.status.toProfileStatus) {
+        when (account.status.toProfileStatus()) {
             LoanProfileStatus.PENDING -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Approve))
             LoanProfileStatus.OVERPAID -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Transfer))
             LoanProfileStatus.ACTIVE -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Repayment))
@@ -137,16 +156,15 @@ internal class LoanAccountProfileViewModel(
         }
     }
 
-    private val LoanStatusEntity?.toProfileStatus: LoanProfileStatus
-        get() {
-            if (this == null) return LoanProfileStatus.UNKNOWN
-            return when {
-                this.pendingApproval == true -> LoanProfileStatus.PENDING
-                this.overpaid == true -> LoanProfileStatus.OVERPAID
-                this.active == true -> LoanProfileStatus.ACTIVE
-                else -> LoanProfileStatus.UNKNOWN
-            }
+    private fun LoanStatusEntity?.toProfileStatus(): LoanProfileStatus {
+        if (this == null) return LoanProfileStatus.UNKNOWN
+        return when {
+            this.pendingApproval == true -> LoanProfileStatus.PENDING
+            this.overpaid == true -> LoanProfileStatus.OVERPAID
+            this.active == true -> LoanProfileStatus.ACTIVE
+            else -> LoanProfileStatus.UNKNOWN
         }
+    }
 }
 
 enum class LoanProfileStatus {
