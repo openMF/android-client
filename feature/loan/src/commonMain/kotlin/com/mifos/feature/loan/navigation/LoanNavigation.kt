@@ -16,6 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
+import com.mifos.feature.loan.loanAccountProfile.loanProfileAccountDestination
 import com.mifos.feature.loan.loanAccountSummary.loanAccountSummary
 import com.mifos.feature.loan.loanApproval.LoanAccountApprovalScreen
 import com.mifos.feature.loan.loanCharge.loanChargeScreen
@@ -71,6 +72,14 @@ fun NavGraphBuilder.loanDestination(
         onNavigateBack = navController::popBackStack,
         onFinish = navController::popBackStack,
         navController = navController,
+    )
+
+    loanProfileAccountDestination(
+        onNavigateBack = navController::popBackStack,
+        navController = navController,
+        approveLoan = navController::navigateToLoanApprovalScreen,
+        onRepaymentClick = navController::navigateToLoanRepaymentScreen,
+        onDetailItemClick = { },
     )
 }
 
