@@ -15,19 +15,40 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-class AmountTransferRoute(
-    val id: Int,
+data class AmountTransferScreenRoute(
+    val fromOfficeId: Int,
+    val fromClientId: Int,
+    val fromAccountType: Int,
+    val fromAccountId: Int,
+    val fromAccountNumber: String? = null,
+    val currency: String? = null,
 )
 
-fun NavController.navigateToTransferScreen(id: Int) {
-    navigate(AmountTransferRoute(id))
+fun NavController.navigateToTransferScreen(
+    fromOfficeId: Int,
+    fromClientId: Int,
+    fromAccountType: Int,
+    fromAccountId: Int,
+    fromAccountNumber: String? = null,
+    currency: String? = null,
+) {
+    navigate(
+        AmountTransferScreenRoute(
+            fromOfficeId = fromOfficeId,
+            fromClientId = fromClientId,
+            fromAccountType = fromAccountType,
+            fromAccountId = fromAccountId,
+            fromAccountNumber = fromAccountNumber,
+            currency = currency,
+        ),
+    )
 }
 
 fun NavGraphBuilder.amountTransferScreen(
     navController: NavController,
     onBackPressed: () -> Unit,
 ) {
-    composable<AmountTransferRoute> {
+    composable<AmountTransferScreenRoute> {
         AmountTransferScreenRoute(
             navController = navController,
             navigateBack = onBackPressed,

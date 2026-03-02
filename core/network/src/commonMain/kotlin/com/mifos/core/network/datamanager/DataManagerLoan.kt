@@ -12,6 +12,8 @@ package com.mifos.core.network.datamanager
 import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
+import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRequest
+import com.mifos.core.model.objects.account.loan.transfer.AccountTransferResponse
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.LoansPayload
@@ -290,5 +292,53 @@ class DataManagerLoan(
         loanDisbursement: LoanDisbursement?,
     ): Flow<GenericResponse> {
         return mBaseApiManager.loanService.disburseLoan(loanId, loanDisbursement)
+    }
+
+    /**
+     * Account Transfer Methods
+     */
+
+    /**
+     * Retrieve account transfer template for populating UI dropdowns
+     *
+     * @param fromOfficeId Source office ID
+     * @param fromClientId Source client ID
+     * @param fromAccountType Source account type ID
+     * @param fromAccountId Source account ID
+     * @param toOfficeId Destination office ID (optional)
+     * @param toClientId Destination client ID (optional)
+     * @param toAccountType Destination account type ID (optional)
+     * @return AccountTransferTemplate with available options
+     */
+    fun getAccountTransferTemplate(
+        fromOfficeId: Int,
+        fromClientId: Int,
+        fromAccountType: Int,
+        fromAccountId: Int,
+        toOfficeId: Int? = null,
+        toClientId: Int? = null,
+        toAccountType: Int? = null,
+    ): Flow<com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplate> {
+        return mBaseApiManager.loanService.getAccountTransferTemplate(
+            fromOfficeId = fromOfficeId,
+            fromClientId = fromClientId,
+            fromAccountType = fromAccountType,
+            fromAccountId = fromAccountId,
+            toOfficeId = toOfficeId,
+            toClientId = toClientId,
+            toAccountType = toAccountType,
+        )
+    }
+
+    /**
+     * Submit an account transfer
+     *
+     * @param request Account transfer request payload
+     * @return AccountTransferResponse with transfer details
+     */
+    suspend fun submitAccountTransfer(
+        request: AccountTransferRequest,
+    ): AccountTransferResponse {
+        return mBaseApiManager.loanService.submitAccountTransfer(request)
     }
 }

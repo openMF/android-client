@@ -105,11 +105,16 @@ internal class LoanAccountSummaryViewModel(
             }
 
             LoanAccountSummaryAction.NavigateToLoanTransfer -> {
-                sendEvent(
-                    LoanAccountSummaryEvent.NavigateToLoanTransfer(
-                        loanAccountNumber,
-                    ),
-                )
+                state.loanWithAssociations?.let { loan ->
+                    sendEvent(
+                        LoanAccountSummaryEvent.NavigateToLoanTransfer(
+                            loanId = loanAccountNumber,
+                            officeId = null, // Not available in LoanWithAssociationsEntity
+                            clientId = loan.clientId,
+                            currencyCode = loan.currency?.code,
+                        ),
+                    )
+                }
             }
         }
     }
@@ -350,7 +355,12 @@ enum class LoanSummaryDropDownAction {
 
 sealed interface LoanAccountSummaryEvent {
     data object NavigateBack : LoanAccountSummaryEvent
-    data class NavigateToLoanTransfer(val loanId: Int) : LoanAccountSummaryEvent
+    data class NavigateToLoanTransfer(
+        val loanId: Int,
+        val officeId: Int?,
+        val clientId: Int?,
+        val currencyCode: String?,
+    ) : LoanAccountSummaryEvent
     data class NavigateToMoreInfo(val loanId: Int) : LoanAccountSummaryEvent
     data class NavigateToTransactions(val loanId: Int) : LoanAccountSummaryEvent
     data class NavigateToRepaymentSchedule(val loanId: Int) : LoanAccountSummaryEvent

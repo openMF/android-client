@@ -13,6 +13,7 @@ import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.data.datasource.SearchRecordLocalDataSource
 import com.mifos.core.data.datasource.SearchRecordLocalDataSourceImpl
 import com.mifos.core.data.repository.ActivateRepository
+import com.mifos.core.data.repository.AmountTransferRepository
 import com.mifos.core.data.repository.CenterDetailsRepository
 import com.mifos.core.data.repository.CenterListRepository
 import com.mifos.core.data.repository.ChargeRepository
@@ -77,6 +78,7 @@ import com.mifos.core.data.repository.SyncGroupsDialogRepository
 import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
 import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
 import com.mifos.core.data.repositoryImp.ActivateRepositoryImp
+import com.mifos.core.data.repositoryImp.AmountTransferRepositoryImp
 import com.mifos.core.data.repositoryImp.CenterDetailsRepositoryImp
 import com.mifos.core.data.repositoryImp.CenterListRepositoryImp
 import com.mifos.core.data.repositoryImp.ChargeRepositoryImp
@@ -184,6 +186,9 @@ val RepositoryModule = module {
     singleOf(::LoanRepaymentRepositoryImp) bind LoanRepaymentRepository::class
     singleOf(::LoanRepaymentScheduleRepositoryImp) bind LoanRepaymentScheduleRepository::class
     singleOf(::LoanTransactionsRepositoryImp) bind LoanTransactionsRepository::class
+
+    // Account Transfer
+    singleOf(::AmountTransferRepositoryImp) bind AmountTransferRepository::class
 
     // Savings
     singleOf(::SavingsAccountRepositoryImp) bind SavingsAccountRepository::class

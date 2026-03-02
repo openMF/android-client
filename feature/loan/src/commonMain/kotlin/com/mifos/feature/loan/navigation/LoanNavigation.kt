@@ -46,7 +46,16 @@ fun NavGraphBuilder.loanDestination(
         onDocumentsClicked = { onDocumentsClicked(it, Constants.ENTITY_TYPE_LOANS) },
         onChargesClicked = navController::navigateToLoanChargesScreen,
         approveLoan = navController::navigateToLoanApprovalScreen,
-        amountTransferScreen = navController::navigateToTransferScreen,
+        amountTransferScreen = { loanId, officeId, clientId, currencyCode ->
+            navController.navigateToTransferScreen(
+                fromOfficeId = officeId ?: 0,
+                fromClientId = clientId ?: 0,
+                fromAccountType = 1, // Loan account type
+                fromAccountId = loanId,
+                fromAccountNumber = loanId.toString(),
+                currency = currencyCode,
+            )
+        },
         disburseLoan = navController::navigateToLoanDisbursementScreen,
         onRepaymentClick = navController::navigateToLoanRepaymentScreen,
         navController = navController,

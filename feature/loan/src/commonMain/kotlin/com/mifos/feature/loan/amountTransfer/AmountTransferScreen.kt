@@ -10,7 +10,6 @@
 package com.mifos.feature.loan.amountTransfer
 
 import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_account_type
 import androidclient.feature.loan.generated.resources.feature_loan_amount
 import androidclient.feature.loan.generated.resources.feature_loan_applicant_name
 import androidclient.feature.loan.generated.resources.feature_loan_currency
@@ -21,6 +20,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_office
 import androidclient.feature.loan.generated.resources.feature_loan_select_account
 import androidclient.feature.loan.generated.resources.feature_loan_select_client
 import androidclient.feature.loan.generated.resources.feature_loan_select_office
+import androidclient.feature.loan.generated.resources.feature_loan_success_title
 import androidclient.feature.loan.generated.resources.feature_loan_transfer
 import androidclient.feature.loan.generated.resources.feature_loan_transfer_details
 import androidx.compose.foundation.layout.Arrangement
@@ -52,6 +52,7 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextButton
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.util.EventsEffect
@@ -73,7 +74,7 @@ internal fun AmountTransferScreenRoute(
     }
 
     AmountTransferContent(
-        navController,
+        navController = navController,
         state = state,
         onAction = viewModel::trySendAction,
     )
@@ -115,15 +116,15 @@ internal fun AmountTransferContent(
                 ) {
                     LoanDetailRow(
                         label = stringResource(Res.string.feature_loan_applicant_name),
-                        value = "MARIA mifos MERCEDES",
+                        value = state.fromClientName ?: "",
                     )
                     LoanDetailRow(
                         label = stringResource(Res.string.feature_loan_office),
-                        value = "Head Office",
+                        value = state.fromOfficeName ?: "",
                     )
                     LoanDetailRow(
                         label = stringResource(Res.string.feature_loan_from_account),
-                        value = "#0ruewre907wew",
+                        value = state.fromAccountNumber ?: "",
                     )
                     LoanDetailRow(
                         label = stringResource(Res.string.feature_loan_loan_account_type),
@@ -131,7 +132,7 @@ internal fun AmountTransferContent(
                     )
                     LoanDetailRow(
                         label = stringResource(Res.string.feature_loan_currency),
-                        value = "US Dollar",
+                        value = state.currency,
                     )
                 }
             }
@@ -146,9 +147,14 @@ internal fun AmountTransferContent(
                 value = state.selectedOfficeName,
                 onValueChanged = { },
                 label = stringResource(Res.string.feature_loan_select_office),
-                options = listOf("Account 1", "Account 2", "Account 3"),
+                options = state.offices.map { it.name },
                 onOptionSelected = { index, text ->
-                    onAction.invoke(AmountTransferAction.OnOfficeChanged(index, text))
+                    onAction.invoke(
+                        AmountTransferAction.OnOfficeChanged(
+                            index,
+                            text,
+                        ),
+                    )
                 },
                 errorMessage = state.selectedOfficeIdError?.let { stringResource(it) },
             )
@@ -157,9 +163,14 @@ internal fun AmountTransferContent(
                 value = state.selectedClientName,
                 onValueChanged = { },
                 label = stringResource(Res.string.feature_loan_select_client),
-                options = listOf("Account 1", "Account 2", "Account 3"),
+                options = state.clients.map { it.displayName },
                 onOptionSelected = { index, text ->
-                    onAction.invoke(AmountTransferAction.OnClientChange(index, text))
+                    onAction.invoke(
+                        AmountTransferAction.OnClientChange(
+                            index,
+                            text,
+                        ),
+                    )
                 },
                 errorMessage = state.selectedClientIdError?.let { stringResource(it) },
             )
@@ -167,10 +178,18 @@ internal fun AmountTransferContent(
             MifosTextFieldDropdown(
                 value = state.selectedAccountType,
                 onValueChanged = { },
-                label = stringResource(Res.string.feature_loan_account_type),
-                options = listOf("Account 1", "Account 2", "Account 3"),
+                label = stringResource(Res.string.feature_loan_loan_account_type),
+                options = state.accountTypes.map { it.value },
                 onOptionSelected = { index, text ->
-                    onAction.invoke(AmountTransferAction.OnAccountTypeChange(index, text))
+                    val typeId = state.accountTypes.getOrNull(index)?.id
+                    typeId?.let {
+                        onAction.invoke(
+                            AmountTransferAction.OnAccountTypeChange(
+                                it,
+                                text,
+                            ),
+                        )
+                    }
                 },
                 errorMessage = state.accountTypeIdError?.let { stringResource(it) },
             )
@@ -179,9 +198,17 @@ internal fun AmountTransferContent(
                 value = state.selectedAccountName,
                 onValueChanged = { },
                 label = stringResource(Res.string.feature_loan_select_account),
-                options = listOf("Account 1", "Account 2", "Account 3"),
+                options = state.accounts.map { it.accountNo },
                 onOptionSelected = { index, text ->
-                    onAction.invoke(AmountTransferAction.OnAccountChange(index, text))
+                    val accountId = state.accounts.getOrNull(index)?.id
+                    accountId?.let {
+                        onAction.invoke(
+                            AmountTransferAction.OnAccountChange(
+                                it,
+                                text,
+                            ),
+                        )
+                    }
                 },
                 errorMessage = state.accountIdError?.let { stringResource(it) },
             )
@@ -224,11 +251,20 @@ private fun AmountTransferDialogContent(
             MifosSweetError(
                 message = dialogState.message,
                 isRetryEnabled = true,
-                onclick = { onAction.invoke(AmountTransferAction.OnRetryClick) },
+                onclick = { onAction.invoke(AmountTransferAction.OnRetryFetching) },
             )
         }
 
         AmountTransferUiState.DialogState.Loading -> MifosProgressIndicatorOverlay()
+
+        is AmountTransferUiState.DialogState.TransferStatus -> {
+            MifosAlertDialog(
+                dialogTitle = stringResource(Res.string.feature_loan_success_title),
+                dialogText = dialogState.message,
+                onConfirmation = { onAction.invoke(AmountTransferAction.OnRetryClick) },
+                onDismissRequest = { onAction.invoke(AmountTransferAction.CloseDialog) },
+            )
+        }
 
         null -> {}
     }

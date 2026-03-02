@@ -11,6 +11,7 @@ package com.mifos.core.network.di
 
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.DataManager
+import com.mifos.core.network.datamanager.DataManagerAccountTransfer
 import com.mifos.core.network.datamanager.DataManagerAuth
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.network.datamanager.DataManagerCharge
@@ -46,6 +47,7 @@ val DataManagerModule = module {
     single { DataManagerDocument(get()) }
     single { DataManagerGroups(get(), get(), get(), get()) }
     single { DataManagerLoan(get(), get(), get()) }
+    single { DataManagerAccountTransfer(get<DataManagerLoan>()) }
     single { DataManagerNote(get()) }
     single { DataManagerOffices(get(), get(), get()) }
     single { DataManagerRunReport(get()) }

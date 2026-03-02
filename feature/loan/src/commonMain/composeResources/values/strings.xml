@@ -312,4 +312,6 @@
     <string name="feature_loan_must_select_client">Must select client</string>
     <string name="feature_loan_must_select_account">Must select account</string>
     <string name="feature_loan_must_select_account_type">Must select account</string>
+    <string name="feature_loan_success_title">Success</string>
+
 </resources>
