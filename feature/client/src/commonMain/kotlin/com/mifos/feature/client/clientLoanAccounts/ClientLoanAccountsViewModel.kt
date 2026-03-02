@@ -80,6 +80,18 @@ class ClientLoanAccountsViewModel(
             ClientLoanAccountsAction.NavigateBack -> {
                 sendEvent(ClientLoanAccountsEvent.NavigateBack)
             }
+
+            ClientLoanAccountsAction.AddAccount -> {
+                viewModelScope.launch {
+                    val client = repository.getClient(route.clientId)
+                    sendEvent(
+                        ClientLoanAccountsEvent.AddAccount(
+                            route.clientId,
+                            client.accountNo ?: "",
+                        ),
+                    )
+                }
+            }
         }
     }
 
@@ -207,12 +219,14 @@ data class ClientLoanAccountsState(
 
 sealed interface ClientLoanAccountsEvent {
     data object NavigateBack : ClientLoanAccountsEvent
+    data class AddAccount(val clientId: Int, val accountNo: String) : ClientLoanAccountsEvent
     data class MakeRepayment(val id: Int) : ClientLoanAccountsEvent
     data class ViewAccount(val id: Int) : ClientLoanAccountsEvent
 }
 
 sealed interface ClientLoanAccountsAction {
     data object ToggleSearch : ClientLoanAccountsAction
+    data object AddAccount : ClientLoanAccountsAction
 
     data object NavigateBack : ClientLoanAccountsAction
     data object ToggleFilter : ClientLoanAccountsAction

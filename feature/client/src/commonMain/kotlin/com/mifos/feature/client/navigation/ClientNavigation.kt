@@ -94,6 +94,7 @@ import com.mifos.feature.document.navigation.documentListScreen
 import com.mifos.feature.document.navigation.navigateToDocumentListScreen
 import com.mifos.feature.groups.navigation.navigateToGroupDetailsScreen
 import com.mifos.feature.loan.loanAccount.navigateToLoanAccountScreen
+import com.mifos.feature.loan.loanAccountProfile.navigateToLoanAccountProfileScreen
 import com.mifos.feature.loan.loanAccountSummary.navigateToLoanAccountSummaryScreen
 import com.mifos.feature.loan.navigation.loanDestination
 import com.mifos.feature.loan.newLoanAccount.navigateToNewLoanAccountRoute
@@ -333,6 +334,7 @@ fun NavGraphBuilder.clientNavGraph(
             navigateBack = navController::popBackStack,
             navigateToViewAccount = navController::navigateToSavingsAccountSummaryScreen,
             navController = navController,
+            createAccount = { clientId -> navController.navigateToAddSavingsAccount(clientId = clientId, groupId = 0, isGroupAccount = false) },
             navigateToApproveAccount = navController::navigateToSavingsAccountApproval,
         )
         clientCollateralDestination(
@@ -342,9 +344,10 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientLoanAccountsDestination(
             navigateBack = navController::popBackStack,
-            navigateToViewAccount = navController::navigateToLoanAccountSummaryScreen,
+            navigateToViewAccount = navController::navigateToLoanAccountProfileScreen,
             navigateToMakeRepayment = {},
             navController = navController,
+            createAccount = { clientId, accountNo -> navController.navigateToNewLoanAccountRoute(clientId, accountNo) },
         )
         clientIdentifiersListDestination(
             addNewClientIdentity = navController::onNavigateToClientIdentifiersAddUpdateScreen,
