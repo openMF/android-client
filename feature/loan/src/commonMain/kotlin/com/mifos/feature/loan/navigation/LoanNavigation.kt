@@ -16,8 +16,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.feature.loan.amountTransfer.amountTransferScreen
-import com.mifos.feature.loan.amountTransfer.navigateToTransferScreen
 import com.mifos.feature.loan.loanAccountSummary.loanAccountSummary
 import com.mifos.feature.loan.loanApproval.LoanAccountApprovalScreen
 import com.mifos.feature.loan.loanCharge.loanChargeScreen
@@ -46,24 +44,11 @@ fun NavGraphBuilder.loanDestination(
         onDocumentsClicked = { onDocumentsClicked(it, Constants.ENTITY_TYPE_LOANS) },
         onChargesClicked = navController::navigateToLoanChargesScreen,
         approveLoan = navController::navigateToLoanApprovalScreen,
-        amountTransferScreen = { loanId, officeId, clientId, currencyCode ->
-            navController.navigateToTransferScreen(
-                fromOfficeId = officeId ?: 0,
-                fromClientId = clientId ?: 0,
-                fromAccountType = 1, // Loan account type
-                fromAccountId = loanId,
-                fromAccountNumber = loanId.toString(),
-                currency = currencyCode,
-            )
-        },
         disburseLoan = navController::navigateToLoanDisbursementScreen,
         onRepaymentClick = navController::navigateToLoanRepaymentScreen,
         navController = navController,
     )
-    amountTransferScreen(
-        navController = navController,
-        onBackPressed = navController::popBackStack,
-    )
+
     loanDisbursementScreen {
         navController.popBackStack()
     }
@@ -86,6 +71,14 @@ fun NavGraphBuilder.loanDestination(
         onNavigateBack = navController::popBackStack,
         onFinish = navController::popBackStack,
         navController = navController,
+    )
+
+    loanProfileAccountDestination(
+        onNavigateBack = navController::popBackStack,
+        navController = navController,
+        approveLoan = navController::navigateToLoanApprovalScreen,
+        onRepaymentClick = navController::navigateToLoanRepaymentScreen,
+        onDetailItemClick = { },
     )
 }
 

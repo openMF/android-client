@@ -36,7 +36,7 @@ android {
             storeFile =
                 file(System.getenv("KEYSTORE_PATH") ?: "../keystores/release_keystore.keystore")
             storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "mifos1234"
-            keyAlias = System.getenv("KEYSTORE_ALIAS") ?: "mifos-mobile"
+            keyAlias = System.getenv("KEYSTORE_ALIAS") ?: "mifos"
             keyPassword = System.getenv("KEYSTORE_ALIAS_PASSWORD") ?: "mifos1234"
             enableV1Signing = true
             enableV2Signing = true

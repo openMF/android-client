@@ -24,6 +24,9 @@ import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
 import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.extension
+import io.github.vinceglb.filekit.name
+import io.github.vinceglb.filekit.readBytes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -65,7 +68,14 @@ class ClientDetailsViewModel(
         }
     }
     private fun uploadImage(id: Int, imageFile: PlatformFile) = viewModelScope.launch {
-        uploadClientImageUseCase(id, multipartRequestBody(imageFile)).collect { result ->
+        uploadClientImageUseCase(
+            id,
+            multipartRequestBody(
+                file = imageFile.readBytes(),
+                extension = imageFile.extension,
+                name = imageFile.name,
+            ),
+        ).collect { result ->
             when (result) {
                 is DataState.Error -> {
                     _clientDetailsUiState.value =

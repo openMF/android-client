@@ -23,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
@@ -36,6 +35,7 @@ import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.search.components.SearchBox
 import com.mifos.feature.search.components.SearchScreenResult
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun SearchScreen(
@@ -107,7 +107,7 @@ internal fun SearchScreenContent(
         ) {
             SearchBox(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = KptTheme.spacing.md),
                 state = state,
                 onEvent = onEvent,
             )

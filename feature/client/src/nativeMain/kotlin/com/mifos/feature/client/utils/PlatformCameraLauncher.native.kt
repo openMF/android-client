@@ -11,13 +11,25 @@ package com.mifos.feature.client.utils
 
 import androidx.compose.runtime.Composable
 import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.dialogs.compose.PhotoResultLauncher
+import io.github.vinceglb.filekit.dialogs.compose.rememberCameraPickerLauncher
 
-actual class PlatformCameraLauncher {
+actual class PlatformCameraLauncher
+internal constructor(
+    private val launcher: PhotoResultLauncher,
+) {
     actual fun launch() {
+        launcher.launch()
     }
 }
 
 @Composable
 actual fun rememberPlatformCameraLauncher(onImageCapturedPath: (PlatformFile?) -> Unit): PlatformCameraLauncher {
-    TODO("Not yet implemented")
+    val launcher = rememberCameraPickerLauncher { file ->
+        onImageCapturedPath(file)
+    }
+
+    return PlatformCameraLauncher(
+        launcher = launcher,
+    )
 }

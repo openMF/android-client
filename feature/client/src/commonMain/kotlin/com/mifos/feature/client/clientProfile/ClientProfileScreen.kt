@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,6 +44,7 @@ import com.mifos.feature.client.clientProfile.components.ProfileCard
 import com.mifos.feature.client.clientProfile.components.clientsActionItems
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun ClientProfileScreen(
@@ -143,9 +143,7 @@ private fun ClientProfileContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .padding(
-                        horizontal = DesignToken.padding.large,
-                    ),
+                    .padding(horizontal = KptTheme.spacing.md),
             ) {
                 Text(
                     text = stringResource(Res.string.client_profile_profile),
@@ -170,7 +168,7 @@ private fun ClientProfileContent(
                         )
                     },
                 )
-                Spacer(Modifier.height(DesignToken.padding.large))
+                Spacer(Modifier.height(KptTheme.spacing.md))
                 Text(
                     text = stringResource(Res.string.client_profile_actions),
                     style = MifosTypography.labelLargeEmphasized,
@@ -184,7 +182,7 @@ private fun ClientProfileContent(
                             TextUtil(
                                 text = stringResource(it.subTitle),
                                 style = MifosTypography.bodySmall,
-                                color = MaterialTheme.colorScheme.secondary,
+                                color = KptTheme.colorScheme.secondary,
                             ),
                         ),
                         rightValues = emptyList(),

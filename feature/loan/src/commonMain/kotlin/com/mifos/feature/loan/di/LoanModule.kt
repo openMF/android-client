@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.loan.di
 
-import com.mifos.feature.loan.amountTransfer.AmountTransferViewModel
+import com.mifos.feature.loan.loanAccountProfile.LoanAccountProfileViewModel
 import com.mifos.feature.loan.groupLoanAccount.GroupLoanAccountViewModel
 import com.mifos.feature.loan.loanAccount.LoanAccountViewModel
 import com.mifos.feature.loan.loanAccountSummary.LoanAccountSummaryViewModel
@@ -36,5 +36,6 @@ val LoanModule = module {
     viewModelOf(::LoanRepaymentScheduleViewModel)
     viewModelOf(::LoanTransactionsViewModel)
     viewModelOf(::NewLoanAccountViewModel)
+    viewModelOf(::LoanAccountProfileViewModel)
     viewModelOf(::AmountTransferViewModel)
 }

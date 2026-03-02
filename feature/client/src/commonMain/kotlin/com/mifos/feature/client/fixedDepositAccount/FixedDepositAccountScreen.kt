@@ -10,13 +10,14 @@
 package com.mifos.feature.client.fixedDepositAccount
 
 import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.client_empty_card_message
+import androidclient.feature.client.generated.resources.add_icon
 import androidclient.feature.client.generated.resources.client_product_fixed_deposit_account
 import androidclient.feature.client.generated.resources.client_profile_fixed_deposit_account_title
 import androidclient.feature.client.generated.resources.client_savings_item
 import androidclient.feature.client.generated.resources.client_savings_not_available
 import androidclient.feature.client.generated.resources.client_savings_pending_approval
 import androidclient.feature.client.generated.resources.feature_client_dialog_action_ok
+import androidclient.feature.client.generated.resources.feature_fixed_account_empty_list_message
 import androidclient.feature.client.generated.resources.filter
 import androidclient.feature.client.generated.resources.search
 import androidx.compose.foundation.clickable
@@ -42,6 +43,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -59,6 +61,7 @@ import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun FixedDepositAccountScreen(
@@ -67,6 +70,7 @@ fun FixedDepositAccountScreen(
     onApproveAccount: (String) -> Unit,
     onViewAccount: (String) -> Unit,
     modifier: Modifier = Modifier,
+    createAccount: (Int) -> Unit,
     viewModel: FixedDepositAccountViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -81,6 +85,8 @@ fun FixedDepositAccountScreen(
             is FixedDepositAccountEvent.OnViewAccount -> {
                 onViewAccount(event.accountNumber)
             }
+
+            is FixedDepositAccountEvent.AddAccount -> createAccount(event.clientId)
         }
     }
 
@@ -145,9 +151,7 @@ fun FixedDepositAccountContent(
             false -> {
                 Column(
                     Modifier.fillMaxSize()
-                        .padding(
-                            horizontal = DesignToken.padding.large,
-                        ),
+                        .padding(horizontal = KptTheme.spacing.md),
                 ) {
                     val notAvailableText = stringResource(Res.string.client_savings_not_available)
 
@@ -159,6 +163,10 @@ fun FixedDepositAccountContent(
                         onToggleFilter = {
                             onAction(FixedDepositAccountAction.ToggleFilter)
                         },
+                        addAccount = {
+                            onAction(FixedDepositAccountAction.AddAccount)
+                        },
+                        isFixedDepositScreenEmpty = state.fixedDepositAccount.isEmpty(),
                     )
 
                     // todo implement search bar functionality
@@ -176,11 +184,14 @@ fun FixedDepositAccountContent(
                             },
                         )
                     }
-
-                    Spacer(modifier = Modifier.height(DesignToken.padding.largeIncreasedExtra))
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.lg))
 
                     if (state.fixedDepositAccount.isEmpty()) {
-                        MifosEmptyCard(msg = stringResource(Res.string.client_empty_card_message))
+                        MifosEmptyCard(
+                            msg = stringResource(Res.string.feature_fixed_account_empty_list_message),
+                            isButtonPresent = true,
+                            onClick = { onAction.invoke(FixedDepositAccountAction.AddAccount) },
+                        )
                     } else {
                         LazyColumn {
                             itemsIndexed(state.fixedDepositAccount) { index, fixedDepositAccount ->
@@ -236,8 +247,7 @@ fun FixedDepositAccountContent(
                                         else -> null
                                     }
                                 }
-
-                                Spacer(modifier = Modifier.height(DesignToken.spacing.small))
+                                Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
                             }
                         }
                     }
@@ -252,11 +262,14 @@ fun FixedDepositAccountHeader(
     totalItem: String,
     onToggleFilter: () -> Unit,
     modifier: Modifier = Modifier,
+    addAccount: () -> Unit,
     onToggleSearch: () -> Unit,
+    isFixedDepositScreenEmpty: Boolean,
 ) {
     Row(
         modifier = modifier.fillMaxWidth()
             .wrapContentHeight(),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Column {
             Text(
@@ -272,22 +285,33 @@ fun FixedDepositAccountHeader(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Icon(
-            painter = painterResource(Res.drawable.search),
-            contentDescription = null,
-            modifier = Modifier.clickable {
-                onToggleSearch.invoke()
-            },
-        )
+        if (!isFixedDepositScreenEmpty) {
+            Icon(
+                painter = painterResource(Res.drawable.search),
+                contentDescription = null,
+                modifier = Modifier.clickable {
+                    onToggleSearch.invoke()
+                },
+            )
 
-        Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
+            Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
 
-        Icon(
-            painter = painterResource(Res.drawable.filter),
-            contentDescription = null,
-            modifier = Modifier.clickable {
-                onToggleFilter.invoke()
-            },
-        )
+            Icon(
+                painter = painterResource(Res.drawable.add_icon),
+                contentDescription = null,
+                modifier = Modifier.clickable {
+                    addAccount.invoke()
+                },
+            )
+            Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
+
+            Icon(
+                painter = painterResource(Res.drawable.filter),
+                contentDescription = null,
+                modifier = Modifier.clickable {
+                    onToggleFilter.invoke()
+                },
+            )
+        }
     }
 }

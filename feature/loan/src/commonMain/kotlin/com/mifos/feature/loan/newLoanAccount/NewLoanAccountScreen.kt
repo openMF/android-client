@@ -81,6 +81,7 @@ import com.mifos.feature.loan.newLoanAccount.pages.TermsPage
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.ExperimentalTime
 
 @Composable
@@ -301,7 +302,7 @@ private fun AddNewCollateralDialog(
                         ),
                     ),
                 )
-                Spacer(modifier = Modifier.height(DesignToken.padding.large))
+                Spacer(modifier = Modifier.height(KptTheme.spacing.md))
                 MifosOutlinedTextField(
                     value = state.collateralTotal.toString(),
                     onValueChange = {},
@@ -311,7 +312,7 @@ private fun AddNewCollateralDialog(
                         enabled = false,
                     ),
                 )
-                Spacer(modifier = Modifier.height(DesignToken.padding.large))
+                Spacer(modifier = Modifier.height(KptTheme.spacing.md))
                 MifosOutlinedTextField(
                     value = state.totalCollateral.toString(),
                     onValueChange = {},
@@ -459,7 +460,7 @@ private fun ShowChargesDialog(
         },
         content = {
             Column(
-                modifier = Modifier.fillMaxWidth().padding(DesignToken.padding.large),
+                modifier = Modifier.fillMaxWidth().padding(KptTheme.spacing.md),
                 verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
             ) {
                 Text(

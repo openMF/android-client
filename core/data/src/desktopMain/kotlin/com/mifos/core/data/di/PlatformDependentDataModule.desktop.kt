@@ -9,11 +9,12 @@
  */
 package com.mifos.core.data.di
 
+import com.mifos.core.data.util.DesktopPlatformDependentDataModule
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
 actual val getPlatformDataModule: PlatformDependentDataModule
-    get() = JsPlatformDependentDataModule()
+    get() = DesktopPlatformDependentDataModule()
 
 actual val platformModule: Module
     get() = module {

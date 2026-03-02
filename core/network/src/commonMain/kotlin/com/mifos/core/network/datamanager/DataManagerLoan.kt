@@ -34,6 +34,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.json.Json
+import io.ktor.client.statement.bodyAsText
 
 /**
  * Created by Rajan Maurya on 15/07/16.
@@ -207,7 +209,7 @@ class DataManagerLoan(
      *
      * @return List<LoanRepaymentRequest>
      *
-     </LoanRepaymentRequest></LoanRepayment> */
+    </LoanRepaymentRequest></LoanRepayment> */
     val databaseLoanRepayments: Flow<List<LoanRepaymentRequestEntity>>
         get() = loanDaoHelper.readAllLoanRepaymentTransaction()
 
@@ -238,7 +240,7 @@ class DataManagerLoan(
      * PaymentTypeOption_Table.
      *
      * @return List<PaymentTypeOption>
-     </PaymentTypeOption> */
+    </PaymentTypeOption> */
     val paymentTypeOption: Flow<List<PaymentTypeOptionEntity>>
         get() = loanDaoHelper.getAllPaymentTypeOption
 
@@ -248,7 +250,7 @@ class DataManagerLoan(
      *
      * @param loanId Loan Id of the Loan
      * @return List<LoanRepaymentRequest>
-     </LoanRepaymentRequest> */
+    </LoanRepaymentRequest> */
     fun deleteAndUpdateLoanRepayments(loanId: Int): Flow<List<LoanRepaymentRequestEntity>> {
         return loanDaoHelper.deleteAndUpdateLoanRepayments(loanId)
     }
@@ -341,5 +343,24 @@ class DataManagerLoan(
         request: AccountTransferRequest,
     ): AccountTransferResponse {
         return mBaseApiManager.loanService.submitAccountTransfer(request)
+    }
+
+    /**
+     * Calculate loan repayment schedule without creating the loan.
+     * Used to preview the schedule before submitting the loan application.
+     *
+     * @param loansPayload The loan parameters to calculate the schedule for
+     * @return LoanWithAssociationsEntity containing the calculated repayment schedule
+     */
+    fun calculateLoanSchedule(loansPayload: LoansPayload): Flow<RepaymentSchedule> {
+        return mBaseApiManager.loanService.calculateLoanSchedule(loansPayload).map { response ->
+            if (!response.status.isSuccess()) {
+                val errorMessage = extractErrorMessage(response)
+
+                throw IllegalStateException(errorMessage)
+            }
+
+            Json { ignoreUnknownKeys = true }.decodeFromString<RepaymentSchedule>(response.bodyAsText())
+        }
     }
 }

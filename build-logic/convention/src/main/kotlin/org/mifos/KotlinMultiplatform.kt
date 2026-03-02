@@ -14,16 +14,17 @@ internal fun Project.configureKotlinMultiplatform() {
         jvm("desktop")
         androidTarget()
         iosSimulatorArm64()
-        iosX64()
         iosArm64()
-//        js(IR) {
-//            this.nodejs()
-//            binaries.executable()
-//        }
-//        wasmJs() {
-//            browser()
-//            nodejs()
-//        }
+// removed support for iosX64 to align with Jetbrains deprecation of the macosX64 targets
+//        iosX64()
+        js(IR) {
+            this.nodejs()
+            binaries.executable()
+        }
+        wasmJs() {
+            browser()
+            nodejs()
+        }
 
         compilerOptions {
             freeCompilerArgs.add("-Xexpect-actual-classes")

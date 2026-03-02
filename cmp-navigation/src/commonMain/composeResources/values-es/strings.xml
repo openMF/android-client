@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2024 Mifos Initiative
+
+    This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+    If a copy of the MPL was not distributed with this file,
+    You can obtain one at https://mozilla.org/MPL/2.0/.
+
+    See https://github.com/openMF/android-client/blob/master/LICENSE.md
+-->
+<resources>
+    <string name="cmp_navigation_no_internet">¡No estás conectado a internet!</string>
+
+    <string name="cmp_navigation_mifos">Mifos</string>
+    <string name="cmp_navigation_search">Buscar</string>
+    <string name="cmp_navigation_clients">Clientes</string>
+    <string name="cmp_navigation_center">Centros</string>
+    <string name="cmp_navigation_groups">Grupos</string>
+
+    <string name="checker_inbox_tasks">Tareas de la bandeja del verificador</string>
+    <string name="collection_sheet">Hoja de cobranza</string>
+    <string name="run_reports">Ejecutar reportes</string>
+    <string name="path_tracker">Rastreador de ruta</string>
+    <string name="settings">Configuración</string>
+    <string name="about">Acerca de</string>
+    <string name="offline_sync">Sincronización sin conexión</string>
+    <string name="powered_by">Desarrollado por</string>
+
+    <string name="cmp_navigation_profile_header">Encabezado de perfil</string>
+    <string name="cmp_navigation_dp_placeholder">FP</string> 
+    <string name="cmp_navigation_address">Domicilio</string>
+
+
+</resources>

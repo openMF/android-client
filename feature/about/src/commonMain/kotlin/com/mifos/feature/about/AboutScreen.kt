@@ -28,7 +28,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,8 +35,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.aboutItemTextStyle
 import com.mifos.core.designsystem.theme.aboutItemTextStyleBold
@@ -45,6 +44,7 @@ import com.mifos.core.ui.util.DevicePreview
 import com.mifos.core.ui.util.ShareUtils
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun AboutScreen(
@@ -63,7 +63,7 @@ internal fun AboutScreen(
             item {
                 Box(modifier = Modifier.fillMaxWidth()) {
                     Image(
-                        modifier = Modifier.size(100.dp).align(Alignment.Center),
+                        modifier = Modifier.size(DesignToken.sizes.dp100).align(Alignment.Center),
                         painter = painterResource(Res.drawable.feature_about_ic_launcher),
                         contentDescription = "App icon",
                     )
@@ -72,26 +72,26 @@ internal fun AboutScreen(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(KptTheme.spacing.md),
                     text = stringResource(Res.string.feature_about_mifos_x_droid),
                     style = aboutItemTextStyleBold,
                 )
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp),
+                        .padding(horizontal = KptTheme.spacing.md),
                     text = stringResource(Res.string.feature_about_app),
                     style = aboutItemTextStyle,
                 )
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
+                        .padding(KptTheme.spacing.md)
                         .clickable {
                             ShareUtils.openUrl("https://github.com/openMF/android-client/graphs/contributors")
                         },
                     text = stringResource(Res.string.feature_about_mifos),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = KptTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center,
                 )
             }
@@ -117,12 +117,12 @@ private fun AboutCardItem(
     onOptionClick: (AboutItems) -> Unit,
 ) {
     ElevatedCard(
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-        elevation = CardDefaults.elevatedCardElevation(0.dp),
+        modifier = Modifier.padding(horizontal = KptTheme.spacing.md, vertical = KptTheme.spacing.sm),
+        elevation = CardDefaults.elevatedCardElevation(KptTheme.elevation.level0),
         onClick = { onOptionClick(about.id) },
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(KptTheme.spacing.md),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             about.icon?.let {
@@ -135,17 +135,17 @@ private fun AboutCardItem(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                        .padding(horizontal = KptTheme.spacing.md),
                     text = stringResource(about.title),
-                    style = MaterialTheme.typography.titleMedium,
+                    style = KptTheme.typography.titleMedium,
                 )
                 about.subtitle?.let {
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
+                            .padding(horizontal = KptTheme.spacing.md),
                         text = stringResource(it),
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = KptTheme.typography.bodyMedium,
                     )
                 }
             }

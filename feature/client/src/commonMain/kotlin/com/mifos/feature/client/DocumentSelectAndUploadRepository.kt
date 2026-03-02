@@ -24,7 +24,7 @@ interface DocumentSelectAndUploadRepository {
 
     fun selectDocumentFromFile(dialogTitle: String = ""): Flow<DataState<PlatformFile?>>
 
-    fun downloadDocumentAndCache(): Flow<DataState<PlatformFile>>
+    fun downloadDocumentAndCache(): Flow<DataState<String>>
 
     suspend fun deleteDocument(): Result<GenericResponse>
 

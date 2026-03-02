@@ -23,7 +23,7 @@ androidxMaterial = "1.6.7"
 androidxMaterialVersion = "1.7.6"
 androidxMetrics = "1.0.0"
 androidxNavigation = "2.8.5"
-androidxPagingCommon = "3.3.6"
+androidxPagingCommon = "3.4.0"
 androidxProfileinstaller = "1.4.1"
 androidxStartup = "1.2.0"
 androidxTestCore = "1.6.1"
@@ -77,7 +77,7 @@ mockitoCore = "5.6.0"
 moshiVersion = '1.15.1'
 mockkVersion = "1.13.5"
 multidex = "2.0.1"
-pagingRuntimeKtx = "3.3.5"
+pagingRuntimeKtx = "3.4.0"
 playServicesLocation = "21.3.0"
 playServicesMaps = "19.0.0"
 playServicesPlaces = "17.1.0"
@@ -197,7 +197,7 @@ androidx-paging-testing = { module = "androidx.paging:paging-testing", version.r
 androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preferenceKtx" }
 
 # RxAndroid
-cmp-image-pick-n-crop = { module = "network.chaintech:cmp-image-pick-n-crop", version.ref = "cmpImagePickNCrop" }
+#cmp-image-pick-n-crop = { module = "network.chaintech:cmp-image-pick-n-crop", version.ref = "cmpImagePickNCrop" }
 mifos-koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
 koin-androidx-compose-v350 = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroidxCompose" }
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
@@ -484,6 +484,7 @@ kmp-koin-convention = { id = "org.convention.kmp.koin", version = "unspecified" 
 kmp-library-convention = { id = "org.convention.kmp.library", version = "unspecified" }
 mifos-android-koin = {id = "mifos.android.koin", version = "unspecified"}
 mifos-kmp-room = { id = "mifos.kmp.room", version = "unspecified" }
+kmp-core-base-library-convention = { id = "org.convention.kmp.core.base.library", version = "unspecified" }
 
 android-application-firebase = { id = "org.convention.android.application.firebase" }
 android-lint = { id = "org.convention.android.application.lint" }

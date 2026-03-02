@@ -12,7 +12,6 @@ package com.mifos.feature.client.clientIdentifiersList
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.mifos.feature.client.clientIdentifiersAddUpdate.Feature
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -21,7 +20,7 @@ data class ClientIdentifiersListRoute(
 )
 
 fun NavGraphBuilder.clientIdentifiersListDestination(
-    addNewClientIdentity: (Int, Feature, String?) -> Unit,
+    addNewClientIdentity: (Int, String, String?) -> Unit,
     onBackPress: () -> Unit,
     navController: NavController,
     onNavigateToSearch: () -> Unit,

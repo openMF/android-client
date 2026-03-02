@@ -34,7 +34,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
@@ -57,13 +56,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.ui.components.MifosProgressIndicator
 import io.github.vinceglb.filekit.PlatformFile
@@ -75,6 +74,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun DocumentDialogScreen(
@@ -254,32 +254,32 @@ private fun DocumentDialogContent(
     Dialog(onDismissRequest = { setShowDialog(false) }) {
         Box(
             modifier = modifier
-                .clip(RoundedCornerShape(16.dp)),
+                .clip(KptTheme.shapes.large),
             contentAlignment = Alignment.Center,
         ) {
             Column(
-                modifier = Modifier.padding(20.dp)
+                modifier = Modifier.padding(DesignToken.padding.largeIncreased)
                     .verticalScroll(rememberScrollState()),
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 16.dp),
+                        .padding(bottom = KptTheme.spacing.md),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = dialogTitle,
-                        fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = KptTheme.typography.titleLarge.fontSize,
+                        color = KptTheme.colorScheme.primary,
                     )
                     Icon(
                         imageVector = MifosIcons.Cancel,
                         contentDescription = "",
                         tint = Color.Gray,
                         modifier = Modifier
-                            .width(30.dp)
-                            .height(30.dp)
+                            .width(DesignToken.spacing.dp30)
+                            .height(DesignToken.spacing.dp30)
                             .clickable { setShowDialog(false) },
                     )
                 }
@@ -322,7 +322,7 @@ private fun DocumentDialogContent(
                     label = { Text(stringResource(Res.string.feature_document_selected_file)) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                        .padding(horizontal = KptTheme.spacing.md),
                     trailingIcon = {
                         if (descriptionError) {
                             Icon(imageVector = MifosIcons.Error, contentDescription = null)
@@ -340,24 +340,22 @@ private fun DocumentDialogContent(
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
                                 text = stringResource(Res.string.feature_document_message_file_required),
-                                color = MaterialTheme.colorScheme.error,
+                                color = KptTheme.colorScheme.error,
                             )
                         }
                     },
                 )
-
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
 
                 Text("Supported formats: xls,xlsx,pdf,doc,docx,png,jpeg,jpg.")
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
 
                 DialogButton(
                     text = stringResource(Res.string.feature_document_browse),
                     onClick = openFilePicker,
                 )
-
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(DesignToken.padding.largeIncreased))
 
                 DialogButton(
                     text = stringResource(Res.string.feature_document_upload),
@@ -382,7 +380,7 @@ private fun DialogButton(
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp),
+            .padding(horizontal = DesignToken.padding.largeIncreased),
     ) {
         Text(text = text)
     }

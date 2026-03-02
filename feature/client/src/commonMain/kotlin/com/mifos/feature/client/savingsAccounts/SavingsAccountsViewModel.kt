@@ -72,6 +72,10 @@ internal class SavingsAccountsViewModel(
                     it.copy(dialogState = null)
                 }
             }
+
+            SavingsAccountAction.AddAccount -> {
+                sendEvent(SavingsAccountEvent.AddAccount(route.clientId))
+            }
         }
     }
 
@@ -134,6 +138,7 @@ sealed interface SavingsAccountEvent {
     data class ApproveAccount(val accountId: Int) : SavingsAccountEvent
     data class ViewAccount(val accountId: Int, val accountType: SavingAccountDepositTypeEntity) :
         SavingsAccountEvent
+    data class AddAccount(val clientId: Int) : SavingsAccountEvent
 }
 
 sealed interface SavingsAccountAction {
@@ -144,7 +149,7 @@ sealed interface SavingsAccountAction {
     data class ApproveAccount(val accountId: Int) : SavingsAccountAction
     data class ViewAccount(val accountId: Int, val accountType: SavingAccountDepositTypeEntity) :
         SavingsAccountAction
-
+    data object AddAccount : SavingsAccountAction
     data class UpdateSearchValue(val query: String) : SavingsAccountAction
     data object OnSearchClick : SavingsAccountAction
     data object CloseDialog : SavingsAccountAction

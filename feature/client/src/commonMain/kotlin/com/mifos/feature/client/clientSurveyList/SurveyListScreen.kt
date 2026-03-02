@@ -19,14 +19,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,14 +32,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.survey.SurveyEntity
@@ -50,6 +46,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 /**
  * Created by Pronay Sarker on 03/07/2024 (6:05 AM)
@@ -132,11 +129,10 @@ private fun SurveyListContent(
     ) {
         Text(
             modifier = Modifier
-                .padding(horizontal = 18.dp)
-                .padding(top = 16.dp, bottom = 8.dp),
+                .padding(horizontal = DesignToken.spacing.dp18)
+                .padding(top = KptTheme.spacing.md, bottom = KptTheme.spacing.sm),
             text = stringResource(Res.string.feature_client_select_one_survey),
-            style = TextStyle(
-                fontSize = 20.sp,
+            style = KptTheme.typography.titleMedium.copy(
                 fontWeight = FontWeight.Normal,
                 fontStyle = FontStyle.Normal,
             ),
@@ -163,14 +159,14 @@ private fun SurveyCardItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp)
-            .padding(bottom = 12.dp),
+            .padding(horizontal = DesignToken.padding.medium)
+            .padding(bottom = DesignToken.padding.medium),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = KptTheme.colorScheme.surface,
         ),
-        elevation = CardDefaults.cardElevation(2.dp),
+        elevation = CardDefaults.cardElevation(DesignToken.elevation.dp2),
         onClick = onCardClicked,
-        shape = RoundedCornerShape(4.dp),
+        shape = KptTheme.shapes.extraSmall,
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -178,23 +174,23 @@ private fun SurveyCardItem(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .size(5.dp)
-                    .background(color = MaterialTheme.colorScheme.primary),
+                    .height(DesignToken.sizes.dp5)
+                    .background(color = KptTheme.colorScheme.primary),
             )
 
             Column(
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
+                modifier = Modifier.padding(horizontal = KptTheme.spacing.sm, vertical = KptTheme.spacing.sm),
             ) {
                 Text(
                     text = surveyName ?: "",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onBackground,
+                    style = KptTheme.typography.bodyLarge,
+                    color = KptTheme.colorScheme.onBackground,
                 )
 
                 Text(
                     text = description ?: "",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = .8f),
+                    style = KptTheme.typography.bodyLarge,
+                    color = KptTheme.colorScheme.onBackground.copy(alpha = .8f),
                 )
             }
         }

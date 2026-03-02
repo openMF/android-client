@@ -12,6 +12,7 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.LoanAccountRepository
+import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.model.LoansPayload
@@ -40,6 +41,13 @@ class LoanAccountRepositoryImp(
 
     override fun createLoansAccount(loansPayload: LoansPayload): Flow<DataState<HttpResponse>> {
         return dataManagerLoan.createLoansAccount(loansPayload)
+            .asDataStateFlow()
+    }
+
+    override fun calculateLoanSchedule(
+        loansPayload: LoansPayload,
+    ): Flow<DataState<RepaymentSchedule>> {
+        return dataManagerLoan.calculateLoanSchedule(loansPayload)
             .asDataStateFlow()
     }
 }

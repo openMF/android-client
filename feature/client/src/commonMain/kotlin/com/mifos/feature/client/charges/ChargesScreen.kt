@@ -50,7 +50,6 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -64,7 +63,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -90,6 +88,7 @@ import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -134,7 +133,7 @@ fun ChargesContent(
             MifosBreadcrumbNavBar(navController)
 
             Column(
-                modifier = Modifier.fillMaxWidth().padding(DesignToken.padding.large),
+                modifier = Modifier.fillMaxWidth().padding(KptTheme.spacing.md),
                 verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
             ) {
                 ChargeAddFields(
@@ -189,7 +188,7 @@ private fun ChargesDialog(
                 successMessage = stringResource(Res.string.feature_client_created_charge_success_message),
                 failureTitle = stringResource(Res.string.feature_client_created_charge_failure_title),
                 failureMessage = state.dialogState.message,
-                modifier = Modifier.fillMaxSize().background(Color.White),
+                modifier = Modifier.fillMaxSize().background(KptTheme.colorScheme.surface),
             )
         }
 
@@ -220,7 +219,7 @@ fun ShowChargeBottomSheet(
                     .heightIn(max = DesignToken.spacing.half),
             ) {
                 Column(
-                    modifier = Modifier.padding(DesignToken.padding.large),
+                    modifier = Modifier.padding(KptTheme.spacing.md),
                     verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
                 ) {
                     Text(
@@ -339,7 +338,7 @@ private fun ChargeAddFields(
         ) {
             Text(
                 text = stringResource(Res.string.feature_client_charges),
-                color = MaterialTheme.colorScheme.primary,
+                color = KptTheme.colorScheme.primary,
                 style = MifosTypography.labelLargeEmphasized,
             )
             Spacer(modifier = Modifier.height(DesignToken.padding.medium))
@@ -424,13 +423,13 @@ private fun ChargeAddFields(
                         Icon(
                             imageVector = MifosIcons.Add,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
+                            tint = KptTheme.colorScheme.primary,
                             modifier = Modifier.size(DesignToken.sizes.iconSmall),
                         )
 
                         Text(
                             text = stringResource(Res.string.add_charge_title),
-                            color = MaterialTheme.colorScheme.primary,
+                            color = KptTheme.colorScheme.primary,
                             style = MifosTypography.labelLargeEmphasized,
                         )
                     }

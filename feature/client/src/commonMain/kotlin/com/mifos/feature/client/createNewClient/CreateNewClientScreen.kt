@@ -75,7 +75,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -86,7 +85,6 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
@@ -114,12 +112,14 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.rememberAsyncImagePainter
+import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.common.utils.formatDate
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.clients.Address
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.feature.client.utils.PhoneNumberUtil
@@ -133,7 +133,6 @@ import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
-import io.github.vinceglb.filekit.path
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -143,6 +142,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -354,14 +354,16 @@ private fun CreateNewClientContent(
         type = FileKitType.Image,
     ) { file ->
         file?.let {
-            selectedImagePath = file.path
+//            TODO: path not support in kmp all targets
+//            selectedImagePath = file.path
             onImageSelected(file)
         }
     }
 
     val cameraLauncher = rememberPlatformCameraLauncher { file ->
         file?.let {
-            selectedImagePath = file.path
+//            TODO: path not support in kmp all targets
+//            selectedImagePath = file.path
             onImageSelected(file)
         }
     }
@@ -483,7 +485,7 @@ private fun CreateNewClientContent(
             onExternalIdChange = { externalId = it },
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         clientTemplate.genderOptions?.let { list ->
             MifosTextFieldDropdown(
@@ -499,7 +501,7 @@ private fun CreateNewClientContent(
             )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosDatePickerTextField(
             value = DateHelper.getDateAsStringFromLong(dateOfBirth),
@@ -507,7 +509,7 @@ private fun CreateNewClientContent(
             openDatePicker = { showDateOfBirthDatepicker = !showDateOfBirthDatepicker },
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         clientTemplate.clientTypeOptions?.let { list ->
             MifosTextFieldDropdown(
@@ -523,7 +525,7 @@ private fun CreateNewClientContent(
             )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
         clientTemplate.clientClassificationOptions?.let { list ->
             MifosTextFieldDropdown(
                 value = clientClassification,
@@ -539,7 +541,7 @@ private fun CreateNewClientContent(
             )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosTextFieldDropdown(
             value = selectedOffice,
@@ -559,7 +561,7 @@ private fun CreateNewClientContent(
             readOnly = true,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosTextFieldDropdown(
             value = staff,
@@ -574,7 +576,7 @@ private fun CreateNewClientContent(
             enabled = staffInOffices.isNotEmpty(),
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -598,7 +600,7 @@ private fun CreateNewClientContent(
             ),
             exit = slideOutVertically() + shrinkVertically() + fadeOut(),
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
             MifosDatePickerTextField(
                 value = DateHelper.getDateAsStringFromLong(activationDate),
@@ -612,14 +614,14 @@ private fun CreateNewClientContent(
             val sortedCountryOptions = addressTemplate.countryIdOptions.sortedBy { it.name }
             val sortedStateOptions = addressTemplate.stateProvinceIdOptions.sortedBy { it.name }
 
-            HorizontalDivider(modifier = Modifier.padding(16.dp))
+            HorizontalDivider(modifier = Modifier.padding(KptTheme.spacing.md))
 
             Text(
                 stringResource(Res.string.feature_client_address),
-                Modifier.padding(horizontal = 16.dp),
+                Modifier.padding(horizontal = KptTheme.spacing.md),
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
             AddressInputTextFields(
                 addressLine1 = addressLine1,
@@ -659,13 +661,13 @@ private fun CreateNewClientContent(
                 onAddressActiveChange = { isAddressActive = it },
             )
         }
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .heightIn(46.dp),
+                .padding(horizontal = KptTheme.spacing.md)
+                .heightIn(DesignToken.spacing.dp46),
             onClick = {
                 val clientNames = Name(firstName, lastName, middleName)
                 handleSubmitClick(
@@ -825,9 +827,6 @@ private fun createClientPayload(
     countryId: Int,
     postalCode: String,
 ): ClientPayloadEntity {
-    val dateFormat = "dd MMMM yyyy"
-    val locale = "en"
-
     var clientPayload = ClientPayloadEntity(
         // Mandatory fields
         firstname = firstName,
@@ -839,8 +838,8 @@ private fun createClientPayload(
         active = isActive,
         activationDate = formatDate(activationDate),
         dateOfBirth = formatDate(dateOfBirth),
-        dateFormat = dateFormat,
-        locale = locale,
+        dateFormat = ApiDateFormatter.DATE_FORMAT,
+        locale = ApiDateFormatter.LOCALE,
     )
     if (isAddressEnabled) {
         val address = Address(
@@ -896,7 +895,7 @@ private fun ClientInputTextFields(
     onExternalIdChange: (String) -> Unit,
 ) {
     Column {
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosOutlinedTextField(
             value = firstName,
@@ -905,7 +904,7 @@ private fun ClientInputTextFields(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosOutlinedTextField(
             value = middleName,
@@ -914,7 +913,7 @@ private fun ClientInputTextFields(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosOutlinedTextField(
             value = lastName,
@@ -933,7 +932,7 @@ private fun ClientInputTextFields(
             keyboardType = KeyboardType.Number,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosOutlinedTextField(
             value = externalId,
@@ -942,7 +941,7 @@ private fun ClientInputTextFields(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
     }
 }
 
@@ -951,7 +950,7 @@ private fun ClientImageSection(selectedImagePath: String?, onImageClick: () -> U
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 16.dp),
+            .padding(vertical = KptTheme.spacing.md),
     ) {
         Image(
             painter = if (selectedImagePath != null) {
@@ -964,11 +963,11 @@ private fun ClientImageSection(selectedImagePath: String?, onImageClick: () -> U
                 .align(Alignment.Center)
                 .clickable { onImageClick() }
                 .border(
-                    color = MaterialTheme.colorScheme.outline,
-                    width = 2.dp,
+                    color = KptTheme.colorScheme.outline,
+                    width = DesignToken.strokes.dp2,
                     shape = CircleShape,
                 )
-                .size(80.dp)
+                .size(DesignToken.sizes.dp80)
                 .clip(CircleShape),
         )
     }
@@ -989,53 +988,53 @@ private fun MifosSelectImageDialog(
         ),
     ) {
         Card(
-            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface),
-            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(KptTheme.colorScheme.surface),
+            shape = DesignToken.shapes.largeIncreased,
         ) {
             Column(
                 modifier = Modifier
-                    .padding(30.dp),
+                    .padding(DesignToken.padding.dp30),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = stringResource(Res.string.feature_client_please_select_action),
                     modifier = Modifier.fillMaxWidth(),
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = KptTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
                 )
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(DesignToken.spacing.largeIncreased))
 
                 Button(
                     onClick = { takeImage() },
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),
+                    colors = ButtonDefaults.buttonColors(KptTheme.colorScheme.secondary),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_client_take_a_photo),
                         modifier = Modifier.fillMaxWidth(),
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = KptTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center,
                     )
                 }
                 Button(
                     onClick = { uploadImage() },
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),
+                    colors = ButtonDefaults.buttonColors(KptTheme.colorScheme.secondary),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_client_upload_photo),
                         modifier = Modifier.fillMaxWidth(),
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = KptTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center,
                     )
                 }
                 Button(
                     onClick = { removeImage() },
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary),
+                    colors = ButtonDefaults.buttonColors(KptTheme.colorScheme.secondary),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_client_remove_existing_photo),
                         modifier = Modifier.fillMaxWidth(),
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = KptTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -1081,7 +1080,7 @@ private fun AddressInputTextFields(
             readOnly = true,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosOutlinedTextField(
             value = addressLine1,
@@ -1090,7 +1089,7 @@ private fun AddressInputTextFields(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosOutlinedTextField(
             value = addressLine2,
@@ -1099,7 +1098,7 @@ private fun AddressInputTextFields(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosOutlinedTextField(
             value = addressLine3,
@@ -1108,7 +1107,7 @@ private fun AddressInputTextFields(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosOutlinedTextField(
             value = city,
@@ -1117,7 +1116,7 @@ private fun AddressInputTextFields(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosOutlinedTextField(
             value = postalCode,
@@ -1127,7 +1126,7 @@ private fun AddressInputTextFields(
             keyboardType = KeyboardType.Number,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosTextFieldDropdown(
             value = selectedStateName,
@@ -1138,7 +1137,7 @@ private fun AddressInputTextFields(
             readOnly = true,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosTextFieldDropdown(
             value = selectedCountryName,
@@ -1149,7 +1148,7 @@ private fun AddressInputTextFields(
             readOnly = true,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         Row(
             modifier = Modifier.fillMaxWidth(),

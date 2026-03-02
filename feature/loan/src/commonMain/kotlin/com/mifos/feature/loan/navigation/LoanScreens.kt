@@ -19,7 +19,7 @@ sealed class LoanScreens(val route: String) {
     data object LoanApprovalScreen : LoanScreens("loan_approval_screen/{arg}") {
         fun argument(loanAccountNumber: Int, loanWithAssociations: LoanWithAssociationsEntity): String {
             val arg = LoanApprovalData(loanAccountNumber, loanWithAssociations)
-            val loanApprovalDataInJson = Json.encodeToString(arg)
+            val loanApprovalDataInJson = Json.encodeToString(LoanApprovalData.serializer(), arg)
 
             return "loan_approval_screen/$loanApprovalDataInJson"
         }

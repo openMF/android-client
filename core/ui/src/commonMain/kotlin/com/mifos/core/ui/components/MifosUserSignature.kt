@@ -15,20 +15,19 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.dp
 import coil3.ImageLoader
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosUserSignatureImage(
@@ -41,13 +40,13 @@ fun MifosUserSignatureImage(
     Box(
         modifier = modifier
             .background(
-                color = MaterialTheme.colorScheme.surfaceVariant,
+                color = KptTheme.colorScheme.surfaceVariant,
                 shape = DesignToken.shapes.medium,
             )
-            .size(width = 256.dp, height = 128.dp)
+            .size(width = DesignToken.sizes.imageDp256, height = DesignToken.sizes.imageDp128)
             .border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.primary,
+                width = DesignToken.strokes.thin,
+                color = KptTheme.colorScheme.primary,
                 shape = DesignToken.shapes.medium,
             ),
         contentAlignment = Alignment.Center,
@@ -66,8 +65,8 @@ fun MifosUserSignatureImage(
         } else {
             Text(
                 text = emptyMessage,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.secondary,
+                style = KptTheme.typography.bodySmall,
+                color = KptTheme.colorScheme.secondary,
             )
         }
     }
