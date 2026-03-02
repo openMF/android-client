@@ -24,6 +24,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.ui)
             implementation(projects.core.domain)
+            implementation(projects.core.ui)
             implementation(libs.kotlinx.serialization.json)
             implementation(compose.components.uiToolingPreview)
 
