@@ -382,8 +382,8 @@
 
     <!-- Upload Options -->
     <string name="choose_from_option">Choose from option</string>
-    <string name="from_camera">From Camera</string>
-    <string name="from_gallery">From Gallery</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
 
     <string name="string_not_available">N/A</string>
     <string name="name_na">Name: N/A</string>
