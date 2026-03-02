@@ -14,6 +14,7 @@ import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRequest
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferResponse
+import com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplate
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.LoansPayload
@@ -318,7 +319,7 @@ class DataManagerLoan(
         toOfficeId: Int? = null,
         toClientId: Int? = null,
         toAccountType: Int? = null,
-    ): Flow<com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplate> {
+    ): Flow<AccountTransferTemplate> {
         return mBaseApiManager.loanService.getAccountTransferTemplate(
             fromOfficeId = fromOfficeId,
             fromClientId = fromClientId,
