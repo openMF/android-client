@@ -12,6 +12,7 @@ package com.mifos.feature.client.recurringDepositAccount
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.navigateToRecurringAccountRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -34,6 +35,9 @@ fun NavGraphBuilder.clientRecurringDepositAccountDestination(
             },
             onViewAccount = {
                 onViewAccount(it)
+            },
+            createAccount = { clientId ->
+                navController.navigateToRecurringAccountRoute(clientId)
             },
         )
     }
