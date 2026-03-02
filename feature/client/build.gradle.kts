@@ -38,6 +38,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.paging.common)
+            implementation(libs.androidx.paging.compose)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.coil.kt.compose)
             implementation(libs.coil.network.ktor)
@@ -55,7 +56,6 @@ kotlin {
             implementation(libs.accompanist.permission)
             implementation(libs.ktor.client.android)
 
-            implementation(libs.androidx.paging.compose)
             implementation(libs.coil.network.okhttp)
             implementation(libs.play.services.location)
             implementation(libs.kotlinx.coroutines.play.services)
