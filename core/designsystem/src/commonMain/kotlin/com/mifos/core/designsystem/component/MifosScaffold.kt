@@ -22,7 +22,6 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.SnackbarHost
@@ -41,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
+import template.core.base.designsystem.theme.KptTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -115,8 +115,8 @@ fun MifosScaffold(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     pullToRefreshState: MifosPullToRefreshState = rememberMifosPullToRefreshState(),
     floatingActionButtonPosition: FabPosition = FabPosition.End,
-    containerColor: Color = MaterialTheme.colorScheme.surface.copy(alpha = 0f),
-    contentColor: Color = MaterialTheme.colorScheme.onSurface,
+    containerColor: Color = KptTheme.colorScheme.surface.copy(alpha = 0f),
+    contentColor: Color = KptTheme.colorScheme.onSurface,
     contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,
     content: @Composable (PaddingValues) -> Unit,
 ) {
@@ -174,7 +174,7 @@ private fun MifosDetailTopBar(
                 text = title,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.titleMedium,
+                style = KptTheme.typography.titleMedium,
             )
         },
         navigationIcon = {
@@ -188,9 +188,9 @@ private fun MifosDetailTopBar(
         actions = actions,
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = AppColors.customWhite,
-            titleContentColor = MaterialTheme.colorScheme.onSurface,
-            navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
-            actionIconContentColor = MaterialTheme.colorScheme.onSurface,
+            titleContentColor = KptTheme.colorScheme.onSurface,
+            navigationIconContentColor = KptTheme.colorScheme.onSurface,
+            actionIconContentColor = KptTheme.colorScheme.onSurface,
         ),
     )
 }

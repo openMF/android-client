@@ -9,11 +9,11 @@
  */
 package com.mifos.core.ui.components
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.util.TextUtil
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun PrintTextUtil(
@@ -21,7 +21,7 @@ fun PrintTextUtil(
 ) {
     Text(
         text = item.text,
-        color = item.color ?: MaterialTheme.colorScheme.onSurface,
+        color = item.color ?: KptTheme.colorScheme.onSurface,
         style = item.style ?: MifosTypography.bodySmall,
     )
 }

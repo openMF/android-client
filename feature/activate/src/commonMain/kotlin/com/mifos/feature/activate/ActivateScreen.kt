@@ -30,7 +30,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -42,7 +41,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.Constants
@@ -52,6 +50,7 @@ import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosProgressIndicator
@@ -60,6 +59,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -189,7 +189,7 @@ private fun ActivateContent(
             },
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosButton(
             onClick = {
@@ -203,13 +203,13 @@ private fun ActivateContent(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(44.dp)
-                .padding(start = 16.dp, end = 16.dp),
+                .heightIn(DesignToken.spacing.dp44)
+                .padding(horizontal = KptTheme.spacing.md),
             contentPadding = PaddingValues(),
         ) {
             Text(
                 text = stringResource(Res.string.feature_activate),
-                style = MaterialTheme.typography.bodySmall,
+                style = KptTheme.typography.bodySmall,
             )
         }
     }

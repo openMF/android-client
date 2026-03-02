@@ -32,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosSweetError
-import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.designsystem.utils.onClick
 import com.mifos.core.ui.components.Actions
@@ -44,6 +43,7 @@ import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun ShareAccountsScreen(
@@ -92,14 +92,13 @@ internal fun ShareAccountsContent(
             false -> {
                 Column(
                     modifier = Modifier.fillMaxSize()
-                        .padding(horizontal = DesignToken.padding.large),
+                        .padding(horizontal = KptTheme.spacing.md),
                 ) {
                     ShareAccountHeader(
                         totalItem = state.accounts.size.toString(),
                         onAction = onAction,
                     )
-
-                    Spacer(modifier = Modifier.height(DesignToken.padding.large))
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
                     if (state.accounts.isNotEmpty()) {
                         val emptyText = stringResource(Res.string.string_not_available)
@@ -135,8 +134,7 @@ internal fun ShareAccountsContent(
                                             )
                                         },
                                     )
-
-                                    Spacer(Modifier.height(DesignToken.padding.small))
+                                    Spacer(Modifier.height(KptTheme.spacing.sm))
                                 }
                             }
                         }

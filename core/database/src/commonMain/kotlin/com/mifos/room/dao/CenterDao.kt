@@ -39,7 +39,7 @@ interface CenterDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE, entity = CenterPayloadEntity::class)
     suspend fun saveCenterPayload(centerPayload: CenterPayloadEntity)
 
-    @Update(entity = CenterPayloadEntity::class)
+    @Update(entity = CenterPayloadEntity::class, onConflict = OnConflictStrategy.NONE)
     suspend fun updateCenterPayload(centerPayload: CenterPayloadEntity)
 
     @Query("DELETE FROM CenterPayload WHERE id = :id")

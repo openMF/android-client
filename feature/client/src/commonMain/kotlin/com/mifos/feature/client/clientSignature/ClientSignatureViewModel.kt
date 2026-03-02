@@ -28,10 +28,11 @@ import com.mifos.core.domain.useCases.RemoveDocumentUseCase
 import com.mifos.core.domain.useCases.UpdateSignatureUseCase
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.multipartRequestBody
-import com.mifos.feature.client.utils.toPlatformFile
 import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.ImageFormat
 import io.github.vinceglb.filekit.dialogs.FileKitMode
 import io.github.vinceglb.filekit.dialogs.FileKitType
+import io.github.vinceglb.filekit.dialogs.compose.util.encodeToByteArray
 import io.github.vinceglb.filekit.dialogs.compose.util.toImageBitmap
 import io.github.vinceglb.filekit.dialogs.openFilePicker
 import io.ktor.client.statement.readRawBytes
@@ -97,9 +98,10 @@ class ClientSignatureViewModel(
             Constants.CLIENTS,
             route.clientId,
             multipartRequestBody(
-                file.toPlatformFile(route.accountNo),
-                Signature.NAME,
-                Signature.DESCRIPTION,
+                file = file.encodeToByteArray(ImageFormat.PNG),
+                name = NAME,
+                extension = ImageFormat.PNG.name,
+                description = DESCRIPTION,
             ),
         ).collect { state ->
             when (state) {
@@ -138,9 +140,10 @@ class ClientSignatureViewModel(
                 route.clientId,
                 signatureId,
                 multipartRequestBody(
-                    file.toPlatformFile(route.accountNo),
-                    Signature.NAME,
-                    Signature.DESCRIPTION,
+                    file = file.encodeToByteArray(ImageFormat.PNG),
+                    name = NAME,
+                    extension = ImageFormat.PNG.name,
+                    description = DESCRIPTION,
                 ),
             ).collect { dataState ->
                 when (dataState) {
@@ -248,7 +251,7 @@ class ClientSignatureViewModel(
 
                     is DataState.Success -> {
                         val signatureId =
-                            dataState.data.firstOrNull { it.name == Signature.NAME }?.id
+                            dataState.data.firstOrNull { it.name == NAME }?.id
 
                         mutableStateFlow.update {
                             it.copy(

@@ -27,7 +27,6 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -55,13 +54,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosOutlinedTextField(
@@ -87,7 +86,7 @@ fun MifosOutlinedTextField(
         },
         modifier = modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp),
+            .padding(start = KptTheme.spacing.md, end = KptTheme.spacing.md),
         leadingIcon = if (icon != null) {
             {
                 Icon(
@@ -112,13 +111,13 @@ fun MifosOutlinedTextField(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = error,
-                    color = MaterialTheme.colorScheme.error,
+                    color = KptTheme.colorScheme.error,
                 )
             }
         },
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
-            unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+            focusedBorderColor = KptTheme.colorScheme.secondaryContainer,
+            unfocusedBorderColor = KptTheme.colorScheme.secondaryContainer,
         ),
     )
 }
@@ -156,8 +155,8 @@ fun MifosOutlinedTextField(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     shape: Shape = OutlinedTextFieldDefaults.shape,
     colors: TextFieldColors = OutlinedTextFieldDefaults.colors(
-        focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
-        unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+        focusedBorderColor = KptTheme.colorScheme.secondaryContainer,
+        unfocusedBorderColor = KptTheme.colorScheme.secondaryContainer,
     ),
 ) {
     val isFocused by interactionSource.collectIsFocusedAsState()
@@ -174,7 +173,7 @@ fun MifosOutlinedTextField(
         label = {
             Text(
                 text = label,
-                style = MaterialTheme.typography.bodySmall,
+                style = KptTheme.typography.bodySmall,
                 maxLines = maxLines,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -212,15 +211,15 @@ fun MifosOutlinedTextField(
                 Text(
                     modifier = Modifier.testTag(errorTextTag),
                     text = errorText,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.error,
+                    style = KptTheme.typography.labelSmall,
+                    color = KptTheme.colorScheme.error,
                 )
             } else if (message != null) {
                 Text(
                     modifier = Modifier.testTag(errorTextTag),
                     text = message,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.error,
+                    style = KptTheme.typography.labelSmall,
+                    color = KptTheme.colorScheme.error,
                 )
             }
         },
@@ -260,8 +259,8 @@ fun MifosOutlinedTextField(
 ) {
     OutlinedTextField(
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
-            unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+            focusedBorderColor = KptTheme.colorScheme.secondaryContainer,
+            unfocusedBorderColor = KptTheme.colorScheme.secondaryContainer,
         ),
         value = value,
         onValueChange = onValueChange,
@@ -284,8 +283,8 @@ fun MifosOutlinedTextField(
         maxLines = maxLines,
         singleLine = singleLine,
         textStyle = TextStyle(
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+            color = KptTheme.colorScheme.onSurfaceVariant,
+            fontSize = KptTheme.typography.bodyLarge.fontSize,
             lineHeight = 24.sp,
             letterSpacing = 0.5f.sp,
             fontWeight = FontWeight.Normal,
@@ -298,7 +297,7 @@ fun MifosOutlinedTextField(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = error,
-                    color = MaterialTheme.colorScheme.error,
+                    color = KptTheme.colorScheme.error,
                 )
             }
         } else {
@@ -325,7 +324,7 @@ private fun PasswordToggleIcon(
             } else {
                 Icons.Filled.Visibility
             },
-            tint = MaterialTheme.colorScheme.secondary,
+            tint = KptTheme.colorScheme.secondary,
             contentDescription = if (isPasswordVisible) {
                 "VisibilityOff"
             } else {
@@ -374,8 +373,8 @@ fun MifosDatePickerTextField(
     OutlinedTextField(
         enabled = enabled,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
-            unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+            focusedBorderColor = KptTheme.colorScheme.secondaryContainer,
+            unfocusedBorderColor = KptTheme.colorScheme.secondaryContainer,
         ),
         value = value,
         onValueChange = { },
@@ -386,8 +385,8 @@ fun MifosDatePickerTextField(
         maxLines = 1,
         textStyle = LocalDensity.current.run {
             TextStyle(
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                color = KptTheme.colorScheme.onSurfaceVariant,
+                fontSize = KptTheme.typography.bodyLarge.fontSize,
                 lineHeight = 24.sp,
                 letterSpacing = 0.5f.sp,
                 fontWeight = FontWeight.Normal,
@@ -404,8 +403,8 @@ fun MifosDatePickerTextField(
             {
                 Text(
                     text = it,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.error,
+                    style = KptTheme.typography.bodySmall,
+                    color = KptTheme.colorScheme.error,
                 )
             }
         },
@@ -420,9 +419,9 @@ fun MifosOutlinedTextField(
     modifier: Modifier = Modifier,
     shape: Shape = DesignToken.shapes.medium,
     colors: TextFieldColors = OutlinedTextFieldDefaults.colors(
-        focusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
-        unfocusedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
-        errorBorderColor = MaterialTheme.colorScheme.error,
+        focusedBorderColor = KptTheme.colorScheme.secondaryContainer,
+        unfocusedBorderColor = KptTheme.colorScheme.secondaryContainer,
+        errorBorderColor = KptTheme.colorScheme.error,
     ),
     textStyle: TextStyle = MifosTypography.bodyLarge,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
@@ -479,7 +478,7 @@ fun MifosOutlinedTextField(
                     modifier = Modifier.testTag("errorTag"),
                     text = it,
                     style = MifosTypography.bodySmall,
-                    color = MaterialTheme.colorScheme.error,
+                    color = KptTheme.colorScheme.error,
                 )
             }
         },

@@ -51,6 +51,7 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountAction
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountState
 import org.jetbrains.compose.resources.stringResource
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun InterestPage(
@@ -58,7 +59,7 @@ fun InterestPage(
     modifier: Modifier = Modifier,
     onAction: (RecurringAccountAction) -> Unit,
 ) {
-    Column(Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
+    Column(Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -66,7 +67,7 @@ fun InterestPage(
                 text = stringResource(Res.string.feature_recurring_deposit_step_interest),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
 
             MifosDefaultListingComponentFromStringResources(
                 data = mapOf(
@@ -90,10 +91,10 @@ fun InterestPage(
                         stringResource(Res.string.feature_recurring_deposit_no)
                     },
                 ),
-                verticalArrangement = Arrangement.spacedBy(DesignToken.padding.small),
+                verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
             )
 
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
 
             MifosRowWithTextAndButton(
                 onBtnClick = {
@@ -109,7 +110,7 @@ fun InterestPage(
                 },
                 btnEnabled = state.isRateChartEmpty,
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
         }
 
         MifosTwoButtonRow(
@@ -132,7 +133,7 @@ fun RateChart(
         },
         content = {
             Column(
-                modifier = Modifier.fillMaxWidth().padding(DesignToken.padding.large),
+                modifier = Modifier.fillMaxWidth().padding(KptTheme.spacing.md),
                 verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
             ) {
                 Text(

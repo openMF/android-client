@@ -18,16 +18,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosAndroidClientIcon(imageVector: Painter, modifier: Modifier = Modifier) {
     Image(
         painter = imageVector,
         contentDescription = null,
-        modifier = modifier.then(Modifier.size(200.dp, 100.dp)),
+        modifier = modifier.then(Modifier.size(DesignToken.sizes.imageDp200, DesignToken.sizes.imageDp100)),
     )
 }
 
@@ -37,7 +38,7 @@ private fun MifosAndroidClientIconPreview() {
     MifosTheme {
         MifosAndroidClientIcon(
             imageVector = rememberVectorPainter(Icons.Default.Android),
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(KptTheme.spacing.md),
         )
     }
 }

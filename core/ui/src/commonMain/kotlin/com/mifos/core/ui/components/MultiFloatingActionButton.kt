@@ -27,8 +27,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
@@ -67,7 +67,7 @@ fun FabItem(
 ) {
     FloatingActionButton(
         onClick = { onFabClick(fabButton.fabType) },
-        modifier = modifier.size(48.dp),
+        modifier = modifier.size(DesignToken.sizes.imageDp48),
     ) {
         when (fabButton) {
             is FabButton.DrawableFab -> Icon(
@@ -108,7 +108,7 @@ fun MultiFloatingActionButton(
             enter = fadeIn() + expandVertically(),
             exit = fadeOut() + shrinkVertically(),
         ) {
-            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.large)) {
                 fabButtons.forEach {
                     FabItem(
                         fabButton = it,

@@ -33,6 +33,9 @@ import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.coroutines.delay
+import io.github.vinceglb.filekit.extension
+import io.github.vinceglb.filekit.name
+import io.github.vinceglb.filekit.readBytes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -178,7 +181,11 @@ class CreateNewClientViewModel(
         viewModelScope.launch {
             try {
                 val compressedImage = compressImage(selectedImage.value!!, id.toString())
-                val requestFile = multipartRequestBody(compressedImage)
+                val requestFile = multipartRequestBody(
+                    file = compressedImage.readBytes(),
+                    name = compressedImage.name,
+                    extension = compressedImage.extension,
+                )
 
                 repository.uploadClientImage(id, requestFile)
 

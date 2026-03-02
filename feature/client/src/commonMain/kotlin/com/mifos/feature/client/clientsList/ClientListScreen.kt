@@ -30,7 +30,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SheetState
@@ -62,6 +61,7 @@ import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -121,7 +121,7 @@ private fun ClientActions(
     toggleFilterVisibility: () -> Unit,
 ) {
     Row(
-        modifier = modifier.fillMaxWidth().padding(DesignToken.padding.large),
+        modifier = modifier.fillMaxWidth().padding(KptTheme.spacing.md),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -134,17 +134,17 @@ private fun ClientActions(
                     modifier = Modifier.clickable {
                         onAction(ClientListAction.NavigateToCreateClient)
                     },
-                    horizontalArrangement = Arrangement.spacedBy(DesignToken.padding.small),
+                    horizontalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
                 ) {
                     Text(
                         text = "Clients",
                         style = MifosTypography.titleMediumEmphasized,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = KptTheme.colorScheme.primary,
                     )
                     Icon(
                         imageVector = MifosIcons.Add,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = KptTheme.colorScheme.primary,
                         modifier = Modifier
                             .size(DesignToken.sizes.iconAverage),
                     )
@@ -214,7 +214,7 @@ private fun ClientListContentScreen(
                     onClientClick = { clientId ->
                         onAction(ClientListAction.OnClientClick(clientId))
                     },
-                    modifier = Modifier.padding(DesignToken.padding.large),
+                    modifier = Modifier.padding(KptTheme.spacing.md),
                     fetchImage = {
                         onAction(ClientListAction.FetchImage(it))
                     },
@@ -282,12 +282,12 @@ fun ClientItem(client: ClientEntity, byteArray: ByteArray?, onClientClick: (Int)
                     (client.accountNo ?: stringResource(Res.string.string_not_available)),
                 ),
                 style = MifosTypography.bodySmall,
-                color = MaterialTheme.colorScheme.secondary,
+                color = KptTheme.colorScheme.secondary,
             ),
             TextUtil(
                 text = client.officeName ?: stringResource(Res.string.string_not_available),
                 style = MifosTypography.bodySmall,
-                color = MaterialTheme.colorScheme.secondary,
+                color = KptTheme.colorScheme.secondary,
             ),
         ),
         rightValues = buildList {
@@ -299,7 +299,7 @@ fun ClientItem(client: ClientEntity, byteArray: ByteArray?, onClientClick: (Int)
                         color = when (status) {
                             "Active" -> AppColors.customEnable
                             "Pending" -> AppColors.customYellow
-                            else -> MaterialTheme.colorScheme.error
+                            else -> KptTheme.colorScheme.error
                         },
                     ),
                 )
@@ -310,7 +310,7 @@ fun ClientItem(client: ClientEntity, byteArray: ByteArray?, onClientClick: (Int)
                     TextUtil(
                         text = externalId,
                         style = MifosTypography.labelSmall,
-                        color = MaterialTheme.colorScheme.secondary,
+                        color = KptTheme.colorScheme.secondary,
                     ),
                 )
             }
@@ -319,7 +319,7 @@ fun ClientItem(client: ClientEntity, byteArray: ByteArray?, onClientClick: (Int)
             .clickable {
                 onClientClick(client.id)
             }
-            .padding(DesignToken.padding.large),
+            .padding(KptTheme.spacing.md),
     )
 }
 
@@ -373,24 +373,24 @@ fun FilterBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
         dragHandle = null,
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = KptTheme.colorScheme.background,
     ) {
         val sortTypes = listOf(SortTypes.NAME, SortTypes.ACCOUNT_NUMBER, SortTypes.EXTERNAL_ID)
         val statusTypes = listOf("Active", "Pending", "Closed")
 
         Column(
-            modifier = Modifier.padding(15.dp),
+            modifier = Modifier.padding(DesignToken.padding.dp15),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
-                    .padding(10.dp),
+                    .padding(DesignToken.padding.dp10),
             ) {
                 Text(
                     text = "Filters",
                     style = MifosTypography.titleLargeEmphasized,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = KptTheme.colorScheme.primary,
                 )
                 Row {
                     IconButton(
@@ -416,7 +416,7 @@ fun FilterBottomSheet(
             }
             HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.5.dp)
             Column(
-                modifier = Modifier.padding(10.dp),
+                modifier = Modifier.padding(DesignToken.padding.dp10),
             ) {
                 var isExpanded by remember { mutableStateOf(false) }
                 Row(
@@ -451,7 +451,7 @@ fun FilterBottomSheet(
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
-                                Spacer(modifier = Modifier.width(10.dp))
+                                Spacer(modifier = Modifier.width(DesignToken.spacing.dp10))
                                 RadioButton(
                                     selected = isSelected,
                                     onClick = {
@@ -466,7 +466,7 @@ fun FilterBottomSheet(
             }
             HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.5.dp)
             Column(
-                modifier = Modifier.padding(10.dp),
+                modifier = Modifier.padding(DesignToken.padding.dp10),
             ) {
                 var isExpanded by remember { mutableStateOf(false) }
                 Row(
@@ -501,7 +501,7 @@ fun FilterBottomSheet(
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
-                                Spacer(modifier = Modifier.width(10.dp))
+                                Spacer(modifier = Modifier.width(DesignToken.spacing.dp10))
                                 Checkbox(
                                     checked = isChecked,
                                     onCheckedChange = { handleFilterClick(status, FilterType.STATUS) },
@@ -515,7 +515,7 @@ fun FilterBottomSheet(
             HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.5.dp)
 
             Column(
-                modifier = Modifier.padding(10.dp),
+                modifier = Modifier.padding(DesignToken.spacing.dp10),
             ) {
                 var isExpanded by remember { mutableStateOf(false) }
                 Row(
@@ -552,7 +552,7 @@ fun FilterBottomSheet(
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
-                                    Spacer(modifier = Modifier.width(10.dp))
+                                    Spacer(modifier = Modifier.width(DesignToken.spacing.dp10))
                                     Checkbox(
                                         checked = isChecked,
                                         onCheckedChange = { handleFilterClick(name, FilterType.OFFICE) },

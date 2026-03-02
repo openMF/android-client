@@ -9,11 +9,9 @@
  */
 package com.mifos.core.network
 
-import com.mifos.core.model.objects.clients.ChargeCreationResponse
 import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.model.objects.databaseobjects.CollectionSheet
 import com.mifos.core.model.objects.databaseobjects.OfflineCenter
-import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
@@ -28,7 +26,6 @@ import com.mifos.room.entities.group.GroupEntity
 import com.mifos.room.entities.group.GroupWithAssociations
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
-import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -86,17 +83,6 @@ class DataManager : KoinComponent {
             officeId,
             staffId,
         )
-    }
-
-    suspend fun getAllChargesV3(loanId: Int): HttpResponse {
-        return mBaseApiManager.chargeService.getAllChargeV3(loanId)
-    }
-
-    suspend fun createLoanCharges(
-        loanId: Int,
-        chargesPayload: ChargesPayload,
-    ): ChargeCreationResponse {
-        return mBaseApiManager.chargeService.createLoanCharges(loanId, chargesPayload)
     }
 
     /**

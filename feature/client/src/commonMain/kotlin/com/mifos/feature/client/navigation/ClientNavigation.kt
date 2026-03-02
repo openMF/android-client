@@ -94,6 +94,7 @@ import com.mifos.feature.document.navigation.documentListScreen
 import com.mifos.feature.document.navigation.navigateToDocumentListScreen
 import com.mifos.feature.groups.navigation.navigateToGroupDetailsScreen
 import com.mifos.feature.loan.loanAccount.navigateToLoanAccountScreen
+import com.mifos.feature.loan.loanAccountProfile.navigateToLoanAccountProfileScreen
 import com.mifos.feature.loan.loanAccountSummary.navigateToLoanAccountSummaryScreen
 import com.mifos.feature.loan.navigation.loanDestination
 import com.mifos.feature.loan.newLoanAccount.navigateToNewLoanAccountRoute
@@ -122,7 +123,7 @@ fun NavGraphBuilder.clientNavGraph(
     onMoreInfoClicked: (String, Int) -> Unit,
     activateClient: (Int) -> Unit,
     hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidgetDTO>>, Unit>,
-    onNavigateToSearch: (RecordType) -> Unit,
+    onNavigateToSearch: (String) -> Unit,
 ) {
     navigation<ClientNavGraph>(
         startDestination = ClientListScreenRoute,
@@ -209,7 +210,7 @@ fun NavGraphBuilder.clientNavGraph(
             navigateToAddAddressForm = navController::navigateToClientAddAddressRoute,
             navController = navController,
             onNavigateToSearch = {
-                onNavigateToSearch(RecordType.ADDRESS)
+                onNavigateToSearch(RecordType.ADDRESS.name)
             },
         )
 
@@ -333,7 +334,7 @@ fun NavGraphBuilder.clientNavGraph(
         )
         clientLoanAccountsDestination(
             navigateBack = navController::popBackStack,
-            navigateToViewAccount = navController::navigateToLoanAccountSummaryScreen,
+            navigateToViewAccount = navController::navigateToLoanAccountProfileScreen,
             navigateToMakeRepayment = {},
             navController = navController,
         )
@@ -342,7 +343,7 @@ fun NavGraphBuilder.clientNavGraph(
             onBackPress = navController::popBackStack,
             navController = navController,
             onNavigateToSearch = {
-                onNavigateToSearch(RecordType.IDENTIFIER)
+                onNavigateToSearch(RecordType.IDENTIFIER.name)
             },
         )
         clientApplyNewApplicationRoute(
@@ -538,7 +539,7 @@ fun NavController.navigateClientSurveyListScreen(clientId: Int) {
 }
 
 fun NavController.navigateToClientSurveyQuestionScreen(clientId: Int, survey: SurveyEntity) {
-    val arg = Json.encodeToString(survey)
+    val arg = Json.encodeToString(SurveyEntity.serializer(), survey)
     navigate(ClientScreens.ClientSurveyQuestionScreen.argument(clientId, arg))
 }
 

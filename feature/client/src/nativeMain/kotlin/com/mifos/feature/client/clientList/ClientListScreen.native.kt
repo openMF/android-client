@@ -20,7 +20,7 @@ import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.Flow
 
 @Composable
-actual fun LazyColumnForClientListApi(
+internal actual fun LazyColumnForClientListApi(
     pagingFlow: Flow<PagingData<ClientEntity>>,
     isInSelectionMode: Boolean,
     selectedItems: ClientSelectionState,

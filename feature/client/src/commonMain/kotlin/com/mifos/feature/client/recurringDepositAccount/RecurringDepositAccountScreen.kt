@@ -59,6 +59,7 @@ import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun RecurringDepositAccountScreen(
@@ -145,9 +146,7 @@ internal fun RecurringDepositAccountContent(
             false -> {
                 Column(
                     Modifier.fillMaxSize()
-                        .padding(
-                            horizontal = DesignToken.padding.large,
-                        ),
+                        .padding(horizontal = KptTheme.spacing.md),
                 ) {
                     val notAvailableText = stringResource(Res.string.client_savings_not_available)
                     RecurringDepositAccountHeader(
@@ -176,7 +175,7 @@ internal fun RecurringDepositAccountContent(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(DesignToken.padding.largeIncreasedExtra))
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.lg))
 
                     if (state.recurringDepositAccounts.isEmpty()) {
                         MifosEmptyCard(msg = stringResource(Res.string.client_empty_card_message))
@@ -235,7 +234,7 @@ internal fun RecurringDepositAccountContent(
                                     }
                                 }
 
-                                Spacer(modifier = Modifier.height(DesignToken.spacing.small))
+                                Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
                             }
                         }
                     }

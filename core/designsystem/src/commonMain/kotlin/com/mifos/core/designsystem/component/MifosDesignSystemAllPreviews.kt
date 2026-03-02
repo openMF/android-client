@@ -37,14 +37,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.utility.TabContent
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.mifos.core.designsystem.component.MifosTopAppBar
 import org.mifos.core.designsystem.component.NavigationIcon
+import template.core.base.designsystem.theme.KptTheme
 
 @Preview
 @Composable
@@ -76,7 +77,7 @@ private fun MifosDialogBoxWithComposableMessage() {
             message = {
                 Column {
                     Text("This is a custom composable inside the dialog.")
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
                     Text("You can place anything here, like a list or input field.")
                 }
             },
@@ -106,11 +107,11 @@ private fun MifosCustomDialog() {
             onDismiss = {},
             content = {
                 Card(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.padding(KptTheme.spacing.md),
                 ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
+                    Column(modifier = Modifier.padding(KptTheme.spacing.md)) {
                         Text("This is a custom dialog.")
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
                         Text("You can fully customize this content.")
                     }
                 }
@@ -125,7 +126,7 @@ private fun MifosAndroidClientIcon() {
     MifosTheme {
         MifosAndroidClientIcon(
             imageVector = rememberVectorPainter(Icons.Default.Android),
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(KptTheme.spacing.md),
         )
     }
 }
@@ -166,7 +167,7 @@ private fun MifosBottomSheet() {
         MifosBottomSheet(
             content = {
                 Box(
-                    Modifier.height(100.dp),
+                    Modifier.height(DesignToken.sizes.imageDp100),
                 ) {
                 }
             },
@@ -245,7 +246,7 @@ private fun MifosCard() {
     MifosTheme {
         MifosCard {
             Column(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(KptTheme.spacing.md),
             ) {
                 Text("Simple Mifos Card")
                 Text("This is the card content.")
@@ -478,8 +479,8 @@ private fun MifosPaginationSweetErrorPreview() {
 private fun MifosTabPreview() {
     MifosTheme {
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
+            modifier = Modifier.padding(KptTheme.spacing.md),
         ) {
             MifosTab(
                 text = "Selected Tab",

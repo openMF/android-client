@@ -28,12 +28,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -49,7 +47,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -57,6 +54,7 @@ import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.components.MifosProgressIndicator
@@ -68,6 +66,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun DocumentListScreen(
@@ -241,28 +240,28 @@ private fun DocumentListContent(
 ) {
     Column(modifier = modifier) {
         Card(
-            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            modifier = Modifier.fillMaxWidth().padding(KptTheme.spacing.sm),
             shape = RectangleShape,
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
+                    .padding(KptTheme.spacing.sm),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(start = 16.dp),
+                        .padding(start = KptTheme.spacing.md),
                     text = "Name",
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = KptTheme.typography.bodyLarge,
                     textAlign = TextAlign.Start,
                     maxLines = 1,
                 )
                 Text(
                     modifier = Modifier.weight(1f),
                     text = "Description",
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = KptTheme.typography.bodyLarge,
                     textAlign = TextAlign.Start,
                     maxLines = 1,
                 )
@@ -283,35 +282,35 @@ private fun DocumentItem(
     onDocumentClicked: (Document) -> Unit,
 ) {
     Card(
-        modifier = modifier.fillMaxWidth().padding(vertical = 4.dp, horizontal = 8.dp),
+        modifier = modifier.fillMaxWidth().padding(vertical = KptTheme.spacing.xs, horizontal = KptTheme.spacing.sm),
         onClick = {
             onDocumentClicked(document)
         },
     ) {
         Row(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(KptTheme.spacing.md)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = 16.dp),
+                    .padding(start = KptTheme.spacing.md),
                 text = document.name.toString(),
-                style = MaterialTheme.typography.bodyLarge,
+                style = KptTheme.typography.bodyLarge,
                 textAlign = TextAlign.Start,
                 maxLines = 1,
             )
             Text(
                 modifier = Modifier.weight(1f),
                 text = document.description ?: "-",
-                style = MaterialTheme.typography.bodyLarge,
+                style = KptTheme.typography.bodyLarge,
                 textAlign = TextAlign.Start,
                 maxLines = 1,
             )
             Icon(
-                modifier = Modifier.size(18.dp),
+                modifier = Modifier.size(DesignToken.sizes.dp18),
                 imageVector = MifosIcons.CloudDownload,
                 contentDescription = "Download Icon",
             )
@@ -334,18 +333,18 @@ private fun SelectOptionsDialog(
         ),
     ) {
         Card(
-            shape = RoundedCornerShape(20.dp),
+            shape = DesignToken.shapes.largeIncreased,
         ) {
             Column(
                 modifier = Modifier
-                    .padding(30.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                    .padding(DesignToken.padding.dp30),
+                verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.md),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = stringResource(Res.string.feature_document_select_option),
                     modifier = Modifier.fillMaxWidth(),
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = KptTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
                 )
                 MifosButton(
@@ -354,7 +353,7 @@ private fun SelectOptionsDialog(
                     Text(
                         text = stringResource(Res.string.feature_document_download_document),
                         modifier = Modifier.fillMaxWidth(),
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = KptTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -364,7 +363,7 @@ private fun SelectOptionsDialog(
                     Text(
                         text = stringResource(Res.string.feature_document_update_document),
                         modifier = Modifier.fillMaxWidth(),
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = KptTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -374,7 +373,7 @@ private fun SelectOptionsDialog(
                     Text(
                         text = stringResource(Res.string.feature_document_remove_document),
                         modifier = Modifier.fillMaxWidth(),
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = KptTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center,
                     )
                 }

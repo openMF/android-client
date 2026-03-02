@@ -12,13 +12,13 @@ package com.mifos.core.designsystem.component
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosMenuDropDownItem(
@@ -29,9 +29,9 @@ fun MifosMenuDropDownItem(
     DropdownMenuItem(
         text = {
             Text(
-                modifier = Modifier.padding(6.dp),
+                modifier = Modifier.padding(DesignToken.padding.dp6),
                 text = option,
-                style = MaterialTheme.typography.bodyLarge,
+                style = KptTheme.typography.bodyLarge,
             )
         },
         onClick = { onClick() },

@@ -34,7 +34,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,13 +45,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.client.ClientEntity
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun SyncClientsDialogScreen(
@@ -124,7 +124,7 @@ private fun SyncClientsDialogContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(KptTheme.spacing.sm)
             .background(Color.White),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -139,7 +139,7 @@ private fun SyncClientsDialogContent(
             value = uiData.clientName,
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
 
         PayloadField(
             label = stringResource(Res.string.feature_client_total),
@@ -148,7 +148,7 @@ private fun SyncClientsDialogContent(
             ),
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
 
         PayloadField(
             label = stringResource(Res.string.feature_client_syncing_client),
@@ -159,7 +159,7 @@ private fun SyncClientsDialogContent(
             modifier = Modifier.fillMaxWidth(),
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
 
         PayloadField(
             label = stringResource(Res.string.feature_client_total_sync_progress),
@@ -172,14 +172,14 @@ private fun SyncClientsDialogContent(
             modifier = Modifier.fillMaxWidth(),
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
 
         PayloadField(
             label = stringResource(Res.string.feature_client_failed_sync),
             value = uiData.failedSyncGroupCount.toString(),
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -199,7 +199,7 @@ private fun SyncClientsDialogContent(
                     Text(text = stringResource(Res.string.feature_client_cancel))
                 }
 
-                Spacer(modifier = Modifier.width(10.dp))
+                Spacer(modifier = Modifier.width(DesignToken.spacing.dp10))
 
                 FilledTonalButton(
                     onClick = { hideClicked() },
@@ -217,17 +217,17 @@ private fun PayloadField(label: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(vertical = KptTheme.spacing.xs),
     ) {
         Text(
             text = label,
-            style = MaterialTheme.typography.bodyMedium,
+            style = KptTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
         )
         Text(
             text = value,
-            style = MaterialTheme.typography.bodyMedium,
+            style = KptTheme.typography.bodyMedium,
             modifier = Modifier.weight(1f),
         )
     }

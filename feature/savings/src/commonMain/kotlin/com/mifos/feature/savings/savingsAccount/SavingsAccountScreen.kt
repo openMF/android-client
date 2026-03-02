@@ -73,6 +73,7 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.account.saving.FieldOfficerOptions
 import com.mifos.core.model.objects.organisations.ProductSavings
 import com.mifos.core.model.objects.payloads.SavingsPayload
@@ -86,6 +87,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -265,7 +267,7 @@ private fun SavingsAccountContent(
             .fillMaxSize()
             .verticalScroll(scrollState),
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosTextFieldDropdown(
             value = selectedSavingsProduct,
@@ -284,7 +286,7 @@ private fun SavingsAccountContent(
             readOnly = true,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosTextFieldDropdown(
             value = selectedFieldOfficer,
@@ -302,7 +304,7 @@ private fun SavingsAccountContent(
             readOnly = true,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosOutlinedTextField(
             value = externalId,
@@ -311,7 +313,7 @@ private fun SavingsAccountContent(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosDatePickerTextField(
             enabled = false,
@@ -320,7 +322,7 @@ private fun SavingsAccountContent(
             openDatePicker = { },
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosOutlinedTextField(
             value = nominalAnnualInterest.toString(),
@@ -330,7 +332,7 @@ private fun SavingsAccountContent(
             keyboardType = KeyboardType.Number,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosOutlinedTextField(
             value = savingProductsTemplate.mSavingProductsTemplate.interestCalculationType?.value.toString(),
@@ -340,7 +342,7 @@ private fun SavingsAccountContent(
             readOnly = true,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosOutlinedTextField(
             value = savingProductsTemplate.mSavingProductsTemplate.interestCompoundingPeriodType?.value.toString(),
@@ -350,7 +352,7 @@ private fun SavingsAccountContent(
             readOnly = true,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosOutlinedTextField(
             value = savingProductsTemplate.mSavingProductsTemplate.interestPostingPeriodType?.value.toString(),
@@ -360,7 +362,7 @@ private fun SavingsAccountContent(
             readOnly = true,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosOutlinedTextField(
             value = savingProductsTemplate.mSavingProductsTemplate.interestCalculationDaysInYearType?.value.toString(),
@@ -370,7 +372,7 @@ private fun SavingsAccountContent(
             readOnly = true,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -395,7 +397,7 @@ private fun SavingsAccountContent(
             ),
             exit = slideOutVertically() + shrinkVertically() + fadeOut(),
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
             MifosOutlinedTextField(
                 value = minimumRequiredBalance,
@@ -406,7 +408,7 @@ private fun SavingsAccountContent(
             )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -432,7 +434,7 @@ private fun SavingsAccountContent(
             exit = slideOutVertically() + shrinkVertically() + fadeOut(),
         ) {
             Column {
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
                 MifosOutlinedTextField(
                     value = maximumOverdraftAmount,
@@ -442,7 +444,7 @@ private fun SavingsAccountContent(
                     keyboardType = KeyboardType.Number,
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
                 MifosOutlinedTextField(
                     value = nominalAnnualInterestOverdraft,
@@ -452,7 +454,7 @@ private fun SavingsAccountContent(
                     keyboardType = KeyboardType.Number,
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
                 MifosOutlinedTextField(
                     value = minimumOverdraftAmount,
@@ -464,13 +466,13 @@ private fun SavingsAccountContent(
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(44.dp)
-                .padding(horizontal = 16.dp),
+                .heightIn(DesignToken.spacing.dp44)
+                .padding(horizontal = KptTheme.spacing.md),
             contentPadding = PaddingValues(),
             onClick = {
 //                if (Network.isOnline(context)) {

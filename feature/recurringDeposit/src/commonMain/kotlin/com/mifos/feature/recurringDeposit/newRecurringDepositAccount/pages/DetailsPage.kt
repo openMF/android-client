@@ -42,12 +42,12 @@ import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountAction
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountState
 import org.jetbrains.compose.resources.stringResource
+import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -110,7 +110,7 @@ fun DetailsPage(
         }
     }
 
-    Column(Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
+    Column(Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -118,7 +118,7 @@ fun DetailsPage(
                 text = stringResource(Res.string.feature_recurring_deposit_step_details),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             MifosTextFieldDropdown(
                 value = if (state.recurringDepositAccountDetail.loanProductSelected == -1) {
                     ""
@@ -154,7 +154,7 @@ fun DetailsPage(
                     },
                 )
 
-                Spacer(Modifier.height(DesignToken.padding.large))
+                Spacer(Modifier.height(KptTheme.spacing.md))
                 MifosTextFieldDropdown(
                     value = if (state.recurringDepositAccountDetail.fieldOfficerIndex == -1) {
                         ""
@@ -193,7 +193,7 @@ fun DetailsPage(
                         ),
                     ),
                 )
-                Spacer(Modifier.height(DesignToken.padding.large))
+                Spacer(Modifier.height(KptTheme.spacing.md))
             }
         }
 
@@ -202,7 +202,7 @@ fun DetailsPage(
             secondBtnText = stringResource(Res.string.feature_recurring_deposit_next),
             onFirstBtnClick = { onAction(RecurringAccountAction.NavigateBack) },
             onSecondBtnClick = { onAction(RecurringAccountAction.RecurringAccountDetailsAction.OnDetailNext) },
-            modifier = Modifier.padding(top = DesignToken.padding.small),
+            modifier = Modifier.padding(top = KptTheme.spacing.sm),
         )
     }
 }

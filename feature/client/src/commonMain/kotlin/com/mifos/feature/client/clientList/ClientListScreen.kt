@@ -33,7 +33,6 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -64,6 +63,7 @@ import androidx.paging.PagingData
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.client.syncClientDialog.SyncClientsDialogScreen
@@ -72,6 +72,7 @@ import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 /**
  * Created by Aditya Gupta on 21/02/24.
@@ -151,7 +152,7 @@ internal fun ClientListScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { createNewClient() },
-                containerColor = MaterialTheme.colorScheme.secondary,
+                containerColor = KptTheme.colorScheme.secondary,
             ) {
                 Icon(
                     imageVector = MifosIcons.AddFilled,
@@ -159,7 +160,7 @@ internal fun ClientListScreen(
                 )
             }
         },
-        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        containerColor = KptTheme.colorScheme.surfaceContainer,
         snackbarHostState = snackbarHostState,
     ) { padding ->
         Column(
@@ -229,13 +230,13 @@ private fun SelectionModeTopAppBar(
     val selectedItems = currentSelectedItems.toMutableStateList()
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.secondary,
+            containerColor = KptTheme.colorScheme.secondary,
         ),
         title = {
             Text(
                 text = "${selectedItems.size} selected",
-                style = MaterialTheme.typography.titleLarge.copy(
-                    color = MaterialTheme.colorScheme.onBackground,
+                style = KptTheme.typography.titleLarge.copy(
+                    color = KptTheme.colorScheme.onBackground,
                 ),
             )
         },
@@ -246,7 +247,7 @@ private fun SelectionModeTopAppBar(
                 Icon(
                     imageVector = MifosIcons.Close,
                     contentDescription = "Close",
-                    tint = MaterialTheme.colorScheme.onSurface,
+                    tint = KptTheme.colorScheme.onSurface,
                 )
             }
         },
@@ -260,7 +261,7 @@ private fun SelectionModeTopAppBar(
                 Icon(
                     imageVector = MifosIcons.Sync,
                     contentDescription = "Sync",
-                    tint = MaterialTheme.colorScheme.onSurface,
+                    tint = KptTheme.colorScheme.onSurface,
                 )
             }
         },
@@ -317,19 +318,17 @@ private fun LazyColumnForClientListDb(clientList: List<ClientEntity>) {
         items(clientList) { client ->
 
             OutlinedCard(
-                modifier = Modifier.padding(6.dp),
+                modifier = Modifier.padding(DesignToken.padding.dp6),
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
+                    containerColor = KptTheme.colorScheme.surface,
                 ),
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
-                            start = 16.dp,
-                            end = 16.dp,
-                            top = 24.dp,
-                            bottom = 24.dp,
+                            horizontal = KptTheme.spacing.md,
+                            vertical = KptTheme.spacing.lg,
                         ),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -337,31 +336,31 @@ private fun LazyColumnForClientListDb(clientList: List<ClientEntity>) {
                         painter = painterResource(Res.drawable.feature_client_ic_dp_placeholder),
                         contentDescription = null,
                         modifier = Modifier
-                            .size(40.dp)
+                            .size(DesignToken.sizes.topBarStandardHeight)
                             .clip(CircleShape)
-                            .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape),
+                            .border(DesignToken.spacing.dp1, KptTheme.colorScheme.outline, CircleShape),
                     )
                     Column(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(start = 16.dp),
+                            .padding(horizontal = KptTheme.spacing.md),
                     ) {
                         client.displayName?.let {
                             Text(
                                 text = it,
-                                style = MaterialTheme.typography.bodyLarge,
+                                style = KptTheme.typography.bodyLarge,
                             )
                         }
                         Text(
                             text = client.accountNo.toString(),
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = KptTheme.typography.bodyMedium,
                         )
                     }
                     if (client.sync) {
                         Image(
                             painter = painterResource(Res.drawable.feature_client_ic_done_all_black_24dp),
                             contentDescription = null,
-                            modifier = Modifier.size(20.dp),
+                            modifier = Modifier.size(DesignToken.sizes.iconAverage),
                         )
                     }
                 }

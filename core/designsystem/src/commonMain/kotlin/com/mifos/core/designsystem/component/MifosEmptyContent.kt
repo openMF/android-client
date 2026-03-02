@@ -23,9 +23,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosErrorContent(
@@ -45,12 +46,12 @@ fun MifosErrorContent(
         Icon(
             imageVector = imageVector ?: Icons.Default.Error,
             contentDescription = null,
-            modifier = Modifier.size(48.dp),
+            modifier = Modifier.size(DesignToken.sizes.imageDp48),
         )
         if (isRefreshEnabled) {
             Text(
                 text = message,
-                modifier = Modifier.padding(vertical = 16.dp),
+                modifier = Modifier.padding(vertical = KptTheme.spacing.md),
             )
             Button(onClick = onRefresh) {
                 Text(text = refreshButtonText)
