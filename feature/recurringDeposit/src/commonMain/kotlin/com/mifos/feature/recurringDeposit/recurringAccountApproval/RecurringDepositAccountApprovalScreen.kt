@@ -57,12 +57,10 @@ import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
-import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.template.recurring.approval.RecurringDepositApproval
-import com.mifos.core.network.GenericResponse
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
-import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.components.MifosStatusDialog
 import com.mifos.core.ui.components.ResultStatus
 import org.jetbrains.compose.resources.stringResource
@@ -111,58 +109,69 @@ internal fun RecurringDepositAccountApprovalScreen(
                     .fillMaxSize()
                     .padding(horizontal = DesignToken.padding.large),
             ) {
-                when (uiState) {
-                    RecurringDepositAccountApprovalUiState.Initial -> {
-                        RecurringDepositAccountApprovalContent(
-                            approveAccount = approveAccount,
-                            isLoading = false,
-                        )
-                    }
+                RecurringDepositAccountApprovalContent(
+                    approveAccount = approveAccount,
+                    isLoading = uiState is RecurringDepositAccountApprovalUiState.ShowProgressbar,
+                )
 
-                    is RecurringDepositAccountApprovalUiState.ShowError -> {
-                        MifosSweetError(
-                            message = uiState.message,
-                            isRetryEnabled = false,
-                            onclick = {},
-                        )
-                    }
+                if (uiState is RecurringDepositAccountApprovalUiState.ShowProgressbar) {
+                    MifosProgressIndicatorOverlay()
+                }
 
-                    RecurringDepositAccountApprovalUiState.ShowProgressbar -> {
-                        Box(modifier = Modifier.fillMaxSize()) {
-                            RecurringDepositAccountApprovalContent(
-                                approveAccount = approveAccount,
-                                isLoading = true,
+                if (uiState is RecurringDepositAccountApprovalUiState.ShowRecurringDepositAccountApprovedSuccessfully) {
+                    Dialog(
+                        onDismissRequest = { navigateBack.invoke() },
+                        properties = DialogProperties(
+                            dismissOnBackPress = true,
+                            dismissOnClickOutside = true,
+                        ),
+                    ) {
+                        Surface(
+                            shape = DesignToken.shapes.extraLarge,
+                            color = MaterialTheme.colorScheme.surface,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(DesignToken.padding.large),
+                        ) {
+                            MifosStatusDialog(
+                                status = ResultStatus.SUCCESS,
+                                onConfirm = { navigateBack.invoke() },
+                                btnText = stringResource(Res.string.feature_recurring_deposit_continue),
+                                successTitle = stringResource(Res.string.feature_recurring_deposit_success_title),
+                                successMessage = stringResource(Res.string.feature_recurring_deposit_success_message),
+                                failureTitle = stringResource(Res.string.feature_recurring_deposit_failure_title),
+                                failureMessage = stringResource(Res.string.feature_recurring_deposit_failure_message),
+                                showButton = true,
                             )
-                            MifosProgressIndicator()
                         }
                     }
+                }
 
-                    is RecurringDepositAccountApprovalUiState.ShowRecurringDepositAccountApprovedSuccessfully -> {
-                        Dialog(
-                            onDismissRequest = { navigateBack.invoke() },
-                            properties = DialogProperties(
-                                dismissOnBackPress = true,
-                                dismissOnClickOutside = true,
-                            ),
+                if (uiState is RecurringDepositAccountApprovalUiState.ShowError) {
+                    Dialog(
+                        onDismissRequest = { navigateBack.invoke() },
+                        properties = DialogProperties(
+                            dismissOnBackPress = true,
+                            dismissOnClickOutside = true,
+                        ),
+                    ) {
+                        Surface(
+                            shape = DesignToken.shapes.extraLarge,
+                            color = MaterialTheme.colorScheme.surface,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(DesignToken.padding.large),
                         ) {
-                            Surface(
-                                shape = DesignToken.shapes.extraLarge,
-                                color = MaterialTheme.colorScheme.surface,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(DesignToken.padding.large),
-                            ) {
-                                MifosStatusDialog(
-                                    status = ResultStatus.SUCCESS,
-                                    onConfirm = { navigateBack.invoke() },
-                                    btnText = stringResource(Res.string.feature_recurring_deposit_continue),
-                                    successTitle = stringResource(Res.string.feature_recurring_deposit_success_title),
-                                    successMessage = stringResource(Res.string.feature_recurring_deposit_success_message),
-                                    failureTitle = stringResource(Res.string.feature_recurring_deposit_failure_title),
-                                    failureMessage = stringResource(Res.string.feature_recurring_deposit_failure_message),
-                                    showButton = true,
-                                )
-                            }
+                            MifosStatusDialog(
+                                status = ResultStatus.FAILURE,
+                                onConfirm = { navigateBack.invoke() },
+                                btnText = stringResource(Res.string.feature_recurring_deposit_continue),
+                                successTitle = stringResource(Res.string.feature_recurring_deposit_success_title),
+                                successMessage = stringResource(Res.string.feature_recurring_deposit_success_message),
+                                failureTitle = stringResource(Res.string.feature_recurring_deposit_failure_title),
+                                failureMessage = uiState.message,
+                                showButton = true,
+                            )
                         }
                     }
                 }
@@ -266,8 +275,6 @@ private fun RecurringDepositAccountApprovalContent(
             onClick = {
                 approveAccount.invoke(
                     RecurringDepositApproval(
-                        locale = "en",
-                        dateFormat = "dd MMMM yyyy",
                         approvedOnDate = DateHelper.getDateAsStringForApproval(approvalDate),
                         note = reasonForApproval,
                     ),
@@ -282,6 +289,7 @@ private fun RecurringDepositAccountApprovalContent(
 sealed class RecurringDepositAccountApprovalUiState {
     data object Initial : RecurringDepositAccountApprovalUiState()
     data object ShowProgressbar : RecurringDepositAccountApprovalUiState()
-    data class ShowRecurringDepositAccountApprovedSuccessfully(val response: GenericResponse) : RecurringDepositAccountApprovalUiState()
+    data object ShowRecurringDepositAccountApprovedSuccessfully :
+        RecurringDepositAccountApprovalUiState()
     data class ShowError(val message: String) : RecurringDepositAccountApprovalUiState()
 }

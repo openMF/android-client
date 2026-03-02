@@ -65,9 +65,7 @@ class RecurringDepositAccountApprovalViewModel(
                     is DataState.Success -> {
                         mutableStateFlow.update {
                             RecurringDepositAccountApprovalUiState
-                                .ShowRecurringDepositAccountApprovedSuccessfully(
-                                    result.data,
-                                )
+                                .ShowRecurringDepositAccountApprovedSuccessfully
                         }
                     }
                 }

@@ -9,16 +9,17 @@
  */
 package com.mifos.core.model.objects.template.recurring.approval
 
+import com.mifos.core.model.utils.DateConstants
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class RecurringDepositApproval(
     @EncodeDefault(EncodeDefault.Mode.ALWAYS)
-    var locale: String = "en",
+    var locale: String = DateConstants.LOCALE,
 
     @EncodeDefault(EncodeDefault.Mode.ALWAYS)
-    var dateFormat: String = "dd MMMM yyyy",
+    var dateFormat: String = DateConstants.DATE_FORMAT,
 
     var approvedOnDate: String? = null,
 
