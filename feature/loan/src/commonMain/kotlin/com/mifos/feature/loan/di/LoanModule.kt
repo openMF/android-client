@@ -15,6 +15,7 @@ import com.mifos.feature.loan.createGuarantor.CreateGuarantorViewModel
 import com.mifos.feature.loan.createLoanReschedules.LoanRescheduleFormViewModel
 import com.mifos.feature.loan.groupLoanAccount.GroupLoanAccountViewModel
 import com.mifos.feature.loan.loanAccount.LoanAccountViewModel
+import com.mifos.feature.loan.loanAccountGeneral.LoanAccountGeneralViewModel
 import com.mifos.feature.loan.loanAccountAction.LoanAccountActionsViewModel
 import com.mifos.feature.loan.loanAccountAction.payments.LoanPaymentsActionViewModel
 import com.mifos.feature.loan.loanAccountProfile.LoanAccountProfileViewModel
@@ -36,6 +37,7 @@ import org.koin.dsl.module
 val LoanModule = module {
     viewModelOf(::GroupLoanAccountViewModel)
     viewModelOf(::LoanAccountViewModel)
+    viewModelOf(::LoanAccountGeneralViewModel)
     viewModelOf(::LoanAccountSummaryViewModel)
     viewModelOf(::LoanAccountApprovalViewModel)
     viewModelOf(::LoanChargeViewModel)

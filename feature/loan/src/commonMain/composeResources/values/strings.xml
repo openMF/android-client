@@ -240,6 +240,38 @@
     <string name="feature_loan_payment_success_transaction_label">Transaction ID: %1$s</string>
     <string name="feature_loan_payment_success_title">Payment Successful</string>
 
+    <string name="feature_loan_general_section_performance_history">PERFORMANCE HISTORY</string>
+    <string name="feature_loan_general_section_loan_summary">LOAN SUMMARY</string>
+    <string name="feature_loan_general_section_loan_details">LOAN DETAILS</string>
+
+    <string name="feature_loan_general_number_of_repayments">Number of Repayments</string>
+    <string name="feature_loan_general_maturity_date">Maturity Date</string>
+
+    <string name="feature_loan_general_summary_col_component">COMPONENT</string>
+    <string name="feature_loan_general_summary_col_original">ORIGINAL</string>
+    <string name="feature_loan_general_summary_col_paid">PAID</string>
+    <string name="feature_loan_general_summary_col_waived">WAIVED</string>
+    <string name="feature_loan_general_summary_col_written_off">WRITTEN OFF</string>
+    <string name="feature_loan_general_summary_col_outstanding">OUTSTANDING</string>
+    <string name="feature_loan_general_summary_col_overdue">OVER DUE</string>
+
+    <string name="feature_loan_general_summary_row_principal">Principal</string>
+    <string name="feature_loan_general_summary_row_interest">Interest</string>
+    <string name="feature_loan_general_summary_row_fees">Fees</string>
+    <string name="feature_loan_general_summary_row_penalties">Penalties</string>
+    <string name="feature_loan_general_summary_row_total">Total</string>
+
+    <string name="feature_loan_general_detail_disbursement_date">DISBURSEMENT DATE</string>
+    <string name="feature_loan_general_detail_loan_purpose">LOAN PURPOSE</string>
+    <string name="feature_loan_general_detail_loan_officer">LOAN OFFICER</string>
+    <string name="feature_loan_general_detail_currency">CURRENCY</string>
+    <string name="feature_loan_general_detail_proposed_amount">Proposed Amount</string>
+    <string name="feature_loan_general_detail_approved_amount">Approved Amount</string>
+    <string name="feature_loan_general_detail_disbursed_amount">Disbursed Amount</string>
+
+    <string name="feature_loan_general_value_unassigned">Unassigned</string>
+    <string name="feature_loan_general_value_not_available">Not Available</string>
+
     <!-- New Loan Account -->
     <string name="new_loan_account_title">New Loan Account</string>
 

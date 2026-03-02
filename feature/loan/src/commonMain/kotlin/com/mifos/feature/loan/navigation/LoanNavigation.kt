@@ -15,6 +15,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.mifos.core.common.utils.Constants
+import com.mifos.feature.loan.loanAccountGeneral.loanAccountGeneralDestination
+import com.mifos.feature.loan.loanAccountGeneral.navigateToLoanAccountGeneralScreen
+import com.mifos.feature.loan.loanAccountProfile.components.LoanAccountProfileActionItem
 import com.mifos.feature.loan.amountTransfer.amountTransferScreen
 import com.mifos.feature.loan.amountTransfer.navigateToTransferScreen
 import com.mifos.feature.loan.assignLoanOfficer.assignLoanOfficerScreen
@@ -167,6 +170,17 @@ fun NavGraphBuilder.loanDestination(
     loanRescheduleFormScreen(
         navController = navController,
         onBackPressed = navController::popBackStack,
+        onDetailItemClick = { item, loanId ->
+            when (item) {
+                LoanAccountProfileActionItem.General ->
+                    navController.navigateToLoanAccountGeneralScreen(loanId = loanId)
+                else -> { /* Other items handled separately */ }
+            }
+        },
+    )
+
+    loanAccountGeneralDestination(
+        navController = navController,
     )
 
     loanDisburseScreen(
