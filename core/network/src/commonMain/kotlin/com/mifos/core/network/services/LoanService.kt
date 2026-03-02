@@ -11,6 +11,8 @@ package com.mifos.core.network.services
 
 import com.mifos.core.model.objects.account.loan.LoanApproval
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
+import com.mifos.core.model.objects.account.loan.RejectLoanPayload
+import com.mifos.core.model.objects.account.loan.RejectLoanResponse
 import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
@@ -51,6 +53,12 @@ interface LoanService {
         @Path("loanId") loanId: Int,
         @Body loanApproval: LoanApproval?,
     ): Flow<GenericResponse>
+
+    @POST(APIEndPoint.LOANS + "/{loanId}?command=reject")
+    fun rejectLoan(
+        @Path("loanId") loanId: Int,
+        @Body rejectLoanPayload: RejectLoanPayload,
+    ): Flow<RejectLoanResponse>
 
     //  Mandatory Fields
     //  String actualDisbursementDate

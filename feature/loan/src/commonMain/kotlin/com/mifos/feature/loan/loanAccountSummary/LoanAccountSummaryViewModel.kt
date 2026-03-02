@@ -114,6 +114,8 @@ internal class LoanAccountSummaryViewModel(
                 sendEvent(LoanAccountSummaryEvent.NavigateToDocuments(loanAccountNumber))
             LoanSummaryDropDownAction.OnChargesClick ->
                 sendEvent(LoanAccountSummaryEvent.NavigateToCharges(loanAccountNumber))
+            LoanSummaryDropDownAction.OnRejectLoanClick ->
+                sendEvent(LoanAccountSummaryEvent.NavigateToRejectLoan(loanAccountNumber))
         }
     }
 
@@ -275,6 +277,7 @@ enum class LoanSummaryDropDownAction {
     OnRepaymentScheduleClick,
     OnDocumentsClick,
     OnChargesClick,
+    OnRejectLoanClick,
 }
 
 sealed interface LoanAccountSummaryEvent {
@@ -288,6 +291,8 @@ sealed interface LoanAccountSummaryEvent {
         val loanId: Int,
         val loanWithAssociations: LoanWithAssociationsEntity,
     ) : LoanAccountSummaryEvent
+
+    data class NavigateToRejectLoan(val loanId: Int) : LoanAccountSummaryEvent
 
     data class NavigateToDisburseLoan(val loanId: Int) : LoanAccountSummaryEvent
     data class NavigateToMakeRepayment(val loanWithAssociations: LoanWithAssociationsEntity) :

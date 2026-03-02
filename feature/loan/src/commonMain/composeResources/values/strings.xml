@@ -88,6 +88,15 @@
     <string name="feature_loan_error_not_connected_internet">Not connected to internet</string>
     <string name="feature_loan_approval_amount_can_not_be_empty">Loan approval amount can not be empty</string>
     <string name="feature_loan_error_invalid_amount">Invalid amount</string>
+    <string name="feature_loan_reject_title">Reject Loan</string>
+    <string name="feature_loan_reject_loan">Reject Loan</string>
+    <string name="feature_loan_rejected_on_label">Rejected On*</string>
+    <string name="feature_loan_reject_note_hint">Note</string>
+    <string name="feature_loan_reject_success_message">Loan rejected successfully</string>
+    <string name="feature_loan_reject_date_error_future">Rejected date cannot be in the future</string>
+    <string name="feature_loan_reject_discard_title">Discard Changes?</string>
+    <string name="feature_loan_reject_discard_message">You have unsaved changes. Are you sure you want to leave?</string>
+    <string name="feature_loan_reject_discard_confirm">Discard</string>
 
     <string name="feature_loan_disburse_loan">Disburse Loan</string>
     <string name="feature_loan_loan_disburse_successfully">Loan disburse successfully</string>

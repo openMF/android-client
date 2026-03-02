@@ -22,6 +22,9 @@ import com.mifos.feature.loan.loanCharge.loanChargeScreen
 import com.mifos.feature.loan.loanCharge.navigateToLoanChargesScreen
 import com.mifos.feature.loan.loanDisbursement.loanDisbursementScreen
 import com.mifos.feature.loan.loanDisbursement.navigateToLoanDisbursementScreen
+import com.mifos.feature.loan.loanReject.LOAN_REJECT_SUCCESS_RESULT_KEY
+import com.mifos.feature.loan.loanReject.loanRejectScreen
+import com.mifos.feature.loan.loanReject.navigateToLoanRejectScreen
 import com.mifos.feature.loan.loanRepayment.loanRepaymentScreen
 import com.mifos.feature.loan.loanRepayment.navigateToLoanRepaymentScreen
 import com.mifos.feature.loan.loanRepaymentSchedule.loanRepaymentSchedule
@@ -44,6 +47,7 @@ fun NavGraphBuilder.loanDestination(
         onDocumentsClicked = { onDocumentsClicked(it, Constants.ENTITY_TYPE_LOANS) },
         onChargesClicked = navController::navigateToLoanChargesScreen,
         approveLoan = navController::navigateToLoanApprovalScreen,
+        rejectLoan = navController::navigateToLoanRejectScreen,
         disburseLoan = navController::navigateToLoanDisbursementScreen,
         onRepaymentClick = navController::navigateToLoanRepaymentScreen,
         navController = navController,
@@ -55,6 +59,15 @@ fun NavGraphBuilder.loanDestination(
     loanApprovalScreen {
         navController.popBackStack()
     }
+    loanRejectScreen(
+        onBackPressed = navController::popBackStack,
+        onRejectSuccess = {
+            navController.previousBackStackEntry
+                ?.savedStateHandle
+                ?.set(LOAN_REJECT_SUCCESS_RESULT_KEY, true)
+            navController.popBackStack()
+        },
+    )
     loanRepaymentSchedule {
         navController.popBackStack()
     }

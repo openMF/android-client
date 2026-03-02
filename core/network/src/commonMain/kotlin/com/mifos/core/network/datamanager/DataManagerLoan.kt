@@ -12,6 +12,8 @@ package com.mifos.core.network.datamanager
 import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
+import com.mifos.core.model.objects.account.loan.RejectLoanPayload
+import com.mifos.core.model.objects.account.loan.RejectLoanResponse
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
@@ -293,6 +295,13 @@ class DataManagerLoan(
         loanDisbursement: LoanDisbursement?,
     ): Flow<GenericResponse> {
         return mBaseApiManager.loanService.disburseLoan(loanId, loanDisbursement)
+    }
+
+    fun rejectLoan(
+        loanId: Int,
+        rejectLoanPayload: RejectLoanPayload,
+    ): Flow<RejectLoanResponse> {
+        return mBaseApiManager.loanService.rejectLoan(loanId, rejectLoanPayload)
     }
 
     /**

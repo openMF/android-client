@@ -16,10 +16,12 @@ import com.mifos.feature.loan.loanApproval.LoanAccountApprovalViewModel
 import com.mifos.feature.loan.loanCharge.LoanChargeViewModel
 import com.mifos.feature.loan.loanChargeForm.LoanChargeSheetViewModel
 import com.mifos.feature.loan.loanDisbursement.LoanAccountDisbursementViewModel
+import com.mifos.feature.loan.loanReject.RejectLoanViewModel
 import com.mifos.feature.loan.loanRepayment.LoanRepaymentViewModel
 import com.mifos.feature.loan.loanRepaymentSchedule.LoanRepaymentScheduleViewModel
 import com.mifos.feature.loan.loanTransaction.LoanTransactionsViewModel
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountViewModel
+import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -33,6 +35,7 @@ val LoanModule = module {
     viewModelOf(::LoanAccountDisbursementViewModel)
     viewModelOf(::LoanRepaymentViewModel)
     viewModelOf(::LoanRepaymentScheduleViewModel)
+    viewModel { RejectLoanViewModel(rejectLoanUseCase = get(), savedStateHandle = get()) }
     viewModelOf(::LoanTransactionsViewModel)
     viewModelOf(::NewLoanAccountViewModel)
 }
