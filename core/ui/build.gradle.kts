@@ -20,6 +20,9 @@ android {
     }
 }
 
+compose.resources {
+    publicResClass = true
+}
 
 kotlin{
     sourceSets{

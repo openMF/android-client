@@ -303,7 +303,7 @@ private fun ClientIdentifiersAddUpdateDocument(
     onAction: (ClientIdentifiersAddUpdateAction) -> Unit,
 ) {
     MifosOutlinedTextField(
-        value = state.documentName ?: "",
+        value = state.documentName?.substringBeforeLast(".") ?: "",
         onValueChange = {
             onAction(ClientIdentifiersAddUpdateAction.OnDocumentNameChange(it))
         },
