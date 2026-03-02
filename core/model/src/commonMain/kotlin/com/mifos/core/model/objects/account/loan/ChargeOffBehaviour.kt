@@ -1,11 +1,11 @@
 /*
- * Copyright 2024 Mifos Initiative
+ * Copyright 2026 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.core.model.objects.account.loan
 
@@ -13,19 +13,10 @@ import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
-/*
- * This project is licensed under the open source MPL V2.
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
- */
-/**
- * Created by nellyk on 2/21/2016.
- */
 @Parcelize
 @Serializable
-data class DaysInYearType(
-    var id: Int? = null,
-
-    var code: String? = null,
-
-    var value: String? = null,
+data class ChargeOffBehaviour(
+    val id: String? = null,
+    val code: String? = null,
+    val value: String? = null,
 ) : Parcelable

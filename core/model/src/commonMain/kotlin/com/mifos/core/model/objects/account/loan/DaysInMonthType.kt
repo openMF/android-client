@@ -11,15 +11,17 @@ package com.mifos.core.model.objects.account.loan
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.Serializable
 
 /**
  * Created by nellyk on 2/21/2016.
  */
 @Parcelize
+@Serializable
 data class DaysInMonthType(
     var id: Int? = null,
 
-    var code: Int? = null,
+    var code: String? = null,
 
-    var value: Int? = null,
+    var value: String? = null,
 ) : Parcelable

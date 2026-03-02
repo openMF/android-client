@@ -46,8 +46,12 @@ import androidclient.core.ui.generated.resources.core_ui_total_value
 import androidclient.core.ui.generated.resources.core_ui_transfer_external_id
 import androidclient.core.ui.generated.resources.core_ui_type
 import androidclient.core.ui.generated.resources.core_ui_waived
+import androidclient.core.ui.generated.resources.less
+import androidclient.core.ui.generated.resources.more
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -59,12 +63,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
@@ -104,24 +117,27 @@ fun MifosListingComponentOutline(
 fun MifosListingRowItem(
     keyContent: @Composable () -> Unit,
     valueContent: @Composable () -> Unit,
+    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+    keyAlignment: Alignment = Alignment.CenterStart,
+    valueAlignment: Alignment = Alignment.CenterEnd,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = verticalAlignment,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = verticalAlignment,
         ) {
             Box(
                 modifier = Modifier.weight(1f),
-                contentAlignment = Alignment.CenterStart,
+                contentAlignment = keyAlignment,
             ) { keyContent() }
 
             Box(
                 modifier = Modifier.weight(1f),
-                contentAlignment = Alignment.CenterEnd,
+                contentAlignment = valueAlignment,
             ) { valueContent() }
         }
     }
@@ -170,6 +186,75 @@ fun MifosListingColumnItem(
 }
 
 @Composable
+private fun ExpandableText(
+    text: String,
+    textStyle: TextStyle,
+    textColor: Color,
+    isRightAligned: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    var isExpanded by remember { mutableStateOf(false) }
+    var isTruncated by remember { mutableStateOf(false) }
+
+    val moreText = stringResource(Res.string.more)
+    val lessText = stringResource(Res.string.less)
+
+    Box(modifier = modifier.animateContentSize()) {
+        if (!isExpanded) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = if (isRightAligned) Arrangement.End else Arrangement.Start,
+                verticalAlignment = Alignment.Bottom,
+            ) {
+                Text(
+                    text = text,
+                    style = textStyle,
+                    color = textColor,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    onTextLayout = {
+                        if (it.hasVisualOverflow) isTruncated = true
+                    },
+                    modifier = Modifier.weight(1f, fill = false),
+                )
+                if (isTruncated) {
+                    Text(
+                        text = " $moreText",
+                        style = textStyle.copy(
+                            color = KptTheme.colorScheme.onPrimaryFixedVariant,
+                            fontWeight = FontWeight.Bold,
+                        ),
+                        modifier = Modifier.clickable { isExpanded = true },
+                    )
+                }
+            }
+        } else {
+            val expandedText = buildAnnotatedString {
+                append(text)
+                withStyle(
+                    style = SpanStyle(
+                        color = KptTheme.colorScheme.onPrimaryFixedVariant,
+                        fontWeight = FontWeight.Bold,
+                    ),
+                ) {
+                    append(" $lessText")
+                }
+            }
+
+            Text(
+                text = expandedText,
+                style = textStyle,
+                color = textColor,
+                textAlign = if (isRightAligned) TextAlign.End else TextAlign.Start,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { isExpanded = false },
+            )
+        }
+    }
+}
+
+@Composable
 fun MifosListingRowItem(
     key: String,
     value: String,
@@ -178,22 +263,27 @@ fun MifosListingRowItem(
     valueColor: Color = KptTheme.colorScheme.onSurface,
 ) {
     MifosListingRowItem(
+
+        verticalAlignment = Alignment.Top,
+        keyAlignment = Alignment.TopStart,
+        valueAlignment = Alignment.TopEnd,
+
         keyContent = {
             if (key.isNotBlank()) {
-                Text(
+                ExpandableText(
                     text = "$key:",
-                    style = keyStyle,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
+                    textStyle = keyStyle,
+                    textColor = KptTheme.colorScheme.onSurface,
+                    isRightAligned = false,
                 )
             }
         },
         valueContent = {
-            Text(
+            ExpandableText(
                 text = value,
-                style = valueStyle.copy(color = valueColor),
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1,
+                textStyle = valueStyle,
+                textColor = valueColor,
+                isRightAligned = true,
             )
         },
     )

@@ -11,7 +11,10 @@ package com.mifos.room.typeconverters
 
 import com.mifos.core.model.objects.Changes
 import com.mifos.core.model.objects.account.loan.AmortizationType
+import com.mifos.core.model.objects.account.loan.ChargeOffBehaviour
 import com.mifos.core.model.objects.account.loan.Currency
+import com.mifos.core.model.objects.account.loan.DaysInMonthType
+import com.mifos.core.model.objects.account.loan.DaysInYearType
 import com.mifos.core.model.objects.account.loan.InterestCalculationPeriodType
 import com.mifos.core.model.objects.account.loan.InterestRateFrequencyType
 import com.mifos.core.model.objects.account.loan.InterestType
@@ -745,4 +748,34 @@ class CustomTypeConverters {
     @TypeConverter
     fun toAddressList(json: String?): List<Address>? =
         json?.let { Json.decodeFromString(it) }
+
+    @TypeConverter
+    fun fromChargeOffBehaviour(type: ChargeOffBehaviour?): String? {
+        return type?.let { Json.encodeToString(it) }
+    }
+
+    @TypeConverter
+    fun toChargeOffBehaviour(json: String?): ChargeOffBehaviour? {
+        return json?.let { Json.decodeFromString(it) }
+    }
+
+    @TypeConverter
+    fun fromDaysInYearType(type: DaysInYearType?): String? {
+        return type?.let { Json.encodeToString(it) }
+    }
+
+    @TypeConverter
+    fun toDaysInYearType(json: String?): DaysInYearType? {
+        return json?.let { Json.decodeFromString(it) }
+    }
+
+    @TypeConverter
+    fun fromDaysInMonthType(type: DaysInMonthType?): String? {
+        return type?.let { Json.encodeToString(it) }
+    }
+
+    @TypeConverter
+    fun toDaysInMonthType(json: String?): DaysInMonthType? {
+        return json?.let { Json.decodeFromString(it) }
+    }
 }

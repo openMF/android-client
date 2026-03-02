@@ -123,6 +123,9 @@
     <string name="amount">Amount</string>
     <string name="type">Type</string>
     <string name="collected_on">Collected On</string>
+    <string name="more">more</string>
+    <string name="less">less</string>
+
 
     <string name="client_share_accounts_share_product">Share Product</string>
     <string name="client_share_accounts_pending_for_approval_shares">Pending For Approval Shares</string>
