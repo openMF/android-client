@@ -107,7 +107,7 @@ internal fun ClientLoanAccountsScreenRoute(
         }
         val lifecycle = navController.currentBackStackEntry?.lifecycle
         lifecycle?.addObserver(observer)
-        
+
         onDispose {
             lifecycle?.removeObserver(observer)
         }
