@@ -171,10 +171,11 @@ fun NavGraphBuilder.loanDestination(
         navController = navController,
         onBackPressed = navController::popBackStack,
         onDetailItemClick = { item, loanId ->
+        onDetailItemClick = { loanId, item ->
             when (item) {
                 LoanAccountProfileActionItem.General ->
                     navController.navigateToLoanAccountGeneralScreen(loanId = loanId)
-                else -> { /* Other items handled separately */ }
+                else -> Unit
             }
         },
     )
