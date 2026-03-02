@@ -30,18 +30,15 @@ import androidclient.feature.loan.generated.resources.feature_loan_general_summa
 import androidclient.feature.loan.generated.resources.feature_loan_general_summary_col_waived
 import androidclient.feature.loan.generated.resources.feature_loan_general_summary_col_written_off
 import androidclient.feature.loan.generated.resources.feature_loan_general_summary_row_total
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
@@ -54,7 +51,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosTableRow
-import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
@@ -254,31 +250,21 @@ private fun LoanSummaryTable(
             )
 
             state.summaryRows.forEachIndexed { index, row ->
-                val summaryRowIndicatorColor = when (row.rowType) {
-                    LoanAccountGeneralState.SummaryRowType.PRINCIPAL -> AppColors.loanGeneralSummaryPrincipalIndicator
-                    LoanAccountGeneralState.SummaryRowType.INTEREST -> AppColors.loanGeneralSummaryInterestIndicator
-                    LoanAccountGeneralState.SummaryRowType.FEES -> AppColors.loanGeneralSummaryFeesIndicator
-                    LoanAccountGeneralState.SummaryRowType.PENALTIES -> AppColors.loanGeneralSummaryPenaltiesIndicator
-                }
                 val amounts = listOf(row.original, row.paid, row.waived, row.writtenOff, row.outstanding, row.overDue)
                 val amtColors = listOf(textColor, KptTheme.colorScheme.primary, KptTheme.colorScheme.primary, KptTheme.colorScheme.primary, textColor, textColor)
 
                 MifosTableRow(
                     cells = buildList {
                         add {
-                            Row(
+                            Box(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .padding(
                                         vertical = DesignToken.padding.small,
                                         horizontal = DesignToken.padding.extraSmall,
                                     ),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(DesignToken.spacing.mediumSmall),
+                                contentAlignment = Alignment.CenterStart,
                             ) {
-                                Canvas(modifier = Modifier.size(DesignToken.spacing.small)) {
-                                    drawCircle(summaryRowIndicatorColor)
-                                }
                                 Text(
                                     text = row.component,
                                     style = KptTheme.typography.bodySmall,
