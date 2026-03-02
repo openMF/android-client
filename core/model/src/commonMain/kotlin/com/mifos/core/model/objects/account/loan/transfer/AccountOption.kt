@@ -9,20 +9,24 @@
  */
 package com.mifos.core.model.objects.account.loan.transfer
 
+import com.mifos.core.model.objects.template.loan.Currency
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
- * Response from account transfer submission
+ * Data class representing an account option for transfers
  */
 @Parcelize
 @Serializable
-data class AccountTransferResponse(
-    val officeId: Int? = null,
+data class AccountOption(
+    val id: Int,
+    val accountNo: String,
     val clientId: Int? = null,
-    val resourceId: Int? = null,
-    val resourceExternalId: String? = null,
-    val changes: AccountTransferChanges? = null,
+    val clientName: String? = null,
+    val productId: Int? = null,
+    val productName: String? = null,
+    val fieldOfficerId: Int? = null,
+    val currency: Currency? = null,
+    val currencyCodeFromCurrency: String? = null,
 ) : Parcelable
-

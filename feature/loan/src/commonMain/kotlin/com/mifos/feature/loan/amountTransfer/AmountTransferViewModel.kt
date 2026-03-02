@@ -24,11 +24,11 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.AmountTransferRepository
 import com.mifos.core.data.repository.ClientDetailsRepository
-import com.mifos.core.model.objects.account.loan.transfer.AccountOption
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRequest
 import com.mifos.core.model.objects.account.loan.transfer.AccountTypeOption
 import com.mifos.core.model.objects.account.loan.transfer.ClientOption
 import com.mifos.core.model.objects.account.loan.transfer.OfficeOption
+import com.mifos.core.model.objects.account.loan.transfer.AccountOption
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
