@@ -11,6 +11,7 @@ package com.mifos.feature.loan.di
 
 import com.mifos.feature.loan.groupLoanAccount.GroupLoanAccountViewModel
 import com.mifos.feature.loan.loanAccount.LoanAccountViewModel
+import com.mifos.feature.loan.loanAccountProfile.LoanAccountProfileViewModel
 import com.mifos.feature.loan.loanAccountSummary.LoanAccountSummaryViewModel
 import com.mifos.feature.loan.loanApproval.LoanAccountApprovalViewModel
 import com.mifos.feature.loan.loanCharge.LoanChargeViewModel
@@ -38,4 +39,5 @@ val LoanModule = module {
     viewModel { RejectLoanViewModel(rejectLoanUseCase = get(), savedStateHandle = get()) }
     viewModelOf(::LoanTransactionsViewModel)
     viewModelOf(::NewLoanAccountViewModel)
+    viewModelOf(::LoanAccountProfileViewModel)
 }
