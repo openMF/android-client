@@ -271,7 +271,7 @@ private fun LazyListScope.appendState(data: LazyPagingItems<GroupEntity>) {
         }
 
         is LoadState.NotLoading -> {
-            if (data.loadState.append.endOfPaginationReached) {
+            if (data.loadState.append.endOfPaginationReached && data.itemCount > 0) {
                 item {
                     Text(
                         modifier = Modifier

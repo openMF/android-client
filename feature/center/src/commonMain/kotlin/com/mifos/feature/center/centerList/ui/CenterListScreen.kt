@@ -276,23 +276,24 @@ fun CenterListContent(
                     centerPagingList[it]?.id ?: it
                 },
             ) { index ->
-                val center = centerPagingList[index]!!
-
-                CenterCard(
-                    center = center,
-                    selected = selectedItems.contains(center),
-                    isInSelectionMode = selectedItems.size() > 0,
-                    onSelect = {
-                        if (selectedItems.contains(it)) {
-                            selectedItems.remove(it)
-                        } else {
-                            selectedItems.add(it)
-                        }
-                    },
-                    onClick = {
-                        onCenterSelect(it.id ?: 0)
-                    },
-                )
+                val center = centerPagingList[index]
+                if (center != null) {
+                    CenterCard(
+                        center = center,
+                        selected = selectedItems.contains(center),
+                        isInSelectionMode = selectedItems.size() > 0,
+                        onSelect = {
+                            if (selectedItems.contains(it)) {
+                                selectedItems.remove(it)
+                            } else {
+                                selectedItems.add(it)
+                            }
+                        },
+                        onClick = {
+                            onCenterSelect(it.id ?: 0)
+                        },
+                    )
+                }
             }
 
             when (centerPagingList.loadState.append) {
