@@ -79,7 +79,10 @@ internal fun LoanAccountProfileScreen(
     onNavigateBack: () -> Unit,
     approveLoan: (Int, LoanWithAssociationsEntity) -> Unit,
     onRepaymentClick: (LoanWithAssociationsEntity) -> Unit,
-    onDetailItemClick: (LoanAccountProfileActionItem) -> Unit,
+    navigateToRepaymentSchedule: (Int) -> Unit,
+    navigateToTransactions: (Int) -> Unit,
+    navigateToCharges: (Int) -> Unit,
+    navigateToDocuments: (Int) -> Unit,
     navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: LoanAccountProfileViewModel = koinViewModel(),
@@ -100,7 +103,17 @@ internal fun LoanAccountProfileScreen(
                     }
                 }
             }
-            is LoanAccountEvent.NavigateToDetail -> onDetailItemClick(event.detailItem)
+            is LoanAccountEvent.NavigateToDetail -> {
+                val loanId = state.loanAccount?.id ?: -1
+
+                when (event.detailItem) {
+                    LoanAccountProfileActionItem.RepaymentSchedule -> navigateToRepaymentSchedule(loanId)
+                    LoanAccountProfileActionItem.Transactions -> navigateToTransactions(loanId)
+                    LoanAccountProfileActionItem.Charges -> navigateToCharges(loanId)
+                    LoanAccountProfileActionItem.Documents -> navigateToDocuments(loanId)
+                    else -> { }
+                }
+            }
             LoanAccountEvent.NavigateToAccountDetails -> {}
         }
     }
