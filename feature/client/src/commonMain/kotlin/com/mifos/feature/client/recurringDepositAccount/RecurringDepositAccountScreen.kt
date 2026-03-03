@@ -10,13 +10,14 @@
 package com.mifos.feature.client.recurringDepositAccount
 
 import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.client_empty_card_message
+import androidclient.feature.client.generated.resources.add_icon
 import androidclient.feature.client.generated.resources.client_product_recurring_deposit_account
 import androidclient.feature.client.generated.resources.client_profile_recurring_deposit_account_title
 import androidclient.feature.client.generated.resources.client_savings_item
 import androidclient.feature.client.generated.resources.client_savings_not_available
 import androidclient.feature.client.generated.resources.client_savings_pending_approval
 import androidclient.feature.client.generated.resources.feature_client_dialog_action_ok
+import androidclient.feature.client.generated.resources.feature_recurring_account_empty_list_message
 import androidclient.feature.client.generated.resources.filter
 import androidclient.feature.client.generated.resources.search
 import androidx.compose.foundation.clickable
@@ -42,6 +43,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -68,6 +70,7 @@ fun RecurringDepositAccountScreen(
     onApproveAccount: (String) -> Unit,
     onViewAccount: (String) -> Unit,
     modifier: Modifier = Modifier,
+    createAccount: (Int) -> Unit,
     viewModel: RecurringDepositAccountViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -82,6 +85,8 @@ fun RecurringDepositAccountScreen(
             is RecurringDepositAccountEvent.OnViewAccount -> {
                 onViewAccount(event.accountNumber)
             }
+
+            is RecurringDepositAccountEvent.AddAccount -> createAccount(event.clientId)
         }
     }
 
@@ -157,6 +162,10 @@ internal fun RecurringDepositAccountContent(
                         onToggleFilter = {
                             onAction(RecurringDepositAccountAction.ToggleFilter)
                         },
+                        addAccount = {
+                            onAction(RecurringDepositAccountAction.AddAccount)
+                        },
+                        isRecurringDepositScreenEmpty = state.recurringDepositAccounts.isEmpty(),
                     )
 
                     // todo implement search bar functionality
@@ -178,15 +187,18 @@ internal fun RecurringDepositAccountContent(
                     Spacer(modifier = Modifier.height(KptTheme.spacing.lg))
 
                     if (state.recurringDepositAccounts.isEmpty()) {
-                        MifosEmptyCard(msg = stringResource(Res.string.client_empty_card_message))
+                        MifosEmptyCard(
+                            msg = stringResource(Res.string.feature_recurring_account_empty_list_message),
+                            isButtonPresent = true,
+                            onClick = { onAction.invoke(RecurringDepositAccountAction.AddAccount) },
+                        )
                     } else {
                         LazyColumn {
                             itemsIndexed(state.recurringDepositAccounts) { index, recurringDeposit ->
                                 MifosActionsSavingsListingComponent(
                                     accountNo = recurringDeposit.accountNo ?: notAvailableText,
                                     savingsProduct = stringResource(Res.string.client_product_recurring_deposit_account),
-                                    savingsProductName = recurringDeposit.shortProductName
-                                        ?: notAvailableText,
+                                    savingsProductName = recurringDeposit.shortProductName ?: notAvailableText,
                                     lastActive = if (recurringDeposit.status?.submittedAndPendingApproval == true) {
                                         stringResource(Res.string.client_savings_pending_approval)
                                     } else if (recurringDeposit.lastActiveTransactionDate != null) {
@@ -223,13 +235,11 @@ internal fun RecurringDepositAccountContent(
                                                 ),
                                             )
                                         }
-
                                         is Actions.ApproveAccount -> {
                                             RecurringDepositAccountAction.ApproveAccount(
                                                 recurringDeposit.accountNo ?: "",
                                             )
                                         }
-
                                         else -> null
                                     }
                                 }
@@ -250,10 +260,13 @@ private fun RecurringDepositAccountHeader(
     onToggleFilter: () -> Unit,
     modifier: Modifier = Modifier,
     onToggleSearch: () -> Unit,
+    addAccount: () -> Unit,
+    isRecurringDepositScreenEmpty: Boolean,
 ) {
     Row(
         modifier = modifier.fillMaxWidth()
             .wrapContentHeight(),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Column {
             Text(
@@ -269,22 +282,34 @@ private fun RecurringDepositAccountHeader(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Icon(
-            painter = painterResource(Res.drawable.search),
-            contentDescription = null,
-            modifier = Modifier.clickable {
-                onToggleSearch.invoke()
-            },
-        )
+        if (!isRecurringDepositScreenEmpty) {
+            Icon(
+                painter = painterResource(Res.drawable.search),
+                contentDescription = null,
+                modifier = Modifier.clickable {
+                    onToggleSearch.invoke()
+                },
+            )
 
-        Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
+            Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
 
-        Icon(
-            painter = painterResource(Res.drawable.filter),
-            contentDescription = null,
-            modifier = Modifier.clickable {
-                onToggleFilter.invoke()
-            },
-        )
+            Icon(
+                painter = painterResource(Res.drawable.add_icon),
+                contentDescription = null,
+                modifier = Modifier.clickable {
+                    addAccount.invoke()
+                },
+            )
+
+            Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
+
+            Icon(
+                painter = painterResource(Res.drawable.filter),
+                contentDescription = null,
+                modifier = Modifier.clickable {
+                    onToggleFilter.invoke()
+                },
+            )
+        }
     }
 }
