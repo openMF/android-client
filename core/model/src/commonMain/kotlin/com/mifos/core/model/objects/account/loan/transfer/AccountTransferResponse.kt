@@ -16,13 +16,8 @@ import kotlinx.serialization.Serializable
 /**
  * Response from account transfer submission
  */
-@Parcelize
 @Serializable
 data class AccountTransferResponse(
-    val officeId: Int? = null,
-    val clientId: Int? = null,
+    val loanId: Int? = null,
     val resourceId: Int? = null,
-    val resourceExternalId: String? = null,
-    val changes: AccountTransferChanges? = null,
-) : Parcelable
-
+)

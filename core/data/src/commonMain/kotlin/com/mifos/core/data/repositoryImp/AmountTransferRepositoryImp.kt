@@ -26,10 +26,10 @@ class AmountTransferRepositoryImp(
 ) : AmountTransferRepository {
 
     override fun getAccountTransferTemplate(
-        fromOfficeId: Int,
         fromClientId: Int,
         fromAccountType: Int,
         fromAccountId: Int,
+        fromOfficeId: Int?,
         toOfficeId: Int?,
         toClientId: Int?,
         toAccountType: Int?,
@@ -47,12 +47,12 @@ class AmountTransferRepositoryImp(
 
     override suspend fun submitAccountTransfer(
         request: AccountTransferRequest,
-    ): Result<AccountTransferResponse> {
+    ): DataState<AccountTransferResponse> {
         return try {
             val response = dataManagerLoan.submitAccountTransfer(request)
-            Result.success(response)
+            DataState.Success(response)
         } catch (e: Exception) {
-            Result.failure(e)
+            DataState.Error(e)
         }
     }
 }

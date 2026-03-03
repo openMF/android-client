@@ -12,7 +12,6 @@ package com.mifos.core.network.services
 import com.mifos.core.model.objects.account.loan.LoanApproval
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRequest
-import com.mifos.core.model.objects.account.loan.transfer.AccountTransferResponse
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplate
 import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.model.objects.organisations.LoanProducts
@@ -143,10 +142,10 @@ interface LoanService {
      */
     @GET(APIEndPoint.ACCOUNT_TRANSFERS + "/template")
     fun getAccountTransferTemplate(
-        @Query("fromOfficeId") fromOfficeId: Int,
         @Query("fromClientId") fromClientId: Int,
         @Query("fromAccountType") fromAccountType: Int,
         @Query("fromAccountId") fromAccountId: Int,
+        @Query("fromOfficeId") fromOfficeId: Int? = null,
         @Query("toOfficeId") toOfficeId: Int? = null,
         @Query("toClientId") toClientId: Int? = null,
         @Query("toAccountType") toAccountType: Int? = null,
@@ -157,10 +156,10 @@ interface LoanService {
      * Submit an account transfer
      *
      * @param request Account transfer request payload
-     * @return AccountTransferResponse with transfer details
+     * @return HttpResponse to check status and handle error/success appropriately
      */
     @POST(APIEndPoint.ACCOUNT_TRANSFERS)
     suspend fun submitAccountTransfer(
         @Body request: AccountTransferRequest,
-    ): AccountTransferResponse
+    ): HttpResponse
 }

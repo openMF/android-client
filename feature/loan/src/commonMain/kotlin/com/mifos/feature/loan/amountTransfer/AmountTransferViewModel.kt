@@ -16,10 +16,13 @@ import androidclient.feature.loan.generated.resources.feature_loan_must_select_a
 import androidclient.feature.loan.generated.resources.feature_loan_must_select_account_type
 import androidclient.feature.loan.generated.resources.feature_loan_must_select_client
 import androidclient.feature.loan.generated.resources.feature_loan_must_select_office
+import org.jetbrains.compose.resources.getString
 import androidclient.feature.loan.generated.resources.feature_loan_transfer_amount_can_not_be_zero
+import androidclient.feature.loan.generated.resources.feature_loan_transfer_success
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.AmountTransferRepository
@@ -133,12 +136,9 @@ class AmountTransferViewModel(
             AmountTransferAction.OnTransferClicked -> validateFields()
             AmountTransferAction.OnRetryClick -> submitTransfer()
             AmountTransferAction.OnRetryFetching -> fetchClientDetails(route.fromClientId)
-            AmountTransferAction.CloseDialog -> {
-                mutableStateFlow.update {
-                    it.copy(dialogState = null)
-                }
-                sendEvent(AmountTransferEvent.NavigateBack)
-            }
+            AmountTransferAction.CloseDialog -> mutableStateFlow.update { it.copy(dialogState = null) }
+            AmountTransferAction.TransferSuccess -> sendEvent(AmountTransferEvent.NavigateBack)
+
         }
     }
 
@@ -149,6 +149,7 @@ class AmountTransferViewModel(
                 val client = clientRepo.getClient(clientId)
                 mutableStateFlow.update {
                     it.copy(
+                        fromOfficeId = client.officeId,
                         fromClientName = client.displayName,
                         fromOfficeName = client.officeName,
                         fromAccountNumber = route.fromAccountNumber,
@@ -161,7 +162,7 @@ class AmountTransferViewModel(
             } catch (e: Exception) {
                 mutableStateFlow.update {
                     it.copy(
-                        dialogState = AmountTransferUiState.DialogState.Error(e.message.toString()),
+                        dialogState = AmountTransferUiState.DialogState.FetchingFailed(e.message.toString()),
                     )
                 }
             }
@@ -171,10 +172,10 @@ class AmountTransferViewModel(
     private fun fetchInitialTemplate() {
         viewModelScope.launch {
             repository.getAccountTransferTemplate(
-                fromOfficeId = route.fromOfficeId,
                 fromClientId = route.fromClientId,
                 fromAccountType = route.fromAccountType,
                 fromAccountId = route.fromAccountId,
+                fromOfficeId = route.fromOfficeId ?: state.fromOfficeId,
             ).collect { dataState ->
                 when (dataState) {
                     is DataState.Loading -> {
@@ -197,7 +198,7 @@ class AmountTransferViewModel(
                     is DataState.Error -> {
                         mutableStateFlow.update {
                             it.copy(
-                                dialogState = AmountTransferUiState.DialogState.Error(
+                                dialogState = AmountTransferUiState.DialogState.FetchingFailed(
                                     dataState.message,
                                 ),
                             )
@@ -220,10 +221,10 @@ class AmountTransferViewModel(
             }
 
             repository.getAccountTransferTemplate(
-                fromOfficeId = route.fromOfficeId,
                 fromClientId = route.fromClientId,
                 fromAccountType = route.fromAccountType,
                 fromAccountId = route.fromAccountId,
+                fromOfficeId = route.fromOfficeId ?: state.fromOfficeId,
                 toOfficeId = currentState.selectedOfficeId,
                 toClientId = currentState.selectedClientId,
                 toAccountType = currentState.accountTypeId,
@@ -238,34 +239,15 @@ class AmountTransferViewModel(
                     is DataState.Success -> {
                         val template = dataState.data
                         mutableStateFlow.update { state ->
-                            // If we have clients from the template, use them
-                            val newClients = if (template.toClientOptions.isNotEmpty()) {
-                                template.toClientOptions.sortedBy { it.displayName }
-                            } else {
-                                state.clients
-                            }
-
-                            // If we have account types from the template, use them
-                            val newAccountTypes = if (template.toAccountTypeOptions.isNotEmpty()) {
+                            val newClients = template.toClientOptions.sortedBy { it.displayName }
+                            val newAccountTypes =
                                 template.toAccountTypeOptions.sortedBy { it.value }
-                            } else {
-                                state.accountTypes
-                            }
-
-                            // If we have accounts from the template, use them
-                            val newAccounts = if (template.toAccountOptions.isNotEmpty()) {
-                                template.toAccountOptions.sortedBy { it.accountNo }
-                            } else {
-                                state.accounts
-                            }
+                            val newAccounts = template.toAccountOptions.sortedBy { it.accountNo }
+                            val offices = template.toOfficeOptions.sortedBy { it.name }
 
                             state.copy(
                                 dialogState = null,
-                                offices = if (template.toOfficeOptions.isNotEmpty()) {
-                                    template.toOfficeOptions.sortedBy { it.name }
-                                } else {
-                                    state.offices
-                                },
+                                offices = offices,
                                 clients = newClients,
                                 accountTypes = newAccountTypes,
                                 accounts = newAccounts,
@@ -276,12 +258,53 @@ class AmountTransferViewModel(
                     is DataState.Error -> {
                         mutableStateFlow.update {
                             it.copy(
-                                dialogState = AmountTransferUiState.DialogState.Error(
+                                dialogState = AmountTransferUiState.DialogState.FetchingFailed(
                                     dataState.message,
                                 ),
                             )
                         }
                     }
+                }
+            }
+        }
+    }
+
+    private fun submitTransfer() {
+        viewModelScope.launch {
+            mutableStateFlow.update { it.copy(dialogState = AmountTransferUiState.DialogState.Loading) }
+
+            val request = AccountTransferRequest(
+                fromOfficeId = state.fromOfficeId ?: -1,
+                fromClientId = route.fromClientId,
+                fromAccountType = route.fromAccountType,
+                fromAccountId = route.fromAccountId,
+                toOfficeId = state.selectedOfficeId!!,
+                toClientId = state.selectedClientId!!,
+                toAccountType = state.accountTypeId!!,
+                toAccountId = state.accountId!!,
+                transferDate = DateHelper.formattedFullDate,
+                transferAmount = state.amount.toDouble(),
+                transferDescription = state.description,
+                dateFormat = Constants.DATE_FORMAT_LONG,
+                locale = Constants.LOCALE_EN,
+            )
+
+            when (val result = repository.submitAccountTransfer(request)) {
+                DataState.Loading -> Unit
+                is DataState.Error -> mutableStateFlow.update {
+                    it.copy(
+                        dialogState = AmountTransferUiState.DialogState.TransferFailed(
+                            result.message,
+                        ),
+                    )
+                }
+
+                is DataState.Success -> mutableStateFlow.update {
+                    it.copy(
+                        dialogState = AmountTransferUiState.DialogState.TransferSuccess(
+                            getString(Res.string.feature_loan_transfer_success),
+                        ),
+                    )
                 }
             }
         }
@@ -359,45 +382,6 @@ class AmountTransferViewModel(
             submitTransfer()
         }
     }
-
-    private fun submitTransfer() {
-        viewModelScope.launch {
-            mutableStateFlow.update { it.copy(dialogState = AmountTransferUiState.DialogState.Loading) }
-
-            val request = AccountTransferRequest(
-                fromOfficeId = route.fromOfficeId,
-                fromClientId = route.fromClientId,
-                fromAccountType = route.fromAccountType,
-                fromAccountId = route.fromAccountId,
-                toOfficeId = state.selectedOfficeId!!,
-                toClientId = state.selectedClientId!!,
-                toAccountType = state.accountTypeId!!,
-                toAccountId = state.accountId!!,
-                transferDate = DateHelper.formattedFullDate,
-                transferAmount = state.amount.toDouble(),
-                transferDescription = state.description,
-            )
-
-            val result = repository.submitAccountTransfer(request)
-
-            result.fold(
-                onSuccess = {
-                    mutableStateFlow.update {
-                        it.copy(dialogState = AmountTransferUiState.DialogState.TransferStatus("Transfer completed successfully"))
-                    }
-                },
-                onFailure = { error ->
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = AmountTransferUiState.DialogState.Error(
-                                error.message ?: "Transfer failed",
-                            ),
-                        )
-                    }
-                },
-            )
-        }
-    }
 }
 
 data class AmountTransferUiState(
@@ -411,6 +395,7 @@ data class AmountTransferUiState(
     val accountIdError: StringResource? = null,
 
     // Source account details
+    val fromOfficeId: Int? = null,
     val fromOfficeName: String? = null,
     val fromClientName: String? = null,
     val fromAccountNumber: String? = null,
@@ -436,8 +421,9 @@ data class AmountTransferUiState(
     val currency: String = "",
 ) {
     sealed interface DialogState {
-        data class Error(val message: String) : DialogState
-        data class TransferStatus(val message: String) : DialogState
+        data class FetchingFailed(val message: String) : DialogState
+        data class TransferSuccess(val message: String) : DialogState
+        data class TransferFailed(val message: String) : DialogState
         data object Loading : DialogState
     }
 }
@@ -452,6 +438,7 @@ sealed interface AmountTransferAction {
     data object OnTransferClicked : AmountTransferAction
     data object OnRetryClick : AmountTransferAction
     data object CloseDialog : AmountTransferAction
+    data object TransferSuccess : AmountTransferAction
     data object OnRetryFetching : AmountTransferAction
 }
 

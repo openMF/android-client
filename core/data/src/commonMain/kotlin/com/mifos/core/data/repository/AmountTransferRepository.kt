@@ -33,10 +33,10 @@ interface AmountTransferRepository {
      * @return AccountTransferTemplate with available options
      */
     fun getAccountTransferTemplate(
-        fromOfficeId: Int,
         fromClientId: Int,
         fromAccountType: Int,
         fromAccountId: Int,
+        fromOfficeId: Int? = null,
         toOfficeId: Int? = null,
         toClientId: Int? = null,
         toAccountType: Int? = null,
@@ -50,5 +50,5 @@ interface AmountTransferRepository {
      */
     suspend fun submitAccountTransfer(
         request: AccountTransferRequest,
-    ): Result<AccountTransferResponse>
+    ): DataState<AccountTransferResponse>
 }

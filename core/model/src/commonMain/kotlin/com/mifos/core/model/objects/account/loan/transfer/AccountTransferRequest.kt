@@ -27,6 +27,6 @@ data class AccountTransferRequest(
     val transferDate: String,
     val transferAmount: Double,
     val transferDescription: String,
-    val dateFormat: String = "dd MMMM yyyy",
-    val locale: String = "en",
+    val dateFormat: String,
+    val locale: String,
 )

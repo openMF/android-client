@@ -9,6 +9,7 @@
  */
 package com.mifos.core.network.datamanager
 
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
@@ -315,11 +316,11 @@ class DataManagerLoan(
      * @return AccountTransferTemplate with available options
      */
     fun getAccountTransferTemplate(
-        fromOfficeId: Int,
         fromClientId: Int,
         fromAccountType: Int,
         fromAccountId: Int,
         toOfficeId: Int? = null,
+        fromOfficeId: Int? = null,
         toClientId: Int? = null,
         toAccountType: Int? = null,
     ): Flow<AccountTransferTemplate> {
@@ -339,11 +340,17 @@ class DataManagerLoan(
      *
      * @param request Account transfer request payload
      * @return AccountTransferResponse with transfer details
+     * @throws IllegalStateException if the request fails with the error message
      */
     suspend fun submitAccountTransfer(
         request: AccountTransferRequest,
     ): AccountTransferResponse {
-        return mBaseApiManager.loanService.submitAccountTransfer(request)
+        val response = mBaseApiManager.loanService.submitAccountTransfer(request)
+        if (!response.status.isSuccess()) {
+            val errorMessage = extractErrorMessage(response)
+            throw IllegalStateException(errorMessage)
+        }
+        return Json.decodeFromString<AccountTransferResponse>(response.bodyAsText())
     }
 
     /**
@@ -361,7 +368,6 @@ class DataManagerLoan(
                 throw IllegalStateException(errorMessage)
             }
 
-            Json { ignoreUnknownKeys = true }.decodeFromString<RepaymentSchedule>(response.bodyAsText())
-        }
+            Json { ignoreUnknownKeys = true }.decodeFromString<RepaymentSchedule>(response.bodyAsText())        }
     }
 }

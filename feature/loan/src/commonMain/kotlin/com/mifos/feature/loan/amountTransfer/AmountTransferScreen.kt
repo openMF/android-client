@@ -18,6 +18,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_from_account
 import androidclient.feature.loan.generated.resources.feature_loan_loan_account_type
 import androidclient.feature.loan.generated.resources.feature_loan_office
 import androidclient.feature.loan.generated.resources.feature_loan_select_account
+import androidclient.feature.loan.generated.resources.feature_loan_error_title
 import androidclient.feature.loan.generated.resources.feature_loan_select_client
 import androidclient.feature.loan.generated.resources.feature_loan_select_office
 import androidclient.feature.loan.generated.resources.feature_loan_success_title
@@ -147,7 +148,7 @@ internal fun AmountTransferContent(
                 value = state.selectedOfficeName,
                 onValueChanged = { },
                 label = stringResource(Res.string.feature_loan_select_office),
-                options = state.offices.map { it.name },
+                options = state.offices.map { it.name!! },
                 onOptionSelected = { index, text ->
                     onAction.invoke(
                         AmountTransferAction.OnOfficeChanged(
@@ -163,7 +164,7 @@ internal fun AmountTransferContent(
                 value = state.selectedClientName,
                 onValueChanged = { },
                 label = stringResource(Res.string.feature_loan_select_client),
-                options = state.clients.map { it.displayName },
+                options = state.clients.map { it.displayName!! },
                 onOptionSelected = { index, text ->
                     onAction.invoke(
                         AmountTransferAction.OnClientChange(
@@ -179,7 +180,7 @@ internal fun AmountTransferContent(
                 value = state.selectedAccountType,
                 onValueChanged = { },
                 label = stringResource(Res.string.feature_loan_loan_account_type),
-                options = state.accountTypes.map { it.value },
+                options = state.accountTypes.map { it.value!! },
                 onOptionSelected = { index, text ->
                     val typeId = state.accountTypes.getOrNull(index)?.id
                     typeId?.let {
@@ -198,7 +199,7 @@ internal fun AmountTransferContent(
                 value = state.selectedAccountName,
                 onValueChanged = { },
                 label = stringResource(Res.string.feature_loan_select_account),
-                options = state.accounts.map { it.accountNo },
+                options = state.accounts.map { it.accountNo!! },
                 onOptionSelected = { index, text ->
                     val accountId = state.accounts.getOrNull(index)?.id
                     accountId?.let {
@@ -247,7 +248,7 @@ private fun AmountTransferDialogContent(
     onAction: (AmountTransferAction) -> Unit,
 ) {
     when (dialogState) {
-        is AmountTransferUiState.DialogState.Error -> {
+        is AmountTransferUiState.DialogState.FetchingFailed -> {
             MifosSweetError(
                 message = dialogState.message,
                 isRetryEnabled = true,
@@ -255,14 +256,24 @@ private fun AmountTransferDialogContent(
             )
         }
 
+        is AmountTransferUiState.DialogState.TransferFailed -> {
+            MifosAlertDialog(
+                dialogTitle = stringResource(Res.string.feature_loan_error_title),
+                dismissText = null,
+                dialogText = dialogState.message,
+                onConfirmation = { onAction.invoke(AmountTransferAction.CloseDialog) },
+                onDismissRequest = { },
+            )
+        }
+
         AmountTransferUiState.DialogState.Loading -> MifosProgressIndicatorOverlay()
 
-        is AmountTransferUiState.DialogState.TransferStatus -> {
+        is AmountTransferUiState.DialogState.TransferSuccess -> {
             MifosAlertDialog(
                 dialogTitle = stringResource(Res.string.feature_loan_success_title),
                 dialogText = dialogState.message,
-                onConfirmation = { onAction.invoke(AmountTransferAction.OnRetryClick) },
-                onDismissRequest = { onAction.invoke(AmountTransferAction.CloseDialog) },
+                onConfirmation = { onAction.invoke(AmountTransferAction.TransferSuccess) },
+                onDismissRequest = { },
             )
         }
 
