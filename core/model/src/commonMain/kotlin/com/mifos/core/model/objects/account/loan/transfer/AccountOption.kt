@@ -20,7 +20,7 @@ import kotlinx.serialization.Serializable
 @Parcelize
 @Serializable
 data class AccountOption(
-    val id: Int?= null,
+    val id: Int? = null,
     val accountNo: String? = null,
     val clientId: Int? = null,
     val clientName: String? = null,

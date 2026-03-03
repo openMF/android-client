@@ -104,18 +104,7 @@ internal class LoanAccountSummaryViewModel(
                 handleDropdownAction(action.action)
             }
 
-            LoanAccountSummaryAction.NavigateToLoanTransfer -> {
-                state.loanWithAssociations?.let { loan ->
-                    sendEvent(
-                        LoanAccountSummaryEvent.NavigateToLoanTransfer(
-                            loanId = loanId,
-                            officeId = null, // Not available in LoanWithAssociationsEntity
-                            clientId = loan.clientId,
-                            currencyCode = loan.currency?.code,
-                        ),
-                    )
-                }
-            }
+            LoanAccountSummaryAction.NavigateToLoanTransfer -> { }
         }
     }
 

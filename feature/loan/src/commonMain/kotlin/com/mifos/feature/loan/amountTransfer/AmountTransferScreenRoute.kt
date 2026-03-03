@@ -18,7 +18,8 @@ import kotlinx.serialization.Serializable
 data class AmountTransferScreenRoute(
     val fromClientId: Int,
     val fromAccountId: Int,
-    val fromAccountType : Int = 1, //for loan its 1
+    // for loan its 1
+    val fromAccountType: Int = 1,
     val fromAccountNumber: String? = null,
     val fromOfficeId: Int? = null,
     val currency: String? = null,

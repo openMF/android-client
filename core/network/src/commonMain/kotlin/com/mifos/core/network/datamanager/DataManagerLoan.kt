@@ -9,7 +9,6 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
@@ -29,6 +28,7 @@ import com.mifos.room.entities.templates.loans.LoanTemplate
 import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
 import com.mifos.room.helper.LoanDaoHelper
 import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -37,7 +37,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
-import io.ktor.client.statement.bodyAsText
 
 /**
  * Created by Rajan Maurya on 15/07/16.
@@ -211,7 +210,7 @@ class DataManagerLoan(
      *
      * @return List<LoanRepaymentRequest>
      *
-    </LoanRepaymentRequest></LoanRepayment> */
+     </LoanRepaymentRequest></LoanRepayment> */
     val databaseLoanRepayments: Flow<List<LoanRepaymentRequestEntity>>
         get() = loanDaoHelper.readAllLoanRepaymentTransaction()
 
@@ -242,7 +241,7 @@ class DataManagerLoan(
      * PaymentTypeOption_Table.
      *
      * @return List<PaymentTypeOption>
-    </PaymentTypeOption> */
+     </PaymentTypeOption> */
     val paymentTypeOption: Flow<List<PaymentTypeOptionEntity>>
         get() = loanDaoHelper.getAllPaymentTypeOption
 
@@ -252,7 +251,7 @@ class DataManagerLoan(
      *
      * @param loanId Loan Id of the Loan
      * @return List<LoanRepaymentRequest>
-    </LoanRepaymentRequest> */
+     </LoanRepaymentRequest> */
     fun deleteAndUpdateLoanRepayments(loanId: Int): Flow<List<LoanRepaymentRequestEntity>> {
         return loanDaoHelper.deleteAndUpdateLoanRepayments(loanId)
     }
@@ -368,6 +367,7 @@ class DataManagerLoan(
                 throw IllegalStateException(errorMessage)
             }
 
-            Json { ignoreUnknownKeys = true }.decodeFromString<RepaymentSchedule>(response.bodyAsText())        }
+            Json { ignoreUnknownKeys = true }.decodeFromString<RepaymentSchedule>(response.bodyAsText())
+        }
     }
 }

@@ -30,5 +30,3 @@ data class AccountTransferTemplate(
     val toAccountOptions: List<AccountOption> = emptyList(),
     val currencyOptions: List<Currency> = emptyList(),
 ) : Parcelable
-
-

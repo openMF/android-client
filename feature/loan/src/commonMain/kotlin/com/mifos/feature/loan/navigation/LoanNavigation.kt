@@ -89,7 +89,6 @@ fun NavGraphBuilder.loanDestination(
         navigateToTransferScreen = navController::navigateToTransferScreen,
     )
 
-    // Register the amount transfer screen
     amountTransferScreen(
         navController = navController,
         onBackPressed = navController::popBackStack,

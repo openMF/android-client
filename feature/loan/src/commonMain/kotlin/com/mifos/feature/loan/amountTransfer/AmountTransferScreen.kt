@@ -14,11 +14,11 @@ import androidclient.feature.loan.generated.resources.feature_loan_amount
 import androidclient.feature.loan.generated.resources.feature_loan_applicant_name
 import androidclient.feature.loan.generated.resources.feature_loan_currency
 import androidclient.feature.loan.generated.resources.feature_loan_description
+import androidclient.feature.loan.generated.resources.feature_loan_error_title
 import androidclient.feature.loan.generated.resources.feature_loan_from_account
 import androidclient.feature.loan.generated.resources.feature_loan_loan_account_type
 import androidclient.feature.loan.generated.resources.feature_loan_office
 import androidclient.feature.loan.generated.resources.feature_loan_select_account
-import androidclient.feature.loan.generated.resources.feature_loan_error_title
 import androidclient.feature.loan.generated.resources.feature_loan_select_client
 import androidclient.feature.loan.generated.resources.feature_loan_select_office
 import androidclient.feature.loan.generated.resources.feature_loan_success_title

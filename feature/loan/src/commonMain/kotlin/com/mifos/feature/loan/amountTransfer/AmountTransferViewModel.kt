@@ -16,7 +16,6 @@ import androidclient.feature.loan.generated.resources.feature_loan_must_select_a
 import androidclient.feature.loan.generated.resources.feature_loan_must_select_account_type
 import androidclient.feature.loan.generated.resources.feature_loan_must_select_client
 import androidclient.feature.loan.generated.resources.feature_loan_must_select_office
-import org.jetbrains.compose.resources.getString
 import androidclient.feature.loan.generated.resources.feature_loan_transfer_amount_can_not_be_zero
 import androidclient.feature.loan.generated.resources.feature_loan_transfer_success
 import androidx.lifecycle.SavedStateHandle
@@ -27,15 +26,16 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.AmountTransferRepository
 import com.mifos.core.data.repository.ClientDetailsRepository
+import com.mifos.core.model.objects.account.loan.transfer.AccountOption
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRequest
 import com.mifos.core.model.objects.account.loan.transfer.AccountTypeOption
 import com.mifos.core.model.objects.account.loan.transfer.ClientOption
 import com.mifos.core.model.objects.account.loan.transfer.OfficeOption
-import com.mifos.core.model.objects.account.loan.transfer.AccountOption
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
 
 class AmountTransferViewModel(
     savedStateHandle: SavedStateHandle,
@@ -138,7 +138,6 @@ class AmountTransferViewModel(
             AmountTransferAction.OnRetryFetching -> fetchClientDetails(route.fromClientId)
             AmountTransferAction.CloseDialog -> mutableStateFlow.update { it.copy(dialogState = null) }
             AmountTransferAction.TransferSuccess -> sendEvent(AmountTransferEvent.NavigateBack)
-
         }
     }
 
