@@ -87,6 +87,9 @@ class RecurringDepositAccountViewModel(
                     RecurringDepositAccountEvent.OnApproveAccount(action.accountNumber),
                 )
             }
+            RecurringDepositAccountAction.AddAccount -> {
+                sendEvent(RecurringDepositAccountEvent.AddAccount(route.clientId))
+            }
         }
     }
 
@@ -179,12 +182,14 @@ sealed class RecurringDepositAccountAction {
     data object ToggleFilter : RecurringDepositAccountAction()
     data object ToggleSearch : RecurringDepositAccountAction()
     data object Search : RecurringDepositAccountAction()
+    data object AddAccount : RecurringDepositAccountAction()
     data class UpdateSearch(val query: String) : RecurringDepositAccountAction()
     data object CloseDialog : RecurringDepositAccountAction()
 }
 
 sealed class RecurringDepositAccountEvent {
     data object OnNavigateBack : RecurringDepositAccountEvent()
+    data class AddAccount(val clientId: Int) : RecurringDepositAccountEvent()
     data class OnViewAccount(val accountNumber: String) : RecurringDepositAccountEvent()
     data class OnApproveAccount(val accountNumber: String) : RecurringDepositAccountEvent()
 }

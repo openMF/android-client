@@ -14,6 +14,7 @@
     <string name="core_ui_no_data">No Data</string>
     <string name="core_ui_something_went_wrong">Something went wrong</string>
     <string name="core_ui_core_common_working">Core Common Working</string>
+    <string name="core_ui_click_to_add_new">Click to add new</string>
 
     <!-- Mifos Client Fee -->
     <string name="core_ui_name">Name</string>

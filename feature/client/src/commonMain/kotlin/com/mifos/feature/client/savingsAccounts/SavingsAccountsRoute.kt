@@ -25,12 +25,14 @@ fun NavGraphBuilder.savingsAccountsDestination(
     navController: NavController,
     navigateToViewAccount: (Int, SavingAccountDepositTypeEntity) -> Unit,
     navigateToApproveAccount: (Int) -> Unit,
+    createAccount: (Int) -> Unit,
 ) {
     composable<SavingsAccountsRoute> {
         SavingsAccountsScreen(
             navigateBack = navigateBack,
             navigateToViewAccount = navigateToViewAccount,
             navigateToApproveAccount = navigateToApproveAccount,
+            createAccount = { clientId -> createAccount(clientId) },
             navController = navController,
         )
     }

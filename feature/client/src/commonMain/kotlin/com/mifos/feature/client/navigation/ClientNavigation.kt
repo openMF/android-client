@@ -324,6 +324,7 @@ fun NavGraphBuilder.clientNavGraph(
             navigateBack = navController::popBackStack,
             navigateToViewAccount = navController::navigateToSavingsAccountSummaryScreen,
             navController = navController,
+            createAccount = { clientId -> navController.navigateToAddSavingsAccount(clientId = clientId, groupId = 0, isGroupAccount = false) },
             navigateToApproveAccount = navController::navigateToSavingsAccountApproval,
         )
         clientCollateralDestination(
@@ -336,6 +337,7 @@ fun NavGraphBuilder.clientNavGraph(
             navigateToViewAccount = navController::navigateToLoanAccountProfileScreen,
             navigateToMakeRepayment = {},
             navController = navController,
+            createAccount = { clientId, accountNo -> navController.navigateToNewLoanAccountRoute(clientId, accountNo) },
         )
         clientIdentifiersListDestination(
             addNewClientIdentity = navController::onNavigateToClientIdentifiersAddUpdateScreen,

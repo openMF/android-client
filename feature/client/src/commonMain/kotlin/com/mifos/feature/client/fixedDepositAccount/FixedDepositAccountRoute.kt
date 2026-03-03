@@ -12,6 +12,7 @@ package com.mifos.feature.client.fixedDepositAccount
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.mifos.feature.client.newFixedDepositAccount.navigateToCreateFixedDepositRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -31,6 +32,7 @@ fun NavGraphBuilder.clientFixedDepositAccountDestination(
             navigateBack = navigateBack,
             onApproveAccount = onApproveAccount,
             onViewAccount = onViewAccount,
+            createAccount = { clientId -> navController.navigateToCreateFixedDepositRoute(clientId) },
         )
     }
 }
