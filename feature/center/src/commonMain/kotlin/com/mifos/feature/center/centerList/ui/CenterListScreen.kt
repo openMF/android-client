@@ -55,7 +55,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.PagingData
@@ -268,8 +267,8 @@ fun CenterListContent(
         }
 
         LazyColumn(
-            modifier = modifier.fillMaxSize().padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = modifier.fillMaxSize().padding(horizontal = KptTheme.spacing.md),
+            verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.md),
         ) {
             items(
                 count = centerPagingList.itemCount,
@@ -297,7 +296,13 @@ fun CenterListContent(
             }
 
             when (centerPagingList.loadState.append) {
-                is LoadState.Error -> {}
+                is LoadState.Error -> {
+                    item {
+                        MifosSweetError(message = stringResource(Res.string.feature_center_error_loading_centers)) {
+                            centerPagingList.retry()
+                        }
+                    }
+                }
 
                 is LoadState.Loading -> {
                     item {
@@ -313,7 +318,7 @@ fun CenterListContent(
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(6.dp),
+                                .padding(KptTheme.spacing.sm),
                             text = stringResource(Res.string.feature_center_no_more_centers),
                             style = MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Center,

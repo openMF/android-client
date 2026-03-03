@@ -38,9 +38,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.PagingData
@@ -217,7 +215,7 @@ fun ChargesListContent(
         is LoadState.NotLoading -> Unit
     }
 
-    LaunchedEffect(chargesPagingList) {
+    LaunchedEffect(chargesPagingList.itemCount) {
         setCount.invoke(chargesPagingList.itemCount)
     }
 
@@ -251,11 +249,11 @@ fun ChargesListContent(
                         Actions.PayOutstandingAmount(),
                     ),
                     isActive = index == state.expandedItemIndex,
-                    onClick = { ClientUpcomingChargesAction.CardClicked(index) },
+                    onClick = { onAction(ClientUpcomingChargesAction.CardClicked(index)) },
                     onActionClicked = { actions ->
                         when (actions) {
                             is Actions.PayOutstandingAmount -> {
-                                ClientUpcomingChargesAction.PayOutstandingAmount
+                                onAction(ClientUpcomingChargesAction.PayOutstandingAmount)
                             }
 
                             else -> {}
@@ -270,7 +268,7 @@ fun ChargesListContent(
             is LoadState.Error -> {
                 item {
                     MifosSweetError(message = org.jetbrains.compose.resources.stringResource(Res.string.client_upcoming_charges_failed_message)) {
-                        refresh()
+                        chargesPagingList.retry()
                     }
                 }
             }
@@ -289,7 +287,7 @@ fun ChargesListContent(
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(6.dp),
+                                .padding(KptTheme.spacing.sm),
                             text = stringResource(Res.string.client_upcoming_charges_no_more_charges_available),
                             style = MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Center,

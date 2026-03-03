@@ -61,10 +61,8 @@ import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -278,9 +276,9 @@ private fun LazyListScope.appendState(data: LazyPagingItems<GroupEntity>) {
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(6.dp),
+                            .padding(KptTheme.spacing.sm),
                         text = stringResource(Res.string.feature_groups_no_more_groups_available),
-                        style = TextStyle(fontSize = 14.sp),
+                        style = KptTheme.typography.labelLarge,
                         color = DarkGray,
                         textAlign = TextAlign.Center,
                     )

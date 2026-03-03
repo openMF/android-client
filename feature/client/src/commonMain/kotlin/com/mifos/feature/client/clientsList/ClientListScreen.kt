@@ -369,7 +369,7 @@ internal fun LazyColumnForClientListApi(
     if (items.isNotEmpty()) {
         val offices = items.map { it.officeName }
             .distinct()
-        onUpdateOffices(offices)
+        LaunchedEffect(offices) { onUpdateOffices(offices) }
     }
 
     when (clientPagingList.loadState.refresh) {
@@ -441,7 +441,7 @@ internal fun LazyColumnForClientListApi(
                 is LoadState.Error -> {
                     item {
                         MifosSweetError(message = stringResource(Res.string.feature_client_failed_to_more_clients)) {
-                            onRefresh()
+                            clientPagingList.retry()
                         }
                     }
                 }
@@ -460,7 +460,6 @@ internal fun LazyColumnForClientListApi(
                             Text(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(bottom = DesignToken.padding.extraExtraLarge)
                                     .padding(bottom = DesignToken.padding.extraExtraLarge),
                                 text = stringResource(Res.string.feature_client_no_more_clients_available),
                                 style = MifosTypography.bodyMedium,

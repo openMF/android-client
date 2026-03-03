@@ -34,7 +34,6 @@ import com.mifos.core.designsystem.component.MifosBottomSheet
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
-import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.MifosActionsChargeListingComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
@@ -45,7 +44,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ShowClientCharge(
-    pagingFlow: Flow<PagingData<Page<ChargesEntity>>>,
+    pagingFlow: Flow<PagingData<ChargesEntity>>,
     onAction: (ChargesAction) -> Unit,
 ) {
     val chargesPagingList = pagingFlow.collectAsLazyPagingItems()
@@ -62,8 +61,6 @@ fun ShowClientCharge(
         is LoadState.Loading -> MifosProgressIndicator()
 
         is LoadState.NotLoading -> {
-            val chargesList = chargesPagingList[0]?.pageItems ?: emptyList()
-
             MifosBottomSheet(
                 onDismiss = {
                     onAction(ChargesAction.DismissDialog)
@@ -82,31 +79,37 @@ fun ShowClientCharge(
                         LazyColumn(
                             verticalArrangement = Arrangement.spacedBy(DesignToken.padding.medium),
                         ) {
-                            items(chargesList) {
-                                MifosActionsChargeListingComponent(
-                                    chargeTitle = it.name.toString(),
-                                    type = it.chargeCalculationType?.value.toString(),
-                                    date = it.formattedDueDate,
-                                    collectedOn = it.formattedDueDate,
-                                    amount = it.amount.toString(),
-                                    onActionClicked = { action ->
-                                        when (action) {
-                                            is Actions.Delete -> {
-                                                onAction(ChargesAction.DeleteCharge(it.id))
-                                            }
+                            items(
+                                count = chargesPagingList.itemCount,
+                                key = { index -> chargesPagingList[index]?.id ?: index },
+                            ) { index ->
+                                chargesPagingList[index]?.let { charge ->
+                                    MifosActionsChargeListingComponent(
+                                        chargeTitle = charge.name.orEmpty(),
+                                        type = charge.chargeCalculationType?.value.toString(),
+                                        date = charge.formattedDueDate,
+                                        collectedOn = charge.formattedDueDate,
+                                        amount = charge.amount.toString(),
+                                        onActionClicked = { action ->
+                                            when (action) {
+                                                is Actions.Delete -> {
+                                                    onAction(ChargesAction.DeleteCharge(charge.id))
+                                                }
 
-                                            is Actions.Edit -> {
-                                                onAction(ChargesAction.FetchEditChargeData(it.id))
-                                            }
+                                                is Actions.Edit -> {
+                                                    onAction(ChargesAction.FetchEditChargeData(charge.id))
+                                                }
 
-                                            else -> {}
-                                        }
-                                    },
-                                    isExpanded = expandedIndex == it.id,
-                                    onExpandToggle = {
-                                        expandedIndex = if (expandedIndex == it.id) -1 else it.id
-                                    },
-                                )
+                                                else -> {}
+                                            }
+                                        },
+                                        isExpanded = expandedIndex == charge.id,
+                                        onExpandToggle = {
+                                            expandedIndex =
+                                                if (expandedIndex == charge.id) -1 else charge.id
+                                        },
+                                    )
+                                }
                             }
                         }
 
@@ -117,7 +120,7 @@ fun ShowClientCharge(
                                 onAction(ChargesAction.DismissDialog)
                             },
                             onSecondBtnClick = {
-                                onAction(ChargesAction.DismissDialog)
+                                onAction(ChargesAction.CreateCharge)
                             },
                         )
                     }
