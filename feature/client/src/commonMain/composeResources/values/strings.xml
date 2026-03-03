@@ -651,6 +651,13 @@
     <string name="feature_fixed_deposit_interest_empty_date">Date Not Found</string>
     <string name="feature_fixed_account_created_successfully">Share account created successfully</string>
 
+    <!-- Empty list handling -->
+    <string name="feature_share_account_empty_list_message">No Share Account Found</string>
+    <string name="feature_fixed_account_empty_list_message">No Fixed Deposit Account Found</string>
+    <string name="feature_recurring_account_empty_list_message">No Recurring Deposit Account Found</string>
+    <string name="feature_savings_account_empty_list_message">No Savings Account Found</string>
+    <string name="feature_loan_account_empty_list_message">No Loan Account Found</string>
+
     <!-- Filters -->
     <string name="feature_client_filters">Filters</string>
     <string name="feature_client_account_status">Account Status</string>

@@ -10,8 +10,10 @@
 package com.mifos.feature.client.shareAccounts
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.add_icon
 import androidclient.feature.client.generated.resources.client_product_shares_account
 import androidclient.feature.client.generated.resources.client_savings_item
+import androidclient.feature.client.generated.resources.feature_share_account_empty_list_message
 import androidclient.feature.client.generated.resources.filter
 import androidclient.feature.client.generated.resources.search
 import androidclient.feature.client.generated.resources.string_not_available
@@ -22,12 +24,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -49,6 +53,7 @@ import template.core.base.designsystem.theme.KptTheme
 internal fun ShareAccountsScreen(
     navController: NavController,
     viewAccount: (Int) -> Unit,
+    createAccount: (Int) -> Unit,
     viewModel: ShareAccountsViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -56,6 +61,7 @@ internal fun ShareAccountsScreen(
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             is ShareAccountsEvent.ViewAccount -> viewAccount(event.accountId)
+            is ShareAccountsEvent.AddAccount -> createAccount(event.clientId)
         }
     }
 
@@ -97,7 +103,9 @@ internal fun ShareAccountsContent(
                     ShareAccountHeader(
                         totalItem = state.accounts.size.toString(),
                         onAction = onAction,
+                        isShareAccountsEmpty = state.accounts.isEmpty(),
                     )
+
                     Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
                     if (state.accounts.isNotEmpty()) {
@@ -134,12 +142,17 @@ internal fun ShareAccountsContent(
                                             )
                                         },
                                     )
+
                                     Spacer(Modifier.height(KptTheme.spacing.sm))
                                 }
                             }
                         }
                     } else {
-                        MifosEmptyCard()
+                        MifosEmptyCard(
+                            msg = stringResource(Res.string.feature_share_account_empty_list_message),
+                            isButtonPresent = true,
+                            onClick = { onAction.invoke(ShareAccountsAction.AddAccount) },
+                        )
                     }
                 }
             }
@@ -151,9 +164,11 @@ internal fun ShareAccountsContent(
 private fun ShareAccountHeader(
     totalItem: String,
     onAction: (ShareAccountsAction) -> Unit,
+    isShareAccountsEmpty: Boolean,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Column {
             Text(
@@ -170,17 +185,26 @@ private fun ShareAccountHeader(
         Spacer(modifier = Modifier.weight(1f))
 
         // add a cross icon when its active, talk with design team
-        Icon(
-            modifier = Modifier.onClick { onAction.invoke(ShareAccountsAction.ToggleSearchBar) },
-            painter = painterResource(Res.drawable.search),
-            contentDescription = null,
-        )
 
-        Icon(
-            modifier = Modifier.onClick { onAction.invoke(ShareAccountsAction.ToggleFiler) },
-            painter = painterResource(Res.drawable.filter),
-            contentDescription = null,
-        )
+        if (!isShareAccountsEmpty) {
+            Icon(
+                modifier = Modifier.onClick { onAction.invoke(ShareAccountsAction.ToggleSearchBar) },
+                painter = painterResource(Res.drawable.search),
+                contentDescription = null,
+            )
+            Spacer(modifier = Modifier.width(KptTheme.spacing.lg))
+            Icon(
+                modifier = Modifier.onClick { onAction.invoke(ShareAccountsAction.AddAccount) },
+                painter = painterResource(Res.drawable.add_icon),
+                contentDescription = null,
+            )
+            Spacer(modifier = Modifier.width(KptTheme.spacing.lg))
+            Icon(
+                modifier = Modifier.onClick { onAction.invoke(ShareAccountsAction.ToggleFiler) },
+                painter = painterResource(Res.drawable.filter),
+                contentDescription = null,
+            )
+        }
     }
 }
 

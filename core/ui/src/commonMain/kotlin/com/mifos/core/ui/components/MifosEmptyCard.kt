@@ -11,6 +11,7 @@ package com.mifos.core.ui.components
 
 import androidclient.core.ui.generated.resources.Res
 import androidclient.core.ui.generated.resources.core_ui_click_here_to_view_filled_state
+import androidclient.core.ui.generated.resources.core_ui_click_to_add_new
 import androidclient.core.ui.generated.resources.core_ui_no_item_found
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
@@ -30,6 +32,8 @@ fun MifosEmptyCard(
     msg: String? = stringResource(Res.string.core_ui_click_here_to_view_filled_state),
     title: String = stringResource(Res.string.core_ui_no_item_found),
     modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
+    isButtonPresent: Boolean = false,
 ) {
     MifosListingComponentOutline {
         Column(modifier.fillMaxWidth()) {
@@ -44,6 +48,15 @@ fun MifosEmptyCard(
                     style = MifosTypography.bodySmall,
                 )
             }
+            if (isButtonPresent) {
+                Spacer(Modifier.height((DesignToken.padding.medium)))
+                MifosButton(
+                    onClick = onClick,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(stringResource(Res.string.core_ui_click_to_add_new))
+                }
+            }
         }
     }
 }
@@ -52,6 +65,14 @@ fun MifosEmptyCard(
 @Composable
 private fun MifosEmptyCardPreview() {
     MifosTheme {
-        MifosEmptyCard("Add any to show")
+        MifosEmptyCard("Add any to show", isButtonPresent = false)
+    }
+}
+
+@Preview
+@Composable
+private fun MifosEmptyCardWithButtonPreview() {
+    MifosTheme {
+        MifosEmptyCard("Add any to show", isButtonPresent = true)
     }
 }
