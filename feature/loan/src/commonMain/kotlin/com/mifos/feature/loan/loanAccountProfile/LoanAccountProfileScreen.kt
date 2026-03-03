@@ -80,6 +80,7 @@ internal fun LoanAccountProfileScreen(
     approveLoan: (Int, LoanWithAssociationsEntity) -> Unit,
     onRepaymentClick: (LoanWithAssociationsEntity) -> Unit,
     onDetailItemClick: (LoanAccountProfileActionItem) -> Unit,
+    amountTransferScreen: (loanId: Int, officeId: Int?, clientId: Int?, currencyCode: String?) -> Unit,
     navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: LoanAccountProfileViewModel = koinViewModel(),
@@ -96,7 +97,12 @@ internal fun LoanAccountProfileScreen(
                     LoanProfileAction.Approve -> approveLoan(account.id, account)
                     LoanProfileAction.Repayment -> onRepaymentClick(account)
                     LoanProfileAction.Transfer -> {
-                        // TODO: Ticket in progress (MIFOSAC-658)
+                        amountTransferScreen(
+                            account.id,
+                            account.clientOfficeId,
+                            account.clientId,
+                            account.currency?.code,
+                        )
                     }
                 }
             }

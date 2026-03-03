@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Parcelize
 @Serializable
 data class OfficeOption(
-    val id: Int,
-    val name: String,
+    val id: Int? = null,
+    val name: String? = null,
     val nameDecorated: String? = null,
 ) : Parcelable

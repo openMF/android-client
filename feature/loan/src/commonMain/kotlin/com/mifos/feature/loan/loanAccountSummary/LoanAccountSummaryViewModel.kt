@@ -31,8 +31,8 @@ internal class LoanAccountSummaryViewModel(
 ) : BaseViewModel<LoanAccountSummaryState, LoanAccountSummaryEvent, LoanAccountSummaryAction>(
     initialState = LoanAccountSummaryState(),
 ) {
-    private val loanAccountNumber =
-        savedStateHandle.toRoute<LoanAccountSummaryScreenRoute>().loanAccountNumber
+    private val loanId =
+        savedStateHandle.toRoute<LoanAccountSummaryScreenRoute>().loanId
 
     init {
         loadLoanById()
@@ -47,30 +47,30 @@ internal class LoanAccountSummaryViewModel(
                 sendEvent(LoanAccountSummaryEvent.NavigateBack)
             }
             is LoanAccountSummaryAction.OnMoreInfoClick -> {
-                sendEvent(LoanAccountSummaryEvent.NavigateToMoreInfo(loanAccountNumber))
+                sendEvent(LoanAccountSummaryEvent.NavigateToMoreInfo(loanId))
             }
 
             is LoanAccountSummaryAction.OnTransactionsClick -> {
-                sendEvent(LoanAccountSummaryEvent.NavigateToTransactions(loanAccountNumber))
+                sendEvent(LoanAccountSummaryEvent.NavigateToTransactions(loanId))
             }
 
             is LoanAccountSummaryAction.OnRepaymentScheduleClick -> {
-                sendEvent(LoanAccountSummaryEvent.NavigateToRepaymentSchedule(loanAccountNumber))
+                sendEvent(LoanAccountSummaryEvent.NavigateToRepaymentSchedule(loanId))
             }
 
             is LoanAccountSummaryAction.OnDocumentsClick -> {
-                sendEvent(LoanAccountSummaryEvent.NavigateToDocuments(loanAccountNumber))
+                sendEvent(LoanAccountSummaryEvent.NavigateToDocuments(loanId))
             }
 
             is LoanAccountSummaryAction.OnChargesClick -> {
-                sendEvent(LoanAccountSummaryEvent.NavigateToCharges(loanAccountNumber))
+                sendEvent(LoanAccountSummaryEvent.NavigateToCharges(loanId))
             }
 
             LoanAccountSummaryAction.OnApproveLoan -> {
                 state.loanWithAssociations?.let { loan ->
                     sendEvent(
                         LoanAccountSummaryEvent.NavigateToApproveLoan(
-                            loanAccountNumber,
+                            loanId,
                             loan,
                         ),
                     )
@@ -78,7 +78,7 @@ internal class LoanAccountSummaryViewModel(
             }
 
             LoanAccountSummaryAction.OnDisburseLoan -> {
-                sendEvent(LoanAccountSummaryEvent.NavigateToDisburseLoan(loanAccountNumber))
+                sendEvent(LoanAccountSummaryEvent.NavigateToDisburseLoan(loanId))
             }
 
             LoanAccountSummaryAction.OnMakeRepayment -> {
@@ -108,7 +108,7 @@ internal class LoanAccountSummaryViewModel(
                 state.loanWithAssociations?.let { loan ->
                     sendEvent(
                         LoanAccountSummaryEvent.NavigateToLoanTransfer(
-                            loanId = loanAccountNumber,
+                            loanId = loanId,
                             officeId = null, // Not available in LoanWithAssociationsEntity
                             clientId = loan.clientId,
                             currencyCode = loan.currency?.code,
@@ -122,19 +122,19 @@ internal class LoanAccountSummaryViewModel(
     private fun handleDropdownAction(action: LoanSummaryDropDownAction) {
         when (action) {
             LoanSummaryDropDownAction.OnMoreInfoClick ->
-                sendEvent(LoanAccountSummaryEvent.NavigateToMoreInfo(loanAccountNumber))
+                sendEvent(LoanAccountSummaryEvent.NavigateToMoreInfo(loanId))
 
             LoanSummaryDropDownAction.OnTransactionsClick ->
-                sendEvent(LoanAccountSummaryEvent.NavigateToTransactions(loanAccountNumber))
+                sendEvent(LoanAccountSummaryEvent.NavigateToTransactions(loanId))
 
             LoanSummaryDropDownAction.OnRepaymentScheduleClick ->
-                sendEvent(LoanAccountSummaryEvent.NavigateToRepaymentSchedule(loanAccountNumber))
+                sendEvent(LoanAccountSummaryEvent.NavigateToRepaymentSchedule(loanId))
 
             LoanSummaryDropDownAction.OnDocumentsClick ->
-                sendEvent(LoanAccountSummaryEvent.NavigateToDocuments(loanAccountNumber))
+                sendEvent(LoanAccountSummaryEvent.NavigateToDocuments(loanId))
 
             LoanSummaryDropDownAction.OnChargesClick ->
-                sendEvent(LoanAccountSummaryEvent.NavigateToCharges(loanAccountNumber))
+                sendEvent(LoanAccountSummaryEvent.NavigateToCharges(loanId))
         }
     }
 
@@ -142,7 +142,7 @@ internal class LoanAccountSummaryViewModel(
         viewModelScope.launch {
             mutableStateFlow.update { it.copy(dialogState = LoanAccountSummaryState.DialogState.Loading) }
 
-            repository.getLoanById(loanAccountNumber).collect { dataState ->
+            repository.getLoanById(loanId).collect { dataState ->
                 when (dataState) {
                     is DataState.Loading -> {
                         mutableStateFlow.update { it.copy(dialogState = LoanAccountSummaryState.DialogState.Loading) }

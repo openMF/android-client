@@ -12,6 +12,7 @@ package com.mifos.core.network.datamanager
 import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
+import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRequest
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferResponse
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplate

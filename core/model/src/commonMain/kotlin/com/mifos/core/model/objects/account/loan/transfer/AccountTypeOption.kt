@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Parcelize
 @Serializable
 data class AccountTypeOption(
-    val id: Int,
-    val code: String,
-    val value: String,
+    val id: Int? = null,
+    val code: String? = null,
+    val value: String? = null,
 ) : Parcelable
