@@ -67,7 +67,7 @@ class ClientDetailsViewModel(
             getUserProfile()
         }
     }
-    private fun uploadImage(id: Int, imageFile: ByteArray, name : String, extension: String) = viewModelScope.launch {
+    private fun uploadImage(id: Int, imageFile: ByteArray, name: String, extension: String) = viewModelScope.launch {
         uploadClientImageUseCase(
             id,
             multipartRequestBody(

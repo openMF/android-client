@@ -211,8 +211,8 @@ class ClientDocumentsViewModel(
                                     // Uncomment them when you want to enable document update on backend.
                                     // And also enable the button on the UI Screen, for SubmitMode.UPDATE.
                                     // ( do this after uncommenting these line)
- //                                documentSelectAndUploadRepository.updateStep(step = EntityDocumentState.Step.UPDATE_PREVIEW)
- //                                documentSelectAndUploadRepository.changeSubmitMode(EntityDocumentState.SubmitMode.UPDATE)
+                                    //                                documentSelectAndUploadRepository.updateStep(step = EntityDocumentState.Step.UPDATE_PREVIEW)
+                                    //                                documentSelectAndUploadRepository.changeSubmitMode(EntityDocumentState.SubmitMode.UPDATE)
                                     sendEvent(ClientDocumentsEvents.OnViewDocument)
                                 }
                             }
