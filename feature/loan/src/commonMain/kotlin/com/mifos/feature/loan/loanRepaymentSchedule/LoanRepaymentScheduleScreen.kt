@@ -122,7 +122,7 @@ private fun LoanRepaymentScheduleContent(
     val smallWidth = DesignToken.sizes.tableCellWidthSmall
     val mediumWidth = DesignToken.sizes.tableCellWidthMedium
     val largeWidth = DesignToken.sizes.tableCellWidthLarge
-
+    val divider = DesignToken.strokes.dpPoint5
     val columnWidths = listOf(
         smallWidth, smallWidth,
         largeWidth, largeWidth,
@@ -136,9 +136,9 @@ private fun LoanRepaymentScheduleContent(
         "" to smallWidth,
         "" to largeWidth,
         "" to largeWidth,
-        stringResource(Res.string.feature_loan_loan_amount_and_balance) to (largeWidth + mediumWidth),
-        stringResource(Res.string.feature_loan_total_cost_of_loan) to (mediumWidth * 3),
-        stringResource(Res.string.feature_loan_installment_totals) to (mediumWidth * 5),
+        stringResource(Res.string.feature_loan_loan_amount_and_balance) to (largeWidth + mediumWidth + divider),
+        stringResource(Res.string.feature_loan_total_cost_of_loan) to (mediumWidth * 3 + divider * 2),
+        stringResource(Res.string.feature_loan_installment_totals) to (mediumWidth * 5 + divider * 4),
     )
 
     val columnHeaders = listOf(

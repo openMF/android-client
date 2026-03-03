@@ -22,10 +22,17 @@ import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.model.objects.account.loan.RepaymentScheduleRowData
 import com.mifos.core.model.objects.account.loan.RepaymentScheduleTableData
 import com.mifos.core.model.objects.account.loan.RepaymentScheduleTotalsData
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class LoanRepaymentScheduleViewModel(
     private val repository: LoanRepaymentScheduleRepository,
     savedStateHandle: SavedStateHandle,
@@ -33,47 +40,55 @@ class LoanRepaymentScheduleViewModel(
 
     private val loanId = savedStateHandle.toRoute<LoanRepaymentScheduleScreenRoute>().loanAccountNumber
 
-    private val _loanRepaymentScheduleUiState =
-        MutableStateFlow<LoanRepaymentScheduleUiState>(LoanRepaymentScheduleUiState.ShowProgressbar)
-    val loanRepaymentScheduleUiState: StateFlow<LoanRepaymentScheduleUiState> get() = _loanRepaymentScheduleUiState
+    private val retryTrigger = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
 
-    init {
-        loadLoanRepaySchedule()
-    }
+    val loanRepaymentScheduleUiState: StateFlow<LoanRepaymentScheduleUiState> =
+        retryTrigger
+            .onStart { emit(Unit) }
+            .flatMapLatest {
+                repository.getLoanRepaySchedule(loanId).map { state ->
+                    mapToUiState(state)
+                }
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = LoanRepaymentScheduleUiState.ShowProgressbar,
+            )
 
     fun loadLoanRepaySchedule() {
-        viewModelScope.launch {
-            repository.getLoanRepaySchedule(loanId).collect { state ->
-                _loanRepaymentScheduleUiState.value = when (state) {
-                    is DataState.Loading -> LoanRepaymentScheduleUiState.ShowProgressbar
-                    is DataState.Error -> LoanRepaymentScheduleUiState.ShowFetchingError(state.message)
-                    is DataState.Success -> {
-                        val data = state.data
-                        val currencyCode = data.currency?.code.orEmpty()
-                        val maxDigits = data.currency?.decimalPlaces ?: 2
-                        val allPeriods = data.repaymentSchedule.periods.orEmpty()
-                        val periods = data.repaymentSchedule.getListOfActualPeriods()
+        retryTrigger.tryEmit(Unit)
+    }
 
-                        val disbursementRow = allPeriods.firstOrNull()
-                            ?.takeIf { it.period == null }
-                            ?.let { buildRowData(it, "", currencyCode, maxDigits) }
+    private fun mapToUiState(state: DataState<LoanWithAssociationsEntity>): LoanRepaymentScheduleUiState {
+        return when (state) {
+            is DataState.Loading -> LoanRepaymentScheduleUiState.ShowProgressbar
+            is DataState.Error -> LoanRepaymentScheduleUiState.ShowFetchingError(state.message)
+            is DataState.Success -> {
+                val data = state.data
+                val currencyCode = data.currency?.code.orEmpty()
+                val maxDigits = data.currency?.decimalPlaces ?: 2
+                val allPeriods = data.repaymentSchedule.periods.orEmpty()
+                val periods = data.repaymentSchedule.getListOfActualPeriods()
 
-                        val rows = periods.mapIndexed { index, period ->
-                            buildRowData(period, (index + 1).toString(), currencyCode, maxDigits)
-                        }
+                val disbursementRow = allPeriods.firstOrNull()
+                    ?.takeIf { it.period == null }
+                    ?.let { buildRowData(it, "", currencyCode, maxDigits) }
 
-                        LoanRepaymentScheduleUiState.ShowLoanRepaySchedule(
-                            tableData = RepaymentScheduleTableData(
-                                disbursementRow = disbursementRow,
-                                rows = rows,
-                                totals = buildTotalsData(periods, currencyCode, maxDigits),
-                                completeCount = RepaymentSchedule.getNumberOfRepaymentsComplete(periods),
-                                overdueCount = RepaymentSchedule.getNumberOfRepaymentsOverDue(periods),
-                                pendingCount = RepaymentSchedule.getNumberOfRepaymentsPending(periods),
-                            ),
-                        )
-                    }
+                val rows = periods.mapIndexed { index, period ->
+                    buildRowData(period, (index + 1).toString(), currencyCode, maxDigits)
                 }
+
+                LoanRepaymentScheduleUiState.ShowLoanRepaySchedule(
+                    tableData = RepaymentScheduleTableData(
+                        disbursementRow = disbursementRow,
+                        rows = rows,
+                        totals = buildTotalsData(periods, currencyCode, maxDigits),
+                        completeCount = RepaymentSchedule.getNumberOfRepaymentsComplete(periods),
+                        overdueCount = RepaymentSchedule.getNumberOfRepaymentsOverDue(periods),
+                        pendingCount = RepaymentSchedule.getNumberOfRepaymentsPending(periods),
+                    ),
+                )
             }
         }
     }
