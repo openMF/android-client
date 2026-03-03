@@ -23,6 +23,7 @@ data class LoanAccountRoute(
 fun NavGraphBuilder.loanProfileAccountDestination(
     onNavigateBack: () -> Unit,
     navController: NavController,
+    navigateToGeneral: (Int) -> Unit,
     navigateToRepaymentSchedule: (Int) -> Unit,
     navigateToTransactions: (Int) -> Unit,
     navigateToCharges: (Int) -> Unit,
@@ -39,6 +40,7 @@ fun NavGraphBuilder.loanProfileAccountDestination(
         LoanAccountProfileScreen(
             navController = navController,
             onNavigateBack = onNavigateBack,
+            navigateToGeneral = navigateToGeneral,
             navigateToRepaymentSchedule = navigateToRepaymentSchedule,
             navigateToTransactions = navigateToTransactions,
             navigateToCharges = navigateToCharges,

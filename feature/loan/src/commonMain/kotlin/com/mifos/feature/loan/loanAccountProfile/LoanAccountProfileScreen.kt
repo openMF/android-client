@@ -81,6 +81,7 @@ internal fun LoanAccountProfileScreen(
     onNavigateBack: () -> Unit,
     approveLoan: (Int, LoanWithAssociationsEntity) -> Unit,
     onRepaymentClick: (LoanWithAssociationsEntity) -> Unit,
+    navigateToGeneral: (Int) -> Unit,
     navigateToRepaymentSchedule: (Int) -> Unit,
     navigateToTransactions: (Int) -> Unit,
     navigateToCharges: (Int) -> Unit,
@@ -117,6 +118,7 @@ internal fun LoanAccountProfileScreen(
                 val loanId = state.loanAccount?.id ?: -1
 
                 when (event.detailItem) {
+                    LoanAccountProfileActionItem.General -> navigateToGeneral(loanId)
                     LoanAccountProfileActionItem.RepaymentSchedule -> navigateToRepaymentSchedule(loanId)
                     LoanAccountProfileActionItem.Transactions -> navigateToTransactions(loanId)
                     LoanAccountProfileActionItem.Charges -> navigateToCharges(loanId)
