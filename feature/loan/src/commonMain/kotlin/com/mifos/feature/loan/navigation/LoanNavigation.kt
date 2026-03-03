@@ -16,7 +16,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.feature.loan.amountTransfer.navigateToTransferScreen
 import com.mifos.feature.loan.loanAccountProfile.loanProfileAccountDestination
 import com.mifos.feature.loan.loanAccountSummary.loanAccountSummary
 import com.mifos.feature.loan.loanApproval.LoanAccountApprovalScreen
@@ -47,15 +46,6 @@ fun NavGraphBuilder.loanDestination(
         onChargesClicked = navController::navigateToLoanChargesScreen,
         approveLoan = navController::navigateToLoanApprovalScreen,
         disburseLoan = navController::navigateToLoanDisbursementScreen,
-        amountTransferScreen = { loanId, officeId, clientId, currencyCode ->
-            navController.navigateToTransferScreen(
-                fromOfficeId = officeId ?: 1,
-                fromClientId = clientId ?: 0,
-                fromAccountType = 1, // Loan account type
-                fromAccountId = loanId,
-                currency = currencyCode,
-            )
-        },
         onRepaymentClick = navController::navigateToLoanRepaymentScreen,
         navController = navController,
     )
@@ -89,15 +79,11 @@ fun NavGraphBuilder.loanDestination(
         navController = navController,
         approveLoan = navController::navigateToLoanApprovalScreen,
         onRepaymentClick = navController::navigateToLoanRepaymentScreen,
-        onDetailItemClick = { },
-        amountTransferScreen = { loanId, officeId, clientId, currencyCode ->
-            navController.navigateToTransferScreen(
-                fromOfficeId = officeId ?: 1,
-                fromClientId = clientId ?: 0,
-                fromAccountType = 1, // Loan account type
-                fromAccountId = loanId,
-                currency = currencyCode,
-            )
+        navigateToRepaymentSchedule = navController::navigateToLoanRepaymentScheduleScreen,
+        navigateToTransactions = navController::navigateToLoanTransactionScreen,
+        navigateToCharges = navController::navigateToLoanChargesScreen,
+        navigateToDocuments = { loanId ->
+            onDocumentsClicked(loanId, Constants.ENTITY_TYPE_LOANS)
         },
     )
 }

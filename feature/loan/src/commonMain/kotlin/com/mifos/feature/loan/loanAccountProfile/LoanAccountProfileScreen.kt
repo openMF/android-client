@@ -79,8 +79,10 @@ internal fun LoanAccountProfileScreen(
     onNavigateBack: () -> Unit,
     approveLoan: (Int, LoanWithAssociationsEntity) -> Unit,
     onRepaymentClick: (LoanWithAssociationsEntity) -> Unit,
-    onDetailItemClick: (LoanAccountProfileActionItem) -> Unit,
-    amountTransferScreen: (loanId: Int, officeId: Int?, clientId: Int?, currencyCode: String?) -> Unit,
+    navigateToRepaymentSchedule: (Int) -> Unit,
+    navigateToTransactions: (Int) -> Unit,
+    navigateToCharges: (Int) -> Unit,
+    navigateToDocuments: (Int) -> Unit,
     navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: LoanAccountProfileViewModel = koinViewModel(),
@@ -97,16 +99,21 @@ internal fun LoanAccountProfileScreen(
                     LoanProfileAction.Approve -> approveLoan(account.id, account)
                     LoanProfileAction.Repayment -> onRepaymentClick(account)
                     LoanProfileAction.Transfer -> {
-                        amountTransferScreen(
-                            account.id,
-                            account.clientOfficeId,
-                            account.clientId,
-                            account.currency?.code,
-                        )
+                        // TODO: Ticket in progress (MIFOSAC-658)
                     }
                 }
             }
-            is LoanAccountEvent.NavigateToDetail -> onDetailItemClick(event.detailItem)
+            is LoanAccountEvent.NavigateToDetail -> {
+                val loanId = state.loanAccount?.id ?: -1
+
+                when (event.detailItem) {
+                    LoanAccountProfileActionItem.RepaymentSchedule -> navigateToRepaymentSchedule(loanId)
+                    LoanAccountProfileActionItem.Transactions -> navigateToTransactions(loanId)
+                    LoanAccountProfileActionItem.Charges -> navigateToCharges(loanId)
+                    LoanAccountProfileActionItem.Documents -> navigateToDocuments(loanId)
+                    else -> { }
+                }
+            }
             LoanAccountEvent.NavigateToAccountDetails -> {}
         }
     }
