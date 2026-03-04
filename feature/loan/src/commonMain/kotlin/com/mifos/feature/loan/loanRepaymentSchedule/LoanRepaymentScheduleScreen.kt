@@ -81,7 +81,7 @@ internal fun LoanRepaymentScheduleScreen(
     LoanRepaymentScheduleScreen(
         uiState = uiState,
         navigateBack = navigateBack,
-        onRetry = viewModel::loadLoanRepaySchedule,
+        onRetry = viewModel::loadLoanRepaymentSchedule,
     )
 }
 
