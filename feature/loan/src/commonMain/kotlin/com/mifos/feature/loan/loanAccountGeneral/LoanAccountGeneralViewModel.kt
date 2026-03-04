@@ -23,7 +23,6 @@ import androidx.navigation.toRoute
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.common.utils.Utils
 import com.mifos.core.data.repository.LoanAccountGeneralRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.ui.util.BaseViewModel
@@ -105,8 +104,19 @@ internal class LoanAccountGeneralViewModel(
         val maxDigits = loan.currency.decimalPlaces
         val summary = loan.summary
 
-        val maturityDate = formatDateList(loan.timeline.expectedMaturityDate?.map { it })
-        val disbursementDate = formatActualDisbursementDate(loan.timeline.actualDisbursementDate)
+        val expectedMaturityDate = loan.timeline.expectedMaturityDate
+        val maturityDate = if (!expectedMaturityDate.isNullOrEmpty()) {
+            DateHelper.getDateAsString(expectedMaturityDate)
+        } else {
+            ""
+        }
+
+        val actualDisbursementDate = loan.timeline.actualDisbursementDate
+        val disbursementDate = if (!actualDisbursementDate.isNullOrEmpty()) {
+            DateHelper.getDateAsString(actualDisbursementDate.filterNotNull())
+        } else {
+            ""
+        }
 
         val currencyDisplay = if (!loan.currency.name.isNullOrBlank() && !loan.currency.code.isNullOrBlank()) {
             "${loan.currency.name} ${loan.currency.code}"
@@ -175,19 +185,6 @@ internal class LoanAccountGeneralViewModel(
         }
     }
 
-    private fun formatActualDisbursementDate(date: List<Int?>?): String {
-        return if (date != null && date.size >= 3 && date.all { it != null }) {
-            @Suppress("UNCHECKED_CAST")
-            DateHelper.getDateAsString(date as List<Int>)
-        } else {
-            ""
-        }
-    }
-
-    private fun formatDateList(date: List<Int?>?): String {
-        if (date == null || date.size < 3) return ""
-        return Utils.getStringOfDate(date)
-    }
 }
 
 data class LoanAccountGeneralState(
