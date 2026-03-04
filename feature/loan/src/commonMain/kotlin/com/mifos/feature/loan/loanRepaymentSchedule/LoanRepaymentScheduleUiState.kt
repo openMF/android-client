@@ -17,7 +17,7 @@ sealed class LoanRepaymentScheduleUiState {
 
     data class ShowFetchingError(val message: String) : LoanRepaymentScheduleUiState()
 
-    data class ShowLoanRepaySchedule(
+    data class ShowLoanRepaymentSchedule(
         val tableData: RepaymentScheduleTableData,
     ) : LoanRepaymentScheduleUiState()
 }
