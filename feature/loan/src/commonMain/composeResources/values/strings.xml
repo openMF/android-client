@@ -170,6 +170,8 @@
     <string name="feature_loan_profile_item_notes_subtitle">Additional internal comments</string>
     <string name="feature_loan_profile_item_standing_instructions_title">Standing Instructions</string>
     <string name="feature_loan_profile_item_standing_instructions_subtitle">Automated payment settings</string>
+    <string name="feature_loan_profile_item_reject_loan_title">Reject Loan</string>
+    <string name="feature_loan_profile_item_reject_loan_subtitle">Submit loan rejection request</string>
     <string name="feature_loan_profile_status_active">Active</string>
     <string name="feature_loan_profile_status_pending">Pending</string>
     <string name="feature_loan_profile_status_overpaid">Overpaid</string>

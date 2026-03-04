@@ -103,13 +103,13 @@ internal fun ClientLoanAccountsScreenRoute(
         }
     }
 
-    DisposableEffect(navController) {
+    val lifecycle = navController.currentBackStackEntry?.lifecycle
+    DisposableEffect(lifecycle) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
                 viewModel.trySendAction(ClientLoanAccountsAction.Refresh)
             }
         }
-        val lifecycle = navController.currentBackStackEntry?.lifecycle
         lifecycle?.addObserver(observer)
 
         onDispose {

@@ -9,11 +9,8 @@
  */
 package com.mifos.feature.loan.loanReject
 
+import com.mifos.core.common.utils.DateHelper.today
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
-import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 
 /**
  * State holder for the reject-loan screen.
@@ -24,14 +21,5 @@ internal data class RejectLoanViewState(
     val isLoading: Boolean = false,
     val rejectedOnDateError: String? = null,
     val submissionError: String? = null,
-    val isSuccess: Boolean = false,
     val showDiscardDialog: Boolean = false,
-    val shouldNavigateBack: Boolean = false,
 )
-
-@OptIn(ExperimentalTime::class)
-internal fun today(): LocalDate {
-    return Clock.System.now()
-        .toLocalDateTime(TimeZone.currentSystemDefault())
-        .date
-}

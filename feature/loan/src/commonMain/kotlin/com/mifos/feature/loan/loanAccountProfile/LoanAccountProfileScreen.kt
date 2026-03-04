@@ -20,6 +20,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_profile_label
 import androidclient.feature.loan.generated.resources.feature_loan_profile_section_account_overview
 import androidclient.feature.loan.generated.resources.feature_loan_profile_section_actions_details
 import androidclient.feature.loan.generated.resources.feature_loan_profile_status_active
+import androidclient.feature.loan.generated.resources.feature_loan_reject_success_message
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,13 +33,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -63,6 +69,7 @@ import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.util.TextUtil
 import com.mifos.feature.loan.loanAccountProfile.components.LoanAccountProfileActionItem
 import com.mifos.feature.loan.loanAccountProfile.components.loanProfileActionItems
+import com.mifos.feature.loan.loanReject.LOAN_REJECT_SUCCESS_RESULT_KEY
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
@@ -79,15 +86,15 @@ internal fun LoanAccountProfileScreen(
     onNavigateBack: () -> Unit,
     approveLoan: (Int, LoanWithAssociationsEntity) -> Unit,
     onRepaymentClick: (LoanWithAssociationsEntity) -> Unit,
-    navigateToRepaymentSchedule: (Int) -> Unit,
-    navigateToTransactions: (Int) -> Unit,
-    navigateToCharges: (Int) -> Unit,
-    navigateToDocuments: (Int) -> Unit,
+    onDetailItemClick: (loanId: Int, LoanAccountProfileActionItem) -> Unit,
+    rejectLoan: (loanId: Int) -> Unit,
     navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: LoanAccountProfileViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val rejectSuccessMessage = stringResource(Res.string.feature_loan_reject_success_message)
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
@@ -103,33 +110,44 @@ internal fun LoanAccountProfileScreen(
                     }
                 }
             }
-            is LoanAccountEvent.NavigateToDetail -> {
-                val loanId = state.loanAccount?.id ?: -1
-
-                when (event.detailItem) {
-                    LoanAccountProfileActionItem.RepaymentSchedule -> navigateToRepaymentSchedule(loanId)
-                    LoanAccountProfileActionItem.Transactions -> navigateToTransactions(loanId)
-                    LoanAccountProfileActionItem.Charges -> navigateToCharges(loanId)
-                    LoanAccountProfileActionItem.Documents -> navigateToDocuments(loanId)
-                    else -> { }
-                }
-            }
+            is LoanAccountEvent.NavigateToDetail -> onDetailItemClick(event.loanId, event.detailItem)
+            is LoanAccountEvent.NavigateToRejectLoan -> rejectLoan(event.loanId)
             LoanAccountEvent.NavigateToAccountDetails -> {}
         }
     }
 
+    LaunchedEffect(navController) {
+        val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle ?: return@LaunchedEffect
+        savedStateHandle.getStateFlow(LOAN_REJECT_SUCCESS_RESULT_KEY, false).collect { isSuccess ->
+            if (isSuccess) {
+                viewModel.trySendAction(LoanAccountAction.OnRetry)
+                snackbarHostState.showSnackbar(message = rejectSuccessMessage)
+                savedStateHandle[LOAN_REJECT_SUCCESS_RESULT_KEY] = false
+            }
+        }
+    }
+
     if (state.dialogState == null) {
-        Column(
+        Box(
             modifier = modifier.fillMaxSize(),
         ) {
-            MifosBreadcrumbNavBar(navController)
+            Column(
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                MifosBreadcrumbNavBar(navController)
 
-            state.loanAccount?.let { loanAccount ->
-                LoanAccountContent(
-                    state = state,
-                    onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
-                )
+                state.loanAccount?.let { loanAccount ->
+                    LoanAccountContent(
+                        state = state,
+                        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+                    )
+                }
             }
+
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.align(Alignment.BottomCenter),
+            )
         }
     }
 
@@ -204,6 +222,51 @@ private fun LoanAccountContent(
                     .clickable { onAction(LoanAccountAction.OnDetailItemClick(item)) }
                     .padding(vertical = DesignToken.padding.medium),
             )
+        }
+
+        if (loanAccount.status.pendingApproval == true) {
+            val rejectItem = LoanAccountProfileActionItem.RejectLoan
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onAction(LoanAccountAction.OnDetailItemClick(rejectItem)) }
+                    .padding(vertical = DesignToken.padding.medium),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(
+                    imageVector = MifosIcons.Cancel,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(DesignToken.sizes.iconExtraLarge)
+                        .background(
+                            color = KptTheme.colorScheme.surfaceBright,
+                            shape = CircleShape,
+                        )
+                        .padding(DesignToken.padding.small),
+                )
+                Spacer(Modifier.width(DesignToken.padding.medium))
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
+                ) {
+                    Text(
+                        text = stringResource(rejectItem.title),
+                        style = MifosTypography.titleSmallEmphasized,
+                        color = KptTheme.colorScheme.onSurface,
+                    )
+                    Text(
+                        text = stringResource(rejectItem.subTitle),
+                        style = MifosTypography.bodySmall,
+                        color = KptTheme.colorScheme.secondary,
+                    )
+                }
+                Spacer(Modifier.width(DesignToken.padding.medium))
+                Icon(
+                    imageVector = MifosIcons.ChevronRight,
+                    contentDescription = null,
+                    modifier = Modifier.size(DesignToken.sizes.iconSmall),
+                )
+            }
         }
 
         Spacer(Modifier.height(KptTheme.spacing.md))

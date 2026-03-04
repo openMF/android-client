@@ -451,4 +451,54 @@ object DateHelper {
             null
         }
     }
+
+    /**
+     * Returns today's date as a [LocalDate] in the system default time zone.
+     */
+    @OptIn(ExperimentalTime::class)
+    fun today(): LocalDate {
+        return Clock.System.now()
+            .toLocalDateTime(TimeZone.currentSystemDefault())
+            .date
+    }
+
+    /**
+     * Formats a [LocalDate] as a display string using [DateFormatPattern.NUMERIC_SLASH].
+     */
+    fun LocalDate.toDisplayDate(): String {
+        return ApiDateFormatter.formatForApi(
+            date = this,
+            pattern = DateFormatPattern.NUMERIC_SLASH,
+        )
+    }
+
+    /**
+     * Converts a [LocalDate] to epoch milliseconds at the start of the day.
+     *
+     * @param timeZone the time zone to use; defaults to [TimeZone.UTC] which
+     *   matches Material 3 [DatePickerState.selectedDateMillis] semantics.
+     *   Pass [TimeZone.currentSystemDefault] when you need local-wall-clock millis.
+     */
+    fun LocalDate.toEpochMillis(
+        timeZone: TimeZone = TimeZone.UTC,
+    ): Long {
+        return atStartOfDayIn(timeZone)
+            .toEpochMilliseconds()
+    }
+
+    /**
+     * Converts epoch milliseconds to a [LocalDate].
+     *
+     * @param timeZone the time zone to use; defaults to [TimeZone.UTC] which
+     *   matches Material 3 [DatePickerState.selectedDateMillis] semantics.
+     *   Pass [TimeZone.currentSystemDefault] when the millis represent local time.
+     */
+    @OptIn(ExperimentalTime::class)
+    fun Long.toLocalDate(
+        timeZone: TimeZone = TimeZone.UTC,
+    ): LocalDate {
+        return Instant.fromEpochMilliseconds(this)
+            .toLocalDateTime(timeZone)
+            .date
+    }
 }

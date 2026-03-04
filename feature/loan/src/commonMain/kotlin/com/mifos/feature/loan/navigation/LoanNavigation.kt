@@ -17,6 +17,7 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.loan.loanAccountProfile.loanProfileAccountDestination
+import com.mifos.feature.loan.loanAccountProfile.components.LoanAccountProfileActionItem
 import com.mifos.feature.loan.loanAccountSummary.loanAccountSummary
 import com.mifos.feature.loan.loanApproval.LoanAccountApprovalScreen
 import com.mifos.feature.loan.loanCharge.loanChargeScreen
@@ -92,12 +93,20 @@ fun NavGraphBuilder.loanDestination(
         navController = navController,
         approveLoan = navController::navigateToLoanApprovalScreen,
         onRepaymentClick = navController::navigateToLoanRepaymentScreen,
-        navigateToRepaymentSchedule = navController::navigateToLoanRepaymentScheduleScreen,
-        navigateToTransactions = navController::navigateToLoanTransactionScreen,
-        navigateToCharges = navController::navigateToLoanChargesScreen,
-        navigateToDocuments = { loanId ->
-            onDocumentsClicked(loanId, Constants.ENTITY_TYPE_LOANS)
+        onDetailItemClick = { loanId, actionItem ->
+            when (actionItem) {
+                LoanAccountProfileActionItem.RepaymentSchedule ->
+                    navController.navigateToLoanRepaymentScheduleScreen(loanId)
+                LoanAccountProfileActionItem.Transactions ->
+                    navController.navigateToLoanTransactionScreen(loanId)
+                LoanAccountProfileActionItem.Charges ->
+                    navController.navigateToLoanChargesScreen(loanId)
+                LoanAccountProfileActionItem.Documents ->
+                    onDocumentsClicked(loanId, Constants.ENTITY_TYPE_LOANS)
+                else -> { }
+            }
         },
+        rejectLoan = navController::navigateToLoanRejectScreen,
     )
 }
 

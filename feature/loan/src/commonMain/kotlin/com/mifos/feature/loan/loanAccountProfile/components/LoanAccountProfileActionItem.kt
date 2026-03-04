@@ -28,6 +28,8 @@ import androidclient.feature.loan.generated.resources.feature_loan_profile_item_
 import androidclient.feature.loan.generated.resources.feature_loan_profile_item_charges_title
 import androidclient.feature.loan.generated.resources.feature_loan_profile_item_collateral_subtitle
 import androidclient.feature.loan.generated.resources.feature_loan_profile_item_collateral_title
+import androidclient.feature.loan.generated.resources.feature_loan_profile_item_reject_loan_subtitle
+import androidclient.feature.loan.generated.resources.feature_loan_profile_item_reject_loan_title
 import androidclient.feature.loan.generated.resources.feature_loan_profile_item_dashboard_subtitle
 import androidclient.feature.loan.generated.resources.feature_loan_profile_item_dashboard_title
 import androidclient.feature.loan.generated.resources.feature_loan_profile_item_documents_subtitle
@@ -58,7 +60,7 @@ import androidclient.feature.loan.generated.resources.Res as LoanRes
 sealed class LoanAccountProfileActionItem(
     val title: StringResource,
     val subTitle: StringResource,
-    val icon: DrawableResource,
+    val icon: DrawableResource? = null,
 ) {
     data object General : LoanAccountProfileActionItem(
         title = LoanRes.string.feature_loan_profile_item_general_title,
@@ -124,6 +126,11 @@ sealed class LoanAccountProfileActionItem(
         title = LoanRes.string.feature_loan_profile_item_standing_instructions_title,
         subTitle = LoanRes.string.feature_loan_profile_item_standing_instructions_subtitle,
         icon = UiRes.drawable.autorenew,
+    )
+
+    data object RejectLoan : LoanAccountProfileActionItem(
+        title = LoanRes.string.feature_loan_profile_item_reject_loan_title,
+        subTitle = LoanRes.string.feature_loan_profile_item_reject_loan_subtitle,
     )
 }
 

@@ -51,8 +51,9 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.DateFormatPattern
-import com.mifos.core.common.utils.formatDate
+import com.mifos.core.common.utils.DateHelper.toDisplayDate
+import com.mifos.core.common.utils.DateHelper.toEpochMillis
+import com.mifos.core.common.utils.DateHelper.toLocalDate
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosDialogBox
@@ -61,15 +62,10 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.ui.components.MifosProgressIndicator
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.toLocalDateTime
+import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
-import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
 
 @Composable
 internal fun RejectLoanScreen(
@@ -77,31 +73,27 @@ internal fun RejectLoanScreen(
     onRejectSuccess: () -> Unit,
     viewModel: RejectLoanViewModel = koinViewModel(),
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.stateFlow.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+
+    EventsEffect(viewModel.eventFlow) { event ->
+        when (event) {
+            RejectLoanEvent.NavigateBack -> navigateBack()
+            RejectLoanEvent.RejectSuccess -> onRejectSuccess()
+        }
+    }
 
     LaunchedEffect(state.submissionError) {
         state.submissionError?.let { message ->
             snackbarHostState.showSnackbar(message = message)
-            viewModel.processIntent(RejectLoanViewIntent.DismissError)
-        }
-    }
-
-    LaunchedEffect(state.shouldNavigateBack, state.isSuccess) {
-        if (state.shouldNavigateBack) {
-            if (state.isSuccess) {
-                onRejectSuccess()
-            } else {
-                navigateBack()
-            }
-            viewModel.processIntent(RejectLoanViewIntent.NavigationHandled)
+            viewModel.trySendAction(RejectLoanAction.DismissError)
         }
     }
 
     MifosScaffold(
         snackbarHostState = snackbarHostState,
         title = stringResource(Res.string.feature_loan_reject_title),
-        onBackPressed = { viewModel.processIntent(RejectLoanViewIntent.CancelClicked) },
+        onBackPressed = { viewModel.trySendAction(RejectLoanAction.CancelClicked) },
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -110,7 +102,7 @@ internal fun RejectLoanScreen(
         ) {
             RejectLoanContent(
                 state = state,
-                processIntent = viewModel::processIntent,
+                onAction = viewModel::trySendAction,
             )
 
             if (state.isLoading) {
@@ -122,19 +114,19 @@ internal fun RejectLoanScreen(
                 showDialogState = state.showDiscardDialog,
                 confirmButtonText = stringResource(Res.string.feature_loan_reject_discard_confirm),
                 dismissButtonText = stringResource(Res.string.feature_loan_cancel),
-                onConfirm = { viewModel.processIntent(RejectLoanViewIntent.DiscardConfirmed) },
-                onDismiss = { viewModel.processIntent(RejectLoanViewIntent.DiscardDismissed) },
+                onConfirm = { viewModel.trySendAction(RejectLoanAction.DiscardConfirmed) },
+                onDismiss = { viewModel.trySendAction(RejectLoanAction.DiscardDismissed) },
                 message = stringResource(Res.string.feature_loan_reject_discard_message),
             )
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RejectLoanContent(
     state: RejectLoanViewState,
-    processIntent: (RejectLoanViewIntent) -> Unit,
+    onAction: (RejectLoanAction) -> Unit,
 ) {
     val rejectedOnLabel = stringResource(Res.string.feature_loan_rejected_on_label)
     val noteLabel = stringResource(Res.string.feature_loan_reject_note_hint)
@@ -153,8 +145,8 @@ private fun RejectLoanContent(
                 TextButton(
                     onClick = {
                         datePickerState.selectedDateMillis?.let { millis ->
-                            processIntent(
-                                RejectLoanViewIntent.RejectedOnDateChanged(
+                            onAction(
+                                RejectLoanAction.RejectedOnDateChanged(
                                     millis.toLocalDate(),
                                 ),
                             )
@@ -200,7 +192,7 @@ private fun RejectLoanContent(
 
         MifosOutlinedTextField(
             value = state.note,
-            onValueChange = { processIntent(RejectLoanViewIntent.NoteChanged(it)) },
+            onValueChange = { onAction(RejectLoanAction.NoteChanged(it)) },
             label = noteLabel,
             config = MifosTextFieldConfig(
                 enabled = !state.isLoading,
@@ -223,7 +215,7 @@ private fun RejectLoanContent(
         ) {
             MifosOutlinedButton(
                 text = { Text(text = cancelLabel) },
-                onClick = { processIntent(RejectLoanViewIntent.CancelClicked) },
+                onClick = { onAction(RejectLoanAction.CancelClicked) },
                 enabled = !state.isLoading,
                 modifier = Modifier
                     .weight(1f)
@@ -235,7 +227,7 @@ private fun RejectLoanContent(
 
             MifosButton(
                 text = { Text(text = submitLabel) },
-                onClick = { processIntent(RejectLoanViewIntent.SubmitClicked) },
+                onClick = { onAction(RejectLoanAction.SubmitClicked) },
                 enabled = !state.isLoading,
                 modifier = Modifier
                     .weight(1f)
@@ -246,23 +238,4 @@ private fun RejectLoanContent(
             )
         }
     }
-}
-
-private fun LocalDate.toDisplayDate(): String {
-    return formatDate(
-        millis = toEpochMillis(),
-        pattern = DateFormatPattern.NUMERIC_SLASH,
-    )
-}
-
-private fun LocalDate.toEpochMillis(): Long {
-    return atStartOfDayIn(TimeZone.currentSystemDefault())
-        .toEpochMilliseconds()
-}
-
-@OptIn(ExperimentalTime::class)
-private fun Long.toLocalDate(): LocalDate {
-    return Instant.fromEpochMilliseconds(this)
-        .toLocalDateTime(TimeZone.currentSystemDefault())
-        .date
 }

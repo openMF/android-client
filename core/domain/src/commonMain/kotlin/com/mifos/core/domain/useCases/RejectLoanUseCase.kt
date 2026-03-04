@@ -9,12 +9,9 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.LoanAccountRejectRepository
 import com.mifos.core.model.objects.account.loan.RejectLoanPayload
 import com.mifos.core.model.objects.account.loan.RejectLoanResponse
-import kotlinx.coroutines.flow.Flow
 
 /**
  * Use case for rejecting a loan application.
@@ -24,13 +21,12 @@ class RejectLoanUseCase(
 ) {
 
     /**
-     * Reject a loan and expose the request state as [DataState].
+     * Reject a loan and return the response.
      */
-    operator fun invoke(
+    suspend operator fun invoke(
         loanId: Int,
         rejectLoanPayload: RejectLoanPayload,
-    ): Flow<DataState<RejectLoanResponse>> {
+    ): RejectLoanResponse {
         return repository.rejectLoan(loanId, rejectLoanPayload)
-            .asDataStateFlow()
     }
 }

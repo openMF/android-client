@@ -140,7 +140,14 @@ internal class LoanAccountProfileViewModel(
                 }
             }
             LoanAccountAction.OnNextActionClick -> handleNextAction()
-            is LoanAccountAction.OnDetailItemClick -> sendEvent(LoanAccountEvent.NavigateToDetail(action.item))
+            is LoanAccountAction.OnDetailItemClick -> {
+                val loanId = mutableStateFlow.value.loanAccount?.id ?: return
+                if (action.item is LoanAccountProfileActionItem.RejectLoan) {
+                    sendEvent(LoanAccountEvent.NavigateToRejectLoan(loanId))
+                } else {
+                    sendEvent(LoanAccountEvent.NavigateToDetail(loanId, action.item))
+                }
+            }
             LoanAccountAction.OnAccountClick -> sendEvent(LoanAccountEvent.NavigateToAccountDetails)
         }
     }
@@ -201,7 +208,8 @@ sealed interface LoanProfileAction {
 sealed interface LoanAccountEvent {
     data object NavigateBack : LoanAccountEvent
     data class NavigateToAction(val action: LoanProfileAction) : LoanAccountEvent
-    data class NavigateToDetail(val detailItem: LoanAccountProfileActionItem) : LoanAccountEvent
+    data class NavigateToDetail(val loanId: Int, val detailItem: LoanAccountProfileActionItem) : LoanAccountEvent
+    data class NavigateToRejectLoan(val loanId: Int) : LoanAccountEvent
     data object NavigateToAccountDetails : LoanAccountEvent
 }
 

@@ -55,10 +55,10 @@ interface LoanService {
     ): Flow<GenericResponse>
 
     @POST(APIEndPoint.LOANS + "/{loanId}?command=reject")
-    fun rejectLoan(
+    suspend fun rejectLoan(
         @Path("loanId") loanId: Int,
         @Body rejectLoanPayload: RejectLoanPayload,
-    ): Flow<RejectLoanResponse>
+    ): RejectLoanResponse
 
     //  Mandatory Fields
     //  String actualDisbursementDate

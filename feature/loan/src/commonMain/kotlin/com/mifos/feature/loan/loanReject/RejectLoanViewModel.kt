@@ -13,23 +13,19 @@ import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_reject_date_error_future
 import androidclient.feature.loan.generated.resources.feature_loan_unknown_error_occured
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.formatDate
+import com.mifos.core.common.utils.ApiDateFormatter
+import com.mifos.core.common.utils.DateHelper.today
 import com.mifos.core.domain.useCases.RejectLoanUseCase
 import com.mifos.core.model.objects.account.loan.RejectLoanPayload
 import com.mifos.core.model.utils.DateConstants
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
 import org.jetbrains.compose.resources.getString
+import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * ViewModel for reject-loan state and actions.
@@ -37,74 +33,52 @@ import org.jetbrains.compose.resources.getString
 internal class RejectLoanViewModel(
     private val rejectLoanUseCase: RejectLoanUseCase,
     savedStateHandle: SavedStateHandle,
-    private val currentDateProvider: () -> LocalDate = ::today,
-    private val futureDateErrorProvider: suspend () -> String = {
-        getString(Res.string.feature_loan_reject_date_error_future)
-    },
-    private val unknownErrorProvider: suspend () -> String = {
-        getString(Res.string.feature_loan_unknown_error_occured)
-    },
-) : ViewModel() {
+) : BaseViewModel<RejectLoanViewState, RejectLoanEvent, RejectLoanAction>(
+    initialState = RejectLoanViewState(rejectedOnDate = today()),
+) {
 
     private val loanId = savedStateHandle.get<Int>("loanId")
         ?: savedStateHandle.toRoute<LoanRejectScreenRoute>().loanId
 
-    private val initialDate = currentDateProvider()
+    private val initialDate = today()
 
-    private val _state = MutableStateFlow(
-        RejectLoanViewState(
-            rejectedOnDate = initialDate,
-        ),
-    )
-    val state: StateFlow<RejectLoanViewState> = _state.asStateFlow()
-
-    /**
-     * Main intent processor for reject-loan interactions.
-     */
-    fun processIntent(intent: RejectLoanViewIntent) {
-        when (intent) {
-            is RejectLoanViewIntent.RejectedOnDateChanged -> {
-                _state.update {
+    override fun handleAction(action: RejectLoanAction) {
+        when (action) {
+            is RejectLoanAction.RejectedOnDateChanged -> {
+                mutableStateFlow.update {
                     it.copy(
-                        rejectedOnDate = intent.date,
+                        rejectedOnDate = action.date,
                         rejectedOnDateError = null,
                     )
                 }
             }
 
-            is RejectLoanViewIntent.NoteChanged -> {
-                _state.update { it.copy(note = intent.note) }
+            is RejectLoanAction.NoteChanged -> {
+                mutableStateFlow.update { it.copy(note = action.note) }
             }
 
-            RejectLoanViewIntent.SubmitClicked -> submitLoanRejection()
-            RejectLoanViewIntent.CancelClicked -> onCancelClicked()
-            RejectLoanViewIntent.DismissError -> _state.update { it.copy(submissionError = null) }
-            RejectLoanViewIntent.DiscardConfirmed -> {
-                _state.update {
-                    it.copy(
-                        showDiscardDialog = false,
-                        shouldNavigateBack = true,
-                    )
-                }
+            RejectLoanAction.SubmitClicked -> submitLoanRejection()
+            RejectLoanAction.CancelClicked -> onCancelClicked()
+            RejectLoanAction.DismissError -> {
+                mutableStateFlow.update { it.copy(submissionError = null) }
             }
 
-            RejectLoanViewIntent.DiscardDismissed -> {
-                _state.update { it.copy(showDiscardDialog = false) }
+            RejectLoanAction.DiscardConfirmed -> {
+                mutableStateFlow.update { it.copy(showDiscardDialog = false) }
+                sendEvent(RejectLoanEvent.NavigateBack)
             }
 
-            RejectLoanViewIntent.NavigationHandled -> {
-                _state.update { it.copy(shouldNavigateBack = false) }
+            RejectLoanAction.DiscardDismissed -> {
+                mutableStateFlow.update { it.copy(showDiscardDialog = false) }
             }
         }
     }
 
     private fun onCancelClicked() {
-        _state.update {
-            if (isDirty(it)) {
-                it.copy(showDiscardDialog = true)
-            } else {
-                it.copy(shouldNavigateBack = true)
-            }
+        if (isDirty(state)) {
+            mutableStateFlow.update { it.copy(showDiscardDialog = true) }
+        } else {
+            sendEvent(RejectLoanEvent.NavigateBack)
         }
     }
 
@@ -113,12 +87,18 @@ internal class RejectLoanViewModel(
     }
 
     private fun submitLoanRejection() {
+        if (state.isLoading) return
+
         viewModelScope.launch {
-            val validatedState = validate(_state.value)
-            _state.value = validatedState
+            val validatedState = validate(state)
+            mutableStateFlow.value = validatedState
 
             if (validatedState.rejectedOnDateError != null) {
                 return@launch
+            }
+
+            mutableStateFlow.update {
+                it.copy(isLoading = true, submissionError = null)
             }
 
             val payload = RejectLoanPayload(
@@ -128,60 +108,45 @@ internal class RejectLoanViewModel(
                 dateFormat = DateConstants.DATE_FORMAT,
             )
 
-            rejectLoanUseCase(loanId, payload).collect { dataState ->
-                when (dataState) {
-                    is DataState.Loading -> {
-                        _state.update {
-                            it.copy(
-                                isLoading = true,
-                                submissionError = null,
-                            )
-                        }
-                    }
+            try {
+                rejectLoanUseCase(loanId, payload)
+                mutableStateFlow.update {
+                    it.copy(
+                        isLoading = false,
+                        submissionError = null,
+                    )
+                }
+                sendEvent(RejectLoanEvent.RejectSuccess)
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                val errorMessage = e.message
+                    ?.takeIf { it.isNotBlank() }
+                    ?: getString(Res.string.feature_loan_unknown_error_occured)
 
-                    is DataState.Success -> {
-                        _state.update {
-                            it.copy(
-                                isLoading = false,
-                                isSuccess = true,
-                                submissionError = null,
-                                shouldNavigateBack = true,
-                            )
-                        }
-                    }
-
-                    is DataState.Error -> {
-                        val errorMessage = dataState.exception.message
-                            ?.takeIf { it.isNotBlank() }
-                            ?: unknownErrorProvider()
-
-                        _state.update {
-                            it.copy(
-                                isLoading = false,
-                                submissionError = errorMessage,
-                            )
-                        }
-                    }
+                mutableStateFlow.update {
+                    it.copy(
+                        isLoading = false,
+                        submissionError = errorMessage,
+                    )
                 }
             }
         }
     }
 
     private suspend fun validate(state: RejectLoanViewState): RejectLoanViewState {
-        return if (state.rejectedOnDate > currentDateProvider()) {
+        return if (state.rejectedOnDate > today()) {
             state.copy(
-                rejectedOnDateError = futureDateErrorProvider(),
+                rejectedOnDateError = getString(
+                    Res.string.feature_loan_reject_date_error_future,
+                ),
             )
         } else {
-            state.copy(
-                rejectedOnDateError = null,
-            )
+            state.copy(rejectedOnDateError = null)
         }
     }
 
     private fun LocalDate.toApiDate(): String {
-        return formatDate(
-            this.atStartOfDayIn(TimeZone.currentSystemDefault()).toEpochMilliseconds(),
-        )
+        return ApiDateFormatter.formatForApi(this)
     }
 }

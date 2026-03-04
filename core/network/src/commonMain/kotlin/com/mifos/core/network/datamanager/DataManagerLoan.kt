@@ -297,10 +297,10 @@ class DataManagerLoan(
         return mBaseApiManager.loanService.disburseLoan(loanId, loanDisbursement)
     }
 
-    fun rejectLoan(
+    suspend fun rejectLoan(
         loanId: Int,
         rejectLoanPayload: RejectLoanPayload,
-    ): Flow<RejectLoanResponse> {
+    ): RejectLoanResponse {
         return mBaseApiManager.loanService.rejectLoan(loanId, rejectLoanPayload)
     }
 
