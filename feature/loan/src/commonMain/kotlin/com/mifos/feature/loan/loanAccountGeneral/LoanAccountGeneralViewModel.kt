@@ -184,7 +184,6 @@ internal class LoanAccountGeneralViewModel(
             )
         }
     }
-
 }
 
 data class LoanAccountGeneralState(
