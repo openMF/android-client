@@ -23,7 +23,6 @@ import com.mifos.core.model.utils.DateConstants
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.getString
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -102,7 +101,7 @@ internal class RejectLoanViewModel(
             }
 
             val payload = RejectLoanPayload(
-                rejectedOnDate = validatedState.rejectedOnDate.toApiDate(),
+                rejectedOnDate = ApiDateFormatter.formatForApi(validatedState.rejectedOnDate),
                 note = validatedState.note.takeIf { it.isNotBlank() },
                 locale = DateConstants.LOCALE,
                 dateFormat = DateConstants.DATE_FORMAT,
@@ -146,7 +145,4 @@ internal class RejectLoanViewModel(
         }
     }
 
-    private fun LocalDate.toApiDate(): String {
-        return ApiDateFormatter.formatForApi(this)
-    }
 }
