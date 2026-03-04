@@ -56,7 +56,7 @@ class LoanRepaymentScheduleViewModel(
                 initialValue = LoanRepaymentScheduleUiState.ShowProgressbar,
             )
 
-    fun loadLoanRepaySchedule() {
+    fun loadLoanRepaymentSchedule() {
         retryTrigger.tryEmit(Unit)
     }
 
