@@ -105,7 +105,7 @@ internal fun LoanRepaymentScheduleScreen(
                     message = uiState.message,
                     onclick = onRetry,
                 )
-                is LoanRepaymentScheduleUiState.ShowLoanRepaySchedule -> LoanRepaymentScheduleContent(
+                is LoanRepaymentScheduleUiState.ShowLoanRepaymentSchedule -> LoanRepaymentScheduleContent(
                     tableData = uiState.tableData,
                 )
             }
@@ -374,7 +374,7 @@ private class LoanRepaymentSchedulePreviewProvider :
         get() = sequenceOf(
             LoanRepaymentScheduleUiState.ShowFetchingError("Error fetching loan repayment schedule"),
             LoanRepaymentScheduleUiState.ShowProgressbar,
-            LoanRepaymentScheduleUiState.ShowLoanRepaySchedule(
+            LoanRepaymentScheduleUiState.ShowLoanRepaymentSchedule(
                 tableData = RepaymentScheduleTableData(
                     disbursementRow = null,
                     rows = listOf(

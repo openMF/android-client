@@ -79,7 +79,7 @@ class LoanRepaymentScheduleViewModel(
                     buildRowData(period, (index + 1).toString(), currencyCode, maxDigits)
                 }
 
-                LoanRepaymentScheduleUiState.ShowLoanRepaySchedule(
+                LoanRepaymentScheduleUiState.ShowLoanRepaymentSchedule(
                     tableData = RepaymentScheduleTableData(
                         disbursementRow = disbursementRow,
                         rows = rows,
