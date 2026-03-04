@@ -202,6 +202,7 @@ private fun LoanSummaryTable(
     )
 
     val totalLabel = stringResource(Res.string.feature_loan_general_summary_row_total)
+    val amountColors = listOf(textColor, KptTheme.colorScheme.primary, KptTheme.colorScheme.primary, KptTheme.colorScheme.primary, textColor, textColor)
 
     Column(modifier = modifier.fillMaxWidth()) {
         Column(
@@ -240,7 +241,6 @@ private fun LoanSummaryTable(
 
             state.summaryRows.forEachIndexed { index, row ->
                 val amounts = listOf(row.original, row.paid, row.waived, row.writtenOff, row.outstanding, row.overDue)
-                val amtColors = listOf(textColor, KptTheme.colorScheme.primary, KptTheme.colorScheme.primary, KptTheme.colorScheme.primary, textColor, textColor)
 
                 MifosTableRow(
                     cells = buildList {
@@ -275,7 +275,7 @@ private fun LoanSummaryTable(
                                     Text(
                                         text = amount,
                                         style = KptTheme.typography.bodySmall,
-                                        color = amtColors[i],
+                                        color = amountColors[i],
                                     )
                                 }
                             }
@@ -292,7 +292,6 @@ private fun LoanSummaryTable(
             }
 
             val totals = listOf(state.totalOriginal, state.totalPaid, state.totalWaived, state.totalWrittenOff, state.totalOutstanding, state.totalOverDue)
-            val totColors = listOf(textColor, KptTheme.colorScheme.primary, KptTheme.colorScheme.primary, KptTheme.colorScheme.primary, textColor, textColor)
 
             MifosTableRow(
                 cells = buildList {
@@ -327,7 +326,7 @@ private fun LoanSummaryTable(
                                 Text(
                                     text = total,
                                     style = KptTheme.typography.titleSmall,
-                                    color = totColors[i],
+                                    color = amountColors[i],
                                 )
                             }
                         }
