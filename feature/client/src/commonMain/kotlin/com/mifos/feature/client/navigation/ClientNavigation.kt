@@ -72,7 +72,7 @@ import com.mifos.feature.client.clientUpcomingCharges.navigateToClientUpcomingCh
 import com.mifos.feature.client.clientUpdateDefaultAccount.navigateToUpdateDefaultAccountRoute
 import com.mifos.feature.client.clientUpdateDefaultAccount.updateDefaultAccountDestination
 import com.mifos.feature.client.clientsList.ClientListScreen
-import com.mifos.feature.client.createNewClient.CreateNewClientScreen
+import com.mifos.feature.client.createNewClient.CreateNewClientScreenRoute
 import com.mifos.feature.client.createShareAccount.createShareAccountDestination
 import com.mifos.feature.client.createShareAccount.navigateToCreateShareAccountRoute
 import com.mifos.feature.client.documentPreviewScreen.createDocumentPreviewRoute
@@ -185,6 +185,7 @@ fun NavGraphBuilder.clientNavGraph(
         createClientRoute(
             onBackPressed = navController::popBackStack,
             hasDatatables = hasDatatables,
+            navigateToClientDetails = navController::navigateToClientDetailsProfileRoute,
         )
         clientProfileDestination(
             onNavigateBack = navController::popBackStack,
@@ -507,13 +508,15 @@ fun NavGraphBuilder.clientSurveyQuestionRoute(
 
 fun NavGraphBuilder.createClientRoute(
     onBackPressed: () -> Unit,
+    navigateToClientDetails: (Int) -> Unit,
     hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidgetDTO>>, Unit>,
 ) {
     composable(
         route = ClientScreens.CreateClientScreen.route,
     ) {
-        CreateNewClientScreen(
+        CreateNewClientScreenRoute(
             navigateBack = onBackPressed,
+            navigateToClientDetails = navigateToClientDetails,
             hasDatatables = { datatables, clientPayload ->
                 hasDatatables(datatables, clientPayload, Constants.CREATE_CLIENT, mutableListOf())
             },

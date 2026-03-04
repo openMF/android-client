@@ -151,8 +151,9 @@ import kotlin.time.ExperimentalTime
  */
 
 @Composable
-internal fun CreateNewClientScreen(
+internal fun CreateNewClientScreenRoute(
     navigateBack: () -> Unit,
+    navigateToClientDetails: (Int) -> Unit,
     hasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
     viewmodel: CreateNewClientViewModel = koinViewModel(),
 ) {
@@ -160,21 +161,18 @@ internal fun CreateNewClientScreen(
     val officeList by viewmodel.showOffices.collectAsStateWithLifecycle()
     val staffInOffice by viewmodel.staffInOffices.collectAsStateWithLifecycle()
 
-    LaunchedEffect(key1 = Unit) {
-        viewmodel.loadOfficeAndClientTemplate()
-    }
-
     CreateNewClientScreen(
         uiState = uiState,
         officeList = officeList,
         staffInOffices = staffInOffice,
+        navigateToClientDetails = navigateToClientDetails,
         onRetry = { viewmodel.loadOfficeAndClientTemplate() },
-        navigateBack = navigateBack,
         loadStaffInOffice = { viewmodel.loadStaffInOffices(it) },
         createClient = { viewmodel.createClient(clientPayload = it) },
         uploadImage = { id ->
             viewmodel.uploadImage(id)
         },
+        navigateBack = navigateBack,
         hasDatatables = hasDatatables,
         onImageSelected = {
             viewmodel.updateSelectedImage(it)
@@ -188,6 +186,7 @@ internal fun CreateNewClientScreen(
     onRetry: () -> Unit,
     officeList: List<OfficeEntity>,
     staffInOffices: List<StaffEntity>,
+    navigateToClientDetails: (Int) -> Unit,
     loadStaffInOffice: (officeId: Int) -> Unit,
     navigateBack: () -> Unit,
     onImageSelected: (PlatformFile?) -> Unit,
@@ -231,15 +230,17 @@ internal fun CreateNewClientScreen(
             }
 
             is CreateNewClientUiState.SetClientId -> {
-                if (createClientWithImage) {
-                    uploadImage(uiState.id)
-                } else {
-                    navigateBack.invoke()
+                LaunchedEffect(uiState.id) {
+                    if (createClientWithImage) {
+                        uploadImage(uiState.id)
+                    } else {
+                        navigateToClientDetails(uiState.id)
+                    }
                 }
             }
 
             is CreateNewClientUiState.ShowClientCreatedSuccessfully -> {
-                scope.launch {
+                LaunchedEffect(uiState.message) {
                     snackbarHostState.showSnackbar(
                         message = getString(Res.string.feature_client_client_created_successfully),
                         duration = SnackbarDuration.Long,
@@ -248,23 +249,23 @@ internal fun CreateNewClientScreen(
             }
 
             is CreateNewClientUiState.OnImageUploadSuccess -> {
-                scope.launch {
+                LaunchedEffect(uiState.clientId) {
                     snackbarHostState.showSnackbar(
                         message = getString(Res.string.feature_client_Image_Upload_Successful),
                         duration = SnackbarDuration.Long,
                     )
+                    navigateToClientDetails(uiState.clientId)
                 }
-                navigateBack.invoke()
             }
 
             is CreateNewClientUiState.ShowWaitingForCheckerApproval -> {
-                scope.launch {
+                LaunchedEffect(uiState.message) {
                     snackbarHostState.showSnackbar(
                         message = getString(Res.string.feature_client_waiting_for_checker_approval),
                         duration = SnackbarDuration.Long,
                     )
+                    navigateBack.invoke()
                 }
-                navigateBack.invoke()
             }
 
             is CreateNewClientUiState.ShowError -> {
@@ -1326,7 +1327,7 @@ private class CreateNewClientScreenPreviewProvider :
             ),
             CreateNewClientUiState.ShowProgressbar,
             CreateNewClientUiState.ShowClientCreatedSuccessfully(Res.string.feature_client_client_created_successfully),
-            CreateNewClientUiState.OnImageUploadSuccess(Res.string.feature_client_Image_Upload_Successful),
+            CreateNewClientUiState.OnImageUploadSuccess(Res.string.feature_client_Image_Upload_Successful, 2),
             CreateNewClientUiState.ShowWaitingForCheckerApproval(Res.string.feature_client_waiting_for_checker_approval),
         )
 }
@@ -1346,6 +1347,7 @@ private fun PreviewCreateNewClientScreen(
         createClient = { },
         uploadImage = { _ -> },
         onImageSelected = {},
+        navigateToClientDetails = { },
     ) { _, _ ->
     }
 }
