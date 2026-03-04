@@ -26,7 +26,7 @@ sealed class CreateNewClientUiState {
 
     data class ShowStringError(val message: String) : CreateNewClientUiState()
 
-    data class OnImageUploadSuccess(val message: StringResource) : CreateNewClientUiState()
+    data class OnImageUploadSuccess(val message: StringResource, val clientId: Int) : CreateNewClientUiState()
 
     data class ShowClientTemplate(
         val clientsTemplate: ClientsTemplateEntity,
