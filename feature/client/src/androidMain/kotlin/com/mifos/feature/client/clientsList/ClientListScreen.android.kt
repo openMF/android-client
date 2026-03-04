@@ -12,8 +12,8 @@ package com.mifos.feature.client.clientsList
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_clients
 import androidclient.feature.client.generated.resources.feature_client_failed_to_more_clients
-import androidclient.feature.client.generated.resources.feature_client_no_more_clients_available
 import androidclient.feature.client.generated.resources.feature_client_no_more_client_found_for_search_bar
+import androidclient.feature.client.generated.resources.feature_client_no_more_clients_available
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -81,7 +81,7 @@ internal actual fun LazyColumnForClientListApi(
                 // Reached end of pagination - show empty state
                 if (hasReachedEnd) {
                     val message = if (searchQuery.isNotEmpty()) {
-                        stringResource(Res.string.feature_client_no_more_client_found_for_search_bar)  + searchQuery
+                        stringResource(Res.string.feature_client_no_more_client_found_for_search_bar) + searchQuery
                     } else {
                         stringResource(Res.string.feature_client_no_more_clients_available)
                     }

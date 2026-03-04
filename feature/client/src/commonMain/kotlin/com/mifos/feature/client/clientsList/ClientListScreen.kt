@@ -11,9 +11,9 @@ package com.mifos.feature.client.clientsList
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.account_number_prefix
-import androidclient.feature.client.generated.resources.string_not_available
 import androidclient.feature.client.generated.resources.feature_client_no_more_client_found_for_search_bar
 import androidclient.feature.client.generated.resources.feature_client_no_more_clients_available
+import androidclient.feature.client.generated.resources.string_not_available
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -189,8 +189,8 @@ private fun ClientActions(
         if (!state.isSearchActive) {
             Spacer(Modifier.width(DesignToken.padding.largeIncreased))
             val isFilterActive = state.selectedStatus.isNotEmpty() ||
-                                 state.selectedOffices.isNotEmpty() ||
-                                 state.sort != null
+                state.selectedOffices.isNotEmpty() ||
+                state.sort != null
             Icon(
                 imageVector = MifosIcons.Filter,
                 contentDescription = null,
@@ -260,7 +260,7 @@ private fun ClientListContentScreen(
             }
             else -> {
                 val message = if (state.isSearchActive && state.searchQuery.isNotEmpty()) {
-                    stringResource(Res.string.feature_client_no_more_client_found_for_search_bar)  + state.searchQuery
+                    stringResource(Res.string.feature_client_no_more_client_found_for_search_bar) + state.searchQuery
                 } else {
                     stringResource(Res.string.feature_client_no_more_clients_available)
                 }
