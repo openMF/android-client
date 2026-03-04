@@ -79,11 +79,6 @@ internal fun LoanAccountGeneralScreen(
         navController = navController,
         modifier = modifier,
     )
-
-    LoanAccountGeneralDialog(
-        state = state,
-        onAction = viewModel::trySendAction,
-    )
 }
 
 @Composable
@@ -93,77 +88,71 @@ internal fun LoanAccountGeneralScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
 ) {
-    if (state.dialogState == null) {
-        Column(modifier = modifier.fillMaxSize()) {
-            MifosBreadcrumbNavBar(navController = navController)
+    Column(modifier = modifier.fillMaxSize()) {
+        MifosBreadcrumbNavBar(navController = navController)
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState()),
-            ) {
-                Text(
-                    text = stringResource(Res.string.feature_loan_general_section_performance_history),
-                    style = KptTheme.typography.labelLarge,
-                    modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
+        when (state.dialogState) {
+            is LoanAccountGeneralState.DialogState.Error -> {
+                MifosErrorComponent(
+                    isNetworkConnected = state.networkConnection,
+                    message = state.dialogState.message,
+                    isRetryEnabled = true,
+                    onRetry = { onAction(LoanAccountGeneralAction.OnRetry) },
                 )
+            }
 
-                Spacer(Modifier.height(DesignToken.spacing.medium))
+            LoanAccountGeneralState.DialogState.Loading -> MifosProgressIndicator()
 
-                PerformanceHistoryCard(
-                    state = state,
-                    modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
-                )
+            null -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState()),
+                ) {
+                    Text(
+                        text = stringResource(Res.string.feature_loan_general_section_performance_history),
+                        style = KptTheme.typography.labelLarge,
+                        modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
+                    )
 
-                Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
+                    Spacer(Modifier.height(DesignToken.spacing.medium))
 
-                Text(
-                    text = stringResource(Res.string.feature_loan_general_section_loan_summary),
-                    style = KptTheme.typography.labelLarge,
-                    modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
-                )
+                    PerformanceHistoryCard(
+                        state = state,
+                        modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
+                    )
 
-                Spacer(Modifier.height(DesignToken.spacing.medium))
+                    Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
 
-                LoanSummaryTable(state = state)
+                    Text(
+                        text = stringResource(Res.string.feature_loan_general_section_loan_summary),
+                        style = KptTheme.typography.labelLarge,
+                        modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
+                    )
 
-                Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
+                    Spacer(Modifier.height(DesignToken.spacing.medium))
 
-                Text(
-                    text = stringResource(Res.string.feature_loan_general_section_loan_details),
-                    style = KptTheme.typography.labelLarge,
-                    modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
-                )
+                    LoanSummaryTable(state = state)
 
-                Spacer(Modifier.height(DesignToken.spacing.medium))
+                    Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
 
-                LoanDetailsSection(
-                    state = state,
-                    modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
-                )
+                    Text(
+                        text = stringResource(Res.string.feature_loan_general_section_loan_details),
+                        style = KptTheme.typography.labelLarge,
+                        modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
+                    )
 
-                Spacer(Modifier.height(KptTheme.spacing.xl))
+                    Spacer(Modifier.height(DesignToken.spacing.medium))
+
+                    LoanDetailsSection(
+                        state = state,
+                        modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
+                    )
+
+                    Spacer(Modifier.height(KptTheme.spacing.xl))
+                }
             }
         }
-    }
-}
-
-@Composable
-private fun LoanAccountGeneralDialog(
-    state: LoanAccountGeneralState,
-    onAction: (LoanAccountGeneralAction) -> Unit,
-) {
-    when (state.dialogState) {
-        is LoanAccountGeneralState.DialogState.Error -> {
-            MifosErrorComponent(
-                isNetworkConnected = state.networkConnection,
-                message = state.dialogState.message,
-                isRetryEnabled = true,
-                onRetry = { onAction(LoanAccountGeneralAction.OnRetry) },
-            )
-        }
-        LoanAccountGeneralState.DialogState.Loading -> MifosProgressIndicator()
-        null -> Unit
     }
 }
 
