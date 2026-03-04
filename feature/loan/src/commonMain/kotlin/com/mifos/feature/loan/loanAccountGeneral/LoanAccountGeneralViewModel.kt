@@ -130,7 +130,6 @@ internal class LoanAccountGeneralViewModel(
                 summaryRows = listOf(
                     LoanAccountGeneralState.SummaryRowState(
                         component = getString(Res.string.feature_loan_general_summary_row_principal),
-                        rowType = LoanAccountGeneralState.SummaryRowType.PRINCIPAL,
                         original = formatCurrency(summary.principalDisbursed, currencyCode, decimalPlaces),
                         paid = formatCurrency(summary.principalPaid, currencyCode, decimalPlaces),
                         waived = formatCurrency(0.0, currencyCode, decimalPlaces),
@@ -140,7 +139,6 @@ internal class LoanAccountGeneralViewModel(
                     ),
                     LoanAccountGeneralState.SummaryRowState(
                         component = getString(Res.string.feature_loan_general_summary_row_interest),
-                        rowType = LoanAccountGeneralState.SummaryRowType.INTEREST,
                         original = formatCurrency(summary.interestCharged, currencyCode, decimalPlaces),
                         paid = formatCurrency(summary.interestPaid, currencyCode, decimalPlaces),
                         waived = formatCurrency(summary.interestWaived, currencyCode, decimalPlaces),
@@ -150,7 +148,6 @@ internal class LoanAccountGeneralViewModel(
                     ),
                     LoanAccountGeneralState.SummaryRowState(
                         component = getString(Res.string.feature_loan_general_summary_row_fees),
-                        rowType = LoanAccountGeneralState.SummaryRowType.FEES,
                         original = formatCurrency(summary.feeChargesCharged, currencyCode, decimalPlaces),
                         paid = formatCurrency(summary.feeChargesPaid, currencyCode, decimalPlaces),
                         waived = formatCurrency(summary.feeChargesWaived, currencyCode, decimalPlaces),
@@ -160,7 +157,6 @@ internal class LoanAccountGeneralViewModel(
                     ),
                     LoanAccountGeneralState.SummaryRowState(
                         component = getString(Res.string.feature_loan_general_summary_row_penalties),
-                        rowType = LoanAccountGeneralState.SummaryRowType.PENALTIES,
                         original = formatCurrency(summary.penaltyChargesCharged, currencyCode, decimalPlaces),
                         paid = formatCurrency(summary.penaltyChargesPaid, currencyCode, decimalPlaces),
                         waived = formatCurrency(summary.penaltyChargesWaived, currencyCode, decimalPlaces),
@@ -236,7 +232,6 @@ data class LoanAccountGeneralState(
 
     data class SummaryRowState(
         val component: String,
-        val rowType: SummaryRowType,
         val original: String,
         val paid: String,
         val waived: String,
@@ -244,13 +239,6 @@ data class LoanAccountGeneralState(
         val outstanding: String,
         val overDue: String,
     )
-
-    enum class SummaryRowType {
-        PRINCIPAL,
-        INTEREST,
-        FEES,
-        PENALTIES,
-    }
 }
 
 sealed interface LoanAccountGeneralEvent
