@@ -239,7 +239,7 @@ private fun LoanSummaryTable(
                 cornerShape = DesignToken.shapes.topMedium,
             )
 
-            state.summaryRows.forEachIndexed { index, row ->
+            state.summaryRows.forEach { row ->
                 val amounts = listOf(row.original, row.paid, row.waived, row.writtenOff, row.outstanding, row.overDue)
 
                 MifosTableRow(
@@ -282,11 +282,7 @@ private fun LoanSummaryTable(
                         }
                     },
                     widths = colWidths,
-                    backgroundColor = if (index % 2 != 0) {
-                        lerp(KptTheme.colorScheme.surface, KptTheme.colorScheme.primary, 0.08f)
-                    } else {
-                        KptTheme.colorScheme.surface
-                    },
+                    backgroundColor = KptTheme.colorScheme.surface,
                     edgeOffset = DesignToken.padding.medium,
                 )
             }
