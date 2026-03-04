@@ -13,6 +13,7 @@ import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_clients
 import androidclient.feature.client.generated.resources.feature_client_failed_to_more_clients
 import androidclient.feature.client.generated.resources.feature_client_no_more_clients_available
+import androidclient.feature.client.generated.resources.feature_client_no_more_client_found_for_search_bar
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -44,6 +45,8 @@ internal actual fun LazyColumnForClientListApi(
     modifier: Modifier,
     sort: SortTypes?,
     onUpdateOffices: (List<String?>) -> Unit,
+    isSearchActive: Boolean,
+    searchQuery: String,
 ) {
     val clientPagingList = pagingFlow.collectAsLazyPagingItems()
 
@@ -63,7 +66,38 @@ internal actual fun LazyColumnForClientListApi(
 
         is LoadState.Loading -> MifosProgressIndicator()
 
-        is LoadState.NotLoading -> Unit
+        is LoadState.NotLoading -> {
+            val isAppendLoading = clientPagingList.loadState.append is LoadState.Loading
+            val hasReachedEnd = clientPagingList.loadState.append.endOfPaginationReached
+
+            // If we have no items and are currently searching/filtering
+            if (clientPagingList.itemCount == 0 && (isSearchActive || searchQuery.isNotEmpty())) {
+                // Still loading more pages - show loading indicator
+                if (isAppendLoading) {
+                    MifosProgressIndicator()
+                    return
+                }
+
+                // Reached end of pagination - show empty state
+                if (hasReachedEnd) {
+                    val message = if (searchQuery.isNotEmpty()) {
+                        stringResource(Res.string.feature_client_no_more_client_found_for_search_bar)  + searchQuery
+                    } else {
+                        stringResource(Res.string.feature_client_no_more_clients_available)
+                    }
+
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(DesignToken.padding.extraExtraLarge),
+                        text = message,
+                        style = MifosTypography.bodyMedium,
+                        textAlign = TextAlign.Center,
+                    )
+                    return
+                }
+            }
+        }
     }
 
     if (sort != null) {

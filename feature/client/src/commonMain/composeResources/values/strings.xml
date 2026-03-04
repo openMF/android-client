@@ -666,5 +666,6 @@
     <string name="feature_client_status_overpaid">Overpaid</string>
     <string name="feature_client_status_waiting">Waiting for Disbursal</string>
     <string name="feature_client_status_pending">Pending Approval</string>
+    <string name="feature_client_no_more_client_found_for_search_bar">No clients found for </string>
 
 </resources>

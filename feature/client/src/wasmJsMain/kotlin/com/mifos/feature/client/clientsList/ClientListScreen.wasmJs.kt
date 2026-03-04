@@ -25,5 +25,7 @@ internal actual fun LazyColumnForClientListApi(
     modifier: Modifier,
     sort: SortTypes?,
     onUpdateOffices: (List<String?>) -> Unit,
+    isSearchActive: Boolean,
+    searchQuery: String,
 ) {
 }
