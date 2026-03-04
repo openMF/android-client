@@ -16,8 +16,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.feature.loan.loanAccountProfile.loanProfileAccountDestination
 import com.mifos.feature.loan.loanAccountProfile.components.LoanAccountProfileActionItem
+import com.mifos.feature.loan.loanAccountProfile.loanProfileAccountDestination
 import com.mifos.feature.loan.loanAccountSummary.loanAccountSummary
 import com.mifos.feature.loan.loanApproval.LoanAccountApprovalScreen
 import com.mifos.feature.loan.loanCharge.loanChargeScreen

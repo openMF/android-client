@@ -144,5 +144,4 @@ internal class RejectLoanViewModel(
             state.copy(rejectedOnDateError = null)
         }
     }
-
 }
