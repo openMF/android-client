@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.loan.loanRepaymentSchedule
 
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.core.model.objects.account.loan.RepaymentScheduleTableData
 
 sealed class LoanRepaymentScheduleUiState {
 
@@ -17,6 +17,7 @@ sealed class LoanRepaymentScheduleUiState {
 
     data class ShowFetchingError(val message: String) : LoanRepaymentScheduleUiState()
 
-    data class ShowLoanRepaySchedule(val loanWithAssociations: LoanWithAssociationsEntity) :
-        LoanRepaymentScheduleUiState()
+    data class ShowLoanRepaymentSchedule(
+        val tableData: RepaymentScheduleTableData,
+    ) : LoanRepaymentScheduleUiState()
 }
