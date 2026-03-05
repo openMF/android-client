@@ -37,6 +37,8 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -203,7 +205,9 @@ private fun ClientListContentScreen(
     onAction: (ClientListAction) -> Unit,
     toggleFilterVisibility: () -> Unit,
     onUpdateOffices: (List<String?>) -> Unit,
+    isRefreshing: Boolean = false,
 ) {
+    val pullRefreshState = rememberPullToRefreshState()
     Column(
         modifier = modifier.fillMaxSize(),
     ) {
@@ -215,40 +219,48 @@ private fun ClientListContentScreen(
             )
         }
 
-        when {
-            state.clients.isNotEmpty() -> {
-                ClientListContent(
-                    clientsList = state.clients,
-                    onClientClick = { clientId ->
-                        onAction(ClientListAction.OnClientClick(clientId))
-                    },
-                    modifier = Modifier.padding(KptTheme.spacing.md),
-                    fetchImage = {
-                        onAction(ClientListAction.FetchImage(it))
-                    },
-                    images = state.clientImages,
-                )
-            }
-            state.clientsFlow != null -> {
-                LazyColumnForClientListApi(
-                    pagingFlow = state.clientsFlow,
-                    onRefresh = {
-                        onAction(ClientListAction.RefreshClients)
-                    },
-                    onClientSelect = {
-                        onAction(ClientListAction.OnClientClick(it))
-                    },
-                    modifier = Modifier,
-                    fetchImage = {
-                        onAction(ClientListAction.FetchImage(it))
-                    },
-                    images = state.clientImages,
-                    sort = state.sort,
-                    onUpdateOffices = onUpdateOffices,
-                )
-            }
-            else -> {
-                MifosEmptyCard("No clients found")
+        PullToRefreshBox(
+            state = pullRefreshState,
+            onRefresh = { onAction(ClientListAction.RefreshClients) },
+            isRefreshing = isRefreshing,
+        ) {
+            when {
+                state.clients.isNotEmpty() -> {
+                    ClientListContent(
+                        clientsList = state.clients,
+                        onClientClick = { clientId ->
+                            onAction(ClientListAction.OnClientClick(clientId))
+                        },
+                        modifier = Modifier.padding(KptTheme.spacing.md),
+                        fetchImage = {
+                            onAction(ClientListAction.FetchImage(it))
+                        },
+                        images = state.clientImages,
+                    )
+                }
+
+                state.clientsFlow != null -> {
+                    LazyColumnForClientListApi(
+                        pagingFlow = state.clientsFlow,
+                        onRefresh = {
+                            onAction(ClientListAction.RefreshClients)
+                        },
+                        onClientSelect = {
+                            onAction(ClientListAction.OnClientClick(it))
+                        },
+                        modifier = Modifier,
+                        fetchImage = {
+                            onAction(ClientListAction.FetchImage(it))
+                        },
+                        images = state.clientImages,
+                        sort = state.sort,
+                        onUpdateOffices = onUpdateOffices,
+                    )
+                }
+
+                else -> {
+                    MifosEmptyCard("No clients found")
+                }
             }
         }
     }
