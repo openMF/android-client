@@ -114,6 +114,9 @@
     <string name="feature_loan_loan_fees">Loan Fees</string>
     <string name="feature_loan_loan_penalty">Loan Penalty</string>
     <string name="feature_loan_total">Total</string>
+    <string name="feature_loan_complete_count">Complete: %1$s</string>
+    <string name="feature_loan_pending_count">Pending: %1$s</string>
+    <string name="feature_loan_overdue_count">Overdue: %1$s</string>
     <string name="feature_loan_make_Repayment">Make Repayment</string>
     <string name="feature_loan_closed">Loan Closed</string>
     <string name="feature_loan_total_loan">Total Loan</string>
@@ -326,6 +329,24 @@
     <string name="due">Due</string>
     <string name="repayment_pay">Pay %1$s</string>
 
+    <!-- Repayment Schedule Table Columns -->
+    <string name="feature_loan_days">Days</string>
+    <string name="feature_loan_paid_date">Paid Date</string>
+    <string name="feature_loan_in_advance">In Advance</string>
+    <string name="feature_loan_late">Late</string>
+    <string name="feature_loan_outstanding">Outstanding</string>
+    <string name="feature_loan_number">#</string>
+    <string name="feature_loan_loan_amount_and_balance">Loan Amount and Balance</string>
+    <string name="feature_loan_total_cost_of_loan">Total Cost of Loan</string>
+    <string name="feature_loan_installment_totals">Installment Totals</string>
+    <string name="feature_loan_principal_short">Principal</string>
+    <string name="feature_loan_interest_short">Interest</string>
+    <string name="feature_loan_fees_short">Fees</string>
+    <string name="feature_loan_penalties_short">Penalties</string>
+    <string name="feature_loan_due_short">Due</string>
+    <string name="feature_loan_paid_short">Paid</string>
+    <string name="feature_loan_balance_of_loan">Balance Of Loan</string>
+    <string name="feature_loan_principal_due">Principal Due</string>
 <!--    Apply new loan Preview screen-->
     <string name="loan_new_loan_on_principal_payment">On principal payment</string>
     <string name="loan_new_loan_on_interest_payment">On interest payment</string>

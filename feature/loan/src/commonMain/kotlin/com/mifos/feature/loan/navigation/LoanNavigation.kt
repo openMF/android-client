@@ -79,7 +79,12 @@ fun NavGraphBuilder.loanDestination(
         navController = navController,
         approveLoan = navController::navigateToLoanApprovalScreen,
         onRepaymentClick = navController::navigateToLoanRepaymentScreen,
-        onDetailItemClick = { },
+        navigateToRepaymentSchedule = navController::navigateToLoanRepaymentScheduleScreen,
+        navigateToTransactions = navController::navigateToLoanTransactionScreen,
+        navigateToCharges = navController::navigateToLoanChargesScreen,
+        navigateToDocuments = { loanId ->
+            onDocumentsClicked(loanId, Constants.ENTITY_TYPE_LOANS)
+        },
     )
 }
 
