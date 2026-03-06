@@ -17,7 +17,6 @@ import androidclient.feature.loan.generated.resources.feature_loan_generate_repo
 import androidclient.feature.loan.generated.resources.feature_loan_invalid_date_range
 import androidclient.feature.loan.generated.resources.feature_loan_to_date
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,7 +32,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCustomDialog
@@ -62,61 +60,59 @@ internal fun ExportTransactionsDialog(
             color = KptTheme.colorScheme.surface,
             modifier = Modifier.fillMaxWidth(0.95f),
         ) {
-            Box(
-                contentAlignment = Alignment.Center,
-            ) {
-                Column(modifier = Modifier.padding(KptTheme.spacing.lg)) {
-                    Text(
-                        text = stringResource(Res.string.feature_loan_export_transactions),
-                        style = KptTheme.typography.titleLarge,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
+            Column(modifier = Modifier.padding(KptTheme.spacing.lg)) {
+                Text(
+                    text = stringResource(Res.string.feature_loan_export_transactions),
+                    style = KptTheme.typography.titleLarge,
+                    modifier = Modifier.fillMaxWidth(),
+                )
 
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+                Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
-                    MifosDateRangePicker(
-                        fromDate = fromDate,
-                        toDate = toDate,
-                        onFromDateSelected = { fromDate = it },
-                        onToDateSelected = { toDate = it },
-                        fromDateLabel = stringResource(Res.string.feature_loan_from_date),
-                        toDateLabel = stringResource(Res.string.feature_loan_to_date),
-                        minSelectableDate = LocalDate.parse("2000-01-01"),
-                        invalidDateRangeMessage = stringResource(Res.string.feature_loan_invalid_date_range),
-                    )
+                MifosDateRangePicker(
+                    fromDate = fromDate,
+                    toDate = toDate,
+                    onFromDateSelected = { fromDate = it },
+                    onToDateSelected = { toDate = it },
+                    fromDateLabel = stringResource(Res.string.feature_loan_from_date),
+                    toDateLabel = stringResource(Res.string.feature_loan_to_date),
+                    minSelectableDate = LocalDate.parse("2000-01-01"),
+                    invalidDateRangeMessage = stringResource(Res.string.feature_loan_invalid_date_range),
+                )
 
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+                Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    MifosOutlinedButton(
+                        onClick = onDismiss,
+                        modifier = Modifier.weight(1f),
                     ) {
-                        MifosOutlinedButton(
-                            onClick = onDismiss,
-                            modifier = Modifier.weight(1f),
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.feature_loan_cancel),
-                                style = KptTheme.typography.labelLarge,
-                                maxLines = 1,
-                            )
-                        }
+                        Text(
+                            text = stringResource(Res.string.feature_loan_cancel),
+                            style = KptTheme.typography.labelLarge,
+                            maxLines = 1,
+                        )
+                    }
 
-                        Spacer(modifier = Modifier.width(KptTheme.spacing.md))
+                    Spacer(modifier = Modifier.width(KptTheme.spacing.md))
 
-                        MifosButton(
-                            onClick = {
-                                onGenerateReport(fromDate!!, toDate!!)
-                            },
-                            enabled = isValidDateRange,
-                            modifier = Modifier.weight(1f),
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.feature_loan_generate_report),
-                                style = KptTheme.typography.labelLarge,
-                                maxLines = 1,
-                            )
-                        }
+                    MifosButton(
+                        onClick = {
+                            val from = fromDate ?: return@MifosButton
+                            val to = toDate ?: return@MifosButton
+                            onGenerateReport(from, to)
+                        },
+                        enabled = isValidDateRange,
+                        modifier = Modifier.weight(1f),
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.feature_loan_generate_report),
+                            style = KptTheme.typography.labelLarge,
+                            maxLines = 1,
+                        )
                     }
                 }
             }
