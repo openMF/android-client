@@ -44,6 +44,7 @@ fun MifosTableRow(
     showBottomBorder: Boolean = true,
     showSideBorders: Boolean = true,
     borderColor: Color = MaterialTheme.colorScheme.outlineVariant,
+    borderThickness: Dp = DesignToken.strokes.dpPoint5,
     onClick: () -> Unit = {},
 ) {
     Column(
@@ -53,7 +54,7 @@ fun MifosTableRow(
             HorizontalDivider(
                 modifier = Modifier
                     .padding(horizontal = edgeOffset),
-                thickness = 0.5.dp,
+                thickness = borderThickness,
                 color = borderColor,
             )
         }
@@ -69,7 +70,7 @@ fun MifosTableRow(
                 val cellWidth = widths.getOrElse(index) { DesignToken.sizes.tableCellWidthMedium }
                 if (showSideBorders) {
                     VerticalDivider(
-                        thickness = 0.5.dp,
+                        thickness = borderThickness,
                         color = borderColor,
                     )
                 }
@@ -78,14 +79,14 @@ fun MifosTableRow(
                     if (showBottomBorder) {
                         HorizontalDivider(
                             modifier = Modifier.align(Alignment.BottomStart),
-                            thickness = 0.5.dp,
+                            thickness = borderThickness,
                             color = borderColor,
                         )
                     }
                 }
                 if (showSideBorders && index == cells.lastIndex) {
                     VerticalDivider(
-                        thickness = 0.5.dp,
+                        thickness = borderThickness,
                         color = borderColor,
                     )
                 }

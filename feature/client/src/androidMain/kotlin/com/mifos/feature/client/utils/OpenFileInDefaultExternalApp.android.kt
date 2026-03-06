@@ -28,6 +28,7 @@ import io.github.vinceglb.filekit.absolutePath
 import io.github.vinceglb.filekit.cacheDir
 import io.github.vinceglb.filekit.context
 import io.github.vinceglb.filekit.div
+import io.github.vinceglb.filekit.extension
 import io.github.vinceglb.filekit.path
 import io.github.vinceglb.filekit.readBytes
 import io.github.vinceglb.filekit.write
@@ -49,7 +50,7 @@ actual suspend fun openPdfWithDefaultExternalApp(platformFile: PlatformFile) {
             "${context.packageName}.fileprovider",
             fileInCache,
         )
-        val mimeType = getMimeTypeFromPlatformFile(platformFile)
+        val mimeType = getMimeTypeFromPlatformFile(platformFile.extension)
         val intent = Intent(ACTION_VIEW).apply {
             setDataAndType(uri, mimeType)
 

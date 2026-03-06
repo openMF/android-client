@@ -32,6 +32,10 @@ import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.extension
+import io.github.vinceglb.filekit.name
+import io.github.vinceglb.filekit.readBytes
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -62,6 +66,10 @@ class CreateNewClientViewModel(
 
     fun updateSelectedImage(image: PlatformFile?) {
         selectedImage.value = image
+    }
+
+    init {
+        loadOfficeAndClientTemplate()
     }
 
     fun loadOfficeAndClientTemplate() {
@@ -107,6 +115,7 @@ class CreateNewClientViewModel(
                     is DataState.Error ->
                         _createNewClientUiState.value =
                             CreateNewClientUiState.ShowError(Res.string.feature_client_failed_to_fetch_staffs)
+
                     DataState.Loading -> Unit
                     is DataState.Success -> _staffInOffices.value = result.data
                 }
@@ -150,6 +159,7 @@ class CreateNewClientViewModel(
                         CreateNewClientUiState.ShowClientCreatedSuccessfully(
                             Res.string.feature_client_client_created_successfully,
                         )
+                    delay(1000)
                     _createNewClientUiState.value = CreateNewClientUiState.SetClientId(it)
                 } ?: run {
                     _createNewClientUiState.value =
@@ -171,12 +181,19 @@ class CreateNewClientViewModel(
         viewModelScope.launch {
             try {
                 val compressedImage = compressImage(selectedImage.value!!, id.toString())
-                val requestFile = multipartRequestBody(compressedImage)
+                val requestFile = multipartRequestBody(
+                    file = compressedImage.readBytes(),
+                    name = compressedImage.name,
+                    extension = compressedImage.extension,
+                )
 
                 repository.uploadClientImage(id, requestFile)
 
                 _createNewClientUiState.value =
-                    CreateNewClientUiState.OnImageUploadSuccess(Res.string.feature_client_Image_Upload_Successful)
+                    CreateNewClientUiState.OnImageUploadSuccess(
+                        Res.string.feature_client_Image_Upload_Successful,
+                        id,
+                    )
             } catch (e: Exception) {
                 _createNewClientUiState.value =
                     CreateNewClientUiState.ShowError(Res.string.feature_client_Image_Upload_Failed)

@@ -9,42 +9,42 @@
  */
 package com.mifos.core.ui.util
 
-import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.extension
 import io.github.vinceglb.filekit.name
-import io.github.vinceglb.filekit.readBytes
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import io.ktor.utils.io.InternalAPI
+import kotlin.text.substringBeforeLast
 
 @OptIn(InternalAPI::class)
-suspend fun multipartRequestBody(
-    file: PlatformFile,
-    name: String? = null,
+fun multipartRequestBody(
+    file: ByteArray,
+    name: String,
+    extension: String,
     description: String? = null,
 ): MultiPartFormDataContent {
-    val mimeType = getMimeTypeFromPlatformFile(file)
-    val byteArray = file.readBytes()
+    val fileName = "${name.substringBeforeLast(".")}.${extension.lowercase()}"
+    val mimeType = getMimeTypeFromPlatformFile(extension)
     return MultiPartFormDataContent(
         formData {
             append(
                 "file",
-                byteArray,
+                file,
                 Headers.build {
                     append(HttpHeaders.ContentType, mimeType)
-                    append(HttpHeaders.ContentDisposition, "filename=\"${file.name}\"")
+                    append(HttpHeaders.ContentDisposition, "filename=\"${fileName}\"")
                 },
             )
-            name?.let { append("name", it) }
+            append("name", name)
             description?.let { append("description", it) }
         },
     )
 }
 
-fun getMimeTypeFromPlatformFile(file: PlatformFile): String {
-    return when (file.extension.lowercase()) {
+fun getMimeTypeFromPlatformFile(extension: String): String {
+    return when (extension.lowercase()) {
         "jpeg", "jpg" -> "image/jpeg"
         "png" -> "image/png"
         "pdf" -> "application/pdf"
