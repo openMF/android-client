@@ -89,7 +89,6 @@
     <string name="feature_loan_approval_amount_can_not_be_empty">Loan approval amount can not be empty</string>
     <string name="feature_loan_error_invalid_amount">Invalid amount</string>
     <string name="feature_loan_reject_title">Reject Loan</string>
-    <string name="feature_loan_reject_loan">Reject Loan</string>
     <string name="feature_loan_rejected_on_label">Rejected On*</string>
     <string name="feature_loan_reject_note_hint">Note</string>
     <string name="feature_loan_reject_success_message">Loan rejected successfully</string>

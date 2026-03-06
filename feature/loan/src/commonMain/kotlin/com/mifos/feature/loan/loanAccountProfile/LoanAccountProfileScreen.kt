@@ -120,9 +120,9 @@ internal fun LoanAccountProfileScreen(
         val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle ?: return@LaunchedEffect
         savedStateHandle.getStateFlow(LOAN_REJECT_SUCCESS_RESULT_KEY, false).collect { isSuccess ->
             if (isSuccess) {
+                savedStateHandle[LOAN_REJECT_SUCCESS_RESULT_KEY] = false
                 viewModel.trySendAction(LoanAccountAction.OnRetry)
                 snackbarHostState.showSnackbar(message = rejectSuccessMessage)
-                savedStateHandle[LOAN_REJECT_SUCCESS_RESULT_KEY] = false
             }
         }
     }

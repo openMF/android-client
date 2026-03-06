@@ -36,8 +36,6 @@ import androidclient.feature.loan.generated.resources.feature_loan_loan_principa
 import androidclient.feature.loan.generated.resources.feature_loan_make_Repayment
 import androidclient.feature.loan.generated.resources.feature_loan_outstanding_balance
 import androidclient.feature.loan.generated.resources.feature_loan_overpaid
-import androidclient.feature.loan.generated.resources.feature_loan_reject_loan
-import androidclient.feature.loan.generated.resources.feature_loan_reject_success_message
 import androidclient.feature.loan.generated.resources.feature_loan_repayment_schedule
 import androidclient.feature.loan.generated.resources.feature_loan_staff
 import androidclient.feature.loan.generated.resources.feature_loan_summary
@@ -98,7 +96,6 @@ import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect
-import com.mifos.feature.loan.loanReject.LOAN_REJECT_SUCCESS_RESULT_KEY
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
@@ -118,7 +115,6 @@ internal fun LoanAccountSummaryScreenRoute(
     onDocumentsClicked: (loanId: Int) -> Unit,
     onChargesClicked: (loanId: Int) -> Unit,
     approveLoan: (loadId: Int, loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
-    rejectLoan: (loanId: Int) -> Unit,
     disburseLoan: (loanId: Int) -> Unit,
     onRepaymentClick: (loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
     navController: NavController,
@@ -127,7 +123,6 @@ internal fun LoanAccountSummaryScreenRoute(
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val loanIdCopiedMessage = stringResource(Res.string.feature_loan_loan_id_copied)
-    val rejectLoanSuccessMessage = stringResource(Res.string.feature_loan_reject_success_message)
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
@@ -156,10 +151,6 @@ internal fun LoanAccountSummaryScreenRoute(
                 approveLoan(event.loanId, event.loanWithAssociations)
             }
 
-            is LoanAccountSummaryEvent.NavigateToRejectLoan -> {
-                rejectLoan(event.loanId)
-            }
-
             is LoanAccountSummaryEvent.NavigateToDisburseLoan -> {
                 disburseLoan(event.loanId)
             }
@@ -178,17 +169,6 @@ internal fun LoanAccountSummaryScreenRoute(
                     viewModel.trySendAction(LoanAccountSummaryAction.OnMessageShown)
                 }
             }
-    }
-
-    LaunchedEffect(navController) {
-        val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle ?: return@LaunchedEffect
-        savedStateHandle.getStateFlow(LOAN_REJECT_SUCCESS_RESULT_KEY, false).collect { isSuccess ->
-            if (isSuccess) {
-                viewModel.trySendAction(LoanAccountSummaryAction.OnRetry)
-                snackbarHostState.showSnackbar(message = rejectLoanSuccessMessage)
-                savedStateHandle[LOAN_REJECT_SUCCESS_RESULT_KEY] = false
-            }
-        }
     }
 
     LoanAccountSummaryScreen(
@@ -717,23 +697,11 @@ private fun LoanSummaryDropdown(
                 onAction(LoanAccountSummaryAction.DropdownAction(LoanSummaryDropDownAction.OnChargesClick))
             },
         )
-        if (state.loanWithAssociations?.status?.isPendingApprovalStatus() == true) {
-            MifosMenuDropDownItem(
-                option = stringResource(Res.string.feature_loan_reject_loan),
-                onClick = {
-                    onAction(LoanAccountSummaryAction.DropdownAction(LoanSummaryDropDownAction.OnRejectLoanClick))
-                },
-            )
-        }
     }
 }
 
 private fun LoanStatusEntity.isButtonActive(): Boolean {
     return active == true || pendingApproval == true || waitingForDisbursal == true
-}
-
-private fun LoanStatusEntity.isPendingApprovalStatus(): Boolean {
-    return code == "loanStatusType.submittedAndPendingApproval" || pendingApproval == true
 }
 
 private class LoanAccountSummaryPreviewProvider :

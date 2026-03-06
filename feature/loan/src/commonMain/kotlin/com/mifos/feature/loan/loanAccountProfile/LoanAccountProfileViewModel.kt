@@ -141,7 +141,9 @@ internal class LoanAccountProfileViewModel(
             }
             LoanAccountAction.OnNextActionClick -> handleNextAction()
             is LoanAccountAction.OnDetailItemClick -> {
-                val loanId = mutableStateFlow.value.loanAccount?.id ?: return
+                val loanId = mutableStateFlow.value.loanAccount?.id?.takeIf { it > 0 }
+                    ?: route.loanId.takeIf { it > 0 }
+                    ?: return
                 if (action.item is LoanAccountProfileActionItem.RejectLoan) {
                     sendEvent(LoanAccountEvent.NavigateToRejectLoan(loanId))
                 } else {

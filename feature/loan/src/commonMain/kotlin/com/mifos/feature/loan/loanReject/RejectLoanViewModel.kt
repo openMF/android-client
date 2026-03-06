@@ -39,7 +39,7 @@ internal class RejectLoanViewModel(
     private val loanId = savedStateHandle.get<Int>("loanId")
         ?: savedStateHandle.toRoute<LoanRejectScreenRoute>().loanId
 
-    private val initialDate = today()
+    private val initialDate = state.rejectedOnDate
 
     override fun handleAction(action: RejectLoanAction) {
         when (action) {

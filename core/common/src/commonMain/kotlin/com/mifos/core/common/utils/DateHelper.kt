@@ -453,12 +453,17 @@ object DateHelper {
     }
 
     /**
-     * Returns today's date as a [LocalDate] in the system default time zone.
+     * Returns today's date as a [LocalDate].
+     *
+     * @param timeZone the time zone to use; defaults to [TimeZone.UTC] to stay
+     *   consistent with [toEpochMillis] / [toLocalDate] and Material 3 date-picker
+     *   semantics. Pass [TimeZone.currentSystemDefault] when you need the
+     *   local-wall-clock date.
      */
     @OptIn(ExperimentalTime::class)
-    fun today(): LocalDate {
+    fun today(timeZone: TimeZone = TimeZone.UTC): LocalDate {
         return Clock.System.now()
-            .toLocalDateTime(TimeZone.currentSystemDefault())
+            .toLocalDateTime(timeZone)
             .date
     }
 
