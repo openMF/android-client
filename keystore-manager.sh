@@ -66,7 +66,7 @@ EXCLUDED_GITHUB_KEYS=(
 )
 
 # Global associative array for iOS string secrets
-declare -g -A IOS_STRING_SECRETS
+declare -A IOS_STRING_SECRETS
 
 # Function to strip quotes from values
 strip_quotes() {
