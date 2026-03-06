@@ -41,7 +41,6 @@
     <string name="feature_loan_submit">Submit</string>
 
 
-
     <string name="feature_loan_failed_to_load_loan">Failed to load loan</string>
     <string name="feature_loan_failed_to_load_template">Failed to load loan template</string>
     <string name="feature_loan_failed_to_create_loan_account">Failed to create loan account</string>
@@ -365,7 +364,7 @@
     <string name="feature_loan_paid_short">Paid</string>
     <string name="feature_loan_balance_of_loan">Balance Of Loan</string>
     <string name="feature_loan_principal_due">Principal Due</string>
-<!--    Apply new loan Preview screen-->
+    <!--    Apply new loan Preview screen-->
     <string name="loan_new_loan_on_principal_payment">On principal payment</string>
     <string name="loan_new_loan_on_interest_payment">On interest payment</string>
     <string name="loan_new_loan_on_arrears_aging">On Arrears Aging</string>
@@ -404,6 +403,95 @@
     <string name="loan_new_loan_view">View</string>
     <string name="loan_new_loan_active_charges">Active Charges</string>
 
+    <!-- Loan dashboard Screen -->
+    <string name="feature_loan_dashboard">Dashboard</string>
+
+    <string name="feature_loan_loan_account_number">Account Number</string>
+
+    <string name="feature_loan_total_outstanding">Total Outstanding</string>
+    <string name="feature_loan_requested_amount">Requested Amount</string>
+    <string name="feature_loan_surplus_balance">Surplus Balance</string>
+    <string name="feature_loan_written_off_amount">Amount Written Off</string>
+    <string name="feature_loan_rescheduled_amount">Rescheduled Amount</string>
+
+    <string name="feature_loan_status_pending_approval">Pending Approval</string>
+    <string name="feature_loan_status_waiting_for_disbursal">Awaiting Disbursal</string>
+    <string name="feature_loan_status_active">Active</string>
+    <string name="feature_loan_status_overpaid">Overpaid</string>
+    <string name="feature_loan_status_closed_met">Closed (Fully Repaid)</string>
+    <string name="feature_loan_status_closed_written_off">Closed (Written Off)</string>
+    <string name="feature_loan_status_closed_rescheduled">Closed (Rescheduled)</string>
+    <string name="feature_loan_status_rejected">Rejected</string>
+    <string name="feature_loan_status_withdrawn_by_applicant">Withdrawn by Applicant</string>
+
+    <string name="feature_loan_expected_next_payment">Expected Next Payment</string>
+    <string name="feature_loan_next_payment">Next Payment</string>
+
+    <string name="feature_loan_account_reject">Reject</string>
+    <string name="feature_loan_account_approve">Approve</string>
+    <string name="feature_loan_account_undo_approval">Undo Approval</string>
+    <string name="feature_loan_account_disburse">Disburse</string>
+    <string name="feature_loan_account_make_repayment">Make repayment</string>
+    <string name="feature_loan_account_credit_balance_refund">Credit balance refund</string>
+
+    <string name="feature_loan_recent_transactions">Recent Transactions</string>
+    <string name="feature_loan_view_all">View All</string>
+    <string name="feature_loan_monthly_repayment">Monthly Repayment</string>
+    <string name="feature_loan_transaction_disbursement">Disbursement</string>
+    <string name="feature_loan_transaction_repayment_at_disbursement">Repayment at Disbursement</string>
+    <string name="feature_loan_transaction_repayment">Repayment</string>
+    <string name="feature_loan_transaction_contra">Contra</string>
+    <string name="feature_loan_transaction_waive_interest">Waive Interest</string>
+    <string name="feature_loan_transaction_waive_charges">Waive Charges</string>
+    <string name="feature_loan_transaction_accrual">Accrual</string>
+    <string name="feature_loan_transaction_write_off">Write Off</string>
+    <string name="feature_loan_transaction_recovery_repayment">Recovery Repayment</string>
+    <string name="feature_loan_transaction_initiate_transfer">Initiate Transfer</string>
+    <string name="feature_loan_transaction_approve_transfer">Approve Transfer</string>
+    <string name="feature_loan_transaction_withdraw_transfer">Withdraw Transfer</string>
+    <string name="feature_loan_transaction_reject_transfer">Reject Transfer</string>
+    <string name="feature_loan_transaction_charge_payment">Charge Payment</string>
+    <string name="feature_loan_transaction_refund">Refund</string>
+    <string name="feature_loan_transaction_unknown">Transaction</string>
+
+    <string name="feature_loan_repaid">Repaid</string>
+    <string name="feature_loan_disbursed_amount">Disbursed Amount</string>
+    <string name="feature_loan_total_payment_received">Total Payment Received</string>
+
+    <string name="feature_loan_interest_charged">Interest Charged</string>
+    <string name="feature_loan_total_interest">Total interest</string>
+    <string name="feature_loan_remaining_balance">Remaining balance</string>
+
+    <string name="feature_loan_repayment_progress">Repayment Progress</string>
+    <string name="feature_loan_total_repaid">Total Repaid</string>
+    <string name="feature_loan_total_paid">Total Paid</string>
+    <string name="feature_loan_surplus">Surplus</string>
+    <string name="feature_loan_recovered">Recovered</string>
+    <string name="feature_loan_written_off">Written Off</string>
+
+    <string name="feature_loan_timeline">Timeline</string>
+    <string name="feature_loan_review_in_progress">Review in progress</string>
+    <string name="feature_loan_timeline_submitted_date">Application Submitted</string>
+    <string name="feature_loan_timeline_approved_date">Application Approved</string>
+    <string name="feature_loan_timeline_expected_disbursement">Expected Disbursement</string>
+    <string name="feature_loan_timeline_disbursed_date">Amount Disbursed</string>
+    <string name="feature_loan_timeline_overpaid">Loan Overpaid</string>
+    <string name="feature_loan_timeline_closed">Loan Closed</string>
+    <string name="feature_loan_timeline_rescheduled">Loan Rescheduled</string>
+    <string name="feature_loan_timeline_rejected">Application Rejected</string>
+    <string name="feature_loan_timeline_withdrawn">Application Withdrawn</string>
+    <string name="feature_loan_timeline_expected_maturity">Expected Maturity</string>
+    <string name="feature_loan_timeline_maturity_date">Maturity Date</string>
+    <string name="feature_loan_payment_schedule">Payment Schedule</string>
+    <string name="feature_loan_projected_payment_schedule">Projected Payment Schedule</string>
+    <string name="feature_loan_interest">Interest</string>
+    <string name="feature_loan_period">Period</string>
+
+    <string name="feature_loan_button_approve">Approve</string>
+    <string name="feature_loan_button_reject">Reject</string>
+    <string name="feature_loan_button_reapply">Re-apply</string>
+
+    <!-- Handle Error-->
     <!-- Amount Transfer-->
     <string name="field_empty">This field cannot be empty</string>
     <string name="feature_loan_applicant_name">Applicant name</string>
