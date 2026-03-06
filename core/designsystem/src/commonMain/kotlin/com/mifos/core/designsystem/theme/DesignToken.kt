@@ -117,6 +117,9 @@ data class AppSpacing(
     val dp164: Dp = 164.dp,
     val dp300: Dp = 300.dp,
     val negativeDp7: Dp = (-7).dp,
+    val negativeDp2: Dp = (-2).dp,
+    val negativeDp8: Dp = (-8).dp,
+    val negativeDp20: Dp = (-20).dp,
 )
 
 /**
@@ -419,6 +422,7 @@ data class AppSizes(
     val tableCellWidthLarge: Dp = 150.dp,
     val tableCellWidthExtraLarge: Dp = 180.dp,
     val tableCellWidthExtraExtraLarge: Dp = 240.dp,
+    val chartHeight: Dp = 220.dp,
 )
 
 @Immutable
@@ -429,6 +433,7 @@ data class AppStrokes(
     val dp2: Dp = 2.dp,
     val dp4: Dp = 4.dp,
     val dp5: Dp = 5.dp,
+    val dp10: Dp = 10.dp,
 )
 
 /**
