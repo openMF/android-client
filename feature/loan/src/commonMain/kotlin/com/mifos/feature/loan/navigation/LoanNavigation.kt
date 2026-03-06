@@ -102,7 +102,20 @@ fun NavGraphBuilder.loanDestination(
                     navController.navigateToLoanChargesScreen(loanId)
                 LoanAccountProfileActionItem.Documents ->
                     onDocumentsClicked(loanId, Constants.ENTITY_TYPE_LOANS)
-                else -> { }
+                // Items below are rendered in the UI but have no navigation target yet.
+                // Listed explicitly so the compiler flags any new item that is added later.
+                LoanAccountProfileActionItem.General,
+                LoanAccountProfileActionItem.Dashboard,
+                LoanAccountProfileActionItem.AccountDetails,
+                LoanAccountProfileActionItem.Originators,
+                LoanAccountProfileActionItem.Collateral,
+                LoanAccountProfileActionItem.TermVariations,
+                LoanAccountProfileActionItem.Reschedules,
+                LoanAccountProfileActionItem.Notes,
+                LoanAccountProfileActionItem.StandingInstructions,
+                -> Unit
+                // RejectLoan is intercepted in the ViewModel and never reaches here.
+                LoanAccountProfileActionItem.RejectLoan -> Unit
             }
         },
         rejectLoan = navController::navigateToLoanRejectScreen,
