@@ -49,7 +49,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -71,6 +70,7 @@ import com.mifos.core.model.objects.account.loan.Transaction
 import com.mifos.core.model.objects.account.loan.Type
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -83,26 +83,17 @@ internal fun LoanTransactionsScreen(
     navigateBack: () -> Unit,
     viewModel: LoanTransactionsViewModel = koinViewModel(),
 ) {
-    val uiState by viewModel.loanTransactionsUiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.stateFlow.collectAsStateWithLifecycle()
 
-    LaunchedEffect(key1 = Unit) {
-        viewModel.loadLoanTransaction()
+    EventsEffect(viewModel.eventFlow) { event ->
+        when (event) {
+            LoanTransactionsEvent.NavigateBack -> navigateBack()
+        }
     }
 
     LoanTransactionsScreen(
         uiState = uiState,
-        navigateBack = navigateBack,
-        onRetry = { viewModel.loadLoanTransaction() },
-        onDismissBottomSheet = { viewModel.dismissBottomSheet() },
-        onTransactionActionClick = { action, id ->
-            viewModel.onActionSelected(
-                action,
-                id,
-            )
-        },
-        onRowAction = { row -> viewModel.onRowAction(row) },
-        onExportClick = { viewModel.showExportDialog() },
-        onDismissExportDialog = { viewModel.hideExportDialog() },
+        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
     )
 }
 
@@ -110,27 +101,21 @@ internal fun LoanTransactionsScreen(
 @Composable
 internal fun LoanTransactionsScreen(
     uiState: LoanTransactionsUiState,
-    navigateBack: () -> Unit,
-    onRetry: () -> Unit,
-    onDismissBottomSheet: () -> Unit,
-    onTransactionActionClick: (TransactionAction, Int) -> Unit,
-    onExportClick: () -> Unit = {},
-    onDismissExportDialog: () -> Unit = {},
-    onRowAction: (LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData) -> Unit = {},
+    onAction: (LoanTransactionsAction) -> Unit = {},
 ) {
     val snackbarHostState = remember {
         SnackbarHostState()
     }
 
-    val isExportDialogOpen = uiState is LoanTransactionsUiState.ShowLoanTransaction &&
-        uiState.isExportDialogOpen
-
     MifosScaffold(
         snackbarHostState = snackbarHostState,
         title = stringResource(Res.string.feature_loan_loan_transactions),
-        onBackPressed = navigateBack,
+        onBackPressed = { onAction(LoanTransactionsAction.NavigateBack) },
         actions = {
-            IconButton(onClick = onExportClick) {
+            IconButton(
+                onClick = { onAction(LoanTransactionsAction.ShowExportDialog) },
+                enabled = !uiState.isLoading && uiState.errorMessage == null,
+            ) {
                 Icon(
                     imageVector = MifosIcons.FileUpload,
                     contentDescription = stringResource(Res.string.feature_loan_export_transactions),
@@ -143,21 +128,28 @@ internal fun LoanTransactionsScreen(
                 .fillMaxSize()
                 .padding(it),
         ) {
-            when (uiState) {
-                is LoanTransactionsUiState.ShowFetchingError -> {
+            when {
+                uiState.isLoading -> {
+                    MifosProgressIndicator()
+                }
+
+                uiState.errorMessage != null -> {
                     MifosSweetError(
-                        message = uiState.message,
-                        onclick = onRetry,
+                        message = uiState.errorMessage,
+                        onclick = { onAction(LoanTransactionsAction.Retry) },
                     )
                 }
 
-                is LoanTransactionsUiState.ShowLoanTransaction -> {
-                    if (uiState.transactionsTableData == null || uiState.transactionsTableData.transactions.isEmpty()) {
+                else -> {
+                    val tableData = uiState.transactionsTableData
+                    if (tableData == null || tableData.transactions.isEmpty()) {
                         MifosEmptyUi(text = stringResource(Res.string.feature_loan_no_transactions))
                     } else {
                         LoanTransactionsTableContent(
-                            tableData = uiState.transactionsTableData,
-                            onRowAction = onRowAction,
+                            tableData = tableData,
+                            onRowAction = { row ->
+                                onAction(LoanTransactionsAction.OnRowAction(row))
+                            },
                         )
                     }
 
@@ -166,28 +158,29 @@ internal fun LoanTransactionsScreen(
                             transactionType = uiState.selectedRow?.transactionType
                                 ?: TransactionType.UNKNOWN,
                             manuallyReversed = uiState.selectedRow?.manuallyReversed ?: false,
-                            onDismissRequest = onDismissBottomSheet,
+                            onDismissRequest = { onAction(LoanTransactionsAction.DismissBottomSheet) },
                             onAction = { action ->
                                 uiState.selectedRow?.id?.let { id ->
-                                    onTransactionActionClick(action, id.toInt())
+                                    onAction(
+                                        LoanTransactionsAction.OnTransactionAction(
+                                            action,
+                                            id.toInt(),
+                                        ),
+                                    )
                                 }
                             },
                         )
                     }
                 }
-
-                LoanTransactionsUiState.ShowProgressBar -> {
-                    MifosProgressIndicator()
-                }
             }
         }
     }
 
-    if (isExportDialogOpen) {
+    if (uiState.isExportDialogOpen) {
         ExportTransactionsDialog(
-            onDismiss = onDismissExportDialog,
+            onDismiss = { onAction(LoanTransactionsAction.HideExportDialog) },
             onGenerateReport = { _, _ ->
-                onDismissExportDialog()
+                onAction(LoanTransactionsAction.HideExportDialog)
             },
         )
     }
@@ -537,9 +530,10 @@ private class LoanTransactionsPreviewProvider : PreviewParameterProvider<LoanTra
 
     override val values: Sequence<LoanTransactionsUiState>
         get() = sequenceOf(
-            LoanTransactionsUiState.ShowFetchingError(""),
-            LoanTransactionsUiState.ShowProgressBar,
-            LoanTransactionsUiState.ShowLoanTransaction(
+            LoanTransactionsUiState(isLoading = false, errorMessage = "Network error"),
+            LoanTransactionsUiState(isLoading = true),
+            LoanTransactionsUiState(
+                isLoading = false,
                 transactionsTableData = LoanTransactionsUiState.LoanTransactionsTableData(
                     transactions = List(10) { index ->
                         LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData(
@@ -569,9 +563,5 @@ private fun PreviewLoanTransactions(
 ) {
     LoanTransactionsScreen(
         uiState = loanTransactionsUiState,
-        navigateBack = {},
-        onRetry = {},
-        onDismissBottomSheet = {},
-        onTransactionActionClick = { _, _ -> },
     )
 }

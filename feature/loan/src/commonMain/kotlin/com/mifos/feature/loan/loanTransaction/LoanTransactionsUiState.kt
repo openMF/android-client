@@ -9,19 +9,14 @@
  */
 package com.mifos.feature.loan.loanTransaction
 
-sealed class LoanTransactionsUiState {
-
-    data object ShowProgressBar : LoanTransactionsUiState()
-
-    data class ShowFetchingError(val message: String) : LoanTransactionsUiState()
-
-    data class ShowLoanTransaction(
-        val transactionsTableData: LoanTransactionsTableData? = null,
-        val selectedRow: LoanTransactionsTableData.TransactionRowData? = null,
-        val isBottomSheetOpen: Boolean = false,
-        val isExportDialogOpen: Boolean = false,
-    ) : LoanTransactionsUiState()
-
+data class LoanTransactionsUiState(
+    val isLoading: Boolean = true,
+    val errorMessage: String? = null,
+    val transactionsTableData: LoanTransactionsTableData? = null,
+    val selectedRow: LoanTransactionsTableData.TransactionRowData? = null,
+    val isBottomSheetOpen: Boolean = false,
+    val isExportDialogOpen: Boolean = false,
+) {
     data class LoanTransactionsTableData(
         val transactions: List<TransactionRowData>,
     ) {

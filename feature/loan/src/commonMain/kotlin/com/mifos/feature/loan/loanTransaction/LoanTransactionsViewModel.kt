@@ -10,41 +10,71 @@
 package com.mifos.feature.loan.loanTransaction
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.LoanTransactionsRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.mifos.core.ui.util.BaseViewModel
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LoanTransactionsViewModel(
     private val repository: LoanTransactionsRepository,
     savedStateHandle: SavedStateHandle,
-) : ViewModel() {
+) : BaseViewModel<LoanTransactionsUiState, LoanTransactionsEvent, LoanTransactionsAction>(
+    initialState = LoanTransactionsUiState(),
+) {
 
-    val loanId = savedStateHandle.toRoute<LoanTransactionScreenRoute>().loanAccountNumber
+    private val loanId = savedStateHandle.toRoute<LoanTransactionScreenRoute>().loanAccountNumber
 
-    private val _loanTransactionsUiState =
-        MutableStateFlow<LoanTransactionsUiState>(LoanTransactionsUiState.ShowProgressBar)
-    val loanTransactionsUiState: StateFlow<LoanTransactionsUiState> get() = _loanTransactionsUiState
+    init {
+        loadLoanTransaction()
+    }
 
-    fun loadLoanTransaction() {
+    override fun handleAction(action: LoanTransactionsAction) {
+        when (action) {
+            LoanTransactionsAction.Retry -> loadLoanTransaction()
+            LoanTransactionsAction.ShowExportDialog -> mutableStateFlow.update {
+                it.copy(isExportDialogOpen = true)
+            }
+            LoanTransactionsAction.HideExportDialog -> mutableStateFlow.update {
+                it.copy(isExportDialogOpen = false)
+            }
+            LoanTransactionsAction.DismissBottomSheet -> mutableStateFlow.update {
+                it.copy(isBottomSheetOpen = false, selectedRow = null)
+            }
+            is LoanTransactionsAction.OnRowAction -> mutableStateFlow.update {
+                it.copy(selectedRow = action.row, isBottomSheetOpen = true)
+            }
+            is LoanTransactionsAction.OnTransactionAction -> {
+                // TODO: Handle the action based on action type and id
+                mutableStateFlow.update {
+                    it.copy(isBottomSheetOpen = false, selectedRow = null)
+                }
+            }
+            LoanTransactionsAction.NavigateBack -> sendEvent(LoanTransactionsEvent.NavigateBack)
+        }
+    }
+
+    private fun loadLoanTransaction() {
         viewModelScope.launch {
-            repository.getLoanTransactions(loanId).collect { state ->
-                when (state) {
-                    is DataState.Error ->
-                        _loanTransactionsUiState.value =
-                            LoanTransactionsUiState.ShowFetchingError(state.message)
+            repository.getLoanTransactions(loanId).collect { dataState ->
+                when (dataState) {
+                    is DataState.Error -> mutableStateFlow.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = dataState.message,
+                        )
+                    }
 
-                    DataState.Loading ->
-                        _loanTransactionsUiState.value = LoanTransactionsUiState.ShowProgressBar
+                    DataState.Loading -> mutableStateFlow.update {
+                        it.copy(isLoading = true, errorMessage = null)
+                    }
 
                     is DataState.Success -> {
-                        val loanWithAssociations = state.data
+                        val loanWithAssociations = dataState.data
                         val currencyCode = loanWithAssociations.currency.code
                         val maxDigits = loanWithAssociations.currency.decimalPlaces
 
@@ -101,50 +131,37 @@ class LoanTransactionsViewModel(
                                 )
                             }
 
-                        _loanTransactionsUiState.value =
-                            LoanTransactionsUiState.ShowLoanTransaction(
+                        mutableStateFlow.update {
+                            it.copy(
+                                isLoading = false,
+                                errorMessage = null,
                                 transactionsTableData = LoanTransactionsUiState.LoanTransactionsTableData(
                                     transactions = transactionsData,
                                 ),
                             )
+                        }
                     }
                 }
             }
         }
     }
+}
 
-    fun onRowAction(row: LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData) {
-        val currentState = _loanTransactionsUiState.value
-        if (currentState is LoanTransactionsUiState.ShowLoanTransaction) {
-            _loanTransactionsUiState.value =
-                currentState.copy(selectedRow = row, isBottomSheetOpen = true)
-        }
-    }
+sealed interface LoanTransactionsAction {
+    data object NavigateBack : LoanTransactionsAction
+    data object Retry : LoanTransactionsAction
+    data object ShowExportDialog : LoanTransactionsAction
+    data object HideExportDialog : LoanTransactionsAction
+    data object DismissBottomSheet : LoanTransactionsAction
+    data class OnRowAction(
+        val row: LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData,
+    ) : LoanTransactionsAction
+    data class OnTransactionAction(
+        val action: TransactionAction,
+        val id: Int,
+    ) : LoanTransactionsAction
+}
 
-    fun dismissBottomSheet() {
-        val currentState = _loanTransactionsUiState.value
-        if (currentState is LoanTransactionsUiState.ShowLoanTransaction) {
-            _loanTransactionsUiState.value =
-                currentState.copy(isBottomSheetOpen = false, selectedRow = null)
-        }
-    }
-
-    fun showExportDialog() {
-        val currentState = _loanTransactionsUiState.value
-        if (currentState is LoanTransactionsUiState.ShowLoanTransaction) {
-            _loanTransactionsUiState.value = currentState.copy(isExportDialogOpen = true)
-        }
-    }
-
-    fun hideExportDialog() {
-        val currentState = _loanTransactionsUiState.value
-        if (currentState is LoanTransactionsUiState.ShowLoanTransaction) {
-            _loanTransactionsUiState.value = currentState.copy(isExportDialogOpen = false)
-        }
-    }
-
-    fun onActionSelected(action: TransactionAction, id: Int) {
-        // TODO: Handle the action based on action string and id
-        dismissBottomSheet()
-    }
+sealed interface LoanTransactionsEvent {
+    data object NavigateBack : LoanTransactionsEvent
 }

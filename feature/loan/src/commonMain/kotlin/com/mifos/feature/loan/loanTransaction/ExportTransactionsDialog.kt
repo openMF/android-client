@@ -15,6 +15,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_export_transa
 import androidclient.feature.loan.generated.resources.feature_loan_from_date
 import androidclient.feature.loan.generated.resources.feature_loan_generate_report
 import androidclient.feature.loan.generated.resources.feature_loan_invalid_date_range
+import androidclient.feature.loan.generated.resources.feature_loan_select
 import androidclient.feature.loan.generated.resources.feature_loan_to_date
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,22 +25,28 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCustomDialog
+import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedButton
-import com.mifos.core.ui.components.MifosDateRangePicker
-import kotlinx.datetime.LocalDate
 import org.jetbrains.compose.resources.stringResource
 import template.core.base.designsystem.theme.KptTheme
+import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
@@ -48,9 +55,79 @@ internal fun ExportTransactionsDialog(
     onDismiss: () -> Unit,
     onGenerateReport: (fromDate: Long, toDate: Long) -> Unit,
 ) {
+    var showFromDatePicker by rememberSaveable { mutableStateOf(false) }
+    var showToDatePicker by rememberSaveable { mutableStateOf(false) }
     var fromDate: Long? by rememberSaveable { mutableStateOf(null) }
     var toDate: Long? by rememberSaveable { mutableStateOf(null) }
-    val isValidDateRange = fromDate != null && toDate != null && toDate!! >= fromDate!!
+
+    val currentFromDate = fromDate
+    val currentToDate = toDate
+    val isValidDateRange = currentFromDate != null && currentToDate != null && currentToDate >= currentFromDate
+    val isInvalidDateRange = currentFromDate != null && currentToDate != null && currentToDate < currentFromDate
+
+    val fromDatePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds(),
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
+            }
+        },
+    )
+
+    val toDatePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds(),
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
+            }
+        },
+    )
+
+    if (showFromDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = { showFromDatePicker = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showFromDatePicker = false
+                        fromDatePickerState.selectedDateMillis?.let {
+                            fromDate = it
+                        }
+                    },
+                ) { Text(stringResource(Res.string.feature_loan_select)) }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showFromDatePicker = false },
+                ) { Text(stringResource(Res.string.feature_loan_cancel)) }
+            },
+        ) {
+            DatePicker(state = fromDatePickerState)
+        }
+    }
+
+    if (showToDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = { showToDatePicker = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showToDatePicker = false
+                        toDatePickerState.selectedDateMillis?.let {
+                            toDate = it
+                        }
+                    },
+                ) { Text(stringResource(Res.string.feature_loan_select)) }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showToDatePicker = false },
+                ) { Text(stringResource(Res.string.feature_loan_cancel)) }
+            },
+        ) {
+            DatePicker(state = toDatePickerState)
+        }
+    }
 
     MifosCustomDialog(
         onDismiss = onDismiss,
@@ -69,15 +146,31 @@ internal fun ExportTransactionsDialog(
 
                 Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
-                MifosDateRangePicker(
-                    fromDate = fromDate,
-                    toDate = toDate,
-                    onFromDateSelected = { fromDate = it },
-                    onToDateSelected = { toDate = it },
-                    fromDateLabel = stringResource(Res.string.feature_loan_from_date),
-                    toDateLabel = stringResource(Res.string.feature_loan_to_date),
-                    minSelectableDate = LocalDate.parse("2000-01-01"),
-                    invalidDateRangeMessage = stringResource(Res.string.feature_loan_invalid_date_range),
+                MifosDatePickerTextField(
+                    value = fromDate?.let { DateHelper.getDateAsStringFromLong(it) }.orEmpty(),
+                    label = stringResource(Res.string.feature_loan_from_date),
+                    openDatePicker = {
+                        fromDatePickerState.selectedDateMillis =
+                            fromDate ?: Clock.System.now().toEpochMilliseconds()
+                        showFromDatePicker = true
+                    },
+                )
+
+                Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+
+                MifosDatePickerTextField(
+                    value = toDate?.let { DateHelper.getDateAsStringFromLong(it) }.orEmpty(),
+                    label = stringResource(Res.string.feature_loan_to_date),
+                    errorMessage = if (isInvalidDateRange) {
+                        stringResource(Res.string.feature_loan_invalid_date_range)
+                    } else {
+                        null
+                    },
+                    openDatePicker = {
+                        toDatePickerState.selectedDateMillis =
+                            toDate ?: Clock.System.now().toEpochMilliseconds()
+                        showToDatePicker = true
+                    },
                 )
 
                 Spacer(modifier = Modifier.height(KptTheme.spacing.md))
