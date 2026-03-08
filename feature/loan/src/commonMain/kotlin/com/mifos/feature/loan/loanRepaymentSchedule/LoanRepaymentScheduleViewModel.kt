@@ -10,14 +10,12 @@
 package com.mifos.feature.loan.loanRepaymentSchedule
 
 import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.account_number
-import androidclient.feature.loan.generated.resources.disbursement_date
+import androidclient.feature.loan.generated.resources.feature_loan_account_number
+import androidclient.feature.loan.generated.resources.feature_loan_disbursed_date
 import androidclient.feature.loan.generated.resources.feature_loan_error_fetching_repayment_schedule
 import androidclient.feature.loan.generated.resources.principle_paid_off
 import androidclient.feature.loan.generated.resources.total_installments
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.CurrencyFormatter
@@ -26,22 +24,6 @@ import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.LoanRepaymentScheduleRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.model.objects.account.loan.Period
-import kotlinx.coroutines.flow.MutableStateFlow
-import com.mifos.core.model.objects.account.loan.RepaymentSchedule
-import com.mifos.core.model.objects.account.loan.RepaymentScheduleRowData
-import com.mifos.core.model.objects.account.loan.RepaymentScheduleTableData
-import com.mifos.core.model.objects.account.loan.RepaymentScheduleTotalsData
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.stateIn
-
-@OptIn(ExperimentalCoroutinesApi::class)
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -89,108 +71,142 @@ class LoanRepaymentScheduleViewModel(
                 handleNetworkStatus(action.isOnline)
             }
 
-    private val loanId = savedStateHandle.toRoute<LoanRepaymentScheduleScreenRoute>().loanAccountNumber
+            LoanRepaymentScheduleAction.Retry -> {
+                retry()
+            }
 
-    private val retryTrigger = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+            LoanRepaymentScheduleAction.ExportToPdf -> {
+                sendEvent(LoanRepaymentScheduleEvent.ExportPdf)
+            }
 
-    val loanRepaymentScheduleUiState: StateFlow<LoanRepaymentScheduleUiState> =
-        retryTrigger
-            .onStart { emit(Unit) }
-            .flatMapLatest {
-                repository.getLoanRepaySchedule(loanId).map { state ->
-                    mapToUiState(state)
+            is LoanRepaymentScheduleAction.PdfExportError -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = LoanRepaymentScheduleState.DialogState.Error(
+                            title = action.title,
+                            message = action.message,
+                        ),
+                    )
                 }
             }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = LoanRepaymentScheduleUiState.ShowProgressbar,
-            )
 
-    fun loadLoanRepaymentSchedule() {
-        retryTrigger.tryEmit(Unit)
-    }
-
-    private fun mapToUiState(state: DataState<LoanWithAssociationsEntity>): LoanRepaymentScheduleUiState {
-        return when (state) {
-            is DataState.Loading -> LoanRepaymentScheduleUiState.ShowProgressbar
-            is DataState.Error -> LoanRepaymentScheduleUiState.ShowFetchingError(state.message)
-            is DataState.Success -> {
-                val data = state.data
-                val currencyCode = data.currency?.code.orEmpty()
-                val maxDigits = data.currency?.decimalPlaces ?: 2
-                val allPeriods = data.repaymentSchedule.periods.orEmpty()
-                val periods = data.repaymentSchedule.getListOfActualPeriods()
-
-                val disbursementRow = allPeriods.firstOrNull()
-                    ?.takeIf { it.period == null }
-                    ?.let { buildRowData(it, "", currencyCode, maxDigits) }
-
-                val rows = periods.mapIndexed { index, period ->
-                    buildRowData(period, (index + 1).toString(), currencyCode, maxDigits)
+            LoanRepaymentScheduleAction.DismissErrorDialog -> {
+                mutableStateFlow.update {
+                    it.copy(dialogState = null)
                 }
-
-                LoanRepaymentScheduleUiState.ShowLoanRepaymentSchedule(
-                    tableData = RepaymentScheduleTableData(
-                        disbursementRow = disbursementRow,
-                        rows = rows,
-                        totals = buildTotalsData(periods, currencyCode, maxDigits),
-                        completeCount = RepaymentSchedule.getNumberOfRepaymentsComplete(periods),
-                        overdueCount = RepaymentSchedule.getNumberOfRepaymentsOverDue(periods),
-                        pendingCount = RepaymentSchedule.getNumberOfRepaymentsPending(periods),
-                    ),
-                )
             }
         }
     }
 
-    private fun buildRowData(
-        period: Period,
-        number: String,
-        currencyCode: String,
-        maxDigits: Int,
-    ) = RepaymentScheduleRowData(
-        number = number,
-        days = period.daysInPeriod?.toString().orEmpty(),
-        date = formatDate(period.dueDate),
-        paidDate = formatDate(period.obligationsMetOnDate),
-        balance = formatAmount(period.principalLoanBalanceOutstanding, currencyCode, maxDigits),
-        principal = formatAmount(period.principalDue, currencyCode, maxDigits),
-        interest = formatAmount(period.interestDue, currencyCode, maxDigits),
-        fees = formatAmount(period.feeChargesDue, currencyCode, maxDigits),
-        penalties = formatAmount(period.penaltyChargesDue, currencyCode, maxDigits),
-        due = formatAmount(period.totalDueForPeriod, currencyCode, maxDigits),
-        paid = formatAmount(period.totalPaidForPeriod, currencyCode, maxDigits),
-        inAdvance = formatAmount(period.totalPaidInAdvanceForPeriod, currencyCode, maxDigits),
-        late = formatAmount(period.totalPaidLateForPeriod, currencyCode, maxDigits),
-        outstanding = formatAmount(period.totalOutstandingForPeriod, currencyCode, maxDigits),
-    )
+    /**
+     * Handles changes in network connectivity.
+     */
+    private fun handleNetworkStatus(isOnline: Boolean) {
+        mutableStateFlow.update { it.copy(networkStatus = isOnline) }
+
+        viewModelScope.launch {
+            if (!isOnline) {
+                mutableStateFlow.update { current ->
+                    if (current.screenState is LoanRepaymentScheduleState.ScreenState.Loading ||
+                        current.screenState is LoanRepaymentScheduleState.ScreenState.Error ||
+                        current.screenState is LoanRepaymentScheduleState.ScreenState.Network
+                    ) {
+                        current.copy(screenState = LoanRepaymentScheduleState.ScreenState.Network)
+                    } else {
+                        current
+                    }
+                }
+            } else {
+                loadLoanRepaySchedule()
+            }
+        }
+    }
+
+    private fun retry() {
+        viewModelScope.launch {
+            if (!state.networkStatus) {
+                mutableStateFlow.update {
+                    it.copy(screenState = LoanRepaymentScheduleState.ScreenState.Network)
+                }
+            } else {
+                loadLoanRepaySchedule()
+            }
+        }
+    }
+
+    private fun loadLoanRepaySchedule() {
+        mutableStateFlow.update {
+            it.copy(screenState = LoanRepaymentScheduleState.ScreenState.Loading)
+        }
+
+        viewModelScope.launch {
+            repository.getLoanRepaySchedule(state.loanId).collect { dataState ->
+                when (dataState) {
+                    is DataState.Error -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                screenState = LoanRepaymentScheduleState.ScreenState.Error(
+                                    message = Res.string.feature_loan_error_fetching_repayment_schedule,
+                                ),
+                            )
+                        }
+                    }
+
+                    DataState.Loading -> {
+                        mutableStateFlow.update {
+                            it.copy(screenState = LoanRepaymentScheduleState.ScreenState.Loading)
+                        }
+                    }
+
+                    is DataState.Success -> {
+                        val tableData = mapToTableData(dataState.data)
+                        mutableStateFlow.update {
+                            it.copy(
+                                repaymentScheduleTableData = tableData,
+                                basicDetails = mapOf(
+                                    getString(Res.string.feature_loan_account_number) to tableData.accountNo,
+                                    getString(Res.string.feature_loan_disbursed_date) to tableData.disbursementDate,
+                                    getString(Res.string.principle_paid_off) to tableData.principalPaid,
+                                    getString(Res.string.total_installments) to "${tableData.installmentsPaid} / ${tableData.totalInstallments}",
+                                ),
+                                screenState = LoanRepaymentScheduleState.ScreenState.Success,
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private fun mapToTableData(loan: LoanWithAssociationsEntity): LoanRepaymentScheduleState.RepaymentScheduleTableData {
         val currencyCode = loan.currency.code
         val maxDigits = loan.currency.decimalPlaces
 
-    private fun buildTotalsData(
-        periods: List<Period>,
-        currencyCode: String,
-        maxDigits: Int,
-    ) = RepaymentScheduleTotalsData(
-        principal = formatAmount(periods.sumOf { it.principalDue ?: 0.0 }, currencyCode, maxDigits),
-        interest = formatAmount(periods.sumOf { it.interestDue ?: 0.0 }, currencyCode, maxDigits),
-        fees = formatAmount(periods.sumOf { it.feeChargesDue ?: 0.0 }, currencyCode, maxDigits),
-        penalties = formatAmount(periods.sumOf { it.penaltyChargesDue ?: 0.0 }, currencyCode, maxDigits),
-        due = formatAmount(periods.sumOf { it.totalDueForPeriod ?: 0.0 }, currencyCode, maxDigits),
-        paid = formatAmount(periods.sumOf { it.totalPaidForPeriod ?: 0.0 }, currencyCode, maxDigits),
-        inAdvance = formatAmount(periods.sumOf { it.totalPaidInAdvanceForPeriod ?: 0.0 }, currencyCode, maxDigits),
-        late = formatAmount(periods.sumOf { it.totalPaidLateForPeriod ?: 0.0 }, currencyCode, maxDigits),
-        outstanding = formatAmount(periods.sumOf { it.totalOutstandingForPeriod ?: 0.0 }, currencyCode, maxDigits),
-    )
+        val periods = loan.repaymentSchedule.periods?.filter { it.period != null } ?: emptyList()
 
-    private fun formatAmount(amount: Double?, currencyCode: String, maxDigits: Int): String {
-        amount ?: return ""
-        return CurrencyFormatter.format(
-            balance = amount,
+        return LoanRepaymentScheduleState.RepaymentScheduleTableData(
+            accountNo = loan.accountNo,
+            clientName = loan.clientName,
+            productName = loan.loanProductName,
+            disbursementDate = loan.timeline.actualDisbursementDate?.filterNotNull()?.let {
+                DateHelper.getDateAsString(it)
+            } ?: "",
+            loanAmount = CurrencyFormatter.format(
+                loan.summary.principalDisbursed,
+                currencyCode,
+                maxDigits,
+            ),
+            principalPaid = CurrencyFormatter.format(
+                loan.summary.principalPaid,
+                currencyCode,
+                maxDigits,
+            ),
+            installmentsPaid = periods.count { it.complete == true }.toString(),
+            installmentsLeft = periods.count { it.complete != true }.toString(),
+            totalInstallments = loan.numberOfRepayments.toString(),
             currencyCode = currencyCode,
-            maximumFractionDigits = maxDigits,
+            periods = mapPeriodsData(periods, currencyCode, maxDigits),
+            totals = calculateTotals(periods, currencyCode, maxDigits),
         )
     }
 
@@ -254,8 +270,6 @@ class LoanRepaymentScheduleViewModel(
         }
     }
 
-    private fun formatDate(date: List<Int>?): String =
-        date?.let { DateHelper.getDateAsString(it) }.orEmpty()
     private fun calculateTotals(
         periods: List<Period>,
         currencyCode: String?,

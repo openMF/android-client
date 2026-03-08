@@ -318,24 +318,16 @@
     <string name="view">View</string>
     <string name="charges">Charges</string>
     <string name="name">Name</string>
-    <string name="date">Date</string>
-    <string name="amount">Amount</string>
-    <string name="type">Type</string>
     <string name="collected_on">Collected On</string>
     <string name="click_on_add_new">Click on Add New to Add Charge</string>
 
 
     <!-- Repayment Schedule -->
-    <string name="repayment_schedule">Repayment Schedule</string>
-    <string name="account_number">Account Number</string>
-    <string name="disbursement_date">Disbursement Date</string>
     <string name="principle_paid_off">Principle Paid Off</string>
     <string name="installment_paid">Installment Paid</string>
     <string name="installment_left">Installment Left</string>
     <string name="total_installments">Total Installments</string>
     <string name="installment">%1$s Installment</string>
-    <string name="paid">Paid</string>
-    <string name="due">Due</string>
     <string name="repayment_pay">Pay %1$s</string>
     <string name="feature_loan_client_name_label">Client Name</string>
     <string name="feature_loan_current_balance_label">Current balance</string>
@@ -365,9 +357,6 @@
     <string name="feature_loan_late">Late</string>
     <string name="feature_loan_outstanding">Outstanding</string>
     <string name="feature_loan_number">#</string>
-    <string name="feature_loan_loan_amount_and_balance">Loan Amount and Balance</string>
-    <string name="feature_loan_total_cost_of_loan">Total Cost of Loan</string>
-    <string name="feature_loan_installment_totals">Installment Totals</string>
     <string name="feature_loan_principal_short">Principal</string>
     <string name="feature_loan_interest_short">Interest</string>
     <string name="feature_loan_fees_short">Fees</string>

@@ -10,9 +10,9 @@
 package com.mifos.feature.loan.component
 
 import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.due
+import androidclient.feature.loan.generated.resources.feature_loan_due_short
+import androidclient.feature.loan.generated.resources.feature_loan_paid_short
 import androidclient.feature.loan.generated.resources.installment
-import androidclient.feature.loan.generated.resources.paid
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -134,9 +134,9 @@ fun RepaymentPeriodCard(
             ) {
                 Text(
                     text = if (isPaid) {
-                        stringResource(Res.string.paid)
+                        stringResource(Res.string.feature_loan_paid_short)
                     } else {
-                        stringResource(Res.string.due)
+                        stringResource(Res.string.feature_loan_due_short)
                     },
                     style = MifosTypography.labelSmall.copy(
                         color = if (isPaid) AppColors.customEnable else KptTheme.colorScheme.error,

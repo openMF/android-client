@@ -10,10 +10,10 @@
 package com.mifos.feature.loan.loanRepaymentSchedule
 
 import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.account_number
-import androidclient.feature.loan.generated.resources.disbursement_date
+import androidclient.feature.loan.generated.resources.feature_loan_account_number
 import androidclient.feature.loan.generated.resources.feature_loan_amount_and_balance
 import androidclient.feature.loan.generated.resources.feature_loan_client_name_label
+import androidclient.feature.loan.generated.resources.feature_loan_disbursed_date
 import androidclient.feature.loan.generated.resources.feature_loan_error_not_connected_internet
 import androidclient.feature.loan.generated.resources.feature_loan_export_pdf_error
 import androidclient.feature.loan.generated.resources.feature_loan_export_pdf_error_title
@@ -223,9 +223,9 @@ private suspend fun createPdfStrings(): RepaymentSchedulePdfStrings {
     return RepaymentSchedulePdfStrings(
         title = getString(Res.string.feature_loan_repayment_schedule_pdf_title),
         clientNameLabel = getString(Res.string.feature_loan_client_name_label),
-        accountNumberLabel = getString(Res.string.account_number),
+        accountNumberLabel = getString(Res.string.feature_loan_account_number),
         productNameLabel = getString(Res.string.feature_loan_loan_repayment_schedule),
-        disbursementDateLabel = getString(Res.string.disbursement_date),
+        disbursementDateLabel = getString(Res.string.feature_loan_disbursed_date),
         installmentsLabel = getString(Res.string.total_installments),
         paidLabel = getString(Res.string.feature_loan_paid_label),
         totalLabel = getString(Res.string.feature_loan_total_label),
