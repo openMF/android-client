@@ -16,6 +16,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.ApproveRecurringDepositUseCase
 import com.mifos.core.model.objects.template.recurring.approval.RecurringDepositApproval
 import com.mifos.core.ui.util.BaseViewModel
+import com.mifos.feature.recurringDeposit.navigation.RecurringDepositAccountApprovalRoute
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 

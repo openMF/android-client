@@ -100,10 +100,10 @@ import com.mifos.feature.loan.navigation.loanDestination
 import com.mifos.feature.loan.newLoanAccount.navigateToNewLoanAccountRoute
 import com.mifos.feature.note.navigation.noteDestination
 import com.mifos.feature.note.notes.navigateToNoteScreen
-import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.navigateToRecurringAccountRoute
-import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.recurringAccountDestination
-import com.mifos.feature.recurringDeposit.recurringAccountApproval.navigateToRecurringDepositAccountApproval
-import com.mifos.feature.recurringDeposit.recurringAccountApproval.recurringDepositAccountApprovalDestination
+import com.mifos.feature.recurringDeposit.navigation.navigateToRecurringAccountRoute
+import com.mifos.feature.recurringDeposit.navigation.navigateToRecurringDepositAccountApproval
+import com.mifos.feature.recurringDeposit.navigation.recurringAccountDestination
+import com.mifos.feature.recurringDeposit.navigation.recurringDepositAccountApprovalDestination
 import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
 import com.mifos.feature.savings.navigation.navigateToSavingsAccountApproval
 import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen

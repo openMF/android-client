@@ -43,4 +43,6 @@ object APIEndPoint {
     const val SHARE = "share"
 
     const val FIXED_DEPOSIT = "fixeddepositaccounts"
+
+    const val APPROVE = "approve"
 }

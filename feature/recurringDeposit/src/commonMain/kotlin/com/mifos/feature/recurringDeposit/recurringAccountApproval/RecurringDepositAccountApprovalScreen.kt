@@ -247,16 +247,17 @@ private fun RecurringDepositAccountApprovalContent(
             modifier = Modifier,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(DesignToken.spacing.large))
 
         MifosDatePickerTextField(
             value = DateHelper.getDateAsStringFromLong(approvalDate),
             label = stringResource(Res.string.feature_recurring_deposit_approval_date),
-        ) {
-            showDatePickerDialog = true
-        }
+            openDatePicker = {
+                showDatePickerDialog = true
+            }
+        )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(DesignToken.spacing.large))
 
         MifosOutlinedTextField(
             value = reasonForApproval,
@@ -265,12 +266,12 @@ private fun RecurringDepositAccountApprovalContent(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(DesignToken.spacing.large))
 
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(44.dp),
+                .heightIn(DesignToken.spacing.dp44),
             enabled = !isLoading,
             onClick = {
                 approveAccount.invoke(
