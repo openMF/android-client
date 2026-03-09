@@ -13,6 +13,7 @@ import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_account_number
 import androidclient.feature.loan.generated.resources.feature_loan_disbursed_date
 import androidclient.feature.loan.generated.resources.feature_loan_error_fetching_repayment_schedule
+import androidclient.feature.loan.generated.resources.feature_loan_error_not_connected_internet
 import androidclient.feature.loan.generated.resources.principle_paid_off
 import androidclient.feature.loan.generated.resources.total_installments
 import androidx.lifecycle.SavedStateHandle
@@ -20,6 +21,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.DataState.Error
+import com.mifos.core.common.utils.DataState.Loading
+import com.mifos.core.common.utils.DataState.Success
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.LoanRepaymentScheduleRepository
 import com.mifos.core.data.util.NetworkMonitor
@@ -29,7 +33,6 @@ import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 class LoanRepaymentScheduleViewModel(
     private val repository: LoanRepaymentScheduleRepository,
@@ -107,11 +110,10 @@ class LoanRepaymentScheduleViewModel(
         viewModelScope.launch {
             if (!isOnline) {
                 mutableStateFlow.update { current ->
-                    if (current.screenState is LoanRepaymentScheduleState.ScreenState.Loading ||
-                        current.screenState is LoanRepaymentScheduleState.ScreenState.Error ||
-                        current.screenState is LoanRepaymentScheduleState.ScreenState.Network
+                    if (current.dataState is DataState.Loading ||
+                        current.dataState is DataState.Error
                     ) {
-                        current.copy(screenState = LoanRepaymentScheduleState.ScreenState.Network)
+                        current.copy(dataState = DataState.Error(exception = Exception(getString(Res.string.feature_loan_error_not_connected_internet))))
                     } else {
                         current
                     }
@@ -126,7 +128,7 @@ class LoanRepaymentScheduleViewModel(
         viewModelScope.launch {
             if (!state.networkStatus) {
                 mutableStateFlow.update {
-                    it.copy(screenState = LoanRepaymentScheduleState.ScreenState.Network)
+                    it.copy(dataState = DataState.Error(exception = Exception(getString(Res.string.feature_loan_error_not_connected_internet))))
                 }
             } else {
                 loadLoanRepaySchedule()
@@ -136,29 +138,29 @@ class LoanRepaymentScheduleViewModel(
 
     private fun loadLoanRepaySchedule() {
         mutableStateFlow.update {
-            it.copy(screenState = LoanRepaymentScheduleState.ScreenState.Loading)
+            it.copy(dataState = DataState.Loading)
         }
 
         viewModelScope.launch {
             repository.getLoanRepaySchedule(state.loanId).collect { dataState ->
                 when (dataState) {
-                    is DataState.Error -> {
+                    is Error -> {
                         mutableStateFlow.update {
                             it.copy(
-                                screenState = LoanRepaymentScheduleState.ScreenState.Error(
-                                    message = Res.string.feature_loan_error_fetching_repayment_schedule,
+                                dataState = DataState.Error(
+                                    exception = Exception(getString(Res.string.feature_loan_error_fetching_repayment_schedule)),
                                 ),
                             )
                         }
                     }
 
-                    DataState.Loading -> {
+                    Loading -> {
                         mutableStateFlow.update {
-                            it.copy(screenState = LoanRepaymentScheduleState.ScreenState.Loading)
+                            it.copy(dataState = DataState.Loading)
                         }
                     }
 
-                    is DataState.Success -> {
+                    is Success -> {
                         val tableData = mapToTableData(dataState.data)
                         mutableStateFlow.update {
                             it.copy(
@@ -169,7 +171,7 @@ class LoanRepaymentScheduleViewModel(
                                     getString(Res.string.principle_paid_off) to tableData.principalPaid,
                                     getString(Res.string.total_installments) to "${tableData.installmentsPaid} / ${tableData.totalInstallments}",
                                 ),
-                                screenState = LoanRepaymentScheduleState.ScreenState.Success,
+                                dataState = DataState.Success(dataState.data),
                             )
                         }
                     }
@@ -333,7 +335,6 @@ class LoanRepaymentScheduleViewModel(
  * @property repaymentScheduleTableData The repayment schedule data.
  * @property dialogState The state of the dialog to display.
  * @property networkStatus The network connectivity status.
- * @property screenState The overall state of the screen.
  */
 data class LoanRepaymentScheduleState(
     val loanId: Int = 0,
@@ -341,18 +342,8 @@ data class LoanRepaymentScheduleState(
     val repaymentScheduleTableData: RepaymentScheduleTableData? = null,
     val dialogState: DialogState? = null,
     val networkStatus: Boolean = false,
-    val screenState: ScreenState = ScreenState.Loading,
+    val dataState: DataState<LoanWithAssociationsEntity> = Loading,
 ) {
-    /**
-     * Represents the possible screen states.
-     */
-    sealed interface ScreenState {
-        data object Loading : ScreenState
-        data object Success : ScreenState
-        data object Network : ScreenState
-        data class Error(val message: StringResource) : ScreenState
-    }
-
     /**
      * Represents the possible dialog states.
      */

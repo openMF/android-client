@@ -14,7 +14,6 @@ import androidclient.feature.loan.generated.resources.feature_loan_account_numbe
 import androidclient.feature.loan.generated.resources.feature_loan_amount_and_balance
 import androidclient.feature.loan.generated.resources.feature_loan_client_name_label
 import androidclient.feature.loan.generated.resources.feature_loan_disbursed_date
-import androidclient.feature.loan.generated.resources.feature_loan_error_not_connected_internet
 import androidclient.feature.loan.generated.resources.feature_loan_export_pdf_error
 import androidclient.feature.loan.generated.resources.feature_loan_export_pdf_error_title
 import androidclient.feature.loan.generated.resources.feature_loan_export_to_pdf
@@ -67,6 +66,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.designsystem.component.BasicDialogState
 import com.mifos.core.designsystem.component.MifosBasicDialog
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -84,6 +84,7 @@ import com.mifos.core.ui.util.pdf.PageSize
 import com.mifos.core.ui.util.pdf.rememberPdfGenerator
 import com.mifos.feature.loan.loanRepaymentSchedule.pdf.RepaymentScheduleHtmlGenerator
 import com.mifos.feature.loan.loanRepaymentSchedule.pdf.RepaymentSchedulePdfStrings
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
@@ -168,22 +169,15 @@ internal fun LoanRepaymentScheduleScreenContent(
         },
     ) {
         Box(modifier = Modifier.padding(it)) {
-            when (state.screenState) {
-                is LoanRepaymentScheduleState.ScreenState.Error -> {
+            when (state.dataState) {
+                is DataState.Error -> {
                     MifosSweetError(
-                        message = stringResource(state.screenState.message),
+                        message = state.dataState.message,
                         onclick = { onAction(LoanRepaymentScheduleAction.Retry) },
                     )
                 }
 
-                LoanRepaymentScheduleState.ScreenState.Network -> {
-                    MifosSweetError(
-                        message = stringResource(Res.string.feature_loan_error_not_connected_internet),
-                        onclick = { onAction(LoanRepaymentScheduleAction.Retry) },
-                    )
-                }
-
-                LoanRepaymentScheduleState.ScreenState.Success -> {
+                is DataState.Success<LoanWithAssociationsEntity> -> {
                     state.repaymentScheduleTableData?.let { data ->
                         LoanRepaymentScheduleContent(
                             tableData = data,
@@ -192,7 +186,7 @@ internal fun LoanRepaymentScheduleScreenContent(
                     }
                 }
 
-                LoanRepaymentScheduleState.ScreenState.Loading -> {
+                DataState.Loading -> {
                     MifosProgressIndicator()
                 }
             }

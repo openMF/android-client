@@ -431,6 +431,8 @@ org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2
 org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.10.2
 org.jetbrains.kotlinx:kotlinx-datetime-jvm:0.7.1
 org.jetbrains.kotlinx:kotlinx-datetime:0.7.1
+org.jetbrains.kotlinx:kotlinx-html-jvm:0.12.0
+org.jetbrains.kotlinx:kotlinx-html:0.12.0
 org.jetbrains.kotlinx:kotlinx-io-bytestring-jvm:0.8.0
 org.jetbrains.kotlinx:kotlinx-io-bytestring:0.8.0
 org.jetbrains.kotlinx:kotlinx-io-core-jvm:0.8.0
@@ -445,5 +447,3 @@ org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0
 org.jetbrains:annotations:23.0.0
 org.jspecify:jspecify:1.0.0
 org.slf4j:slf4j-api:2.0.17
-org.jetbrains.kotlinx:kotlinx-html-jvm:0.12.0
-org.jetbrains.kotlinx:kotlinx-html:0.12.0
