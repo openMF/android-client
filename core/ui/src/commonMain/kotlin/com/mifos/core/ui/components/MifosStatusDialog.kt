@@ -153,39 +153,3 @@ private fun MifosSuccessStatusDialogPreview() {
         )
     }
 }
-
-@Composable
-@Preview
-private fun MifosSuccessStatusDialogAsDialogPreview() {
-    MifosTheme {
-        MifosStatusDialog(
-            status = ResultStatus.SUCCESS,
-            onConfirm = {},
-            onDismissRequest = {},
-            btnText = "Continue",
-            successTitle = "Success",
-            successMessage = "Transfer completed successfully",
-            failureTitle = "Failure",
-            failureMessage = "Operation Failed",
-            showAsDialog = true,
-        )
-    }
-}
-
-@Composable
-@Preview
-private fun MifosFailureStatusDialogAsDialogPreview() {
-    MifosTheme {
-        MifosStatusDialog(
-            status = ResultStatus.FAILURE,
-            onConfirm = {},
-            onDismissRequest = {},
-            btnText = "OK",
-            successTitle = "Success",
-            successMessage = "Operation Successful",
-            failureTitle = "Error",
-            failureMessage = "An error occurred while processing your request",
-            showAsDialog = true,
-        )
-    }
-}
