@@ -14,6 +14,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_amount
 import androidclient.feature.loan.generated.resources.feature_loan_applicant_name
 import androidclient.feature.loan.generated.resources.feature_loan_currency
 import androidclient.feature.loan.generated.resources.feature_loan_description
+import androidclient.feature.loan.generated.resources.feature_loan_dialog_action_ok
 import androidclient.feature.loan.generated.resources.feature_loan_error_title
 import androidclient.feature.loan.generated.resources.feature_loan_from_account
 import androidclient.feature.loan.generated.resources.feature_loan_loan_account_type
@@ -24,6 +25,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_select_office
 import androidclient.feature.loan.generated.resources.feature_loan_success_title
 import androidclient.feature.loan.generated.resources.feature_loan_transfer
 import androidclient.feature.loan.generated.resources.feature_loan_transfer_details
+import androidclient.feature.loan.generated.resources.feature_loan_transfer_go_back
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -53,9 +55,10 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextButton
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
-import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
+import com.mifos.core.ui.components.MifosStatusDialog
+import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -256,24 +259,27 @@ private fun AmountTransferDialogContent(
             )
         }
 
-        is AmountTransferUiState.DialogState.TransferFailed -> {
-            MifosAlertDialog(
-                dialogTitle = stringResource(Res.string.feature_loan_error_title),
-                dismissText = null,
-                dialogText = dialogState.message,
-                onConfirmation = { onAction.invoke(AmountTransferAction.CloseDialog) },
-                onDismissRequest = { },
-            )
-        }
-
         AmountTransferUiState.DialogState.Loading -> MifosProgressIndicatorOverlay()
 
-        is AmountTransferUiState.DialogState.TransferSuccess -> {
-            MifosAlertDialog(
-                dialogTitle = stringResource(Res.string.feature_loan_success_title),
-                dialogText = dialogState.message,
-                onConfirmation = { onAction.invoke(AmountTransferAction.TransferSuccess) },
+        is AmountTransferUiState.DialogState.TransferState -> {
+            MifosStatusDialog(
+                status = dialogState.status,
+                btnText = when (dialogState.status) {
+                    ResultStatus.SUCCESS -> stringResource(Res.string.feature_loan_transfer_go_back)
+                    ResultStatus.FAILURE -> stringResource(Res.string.feature_loan_dialog_action_ok)
+                },
+                onConfirm = {
+                    when (dialogState.status) {
+                        ResultStatus.SUCCESS -> onAction(AmountTransferAction.TransferSuccess)
+                        ResultStatus.FAILURE -> onAction(AmountTransferAction.CloseDialog)
+                    }
+                },
                 onDismissRequest = { },
+                successTitle = stringResource(Res.string.feature_loan_success_title),
+                successMessage = dialogState.message,
+                failureTitle = stringResource(Res.string.feature_loan_error_title),
+                failureMessage = dialogState.message,
+                showAsDialog = true,
             )
         }
 

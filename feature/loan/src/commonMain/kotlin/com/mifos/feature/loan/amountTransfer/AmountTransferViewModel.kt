@@ -31,6 +31,7 @@ import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRequest
 import com.mifos.core.model.objects.account.loan.transfer.AccountTypeOption
 import com.mifos.core.model.objects.account.loan.transfer.ClientOption
 import com.mifos.core.model.objects.account.loan.transfer.OfficeOption
+import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -292,16 +293,18 @@ class AmountTransferViewModel(
                 DataState.Loading -> Unit
                 is DataState.Error -> mutableStateFlow.update {
                     it.copy(
-                        dialogState = AmountTransferUiState.DialogState.TransferFailed(
-                            result.message,
+                        dialogState = AmountTransferUiState.DialogState.TransferState(
+                            status = ResultStatus.FAILURE,
+                            message = result.message,
                         ),
                     )
                 }
 
                 is DataState.Success -> mutableStateFlow.update {
                     it.copy(
-                        dialogState = AmountTransferUiState.DialogState.TransferSuccess(
-                            getString(Res.string.feature_loan_transfer_success),
+                        dialogState = AmountTransferUiState.DialogState.TransferState(
+                            status = ResultStatus.SUCCESS,
+                            message = getString(Res.string.feature_loan_transfer_success),
                         ),
                     )
                 }
@@ -421,8 +424,7 @@ data class AmountTransferUiState(
 ) {
     sealed interface DialogState {
         data class FetchingFailed(val message: String) : DialogState
-        data class TransferSuccess(val message: String) : DialogState
-        data class TransferFailed(val message: String) : DialogState
+        data class TransferState(val status: ResultStatus, val message: String = "") : DialogState
         data object Loading : DialogState
     }
 }
