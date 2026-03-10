@@ -372,9 +372,7 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                         )
                     },
                     hasDatatables = navController::navigateDataTableList,
-                    onNavigateToSearch = { type ->
-                        navController.navigateToSearchRecord(type)
-                    },
+                    onNavigateToSearch = navController::navigateToSearchRecord,
                 )
 
                 searchRecordNavigation(
