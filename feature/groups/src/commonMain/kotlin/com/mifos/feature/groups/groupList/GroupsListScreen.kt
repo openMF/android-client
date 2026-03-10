@@ -190,9 +190,7 @@ fun GroupsListScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(
-                    top = if (selectedItems.isNotEmpty()) paddingValues.calculateTopPadding() else 0.dp,
-                ),
+                .padding(paddingValues),
         ) {
             PullToRefreshBox(
                 modifier = Modifier.semantics {
