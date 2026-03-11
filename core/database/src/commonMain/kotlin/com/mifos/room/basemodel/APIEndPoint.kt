@@ -45,4 +45,5 @@ object APIEndPoint {
     const val FIXED_DEPOSIT = "fixeddepositaccounts"
 
     const val APPROVE = "approve"
+    const val ACCOUNT_TRANSFERS = "accounttransfers"
 }
