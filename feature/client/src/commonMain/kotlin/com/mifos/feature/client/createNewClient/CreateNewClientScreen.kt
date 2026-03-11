@@ -111,7 +111,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import co.touchlab.kermit.Logger
 import coil3.compose.rememberAsyncImagePainter
 import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DateHelper
@@ -496,7 +495,6 @@ private fun CreateNewClientContent(
                 onOptionSelected = { index, value ->
                     gender = value
                     genderId = list[index].id
-                    Logger.e { "GenderIdDebug : $genderId" }
                 },
                 label = stringResource(Res.string.feature_client_gender),
                 options = list.map { it.name },
