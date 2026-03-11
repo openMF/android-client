@@ -39,7 +39,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_table_header_
 import androidclient.feature.loan.generated.resources.feature_loan_table_total
 import androidclient.feature.loan.generated.resources.feature_loan_total_cost_of_loan
 import androidclient.feature.loan.generated.resources.feature_loan_total_label
-import androidclient.feature.loan.generated.resources.principle_paid_off
+import androidclient.feature.loan.generated.resources.principal_paid_off
 import androidclient.feature.loan.generated.resources.total_installments
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
@@ -223,7 +223,7 @@ private suspend fun createPdfStrings(): RepaymentSchedulePdfStrings {
         installmentsLabel = getString(Res.string.total_installments),
         paidLabel = getString(Res.string.feature_loan_paid_label),
         totalLabel = getString(Res.string.feature_loan_total_label),
-        principalPaidLabel = getString(Res.string.principle_paid_off),
+        principalPaidLabel = getString(Res.string.principal_paid_off),
         periodDetailsHeader = getString(Res.string.feature_loan_period_details),
         loanAmountBalanceHeader = getString(Res.string.feature_loan_amount_and_balance),
         totalCostLoanHeader = getString(Res.string.feature_loan_total_cost_of_loan),

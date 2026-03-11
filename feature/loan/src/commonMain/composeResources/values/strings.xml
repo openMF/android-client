@@ -323,7 +323,7 @@
 
 
     <!-- Repayment Schedule -->
-    <string name="principle_paid_off">Principle Paid Off</string>
+    <string name="principal_paid_off">Principal Paid Off</string>
     <string name="installment_paid">Installment Paid</string>
     <string name="installment_left">Installment Left</string>
     <string name="total_installments">Total Installments</string>

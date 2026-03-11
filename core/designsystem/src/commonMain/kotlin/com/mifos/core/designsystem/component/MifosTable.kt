@@ -43,7 +43,7 @@ fun MifosTableRow(
     showTopBorder: Boolean = false,
     showBottomBorder: Boolean = true,
     showSideBorders: Boolean = true,
-    borderColor: Color = KptTheme.colorScheme.surfaceVariant,
+    borderColor: Color = KptTheme.colorScheme.outlineVariant,
     onClick: () -> Unit = {},
 ) {
     Column(

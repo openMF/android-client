@@ -14,7 +14,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_account_numbe
 import androidclient.feature.loan.generated.resources.feature_loan_disbursed_date
 import androidclient.feature.loan.generated.resources.feature_loan_error_fetching_repayment_schedule
 import androidclient.feature.loan.generated.resources.feature_loan_error_not_connected_internet
-import androidclient.feature.loan.generated.resources.principle_paid_off
+import androidclient.feature.loan.generated.resources.principal_paid_off
 import androidclient.feature.loan.generated.resources.total_installments
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -168,7 +168,7 @@ class LoanRepaymentScheduleViewModel(
                                 basicDetails = mapOf(
                                     getString(Res.string.feature_loan_account_number) to tableData.accountNo,
                                     getString(Res.string.feature_loan_disbursed_date) to tableData.disbursementDate,
-                                    getString(Res.string.principle_paid_off) to tableData.principalPaid,
+                                    getString(Res.string.principal_paid_off) to tableData.principalPaid,
                                     getString(Res.string.total_installments) to "${tableData.installmentsPaid} / ${tableData.totalInstallments}",
                                 ),
                                 dataState = DataState.Success(dataState.data),
