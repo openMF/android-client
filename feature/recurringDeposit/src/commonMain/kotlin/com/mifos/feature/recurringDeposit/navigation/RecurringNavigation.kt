@@ -39,8 +39,6 @@ fun NavController.navigateToRecurringAccountRoute(clientId: Int) {
     )
 }
 
-
-
 @Serializable
 data class RecurringDepositAccountApprovalRoute(
     val accountId: String,

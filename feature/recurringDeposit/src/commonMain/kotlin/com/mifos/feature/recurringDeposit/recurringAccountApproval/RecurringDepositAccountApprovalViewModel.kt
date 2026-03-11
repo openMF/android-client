@@ -12,7 +12,6 @@ package com.mifos.feature.recurringDeposit.recurringAccountApproval
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.ApproveRecurringDepositUseCase
 import com.mifos.core.model.objects.template.recurring.approval.RecurringDepositApproval
 import com.mifos.core.ui.util.BaseViewModel
@@ -33,43 +32,39 @@ class RecurringDepositAccountApprovalViewModel(
 
     private val route = savedStateHandle.toRoute<RecurringDepositAccountApprovalRoute>()
 
-    fun approveRecurringDepositApplication(recurringDepositApproval: RecurringDepositApproval) {
-        trySendAction(RecurringDepositAccountApprovalAction.Approve(recurringDepositApproval))
-    }
-
     override fun handleAction(action: RecurringDepositAccountApprovalAction) {
         when (action) {
-            is RecurringDepositAccountApprovalAction.Approve -> approveRecurringDeposit(action.approval)
+            is RecurringDepositAccountApprovalAction.Approve -> {
+                viewModelScope.launch {
+                    approveRecurringDeposit(action.approval)
+                }
+            }
         }
     }
 
-    private fun approveRecurringDeposit(recurringDepositApproval: RecurringDepositApproval) {
+    private suspend fun approveRecurringDeposit(recurringDepositApproval: RecurringDepositApproval) {
         mutableStateFlow.update { RecurringDepositAccountApprovalUiState.ShowProgressbar }
-        viewModelScope.launch {
-            approveRecurringDepositUseCase.invoke(
+
+        try {
+            val response = approveRecurringDepositUseCase(
                 accountId = route.accountId,
                 approval = recurringDepositApproval,
-            ).collect { result ->
-                when (result) {
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            RecurringDepositAccountApprovalUiState.ShowError(result.message)
-                        }
-                    }
-
-                    is DataState.Loading -> {
-                        mutableStateFlow.update {
-                            RecurringDepositAccountApprovalUiState.ShowProgressbar
-                        }
-                    }
-
-                    is DataState.Success -> {
-                        mutableStateFlow.update {
-                            RecurringDepositAccountApprovalUiState
-                                .ShowRecurringDepositAccountApprovedSuccessfully
-                        }
-                    }
+            )
+            if (response.changes?.status?.approved == true) {
+                mutableStateFlow.update {
+                    RecurringDepositAccountApprovalUiState
+                        .ShowRecurringDepositAccountApprovedSuccessfully(response)
                 }
+            } else {
+                val status = response.changes?.status
+                val message = status?.value ?: status?.code
+                mutableStateFlow.update {
+                    RecurringDepositAccountApprovalUiState.ShowError(message)
+                }
+            }
+        } catch (e: Exception) {
+            mutableStateFlow.update {
+                RecurringDepositAccountApprovalUiState.ShowError(e.message)
             }
         }
     }

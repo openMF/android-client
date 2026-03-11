@@ -48,7 +48,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -58,6 +57,7 @@ import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.model.objects.responses.RecurringDepositApprovalResponse
 import com.mifos.core.model.objects.template.recurring.approval.RecurringDepositApproval
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
@@ -169,7 +169,8 @@ internal fun RecurringDepositAccountApprovalScreen(
                                 successTitle = stringResource(Res.string.feature_recurring_deposit_success_title),
                                 successMessage = stringResource(Res.string.feature_recurring_deposit_success_message),
                                 failureTitle = stringResource(Res.string.feature_recurring_deposit_failure_title),
-                                failureMessage = uiState.message,
+                                failureMessage = uiState.message
+                                    ?: stringResource(Res.string.feature_recurring_deposit_failure_message),
                                 showButton = true,
                             )
                         }
@@ -254,7 +255,7 @@ private fun RecurringDepositAccountApprovalContent(
             label = stringResource(Res.string.feature_recurring_deposit_approval_date),
             openDatePicker = {
                 showDatePickerDialog = true
-            }
+            },
         )
 
         Spacer(modifier = Modifier.height(DesignToken.spacing.large))
@@ -290,7 +291,8 @@ private fun RecurringDepositAccountApprovalContent(
 sealed class RecurringDepositAccountApprovalUiState {
     data object Initial : RecurringDepositAccountApprovalUiState()
     data object ShowProgressbar : RecurringDepositAccountApprovalUiState()
-    data object ShowRecurringDepositAccountApprovedSuccessfully :
-        RecurringDepositAccountApprovalUiState()
-    data class ShowError(val message: String) : RecurringDepositAccountApprovalUiState()
+    data class ShowRecurringDepositAccountApprovedSuccessfully(
+        val response: RecurringDepositApprovalResponse,
+    ) : RecurringDepositAccountApprovalUiState()
+    data class ShowError(val message: String? = null) : RecurringDepositAccountApprovalUiState()
 }
