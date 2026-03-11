@@ -14,8 +14,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
+import com.mifos.feature.loan.amountTransfer.amountTransferScreen
+import com.mifos.feature.loan.amountTransfer.navigateToTransferScreen
 import com.mifos.feature.loan.loanAccountProfile.loanProfileAccountDestination
 import com.mifos.feature.loan.loanAccountSummary.loanAccountSummary
 import com.mifos.feature.loan.loanApproval.LoanAccountApprovalScreen
@@ -85,6 +86,12 @@ fun NavGraphBuilder.loanDestination(
         navigateToDocuments = { loanId ->
             onDocumentsClicked(loanId, Constants.ENTITY_TYPE_LOANS)
         },
+        navigateToTransferScreen = navController::navigateToTransferScreen,
+    )
+
+    amountTransferScreen(
+        navController = navController,
+        onBackPressed = navController::popBackStack,
     )
 }
 

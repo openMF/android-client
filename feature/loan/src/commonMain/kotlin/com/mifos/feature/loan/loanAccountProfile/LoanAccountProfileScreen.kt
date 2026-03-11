@@ -83,6 +83,7 @@ internal fun LoanAccountProfileScreen(
     navigateToTransactions: (Int) -> Unit,
     navigateToCharges: (Int) -> Unit,
     navigateToDocuments: (Int) -> Unit,
+    navigateToTransferScreen: (loanId: Int, accountNumber: String, clientId: Int, currencyCode: String, officeId: Int) -> Unit,
     navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: LoanAccountProfileViewModel = koinViewModel(),
@@ -99,7 +100,14 @@ internal fun LoanAccountProfileScreen(
                     LoanProfileAction.Approve -> approveLoan(account.id, account)
                     LoanProfileAction.Repayment -> onRepaymentClick(account)
                     LoanProfileAction.Transfer -> {
-                        // TODO: Ticket in progress (MIFOSAC-658)
+                        val account = state.loanAccount ?: return@EventsEffect
+                        navigateToTransferScreen(
+                            account.id,
+                            account.accountNo,
+                            account.clientId,
+                            account.currency.code ?: "N/A",
+                            account.clientOfficeId,
+                        )
                     }
                 }
             }
