@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,11 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosRowWithTextAndButton(
@@ -45,8 +44,8 @@ fun MifosRowWithTextAndButton(
             .fillMaxWidth()
             .clip(shape = DesignToken.shapes.medium)
             .border(
-                1.dp,
-                color = MaterialTheme.colorScheme.secondaryContainer,
+                DesignToken.strokes.thin,
+                color = KptTheme.colorScheme.secondaryContainer,
                 shape = DesignToken.shapes.medium,
             ),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -54,7 +53,7 @@ fun MifosRowWithTextAndButton(
     ) {
         Text(
             text = text,
-            style = MaterialTheme.typography.bodyLarge,
+            style = KptTheme.typography.bodyLarge,
             fontFamily = FontFamily.SansSerif,
             modifier = Modifier.padding(
                 start = DesignToken.padding.large,
@@ -71,13 +70,13 @@ fun MifosRowWithTextAndButton(
                 onBtnClick()
             },
             colors = ButtonDefaults.outlinedButtonColors(
-                containerColor = MaterialTheme.colorScheme.onPrimary,
-                contentColor = MaterialTheme.colorScheme.primary,
+                containerColor = KptTheme.colorScheme.onPrimary,
+                contentColor = KptTheme.colorScheme.primary,
             ),
             shape = DesignToken.shapes.small,
             border = BorderStroke(
-                1.dp,
-                color = MaterialTheme.colorScheme.secondaryContainer,
+                DesignToken.strokes.thin,
+                color = KptTheme.colorScheme.secondaryContainer,
             ),
             modifier = Modifier
                 .padding(end = DesignToken.padding.large)
@@ -87,7 +86,7 @@ fun MifosRowWithTextAndButton(
         ) {
             Text(
                 text = btnText,
-                style = MaterialTheme.typography.labelLarge,
+                style = KptTheme.typography.labelLarge,
                 fontFamily = FontFamily.SansSerif,
             )
         }

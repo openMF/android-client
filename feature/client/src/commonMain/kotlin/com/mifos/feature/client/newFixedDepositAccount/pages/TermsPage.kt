@@ -38,12 +38,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountAction
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountState
 import org.jetbrains.compose.resources.stringResource
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun TermsPage(
@@ -51,7 +51,7 @@ fun TermsPage(
     modifier: Modifier = Modifier,
     onAction: (NewFixedDepositAccountAction) -> Unit,
 ) {
-    Column(modifier = Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -59,7 +59,7 @@ fun TermsPage(
                 text = stringResource(Res.string.feature_fixed_deposit_terms_page),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             MifosOutlinedTextField(
                 value = state.fixedDepositAccountTerms.depositAmount,
                 onValueChange = {
@@ -86,7 +86,7 @@ fun TermsPage(
                     },
                 ),
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             MifosOutlinedTextField(
                 value = state.fixedDepositAccountTerms.depositPeriod,
                 onValueChange = {
@@ -106,7 +106,7 @@ fun TermsPage(
                     errorText = state.fixedDepositAccountTerms.depositPeriodError?.let { stringResource(it) },
                 ),
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
             MifosTextFieldDropdown(
                 value = if (state.fixedDepositAccountTerms.depositPeriodTypeIndex != -1) {
                     state.template.periodFrequencyTypeOptions?.getOrNull(state.fixedDepositAccountTerms.depositPeriodTypeIndex)?.value.orEmpty()
@@ -127,12 +127,12 @@ fun TermsPage(
                 label = stringResource(Res.string.feature_fixed_deposit_deposit_period_type) + "*",
                 errorMessage = state.fixedDepositAccountTerms.depositPeriodTypeError?.let { stringResource(it) },
             )
-            Spacer(Modifier.height(DesignToken.padding.small))
+            Spacer(Modifier.height(KptTheme.spacing.sm))
             Text(
                 text = stringResource(Res.string.feature_fixed_interest_compounding),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(modifier = Modifier.height(DesignToken.padding.large))
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
             MifosTextFieldDropdown(
                 value = if (state.fixedDepositAccountTerms.interestCompoundingPeriodTypeIndex != -1) {
                     state.template.interestCompoundingPeriodTypeOptions?.getOrNull(state.fixedDepositAccountTerms.interestCompoundingPeriodTypeIndex)?.value.orEmpty()

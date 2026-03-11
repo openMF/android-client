@@ -38,7 +38,7 @@ interface GroupsDao {
     @Insert(entity = GroupPayloadEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGroupPayload(groupPayload: GroupPayloadEntity)
 
-    @Update(entity = GroupPayloadEntity::class)
+    @Update(entity = GroupPayloadEntity::class, onConflict = OnConflictStrategy.NONE)
     suspend fun updateGroupPayload(payload: GroupPayloadEntity)
 
     @Query("DELETE FROM GroupPayload where id = :groupId")

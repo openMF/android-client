@@ -10,8 +10,10 @@
 package com.mifos.feature.center.centerList.ui
 
 import androidclient.feature.center.generated.resources.Res
+import androidclient.feature.center.generated.resources.feature_center_error_loading_centers
 import androidclient.feature.center.generated.resources.feature_center_failed_to_load_db_centers
 import androidclient.feature.center.generated.resources.feature_center_ic_done_all_black_24dp
+import androidclient.feature.center.generated.resources.feature_center_no_more_centers
 import androidclient.feature.center.generated.resources.feature_center_sync
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -20,6 +22,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -50,13 +54,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
 import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil3.compose.AsyncImage
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
+import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.ui.components.MifosPagingAppendProgress
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.center.syncCentersDialog.SyncCenterDialogScreen
@@ -67,6 +75,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun CenterListScreen(
@@ -182,6 +191,7 @@ internal fun CenterListScreen(
                             onCenterSelect = {
                                 onCenterSelect(it)
                             },
+                            modifier = Modifier,
                         )
                     }
 
@@ -234,14 +244,94 @@ class SelectedItemsState(initialSelectedItems: List<CenterEntity> = emptyList())
 }
 
 @Composable
-expect fun CenterListContent(
+fun CenterListContent(
     state: CenterListUiState,
     isInSelectionMode: Boolean,
     selectedItems: SelectedItemsState,
     onRefresh: () -> Unit,
     onCenterSelect: (Int) -> Unit,
-    modifier: Modifier = Modifier,
-)
+    modifier: Modifier,
+) {
+    if (state is CenterListUiState.CenterList) {
+        val centerPagingList = state.centers.collectAsLazyPagingItems()
+        when (centerPagingList.loadState.refresh) {
+            is LoadState.Error -> {
+                MifosSweetError(message = stringResource(Res.string.feature_center_error_loading_centers)) {
+                    onRefresh()
+                }
+            }
+
+            is LoadState.Loading -> MifosProgressIndicator()
+
+            is LoadState.NotLoading -> Unit
+        }
+
+        LazyColumn(
+            modifier = modifier.fillMaxSize().padding(horizontal = KptTheme.spacing.md),
+            verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.md),
+        ) {
+            items(
+                count = centerPagingList.itemCount,
+                key = {
+                    centerPagingList[it]?.id ?: it
+                },
+            ) { index ->
+                val center = centerPagingList[index]
+                if (center != null) {
+                    CenterCard(
+                        center = center,
+                        selected = selectedItems.contains(center),
+                        isInSelectionMode = selectedItems.size() > 0,
+                        onSelect = {
+                            if (selectedItems.contains(it)) {
+                                selectedItems.remove(it)
+                            } else {
+                                selectedItems.add(it)
+                            }
+                        },
+                        onClick = {
+                            onCenterSelect(it.id ?: 0)
+                        },
+                    )
+                }
+            }
+
+            when (centerPagingList.loadState.append) {
+                is LoadState.Error -> {
+                    item {
+                        MifosSweetError(message = stringResource(Res.string.feature_center_error_loading_centers)) {
+                            centerPagingList.retry()
+                        }
+                    }
+                }
+
+                is LoadState.Loading -> {
+                    item {
+                        MifosPagingAppendProgress()
+                    }
+                }
+
+                is LoadState.NotLoading -> Unit
+            }
+            when (centerPagingList.loadState.append.endOfPaginationReached) {
+                true -> {
+                    item {
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(KptTheme.spacing.sm),
+                            text = stringResource(Res.string.feature_center_no_more_centers),
+                            style = MaterialTheme.typography.bodyMedium,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                }
+
+                false -> Unit
+            }
+        }
+    }
+}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -251,8 +341,8 @@ fun CenterCard(
     isInSelectionMode: Boolean,
     onSelect: (CenterEntity) -> Unit,
     modifier: Modifier = Modifier,
-    selectedColor: Color = MaterialTheme.colorScheme.secondaryContainer,
-    unselectedColor: Color = MaterialTheme.colorScheme.surface,
+    selectedColor: Color = KptTheme.colorScheme.secondaryContainer,
+    unselectedColor: Color = KptTheme.colorScheme.surface,
     onClick: (CenterEntity) -> Unit,
 ) {
     val containerColor = if (selected) selectedColor else unselectedColor
@@ -279,7 +369,7 @@ fun CenterCard(
         ListItem(
             leadingContent = {
                 Canvas(
-                    modifier = Modifier.size(16.dp),
+                    modifier = Modifier.size(DesignToken.sizes.iconSmall),
                     onDraw = {
                         drawCircle(
                             color = if (center.active == true) Color.Green else Color.Red,
@@ -299,11 +389,11 @@ fun CenterCard(
             trailingContent = {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(KptTheme.spacing.xs),
                 ) {
                     if (center.sync) {
                         AsyncImage(
-                            modifier = Modifier.size(20.dp),
+                            modifier = Modifier.size(DesignToken.sizes.iconAverage),
                             model = Res.drawable.feature_center_ic_done_all_black_24dp,
                             contentDescription = null,
                         )

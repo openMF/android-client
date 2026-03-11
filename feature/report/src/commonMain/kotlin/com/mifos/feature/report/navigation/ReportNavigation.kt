@@ -70,7 +70,7 @@ fun NavGraphBuilder.reportDetailsScreenRoute(
 }
 
 fun NavController.navigateReportDetailsScreen(clientReportTypeItem: ClientReportTypeItem) {
-    val arg = Json.encodeToString(clientReportTypeItem)
+    val arg = Json.encodeToString(ClientReportTypeItem.serializer(), clientReportTypeItem)
     navigate(ReportScreens.ReportDetailScreen.argument(arg))
 }
 

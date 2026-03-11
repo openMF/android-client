@@ -32,7 +32,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -54,6 +53,7 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun ClientApplyNewApplicationsScreen(
@@ -118,7 +118,7 @@ private fun ClientApplyNewApplicationsContent(
         MifosBreadcrumbNavBar(navController)
         if (state.status == ClientStatusEntity.STATUS_ACTIVE) {
             Column(
-                modifier = Modifier.padding(horizontal = DesignToken.padding.large),
+                modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
             ) {
                 Text(
                     text = stringResource(Res.string.client_apply_new_applications_title),
@@ -133,7 +133,7 @@ private fun ClientApplyNewApplicationsContent(
                             TextUtil(
                                 text = stringResource(it.subTitle),
                                 style = MifosTypography.bodySmall,
-                                color = MaterialTheme.colorScheme.secondary,
+                                color = KptTheme.colorScheme.secondary,
                             ),
                         ),
                         rightValues = emptyList(),

@@ -48,13 +48,13 @@ import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosCheckBox
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.client.createShareAccount.CreateShareAccountAction
 import com.mifos.feature.client.createShareAccount.CreateShareAccountState
 import org.jetbrains.compose.resources.stringResource
+import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -105,7 +105,7 @@ fun TermsPage(
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large)) {
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -113,7 +113,7 @@ fun TermsPage(
                 text = stringResource(Res.string.feature_share_account_terms),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
 
             MifosTextFieldDropdown(
                 value = state.currency.orEmpty(),
@@ -131,7 +131,7 @@ fun TermsPage(
                     enabled = false,
                 ),
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
 
             MifosOutlinedTextField(
                 value = state.totalShares,
@@ -147,7 +147,7 @@ fun TermsPage(
                     errorText = state.totalSharesError?.let { stringResource(it) },
                 ),
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
 
             MifosTextFieldDropdown(
                 value = if (state.savingsAccountIdx == null) {
@@ -182,13 +182,13 @@ fun TermsPage(
                     onAction(CreateShareAccountAction.OnIsDividendAllowedClicked)
                 },
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
 
             Text(
                 text = stringResource(Res.string.feature_share_account_terms_min_active_period),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
 
             MifosOutlinedTextField(
                 value = state.minActivePeriodFreq,
@@ -204,7 +204,7 @@ fun TermsPage(
                     errorText = state.minActivePeriodFreqError?.let { stringResource(it) },
                 ),
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
 
             MifosTextFieldDropdown(
                 value = if (state.minActivePeriodFreqTypeIdx == null) {
@@ -224,13 +224,13 @@ fun TermsPage(
                 errorMessage = state.minActivePeriodFreqTypeError?.let { stringResource(it) },
             )
 
-            Spacer(Modifier.height(DesignToken.padding.small))
+            Spacer(Modifier.height(KptTheme.spacing.sm))
 
             Text(
                 text = stringResource(Res.string.feature_share_account_terms_lock_in_period),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
 
             MifosOutlinedTextField(
                 value = state.lockInPeriodFreq,
@@ -246,7 +246,7 @@ fun TermsPage(
                     errorText = state.lockInPeriodFreqError?.let { stringResource(it) },
                 ),
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
 
             MifosTextFieldDropdown(
                 value = if (state.lockInPeriodFreqTypeIdx == null) {
@@ -265,7 +265,7 @@ fun TermsPage(
                 label = stringResource(Res.string.feature_share_account_terms_type),
                 errorMessage = state.lockInPeriodFreqTypeError?.let { stringResource(it) },
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
         }
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.feature_share_account_back),

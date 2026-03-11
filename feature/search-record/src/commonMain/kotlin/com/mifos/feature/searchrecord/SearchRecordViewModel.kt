@@ -35,7 +35,7 @@ class SearchRecordViewModel(
 ) {
 
     private val route = savedStateHandle.toRoute<SearchRecordRoute>()
-    private val recordType: RecordType = route.type
+    private val recordType: RecordType = RecordType.valueOf(route.type)
     private var searchJob: Job? = null
 
     init {

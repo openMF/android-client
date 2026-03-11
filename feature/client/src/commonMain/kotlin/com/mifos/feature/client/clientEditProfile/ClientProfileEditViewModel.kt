@@ -16,6 +16,11 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.attafitamim.krop.core.crop.CropError
+import com.attafitamim.krop.core.crop.CropResult
+import com.attafitamim.krop.core.crop.ImageCropper
+import com.attafitamim.krop.core.crop.crop
+import com.attafitamim.krop.core.crop.imageCropper
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor
@@ -24,7 +29,15 @@ import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.core.ui.util.multipartRequestBody
-import com.mifos.feature.client.utils.toPlatformFile
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.ImageFormat
+import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.dialogs.FileKitMode
+import io.github.vinceglb.filekit.dialogs.FileKitType
+import io.github.vinceglb.filekit.dialogs.compose.util.encodeToByteArray
+import io.github.vinceglb.filekit.dialogs.compose.util.toImageBitmap
+import io.github.vinceglb.filekit.dialogs.openFilePicker
+import io.github.vinceglb.filekit.name
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -63,14 +76,25 @@ internal class ClientProfileEditViewModel(
         when (action) {
             ClientProfileEditAction.NavigateBack -> sendEvent(ClientProfileEditEvent.NavigateBack)
             is ClientProfileEditAction.OnNameChanged -> mutableStateFlow.update { it.copy(name = action.name) }
-            is ClientProfileEditAction.OnAccountNoChanged -> mutableStateFlow.update { it.copy(accountNo = action.accountNo) }
+            is ClientProfileEditAction.OnAccountNoChanged -> mutableStateFlow.update {
+                it.copy(
+                    accountNo = action.accountNo,
+                )
+            }
+
             ClientProfileEditAction.OnRetry -> Unit
             ClientProfileEditAction.OnDeleteImage -> {
                 mutableStateFlow.update {
                     it.copy(dialogState = ClientProfileEditState.DialogState.ShowDeleteDialog)
                 }
             }
-            ClientProfileEditAction.CancelDeleteClick -> mutableStateFlow.update { it.copy(dialogState = null) }
+
+            ClientProfileEditAction.CancelDeleteClick -> mutableStateFlow.update {
+                it.copy(
+                    dialogState = null,
+                )
+            }
+
             ClientProfileEditAction.OnConfirmDeleteClick -> deleteClientImage()
             ClientProfileEditAction.OnUploadNewPhotoClick -> {
                 mutableStateFlow.update {
@@ -80,7 +104,13 @@ internal class ClientProfileEditViewModel(
                     )
                 }
             }
-            ClientProfileEditAction.DismissModalBottomSheet -> mutableStateFlow.update { it.copy(dialogState = null) }
+
+            ClientProfileEditAction.DismissModalBottomSheet -> mutableStateFlow.update {
+                it.copy(
+                    dialogState = null,
+                )
+            }
+
             is ClientProfileEditAction.UpdateImagePicker -> {
                 mutableStateFlow.update {
                     it.copy(
@@ -89,10 +119,72 @@ internal class ClientProfileEditViewModel(
                 }
             }
 
-            is ClientProfileEditAction.OnImageSelected -> {
-                uploadImage(state.id, action.image)
-            }
             ClientProfileEditAction.OnNext -> sendEvent(ClientProfileEditEvent.NavigateBack)
+            ClientProfileEditAction.OnDismissDialog -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = null,
+                    )
+                }
+            }
+
+            is ClientProfileEditAction.OpenCamera -> {
+                viewModelScope.launch {
+                    action.file ?: return@launch
+                    imageCropper(action.file.toImageBitmap(), action.file.name)
+                }
+            }
+
+            ClientProfileEditAction.OpenImagePicker -> {
+                viewModelScope.launch {
+                    val file = FileKit.openFilePicker(
+                        mode = FileKitMode.Single,
+                        type = FileKitType.Image,
+                    )
+
+                    file?.let {
+                        imageCropper(it.toImageBitmap(), it.name)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun imageCropper(file: ImageBitmap, fileName: String) {
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = ClientProfileEditState.DialogState.ShowImageCrop,
+            )
+        }
+
+        viewModelScope.launch {
+            val result = state.cropState.crop(bmp = file)
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ClientProfileEditState.DialogState.Loading,
+                )
+            }
+            when (result) {
+                is CropError -> {
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ClientProfileEditState.DialogState.Error("Unexpected error"),
+                        )
+                    }
+                }
+
+                is CropResult.Success -> {
+                    uploadImage(state.id, result.bitmap, fileName)
+                }
+
+                CropResult.Cancelled -> {
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = null,
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -101,16 +193,18 @@ internal class ClientProfileEditViewModel(
             clientDetailsRepo.getImage(clientId).collect { result ->
                 when (result) {
                     is DataState.Success -> mutableStateFlow.update {
-                        val newDialogState = if (state.dialogState is ClientProfileEditState.DialogState.ShowStatusDialog) {
-                            state.dialogState
-                        } else {
-                            null
-                        }
+                        val newDialogState =
+                            if (state.dialogState is ClientProfileEditState.DialogState.ShowStatusDialog) {
+                                state.dialogState
+                            } else {
+                                null
+                            }
                         state.copy(
                             profileImage = imageToByteArray(result.data),
                             dialogState = newDialogState,
                         )
                     }
+
                     is DataState.Loading -> mutableStateFlow.update {
                         if (it.dialogState !is ClientProfileEditState.DialogState.ShowStatusDialog) {
                             it.copy(dialogState = ClientProfileEditState.DialogState.Loading)
@@ -118,6 +212,7 @@ internal class ClientProfileEditViewModel(
                             it
                         }
                     }
+
                     is DataState.Error -> mutableStateFlow.update {
                         if (it.dialogState is ClientProfileEditState.DialogState.ShowStatusDialog) {
                             it
@@ -130,50 +225,55 @@ internal class ClientProfileEditViewModel(
         }
     }
 
-    private fun uploadImage(id: Int, imageFile: ImageBitmap) = viewModelScope.launch {
-        uploadClientImageUseCase(
-            id,
-            multipartRequestBody(imageFile.toPlatformFile(id.toString())),
-        ).collect { result ->
-            when (result) {
-                is DataState.Error -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = ClientProfileEditState.DialogState.Error(result.message),
-                        )
+    private fun uploadImage(id: Int, imageFile: ImageBitmap, fileName: String) =
+        viewModelScope.launch {
+            uploadClientImageUseCase(
+                id,
+                multipartRequestBody(
+                    file = imageFile.encodeToByteArray(ImageFormat.PNG),
+                    name = fileName,
+                    extension = ImageFormat.PNG.name,
+                ),
+            ).collect { result ->
+                when (result) {
+                    is DataState.Error -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                dialogState = ClientProfileEditState.DialogState.Error(result.message),
+                            )
+                        }
                     }
-                }
 
-                is DataState.Loading -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = ClientProfileEditState.DialogState.Loading,
-                        )
+                    is DataState.Loading -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                dialogState = ClientProfileEditState.DialogState.Loading,
+                            )
+                        }
                     }
-                }
 
-                is DataState.Success -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = ClientProfileEditState.DialogState.Loading,
-                            openImagePicker = false,
-                        )
-                    }
-                    clientDetailsRepo.triggerClientUpdate()
-                    loadImage(route.id)
-                    mutableStateFlow.update {
-                        it.copy(
-                            openImagePicker = false,
-                            dialogState = ClientProfileEditState.DialogState.ShowStatusDialog(
-                                status = ResultStatus.SUCCESS,
-                                msg = getString(Res.string.client_profile_photo_updated_success),
-                            ),
-                        )
+                    is DataState.Success -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                dialogState = ClientProfileEditState.DialogState.Loading,
+                                openImagePicker = false,
+                            )
+                        }
+                        clientDetailsRepo.triggerClientUpdate()
+                        loadImage(route.id)
+                        mutableStateFlow.update {
+                            it.copy(
+                                openImagePicker = false,
+                                dialogState = ClientProfileEditState.DialogState.ShowStatusDialog(
+                                    status = ResultStatus.SUCCESS,
+                                    msg = getString(Res.string.client_profile_photo_updated_success),
+                                ),
+                            )
+                        }
                     }
                 }
             }
         }
-    }
 
     fun deleteClientImage() {
         viewModelScope.launch {
@@ -204,6 +304,7 @@ data class ClientProfileEditState(
     val name: String = "",
     val accountNo: String = "",
     val profileImage: ByteArray? = null,
+    val cropState: ImageCropper = imageCropper(),
     val openImagePicker: Boolean = false,
     val dialogState: DialogState? = null,
     val networkConnection: Boolean = false,
@@ -213,6 +314,7 @@ data class ClientProfileEditState(
         data object Loading : DialogState
         data object ShowDeleteDialog : DialogState
         data object ShowUploadOptions : DialogState
+        data object ShowImageCrop : DialogState
         data class ShowStatusDialog(val status: ResultStatus, val msg: String = "") : DialogState
     }
 }
@@ -233,6 +335,8 @@ sealed interface ClientProfileEditAction {
     data class OnAccountNoChanged(val accountNo: String) : ClientProfileEditAction
     data object DismissModalBottomSheet : ClientProfileEditAction
     data class UpdateImagePicker(val status: Boolean) : ClientProfileEditAction
-    data class OnImageSelected(val image: ImageBitmap) : ClientProfileEditAction
     data object OnNext : ClientProfileEditAction
+    object OnDismissDialog : ClientProfileEditAction
+    object OpenImagePicker : ClientProfileEditAction
+    data class OpenCamera(val file: PlatformFile?) : ClientProfileEditAction
 }

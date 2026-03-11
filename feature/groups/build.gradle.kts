@@ -32,10 +32,11 @@ kotlin{
 
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.paging.common)
+            implementation(libs.androidx.paging.compose)
+            implementation(libs.ui.backhandler)
         }
 
         androidMain.dependencies {
-            implementation(libs.androidx.paging.compose)
             implementation(compose.ui)
             implementation(compose.material3)
             implementation(libs.androidx.compose.foundation)

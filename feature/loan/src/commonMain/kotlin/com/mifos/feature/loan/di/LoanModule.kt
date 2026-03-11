@@ -11,10 +11,11 @@ package com.mifos.feature.loan.di
 
 import com.mifos.feature.loan.groupLoanAccount.GroupLoanAccountViewModel
 import com.mifos.feature.loan.loanAccount.LoanAccountViewModel
+import com.mifos.feature.loan.loanAccountProfile.LoanAccountProfileViewModel
 import com.mifos.feature.loan.loanAccountSummary.LoanAccountSummaryViewModel
 import com.mifos.feature.loan.loanApproval.LoanAccountApprovalViewModel
 import com.mifos.feature.loan.loanCharge.LoanChargeViewModel
-import com.mifos.feature.loan.loanChargeDialog.LoanChargeDialogViewModel
+import com.mifos.feature.loan.loanChargeForm.LoanChargeSheetViewModel
 import com.mifos.feature.loan.loanDisbursement.LoanAccountDisbursementViewModel
 import com.mifos.feature.loan.loanRepayment.LoanRepaymentViewModel
 import com.mifos.feature.loan.loanRepaymentSchedule.LoanRepaymentScheduleViewModel
@@ -29,10 +30,11 @@ val LoanModule = module {
     viewModelOf(::LoanAccountSummaryViewModel)
     viewModelOf(::LoanAccountApprovalViewModel)
     viewModelOf(::LoanChargeViewModel)
-    viewModelOf(::LoanChargeDialogViewModel)
+    viewModelOf(::LoanChargeSheetViewModel)
     viewModelOf(::LoanAccountDisbursementViewModel)
     viewModelOf(::LoanRepaymentViewModel)
     viewModelOf(::LoanRepaymentScheduleViewModel)
     viewModelOf(::LoanTransactionsViewModel)
     viewModelOf(::NewLoanAccountViewModel)
+    viewModelOf(::LoanAccountProfileViewModel)
 }

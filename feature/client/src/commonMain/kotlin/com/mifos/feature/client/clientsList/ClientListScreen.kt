@@ -11,6 +11,9 @@ package com.mifos.feature.client.clientsList
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.account_number_prefix
+import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_clients
+import androidclient.feature.client.generated.resources.feature_client_failed_to_more_clients
+import androidclient.feature.client.generated.resources.feature_client_no_more_clients_available
 import androidclient.feature.client.generated.resources.string_not_available
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
@@ -30,11 +33,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -44,16 +48,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
 import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.mifos.core.designsystem.component.BasicDialogState
 import com.mifos.core.designsystem.component.MifosBasicDialog
+import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosEmptyCard
+import com.mifos.core.ui.components.MifosPagingAppendProgress
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosRowCard
 import com.mifos.core.ui.util.EventsEffect
@@ -62,6 +71,7 @@ import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -121,7 +131,7 @@ private fun ClientActions(
     toggleFilterVisibility: () -> Unit,
 ) {
     Row(
-        modifier = modifier.fillMaxWidth().padding(DesignToken.padding.large),
+        modifier = modifier.fillMaxWidth().padding(KptTheme.spacing.md),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -134,17 +144,17 @@ private fun ClientActions(
                     modifier = Modifier.clickable {
                         onAction(ClientListAction.NavigateToCreateClient)
                     },
-                    horizontalArrangement = Arrangement.spacedBy(DesignToken.padding.small),
+                    horizontalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
                 ) {
                     Text(
                         text = "Clients",
                         style = MifosTypography.titleMediumEmphasized,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = KptTheme.colorScheme.primary,
                     )
                     Icon(
                         imageVector = MifosIcons.Add,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = KptTheme.colorScheme.primary,
                         modifier = Modifier
                             .size(DesignToken.sizes.iconAverage),
                     )
@@ -195,7 +205,9 @@ private fun ClientListContentScreen(
     onAction: (ClientListAction) -> Unit,
     toggleFilterVisibility: () -> Unit,
     onUpdateOffices: (List<String?>) -> Unit,
+    isRefreshing: Boolean = false,
 ) {
+    val pullRefreshState = rememberPullToRefreshState()
     Column(
         modifier = modifier.fillMaxSize(),
     ) {
@@ -207,40 +219,48 @@ private fun ClientListContentScreen(
             )
         }
 
-        when {
-            state.clients.isNotEmpty() -> {
-                ClientListContent(
-                    clientsList = state.clients,
-                    onClientClick = { clientId ->
-                        onAction(ClientListAction.OnClientClick(clientId))
-                    },
-                    modifier = Modifier.padding(DesignToken.padding.large),
-                    fetchImage = {
-                        onAction(ClientListAction.FetchImage(it))
-                    },
-                    images = state.clientImages,
-                )
-            }
-            state.clientsFlow != null -> {
-                LazyColumnForClientListApi(
-                    pagingFlow = state.clientsFlow,
-                    onRefresh = {
-                        onAction(ClientListAction.RefreshClients)
-                    },
-                    onClientSelect = {
-                        onAction(ClientListAction.OnClientClick(it))
-                    },
-                    modifier = Modifier,
-                    fetchImage = {
-                        onAction(ClientListAction.FetchImage(it))
-                    },
-                    images = state.clientImages,
-                    sort = state.sort,
-                    onUpdateOffices = onUpdateOffices,
-                )
-            }
-            else -> {
-                MifosEmptyCard("No clients found")
+        PullToRefreshBox(
+            state = pullRefreshState,
+            onRefresh = { onAction(ClientListAction.RefreshClients) },
+            isRefreshing = isRefreshing,
+        ) {
+            when {
+                state.clients.isNotEmpty() -> {
+                    ClientListContent(
+                        clientsList = state.clients,
+                        onClientClick = { clientId ->
+                            onAction(ClientListAction.OnClientClick(clientId))
+                        },
+                        modifier = Modifier.padding(KptTheme.spacing.md),
+                        fetchImage = {
+                            onAction(ClientListAction.FetchImage(it))
+                        },
+                        images = state.clientImages,
+                    )
+                }
+
+                state.clientsFlow != null -> {
+                    LazyColumnForClientListApi(
+                        pagingFlow = state.clientsFlow,
+                        onRefresh = {
+                            onAction(ClientListAction.RefreshClients)
+                        },
+                        onClientSelect = {
+                            onAction(ClientListAction.OnClientClick(it))
+                        },
+                        modifier = Modifier,
+                        fetchImage = {
+                            onAction(ClientListAction.FetchImage(it))
+                        },
+                        images = state.clientImages,
+                        sort = state.sort,
+                        onUpdateOffices = onUpdateOffices,
+                    )
+                }
+
+                else -> {
+                    MifosEmptyCard("No clients found")
+                }
             }
         }
     }
@@ -282,12 +302,12 @@ fun ClientItem(client: ClientEntity, byteArray: ByteArray?, onClientClick: (Int)
                     (client.accountNo ?: stringResource(Res.string.string_not_available)),
                 ),
                 style = MifosTypography.bodySmall,
-                color = MaterialTheme.colorScheme.secondary,
+                color = KptTheme.colorScheme.secondary,
             ),
             TextUtil(
                 text = client.officeName ?: stringResource(Res.string.string_not_available),
                 style = MifosTypography.bodySmall,
-                color = MaterialTheme.colorScheme.secondary,
+                color = KptTheme.colorScheme.secondary,
             ),
         ),
         rightValues = buildList {
@@ -299,7 +319,7 @@ fun ClientItem(client: ClientEntity, byteArray: ByteArray?, onClientClick: (Int)
                         color = when (status) {
                             "Active" -> AppColors.customEnable
                             "Pending" -> AppColors.customYellow
-                            else -> MaterialTheme.colorScheme.error
+                            else -> KptTheme.colorScheme.error
                         },
                     ),
                 )
@@ -310,7 +330,7 @@ fun ClientItem(client: ClientEntity, byteArray: ByteArray?, onClientClick: (Int)
                     TextUtil(
                         text = externalId,
                         style = MifosTypography.labelSmall,
-                        color = MaterialTheme.colorScheme.secondary,
+                        color = KptTheme.colorScheme.secondary,
                     ),
                 )
             }
@@ -319,7 +339,7 @@ fun ClientItem(client: ClientEntity, byteArray: ByteArray?, onClientClick: (Int)
             .clickable {
                 onClientClick(client.id)
             }
-            .padding(DesignToken.padding.large),
+            .padding(KptTheme.spacing.md),
     )
 }
 
@@ -345,16 +365,125 @@ private fun ClientListDialogs(
 }
 
 @Composable
-internal expect fun LazyColumnForClientListApi(
+internal fun LazyColumnForClientListApi(
     pagingFlow: Flow<PagingData<ClientEntity>>,
     onRefresh: () -> Unit,
     onClientSelect: (Int) -> Unit,
     fetchImage: (Int) -> Unit,
     images: Map<Int, ByteArray?>,
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     sort: SortTypes?,
     onUpdateOffices: (List<String?>) -> Unit,
-)
+) {
+    val clientPagingList = pagingFlow.collectAsLazyPagingItems()
+
+    val items = clientPagingList.itemSnapshotList.items
+    if (items.isNotEmpty()) {
+        val offices = items.map { it.officeName }
+            .distinct()
+        LaunchedEffect(offices) { onUpdateOffices(offices) }
+    }
+
+    when (clientPagingList.loadState.refresh) {
+        is LoadState.Error -> {
+            MifosSweetError(message = stringResource(Res.string.feature_client_failed_to_fetch_clients)) {
+                onRefresh()
+            }
+        }
+
+        is LoadState.Loading -> MifosProgressIndicator()
+
+        is LoadState.NotLoading -> Unit
+    }
+
+    if (sort != null) {
+        val currentItems = clientPagingList.itemSnapshotList.items
+
+        val sortedItems = when (sort) {
+            SortTypes.NAME -> {
+                currentItems.sortedBy { it.displayName?.lowercase() }
+            }
+            SortTypes.ACCOUNT_NUMBER -> {
+                currentItems.sortedBy { it.accountNo }
+            }
+            SortTypes.EXTERNAL_ID -> {
+                currentItems.sortedBy { it.externalId }
+            }
+            else -> currentItems
+        }
+
+        LazyColumn(
+            modifier = modifier,
+        ) {
+            items(
+                items = sortedItems,
+                key = { client -> client.id },
+            ) { client ->
+                LaunchedEffect(client.id) {
+                    fetchImage(client.id)
+                }
+                ClientItem(
+                    client = client,
+                    byteArray = images[client.id],
+                    onClientClick = onClientSelect,
+                )
+            }
+        }
+    } else {
+        LazyColumn(
+            modifier = modifier,
+        ) {
+            items(
+                count = clientPagingList.itemCount,
+                key = { index -> clientPagingList[index]?.id ?: index },
+            ) { index ->
+                clientPagingList[index]?.let { client ->
+                    LaunchedEffect(client.id) {
+                        fetchImage(client.id)
+                    }
+                    ClientItem(
+                        client = client,
+                        byteArray = images[client.id],
+                        onClientClick = onClientSelect,
+                    )
+                }
+            }
+
+            when (clientPagingList.loadState.append) {
+                is LoadState.Error -> {
+                    item {
+                        MifosSweetError(message = stringResource(Res.string.feature_client_failed_to_more_clients)) {
+                            clientPagingList.retry()
+                        }
+                    }
+                }
+
+                is LoadState.Loading -> {
+                    item {
+                        MifosPagingAppendProgress()
+                    }
+                }
+
+                is LoadState.NotLoading -> {
+                    if (clientPagingList.loadState.append.endOfPaginationReached &&
+                        clientPagingList.itemCount > 0
+                    ) {
+                        item {
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = DesignToken.padding.extraExtraLarge),
+                                text = stringResource(Res.string.feature_client_no_more_clients_available),
+                                style = MifosTypography.bodyMedium,
+                                textAlign = TextAlign.Center,
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -373,24 +502,24 @@ fun FilterBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
         dragHandle = null,
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = KptTheme.colorScheme.background,
     ) {
         val sortTypes = listOf(SortTypes.NAME, SortTypes.ACCOUNT_NUMBER, SortTypes.EXTERNAL_ID)
         val statusTypes = listOf("Active", "Pending", "Closed")
 
         Column(
-            modifier = Modifier.padding(15.dp),
+            modifier = Modifier.padding(DesignToken.padding.dp15),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
-                    .padding(10.dp),
+                    .padding(DesignToken.padding.dp10),
             ) {
                 Text(
                     text = "Filters",
                     style = MifosTypography.titleLargeEmphasized,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = KptTheme.colorScheme.primary,
                 )
                 Row {
                     IconButton(
@@ -416,7 +545,7 @@ fun FilterBottomSheet(
             }
             HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.5.dp)
             Column(
-                modifier = Modifier.padding(10.dp),
+                modifier = Modifier.padding(DesignToken.padding.dp10),
             ) {
                 var isExpanded by remember { mutableStateOf(false) }
                 Row(
@@ -451,7 +580,7 @@ fun FilterBottomSheet(
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
-                                Spacer(modifier = Modifier.width(10.dp))
+                                Spacer(modifier = Modifier.width(DesignToken.spacing.dp10))
                                 RadioButton(
                                     selected = isSelected,
                                     onClick = {
@@ -466,7 +595,7 @@ fun FilterBottomSheet(
             }
             HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.5.dp)
             Column(
-                modifier = Modifier.padding(10.dp),
+                modifier = Modifier.padding(DesignToken.padding.dp10),
             ) {
                 var isExpanded by remember { mutableStateOf(false) }
                 Row(
@@ -501,7 +630,7 @@ fun FilterBottomSheet(
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
-                                Spacer(modifier = Modifier.width(10.dp))
+                                Spacer(modifier = Modifier.width(DesignToken.spacing.dp10))
                                 Checkbox(
                                     checked = isChecked,
                                     onCheckedChange = { handleFilterClick(status, FilterType.STATUS) },
@@ -515,7 +644,7 @@ fun FilterBottomSheet(
             HorizontalDivider(Modifier.fillMaxWidth(), thickness = 1.5.dp)
 
             Column(
-                modifier = Modifier.padding(10.dp),
+                modifier = Modifier.padding(DesignToken.spacing.dp10),
             ) {
                 var isExpanded by remember { mutableStateOf(false) }
                 Row(
@@ -552,7 +681,7 @@ fun FilterBottomSheet(
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
-                                    Spacer(modifier = Modifier.width(10.dp))
+                                    Spacer(modifier = Modifier.width(DesignToken.spacing.dp10))
                                     Checkbox(
                                         checked = isChecked,
                                         onCheckedChange = { handleFilterClick(name, FilterType.OFFICE) },

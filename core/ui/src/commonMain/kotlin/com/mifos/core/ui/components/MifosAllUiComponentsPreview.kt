@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,6 +34,8 @@ import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.core.ui.util.TextUtil
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.KptTheme
+import template.core.base.designsystem.theme.KptTheme
 
 @DevicePreview
 @Composable
@@ -66,7 +67,7 @@ private fun EmptyDataViewPreviewForIcon(
 @Preview
 @Composable
 private fun PreviewMifosActionsNoteListingComponent() {
-    MaterialTheme {
+    KptTheme {
         MifosActionsNoteListingComponent(
             createdBy = "John Doe",
             date = "02 September 2025",
@@ -91,7 +92,7 @@ private fun PreviewMifosActionsNoteListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosActionsIdentifierListingComponent() {
-    MaterialTheme {
+    KptTheme {
         MifosActionsIdentifierListingComponent(
             type = "Passport",
             id = "P1234567",
@@ -121,7 +122,7 @@ private fun PreviewMifosActionsIdentifierListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosActionsClientFeeListingComponent() {
-    MaterialTheme {
+    KptTheme {
         MifosActionsClientFeeListingComponent(
             name = "John Doe",
             dueAsOf = "2025-08-19",
@@ -149,7 +150,7 @@ private fun PreviewMifosActionsClientFeeListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosActionsSavingsListingComponent() {
-    MaterialTheme {
+    KptTheme {
         MifosActionsSavingsListingComponent(
             accountNo = "SV9876",
             savingsProduct = "Savings Product",
@@ -176,7 +177,7 @@ private fun PreviewMifosActionsSavingsListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosActionsCollateralDataListingComponent() {
-    MaterialTheme {
+    KptTheme {
         MifosActionsCollateralDataListingComponent(
             name = "Gold Jewelry",
             quantity = "5",
@@ -200,7 +201,7 @@ private fun PreviewMifosActionsCollateralDataListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosActionsLoanListingComponent() {
-    MaterialTheme {
+    KptTheme {
         MifosActionsLoanListingComponent(
             accountNo = "LN12345",
             loanProduct = "Personal Loan",
@@ -417,7 +418,7 @@ private fun MifosDefaultListingComponentPreview() {
 @Preview
 @Composable
 private fun PreviewMifosClientFeeListingComponent() {
-    MaterialTheme {
+    KptTheme {
         MifosClientFeeListingComponent(
             name = "John Doe",
             dueAsOf = "2025-08-19",
@@ -432,7 +433,7 @@ private fun PreviewMifosClientFeeListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosLoanListingComponent() {
-    MaterialTheme {
+    KptTheme {
         MifosLoanListingComponent(
             accountNo = "LN12345",
             loanProduct = "Personal Loan",
@@ -447,7 +448,7 @@ private fun PreviewMifosLoanListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosSavingsListingComponent() {
-    MaterialTheme {
+    KptTheme {
         MifosSavingsListingComponent(
             accountNo = "SV9876",
             savingsProduct = "Regular Savings",
@@ -460,7 +461,7 @@ private fun PreviewMifosSavingsListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosCollateralDataListingComponent() {
-    MaterialTheme {
+    KptTheme {
         MifosCollateralDataListingComponent(
             name = "Gold Jewelry",
             quantity = "5",
@@ -473,7 +474,7 @@ private fun PreviewMifosCollateralDataListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosIdentifierListingComponent() {
-    MaterialTheme {
+    KptTheme {
         MifosIdentifierListingComponent(
             type = "Passport",
             id = "P1234567",
@@ -488,7 +489,7 @@ private fun PreviewMifosIdentifierListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosDelinquencyListingComponent() {
-    MaterialTheme {
+    KptTheme {
         MifosDelinquencyListingComponent(
             date = "2025-08-01",
             time = "10:00 AM",
@@ -502,7 +503,7 @@ private fun PreviewMifosDelinquencyListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosChargesListingComponent() {
-    MaterialTheme {
+    KptTheme {
         MifosChargesListingComponent(
             title = "Processing Fee",
             type = "Flat",
@@ -519,7 +520,7 @@ private fun PreviewMifosChargesListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosSellLoanListingComponent() {
-    MaterialTheme {
+    KptTheme {
         MifosSellLoanListingComponent(
             status = Status.Pending,
             effectiveForm = "2025-08-20",
@@ -534,7 +535,7 @@ private fun PreviewMifosSellLoanListingComponent() {
 @Preview
 @Composable
 private fun PreviewMifosHeader() {
-    MaterialTheme {
+    KptTheme {
         MifosListingRowItemHeader(
             text = "Hello",
         )
@@ -768,7 +769,7 @@ private fun MifosTextTitleDescDoubleLinePreview(
         MifosTextTitleDescDoubleLine(
             title = "MifosTextTitleDescDoubleLine Title",
             description = "MifosTextTitleDescDoubleLine Description",
-            descriptionStyle = MaterialTheme.typography.bodyMedium,
+            descriptionStyle = KptTheme.typography.bodyMedium,
             modifier = modifier,
         )
     }

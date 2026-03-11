@@ -34,7 +34,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,11 +47,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.account.loan.PaymentTypeOptions
 import com.mifos.core.model.objects.collectionsheets.LoanAndClientName
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
@@ -61,6 +60,7 @@ import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.noncore.BulkRepaymentTransactions
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun PaymentDetailsScreenRoute(
@@ -201,34 +201,34 @@ internal fun PaymentsDetailsScreen(
         OutlinedCard(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(KptTheme.spacing.md),
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(KptTheme.spacing.md),
                 verticalAlignment = Alignment.CenterVertically,
 
             ) {
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(end = 16.dp),
+                        .padding(end = KptTheme.spacing.md),
                 ) {
                     Text(
                         text = loanAndClientNameItem.clientName ?: "This is Tv name",
-                        style = MaterialTheme.typography.titleLarge,
+                        style = KptTheme.typography.titleLarge,
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
                     Text(
                         text = "${loanCollectionSheetItem?.productShortName} (#${loanCollectionSheetItem?.accountId})",
                         color = Color.DarkGray.copy(alpha = .7f),
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                        style = KptTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
                     MifosOutlinedTextField(
                         modifier = Modifier.fillMaxWidth(),
@@ -239,11 +239,11 @@ internal fun PaymentsDetailsScreen(
                         keyboardType = KeyboardType.Number,
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
                     Text(
                         text = stringResource(Res.string.feature_collection_sheet_total_charges) + " : " + loanCollectionSheetItem?.chargesDue,
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = KptTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Bold,
                     )
                 }
@@ -255,7 +255,7 @@ internal fun PaymentsDetailsScreen(
                 ) {
                     MifosUserImage(
                         bitmap = getClientImage,
-                        modifier = Modifier.size(100.dp),
+                        modifier = Modifier.size(DesignToken.sizes.dp100),
                     )
                 }
             }
@@ -264,8 +264,8 @@ internal fun PaymentsDetailsScreen(
         MifosButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .height(50.dp),
+                .padding(horizontal = KptTheme.spacing.md)
+                .height(DesignToken.spacing.dp50),
             onClick = {
                 showAdditionalDetails = !showAdditionalDetails
             },
@@ -276,24 +276,24 @@ internal fun PaymentsDetailsScreen(
         if (noPaymentVisibility) {
             Text(
                 text = stringResource(Res.string.feature_collection_sheet_no_payment_added),
-                style = MaterialTheme.typography.bodyMedium,
+                style = KptTheme.typography.bodyMedium,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(vertical = 16.dp),
+                    .padding(vertical = KptTheme.spacing.md),
                 color = Color.Gray,
             )
         }
 
         if (showAdditionalDetails) {
             OutlinedCard(
-                modifier = Modifier.padding(horizontal = 16.dp),
+                modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
                 colors = CardDefaults.cardColors(
                     containerColor = Color.White,
                 ),
             ) {
                 Column(
-                    modifier = Modifier.padding(vertical = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier.padding(vertical = KptTheme.spacing.md),
+                    verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.md),
                 ) {
                     MifosTextFieldDropdown(
                         label = stringResource(Res.string.feature_collection_sheet_payment_type),
@@ -360,17 +360,17 @@ private fun MifosButtonRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = KptTheme.spacing.md),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         MifosButton(
-            modifier = Modifier.height(50.dp),
+            modifier = Modifier.height(DesignToken.spacing.dp50),
             onClick = { cancelAdditional() },
         ) {
             Text(text = stringResource(Res.string.feature_collection_sheet_cancel))
         }
         MifosButton(
-            modifier = Modifier.height(50.dp),
+            modifier = Modifier.height(DesignToken.spacing.dp50),
             onClick = { saveAdditional() },
         ) {
             Text(text = stringResource(Res.string.feature_collection_sheet_save))

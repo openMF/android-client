@@ -12,20 +12,21 @@ package com.mifos.feature.client.clientEditProfile
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.account_number_prefix
 import androidclient.feature.client.generated.resources.arrow_up
+import androidclient.feature.client.generated.resources.camera
 import androidclient.feature.client.generated.resources.cancel
-import androidclient.feature.client.generated.resources.choose_from_option
 import androidclient.feature.client.generated.resources.client_profile_edit_failure_title
 import androidclient.feature.client.generated.resources.client_profile_edit_success_title
+import androidclient.feature.client.generated.resources.client_signature_more
 import androidclient.feature.client.generated.resources.delete_dialog_message
 import androidclient.feature.client.generated.resources.delete_dialog_title
 import androidclient.feature.client.generated.resources.delete_photo
 import androidclient.feature.client.generated.resources.dialog_continue
-import androidclient.feature.client.generated.resources.from_camera
-import androidclient.feature.client.generated.resources.from_gallery
+import androidclient.feature.client.generated.resources.gallery
 import androidclient.feature.client.generated.resources.remove
 import androidclient.feature.client.generated.resources.update_profile_photo_message
 import androidclient.feature.client.generated.resources.upload_new_photo
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -36,14 +37,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -51,8 +50,11 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.attafitamim.krop.core.crop.AspectRatio
 import com.mifos.core.designsystem.component.BasicDialogState
 import com.mifos.core.designsystem.component.MifosBasicDialog
+import com.mifos.core.designsystem.component.MifosBottomSheet
+import com.mifos.core.designsystem.component.MifosBottomSheetOptionItem
 import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.component.MifosTextButton
 import com.mifos.core.designsystem.icon.MifosIcons
@@ -60,19 +62,18 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosErrorComponent
+import com.mifos.core.ui.components.MifosImageCropperDialog
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosStatusDialog
 import com.mifos.core.ui.components.MifosUserImage
 import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.EventsEffect
+import com.mifos.feature.client.utils.rememberPlatformCameraLauncher
 import kotlinx.coroutines.delay
-import network.chaintech.cmpimagepickncrop.CMPImagePickNCropDialog
-import network.chaintech.cmpimagepickncrop.imagecropper.ImageAspectRatio
-import network.chaintech.cmpimagepickncrop.imagecropper.rememberImageCropper
-import network.chaintech.cmpimagepickncrop.utils.ImagePickerDialogStyle
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun ClientProfileEditScreen(
@@ -120,9 +121,7 @@ private fun ClientProfileEditContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .padding(
-                        horizontal = DesignToken.padding.large,
-                    ),
+                    .padding(horizontal = KptTheme.spacing.md),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Spacer(Modifier.height(DesignToken.padding.largeIncreased))
@@ -135,7 +134,7 @@ private fun ClientProfileEditContent(
                 Text(
                     text = stringResource(Res.string.account_number_prefix, state.accountNo),
                     style = MifosTypography.bodySmall,
-                    color = MaterialTheme.colorScheme.secondary,
+                    color = KptTheme.colorScheme.secondary,
                 )
                 Spacer(Modifier.height(DesignToken.padding.largeIncreased))
                 MifosUserImage(
@@ -144,11 +143,11 @@ private fun ClientProfileEditContent(
                     hasBorder = true,
                 )
                 if (state.profileImage == null) {
-                    Spacer(Modifier.height(DesignToken.padding.large))
+                    Spacer(Modifier.height(KptTheme.spacing.md))
                     Text(
                         text = stringResource(Res.string.update_profile_photo_message),
                         style = MifosTypography.bodySmall,
-                        color = MaterialTheme.colorScheme.secondary,
+                        color = KptTheme.colorScheme.secondary,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -167,7 +166,7 @@ private fun ClientProfileEditContent(
                     },
                     modifier = Modifier.fillMaxWidth(),
                 )
-                Spacer(Modifier.height(DesignToken.padding.large))
+                Spacer(Modifier.height(KptTheme.spacing.md))
                 MifosTextButton(
                     text = { Text(stringResource(Res.string.upload_new_photo)) },
                     onClick = {
@@ -225,7 +224,7 @@ private fun ClientProfileEditDialogs(
                     Icon(
                         imageVector = MifosIcons.DeleteDocument,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
+                        tint = KptTheme.colorScheme.primary,
                         modifier = Modifier.size(DesignToken.sizes.iconMedium),
                     )
                 },
@@ -235,30 +234,8 @@ private fun ClientProfileEditDialogs(
         null -> Unit
 
         ClientProfileEditState.DialogState.ShowUploadOptions -> {
-            val imageCropper = rememberImageCropper()
-            val scope = rememberCoroutineScope()
-            CMPImagePickNCropDialog(
-                imageCropper = imageCropper,
-                openImagePicker = state.openImagePicker,
-                defaultAspectRatio = ImageAspectRatio(16, 9),
-                imagePickerDialogStyle = ImagePickerDialogStyle(
-                    title = stringResource(Res.string.choose_from_option),
-                    txtCamera = stringResource(Res.string.from_camera),
-                    txtGallery = stringResource(Res.string.from_gallery),
-                    txtCameraColor = MaterialTheme.colorScheme.primary,
-                    txtGalleryColor = MaterialTheme.colorScheme.primary,
-                    cameraIconTint = MaterialTheme.colorScheme.primary,
-                    galleryIconTint = MaterialTheme.colorScheme.primary,
-                    backgroundColor = MaterialTheme.colorScheme.background,
-                ),
-                autoZoom = true,
-                imagePickerDialogHandler = {
-                    onAction(ClientProfileEditAction.UpdateImagePicker(it))
-                },
-                selectedImageCallback = {
-                    onAction(ClientProfileEditAction.OnImageSelected(it))
-                },
-                selectedImageFileCallback = {},
+            ShowUploadOption(
+                onAction = onAction,
             )
         }
 
@@ -277,11 +254,11 @@ private fun ClientProfileEditDialogs(
                 ),
             ) {
                 Surface(
-                    shape = DesignToken.shapes.extraLarge,
-                    color = MaterialTheme.colorScheme.surface,
+                    shape = KptTheme.shapes.extraLarge,
+                    color = KptTheme.colorScheme.surface,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(DesignToken.padding.large),
+                        .padding(KptTheme.spacing.md),
                 ) {
                     MifosStatusDialog(
                         status = state.dialogState.status,
@@ -297,6 +274,63 @@ private fun ClientProfileEditDialogs(
                     )
                 }
             }
+        }
+
+        ClientProfileEditState.DialogState.ShowImageCrop -> {
+            state.cropState.cropState?.let {
+                MifosImageCropperDialog(
+                    state = it,
+                    AspectRatio(1, 1),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ShowUploadOption(
+    onAction: (ClientProfileEditAction) -> Unit,
+) {
+    val cameraLauncher = rememberPlatformCameraLauncher(
+        onImageCapturedPath = { file ->
+            onAction(ClientProfileEditAction.OpenCamera(file))
+        },
+    )
+
+    MifosBottomSheet(
+        onDismiss = {
+            onAction(ClientProfileEditAction.OnDismissDialog)
+        },
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(
+                    start = KptTheme.spacing.md,
+                    end = KptTheme.spacing.md,
+                    bottom = KptTheme.spacing.md,
+                ),
+        ) {
+            MifosBottomSheetOptionItem(
+                label = stringResource(Res.string.gallery),
+                icon = MifosIcons.Gallery,
+                onClick = {
+                    onAction(ClientProfileEditAction.OpenImagePicker)
+                },
+            )
+            MifosBottomSheetOptionItem(
+                label = stringResource(Res.string.camera),
+                icon = MifosIcons.Camera,
+                onClick = {
+                    cameraLauncher.launch()
+                },
+            )
+            MifosBottomSheetOptionItem(
+                label = stringResource(Res.string.client_signature_more),
+                icon = MifosIcons.MoreHoriz,
+                onClick = {
+                    // it implement further
+                },
+            )
         }
     }
 }

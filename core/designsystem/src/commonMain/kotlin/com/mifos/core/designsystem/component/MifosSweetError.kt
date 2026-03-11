@@ -21,7 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,13 +28,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import core.designsystem.generated.resources.Res
 import core.designsystem.generated.resources.core_designsystem_try_again
 import core.designsystem.generated.resources.core_designsystem_unable_to_load
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosSweetError(
@@ -43,7 +43,7 @@ fun MifosSweetError(
     isShowLoadMsg: Boolean = true,
     modifier: Modifier = Modifier
         .fillMaxSize()
-        .padding(18.dp)
+        .padding(DesignToken.padding.dp18)
         .semantics { contentDescription = "MifosSweetError" },
     isRetryEnabled: Boolean = true,
     buttonText: String = stringResource(Res.string.core_designsystem_try_again),
@@ -57,25 +57,25 @@ fun MifosSweetError(
         if (isShowLoadMsg) {
             Text(
                 text = stringResource(Res.string.core_designsystem_unable_to_load),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.secondary,
+                style = KptTheme.typography.bodyMedium,
+                color = KptTheme.colorScheme.secondary,
             )
         }
         Text(
             text = message,
-            style = MaterialTheme.typography.bodyMedium.copy(textAlign = TextAlign.Center),
-            color = MaterialTheme.colorScheme.secondary,
+            style = KptTheme.typography.bodyMedium.copy(textAlign = TextAlign.Center),
+            color = KptTheme.colorScheme.secondary,
         )
         if (isRetryEnabled) {
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(DesignToken.spacing.largeIncreased))
             Button(
                 onClick = { onclick() },
                 contentPadding = PaddingValues(),
             ) {
                 Text(
-                    modifier = Modifier.padding(start = 20.dp, end = 20.dp),
+                    modifier = Modifier.padding(start = DesignToken.spacing.largeIncreased, end = DesignToken.spacing.largeIncreased),
                     text = buttonText,
-                    style = MaterialTheme.typography.labelLarge,
+                    style = KptTheme.typography.labelLarge,
                 )
             }
         }
@@ -90,8 +90,8 @@ fun MifosPaginationSweetError(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(18.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+            .padding(DesignToken.padding.dp18),
+        verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.xs),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(
@@ -100,8 +100,8 @@ fun MifosPaginationSweetError(
         )
         Text(
             text = stringResource(Res.string.core_designsystem_unable_to_load),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.secondary,
+            style = KptTheme.typography.bodyMedium,
+            color = KptTheme.colorScheme.secondary,
         )
         Button(
             onClick = { onclick() },
@@ -109,9 +109,9 @@ fun MifosPaginationSweetError(
         ) {
             Text(
                 modifier = Modifier
-                    .padding(start = 20.dp, end = 20.dp),
+                    .padding(start = DesignToken.padding.largeIncreased, end = DesignToken.padding.largeIncreased),
                 text = stringResource(Res.string.core_designsystem_try_again),
-                style = MaterialTheme.typography.bodyLarge,
+                style = KptTheme.typography.bodyLarge,
             )
         }
     }

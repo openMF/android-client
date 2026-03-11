@@ -29,11 +29,12 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosDialogBox(
@@ -122,12 +123,12 @@ fun MifosRadioButtonDialog(
         onDismissRequest = { onDismissRequest.invoke() },
     ) {
         Card(modifier = modifier) {
-            Column(modifier = Modifier.padding(20.dp)) {
+            Column(modifier = Modifier.padding(DesignToken.padding.largeIncreased)) {
                 Text(text = title)
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(max = 500.dp),
+                        .heightIn(max = DesignToken.sizes.lazyColHeightInDp500),
                 ) {
                     itemsIndexed(items = items) { index, item ->
                         Row(
@@ -148,7 +149,7 @@ fun MifosRadioButtonDialog(
                             )
                             Text(
                                 text = item,
-                                modifier = Modifier.padding(start = 4.dp),
+                                modifier = Modifier.padding(start = KptTheme.spacing.xs),
                             )
                         }
                     }
@@ -204,7 +205,7 @@ private fun MifosDialogBoxWithComposableMessagePreview() {
             message = {
                 Column {
                     Text("This is a custom composable inside the dialog.")
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
                     Text("You can place anything here, like a list or input field.")
                 }
             },
@@ -234,11 +235,11 @@ private fun MifosCustomDialogPreview() {
             onDismiss = {},
             content = {
                 Card(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.padding(KptTheme.spacing.md),
                 ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
+                    Column(modifier = Modifier.padding(KptTheme.spacing.md)) {
                         Text("This is a custom dialog.")
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
                         Text("You can fully customize this content.")
                     }
                 }

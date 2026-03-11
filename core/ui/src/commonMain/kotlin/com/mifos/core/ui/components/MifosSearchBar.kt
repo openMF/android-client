@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -36,6 +35,7 @@ import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosSearchBar(
@@ -49,7 +49,7 @@ fun MifosSearchBar(
         modifier = modifier
             .fillMaxWidth()
             .background(
-                color = MaterialTheme.colorScheme.surface,
+                color = KptTheme.colorScheme.surface,
                 shape = DesignToken.shapes.full,
             ),
         verticalAlignment = Alignment.CenterVertically,
@@ -58,7 +58,7 @@ fun MifosSearchBar(
             Icon(
                 imageVector = MifosIcons.ChevronLeft,
                 contentDescription = "Back",
-                tint = MaterialTheme.colorScheme.primary,
+                tint = KptTheme.colorScheme.primary,
             )
         }
 
@@ -75,9 +75,9 @@ fun MifosSearchBar(
             modifier = Modifier
                 .weight(1f),
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                focusedContainerColor = KptTheme.colorScheme.surface,
                 unfocusedContainerColor = Color.Transparent,
-                cursorColor = MaterialTheme.colorScheme.primary,
+                cursorColor = KptTheme.colorScheme.primary,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
@@ -89,7 +89,7 @@ fun MifosSearchBar(
                 .padding(start = DesignToken.padding.small)
                 .size(DesignToken.sizes.iconExtraLarge)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primary),
+                .background(KptTheme.colorScheme.primary),
             contentAlignment = Alignment.Center,
         ) {
             IconButton(onClick = { onSearchClick(query) }, modifier = Modifier.size(DesignToken.sizes.iconMedium)) {

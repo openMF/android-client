@@ -25,19 +25,18 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.TextAutoSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.theme.KptTheme
 
 data class Step(
     val name: String,
@@ -68,7 +67,7 @@ fun MifosStepper(
         Box(
             modifier = Modifier
                 .clip(shape = DesignToken.shapes.medium)
-                .background(MaterialTheme.colorScheme.primary)
+                .background(KptTheme.colorScheme.primary)
                 .padding(
                     vertical = DesignToken.padding.largeIncreasedExtra,
                 )
@@ -104,7 +103,7 @@ fun MifosStepper(
                                     ) {
                                         Text(
                                             text = (index + 1).toString(),
-                                            color = MaterialTheme.colorScheme.primary,
+                                            color = KptTheme.colorScheme.primary,
                                         )
                                     }
                                     Spacer(modifier = Modifier.height(DesignToken.padding.small))
@@ -124,7 +123,7 @@ fun MifosStepper(
                                     modifier = Modifier
                                         .padding(vertical = DesignToken.padding.large)
                                         .width(DesignToken.padding.small)
-                                        .height(1.dp)
+                                        .height(DesignToken.padding.dp1)
                                         .background(AppColors.stepperColor),
                                 )
                             }

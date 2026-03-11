@@ -39,7 +39,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosDefaultListingComponentFromStringResources
@@ -48,6 +47,7 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.client.createShareAccount.CreateShareAccountAction
 import com.mifos.feature.client.createShareAccount.CreateShareAccountState
 import org.jetbrains.compose.resources.stringResource
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun PreviewPage(
@@ -56,11 +56,11 @@ fun PreviewPage(
     onAction: (CreateShareAccountAction) -> Unit,
 ) {
     Column(
-        Modifier.fillMaxSize().padding(bottom = DesignToken.padding.large),
+        Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.sm),
     ) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
+            verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.largeIncreased),
         ) {
             Text(
                 text = stringResource(Res.string.feature_share_account_details),
@@ -90,7 +90,7 @@ fun PreviewPage(
                 text = state.addedCharges.size.toString() + " " + stringResource(Res.string.feature_share_account_charge_active_charge),
                 btnEnabled = state.addedCharges.isNotEmpty(),
             )
-            Spacer(Modifier.height(DesignToken.padding.large))
+            Spacer(Modifier.height(KptTheme.spacing.md))
         }
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.feature_share_account_back),
@@ -120,7 +120,7 @@ private fun TermsCard(
             Res.string.feature_share_account_terms_min_active_period to if (state.minActivePeriodFreqTypeIdx != null) state.minActivePeriodFreq + " " + state.minimumActivePeriodFrequencyTypeOptions[state.minActivePeriodFreqTypeIdx].value else "",
             Res.string.feature_share_account_terms_lock_in_period to if (state.lockInPeriodFreqTypeIdx != null) state.lockInPeriodFreq + " " + state.lockInPeriodFrequencyTypeOptions[state.lockInPeriodFreqTypeIdx].value else "",
         ),
-        verticalArrangement = Arrangement.spacedBy(DesignToken.padding.small),
+        verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
     )
 }
 
@@ -134,6 +134,6 @@ private fun DetailsCard(
             Res.string.feature_share_account_detail_submission_date to state.submissionDate,
             Res.string.feature_share_account_detail_external_id to state.externalId.orEmpty(),
         ),
-        verticalArrangement = Arrangement.spacedBy(DesignToken.padding.small),
+        verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
     )
 }

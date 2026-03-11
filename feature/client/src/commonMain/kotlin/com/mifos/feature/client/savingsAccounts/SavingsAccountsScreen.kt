@@ -10,15 +10,16 @@
 package com.mifos.feature.client.savingsAccounts
 
 import androidclient.feature.client.generated.resources.Res
+import androidclient.feature.client.generated.resources.add_icon
 import androidclient.feature.client.generated.resources.client_product_saving_account
 import androidclient.feature.client.generated.resources.client_savings_item
 import androidclient.feature.client.generated.resources.client_savings_not_available
 import androidclient.feature.client.generated.resources.client_savings_pending_approval
 import androidclient.feature.client.generated.resources.client_savings_savings_accounts
 import androidclient.feature.client.generated.resources.feature_client_dialog_action_ok
+import androidclient.feature.client.generated.resources.feature_savings_account_empty_list_message
 import androidclient.feature.client.generated.resources.filter
 import androidclient.feature.client.generated.resources.search
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,13 +27,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -41,17 +42,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.designsystem.theme.AppColors
-import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.MifosActionsSavingsListingComponent
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
+import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosSearchBar
 import com.mifos.core.ui.util.EventsEffect
@@ -59,6 +59,7 @@ import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun SavingsAccountsScreen(
@@ -67,6 +68,7 @@ internal fun SavingsAccountsScreen(
     viewModel: SavingsAccountsViewModel = koinViewModel(),
     navigateToViewAccount: (Int, SavingAccountDepositTypeEntity) -> Unit,
     navigateToApproveAccount: (Int) -> Unit,
+    createAccount: (Int) -> Unit,
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
@@ -77,7 +79,7 @@ internal fun SavingsAccountsScreen(
                 event.accountId,
                 event.accountType,
             )
-
+            is SavingsAccountEvent.AddAccount -> createAccount(event.clientId)
             is SavingsAccountEvent.ApproveAccount -> navigateToApproveAccount(event.accountId)
         }
     }
@@ -115,11 +117,12 @@ fun SavingsAccountsContent(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = DesignToken.padding.large),
+                        .padding(horizontal = KptTheme.spacing.md),
                 ) {
                     SavingsAccountsHeader(
                         totalItem = state.savingsAccounts.size.toString(),
                         onAction = onAction,
+                        isSavingsScreenEmpty = state.savingsAccounts.isEmpty(),
                     )
 
                     // todo implement search bar functionality
@@ -138,10 +141,14 @@ fun SavingsAccountsContent(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
                     if (state.savingsAccounts.isEmpty()) {
-                        EmptySavingsCard()
+                        MifosEmptyCard(
+                            msg = stringResource(Res.string.feature_savings_account_empty_list_message),
+                            isButtonPresent = true,
+                            onClick = { onAction.invoke(SavingsAccountAction.AddAccount) },
+                        )
                     } else {
                         LazyColumn {
                             itemsIndexed(state.savingsAccounts) { index, savings ->
@@ -198,7 +205,7 @@ fun SavingsAccountsContent(
                                     },
                                 )
 
-                                Spacer(modifier = Modifier.height(DesignToken.spacing.small))
+                                Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
                             }
                         }
                     }
@@ -212,9 +219,11 @@ fun SavingsAccountsContent(
 fun SavingsAccountsHeader(
     totalItem: String,
     onAction: (SavingsAccountAction) -> Unit,
+    isSavingsScreenEmpty: Boolean,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Column {
             Text(
@@ -230,52 +239,35 @@ fun SavingsAccountsHeader(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        IconButton(
-            onClick = { onAction.invoke(SavingsAccountAction.ToggleSearch) },
-        ) {
-            // add a cross icon when its active, talk with design team
-            Icon(
-                painter = painterResource(Res.drawable.search),
-                contentDescription = null,
-            )
-        }
+        if (!isSavingsScreenEmpty) {
+            IconButton(
+                onClick = { onAction.invoke(SavingsAccountAction.ToggleSearch) },
+            ) {
+                // add a cross icon when its active, talk with design team
+                Icon(
+                    painter = painterResource(Res.drawable.search),
+                    contentDescription = null,
+                )
+            }
+            Spacer(modifier = Modifier.width(KptTheme.spacing.md))
+            IconButton(
+                onClick = { onAction.invoke(SavingsAccountAction.AddAccount) },
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.add_icon),
+                    contentDescription = null,
+                )
+            }
+            Spacer(modifier = Modifier.width(KptTheme.spacing.md))
 
-        DesignToken.padding
-
-        IconButton(
-            onClick = { onAction.invoke(SavingsAccountAction.ToggleFilter) },
-        ) {
-            Icon(
-                painter = painterResource(Res.drawable.filter),
-                contentDescription = null,
-            )
-        }
-    }
-}
-
-@Composable
-private fun EmptySavingsCard() {
-    OutlinedCard(
-        modifier = Modifier.fillMaxWidth(),
-        border = BorderStroke(
-            width = 1.dp,
-            color = AppColors.cardBorders,
-        ),
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-        ) {
-            Text(
-                text = "No Item Found",
-                style = MifosTypography.titleSmallEmphasized,
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Text(
-                text = "Click Here To View Filled State. ",
-                style = MifosTypography.bodySmall,
-            )
+            IconButton(
+                onClick = { onAction.invoke(SavingsAccountAction.ToggleFilter) },
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.filter),
+                    contentDescription = null,
+                )
+            }
         }
     }
 }
