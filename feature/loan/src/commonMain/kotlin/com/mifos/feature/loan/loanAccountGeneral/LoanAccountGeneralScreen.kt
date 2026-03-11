@@ -10,13 +10,6 @@
 package com.mifos.feature.loan.loanAccountGeneral
 
 import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_general_detail_approved_amount
-import androidclient.feature.loan.generated.resources.feature_loan_general_detail_currency
-import androidclient.feature.loan.generated.resources.feature_loan_general_detail_disbursed_amount
-import androidclient.feature.loan.generated.resources.feature_loan_general_detail_disbursement_date
-import androidclient.feature.loan.generated.resources.feature_loan_general_detail_loan_officer
-import androidclient.feature.loan.generated.resources.feature_loan_general_detail_loan_purpose
-import androidclient.feature.loan.generated.resources.feature_loan_general_detail_proposed_amount
 import androidclient.feature.loan.generated.resources.feature_loan_general_maturity_date
 import androidclient.feature.loan.generated.resources.feature_loan_general_number_of_repayments
 import androidclient.feature.loan.generated.resources.feature_loan_general_section_loan_details
@@ -30,10 +23,12 @@ import androidclient.feature.loan.generated.resources.feature_loan_general_summa
 import androidclient.feature.loan.generated.resources.feature_loan_general_summary_col_waived
 import androidclient.feature.loan.generated.resources.feature_loan_general_summary_col_written_off
 import androidclient.feature.loan.generated.resources.feature_loan_general_summary_row_total
+import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,21 +39,23 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosTableRow
+import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
-import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
+import com.mifos.core.ui.components.MifosDefaultListingComponentFromStringResources
 import com.mifos.core.ui.components.MifosErrorComponent
-import com.mifos.core.ui.components.MifosListingColumnItem
-import com.mifos.core.ui.components.MifosListingComponentOutline
-import com.mifos.core.ui.components.MifosListingRowItem
 import com.mifos.core.ui.components.MifosProgressIndicator
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -72,85 +69,97 @@ internal fun LoanAccountGeneralScreen(
     viewModel: LoanAccountGeneralViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+    val onAction = remember(viewModel) { { action: LoanAccountGeneralAction -> viewModel.trySendAction(action) } }
 
-    LoanAccountGeneralScreen(
+    LoanAccountGeneralContent(
         state = state,
-        onAction = viewModel::trySendAction,
         navController = navController,
         modifier = modifier,
+    )
+
+    LoanAccountGeneralDialogs(
+        state = state,
+        onAction = onAction,
     )
 }
 
 @Composable
-internal fun LoanAccountGeneralScreen(
+private fun LoanAccountGeneralDialogs(
     state: LoanAccountGeneralState,
     onAction: (LoanAccountGeneralAction) -> Unit,
+) {
+    when (state.dialogState) {
+        is LoanAccountGeneralState.DialogState.Error -> {
+            MifosErrorComponent(
+                isNetworkConnected = state.networkConnection,
+                message = state.dialogState.message,
+                isRetryEnabled = true,
+                onRetry = { onAction(LoanAccountGeneralAction.OnRetry) },
+            )
+        }
+
+        LoanAccountGeneralState.DialogState.Loading -> MifosProgressIndicator()
+
+        null -> Unit
+    }
+}
+
+@Composable
+private fun LoanAccountGeneralContent(
+    state: LoanAccountGeneralState,
     navController: NavController,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier.fillMaxSize()) {
-        MifosBreadcrumbNavBar(navController = navController)
+    if (state.dialogState == null) {
+        Column(modifier = modifier.fillMaxSize()) {
+            MifosBreadcrumbNavBar(navController = navController)
 
-        when (state.dialogState) {
-            is LoanAccountGeneralState.DialogState.Error -> {
-                MifosErrorComponent(
-                    isNetworkConnected = state.networkConnection,
-                    message = state.dialogState.message,
-                    isRetryEnabled = true,
-                    onRetry = { onAction(LoanAccountGeneralAction.OnRetry) },
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
+            ) {
+                Text(
+                    text = stringResource(Res.string.feature_loan_general_section_performance_history),
+                    style = KptTheme.typography.labelLarge,
+                    modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
                 )
-            }
 
-            LoanAccountGeneralState.DialogState.Loading -> MifosProgressIndicator()
+                Spacer(Modifier.height(DesignToken.spacing.medium))
 
-            null -> {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState()),
-                ) {
-                    Text(
-                        text = stringResource(Res.string.feature_loan_general_section_performance_history),
-                        style = KptTheme.typography.labelLarge,
-                        modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
-                    )
+                PerformanceHistoryCard(
+                    state = state,
+                    modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
+                )
 
-                    Spacer(Modifier.height(DesignToken.spacing.medium))
+                Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
 
-                    PerformanceHistoryCard(
-                        state = state,
-                        modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
-                    )
+                Text(
+                    text = stringResource(Res.string.feature_loan_general_section_loan_summary),
+                    style = KptTheme.typography.labelLarge,
+                    modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
+                )
 
-                    Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
+                Spacer(Modifier.height(DesignToken.spacing.medium))
 
-                    Text(
-                        text = stringResource(Res.string.feature_loan_general_section_loan_summary),
-                        style = KptTheme.typography.labelLarge,
-                        modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
-                    )
+                LoanSummaryTable(state = state)
 
-                    Spacer(Modifier.height(DesignToken.spacing.medium))
+                Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
 
-                    LoanSummaryTable(state = state)
+                Text(
+                    text = stringResource(Res.string.feature_loan_general_section_loan_details),
+                    style = KptTheme.typography.labelLarge,
+                    modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
+                )
 
-                    Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
+                Spacer(Modifier.height(DesignToken.spacing.medium))
 
-                    Text(
-                        text = stringResource(Res.string.feature_loan_general_section_loan_details),
-                        style = KptTheme.typography.labelLarge,
-                        modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
-                    )
+                LoanDetailsSection(
+                    state = state,
+                    modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
+                )
 
-                    Spacer(Modifier.height(DesignToken.spacing.medium))
-
-                    LoanDetailsSection(
-                        state = state,
-                        modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
-                    )
-
-                    Spacer(Modifier.height(KptTheme.spacing.xl))
-                }
+                Spacer(Modifier.height(KptTheme.spacing.xl))
             }
         }
     }
@@ -161,22 +170,46 @@ private fun PerformanceHistoryCard(
     state: LoanAccountGeneralState,
     modifier: Modifier = Modifier,
 ) {
-    MifosListingComponentOutline(modifier = modifier) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(KptTheme.shapes.medium)
+            .background(KptTheme.colorScheme.primary)
+            .padding(KptTheme.spacing.lg),
+        contentAlignment = Alignment.Center,
+    ) {
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(DesignToken.padding.medium),
+            verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            MifosListingRowItem(
-                key = stringResource(Res.string.feature_loan_general_number_of_repayments),
+            PerformanceHistoryRow(
+                label = stringResource(Res.string.feature_loan_general_number_of_repayments),
                 value = state.numberOfRepayments,
-                valueStyle = MifosTypography.labelMedium.copy(fontWeight = FontWeight.Bold),
             )
-            MifosListingRowItem(
-                key = stringResource(Res.string.feature_loan_general_maturity_date),
+            PerformanceHistoryRow(
+                label = stringResource(Res.string.feature_loan_general_maturity_date),
                 value = state.maturityDate,
-                valueStyle = MifosTypography.labelMedium.copy(fontWeight = FontWeight.Bold),
             )
         }
+    }
+}
+
+@Composable
+private fun PerformanceHistoryRow(
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier,
+    textStyle: TextStyle = TextStyle(
+        color = AppColors.customWhite,
+        fontStyle = KptTheme.typography.labelMedium.fontStyle,
+    ),
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Text(text = label, style = textStyle)
+        Text(text = value, style = textStyle)
     }
 }
 
@@ -186,7 +219,7 @@ private fun LoanSummaryTable(
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
-    val textColor = KptTheme.colorScheme.onSurface
+    val textColor = KptTheme.colorScheme.onBackground
     val componentWidth = DesignToken.sizes.tableCellWidthLarge
     val amountWidth = DesignToken.sizes.tableCellWidthMedium
     val colWidths = listOf(componentWidth, amountWidth, amountWidth, amountWidth, amountWidth, amountWidth, amountWidth)
@@ -202,139 +235,92 @@ private fun LoanSummaryTable(
     )
 
     val totalLabel = stringResource(Res.string.feature_loan_general_summary_row_total)
-    val amountColors = listOf(textColor, KptTheme.colorScheme.primary, KptTheme.colorScheme.primary, KptTheme.colorScheme.primary, textColor, textColor)
 
-    Column(modifier = modifier.fillMaxWidth()) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(scrollState),
-        ) {
-            MifosTableRow(
-                cells = headers.map { label ->
-                    {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(
-                                    vertical = KptTheme.spacing.sm,
-                                    horizontal = KptTheme.spacing.xs,
-                                ),
-                        ) {
-                            Text(
-                                text = label,
-                                style = KptTheme.typography.titleSmall,
-                                softWrap = true,
-                            )
-                        }
-                    }
-                },
-                widths = colWidths,
-                backgroundColor = lerp(
-                    KptTheme.colorScheme.surface,
-                    KptTheme.colorScheme.primary,
-                    0.3f,
-                ),
-                edgeOffset = DesignToken.padding.medium,
-                cornerShape = DesignToken.shapes.topMedium,
-            )
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .horizontalScroll(scrollState),
+    ) {
+        MifosTableRow(
+            cells = headers.map { label ->
+                {
+                    LoanSummaryTableCell(
+                        text = label,
+                        style = KptTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        textColor = textColor,
+                    )
+                }
+            },
+            widths = colWidths,
+            backgroundColor = lerp(
+                KptTheme.colorScheme.surface,
+                KptTheme.colorScheme.primary,
+                0.3f,
+            ),
+            edgeOffset = DesignToken.padding.medium,
+            cornerShape = DesignToken.shapes.topMedium,
+        )
 
-            state.summaryRows.forEach { row ->
-                val amounts = listOf(row.original, row.paid, row.waived, row.writtenOff, row.outstanding, row.overDue)
-
-                MifosTableRow(
-                    cells = buildList {
-                        add {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(
-                                        vertical = DesignToken.padding.small,
-                                        horizontal = DesignToken.padding.extraSmall,
-                                    ),
-                                contentAlignment = Alignment.CenterStart,
-                            ) {
-                                Text(
-                                    text = row.component,
-                                    style = KptTheme.typography.bodySmall,
-                                    color = textColor,
-                                )
-                            }
-                        }
-                        amounts.forEachIndexed { i, amount ->
-                            add {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(
-                                            vertical = DesignToken.padding.small,
-                                            horizontal = DesignToken.padding.extraSmall,
-                                        ),
-                                    contentAlignment = Alignment.CenterStart,
-                                ) {
-                                    Text(
-                                        text = amount,
-                                        style = KptTheme.typography.bodySmall,
-                                        color = amountColors[i],
-                                    )
-                                }
-                            }
-                        }
-                    },
-                    widths = colWidths,
-                    backgroundColor = KptTheme.colorScheme.surface,
-                    edgeOffset = DesignToken.padding.medium,
-                )
-            }
-
-            val totals = listOf(state.totalOriginal, state.totalPaid, state.totalWaived, state.totalWrittenOff, state.totalOutstanding, state.totalOverDue)
+        state.summaryRows.forEach { row ->
+            val amounts = listOf(row.original, row.paid, row.waived, row.writtenOff, row.outstanding, row.overDue)
 
             MifosTableRow(
                 cells = buildList {
                     add {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(
-                                    vertical = DesignToken.padding.small,
-                                    horizontal = DesignToken.padding.extraSmall,
-                                ),
-                            contentAlignment = Alignment.CenterStart,
-                        ) {
-                            Text(
-                                text = totalLabel,
-                                style = KptTheme.typography.titleSmall,
-                                color = textColor,
-                            )
-                        }
+                        LoanSummaryTableCell(
+                            text = row.component,
+                            style = KptTheme.typography.bodySmall,
+                            fontWeight = FontWeight.Normal,
+                            textColor = textColor,
+                        )
                     }
-                    totals.forEachIndexed { i, total ->
+                    amounts.forEach { amount ->
                         add {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(
-                                        vertical = DesignToken.padding.small,
-                                        horizontal = DesignToken.padding.extraSmall,
-                                    ),
-                                contentAlignment = Alignment.CenterStart,
-                            ) {
-                                Text(
-                                    text = total,
-                                    style = KptTheme.typography.titleSmall,
-                                    color = amountColors[i],
-                                )
-                            }
+                            LoanSummaryTableCell(
+                                text = amount,
+                                style = KptTheme.typography.bodySmall,
+                                fontWeight = FontWeight.Normal,
+                                textColor = textColor,
+                            )
                         }
                     }
                 },
                 widths = colWidths,
-                backgroundColor = lerp(KptTheme.colorScheme.surface, KptTheme.colorScheme.primary, 0.08f),
+                backgroundColor = KptTheme.colorScheme.surface,
                 edgeOffset = DesignToken.padding.medium,
-                cornerShape = DesignToken.shapes.bottomMedium,
-                showBottomBorder = false,
             )
         }
+
+        val totals = listOf(state.totalOriginal, state.totalPaid, state.totalWaived, state.totalWrittenOff, state.totalOutstanding, state.totalOverDue)
+
+        MifosTableRow(
+            cells = buildList {
+                add {
+                    LoanSummaryTableCell(
+                        text = totalLabel,
+                        style = KptTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold,
+                        textColor = textColor,
+                    )
+                }
+                totals.forEach { total ->
+                    add {
+                        LoanSummaryTableCell(
+                            text = total,
+                            style = KptTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold,
+                            textColor = textColor,
+                        )
+                    }
+                }
+            },
+            widths = colWidths,
+            backgroundColor = lerp(KptTheme.colorScheme.surface, KptTheme.colorScheme.primary, 0.15f),
+            edgeOffset = DesignToken.padding.medium,
+            cornerShape = DesignToken.shapes.bottomMedium,
+            showBottomBorder = false,
+        )
     }
 }
 
@@ -347,51 +333,33 @@ private fun LoanDetailsSection(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(DesignToken.padding.medium),
     ) {
-        MifosListingComponentOutline {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(DesignToken.padding.medium),
-            ) {
-                MifosListingColumnItem(
-                    key = stringResource(Res.string.feature_loan_general_detail_disbursement_date),
-                    value = state.disbursementDate,
-                )
-                MifosListingColumnItem(
-                    key = stringResource(Res.string.feature_loan_general_detail_loan_purpose),
-                    value = state.loanPurpose,
-                )
-                MifosListingColumnItem(
-                    key = stringResource(Res.string.feature_loan_general_detail_loan_officer),
-                    value = state.loanOfficer,
-                )
-                MifosListingColumnItem(
-                    key = stringResource(Res.string.feature_loan_general_detail_currency),
-                    value = state.currency,
-                )
-            }
+        state.details.forEach { detailGroup ->
+            MifosDefaultListingComponentFromStringResources(data = detailGroup)
         }
+    }
+}
 
-        MifosListingComponentOutline {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(DesignToken.padding.medium),
-            ) {
-                MifosListingRowItem(
-                    key = stringResource(Res.string.feature_loan_general_detail_proposed_amount),
-                    value = state.proposedAmount,
-                )
-                MifosListingRowItem(
-                    key = stringResource(Res.string.feature_loan_general_detail_approved_amount),
-                    value = state.approvedAmount,
-                )
-                MifosListingRowItem(
-                    key = stringResource(Res.string.feature_loan_general_detail_disbursed_amount),
-                    value = state.disbursedAmount,
-                    keyStyle = MifosTypography.labelMediumEmphasized.copy(color = KptTheme.colorScheme.primary),
-                    valueColor = KptTheme.colorScheme.primary,
-                )
-            }
-        }
+@Composable
+private fun LoanSummaryTableCell(
+    text: String,
+    style: TextStyle,
+    fontWeight: FontWeight,
+    textColor: androidx.compose.ui.graphics.Color,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = KptTheme.spacing.sm, horizontal = KptTheme.spacing.xs),
+    ) {
+        Text(
+            text = text,
+            style = style,
+            fontWeight = fontWeight,
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Left,
+            color = textColor,
+        )
     }
 }
 
@@ -426,31 +394,32 @@ private fun LoanAccountGeneralPreview() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = KptTheme.spacing.md),
         ) {
             Text(
-                text = "PERFORMANCE HISTORY",
+                text = stringResource(Res.string.feature_loan_general_section_performance_history),
                 style = KptTheme.typography.labelLarge,
-                modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
             )
             Spacer(Modifier.height(DesignToken.spacing.medium))
-            PerformanceHistoryCard(state = previewState, modifier = Modifier.padding(horizontal = KptTheme.spacing.md))
+            PerformanceHistoryCard(state = previewState)
+
             Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
             Text(
-                text = "LOAN SUMMARY",
+                text = stringResource(Res.string.feature_loan_general_section_loan_summary),
                 style = KptTheme.typography.labelLarge,
-                modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
             )
             Spacer(Modifier.height(DesignToken.spacing.medium))
             LoanSummaryTable(state = previewState)
+
             Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
             Text(
-                text = "LOAN DETAILS",
+                text = stringResource(Res.string.feature_loan_general_section_loan_details),
                 style = KptTheme.typography.labelLarge,
-                modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
             )
             Spacer(Modifier.height(DesignToken.spacing.medium))
-            LoanDetailsSection(state = previewState, modifier = Modifier.padding(horizontal = KptTheme.spacing.md))
+            LoanDetailsSection(state = previewState)
+
             Spacer(Modifier.height(KptTheme.spacing.xl))
         }
     }

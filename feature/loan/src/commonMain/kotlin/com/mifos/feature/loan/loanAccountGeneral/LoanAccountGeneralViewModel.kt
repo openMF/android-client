@@ -10,6 +10,13 @@
 package com.mifos.feature.loan.loanAccountGeneral
 
 import androidclient.feature.loan.generated.resources.Res
+import androidclient.feature.loan.generated.resources.feature_loan_general_detail_approved_amount
+import androidclient.feature.loan.generated.resources.feature_loan_general_detail_currency
+import androidclient.feature.loan.generated.resources.feature_loan_general_detail_disbursed_amount
+import androidclient.feature.loan.generated.resources.feature_loan_general_detail_disbursement_date
+import androidclient.feature.loan.generated.resources.feature_loan_general_detail_loan_officer
+import androidclient.feature.loan.generated.resources.feature_loan_general_detail_loan_purpose
+import androidclient.feature.loan.generated.resources.feature_loan_general_detail_proposed_amount
 import androidclient.feature.loan.generated.resources.feature_loan_general_summary_row_fees
 import androidclient.feature.loan.generated.resources.feature_loan_general_summary_row_interest
 import androidclient.feature.loan.generated.resources.feature_loan_general_summary_row_penalties
@@ -30,6 +37,7 @@ import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 
 internal class LoanAccountGeneralViewModel(
@@ -137,6 +145,23 @@ internal class LoanAccountGeneralViewModel(
                 proposedAmount = CurrencyFormatter.format(loan.approvedPrincipal, currencyCode, maxDigits),
                 approvedAmount = CurrencyFormatter.format(loan.approvedPrincipal, currencyCode, maxDigits),
                 disbursedAmount = CurrencyFormatter.format(loan.principal, currencyCode, maxDigits),
+                details = listOf(
+                    mapOf(
+                        Res.string.feature_loan_general_detail_disbursement_date to disbursementDate,
+                        Res.string.feature_loan_general_detail_loan_purpose to loan.loanPurposeName.ifBlank {
+                            getString(Res.string.feature_loan_general_value_not_available)
+                        },
+                        Res.string.feature_loan_general_detail_loan_officer to loan.loanOfficerName.ifBlank {
+                            getString(Res.string.feature_loan_general_value_unassigned)
+                        },
+                        Res.string.feature_loan_general_detail_currency to currencyDisplay,
+                    ),
+                    mapOf(
+                        Res.string.feature_loan_general_detail_proposed_amount to CurrencyFormatter.format(loan.approvedPrincipal, currencyCode, maxDigits),
+                        Res.string.feature_loan_general_detail_approved_amount to CurrencyFormatter.format(loan.approvedPrincipal, currencyCode, maxDigits),
+                        Res.string.feature_loan_general_detail_disbursed_amount to CurrencyFormatter.format(loan.principal, currencyCode, maxDigits),
+                    ),
+                ),
                 summaryRows = listOf(
                     LoanAccountGeneralState.SummaryRowState(
                         component = getString(Res.string.feature_loan_general_summary_row_principal),
@@ -191,6 +216,7 @@ data class LoanAccountGeneralState(
     val networkConnection: Boolean = false,
     val numberOfRepayments: String = "",
     val maturityDate: String = "",
+    val details: List<Map<StringResource, String>> = emptyList(),
     val summaryRows: List<SummaryRowState> = emptyList(),
     val totalOriginal: String = "",
     val totalPaid: String = "",
