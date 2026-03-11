@@ -386,8 +386,31 @@
     <string name="loan_new_loan_view">View</string>
     <string name="loan_new_loan_active_charges">Active Charges</string>
 
-    <!-- Handle Error-->
+    <!-- Amount Transfer-->
     <string name="field_empty">This field cannot be empty</string>
-
+    <string name="feature_loan_applicant_name">Applicant name</string>
+    <string name="feature_loan_from_account">From Account</string>
+    <string name="feature_loan_loan_account_type">From Account Type</string>
+    <string name="feature_loan_currency">Currency</string>
+    <string name="feature_loan_select_office">Select Office</string>
+    <string name="feature_loan_select_client">Select Client</string>
+    <string name="feature_loan_account_type">Account Type</string>
+    <string name="feature_loan_select_account">Select Account</string>
+    <string name="feature_loan_description">Description</string>
+    <string name="feature_loan_transfer_date">Transfer Date</string>
+    <string name="feature_loan_transfer">Transfer</string>
+    <string name="feature_loan_transfer_funds">Transfer Funds</string>
+    <string name="feature_loan_transfer_details">Transfer Details</string>
+    <string name="feature_loan_invalid_amount">Invalid amount</string>
+    <string name="feature_loan_transfer_amount_can_not_be_zero">Amount can not be zero or negative</string>
+    <string name="feature_loan_description_can_not_be_empty">Description can not be empty</string>
+    <string name="feature_loan_must_select_office">Must select office</string>
+    <string name="feature_loan_must_select_client">Must select client</string>
+    <string name="feature_loan_must_select_account">Must select account</string>
+    <string name="feature_loan_must_select_account_type">Must select account type</string>
+    <string name="feature_loan_success_title">Success</string>
+    <string name="feature_loan_error_title">Error</string>
+    <string name="feature_loan_transfer_success">Transfer completed successfully</string>
+    <string name="feature_loan_transfer_go_back">Go Back</string>
 
 </resources>
