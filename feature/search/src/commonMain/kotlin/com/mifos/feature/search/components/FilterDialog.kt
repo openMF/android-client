@@ -75,7 +75,7 @@ internal fun FilterDialog(
                 HorizontalDivider()
                 FilterOption.values.forEachIndexed { index, option ->
                     FilterOption(
-                        text = option.label,
+                        text = stringResource(option.labelRes),
                         selected = option == selectedFilter,
                         onSelected = {
                             selectedFilter = option
