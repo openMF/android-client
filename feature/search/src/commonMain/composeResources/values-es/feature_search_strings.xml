@@ -23,19 +23,9 @@
     <string name="feature_search_close">Cerrar</string>
     <string name="feature_search_all">Todos</string>
 
-    <string-array name="feature_search_filter_options">
-        <item>Clientes</item>
-        <item>Grupos</item>
-        <item>Centros</item>
-        <item>Cuentas de préstamo</item>
-        <item>Cuentas de ahorro</item>
-    </string-array>
-
-    <string-array name="feature_search_filter_option_values">
-        <item>clients</item>
-        <item>groups</item>
-        <item>centers</item>
-        <item>loans</item>
-        <item>savingsaccounts</item>
-    </string-array>
+    <string name="feature_search_filter_options_clients_label">Clientes</string>
+    <string name="feature_search_filter_options_groups_label">Grupos</string>
+    <string name="feature_search_filter_options_centers_label">Centros</string>
+    <string name="feature_search_filter_options_loans_label">Cuentas de préstamo</string>
+    <string name="feature_search_filter_options_savings_label">Cuentas de ahorro</string>
 </resources>
