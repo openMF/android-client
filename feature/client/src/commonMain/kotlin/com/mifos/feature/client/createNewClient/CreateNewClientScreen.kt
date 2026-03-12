@@ -825,6 +825,10 @@ private fun createClientPayload(
     countryId: Int,
     postalCode: String,
 ): ClientPayloadEntity {
+    val formattedActivationDate = if (isActive) formatDate(activationDate) else null
+    val formattedDateOfBirth = dateOfBirth?.let { formatDate(it) }
+    val hasAnyDate = formattedActivationDate != null || formattedDateOfBirth != null
+
     var clientPayload = ClientPayloadEntity(
         // Mandatory fields
         firstname = firstName,
@@ -834,9 +838,9 @@ private fun createClientPayload(
 
         // Optional fields with default values
         active = isActive,
-        activationDate = if (isActive) formatDate(activationDate) else null,
-        dateOfBirth = dateOfBirth?.let { formatDate(it) },
-        dateFormat = ApiDateFormatter.DATE_FORMAT,
+        activationDate = formattedActivationDate,
+        dateOfBirth = formattedDateOfBirth,
+        dateFormat = if (hasAnyDate) ApiDateFormatter.DATE_FORMAT else null,
         locale = ApiDateFormatter.LOCALE,
     )
     if (isAddressEnabled) {
