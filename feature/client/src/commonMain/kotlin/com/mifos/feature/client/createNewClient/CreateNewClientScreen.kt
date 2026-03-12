@@ -834,7 +834,7 @@ private fun createClientPayload(
 
         // Optional fields with default values
         active = isActive,
-        activationDate = formatDate(activationDate),
+        activationDate = if (isActive) formatDate(activationDate) else null,
         dateOfBirth = dateOfBirth?.let { formatDate(it) },
         dateFormat = ApiDateFormatter.DATE_FORMAT,
         locale = ApiDateFormatter.LOCALE,
