@@ -333,11 +333,8 @@ private fun CreateNewClientContent(
     var selectedStaffId: Int? by rememberSaveable { mutableStateOf(0) }
 
     var isActive by rememberSaveable { mutableStateOf(false) }
-    var dateOfBirth by rememberSaveable {
-        mutableLongStateOf(
-            Clock.System.now().toEpochMilliseconds(),
-        )
-    }
+    var dateOfBirth by rememberSaveable { mutableStateOf<Long?>(null) }
+
     var activationDate by rememberSaveable {
         mutableLongStateOf(
             Clock.System.now().toEpochMilliseconds(),
@@ -402,7 +399,7 @@ private fun CreateNewClientContent(
         },
     )
     val dateOfBirthDatePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = dateOfBirth,
+        initialSelectedDateMillis = null,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
@@ -505,7 +502,7 @@ private fun CreateNewClientContent(
         Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosDatePickerTextField(
-            value = DateHelper.getDateAsStringFromLong(dateOfBirth),
+            value = dateOfBirth?.let { DateHelper.getDateAsStringFromLong(it) } ?: "",
             label = stringResource(Res.string.feature_client_dob),
             openDatePicker = { showDateOfBirthDatepicker = !showDateOfBirthDatepicker },
         )
@@ -734,7 +731,7 @@ private fun handleSubmitClick(
     genderId: Int,
     selectedStaffId: Int?,
     activationDate: Long,
-    dateOfBirth: Long,
+    dateOfBirth: Long?,
     mobileNumber: String,
     externalId: String,
     isAddressEnabled: Boolean,
@@ -808,7 +805,7 @@ private fun createClientPayload(
     staffInOffices: List<StaffEntity>,
     isActive: Boolean,
     activationDate: Long,
-    dateOfBirth: Long,
+    dateOfBirth: Long?,
     middleName: String,
     mobileNumber: String,
     externalId: String,
@@ -838,7 +835,7 @@ private fun createClientPayload(
         // Optional fields with default values
         active = isActive,
         activationDate = formatDate(activationDate),
-        dateOfBirth = formatDate(dateOfBirth),
+        dateOfBirth = dateOfBirth?.let { formatDate(it) },
         dateFormat = ApiDateFormatter.DATE_FORMAT,
         locale = ApiDateFormatter.LOCALE,
     )
