@@ -9,10 +9,16 @@
  */
 package com.mifos.core.network.datamanager
 
+import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
+import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
+import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRejectionRequest
+import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRequest
+import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleResponse
+import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleTemplate
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRequest
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferResponse
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplate
@@ -37,6 +43,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
+import kotlin.time.Clock
 
 /**
  * Created by Rajan Maurya on 15/07/16.
@@ -368,6 +375,52 @@ class DataManagerLoan(
             }
 
             Json { ignoreUnknownKeys = true }.decodeFromString<RepaymentSchedule>(response.bodyAsText())
+        }
+    }
+
+    fun getLoanReschedules(loanId: Int): Flow<List<LoanRescheduleResponse>> {
+        return mBaseApiManager.loanService.getLoanReschedules(loanId)
+    }
+
+    fun getLoanRescheduleTemplate(): Flow<LoanRescheduleTemplate> {
+        return mBaseApiManager.loanService.getLoanRescheduleTemplate()
+    }
+
+    suspend fun submitLoanReschedule(request: LoanRescheduleRequest): GenericResponse {
+        val response = mBaseApiManager.loanService.submitLoanReschedule(request)
+        if (!response.status.isSuccess()) {
+            val errorMessage = extractErrorMessage(response)
+            throw IllegalStateException(errorMessage)
+        }
+        return Json { ignoreUnknownKeys = true }.decodeFromString<GenericResponse>(response.bodyAsText())
+    }
+
+    suspend fun approveLoanReschedule(scheduleId: Int) {
+        val today = ApiDateFormatter.formatForApi(Clock.System.now().toEpochMilliseconds())
+        val response = mBaseApiManager.loanService.approveLoanReschedule(
+            scheduleId = scheduleId,
+            request = LoanRescheduleApprovalRequest(
+                approvedOnDate = today,
+                dateFormat = ApiDateFormatter.DATE_FORMAT,
+                locale = ApiDateFormatter.LOCALE,
+            ),
+        )
+        if (!response.status.isSuccess()) {
+            throw IllegalStateException(extractErrorMessage(response))
+        }
+    }
+    suspend fun rejectLoanReschedule(scheduleId: Int) {
+        val today = ApiDateFormatter.formatForApi(Clock.System.now().toEpochMilliseconds())
+        val response = mBaseApiManager.loanService.rejectLoanReschedule(
+            scheduleId = scheduleId,
+            request = LoanRescheduleRejectionRequest(
+                rejectedOnDate = today,
+                dateFormat = ApiDateFormatter.DATE_FORMAT,
+                locale = ApiDateFormatter.LOCALE,
+            ),
+        )
+        if (!response.status.isSuccess()) {
+            throw IllegalStateException(extractErrorMessage(response))
         }
     }
 }
