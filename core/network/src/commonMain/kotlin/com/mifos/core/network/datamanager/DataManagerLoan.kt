@@ -9,7 +9,6 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
@@ -43,7 +42,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
-import kotlin.time.Clock
 
 /**
  * Created by Rajan Maurya on 15/07/16.
@@ -395,29 +393,20 @@ class DataManagerLoan(
         return Json { ignoreUnknownKeys = true }.decodeFromString<GenericResponse>(response.bodyAsText())
     }
 
-    suspend fun approveLoanReschedule(scheduleId: Int) {
-        val today = ApiDateFormatter.formatForApi(Clock.System.now().toEpochMilliseconds())
+    suspend fun approveLoanReschedule(scheduleId: Int, request: LoanRescheduleApprovalRequest) {
         val response = mBaseApiManager.loanService.approveLoanReschedule(
             scheduleId = scheduleId,
-            request = LoanRescheduleApprovalRequest(
-                approvedOnDate = today,
-                dateFormat = ApiDateFormatter.DATE_FORMAT,
-                locale = ApiDateFormatter.LOCALE,
-            ),
+            request = request,
         )
         if (!response.status.isSuccess()) {
             throw IllegalStateException(extractErrorMessage(response))
         }
     }
-    suspend fun rejectLoanReschedule(scheduleId: Int) {
-        val today = ApiDateFormatter.formatForApi(Clock.System.now().toEpochMilliseconds())
+
+    suspend fun rejectLoanReschedule(scheduleId: Int, request: LoanRescheduleRejectionRequest) {
         val response = mBaseApiManager.loanService.rejectLoanReschedule(
             scheduleId = scheduleId,
-            request = LoanRescheduleRejectionRequest(
-                rejectedOnDate = today,
-                dateFormat = ApiDateFormatter.DATE_FORMAT,
-                locale = ApiDateFormatter.LOCALE,
-            ),
+            request = request,
         )
         if (!response.status.isSuccess()) {
             throw IllegalStateException(extractErrorMessage(response))

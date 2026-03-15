@@ -16,8 +16,11 @@ import androidclient.feature.loan.generated.resources.feature_loan_reschedule_fe
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanReschedulesRepository
+import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
+import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRejectionRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleResponse
 import com.mifos.core.model.objects.account.loan.reschedules.RescheduleStatus
 import com.mifos.core.ui.util.BaseViewModel
@@ -26,6 +29,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
+import kotlin.time.Clock
 
 class LoanReschedulesViewModel(
     savedStateHandle: SavedStateHandle,
@@ -103,7 +107,15 @@ class LoanReschedulesViewModel(
             mutableStateFlow.update {
                 it.copy(dialogState = LoanReschedulesUiState.DialogState.Loading)
             }
-            when (val result = repository.approveReschedule(rescheduleId)) {
+
+            val today = ApiDateFormatter.formatForApi(Clock.System.now().toEpochMilliseconds())
+            val request = LoanRescheduleApprovalRequest(
+                approvedOnDate = today,
+                dateFormat = ApiDateFormatter.DATE_FORMAT,
+                locale = ApiDateFormatter.LOCALE,
+            )
+
+            when (val result = repository.approveReschedule(rescheduleId, request)) {
                 is DataState.Success -> {
                     mutableStateFlow.update { it.copy(dialogState = null) }
                     fetchRescheduleHistory()
@@ -125,7 +137,15 @@ class LoanReschedulesViewModel(
             mutableStateFlow.update {
                 it.copy(dialogState = LoanReschedulesUiState.DialogState.Loading)
             }
-            when (val result = repository.deleteReschedule(rescheduleId)) {
+
+            val today = ApiDateFormatter.formatForApi(Clock.System.now().toEpochMilliseconds())
+            val request = LoanRescheduleRejectionRequest(
+                rejectedOnDate = today,
+                dateFormat = ApiDateFormatter.DATE_FORMAT,
+                locale = ApiDateFormatter.LOCALE,
+            )
+
+            when (val result = repository.deleteReschedule(rescheduleId, request)) {
                 is DataState.Success -> {
                     mutableStateFlow.update { it.copy(dialogState = null) }
                     fetchRescheduleHistory()

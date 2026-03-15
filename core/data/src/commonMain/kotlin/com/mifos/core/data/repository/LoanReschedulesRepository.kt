@@ -10,6 +10,8 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
+import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRejectionRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleResponse
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleTemplate
@@ -19,6 +21,6 @@ interface LoanReschedulesRepository {
     fun getLoanReschedules(loanId: Int): Flow<DataState<List<LoanRescheduleResponse>>>
     fun getLoanRescheduleTemplate(): Flow<DataState<LoanRescheduleTemplate>>
     suspend fun submitLoanReschedule(request: LoanRescheduleRequest): DataState<Unit>
-    suspend fun approveReschedule(rescheduleId: Int): DataState<Unit>
-    suspend fun deleteReschedule(rescheduleId: Int): DataState<Unit>
+    suspend fun approveReschedule(rescheduleId: Int, request: LoanRescheduleApprovalRequest): DataState<Unit>
+    suspend fun deleteReschedule(rescheduleId: Int, request: LoanRescheduleRejectionRequest): DataState<Unit>
 }
