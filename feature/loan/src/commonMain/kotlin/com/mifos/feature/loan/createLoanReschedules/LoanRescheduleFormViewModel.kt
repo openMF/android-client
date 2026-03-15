@@ -99,6 +99,12 @@ class LoanRescheduleFormViewModel(
             is LoanRescheduleFormAction.OnNewInterestRateChange -> mutableStateFlow.update {
                 it.copy(newInterestRate = action.rate)
             }
+            is LoanRescheduleFormAction.ShowDatePicker -> mutableStateFlow.update {
+                it.copy(activeDatePicker = action.picker)
+            }
+            LoanRescheduleFormAction.HideDatePicker -> mutableStateFlow.update {
+                it.copy(activeDatePicker = ActiveDatePicker.NONE)
+            }
             LoanRescheduleFormAction.OnSubmitClicked -> validateAndSubmit()
             LoanRescheduleFormAction.OnRetrySubmitClick -> validateAndSubmit()
             LoanRescheduleFormAction.CloseDialog -> mutableStateFlow.update {
@@ -158,22 +164,12 @@ class LoanRescheduleFormViewModel(
                 submittedOnDate = state.submittedOnDate,
                 dateFormat = ApiDateFormatter.DATE_FORMAT,
                 locale = ApiDateFormatter.LOCALE,
-                rescheduleReasonComment = state.comments.takeIf { it.isNotBlank() },
-                adjustedDueDate = state.adjustedDueDate.takeIf {
-                    state.changeRepaymentDateSelected && it.isNotBlank()
-                },
-                graceOnPrincipal = state.graceOnPrincipal.takeIf {
-                    state.introduceGracePeriodsSelected && it.isNotBlank()
-                },
-                graceOnInterest = state.graceOnInterest.takeIf {
-                    state.introduceGracePeriodsSelected && it.isNotBlank()
-                },
-                extraTerms = state.extraTerms.takeIf {
-                    state.extendRepaymentPeriodSelected && it.isNotBlank()
-                },
-                newInterestRate = state.newInterestRate.takeIf {
-                    state.adjustInterestRateSelected && it.isNotBlank()
-                },
+                rescheduleReasonComment = state.comments,
+                adjustedDueDate = if (state.changeRepaymentDateSelected) state.adjustedDueDate else "",
+                graceOnPrincipal = if (state.introduceGracePeriodsSelected) state.graceOnPrincipal else "",
+                graceOnInterest = if (state.introduceGracePeriodsSelected) state.graceOnInterest else "",
+                extraTerms = if (state.extendRepaymentPeriodSelected) state.extraTerms else "",
+                newInterestRate = if (state.adjustInterestRateSelected) state.newInterestRate else "",
                 waivePenalties = if (state.waivePenaltiesSelected) true else null,
             )
 
@@ -196,8 +192,16 @@ class LoanRescheduleFormViewModel(
     }
 }
 
+enum class ActiveDatePicker {
+    NONE,
+    RESCHEDULE_FROM,
+    SUBMITTED_ON,
+    ADJUSTED_DUE_DATE,
+}
+
 data class LoanRescheduleFormUiState(
     val dialogState: DialogState? = null,
+    val activeDatePicker: ActiveDatePicker = ActiveDatePicker.NONE,
     val reasonIdError: StringResource? = null,
 
     val selectedReasonId: Int? = null,
@@ -258,6 +262,8 @@ sealed interface LoanRescheduleFormAction {
     data class OnGraceOnInterestChange(val value: String) : LoanRescheduleFormAction
     data class OnExtraTermsChange(val value: String) : LoanRescheduleFormAction
     data class OnNewInterestRateChange(val rate: String) : LoanRescheduleFormAction
+    data class ShowDatePicker(val picker: ActiveDatePicker) : LoanRescheduleFormAction
+    data object HideDatePicker : LoanRescheduleFormAction
     data object OnSubmitClicked : LoanRescheduleFormAction
     data object OnRetrySubmitClick : LoanRescheduleFormAction
     data object CloseDialog : LoanRescheduleFormAction

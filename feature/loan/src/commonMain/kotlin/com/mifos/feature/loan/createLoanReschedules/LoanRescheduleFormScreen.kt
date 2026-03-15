@@ -49,8 +49,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -88,16 +86,29 @@ internal fun LoanRescheduleFormScreenRoute(
         }
     }
 
+    RescheduleFormScreen(
+        navController = navController,
+        state = state,
+        onAction = viewModel::trySendAction,
+    )
+}
+
+@Composable
+internal fun RescheduleFormScreen(
+    navController: NavController,
+    state: LoanRescheduleFormUiState,
+    onAction: (LoanRescheduleFormAction) -> Unit,
+) {
     Column(modifier = Modifier.fillMaxSize()) {
         MifosBreadcrumbNavBar(navController = navController)
         Box(modifier = Modifier.weight(1f)) {
-            RescheduleFormContent(state = state, onAction = viewModel::trySendAction)
+            RescheduleFormContent(state = state, onAction = onAction)
         }
     }
 
     RescheduleFormDialogContent(
         dialogState = state.dialogState,
-        onAction = viewModel::trySendAction,
+        onAction = onAction,
     )
 }
 
@@ -122,6 +133,9 @@ internal fun RescheduleFormContent(
         RescheduleDatePickerField(
             value = state.rescheduleFromDate,
             label = stringResource(Res.string.feature_loan_reschedule_from_date),
+            showDialog = state.activeDatePicker == ActiveDatePicker.RESCHEDULE_FROM,
+            onOpenDialog = { onAction(LoanRescheduleFormAction.ShowDatePicker(ActiveDatePicker.RESCHEDULE_FROM)) },
+            onCloseDialog = { onAction(LoanRescheduleFormAction.HideDatePicker) },
             onDateSelected = { onAction(LoanRescheduleFormAction.OnRescheduleFromDateChange(it)) },
         )
 
@@ -143,6 +157,9 @@ internal fun RescheduleFormContent(
         RescheduleDatePickerField(
             value = state.submittedOnDate,
             label = stringResource(Res.string.feature_loan_reschedule_submitted_on),
+            showDialog = state.activeDatePicker == ActiveDatePicker.SUBMITTED_ON,
+            onOpenDialog = { onAction(LoanRescheduleFormAction.ShowDatePicker(ActiveDatePicker.SUBMITTED_ON)) },
+            onCloseDialog = { onAction(LoanRescheduleFormAction.HideDatePicker) },
             onDateSelected = { onAction(LoanRescheduleFormAction.OnSubmittedOnDateChange(it)) },
         )
 
@@ -160,6 +177,9 @@ internal fun RescheduleFormContent(
             RescheduleDatePickerField(
                 value = state.adjustedDueDate,
                 label = stringResource(Res.string.feature_loan_reschedule_installment_rescheduled_to),
+                showDialog = state.activeDatePicker == ActiveDatePicker.ADJUSTED_DUE_DATE,
+                onOpenDialog = { onAction(LoanRescheduleFormAction.ShowDatePicker(ActiveDatePicker.ADJUSTED_DUE_DATE)) },
+                onCloseDialog = { onAction(LoanRescheduleFormAction.HideDatePicker) },
                 onDateSelected = { onAction(LoanRescheduleFormAction.OnAdjustedDueDateChange(it)) },
             )
         }
@@ -264,34 +284,36 @@ private fun RescheduleFormDialogContent(
 private fun RescheduleDatePickerField(
     value: String,
     label: String,
+    showDialog: Boolean,
+    onOpenDialog: () -> Unit,
+    onCloseDialog: () -> Unit,
     onDateSelected: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var showDialog by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
 
     MifosDatePickerTextField(
         value = value,
         label = label,
         modifier = modifier.fillMaxWidth(),
-        openDatePicker = { showDialog = true },
+        openDatePicker = onOpenDialog,
     )
 
     if (showDialog) {
         DatePickerDialog(
-            onDismissRequest = { showDialog = false },
+            onDismissRequest = onCloseDialog,
             confirmButton = {
                 TextButton(
                     onClick = {
                         datePickerState.selectedDateMillis?.let { millis ->
                             onDateSelected(ApiDateFormatter.formatForApi(millis))
                         }
-                        showDialog = false
+                        onCloseDialog()
                     },
                 ) { Text(stringResource(Res.string.feature_loan_reschedule_ok)) }
             },
             dismissButton = {
-                TextButton(onClick = { showDialog = false }) { Text(stringResource(Res.string.feature_loan_reschedule_cancel)) }
+                TextButton(onClick = onCloseDialog) { Text(stringResource(Res.string.feature_loan_reschedule_cancel)) }
             },
         ) {
             DatePicker(state = datePickerState)

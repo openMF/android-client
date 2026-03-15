@@ -74,6 +74,8 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleResponse
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
+import com.mifos.core.ui.components.MifosStatusDialog
+import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.loan.createLoanReschedules.navigateToLoanRescheduleFormScreen
 import org.jetbrains.compose.resources.stringResource
@@ -101,20 +103,40 @@ internal fun LoanReschedulesScreenRoute(
         }
     }
 
+    RescheduleListScreen(
+        navController = navController,
+        state = state,
+        onAddClick = { navController.navigateToLoanRescheduleFormScreen(viewModel.loanId) },
+        onAction = viewModel::trySendAction,
+    )
+}
+
+@Composable
+internal fun RescheduleListScreen(
+    navController: NavController,
+    state: LoanReschedulesUiState,
+    onAddClick: () -> Unit,
+    onAction: (LoanReschedulesAction) -> Unit,
+) {
     Column(modifier = Modifier.fillMaxSize()) {
         MifosBreadcrumbNavBar(navController = navController)
 
         Box(modifier = Modifier.weight(1f)) {
             RescheduleListContent(
                 state = state,
-                onAddClick = { navController.navigateToLoanRescheduleFormScreen(viewModel.loanId) },
-                onRetry = { viewModel.trySendAction(LoanReschedulesAction.OnRetryFetching) },
-                onDeleteClick = { item -> viewModel.trySendAction(LoanReschedulesAction.OnDeleteIconClick(item)) },
-                onApproveClick = { item -> viewModel.trySendAction(LoanReschedulesAction.OnApproveIconClick(item)) },
-                onAction = viewModel::trySendAction,
+                onAddClick = onAddClick,
+                onRetry = { onAction(LoanReschedulesAction.OnRetryFetching) },
+                onDeleteClick = { item -> onAction(LoanReschedulesAction.OnDeleteIconClick(item)) },
+                onApproveClick = { item -> onAction(LoanReschedulesAction.OnApproveIconClick(item)) },
+                onAction = onAction,
             )
         }
     }
+    RescheduleListDialogContent(
+        dialogState = state.dialogState,
+        onAction = onAction,
+        onRetry = { onAction(LoanReschedulesAction.OnRetryFetching) },
+    )
 }
 
 @Composable
@@ -291,56 +313,64 @@ internal fun RescheduleListContent(
                 tint = AppColors.customWhite,
             )
         }
+    }
+}
 
-        when (val dialog = state.dialogState) {
-            is LoanReschedulesUiState.DialogState.Loading -> MifosProgressIndicatorOverlay()
+@Composable
+private fun RescheduleListDialogContent(
+    dialogState: LoanReschedulesUiState.DialogState?,
+    onAction: (LoanReschedulesAction) -> Unit,
+    onRetry: () -> Unit,
+) {
+    when (val dialog = dialogState) {
+        is LoanReschedulesUiState.DialogState.Loading -> MifosProgressIndicatorOverlay()
 
-            is LoanReschedulesUiState.DialogState.FetchingFailed -> {
-                MifosSweetError(
-                    message = stringResource(dialog.messageRes),
-                    isRetryEnabled = true,
-                    onclick = onRetry,
-                )
-            }
-
-            is LoanReschedulesUiState.DialogState.ConfirmDelete -> {
-                MifosDialogBox(
-                    showDialogState = true,
-                    title = stringResource(Res.string.feature_loan_reschedule_delete_title),
-                    message = stringResource(Res.string.feature_loan_reschedule_delete_message),
-                    confirmButtonText = stringResource(Res.string.feature_loan_reschedule_delete_confirm),
-                    dismissButtonText = stringResource(Res.string.feature_loan_reschedule_cancel),
-                    onConfirm = { onAction(LoanReschedulesAction.ConfirmDelete(dialog.rescheduleId)) },
-                    onDismiss = { onAction(LoanReschedulesAction.DismissDialog) },
-                )
-            }
-
-            is LoanReschedulesUiState.DialogState.ConfirmApprove -> {
-                MifosDialogBox(
-                    showDialogState = true,
-                    title = stringResource(Res.string.feature_loan_reschedule_approve_title),
-                    message = stringResource(Res.string.feature_loan_reschedule_approve_message),
-                    confirmButtonText = stringResource(Res.string.feature_loan_reschedule_approve_confirm),
-                    dismissButtonText = stringResource(Res.string.feature_loan_reschedule_cancel),
-                    onConfirm = { onAction(LoanReschedulesAction.ConfirmApprove(dialog.rescheduleId)) },
-                    onDismiss = { onAction(LoanReschedulesAction.DismissDialog) },
-                )
-            }
-
-            is LoanReschedulesUiState.DialogState.ActionError -> {
-                MifosDialogBox(
-                    showDialogState = true,
-                    title = stringResource(Res.string.feature_loan_reschedule_failure_title),
-                    message = stringResource(dialog.messageRes),
-                    confirmButtonText = stringResource(Res.string.feature_loan_reschedule_ok),
-                    dismissButtonText = "",
-                    onConfirm = { onAction(LoanReschedulesAction.DismissDialog) },
-                    onDismiss = { onAction(LoanReschedulesAction.DismissDialog) },
-                )
-            }
-
-            else -> { }
+        is LoanReschedulesUiState.DialogState.FetchingFailed -> {
+            MifosSweetError(
+                message = stringResource(dialog.messageRes),
+                isRetryEnabled = true,
+                onclick = onRetry,
+            )
         }
+
+        is LoanReschedulesUiState.DialogState.ConfirmDelete -> {
+            MifosDialogBox(
+                showDialogState = true,
+                title = stringResource(Res.string.feature_loan_reschedule_delete_title),
+                message = stringResource(Res.string.feature_loan_reschedule_delete_message),
+                confirmButtonText = stringResource(Res.string.feature_loan_reschedule_delete_confirm),
+                dismissButtonText = stringResource(Res.string.feature_loan_reschedule_cancel),
+                onConfirm = { onAction(LoanReschedulesAction.ConfirmDelete(dialog.rescheduleId)) },
+                onDismiss = { onAction(LoanReschedulesAction.DismissDialog) },
+            )
+        }
+
+        is LoanReschedulesUiState.DialogState.ConfirmApprove -> {
+            MifosDialogBox(
+                showDialogState = true,
+                title = stringResource(Res.string.feature_loan_reschedule_approve_title),
+                message = stringResource(Res.string.feature_loan_reschedule_approve_message),
+                confirmButtonText = stringResource(Res.string.feature_loan_reschedule_approve_confirm),
+                dismissButtonText = stringResource(Res.string.feature_loan_reschedule_cancel),
+                onConfirm = { onAction(LoanReschedulesAction.ConfirmApprove(dialog.rescheduleId)) },
+                onDismiss = { onAction(LoanReschedulesAction.DismissDialog) },
+            )
+        }
+
+        is LoanReschedulesUiState.DialogState.ActionError -> {
+            MifosStatusDialog(
+                status = ResultStatus.FAILURE,
+                btnText = stringResource(Res.string.feature_loan_reschedule_ok),
+                onConfirm = { onAction(LoanReschedulesAction.DismissDialog) },
+                onDismissRequest = { onAction(LoanReschedulesAction.DismissDialog) },
+                successTitle = "",
+                successMessage = "",
+                failureTitle = stringResource(Res.string.feature_loan_reschedule_failure_title),
+                failureMessage = stringResource(dialog.messageRes),
+                showAsDialog = true,
+            )
+        }
+        null -> { }
     }
 }
 
