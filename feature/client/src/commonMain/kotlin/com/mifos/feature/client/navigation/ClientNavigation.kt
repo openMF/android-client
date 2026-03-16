@@ -374,6 +374,7 @@ fun NavGraphBuilder.clientNavGraph(
             navController = navController,
             onMoreInfoClicked = onMoreInfoClicked,
             onDocumentsClicked = navController::navigateToDocumentListScreen,
+            onNotesClicked = navController::navigateToNoteScreen,
         )
 
         dataTableRoute(
