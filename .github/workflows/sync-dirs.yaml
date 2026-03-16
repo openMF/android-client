@@ -300,4 +300,4 @@ jobs:
           labels: |
             sync
             automated pr
-          base: dev
+          base: development
