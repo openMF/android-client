@@ -1,9 +1,9 @@
 <div align="center">
-<img src="https://user-images.githubusercontent.com/37406965/51083189-d5dc3a80-173b-11e9-8ca0-28015e0893ac.png" alt="Android Client" />
+<img src="https://user-images.githubusercontent.com/37406965/51083189-d5dc3a80-173b-11e9-8ca0-28015e0893ac.png" alt="Mifos X Field Officer App" />
 
-# Mifos X Field Officer Application for MifosX
+# Mifos X Field Officer Application for MifosX Application
 
-This Android application is built on the powerful [MifosX](https://mifosforge.jira.com/wiki/spaces/MIFOSX/overview) platform and written in Kotlin. MifosX is a comprehensive core banking platform designed for field officers to efficiently process transactions, manage client data, track center records, group details, and handle various types of accounts such as loans, savings, and recurring accounts. The application's primary goal is to streamline field operations, making them easier and more efficient.
+This Kotlin Multiplatform application is built on the powerful [MifosX](https://mifosforge.jira.com/wiki/spaces/MIFOSX/overview) platform and written in Kotlin. MifosX is a comprehensive core banking platform designed for field officers to efficiently process transactions, manage client data, track center records, group details, and handle various types of accounts such as loans, savings, and recurring accounts. The application's primary goal is to streamline field operations, making them easier and more efficient.
 
 One of the standout features of this application is its offline capability, allowing officers to connect with clients and provide financial support even in remote areas. This ensures that clients in underserved areas can still access the financial services they need.
 

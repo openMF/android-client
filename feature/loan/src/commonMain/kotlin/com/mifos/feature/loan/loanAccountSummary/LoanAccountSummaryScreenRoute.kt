@@ -17,11 +17,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LoanAccountSummaryScreenRoute(
-    val loanAccountNumber: Int,
+    val loanId: Int,
 )
 
-fun NavController.navigateToLoanAccountSummaryScreen(loanAccountNumber: Int) {
-    navigate(LoanAccountSummaryScreenRoute(loanAccountNumber))
+fun NavController.navigateToLoanAccountSummaryScreen(loanId: Int) {
+    navigate(LoanAccountSummaryScreenRoute(loanId))
 }
 
 fun NavGraphBuilder.loanAccountSummary(
@@ -31,7 +31,7 @@ fun NavGraphBuilder.loanAccountSummary(
     onRepaymentScheduleClicked: (loanId: Int) -> Unit,
     onDocumentsClicked: (Int) -> Unit,
     onChargesClicked: (Int) -> Unit,
-    approveLoan: (loadId: Int, loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
+    approveLoan: (loanId: Int, loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
     disburseLoan: (Int) -> Unit,
     onRepaymentClick: (LoanWithAssociationsEntity) -> Unit,
     navController: NavController,
