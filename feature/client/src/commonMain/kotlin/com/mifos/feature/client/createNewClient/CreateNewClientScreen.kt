@@ -121,6 +121,7 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.clients.Address
+import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.feature.client.utils.PhoneNumberUtil
 import com.mifos.feature.client.utils.rememberPlatformCameraLauncher
@@ -259,13 +260,12 @@ internal fun CreateNewClientScreen(
             }
 
             is CreateNewClientUiState.ShowWaitingForCheckerApproval -> {
-                LaunchedEffect(uiState.message) {
-                    snackbarHostState.showSnackbar(
-                        message = getString(Res.string.feature_client_waiting_for_checker_approval),
-                        duration = SnackbarDuration.Long,
-                    )
-                    navigateBack.invoke()
-                }
+                MifosAlertDialog(
+                    dialogText = stringResource(Res.string.feature_client_waiting_for_checker_approval),
+                    dismissText = null,
+                    onConfirmation = navigateBack,
+                    onDismissRequest = {},
+                )
             }
 
             is CreateNewClientUiState.ShowError -> {

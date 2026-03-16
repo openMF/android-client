@@ -36,7 +36,7 @@
 
 # WORKFLOW INPUTS:
 # - release_type: 'internal' (default) or 'beta'
-# - target_branch: Branch to use for release (default: 'dev')
+# - target_branch: Branch to use for release (default: 'development')
 # - android_package_name: Name of Android module
 # - ios_package_name: Name of iOS module
 # - desktop_package_name: Name of desktop module

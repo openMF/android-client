@@ -23,19 +23,14 @@
     <string name="feature_search_close">Close</string>
     <string name="feature_search_all">All</string>
 
-    <string-array name="feature_search_filter_options">
-        <item>Clients</item>
-        <item>Groups</item>
-        <item>Centers</item>
-        <item>Loan Accounts</item>
-        <item>Savings Accounts</item>
-    </string-array>
-
-    <string-array name="feature_search_filter_option_values">
-        <item>clients</item>
-        <item>groups</item>
-        <item>centers</item>
-        <item>loans</item>
-        <item>savingsaccounts</item>
-    </string-array>
+    <string name="feature_search_filter_options_clients_label">Clients</string>
+    <string name="feature_search_filter_options_clients_value" translatable="false">clients</string>
+    <string name="feature_search_filter_options_groups_label">Groups</string>
+    <string name="feature_search_filter_options_groups_value" translatable="false">groups</string>
+    <string name="feature_search_filter_options_centers_label">Centers</string>
+    <string name="feature_search_filter_options_centers_value" translatable="false">centers</string>
+    <string name="feature_search_filter_options_loans_label">Loan Accounts</string>
+    <string name="feature_search_filter_options_loans_value" translatable="false">loans</string>
+    <string name="feature_search_filter_options_savings_label">Savings Accounts</string>
+    <string name="feature_search_filter_options_savings_value" translatable="false">savingsaccounts</string>
 </resources>

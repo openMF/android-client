@@ -11,6 +11,9 @@ package com.mifos.feature.client.clientsList
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.account_number_prefix
+import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_clients
+import androidclient.feature.client.generated.resources.feature_client_failed_to_more_clients
+import androidclient.feature.client.generated.resources.feature_client_no_more_clients_available
 import androidclient.feature.client.generated.resources.string_not_available
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
@@ -34,6 +37,8 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,16 +48,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
 import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.mifos.core.designsystem.component.BasicDialogState
 import com.mifos.core.designsystem.component.MifosBasicDialog
+import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosEmptyCard
+import com.mifos.core.ui.components.MifosPagingAppendProgress
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosRowCard
 import com.mifos.core.ui.util.EventsEffect
@@ -195,7 +205,9 @@ private fun ClientListContentScreen(
     onAction: (ClientListAction) -> Unit,
     toggleFilterVisibility: () -> Unit,
     onUpdateOffices: (List<String?>) -> Unit,
+    isRefreshing: Boolean = false,
 ) {
+    val pullRefreshState = rememberPullToRefreshState()
     Column(
         modifier = modifier.fillMaxSize(),
     ) {
@@ -207,40 +219,48 @@ private fun ClientListContentScreen(
             )
         }
 
-        when {
-            state.clients.isNotEmpty() -> {
-                ClientListContent(
-                    clientsList = state.clients,
-                    onClientClick = { clientId ->
-                        onAction(ClientListAction.OnClientClick(clientId))
-                    },
-                    modifier = Modifier.padding(KptTheme.spacing.md),
-                    fetchImage = {
-                        onAction(ClientListAction.FetchImage(it))
-                    },
-                    images = state.clientImages,
-                )
-            }
-            state.clientsFlow != null -> {
-                LazyColumnForClientListApi(
-                    pagingFlow = state.clientsFlow,
-                    onRefresh = {
-                        onAction(ClientListAction.RefreshClients)
-                    },
-                    onClientSelect = {
-                        onAction(ClientListAction.OnClientClick(it))
-                    },
-                    modifier = Modifier,
-                    fetchImage = {
-                        onAction(ClientListAction.FetchImage(it))
-                    },
-                    images = state.clientImages,
-                    sort = state.sort,
-                    onUpdateOffices = onUpdateOffices,
-                )
-            }
-            else -> {
-                MifosEmptyCard("No clients found")
+        PullToRefreshBox(
+            state = pullRefreshState,
+            onRefresh = { onAction(ClientListAction.RefreshClients) },
+            isRefreshing = isRefreshing,
+        ) {
+            when {
+                state.clients.isNotEmpty() -> {
+                    ClientListContent(
+                        clientsList = state.clients,
+                        onClientClick = { clientId ->
+                            onAction(ClientListAction.OnClientClick(clientId))
+                        },
+                        modifier = Modifier.padding(KptTheme.spacing.md),
+                        fetchImage = {
+                            onAction(ClientListAction.FetchImage(it))
+                        },
+                        images = state.clientImages,
+                    )
+                }
+
+                state.clientsFlow != null -> {
+                    LazyColumnForClientListApi(
+                        pagingFlow = state.clientsFlow,
+                        onRefresh = {
+                            onAction(ClientListAction.RefreshClients)
+                        },
+                        onClientSelect = {
+                            onAction(ClientListAction.OnClientClick(it))
+                        },
+                        modifier = Modifier,
+                        fetchImage = {
+                            onAction(ClientListAction.FetchImage(it))
+                        },
+                        images = state.clientImages,
+                        sort = state.sort,
+                        onUpdateOffices = onUpdateOffices,
+                    )
+                }
+
+                else -> {
+                    MifosEmptyCard("No clients found")
+                }
             }
         }
     }
@@ -345,16 +365,125 @@ private fun ClientListDialogs(
 }
 
 @Composable
-internal expect fun LazyColumnForClientListApi(
+internal fun LazyColumnForClientListApi(
     pagingFlow: Flow<PagingData<ClientEntity>>,
     onRefresh: () -> Unit,
     onClientSelect: (Int) -> Unit,
     fetchImage: (Int) -> Unit,
     images: Map<Int, ByteArray?>,
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     sort: SortTypes?,
     onUpdateOffices: (List<String?>) -> Unit,
-)
+) {
+    val clientPagingList = pagingFlow.collectAsLazyPagingItems()
+
+    val items = clientPagingList.itemSnapshotList.items
+    if (items.isNotEmpty()) {
+        val offices = items.map { it.officeName }
+            .distinct()
+        LaunchedEffect(offices) { onUpdateOffices(offices) }
+    }
+
+    when (clientPagingList.loadState.refresh) {
+        is LoadState.Error -> {
+            MifosSweetError(message = stringResource(Res.string.feature_client_failed_to_fetch_clients)) {
+                onRefresh()
+            }
+        }
+
+        is LoadState.Loading -> MifosProgressIndicator()
+
+        is LoadState.NotLoading -> Unit
+    }
+
+    if (sort != null) {
+        val currentItems = clientPagingList.itemSnapshotList.items
+
+        val sortedItems = when (sort) {
+            SortTypes.NAME -> {
+                currentItems.sortedBy { it.displayName?.lowercase() }
+            }
+            SortTypes.ACCOUNT_NUMBER -> {
+                currentItems.sortedBy { it.accountNo }
+            }
+            SortTypes.EXTERNAL_ID -> {
+                currentItems.sortedBy { it.externalId }
+            }
+            else -> currentItems
+        }
+
+        LazyColumn(
+            modifier = modifier,
+        ) {
+            items(
+                items = sortedItems,
+                key = { client -> client.id },
+            ) { client ->
+                LaunchedEffect(client.id) {
+                    fetchImage(client.id)
+                }
+                ClientItem(
+                    client = client,
+                    byteArray = images[client.id],
+                    onClientClick = onClientSelect,
+                )
+            }
+        }
+    } else {
+        LazyColumn(
+            modifier = modifier,
+        ) {
+            items(
+                count = clientPagingList.itemCount,
+                key = { index -> clientPagingList[index]?.id ?: index },
+            ) { index ->
+                clientPagingList[index]?.let { client ->
+                    LaunchedEffect(client.id) {
+                        fetchImage(client.id)
+                    }
+                    ClientItem(
+                        client = client,
+                        byteArray = images[client.id],
+                        onClientClick = onClientSelect,
+                    )
+                }
+            }
+
+            when (clientPagingList.loadState.append) {
+                is LoadState.Error -> {
+                    item {
+                        MifosSweetError(message = stringResource(Res.string.feature_client_failed_to_more_clients)) {
+                            clientPagingList.retry()
+                        }
+                    }
+                }
+
+                is LoadState.Loading -> {
+                    item {
+                        MifosPagingAppendProgress()
+                    }
+                }
+
+                is LoadState.NotLoading -> {
+                    if (clientPagingList.loadState.append.endOfPaginationReached &&
+                        clientPagingList.itemCount > 0
+                    ) {
+                        item {
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = DesignToken.padding.extraExtraLarge),
+                                text = stringResource(Res.string.feature_client_no_more_clients_available),
+                                style = MifosTypography.bodyMedium,
+                                textAlign = TextAlign.Center,
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
