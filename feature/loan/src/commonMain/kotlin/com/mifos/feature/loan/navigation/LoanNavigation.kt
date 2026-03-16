@@ -36,6 +36,7 @@ import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 fun NavGraphBuilder.loanDestination(
     navController: NavController,
     onDocumentsClicked: (Int, String) -> Unit,
+    onNotesClicked: (Int, String?) -> Unit,
     onMoreInfoClicked: (String, Int) -> Unit,
 ) {
     loanAccountSummary(
@@ -83,6 +84,9 @@ fun NavGraphBuilder.loanDestination(
         navigateToRepaymentSchedule = navController::navigateToLoanRepaymentScheduleScreen,
         navigateToTransactions = navController::navigateToLoanTransactionScreen,
         navigateToCharges = navController::navigateToLoanChargesScreen,
+        navigateToNotes = { loanId ->
+            onNotesClicked(loanId, Constants.ENTITY_TYPE_LOANS)
+        },
         navigateToDocuments = { loanId ->
             onDocumentsClicked(loanId, Constants.ENTITY_TYPE_LOANS)
         },
