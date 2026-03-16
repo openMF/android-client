@@ -110,7 +110,7 @@ jobs:
       desktop_package_name: 'cmp-desktop'
       web_package_name: 'cmp-web'
       metadata_path: './fastlane/metadata'
-      use_cocoapods: true
+      use_cocoapods: false
       shared_module: ':cmp-shared'
       distribute_ios_firebase: ${{ inputs.distribute_ios_firebase }}
       # When App Store is enabled, skip TestFlight — deliver() already uploads
