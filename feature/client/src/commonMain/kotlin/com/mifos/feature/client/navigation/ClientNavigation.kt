@@ -72,7 +72,7 @@ import com.mifos.feature.client.clientUpcomingCharges.navigateToClientUpcomingCh
 import com.mifos.feature.client.clientUpdateDefaultAccount.navigateToUpdateDefaultAccountRoute
 import com.mifos.feature.client.clientUpdateDefaultAccount.updateDefaultAccountDestination
 import com.mifos.feature.client.clientsList.ClientListScreen
-import com.mifos.feature.client.createNewClient.CreateNewClientScreenRoute
+import com.mifos.feature.client.createNewClient.CreateNewClientScreen
 import com.mifos.feature.client.createShareAccount.createShareAccountDestination
 import com.mifos.feature.client.createShareAccount.navigateToCreateShareAccountRoute
 import com.mifos.feature.client.documentPreviewScreen.createDocumentPreviewRoute
@@ -516,7 +516,7 @@ fun NavGraphBuilder.createClientRoute(
     composable(
         route = ClientScreens.CreateClientScreen.route,
     ) {
-        CreateNewClientScreenRoute(
+        CreateNewClientScreen(
             navigateBack = onBackPressed,
             navigateToClientDetails = navigateToClientDetails,
             hasDatatables = { datatables, clientPayload ->

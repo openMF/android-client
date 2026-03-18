@@ -60,6 +60,7 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -104,6 +105,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -111,18 +113,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import co.touchlab.kermit.Logger
 import coil3.compose.rememberAsyncImagePainter
 import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.common.utils.formatDate
+import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
+import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.clients.Address
 import com.mifos.core.ui.components.MifosAlertDialog
+import com.mifos.core.ui.components.MifosCheckBox
 import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.util.EventsEffect
+import com.mifos.feature.client.charges.ChargesEvent
 import com.mifos.feature.client.utils.PhoneNumberUtil
 import com.mifos.feature.client.utils.rememberPlatformCameraLauncher
 import com.mifos.room.entities.client.AddressTemplate
@@ -147,140 +155,91 @@ import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
-/**
- * Created by Pronay Sarker on 07/07/2024 (3:45 AM)
- */
-
 @Composable
-internal fun CreateNewClientScreenRoute(
+internal fun CreateNewClientScreen(
     navigateBack: () -> Unit,
     navigateToClientDetails: (Int) -> Unit,
     hasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
-    viewmodel: CreateNewClientViewModel = koinViewModel(),
+    viewModel: CreateNewClientViewModelV2 = koinViewModel(),
 ) {
-    val uiState by viewmodel.createNewClientUiState.collectAsStateWithLifecycle()
-    val officeList by viewmodel.showOffices.collectAsStateWithLifecycle()
-    val staffInOffice by viewmodel.staffInOffices.collectAsStateWithLifecycle()
+
+    val snackbarHostState = remember { SnackbarHostState() }
+    EventsEffect(viewModel.eventFlow) { event ->
+        when (event) {
+            is CreateNewClientEvent.NavigateBack -> navigateBack()
+            is CreateNewClientEvent.NavigateToClientDetails -> navigateToClientDetails(event.clientId)
+            is CreateNewClientEvent.ShowSnackBar -> {
+                snackbarHostState.showSnackbar(event.message)
+            }
+        }
+    }
+
+    val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
     CreateNewClientScreen(
-        uiState = uiState,
-        officeList = officeList,
-        staffInOffices = staffInOffice,
-        navigateToClientDetails = navigateToClientDetails,
-        onRetry = { viewmodel.loadOfficeAndClientTemplate() },
-        loadStaffInOffice = { viewmodel.loadStaffInOffices(it) },
-        createClient = { viewmodel.createClient(clientPayload = it) },
-        uploadImage = { id ->
-            viewmodel.uploadImage(id)
-        },
-        navigateBack = navigateBack,
+        state = state,
         hasDatatables = hasDatatables,
-        onImageSelected = {
-            viewmodel.updateSelectedImage(it)
+        snackbarHostState = snackbarHostState,
+        onAction = {
+            viewModel.trySendAction(it)
         },
     )
 }
 
 @Composable
 internal fun CreateNewClientScreen(
-    uiState: CreateNewClientUiState,
-    onRetry: () -> Unit,
-    officeList: List<OfficeEntity>,
-    staffInOffices: List<StaffEntity>,
-    navigateToClientDetails: (Int) -> Unit,
-    loadStaffInOffice: (officeId: Int) -> Unit,
-    navigateBack: () -> Unit,
-    onImageSelected: (PlatformFile?) -> Unit,
-    createClient: (clientPayload: ClientPayloadEntity) -> Unit,
-    uploadImage: (id: Int) -> Unit,
+    state: CreateNewClientState,
+    snackbarHostState: SnackbarHostState,
     hasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
+    onAction: (CreateNewClientAction) -> Unit,
 ) {
-    var createClientWithImage by rememberSaveable { mutableStateOf(false) }
-    val snackbarHostState = remember { SnackbarHostState() }
+
     val scope = rememberCoroutineScope()
 
-    Column {
-        when (uiState) {
-            CreateNewClientUiState.ShowProgressbar -> {
-                MifosProgressIndicator()
-            }
-
-            is CreateNewClientUiState.ShowProgress -> {
-                MifosProgressIndicator()
-            }
-
-            is CreateNewClientUiState.ShowClientTemplate -> {
-                CreateNewClientContent(
-                    scope = scope,
-                    snackbarHostState = snackbarHostState,
-                    officeList = officeList,
-                    staffInOffices = staffInOffices,
-                    clientTemplate = uiState.clientsTemplate,
-                    loadStaffInOffice = loadStaffInOffice,
-                    createClient = createClient,
-                    onHasDatatables = hasDatatables,
-                    setFileForUpload = { filePath ->
-                        filePath?.let {
-                            createClientWithImage = true
-                        }
+    MifosScaffold(
+        snackbarHostState = snackbarHostState,
+    ) {
+        when (state.screenState) {
+            is CreateNewClientState.ScreenState.Error -> {
+                MifosSweetError(
+                    message = state.screenState.message,
+                    onclick = {
+                        onAction(CreateNewClientAction.Retry)
                     },
-                    onImageSelected = onImageSelected,
-                    addressTemplate = uiState.addressTemplate,
-                    isAddressEnabled = uiState.isAddressEnabled,
                 )
             }
 
-            is CreateNewClientUiState.SetClientId -> {
-                LaunchedEffect(uiState.id) {
-                    if (createClientWithImage) {
-                        uploadImage(uiState.id)
-                    } else {
-                        navigateToClientDetails(uiState.id)
-                    }
-                }
+            CreateNewClientState.ScreenState.Loading -> {
+                MifosProgressIndicator()
             }
 
-            is CreateNewClientUiState.ShowClientCreatedSuccessfully -> {
-                LaunchedEffect(uiState.message) {
-                    snackbarHostState.showSnackbar(
-                        message = getString(Res.string.feature_client_client_created_successfully),
-                        duration = SnackbarDuration.Long,
+            CreateNewClientState.ScreenState.Success -> {
+                if (state.clientsTemplate != null) {
+                    CreateNewClientContent(
+                        scope = scope,
+                        snackbarHostState = snackbarHostState,
+                        officeList = state.officeOptions,
+                        staffInOffices = state.staffInOffices,
+                        clientTemplate = state.clientsTemplate,
+                        loadStaffInOffice = {
+                            onAction(CreateNewClientAction.LoadStaffInOffices(it))
+                        },
+                        createClient = {
+                            onAction(CreateNewClientAction.CreateClient(it))
+                        },
+                        onHasDatatables = hasDatatables,
+                        setFileForUpload = { filePath ->
+
+                        },
+                        onImageSelected = {
+                            onAction(CreateNewClientAction.UpdateSelectedImageFile(it))
+                        },
+                        addressTemplate = state.addressTemplate,
+                        isAddressEnabled = state.isAddressEnabled,
+                        formState = state.formState,
+                        onAction = onAction,
                     )
                 }
-            }
-
-            is CreateNewClientUiState.OnImageUploadSuccess -> {
-                LaunchedEffect(uiState.clientId) {
-                    snackbarHostState.showSnackbar(
-                        message = getString(Res.string.feature_client_Image_Upload_Successful),
-                        duration = SnackbarDuration.Long,
-                    )
-                    navigateToClientDetails(uiState.clientId)
-                }
-            }
-
-            is CreateNewClientUiState.ShowWaitingForCheckerApproval -> {
-                MifosAlertDialog(
-                    dialogText = stringResource(Res.string.feature_client_waiting_for_checker_approval),
-                    dismissText = null,
-                    onConfirmation = navigateBack,
-                    onDismissRequest = {},
-                )
-            }
-
-            is CreateNewClientUiState.ShowError -> {
-                MifosSweetError(
-                    message = stringResource(uiState.message),
-                    onclick = { onRetry() },
-                )
-            }
-
-            is CreateNewClientUiState.ShowStringError -> {
-                MifosSweetError(
-                    message = uiState.message,
-                    onclick = { onRetry() },
-                    buttonText = stringResource(Res.string.feature_client_go_back),
-                )
             }
         }
     }
@@ -296,54 +255,15 @@ private fun CreateNewClientContent(
     clientTemplate: ClientsTemplateEntity,
     addressTemplate: AddressTemplate?,
     isAddressEnabled: Boolean,
+    formState: CreateNewClientState.ClientFormState,
     loadStaffInOffice: (Int) -> Unit,
     onImageSelected: (PlatformFile?) -> Unit,
     createClient: (ClientPayloadEntity) -> Unit,
     onHasDatatables: (List<DataTableEntity>, ClientPayloadEntity) -> Unit,
     setFileForUpload: (filePath: String?) -> Unit,
+    onAction: (CreateNewClientAction) -> Unit
 ) {
-    var firstName by rememberSaveable { mutableStateOf("") }
-    var middleName by rememberSaveable { mutableStateOf("") }
-    var lastName by rememberSaveable { mutableStateOf("") }
-    var mobileNumber by rememberSaveable { mutableStateOf("") }
-    var externalId by rememberSaveable { mutableStateOf("") }
-    var gender by rememberSaveable { mutableStateOf("") }
-    var genderId by rememberSaveable { mutableIntStateOf(0) }
 
-    var selectedAddressType by rememberSaveable { mutableStateOf("") }
-    var selectedAddressTypeId by rememberSaveable { mutableIntStateOf(0) }
-    var addressLine1 by rememberSaveable { mutableStateOf("") }
-    var addressLine2 by rememberSaveable { mutableStateOf("") }
-    var addressLine3 by rememberSaveable { mutableStateOf("") }
-    var city by rememberSaveable { mutableStateOf("") }
-    var selectedStateName by rememberSaveable { mutableStateOf("") }
-    var selectedStateProvinceId by rememberSaveable { mutableIntStateOf(0) }
-    var selectedCountryName by rememberSaveable { mutableStateOf("") }
-    var selectedCountryId by rememberSaveable { mutableIntStateOf(0) }
-    var postalCode by rememberSaveable { mutableStateOf("") }
-    var isAddressActive by rememberSaveable { mutableStateOf(false) }
-
-    var clientType by rememberSaveable { mutableStateOf("") }
-    var selectedClientTypeId by rememberSaveable { mutableIntStateOf(0) }
-    var clientClassification by rememberSaveable { mutableStateOf("") }
-    var selectedClientClassificationId by rememberSaveable { mutableIntStateOf(0) }
-    var selectedOffice by rememberSaveable { mutableStateOf("") }
-    var selectedOfficeId: Int? by rememberSaveable { mutableStateOf(0) }
-    var staff by rememberSaveable { mutableStateOf("") }
-    var selectedStaffId: Int? by rememberSaveable { mutableStateOf(0) }
-
-    var isActive by rememberSaveable { mutableStateOf(false) }
-    var dateOfBirth by rememberSaveable { mutableStateOf<Long?>(null) }
-
-    var activationDate by rememberSaveable {
-        mutableLongStateOf(
-            Clock.System.now().toEpochMilliseconds(),
-        )
-    }
-    var showDateOfBirthDatepicker by rememberSaveable { mutableStateOf(false) }
-    var showActivateDatepicker by rememberSaveable { mutableStateOf(false) }
-    var showImagePickerDialog by rememberSaveable { mutableStateOf(false) }
-    var selectedImagePath by rememberSaveable { mutableStateOf<String?>(null) }
 
     val scrollState = rememberScrollState()
     val density = LocalDensity.current
@@ -352,16 +272,12 @@ private fun CreateNewClientContent(
         type = FileKitType.Image,
     ) { file ->
         file?.let {
-//            TODO: path not support in kmp all targets
-//            selectedImagePath = file.path
             onImageSelected(file)
         }
     }
 
     val cameraLauncher = rememberPlatformCameraLauncher { file ->
         file?.let {
-//            TODO: path not support in kmp all targets
-//            selectedImagePath = file.path
             onImageSelected(file)
         }
     }
@@ -385,13 +301,12 @@ private fun CreateNewClientContent(
                     Res.string.feature_client_no_staff_associated_with_office,
                 ),
             )
-            staff = ""
-            selectedStaffId = 0
+            onAction(CreateNewClientAction.UpdateStaff("",0))
         }
     }
 
     val activateDatePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = activationDate,
+        initialSelectedDateMillis = formState.activationDate,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
@@ -407,188 +322,241 @@ private fun CreateNewClientContent(
         },
     )
 
-    if (showImagePickerDialog) {
+    if (formState.showImagePickerDialog) {
         MifosSelectImageDialog(
-            onDismissRequest = { showImagePickerDialog = false },
+            onDismissRequest = {
+                onAction(CreateNewClientAction.ToggleImagePickerDialog(false))
+            },
             takeImage = {
-                showImagePickerDialog = false
+                onAction(CreateNewClientAction.ToggleImagePickerDialog(false))
                 cameraLauncher.launch()
             },
             uploadImage = {
-                showImagePickerDialog = false
+                onAction(CreateNewClientAction.ToggleImagePickerDialog(false))
                 galleryLauncher.launch()
             },
             removeImage = {
-                showImagePickerDialog = false
-                selectedImagePath = null
+                onAction(CreateNewClientAction.ToggleImagePickerDialog(false))
+                onAction(CreateNewClientAction.UpdateSelectedImageFile(null))
             },
         )
     }
 
-    if (showActivateDatepicker || showDateOfBirthDatepicker) {
+    if (formState.showActivateDatepicker || formState.showDateOfBirthDatepicker) {
+
         DatePickerDialog(
             onDismissRequest = {
-                showDateOfBirthDatepicker = false
-                showActivateDatepicker = false
+                onAction(CreateNewClientAction.ToggleActivationDatePicker(false))
+                onAction(CreateNewClientAction.ToggleDateOfBirthPicker(false))
             },
+
             confirmButton = {
                 TextButton(
                     onClick = {
-                        if (showActivateDatepicker) {
+                        if (formState.showActivateDatepicker) {
                             activateDatePickerState.selectedDateMillis?.let {
-                                activationDate = it
+                                onAction(CreateNewClientAction.UpdateActivationDate(it))
                             }
                         } else {
                             dateOfBirthDatePickerState.selectedDateMillis?.let {
-                                dateOfBirth = it
+                                onAction(CreateNewClientAction.UpdateDateOfBirth(it))
                             }
                         }
-                        showActivateDatepicker = false
-                        showDateOfBirthDatepicker = false
+
+                        onAction(CreateNewClientAction.ToggleActivationDatePicker(false))
+                        onAction(CreateNewClientAction.ToggleDateOfBirthPicker(false))
                     },
-                ) { Text(stringResource(Res.string.feature_client_select_date)) }
+                ) {
+                    Text(stringResource(Res.string.feature_client_select_date))
+                }
             },
+
             dismissButton = {
                 TextButton(
                     onClick = {
-                        showActivateDatepicker = false
-                        showDateOfBirthDatepicker = false
+                        onAction(CreateNewClientAction.ToggleActivationDatePicker(false))
+                        onAction(CreateNewClientAction.ToggleDateOfBirthPicker(false))
                     },
-                ) { Text(stringResource(Res.string.feature_client_cancel)) }
+                ) {
+                    Text(stringResource(Res.string.feature_client_cancel))
+                }
             },
         ) {
-            DatePicker(state = if (showActivateDatepicker) activateDatePickerState else dateOfBirthDatePickerState)
+            DatePicker(
+                state = if (formState.showActivateDatepicker)
+                    activateDatePickerState
+                else
+                    dateOfBirthDatePickerState
+            )
         }
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(KptTheme.spacing.md)
             .verticalScroll(state = scrollState),
     ) {
-        ClientImageSection(selectedImagePath = selectedImagePath) {
-            showImagePickerDialog = true
+        ClientImageSection(
+            selectedImagePath = formState.selectedImagePath
+        ) {
+            onAction(CreateNewClientAction.ToggleImagePickerDialog(true))
         }
 
         ClientInputTextFields(
-            firstName = firstName,
-            middleName = middleName,
-            lastName = lastName,
-            mobileNumber = mobileNumber,
-            externalId = externalId,
-            onFirstNameChange = { firstName = it },
-            onMiddleNameChange = { middleName = it },
-            onLastNameChange = { lastName = it },
-            onMobileNumberChange = { mobileNumber = it },
-            onExternalIdChange = { externalId = it },
+            firstName = formState.firstName,
+            middleName = formState.middleName,
+            lastName = formState.lastName,
+            mobileNumber = formState.mobileNumber,
+            externalId = formState.externalId,
+
+            onFirstNameChange = {
+                onAction(CreateNewClientAction.UpdateFirstName(it))
+            },
+            onMiddleNameChange = {
+                onAction(CreateNewClientAction.UpdateMiddleName(it))
+            },
+            onLastNameChange = {
+                onAction(CreateNewClientAction.UpdateLastName(it))
+            },
+            onMobileNumberChange = {
+                onAction(CreateNewClientAction.UpdateMobileNumber(it))
+            },
+            onExternalIdChange = {
+                onAction(CreateNewClientAction.UpdateExternalId(it))
+            },
         )
 
         Spacer(modifier = Modifier.height(KptTheme.spacing.md))
-
+        
         clientTemplate.genderOptions?.let { list ->
             MifosTextFieldDropdown(
-                value = gender,
-                onValueChanged = { gender = it },
+                value = formState.gender,
+                onValueChanged = {  },
                 onOptionSelected = { index, value ->
-                    gender = value
-                    genderId = list[index].id
+                    onAction(
+                        CreateNewClientAction.UpdateGender(
+                            name = value,
+                            id = list[index].id
+                        )
+                    )
                 },
                 label = stringResource(Res.string.feature_client_gender),
                 options = list.map { it.name },
                 readOnly = true,
             )
         }
-
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
-
+        
         MifosDatePickerTextField(
-            value = dateOfBirth?.let { DateHelper.getDateAsStringFromLong(it) } ?: "",
+            value = formState.dateOfBirth
+                ?.let { DateHelper.getDateAsStringFromLong(it) } ?: "",
             label = stringResource(Res.string.feature_client_dob),
-            openDatePicker = { showDateOfBirthDatepicker = !showDateOfBirthDatepicker },
+            openDatePicker = {
+                onAction(
+                    CreateNewClientAction.ToggleDateOfBirthPicker(
+                        !formState.showDateOfBirthDatepicker
+                    )
+                )
+            },
         )
 
         Spacer(modifier = Modifier.height(KptTheme.spacing.md))
-
+        
         clientTemplate.clientTypeOptions?.let { list ->
+            val sorted = list.sortedBy { it.name }
+
             MifosTextFieldDropdown(
-                value = clientType,
-                onValueChanged = { clientType = it },
+                value = formState.clientType,
+                onValueChanged = {},
                 onOptionSelected = { index, value ->
-                    clientType = value
-                    selectedClientTypeId = list[index].id
+                    onAction(
+                        CreateNewClientAction.UpdateClientType(
+                            name = value,
+                            id = sorted[index].id
+                        )
+                    )
                 },
                 label = stringResource(Res.string.feature_client_client),
-                options = list.sortedBy { it.name }.map { it.name },
+                options = sorted.map { it.name },
                 readOnly = true,
             )
         }
-
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        
         clientTemplate.clientClassificationOptions?.let { list ->
+            val sorted = list.sortedBy { it.name }
+
             MifosTextFieldDropdown(
-                value = clientClassification,
-                onValueChanged = { clientClassification = it },
+                value = formState.clientClassification,
+                onValueChanged = {},
                 onOptionSelected = { index, value ->
-                    clientClassification = value
-                    selectedClientClassificationId =
-                        list[index].id
+                    onAction(
+                        CreateNewClientAction.UpdateClientClassification(
+                            name = value,
+                            id = sorted[index].id
+                        )
+                    )
                 },
                 label = stringResource(Res.string.feature_client_client_classification),
-                options = list.sortedBy { it.name }.map { it.name },
+                options = sorted.map { it.name },
+                readOnly = true,
+            )
+        }
+        
+        val sortedOffices = officeList.sortedBy { it.name }
+
+        MifosTextFieldDropdown(
+            value = formState.selectedOffice,
+            onValueChanged = {},
+            onOptionSelected = { index, value ->
+                val officeId = sortedOffices[index].id
+
+                onAction(
+                    CreateNewClientAction.UpdateOffice(
+                        name = value,
+                        id = officeId
+                    )
+                )
+                
+                onAction(CreateNewClientAction.LoadStaffInOffices(officeId))
+            },
+            label = stringResource(Res.string.feature_client_office_name_mandatory),
+            options = sortedOffices.map { it.name.toString() },
+            readOnly = true,
+        )
+
+        AnimatedVisibility(
+            visible = staffInOffices.isNotEmpty(),
+        ) {
+            val sortedStaff = staffInOffices.sortedBy { it.displayName }
+
+            MifosTextFieldDropdown(
+                value = formState.staff,
+                onValueChanged = {},
+                onOptionSelected = { index, value ->
+                    onAction(
+                        CreateNewClientAction.UpdateStaff(
+                            name = value,
+                            id = sortedStaff[index].id
+                        )
+                    )
+                },
+                label = stringResource(Res.string.feature_client_staff),
+                options = sortedStaff.map { it.displayName.toString() },
                 readOnly = true,
             )
         }
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
-
-        MifosTextFieldDropdown(
-            value = selectedOffice,
-            onValueChanged = { selectedOffice = it },
-            onOptionSelected = { index, value ->
-                selectedOffice = value
-                selectedOfficeId = officeList[index].id
-
-                if (selectedOfficeId != null) {
-                    scope.launch {
-                        loadStaffInOffice.invoke(selectedOfficeId!!)
-                    }
-                }
+        MifosCheckBox(
+            checked = formState.isActive,
+            onCheckChanged = {
+                onAction(CreateNewClientAction.ToggleClientActive(it))
             },
-            label = stringResource(Res.string.feature_client_office_name_mandatory),
-            options = officeList.sortedBy { it.name }.map { it.name.toString() },
-            readOnly = true,
+            text = stringResource(Res.string.feature_client_client_active),
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
-
-        MifosTextFieldDropdown(
-            value = staff,
-            onValueChanged = { staff = it },
-            onOptionSelected = { index, value ->
-                staff = value
-                selectedStaffId = staffInOffices[index].id
-            },
-            label = stringResource(Res.string.feature_client_staff),
-            options = staffInOffices.sortedBy { it.displayName }.map { it.displayName.toString() },
-            readOnly = true,
-            enabled = staffInOffices.isNotEmpty(),
-        )
-
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Checkbox(
-                checked = isActive,
-                onCheckedChange = { isActive = !isActive },
-            )
-            Text(text = stringResource(Res.string.feature_client_client_active))
-        }
 
         AnimatedVisibility(
-            visible = isActive,
+            visible = formState.isActive,
             enter = slideInVertically {
                 with(density) { -40.dp.roundToPx() }
             } + expandVertically(
@@ -598,13 +566,21 @@ private fun CreateNewClientContent(
             ),
             exit = slideOutVertically() + shrinkVertically() + fadeOut(),
         ) {
-            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+            Column {
+                Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
-            MifosDatePickerTextField(
-                value = DateHelper.getDateAsStringFromLong(activationDate),
-                label = stringResource(Res.string.feature_client_center_submission_date),
-                openDatePicker = { showActivateDatepicker = !showActivateDatepicker },
-            )
+                MifosDatePickerTextField(
+                    value = DateHelper.getDateAsStringFromLong(formState.activationDate),
+                    label = stringResource(Res.string.feature_client_center_submission_date),
+                    openDatePicker = {
+                        onAction(
+                            CreateNewClientAction.ToggleActivationDatePicker(
+                                !formState.showActivateDatepicker
+                            )
+                        )
+                    },
+                )
+            }
         }
 
         if (isAddressEnabled && addressTemplate != null) {
@@ -622,83 +598,125 @@ private fun CreateNewClientContent(
             Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
             AddressInputTextFields(
-                addressLine1 = addressLine1,
-                onAddressLine1Change = { addressLine1 = it },
-                addressLine2 = addressLine2,
-                onAddressLine2Change = { addressLine2 = it },
-                addressLine3 = addressLine3,
-                onAddressLine3Change = { addressLine3 = it },
-                city = city,
-                onCityChange = { city = it },
-                postalCode = postalCode,
-                onPostalCodeChange = { postalCode = it },
-                selectedAddressType = selectedAddressType,
-                onAddressTypeChanged = { selectedAddressType = it },
+                addressLine1 = formState.addressLine1,
+                onAddressLine1Change = {
+                    onAction(CreateNewClientAction.UpdateAddressLine1(it))
+                },
+                addressLine2 = formState.addressLine2,
+                onAddressLine2Change = {
+                    onAction(CreateNewClientAction.UpdateAddressLine2(it))
+                },
+                addressLine3 = formState.addressLine3,
+                onAddressLine3Change = {
+                    onAction(CreateNewClientAction.UpdateAddressLine3(it))
+                },
+                city = formState.city,
+                onCityChange = {
+                    onAction(CreateNewClientAction.UpdateCity(it))
+                },
+                postalCode = formState.postalCode,
+                onPostalCodeChange = {
+                    onAction(CreateNewClientAction.UpdatePostalCode(it))
+                },
+                selectedAddressType = formState.selectedAddressType,
+                onAddressTypeChanged = {
+                    onAction(
+                        CreateNewClientAction.UpdateAddressType(
+                            it,
+                            formState.selectedAddressTypeId
+                        )
+                    )
+                },
                 onAddressTypeSelected = { index, value ->
-                    selectedAddressType = value
-                    selectedAddressTypeId = sortedAddressTypeOptions[index].id
+                    onAction(
+                        CreateNewClientAction.UpdateAddressType(
+                            name = value,
+                            id = sortedAddressTypeOptions[index].id
+                        )
+                    )
                 },
                 addressTypeOptions = sortedAddressTypeOptions.map { it.name },
-                selectedStateName = selectedStateName,
-                onStateNameChanged = { selectedStateName = it },
+                selectedStateName = formState.selectedStateName,
+                onStateNameChanged = {
+                    onAction(
+                        CreateNewClientAction.UpdateState(
+                            it,
+                            formState.selectedStateProvinceId
+                        )
+                    )
+                },
                 onStateSelected = { index, value ->
-                    selectedStateName = value
-                    selectedStateProvinceId = sortedStateOptions[index].id
+                    onAction(
+                        CreateNewClientAction.UpdateState(
+                            name = value,
+                            id = sortedStateOptions[index].id
+                        )
+                    )
                 },
                 stateOptions = sortedStateOptions.map { it.name },
-
-                selectedCountryName = selectedCountryName,
-                onCountryNameChanged = { selectedCountryName = it },
+                selectedCountryName = formState.selectedCountryName,
+                onCountryNameChanged = {
+                    onAction(
+                        CreateNewClientAction.UpdateCountry(
+                            it,
+                            formState.selectedCountryId
+                        )
+                    )
+                },
                 onCountrySelected = { index, value ->
-                    selectedCountryName = value
-                    selectedCountryId = sortedCountryOptions[index].id
+                    onAction(
+                        CreateNewClientAction.UpdateCountry(
+                            name = value,
+                            id = sortedCountryOptions[index].id
+                        )
+                    )
                 },
                 countryOptions = sortedCountryOptions.map { it.name },
-
-                isAddressActive = isAddressActive,
-                onAddressActiveChange = { isAddressActive = it },
+                isAddressActive = formState.isAddressActive,
+                onAddressActiveChange = {
+                    onAction(CreateNewClientAction.ToggleAddressActive(it))
+                },
             )
         }
         Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
-        Button(
+        MifosButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = KptTheme.spacing.md)
                 .heightIn(DesignToken.spacing.dp46),
             onClick = {
-                val clientNames = Name(firstName, lastName, middleName)
+                val clientNames = Name(formState.firstName, formState.lastName, formState.middleName)
                 handleSubmitClick(
                     scope,
                     snackbarHostState,
                     clientNames,
                     clientTemplate,
                     createClient,
-                    isActive,
+                    formState.isActive,
                     onHasDatatables,
-                    selectedImagePath,
+                    formState.selectedImagePath,
                     setFileForUpload,
                     staffInOffices,
                     hasDatatables,
-                    selectedOfficeId,
-                    selectedClientTypeId,
-                    selectedClientClassificationId,
-                    genderId,
-                    selectedStaffId,
-                    activationDate,
-                    dateOfBirth,
-                    mobileNumber,
-                    externalId,
+                    formState.selectedOfficeId,
+                    formState.selectedClientTypeId,
+                    formState.selectedClientClassificationId,
+                    formState.genderId,
+                    formState.selectedStaffId,
+                    formState.activationDate,
+                    formState.dateOfBirth,
+                    formState.mobileNumber,
+                    formState.externalId,
                     isAddressEnabled,
-                    isAddressActive,
-                    selectedAddressTypeId,
-                    addressLine1,
-                    addressLine2,
-                    addressLine3,
-                    city,
-                    selectedStateProvinceId,
-                    selectedCountryId,
-                    postalCode,
+                    formState.isAddressActive,
+                    formState.selectedAddressTypeId,
+                    formState.addressLine1,
+                    formState.addressLine2,
+                    formState.addressLine3,
+                    formState.city,
+                    formState.selectedStateProvinceId,
+                    formState.selectedCountryId,
+                    formState.postalCode,
                 )
             },
         ) {
@@ -752,6 +770,7 @@ private fun handleSubmitClick(
             clientNames.middleName,
             clientNames.lastName,
             addressTypeId = addressTypeId,
+            isAddressEnabled = isAddressEnabled,
         )
     ) {
         return
@@ -896,8 +915,11 @@ private fun ClientInputTextFields(
     onMobileNumberChange: (String) -> Unit,
     onExternalIdChange: (String) -> Unit,
 ) {
-    Column {
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+    Column(
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.md),
+    ) {
 
         MifosOutlinedTextField(
             value = firstName,
@@ -906,8 +928,6 @@ private fun ClientInputTextFields(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
-
         MifosOutlinedTextField(
             value = middleName,
             onValueChange = onMiddleNameChange,
@@ -915,16 +935,12 @@ private fun ClientInputTextFields(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
-
         MifosOutlinedTextField(
             value = lastName,
             onValueChange = onLastNameChange,
             label = stringResource(Res.string.feature_client_last_name_mandatory),
             error = null,
         )
-
-        Spacer(modifier = Modifier.height(16.dp))
 
         MifosOutlinedTextField(
             value = mobileNumber,
@@ -934,16 +950,12 @@ private fun ClientInputTextFields(
             keyboardType = KeyboardType.Number,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
-
         MifosOutlinedTextField(
             value = externalId,
             onValueChange = onExternalIdChange,
             label = stringResource(Res.string.feature_client_external_id),
             error = null,
         )
-
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
     }
 }
 
@@ -1172,6 +1184,7 @@ private fun isAllFieldsValid(
     middleName: String,
     lastName: String,
     addressTypeId: Int,
+    isAddressEnabled: Boolean,
 ): Boolean {
     return when {
         !isFirstNameValid(
@@ -1190,7 +1203,7 @@ private fun isAllFieldsValid(
             false
         }
 
-        !isAddressTypeIdValid(addressTypeId, scope, snackbarHostState) -> {
+        isAddressEnabled && !isAddressTypeIdValid(addressTypeId, scope, snackbarHostState) -> {
             false
         }
 
@@ -1305,50 +1318,5 @@ private fun isAddressTypeIdValid(
         }
 
         else -> true
-    }
-}
-
-private class CreateNewClientScreenPreviewProvider :
-    PreviewParameterProvider<CreateNewClientUiState> {
-    override val values: Sequence<CreateNewClientUiState>
-        get() = sequenceOf(
-            CreateNewClientUiState.ShowClientTemplate(
-                ClientsTemplateEntity(
-                    officeOptions = listOf(),
-                    staffOptions = listOf(),
-                    genderOptions = listOf(),
-                    clientTypeOptions = listOf(),
-                    clientClassificationOptions = listOf(),
-                    clientLegalFormOptions = listOf(),
-                    savingProductOptions = listOf(),
-                    dataTables = listOf(),
-                ),
-                isAddressEnabled = false,
-                addressTemplate = AddressTemplate(),
-            ),
-            CreateNewClientUiState.ShowProgressbar,
-            CreateNewClientUiState.ShowClientCreatedSuccessfully(Res.string.feature_client_client_created_successfully),
-            CreateNewClientUiState.OnImageUploadSuccess(Res.string.feature_client_Image_Upload_Successful, 2),
-            CreateNewClientUiState.ShowWaitingForCheckerApproval(Res.string.feature_client_waiting_for_checker_approval),
-        )
-}
-
-@Composable
-@Preview
-private fun PreviewCreateNewClientScreen(
-    @PreviewParameter(CreateNewClientScreenPreviewProvider::class) createNewClientUiState: CreateNewClientUiState,
-) {
-    CreateNewClientScreen(
-        uiState = createNewClientUiState,
-        onRetry = { },
-        officeList = listOf(),
-        staffInOffices = listOf(),
-        loadStaffInOffice = { },
-        navigateBack = { },
-        createClient = { },
-        uploadImage = { _ -> },
-        onImageSelected = {},
-        navigateToClientDetails = { },
-    ) { _, _ ->
     }
 }
