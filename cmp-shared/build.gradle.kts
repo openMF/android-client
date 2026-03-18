@@ -57,3 +57,23 @@ kotlin {
         }
     }
 }
+
+// Compatibility task for CI: some templates expect a task named `generateDummyFramework`.
+// Create a task that depends on linking the ComposeApp framework for all iOS targets.
+val generateDummyFramework by tasks.registering {
+    group = "build"
+    description = "Compatibility task to generate the ComposeApp dummy framework for iOS targets (used by CI)."
+    doLast {
+        println("generateDummyFramework: running compatibility task. If iOS frameworks are configured, they will be built by named tasks.")
+    }
+}
+
+// Wire up dependencies dynamically if the Kotlin/Native targets create linkFramework tasks
+kotlin.targets.filter { it.name.startsWith("ios") }.forEach { target ->
+    val targetNameCapitalized = target.name.replaceFirstChar { it.uppercaseChar() }
+    // The task name pattern for linking a framework is 'link${TargetName}Framework', e.g., linkIosArm64Framework
+    val linkTaskName = "link${targetNameCapitalized}Framework"
+    tasks.findByName(linkTaskName)?.let { linkTask ->
+        generateDummyFramework.configure { dependsOn(linkTask) }
+    }
+}
