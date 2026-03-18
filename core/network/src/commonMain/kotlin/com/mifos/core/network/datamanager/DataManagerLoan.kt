@@ -304,7 +304,13 @@ class DataManagerLoan(
         loanId: Int,
         rejectLoanPayload: RejectLoanPayload,
     ): RejectLoanResponse {
-        return mBaseApiManager.loanService.rejectLoan(loanId, rejectLoanPayload)
+        val response = mBaseApiManager.loanService.rejectLoan(loanId, rejectLoanPayload)
+        if (!response.status.isSuccess()) {
+            val errorMessage = extractErrorMessage(response)
+            throw IllegalStateException(errorMessage)
+        }
+        return Json { ignoreUnknownKeys = true }
+            .decodeFromString<RejectLoanResponse>(response.bodyAsText())
     }
 
     /**

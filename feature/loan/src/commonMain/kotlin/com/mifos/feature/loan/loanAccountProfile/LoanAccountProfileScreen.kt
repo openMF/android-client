@@ -131,7 +131,16 @@ internal fun LoanAccountProfileScreen(
                     LoanAccountProfileActionItem.Charges -> navigateToCharges(loanId)
                     LoanAccountProfileActionItem.Documents -> navigateToDocuments(loanId)
                     LoanAccountProfileActionItem.Notes -> navigateToNotes(loanId)
-                    else -> { }
+                    LoanAccountProfileActionItem.General,
+                    LoanAccountProfileActionItem.Dashboard,
+                    LoanAccountProfileActionItem.AccountDetails,
+                    LoanAccountProfileActionItem.Originators,
+                    LoanAccountProfileActionItem.Collateral,
+                    LoanAccountProfileActionItem.TermVariations,
+                    LoanAccountProfileActionItem.Reschedules,
+                    LoanAccountProfileActionItem.StandingInstructions,
+                    LoanAccountProfileActionItem.RejectLoan,
+                    -> Unit
                 }
             }
             is LoanAccountEvent.NavigateToRejectLoan -> rejectLoan(event.loanId)
