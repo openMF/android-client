@@ -159,7 +159,7 @@ internal fun CreateNewClientScreen(
     navigateBack: () -> Unit,
     navigateToClientDetails: (Int) -> Unit,
     hasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
-    viewModel: CreateNewClientViewModelV2 = koinViewModel(),
+    viewModel: CreateNewClientViewModel = koinViewModel(),
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }

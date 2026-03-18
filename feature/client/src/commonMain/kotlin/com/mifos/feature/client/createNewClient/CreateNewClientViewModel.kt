@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import kotlin.time.Clock
 
-class CreateNewClientViewModelV2(
+class CreateNewClientViewModel(
     private val repository: CreateNewClientRepository,
 ) : BaseViewModel<
         CreateNewClientState,
