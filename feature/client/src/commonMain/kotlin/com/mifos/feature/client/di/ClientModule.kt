@@ -37,7 +37,7 @@ import com.mifos.feature.client.clientTransfer.ClientTransferViewModel
 import com.mifos.feature.client.clientUpcomingCharges.ClientUpcomingChargesViewmodel
 import com.mifos.feature.client.clientUpdateDefaultAccount.UpdateDefaultAccountViewModel
 import com.mifos.feature.client.clientsList.ClientListViewModel
-import com.mifos.feature.client.createNewClient.CreateNewClientViewModelV2
+import com.mifos.feature.client.createNewClient.CreateNewClientViewModel
 import com.mifos.feature.client.createShareAccount.CreateShareAccountViewModel
 import com.mifos.feature.client.documentPreviewScreen.DocumentPreviewScreenViewModel
 import com.mifos.feature.client.fixedDepositAccount.FixedDepositAccountViewModel
@@ -59,7 +59,7 @@ val ClientModule = module {
     viewModelOf(::PinPointClientViewModel)
     viewModelOf(::SurveyListViewModel)
     viewModelOf(::SurveySubmitViewModel)
-    viewModelOf(::CreateNewClientViewModelV2)
+    viewModelOf(::CreateNewClientViewModel)
     viewModelOf(::ClientEditDetailsViewModel)
     viewModelOf(::SyncClientsDialogViewModel)
     viewModelOf(::ClientProfileViewModel)

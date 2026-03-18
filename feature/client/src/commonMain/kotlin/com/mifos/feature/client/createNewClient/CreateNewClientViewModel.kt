@@ -3,16 +3,28 @@ package com.mifos.feature.client.createNewClient
 
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.feature_client_client_created_successfully
+import androidclient.feature.client.generated.resources.feature_client_error_address_type_is_required
+import androidclient.feature.client.generated.resources.feature_client_error_first_name_can_not_be_empty
+import androidclient.feature.client.generated.resources.feature_client_error_first_name_should_contain_only_alphabets
+import androidclient.feature.client.generated.resources.feature_client_error_last_name_can_not_be_empty
+import androidclient.feature.client.generated.resources.feature_client_error_last_name_should_contain_only_alphabets
+import androidclient.feature.client.generated.resources.feature_client_error_middle_name_should_contain_only_alphabets
 import androidclient.feature.client.generated.resources.feature_client_waiting_for_checker_approval
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.MFErrorParser
+import com.mifos.core.common.utils.formatDate
 import com.mifos.core.data.repository.CreateNewClientRepository
+import com.mifos.core.model.objects.clients.Address
 import com.mifos.core.ui.util.BaseViewModel
+import com.mifos.core.ui.util.ImageUtil
 import com.mifos.core.ui.util.multipartRequestBody
+import com.mifos.feature.client.utils.PhoneNumberUtil
 import com.mifos.feature.client.utils.compressImage
 import com.mifos.room.entities.client.AddressTemplate
 import com.mifos.room.entities.client.ClientPayloadEntity
+import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
@@ -194,7 +206,7 @@ class CreateNewClientViewModel(
             }
 
             is CreateNewClientAction.CreateClient -> {
-                createClient(action.clientPayload)
+                submitClient()
             }
         }
     }
@@ -361,11 +373,16 @@ class CreateNewClientViewModel(
                     sendEvent(CreateNewClientEvent.NavigateToClientDetails(id))
                 }
                 else{
-                    val compressedImage = compressImage(selectedImage, id.toString())
+                    val compressedImage= ImageUtil.compressImage(
+                        selectedImage.readBytes(),
+                        150f,
+                        150f
+                    )
+
                     val requestFile = multipartRequestBody(
-                        file = compressedImage.readBytes(),
-                        name = compressedImage.name,
-                        extension = compressedImage.extension,
+                        file = compressedImage,
+                        name = selectedImage.name,
+                        extension = selectedImage.extension,
                     )
 
                     repository.uploadClientImage(id, requestFile)
@@ -377,6 +394,177 @@ class CreateNewClientViewModel(
                 sendEvent(CreateNewClientEvent.ShowSnackBar(err))
             }
         }
+    }
+
+    private fun submitClient() {
+        viewModelScope.launch {
+            val form = state.formState
+            val template = state.clientsTemplate ?: return@launch
+
+            if (!validateForm(form, state.isAddressEnabled)) return@launch
+
+            var payload = createClientPayload(
+                form = form,
+                template = template,
+                staffInOffices = state.staffInOffices,
+                isAddressEnabled = state.isAddressEnabled
+            )
+
+            if (state.clientsTemplate?.dataTables?.isNotEmpty() ?: false) {
+                sendEvent(
+                    CreateNewClientEvent.HasDatatables(
+                        template.dataTables?: emptyList(),
+                        payload
+                    )
+                )
+            } else {
+                payload = payload.copy(
+                    datatables = null,
+                )
+                createClient(payload)
+            }
+        }
+
+    }
+
+    private suspend fun validateForm(
+        form: CreateNewClientState.ClientFormState,
+        isAddressEnabled: Boolean
+    ): Boolean {
+
+        if (form.firstName.isBlank()) {
+            sendEvent(
+                CreateNewClientEvent.ShowSnackBar(
+                    getString(Res.string.feature_client_error_first_name_can_not_be_empty)
+                )
+            )
+            return false
+        }
+
+        if (form.firstName.contains("[^a-zA-Z ]".toRegex())) {
+            sendEvent(
+                CreateNewClientEvent.ShowSnackBar(
+                    getString(Res.string.feature_client_error_first_name_should_contain_only_alphabets)
+                )
+            )
+            return false
+        }
+
+        if (form.lastName.isBlank()) {
+            sendEvent(
+                CreateNewClientEvent.ShowSnackBar(
+                    getString(Res.string.feature_client_error_last_name_can_not_be_empty)
+                )
+            )
+            return false
+        }
+
+        if (form.lastName.contains("[^a-zA-Z ]".toRegex())) {
+            sendEvent(
+                CreateNewClientEvent.ShowSnackBar(
+                    getString(Res.string.feature_client_error_last_name_should_contain_only_alphabets)
+                )
+            )
+            return false
+        }
+
+        if (form.middleName.isNotBlank() &&
+            form.middleName.contains("[^a-zA-Z ]".toRegex())
+        ) {
+            sendEvent(
+                CreateNewClientEvent.ShowSnackBar(
+                    getString(Res.string.feature_client_error_middle_name_should_contain_only_alphabets)
+                )
+            )
+            return false
+        }
+
+        if (isAddressEnabled && form.selectedAddressTypeId <= 0) {
+            sendEvent(
+                CreateNewClientEvent.ShowSnackBar(
+                    getString(Res.string.feature_client_error_address_type_is_required)
+                )
+            )
+            return false
+        }
+
+        return true
+    }
+
+    private fun createClientPayload(
+        form: CreateNewClientState.ClientFormState,
+        template: ClientsTemplateEntity,
+        staffInOffices: List<StaffEntity>,
+        isAddressEnabled: Boolean
+    ): ClientPayloadEntity {
+
+        val formattedActivationDate =
+            if (form.isActive) formatDate(form.activationDate) else null
+
+        val formattedDob = form.dateOfBirth?.let { formatDate(it) }
+
+        val hasAnyDate = formattedActivationDate != null || formattedDob != null
+
+        var payload = ClientPayloadEntity(
+            firstname = form.firstName,
+            lastname = form.lastName,
+            officeId = form.selectedOfficeId,
+            legalFormId = 1,
+
+            active = form.isActive,
+            activationDate = formattedActivationDate,
+            dateOfBirth = formattedDob,
+            dateFormat = if (hasAnyDate) ApiDateFormatter.DATE_FORMAT else null,
+            locale = ApiDateFormatter.LOCALE,
+        )
+
+        if (isAddressEnabled) {
+            payload = payload.copy(
+                address = listOf(
+                    Address(
+                        addressTypeId = form.selectedAddressTypeId.takeIf { it > 0 },
+                        isActive = form.isAddressActive,
+                        addressLine1 = form.addressLine1.ifBlank { null },
+                        addressLine2 = form.addressLine2.ifBlank { null },
+                        addressLine3 = form.addressLine3.ifBlank { null },
+                        city = form.city.ifBlank { null },
+                        stateProvinceId = form.selectedStateProvinceId.takeIf { it > 0 },
+                        countryId = form.selectedCountryId.takeIf { it > 0 },
+                        postalCode = form.postalCode.ifBlank { null },
+                    )
+                )
+            )
+        }
+
+        if (form.middleName.isNotBlank()) {
+            payload = payload.copy(middlename = form.middleName)
+        }
+
+        if (PhoneNumberUtil.isGlobalPhoneNumber(form.mobileNumber)) {
+            payload = payload.copy(mobileNo = form.mobileNumber)
+        }
+
+        if (form.externalId.isNotBlank()) {
+            payload = payload.copy(externalId = form.externalId)
+        }
+
+        if (template.genderOptions?.isNotEmpty() == true && form.genderId > 0) {
+            payload = payload.copy(genderId = form.genderId)
+        }
+
+        if (staffInOffices.isNotEmpty() && form.selectedStaffId != null && form.selectedStaffId > 0) {
+            payload = payload.copy(staffId = form.selectedStaffId)
+        }
+
+        if (template.clientTypeOptions?.isNotEmpty() == true && form.selectedClientTypeId > 0) {
+            payload = payload.copy(clientTypeId = form.selectedClientTypeId)
+        }
+
+        if (template.clientClassificationOptions?.isNotEmpty() == true && form.selectedClientClassificationId > 0) {
+            payload = payload.copy(clientClassificationId = form.selectedClientClassificationId)
+        }
+
+        return payload
     }
 }
 
@@ -442,7 +630,7 @@ data class CreateNewClientState(
 sealed interface CreateNewClientAction {
 
     object Retry : CreateNewClientAction
-    class CreateClient(val clientPayload: ClientPayloadEntity) : CreateNewClientAction
+    object CreateClient : CreateNewClientAction
     data class LoadStaffInOffices(val officeId: Int) : CreateNewClientAction
 
     data class UpdateFirstName(val value: String) : CreateNewClientAction
@@ -486,4 +674,5 @@ sealed interface CreateNewClientEvent {
     object NavigateBack : CreateNewClientEvent
     class NavigateToClientDetails(val clientId: Int) : CreateNewClientEvent
     class ShowSnackBar(val message: String) : CreateNewClientEvent
+    class HasDatatables(val datatables: List<DataTableEntity>, val clientPayload: ClientPayloadEntity) : CreateNewClientEvent
 }

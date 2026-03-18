@@ -10,7 +10,6 @@
 package com.mifos.feature.client.createNewClient
 
 import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_Image_Upload_Successful
 import androidclient.feature.client.generated.resources.feature_client_address
 import androidclient.feature.client.generated.resources.feature_client_address_active
 import androidclient.feature.client.generated.resources.feature_client_address_line_1
@@ -23,7 +22,6 @@ import androidclient.feature.client.generated.resources.feature_client_city
 import androidclient.feature.client.generated.resources.feature_client_client
 import androidclient.feature.client.generated.resources.feature_client_client_active
 import androidclient.feature.client.generated.resources.feature_client_client_classification
-import androidclient.feature.client.generated.resources.feature_client_client_created_successfully
 import androidclient.feature.client.generated.resources.feature_client_country
 import androidclient.feature.client.generated.resources.feature_client_dob
 import androidclient.feature.client.generated.resources.feature_client_error_address_type_is_required
@@ -35,7 +33,6 @@ import androidclient.feature.client.generated.resources.feature_client_error_mid
 import androidclient.feature.client.generated.resources.feature_client_external_id
 import androidclient.feature.client.generated.resources.feature_client_first_name_mandatory
 import androidclient.feature.client.generated.resources.feature_client_gender
-import androidclient.feature.client.generated.resources.feature_client_go_back
 import androidclient.feature.client.generated.resources.feature_client_ic_dp_placeholder
 import androidclient.feature.client.generated.resources.feature_client_last_name_mandatory
 import androidclient.feature.client.generated.resources.feature_client_middle_name
@@ -51,7 +48,6 @@ import androidclient.feature.client.generated.resources.feature_client_state_pro
 import androidclient.feature.client.generated.resources.feature_client_submit
 import androidclient.feature.client.generated.resources.feature_client_take_a_photo
 import androidclient.feature.client.generated.resources.feature_client_upload_photo
-import androidclient.feature.client.generated.resources.feature_client_waiting_for_checker_approval
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -60,7 +56,6 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -94,18 +89,14 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.platform.LocalDensity
@@ -115,8 +106,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import co.touchlab.kermit.Logger
-import coil3.compose.rememberAsyncImagePainter
 import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.common.utils.formatDate
@@ -149,6 +138,9 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.Clock
@@ -170,6 +162,10 @@ internal fun CreateNewClientScreen(
             is CreateNewClientEvent.ShowSnackBar -> {
                 snackbarHostState.showSnackbar(event.message)
             }
+
+            is CreateNewClientEvent.HasDatatables -> {
+                hasDatatables(event.datatables, event.clientPayload)
+            }
         }
     }
 
@@ -177,7 +173,6 @@ internal fun CreateNewClientScreen(
 
     CreateNewClientScreen(
         state = state,
-        hasDatatables = hasDatatables,
         snackbarHostState = snackbarHostState,
         onAction = {
             viewModel.trySendAction(it)
@@ -189,7 +184,6 @@ internal fun CreateNewClientScreen(
 internal fun CreateNewClientScreen(
     state: CreateNewClientState,
     snackbarHostState: SnackbarHostState,
-    hasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
     onAction: (CreateNewClientAction) -> Unit,
 ) {
 
@@ -224,10 +218,6 @@ internal fun CreateNewClientScreen(
                             officeList = state.officeOptions,
                             staffInOffices = state.staffInOffices,
                             clientTemplate = state.clientsTemplate,
-                            createClient = {
-                                onAction(CreateNewClientAction.CreateClient(it))
-                            },
-                            onHasDatatables = hasDatatables,
                             addressTemplate = state.addressTemplate,
                             isAddressEnabled = state.isAddressEnabled,
                             formState = state.formState,
@@ -258,8 +248,6 @@ private fun CreateNewClientContent(
     addressTemplate: AddressTemplate?,
     isAddressEnabled: Boolean,
     formState: CreateNewClientState.ClientFormState,
-    createClient: (ClientPayloadEntity) -> Unit,
-    onHasDatatables: (List<DataTableEntity>, ClientPayloadEntity) -> Unit,
     onAction: (CreateNewClientAction) -> Unit,
 ) {
 
@@ -281,11 +269,6 @@ private fun CreateNewClientContent(
         }
     }
 
-    val hasDatatables by rememberSaveable {
-        mutableStateOf(
-            clientTemplate.dataTables?.isNotEmpty() ?: false,
-        )
-    }
 
     LaunchedEffect(key1 = Unit) {
         if (officeList.isNotEmpty()) {
@@ -684,217 +667,12 @@ private fun CreateNewClientContent(
                 .fillMaxWidth()
                 .heightIn(DesignToken.spacing.dp46),
             onClick = {
-                val clientNames =
-                    Name(formState.firstName, formState.lastName, formState.middleName)
-                handleSubmitClick(
-                    scope,
-                    snackbarHostState,
-                    clientNames,
-                    clientTemplate,
-                    createClient,
-                    formState.isActive,
-                    onHasDatatables,
-                    staffInOffices,
-                    hasDatatables,
-                    formState.selectedOfficeId,
-                    formState.selectedClientTypeId,
-                    formState.selectedClientClassificationId,
-                    formState.genderId,
-                    formState.selectedStaffId,
-                    formState.activationDate,
-                    formState.dateOfBirth,
-                    formState.mobileNumber,
-                    formState.externalId,
-                    isAddressEnabled,
-                    formState.isAddressActive,
-                    formState.selectedAddressTypeId,
-                    formState.addressLine1,
-                    formState.addressLine2,
-                    formState.addressLine3,
-                    formState.city,
-                    formState.selectedStateProvinceId,
-                    formState.selectedCountryId,
-                    formState.postalCode,
-                )
+                onAction(CreateNewClientAction.CreateClient)
             },
         ) {
             Text(text = stringResource(Res.string.feature_client_submit))
         }
     }
-}
-
-data class Name(
-    val firstName: String,
-    val lastName: String,
-    val middleName: String,
-)
-
-private fun handleSubmitClick(
-    scope: CoroutineScope,
-    snackbarHostState: SnackbarHostState,
-    clientNames: Name,
-    clientTemplate: ClientsTemplateEntity,
-    createClient: (clientPayload: ClientPayloadEntity) -> Unit,
-    isActive: Boolean,
-    onHasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
-    staffInOffices: List<StaffEntity>,
-    hasDatatables: Boolean,
-    selectedOfficeId: Int?,
-    selectedClientId: Int,
-    selectedClientClassificationId: Int,
-    genderId: Int,
-    selectedStaffId: Int?,
-    activationDate: Long,
-    dateOfBirth: Long?,
-    mobileNumber: String,
-    externalId: String,
-    isAddressEnabled: Boolean,
-    isAddressActive: Boolean,
-    addressTypeId: Int,
-    addressLine1: String,
-    addressLine2: String,
-    addressLine3: String,
-    city: String,
-    stateProvinceId: Int,
-    countryId: Int,
-    postalCode: String,
-) {
-    if (!isAllFieldsValid(
-            scope,
-            snackbarHostState,
-            clientNames.firstName,
-            clientNames.middleName,
-            clientNames.lastName,
-            addressTypeId = addressTypeId,
-            isAddressEnabled = isAddressEnabled,
-        )
-    ) {
-        return
-    }
-
-    var clientPayload = createClientPayload(
-        clientNames.firstName,
-        clientNames.lastName,
-        selectedOfficeId,
-        staffInOffices,
-        isActive,
-        activationDate,
-        dateOfBirth,
-        clientNames.middleName,
-        mobileNumber,
-        externalId,
-        clientTemplate,
-        genderId,
-        selectedStaffId,
-        selectedClientId,
-        selectedClientClassificationId,
-        isAddressEnabled,
-        isAddressActive,
-        addressTypeId,
-        addressLine1,
-        addressLine2,
-        addressLine3,
-        city,
-        stateProvinceId,
-        countryId,
-        postalCode,
-    )
-
-    if (hasDatatables) {
-        clientTemplate.dataTables?.let {
-            onHasDatatables.invoke(it, clientPayload)
-        }
-    } else {
-        clientPayload = clientPayload.copy(
-            datatables = null,
-        )
-        createClient.invoke(clientPayload)
-    }
-}
-
-private fun createClientPayload(
-    firstName: String,
-    lastName: String,
-    selectedOfficeId: Int?,
-    staffInOffices: List<StaffEntity>,
-    isActive: Boolean,
-    activationDate: Long,
-    dateOfBirth: Long?,
-    middleName: String,
-    mobileNumber: String,
-    externalId: String,
-    clientTemplate: ClientsTemplateEntity,
-    genderId: Int,
-    selectedStaffId: Int?,
-    selectedClientId: Int,
-    selectedClientClassificationId: Int,
-    isAddressEnabled: Boolean,
-    isAddressActive: Boolean,
-    addressTypeId: Int,
-    addressLine1: String,
-    addressLine2: String,
-    addressLine3: String,
-    city: String,
-    stateProvinceId: Int,
-    countryId: Int,
-    postalCode: String,
-): ClientPayloadEntity {
-    val formattedActivationDate = if (isActive) formatDate(activationDate) else null
-    val formattedDateOfBirth = dateOfBirth?.let { formatDate(it) }
-    val hasAnyDate = formattedActivationDate != null || formattedDateOfBirth != null
-
-    var clientPayload = ClientPayloadEntity(
-        // Mandatory fields
-        firstname = firstName,
-        lastname = lastName,
-        officeId = selectedOfficeId,
-        legalFormId = 1,
-
-        // Optional fields with default values
-        active = isActive,
-        activationDate = formattedActivationDate,
-        dateOfBirth = formattedDateOfBirth,
-        dateFormat = if (hasAnyDate) ApiDateFormatter.DATE_FORMAT else null,
-        locale = ApiDateFormatter.LOCALE,
-    )
-    if (isAddressEnabled) {
-        val address = Address(
-            addressTypeId = if (addressTypeId > 0) addressTypeId else null,
-            isActive = isAddressActive,
-            addressLine1 = addressLine1.ifBlank { null },
-            addressLine2 = addressLine2.ifBlank { null },
-            addressLine3 = addressLine3.ifBlank { null },
-            city = city.ifBlank { null },
-            stateProvinceId = if (stateProvinceId > 0) stateProvinceId else null,
-            countryId = if (countryId > 0) countryId else null,
-            postalCode = postalCode.ifBlank { null },
-        )
-        clientPayload = clientPayload.copy(address = listOf(address))
-    }
-
-    // optional fields
-    if (middleName.isNotEmpty()) {
-        clientPayload = clientPayload.copy(middlename = middleName)
-    }
-    if (PhoneNumberUtil.isGlobalPhoneNumber(mobileNumber)) {
-        clientPayload = clientPayload.copy(mobileNo = mobileNumber)
-    }
-    if (externalId.isNotEmpty()) {
-        clientPayload = clientPayload.copy(externalId = externalId)
-    }
-    if (clientTemplate.genderOptions?.isNotEmpty() == true && genderId > 0) {
-        clientPayload = clientPayload.copy(genderId = genderId)
-    }
-    if (staffInOffices.isNotEmpty() && selectedStaffId != null && selectedStaffId > 0) {
-        clientPayload = clientPayload.copy(staffId = selectedStaffId)
-    }
-    if (clientTemplate.clientTypeOptions?.isNotEmpty() == true && selectedClientId > 0) {
-        clientPayload = clientPayload.copy(clientTypeId = selectedClientId)
-    }
-    if (clientTemplate.clientClassificationOptions?.isNotEmpty() == true && selectedClientClassificationId > 0) {
-        clientPayload = clientPayload.copy(clientClassificationId = selectedClientClassificationId)
-    }
-    return clientPayload
 }
 
 @Composable
@@ -1328,5 +1106,30 @@ private fun isAddressTypeIdValid(
         }
 
         else -> true
+    }
+}
+
+private class CreateNewClientScreenPreviewProvider :
+    PreviewParameterProvider<CreateNewClientState.ScreenState> {
+    override val values: Sequence<CreateNewClientState.ScreenState>
+        get() = sequenceOf(
+            CreateNewClientState.ScreenState.Loading,
+            CreateNewClientState.ScreenState.Success,
+            CreateNewClientState.ScreenState.Error("Some thing went wrong"),
+        )
+}
+
+@Composable
+@Preview
+private fun PreviewCreateNewClientScreen(
+    @PreviewParameter(CreateNewClientScreenPreviewProvider::class) createNewClientUiState: CreateNewClientState.ScreenState,
+) {
+    CreateNewClientScreen(
+        state = CreateNewClientState(
+            screenState = createNewClientUiState,
+        ),
+        snackbarHostState = remember { SnackbarHostState() },
+    ){
+
     }
 }
