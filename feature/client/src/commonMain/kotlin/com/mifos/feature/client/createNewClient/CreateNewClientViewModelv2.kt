@@ -320,6 +320,11 @@ class CreateNewClientViewModelV2(
     fun createClient(clientPayload: ClientPayloadEntity) {
         viewModelScope.launch {
             try {
+                mutableStateFlow.update {
+                    it.copy(
+                        showOverLayProgressIndicator = true,
+                    )
+                }
                 val clientId = repository.createClient(clientPayload)
 
                 clientId?.let {
@@ -328,9 +333,21 @@ class CreateNewClientViewModelV2(
                 } ?: run {
                     sendEvent(CreateNewClientEvent.ShowSnackBar(getString(Res.string.feature_client_waiting_for_checker_approval)))
                 }
+
+                mutableStateFlow.update {
+                    it.copy(
+                        showOverLayProgressIndicator = false,
+                    )
+                }
             } catch (e: Exception) {
                 val err = MFErrorParser.errorMessage(e)
                 sendEvent(CreateNewClientEvent.ShowSnackBar(err))
+
+                mutableStateFlow.update {
+                    it.copy(
+                        showOverLayProgressIndicator = false,
+                    )
+                }
             }
         }
     }
@@ -340,7 +357,7 @@ class CreateNewClientViewModelV2(
             try {
                 val selectedImage = state.formState.selectedImage
                 if (selectedImage == null) {
-                    delay(1000)
+                    delay(500)
                     sendEvent(CreateNewClientEvent.NavigateToClientDetails(id))
                 }
                 else{
@@ -370,8 +387,8 @@ data class CreateNewClientState(
     val addressTemplate: AddressTemplate? = null,
     val clientsTemplate: ClientsTemplateEntity? = null,
     val staffInOffices: List<StaffEntity> = emptyList(),
-
-    val formState: ClientFormState = ClientFormState()
+    val formState: ClientFormState = ClientFormState(),
+    val showOverLayProgressIndicator: Boolean = false,
 ) {
     sealed interface ScreenState {
         object Loading : ScreenState

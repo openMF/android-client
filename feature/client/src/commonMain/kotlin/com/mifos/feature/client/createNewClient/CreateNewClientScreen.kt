@@ -87,7 +87,6 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.SelectableDates
-
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -131,6 +130,7 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.clients.Address
 import com.mifos.core.ui.components.MifosCheckBox
 import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.client.utils.PhoneNumberUtil
 import com.mifos.feature.client.utils.rememberPlatformCameraLauncher
@@ -198,40 +198,52 @@ internal fun CreateNewClientScreen(
     MifosScaffold(
         snackbarHostState = snackbarHostState,
     ) {
-        when (state.screenState) {
-            is CreateNewClientState.ScreenState.Error -> {
-                MifosSweetError(
-                    message = state.screenState.message,
-                    onclick = {
-                        onAction(CreateNewClientAction.Retry)
-                    },
-                )
-            }
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
 
-            CreateNewClientState.ScreenState.Loading -> {
-                MifosProgressIndicator()
-            }
-
-            CreateNewClientState.ScreenState.Success -> {
-                if (state.clientsTemplate != null) {
-                    CreateNewClientContent(
-                        scope = scope,
-                        snackbarHostState = snackbarHostState,
-                        officeList = state.officeOptions,
-                        staffInOffices = state.staffInOffices,
-                        clientTemplate = state.clientsTemplate,
-                        createClient = {
-                            onAction(CreateNewClientAction.CreateClient(it))
+            when (state.screenState) {
+                is CreateNewClientState.ScreenState.Error -> {
+                    MifosSweetError(
+                        message = state.screenState.message,
+                        onclick = {
+                            onAction(CreateNewClientAction.Retry)
                         },
-                        onHasDatatables = hasDatatables,
-                        addressTemplate = state.addressTemplate,
-                        isAddressEnabled = state.isAddressEnabled,
-                        formState = state.formState,
-                        onAction = onAction,
                     )
+                }
+
+                CreateNewClientState.ScreenState.Loading -> {
+                    MifosProgressIndicator()
+                }
+
+                CreateNewClientState.ScreenState.Success -> {
+                    if (state.clientsTemplate != null) {
+                        CreateNewClientContent(
+                            scope = scope,
+                            snackbarHostState = snackbarHostState,
+                            officeList = state.officeOptions,
+                            staffInOffices = state.staffInOffices,
+                            clientTemplate = state.clientsTemplate,
+                            createClient = {
+                                onAction(CreateNewClientAction.CreateClient(it))
+                            },
+                            onHasDatatables = hasDatatables,
+                            addressTemplate = state.addressTemplate,
+                            isAddressEnabled = state.isAddressEnabled,
+                            formState = state.formState,
+                            onAction = onAction,
+                        )
+                    }
                 }
             }
         }
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ){
+
+        if (state.showOverLayProgressIndicator) {
+            MifosProgressIndicatorOverlay()
+        }}
     }
 }
 
@@ -953,7 +965,6 @@ private fun ClientImageSection(
             .padding(vertical = KptTheme.spacing.md),
     ) {
 
-        // ✅ Load ImageBitmap asynchronously
         val imageBitmapState = produceState<ImageBitmap?>(
             initialValue = null,
             key1 = selectedImage,
