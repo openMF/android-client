@@ -89,11 +89,9 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -106,9 +104,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.common.utils.formatDate
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -116,12 +112,10 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
-import com.mifos.core.model.objects.clients.Address
 import com.mifos.core.ui.components.MifosCheckBox
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.util.EventsEffect
-import com.mifos.feature.client.utils.PhoneNumberUtil
 import com.mifos.feature.client.utils.rememberPlatformCameraLauncher
 import com.mifos.room.entities.client.AddressTemplate
 import com.mifos.room.entities.client.ClientPayloadEntity
@@ -153,7 +147,6 @@ internal fun CreateNewClientScreen(
     hasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
     viewModel: CreateNewClientViewModel = koinViewModel(),
 ) {
-
     val snackbarHostState = remember { SnackbarHostState() }
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
@@ -186,16 +179,14 @@ internal fun CreateNewClientScreen(
     snackbarHostState: SnackbarHostState,
     onAction: (CreateNewClientAction) -> Unit,
 ) {
-
     val scope = rememberCoroutineScope()
 
     MifosScaffold(
         snackbarHostState = snackbarHostState,
     ) {
         Box(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) {
-
             when (state.screenState) {
                 is CreateNewClientState.ScreenState.Error -> {
                     MifosSweetError(
@@ -228,12 +219,12 @@ internal fun CreateNewClientScreen(
             }
         }
         Box(
-            modifier = Modifier.fillMaxSize()
-        ){
-
-        if (state.showOverLayProgressIndicator) {
-            MifosProgressIndicatorOverlay()
-        }}
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            if (state.showOverLayProgressIndicator) {
+                MifosProgressIndicatorOverlay()
+            }
+        }
     }
 }
 
@@ -250,8 +241,6 @@ private fun CreateNewClientContent(
     formState: CreateNewClientState.ClientFormState,
     onAction: (CreateNewClientAction) -> Unit,
 ) {
-
-
     val scrollState = rememberScrollState()
     val density = LocalDensity.current
 
@@ -268,7 +257,6 @@ private fun CreateNewClientContent(
             onAction(CreateNewClientAction.UpdateSelectedImageFile(it))
         }
     }
-
 
     LaunchedEffect(key1 = Unit) {
         if (officeList.isNotEmpty()) {
@@ -291,7 +279,7 @@ private fun CreateNewClientContent(
         initialSelectedDateMillis = formState.activationDate,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
+                return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
             }
         },
     )
@@ -325,7 +313,6 @@ private fun CreateNewClientContent(
     }
 
     if (formState.showActivateDatepicker || formState.showDateOfBirthDatepicker) {
-
         DatePickerDialog(
             onDismissRequest = {
                 onAction(CreateNewClientAction.ToggleActivationDatePicker(false))
@@ -365,10 +352,11 @@ private fun CreateNewClientContent(
             },
         ) {
             DatePicker(
-                state = if (formState.showActivateDatepicker)
+                state = if (formState.showActivateDatepicker) {
                     activateDatePickerState
-                else
-                    dateOfBirthDatePickerState,
+                } else {
+                    dateOfBirthDatePickerState
+                },
             )
         }
     }
@@ -536,7 +524,6 @@ private fun CreateNewClientContent(
             text = stringResource(Res.string.feature_client_client_active),
         )
 
-
         AnimatedVisibility(
             visible = formState.isActive,
             enter = slideInVertically {
@@ -693,7 +680,6 @@ private fun ClientInputTextFields(
             .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.md),
     ) {
-
         MifosOutlinedTextField(
             value = firstName,
             onValueChange = onFirstNameChange,
@@ -742,7 +728,6 @@ private fun ClientImageSection(
             .fillMaxWidth()
             .padding(vertical = KptTheme.spacing.md),
     ) {
-
         val imageBitmapState = produceState<ImageBitmap?>(
             initialValue = null,
             key1 = selectedImage,
@@ -1129,7 +1114,6 @@ private fun PreviewCreateNewClientScreen(
             screenState = createNewClientUiState,
         ),
         snackbarHostState = remember { SnackbarHostState() },
-    ){
-
+    ) {
     }
 }

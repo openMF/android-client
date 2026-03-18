@@ -1,8 +1,15 @@
+/*
+ * Copyright 2026 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.client.createNewClient
 
-
 import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_client_created_successfully
 import androidclient.feature.client.generated.resources.feature_client_error_address_type_is_required
 import androidclient.feature.client.generated.resources.feature_client_error_first_name_can_not_be_empty
 import androidclient.feature.client.generated.resources.feature_client_error_first_name_should_contain_only_alphabets
@@ -42,10 +49,10 @@ import kotlin.time.Clock
 class CreateNewClientViewModel(
     private val repository: CreateNewClientRepository,
 ) : BaseViewModel<
-        CreateNewClientState,
-        CreateNewClientEvent,
-        CreateNewClientAction,
-        >(
+    CreateNewClientState,
+    CreateNewClientEvent,
+    CreateNewClientAction,
+    >(
     initialState = CreateNewClientState(),
 ) {
 
@@ -79,7 +86,7 @@ class CreateNewClientViewModel(
                 updateForm {
                     copy(
                         gender = action.name,
-                        genderId = action.id
+                        genderId = action.id,
                     )
                 }
             }
@@ -88,7 +95,7 @@ class CreateNewClientViewModel(
                 updateForm {
                     copy(
                         selectedAddressType = action.name,
-                        selectedAddressTypeId = action.id
+                        selectedAddressTypeId = action.id,
                     )
                 }
             }
@@ -113,7 +120,7 @@ class CreateNewClientViewModel(
                 updateForm {
                     copy(
                         selectedStateName = action.name,
-                        selectedStateProvinceId = action.id
+                        selectedStateProvinceId = action.id,
                     )
                 }
             }
@@ -122,7 +129,7 @@ class CreateNewClientViewModel(
                 updateForm {
                     copy(
                         selectedCountryName = action.name,
-                        selectedCountryId = action.id
+                        selectedCountryId = action.id,
                     )
                 }
             }
@@ -139,7 +146,7 @@ class CreateNewClientViewModel(
                 updateForm {
                     copy(
                         clientType = action.name,
-                        selectedClientTypeId = action.id
+                        selectedClientTypeId = action.id,
                     )
                 }
             }
@@ -148,7 +155,7 @@ class CreateNewClientViewModel(
                 updateForm {
                     copy(
                         clientClassification = action.name,
-                        selectedClientClassificationId = action.id
+                        selectedClientClassificationId = action.id,
                     )
                 }
             }
@@ -157,7 +164,7 @@ class CreateNewClientViewModel(
                 updateForm {
                     copy(
                         selectedOffice = action.name,
-                        selectedOfficeId = action.id
+                        selectedOfficeId = action.id,
                     )
                 }
             }
@@ -166,7 +173,7 @@ class CreateNewClientViewModel(
                 updateForm {
                     copy(
                         staff = action.name,
-                        selectedStaffId = action.id
+                        selectedStaffId = action.id,
                     )
                 }
             }
@@ -211,7 +218,6 @@ class CreateNewClientViewModel(
         }
     }
 
-
     private fun loadInitialData() {
         viewModelScope.launch {
             combine(
@@ -248,9 +254,7 @@ class CreateNewClientViewModel(
                     return@collect
                 }
 
-
                 if (clientResult is DataState.Success && officeResult is DataState.Success) {
-
                     loadAddressConfiguration()
 
                     mutableStateFlow.update {
@@ -320,11 +324,11 @@ class CreateNewClientViewModel(
     }
 
     private inline fun updateForm(
-        crossinline update: CreateNewClientState.ClientFormState.() -> CreateNewClientState.ClientFormState
+        crossinline update: CreateNewClientState.ClientFormState.() -> CreateNewClientState.ClientFormState,
     ) {
         mutableStateFlow.update { currentState ->
             currentState.copy(
-                formState = currentState.formState.update()
+                formState = currentState.formState.update(),
             )
         }
     }
@@ -340,7 +344,6 @@ class CreateNewClientViewModel(
                 val clientId = repository.createClient(clientPayload)
 
                 clientId?.let {
-                    sendEvent(CreateNewClientEvent.ShowSnackBar(getString(Res.string.feature_client_client_created_successfully)))
                     uploadImage(it)
                 } ?: run {
                     sendEvent(CreateNewClientEvent.ShowSnackBar(getString(Res.string.feature_client_waiting_for_checker_approval)))
@@ -371,12 +374,11 @@ class CreateNewClientViewModel(
                 if (selectedImage == null) {
                     delay(500)
                     sendEvent(CreateNewClientEvent.NavigateToClientDetails(id))
-                }
-                else{
-                    val compressedImage= ImageUtil.compressImage(
+                } else {
+                    val compressedImage = ImageUtil.compressImage(
                         selectedImage.readBytes(),
                         150f,
-                        150f
+                        150f,
                     )
 
                     val requestFile = multipartRequestBody(
@@ -388,7 +390,6 @@ class CreateNewClientViewModel(
                     repository.uploadClientImage(id, requestFile)
                     sendEvent(CreateNewClientEvent.NavigateToClientDetails(id))
                 }
-
             } catch (e: Exception) {
                 val err = MFErrorParser.errorMessage(e)
                 sendEvent(CreateNewClientEvent.ShowSnackBar(err))
@@ -407,15 +408,15 @@ class CreateNewClientViewModel(
                 form = form,
                 template = template,
                 staffInOffices = state.staffInOffices,
-                isAddressEnabled = state.isAddressEnabled
+                isAddressEnabled = state.isAddressEnabled,
             )
 
             if (state.clientsTemplate?.dataTables?.isNotEmpty() ?: false) {
                 sendEvent(
                     CreateNewClientEvent.HasDatatables(
-                        template.dataTables?: emptyList(),
-                        payload
-                    )
+                        template.dataTables ?: emptyList(),
+                        payload,
+                    ),
                 )
             } else {
                 payload = payload.copy(
@@ -424,19 +425,17 @@ class CreateNewClientViewModel(
                 createClient(payload)
             }
         }
-
     }
 
     private suspend fun validateForm(
         form: CreateNewClientState.ClientFormState,
-        isAddressEnabled: Boolean
+        isAddressEnabled: Boolean,
     ): Boolean {
-
         if (form.firstName.isBlank()) {
             sendEvent(
                 CreateNewClientEvent.ShowSnackBar(
-                    getString(Res.string.feature_client_error_first_name_can_not_be_empty)
-                )
+                    getString(Res.string.feature_client_error_first_name_can_not_be_empty),
+                ),
             )
             return false
         }
@@ -444,8 +443,8 @@ class CreateNewClientViewModel(
         if (form.firstName.contains("[^a-zA-Z ]".toRegex())) {
             sendEvent(
                 CreateNewClientEvent.ShowSnackBar(
-                    getString(Res.string.feature_client_error_first_name_should_contain_only_alphabets)
-                )
+                    getString(Res.string.feature_client_error_first_name_should_contain_only_alphabets),
+                ),
             )
             return false
         }
@@ -453,8 +452,8 @@ class CreateNewClientViewModel(
         if (form.lastName.isBlank()) {
             sendEvent(
                 CreateNewClientEvent.ShowSnackBar(
-                    getString(Res.string.feature_client_error_last_name_can_not_be_empty)
-                )
+                    getString(Res.string.feature_client_error_last_name_can_not_be_empty),
+                ),
             )
             return false
         }
@@ -462,8 +461,8 @@ class CreateNewClientViewModel(
         if (form.lastName.contains("[^a-zA-Z ]".toRegex())) {
             sendEvent(
                 CreateNewClientEvent.ShowSnackBar(
-                    getString(Res.string.feature_client_error_last_name_should_contain_only_alphabets)
-                )
+                    getString(Res.string.feature_client_error_last_name_should_contain_only_alphabets),
+                ),
             )
             return false
         }
@@ -473,8 +472,8 @@ class CreateNewClientViewModel(
         ) {
             sendEvent(
                 CreateNewClientEvent.ShowSnackBar(
-                    getString(Res.string.feature_client_error_middle_name_should_contain_only_alphabets)
-                )
+                    getString(Res.string.feature_client_error_middle_name_should_contain_only_alphabets),
+                ),
             )
             return false
         }
@@ -482,8 +481,8 @@ class CreateNewClientViewModel(
         if (isAddressEnabled && form.selectedAddressTypeId <= 0) {
             sendEvent(
                 CreateNewClientEvent.ShowSnackBar(
-                    getString(Res.string.feature_client_error_address_type_is_required)
-                )
+                    getString(Res.string.feature_client_error_address_type_is_required),
+                ),
             )
             return false
         }
@@ -495,9 +494,8 @@ class CreateNewClientViewModel(
         form: CreateNewClientState.ClientFormState,
         template: ClientsTemplateEntity,
         staffInOffices: List<StaffEntity>,
-        isAddressEnabled: Boolean
+        isAddressEnabled: Boolean,
     ): ClientPayloadEntity {
-
         val formattedActivationDate =
             if (form.isActive) formatDate(form.activationDate) else null
 
@@ -531,8 +529,8 @@ class CreateNewClientViewModel(
                         stateProvinceId = form.selectedStateProvinceId.takeIf { it > 0 },
                         countryId = form.selectedCountryId.takeIf { it > 0 },
                         postalCode = form.postalCode.ifBlank { null },
-                    )
-                )
+                    ),
+                ),
             )
         }
 
