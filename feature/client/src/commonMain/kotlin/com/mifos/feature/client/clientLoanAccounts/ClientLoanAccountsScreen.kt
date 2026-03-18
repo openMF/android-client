@@ -258,7 +258,7 @@ private fun ClientLoanAccountsScreen(
                                                 ClientLoanAccountsAction.ViewAccount(loan.id ?: 0),
                                             )
                                             is Actions.MakeRepayment -> onAction(
-                                                ClientLoanAccountsAction.MakeRepayment,
+                                                ClientLoanAccountsAction.MakeRepayment(loan.id ?: 0),
                                             )
 
                                             else -> null

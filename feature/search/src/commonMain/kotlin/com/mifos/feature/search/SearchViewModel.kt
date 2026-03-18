@@ -9,6 +9,15 @@
  */
 package com.mifos.feature.search
 
+import androidclient.feature.search.generated.resources.Res
+import androidclient.feature.search.generated.resources.feature_search_filter_options_clients_label
+import androidclient.feature.search.generated.resources.feature_search_filter_options_clients_value
+import androidclient.feature.search.generated.resources.feature_search_filter_options_groups_label
+import androidclient.feature.search.generated.resources.feature_search_filter_options_groups_value
+import androidclient.feature.search.generated.resources.feature_search_filter_options_loans_label
+import androidclient.feature.search.generated.resources.feature_search_filter_options_loans_value
+import androidclient.feature.search.generated.resources.feature_search_filter_options_savings_label
+import androidclient.feature.search.generated.resources.feature_search_filter_options_savings_value
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -24,6 +33,8 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
 
 class SearchViewModel(
     private val searchRepository: SearchRepository,
@@ -96,7 +107,7 @@ class SearchViewModel(
             state.value = state.value.copy(showEmptyError = false)
             searchJob = searchRepository.searchResources(
                 query = state.value.searchText,
-                resources = state.value.selectedFilter?.value,
+                resources = state.value.selectedFilter?.let { getString(it.valueRes) },
                 exactMatch = state.value.exactMatch,
             ).onStart {
                 searchResultState.update { SearchResultState.Loading }
@@ -157,16 +168,27 @@ sealed interface SearchScreenEvent {
     data object PerformSearch : SearchScreenEvent
 }
 
-sealed class FilterOption(val label: String, val value: String) {
+sealed class FilterOption(val labelRes: StringResource, val valueRes: StringResource) {
 
-    data object Clients : FilterOption(label = "Clients", value = "clients")
+    data object Clients : FilterOption(
+        labelRes = Res.string.feature_search_filter_options_clients_label,
+        valueRes = Res.string.feature_search_filter_options_clients_value,
+    )
 
-    data object Groups : FilterOption(label = "Groups", value = "groups")
+    data object Groups : FilterOption(
+        labelRes = Res.string.feature_search_filter_options_groups_label,
+        valueRes = Res.string.feature_search_filter_options_groups_value,
+    )
 
-    data object LoanAccounts : FilterOption(label = "Loan Accounts", value = "loans")
+    data object LoanAccounts : FilterOption(
+        labelRes = Res.string.feature_search_filter_options_loans_label,
+        valueRes = Res.string.feature_search_filter_options_loans_value,
+    )
 
-    data object SavingsAccounts :
-        FilterOption(label = "Savings Accounts", value = "savingsaccounts")
+    data object SavingsAccounts : FilterOption(
+        labelRes = Res.string.feature_search_filter_options_savings_label,
+        valueRes = Res.string.feature_search_filter_options_savings_value,
+    )
 
     companion object {
         val values = listOf(Clients, Groups, LoanAccounts, SavingsAccounts)

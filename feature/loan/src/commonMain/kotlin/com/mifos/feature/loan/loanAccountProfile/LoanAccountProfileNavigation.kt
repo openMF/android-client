@@ -24,18 +24,28 @@ data class LoanAccountRoute(
 fun NavGraphBuilder.loanProfileAccountDestination(
     onNavigateBack: () -> Unit,
     navController: NavController,
+    navigateToRepaymentSchedule: (Int) -> Unit,
+    navigateToTransactions: (Int) -> Unit,
+    navigateToCharges: (Int) -> Unit,
+    navigateToDocuments: (Int) -> Unit,
+    navigateToNotes: (Int) -> Unit,
     approveLoan: (Int, LoanWithAssociationsEntity) -> Unit,
     onRepaymentClick: (LoanWithAssociationsEntity) -> Unit,
-    onDetailItemClick: (loanId: Int, LoanAccountProfileActionItem) -> Unit,
+    navigateToTransferScreen: (loanId: Int, accountNumber: String, clientId: Int, currencyCode: String, officeId: Int) -> Unit,
     rejectLoan: (loanId: Int) -> Unit,
 ) {
     composable<LoanAccountRoute> {
         LoanAccountProfileScreen(
             onNavigateBack = onNavigateBack,
             navController = navController,
+            navigateToRepaymentSchedule = navigateToRepaymentSchedule,
+            navigateToTransactions = navigateToTransactions,
+            navigateToCharges = navigateToCharges,
+            navigateToDocuments = navigateToDocuments,
+            navigateToNotes = navigateToNotes,
             approveLoan = approveLoan,
             onRepaymentClick = onRepaymentClick,
-            onDetailItemClick = onDetailItemClick,
+            navigateToTransferScreen = navigateToTransferScreen,
             rejectLoan = rejectLoan,
         )
     }

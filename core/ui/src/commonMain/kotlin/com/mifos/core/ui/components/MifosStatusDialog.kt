@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,6 +33,7 @@ import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosStatusDialog(
@@ -43,6 +45,8 @@ fun MifosStatusDialog(
     failureTitle: String,
     failureMessage: String,
     showButton: Boolean = true,
+    showAsDialog: Boolean = false,
+    onDismissRequest: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val (title, message, icon) = when (status) {
@@ -58,51 +62,74 @@ fun MifosStatusDialog(
         )
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(DesignToken.padding.largeIncreasedExtra),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.large),
-    ) {
-        Image(
-            painter = icon,
-            contentDescription = null,
-            modifier = Modifier.size(DesignToken.sizes.profile),
-        )
+    val content: @Composable () -> Unit = {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.small),
-        ) {
-            Text(
-                text = title,
-                style = MifosTypography.titleLargeEmphasized,
-                textAlign = TextAlign.Center,
-            )
-            Text(
-                text = message,
-                style = MifosTypography.bodyMedium,
-                textAlign = TextAlign.Center,
-            )
-        }
-
-        if (showButton) {
-            MifosButton(
-                onClick = onConfirm,
-                text = {
-                    Text(
-                        text = btnText,
-                        style = MifosTypography.labelLarge,
-                    )
-                },
-                modifier = Modifier
+            modifier = if (showAsDialog) {
+                Modifier
                     .fillMaxWidth()
-                    .padding(top = DesignToken.padding.small),
+                    .wrapContentHeight()
+                    .padding(DesignToken.padding.large)
+            } else {
+                modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(DesignToken.padding.largeIncreasedExtra)
+            },
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.large),
+        ) {
+            Image(
+                painter = icon,
+                contentDescription = null,
+                modifier = Modifier.size(
+                    if (showAsDialog) DesignToken.sizes.iconExtraLarge else DesignToken.sizes.profile,
+                ),
             )
-        } else {
-            Spacer(modifier = Modifier.height(DesignToken.spacing.large))
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.small),
+            ) {
+                Text(
+                    text = title,
+                    style = MifosTypography.titleLargeEmphasized,
+                    textAlign = TextAlign.Center,
+                )
+                Text(
+                    text = message,
+                    style = MifosTypography.bodyMedium,
+                    textAlign = TextAlign.Center,
+                )
+            }
+
+            if (showButton) {
+                MifosButton(
+                    onClick = onConfirm,
+                    text = {
+                        Text(
+                            text = btnText,
+                            style = MifosTypography.labelLarge,
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = DesignToken.padding.small),
+                )
+            } else {
+                Spacer(modifier = Modifier.height(DesignToken.spacing.large))
+            }
         }
+    }
+
+    if (showAsDialog) {
+        AlertDialog(
+            onDismissRequest = onDismissRequest,
+            confirmButton = {},
+            text = content,
+            containerColor = KptTheme.colorScheme.surfaceContainerHigh,
+            modifier = modifier,
+        )
+    } else {
+        content()
     }
 }
 

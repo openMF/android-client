@@ -14,9 +14,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.feature.loan.loanAccountProfile.components.LoanAccountProfileActionItem
+import com.mifos.feature.loan.amountTransfer.amountTransferScreen
+import com.mifos.feature.loan.amountTransfer.navigateToTransferScreen
 import com.mifos.feature.loan.loanAccountProfile.loanProfileAccountDestination
 import com.mifos.feature.loan.loanAccountSummary.loanAccountSummary
 import com.mifos.feature.loan.loanApproval.LoanAccountApprovalScreen
@@ -39,6 +39,7 @@ import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 fun NavGraphBuilder.loanDestination(
     navController: NavController,
     onDocumentsClicked: (Int, String) -> Unit,
+    onNotesClicked: (Int, String?) -> Unit,
     onMoreInfoClicked: (String, Int) -> Unit,
 ) {
     loanAccountSummary(
@@ -92,33 +93,22 @@ fun NavGraphBuilder.loanDestination(
         navController = navController,
         approveLoan = navController::navigateToLoanApprovalScreen,
         onRepaymentClick = navController::navigateToLoanRepaymentScreen,
-        onDetailItemClick = { loanId, actionItem ->
-            when (actionItem) {
-                LoanAccountProfileActionItem.RepaymentSchedule ->
-                    navController.navigateToLoanRepaymentScheduleScreen(loanId)
-                LoanAccountProfileActionItem.Transactions ->
-                    navController.navigateToLoanTransactionScreen(loanId)
-                LoanAccountProfileActionItem.Charges ->
-                    navController.navigateToLoanChargesScreen(loanId)
-                LoanAccountProfileActionItem.Documents ->
-                    onDocumentsClicked(loanId, Constants.ENTITY_TYPE_LOANS)
-                // Items below are rendered in the UI but have no navigation target yet.
-                // Listed explicitly so the compiler flags any new item that is added later.
-                LoanAccountProfileActionItem.General,
-                LoanAccountProfileActionItem.Dashboard,
-                LoanAccountProfileActionItem.AccountDetails,
-                LoanAccountProfileActionItem.Originators,
-                LoanAccountProfileActionItem.Collateral,
-                LoanAccountProfileActionItem.TermVariations,
-                LoanAccountProfileActionItem.Reschedules,
-                LoanAccountProfileActionItem.Notes,
-                LoanAccountProfileActionItem.StandingInstructions,
-                -> Unit
-                // RejectLoan is intercepted in the ViewModel and never reaches here.
-                LoanAccountProfileActionItem.RejectLoan -> Unit
-            }
+        navigateToRepaymentSchedule = navController::navigateToLoanRepaymentScheduleScreen,
+        navigateToTransactions = navController::navigateToLoanTransactionScreen,
+        navigateToCharges = navController::navigateToLoanChargesScreen,
+        navigateToNotes = { loanId ->
+            onNotesClicked(loanId, Constants.ENTITY_TYPE_LOANS)
         },
+        navigateToDocuments = { loanId ->
+            onDocumentsClicked(loanId, Constants.ENTITY_TYPE_LOANS)
+        },
+        navigateToTransferScreen = navController::navigateToTransferScreen,
         rejectLoan = navController::navigateToLoanRejectScreen,
+    )
+
+    amountTransferScreen(
+        navController = navController,
+        onBackPressed = navController::popBackStack,
     )
 }
 

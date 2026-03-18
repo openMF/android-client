@@ -86,7 +86,12 @@ internal fun LoanAccountProfileScreen(
     onNavigateBack: () -> Unit,
     approveLoan: (Int, LoanWithAssociationsEntity) -> Unit,
     onRepaymentClick: (LoanWithAssociationsEntity) -> Unit,
-    onDetailItemClick: (loanId: Int, LoanAccountProfileActionItem) -> Unit,
+    navigateToRepaymentSchedule: (Int) -> Unit,
+    navigateToTransactions: (Int) -> Unit,
+    navigateToCharges: (Int) -> Unit,
+    navigateToDocuments: (Int) -> Unit,
+    navigateToNotes: (Int) -> Unit,
+    navigateToTransferScreen: (loanId: Int, accountNumber: String, clientId: Int, currencyCode: String, officeId: Int) -> Unit,
     rejectLoan: (loanId: Int) -> Unit,
     navController: NavController,
     modifier: Modifier = Modifier,
@@ -106,11 +111,29 @@ internal fun LoanAccountProfileScreen(
                     LoanProfileAction.Approve -> approveLoan(account.id, account)
                     LoanProfileAction.Repayment -> onRepaymentClick(account)
                     LoanProfileAction.Transfer -> {
-                        // TODO: Ticket in progress (MIFOSAC-658)
+                        val account = state.loanAccount ?: return@EventsEffect
+                        navigateToTransferScreen(
+                            account.id,
+                            account.accountNo,
+                            account.clientId,
+                            account.currency.code ?: "N/A",
+                            account.clientOfficeId,
+                        )
                     }
                 }
             }
-            is LoanAccountEvent.NavigateToDetail -> onDetailItemClick(event.loanId, event.detailItem)
+            is LoanAccountEvent.NavigateToDetail -> {
+                val loanId = event.loanId
+
+                when (event.detailItem) {
+                    LoanAccountProfileActionItem.RepaymentSchedule -> navigateToRepaymentSchedule(loanId)
+                    LoanAccountProfileActionItem.Transactions -> navigateToTransactions(loanId)
+                    LoanAccountProfileActionItem.Charges -> navigateToCharges(loanId)
+                    LoanAccountProfileActionItem.Documents -> navigateToDocuments(loanId)
+                    LoanAccountProfileActionItem.Notes -> navigateToNotes(loanId)
+                    else -> { }
+                }
+            }
             is LoanAccountEvent.NavigateToRejectLoan -> rejectLoan(event.loanId)
             LoanAccountEvent.NavigateToAccountDetails -> {}
         }

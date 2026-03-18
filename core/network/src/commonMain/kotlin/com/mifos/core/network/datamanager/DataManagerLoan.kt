@@ -15,6 +15,9 @@ import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.model.objects.account.loan.RejectLoanPayload
 import com.mifos.core.model.objects.account.loan.RejectLoanResponse
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
+import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRequest
+import com.mifos.core.model.objects.account.loan.transfer.AccountTransferResponse
+import com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplate
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.LoansPayload
@@ -302,6 +305,60 @@ class DataManagerLoan(
         rejectLoanPayload: RejectLoanPayload,
     ): RejectLoanResponse {
         return mBaseApiManager.loanService.rejectLoan(loanId, rejectLoanPayload)
+    }
+
+    /**
+     * Account Transfer Methods
+     */
+
+    /**
+     * Retrieve account transfer template for populating UI dropdowns
+     *
+     * @param fromOfficeId Source office ID
+     * @param fromClientId Source client ID
+     * @param fromAccountType Source account type ID
+     * @param fromAccountId Source account ID
+     * @param toOfficeId Destination office ID (optional)
+     * @param toClientId Destination client ID (optional)
+     * @param toAccountType Destination account type ID (optional)
+     * @return AccountTransferTemplate with available options
+     */
+    fun getAccountTransferTemplate(
+        fromClientId: Int,
+        fromAccountType: Int,
+        fromAccountId: Int,
+        toOfficeId: Int? = null,
+        fromOfficeId: Int? = null,
+        toClientId: Int? = null,
+        toAccountType: Int? = null,
+    ): Flow<AccountTransferTemplate> {
+        return mBaseApiManager.loanService.getAccountTransferTemplate(
+            fromOfficeId = fromOfficeId,
+            fromClientId = fromClientId,
+            fromAccountType = fromAccountType,
+            fromAccountId = fromAccountId,
+            toOfficeId = toOfficeId,
+            toClientId = toClientId,
+            toAccountType = toAccountType,
+        )
+    }
+
+    /**
+     * Submit an account transfer
+     *
+     * @param request Account transfer request payload
+     * @return AccountTransferResponse with transfer details
+     * @throws IllegalStateException if the request fails with the error message
+     */
+    suspend fun submitAccountTransfer(
+        request: AccountTransferRequest,
+    ): AccountTransferResponse {
+        val response = mBaseApiManager.loanService.submitAccountTransfer(request)
+        if (!response.status.isSuccess()) {
+            val errorMessage = extractErrorMessage(response)
+            throw IllegalStateException(errorMessage)
+        }
+        return Json.decodeFromString<AccountTransferResponse>(response.bodyAsText())
     }
 
     /**
