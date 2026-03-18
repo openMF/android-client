@@ -9,12 +9,17 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.ui.util.BaseViewModel
+import com.mifos.core.ui.util.multipartRequestBody
+import com.mifos.feature.client.utils.compressImage
 import com.mifos.room.entities.client.AddressTemplate
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
 import com.mifos.room.entities.organisation.StaffEntity
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.extension
+import io.github.vinceglb.filekit.name
+import io.github.vinceglb.filekit.readBytes
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
@@ -38,10 +43,6 @@ class CreateNewClientViewModelV2(
 
     override fun handleAction(action: CreateNewClientAction) {
         when (action) {
-
-            // -------------------------
-            // BASIC DETAILS
-            // -------------------------
             is CreateNewClientAction.UpdateFirstName -> {
                 updateForm { copy(firstName = action.value) }
             }
@@ -62,9 +63,6 @@ class CreateNewClientViewModelV2(
                 updateForm { copy(externalId = action.value) }
             }
 
-            // -------------------------
-            // GENDER
-            // -------------------------
             is CreateNewClientAction.UpdateGender -> {
                 updateForm {
                     copy(
@@ -74,9 +72,6 @@ class CreateNewClientViewModelV2(
                 }
             }
 
-            // -------------------------
-            // ADDRESS TYPE
-            // -------------------------
             is CreateNewClientAction.UpdateAddressType -> {
                 updateForm {
                     copy(
@@ -86,9 +81,6 @@ class CreateNewClientViewModelV2(
                 }
             }
 
-            // -------------------------
-            // ADDRESS DETAILS
-            // -------------------------
             is CreateNewClientAction.UpdateAddressLine1 -> {
                 updateForm { copy(addressLine1 = action.value) }
             }
@@ -131,9 +123,6 @@ class CreateNewClientViewModelV2(
                 updateForm { copy(isAddressActive = action.isActive) }
             }
 
-            // -------------------------
-            // CLIENT DETAILS
-            // -------------------------
             is CreateNewClientAction.UpdateClientType -> {
                 updateForm {
                     copy(
@@ -152,9 +141,6 @@ class CreateNewClientViewModelV2(
                 }
             }
 
-            // -------------------------
-            // OFFICE & STAFF
-            // -------------------------
             is CreateNewClientAction.UpdateOffice -> {
                 updateForm {
                     copy(
@@ -173,16 +159,10 @@ class CreateNewClientViewModelV2(
                 }
             }
 
-            // -------------------------
-            // STATUS
-            // -------------------------
             is CreateNewClientAction.ToggleClientActive -> {
                 updateForm { copy(isActive = action.isActive) }
             }
 
-            // -------------------------
-            // DATES
-            // -------------------------
             is CreateNewClientAction.UpdateDateOfBirth -> {
                 updateForm { copy(dateOfBirth = action.value) }
             }
@@ -191,9 +171,6 @@ class CreateNewClientViewModelV2(
                 updateForm { copy(activationDate = action.value) }
             }
 
-            // -------------------------
-            // DATE PICKERS
-            // -------------------------
             is CreateNewClientAction.ToggleDateOfBirthPicker -> {
                 updateForm { copy(showDateOfBirthDatepicker = action.show) }
             }
@@ -202,24 +179,14 @@ class CreateNewClientViewModelV2(
                 updateForm { copy(showActivateDatepicker = action.show) }
             }
 
-            // -------------------------
-            // IMAGE
-            // -------------------------
             is CreateNewClientAction.ToggleImagePickerDialog -> {
                 updateForm { copy(showImagePickerDialog = action.show) }
-            }
-
-            is CreateNewClientAction.UpdateSelectedImagePath -> {
-                updateForm { copy(selectedImagePath = action.path) }
             }
 
             is CreateNewClientAction.UpdateSelectedImageFile -> {
                 updateForm { copy(selectedImage = action.file) }
             }
 
-            // -------------------------
-            // EXISTING
-            // -------------------------
             is CreateNewClientAction.Retry -> loadInitialData()
 
             is CreateNewClientAction.LoadStaffInOffices -> {
@@ -357,11 +324,37 @@ class CreateNewClientViewModelV2(
 
                 clientId?.let {
                     sendEvent(CreateNewClientEvent.ShowSnackBar(getString(Res.string.feature_client_client_created_successfully)))
-                    delay(1000)
-                    sendEvent(CreateNewClientEvent.NavigateToClientDetails(it))
+                    uploadImage(it)
                 } ?: run {
                     sendEvent(CreateNewClientEvent.ShowSnackBar(getString(Res.string.feature_client_waiting_for_checker_approval)))
                 }
+            } catch (e: Exception) {
+                val err = MFErrorParser.errorMessage(e)
+                sendEvent(CreateNewClientEvent.ShowSnackBar(err))
+            }
+        }
+    }
+
+    fun uploadImage(id: Int) {
+        viewModelScope.launch {
+            try {
+                val selectedImage = state.formState.selectedImage
+                if (selectedImage == null) {
+                    delay(1000)
+                    sendEvent(CreateNewClientEvent.NavigateToClientDetails(id))
+                }
+                else{
+                    val compressedImage = compressImage(selectedImage, id.toString())
+                    val requestFile = multipartRequestBody(
+                        file = compressedImage.readBytes(),
+                        name = compressedImage.name,
+                        extension = compressedImage.extension,
+                    )
+
+                    repository.uploadClientImage(id, requestFile)
+                    sendEvent(CreateNewClientEvent.NavigateToClientDetails(id))
+                }
+
             } catch (e: Exception) {
                 val err = MFErrorParser.errorMessage(e)
                 sendEvent(CreateNewClientEvent.ShowSnackBar(err))
@@ -426,41 +419,25 @@ data class CreateNewClientState(
         val showActivateDatepicker: Boolean = false,
         val showImagePickerDialog: Boolean = false,
         val selectedImage: PlatformFile? = null,
-        val selectedImagePath: String? = null,
     )
 }
 
 sealed interface CreateNewClientAction {
 
-    // -------------------------
-    // GENERAL
-    // -------------------------
     object Retry : CreateNewClientAction
     class CreateClient(val clientPayload: ClientPayloadEntity) : CreateNewClientAction
     data class LoadStaffInOffices(val officeId: Int) : CreateNewClientAction
 
-    // -------------------------
-    // BASIC DETAILS
-    // -------------------------
     data class UpdateFirstName(val value: String) : CreateNewClientAction
     data class UpdateMiddleName(val value: String) : CreateNewClientAction
     data class UpdateLastName(val value: String) : CreateNewClientAction
     data class UpdateMobileNumber(val value: String) : CreateNewClientAction
     data class UpdateExternalId(val value: String) : CreateNewClientAction
 
-    // -------------------------
-    // GENDER
-    // -------------------------
     data class UpdateGender(val name: String, val id: Int) : CreateNewClientAction
 
-    // -------------------------
-    // ADDRESS TYPE
-    // -------------------------
     data class UpdateAddressType(val name: String, val id: Int) : CreateNewClientAction
 
-    // -------------------------
-    // ADDRESS DETAILS
-    // -------------------------
     data class UpdateAddressLine1(val value: String) : CreateNewClientAction
     data class UpdateAddressLine2(val value: String) : CreateNewClientAction
     data class UpdateAddressLine3(val value: String) : CreateNewClientAction
@@ -470,40 +447,21 @@ sealed interface CreateNewClientAction {
     data class UpdatePostalCode(val value: String) : CreateNewClientAction
     data class ToggleAddressActive(val isActive: Boolean) : CreateNewClientAction
 
-    // -------------------------
-    // CLIENT DETAILS
-    // -------------------------
     data class UpdateClientType(val name: String, val id: Int) : CreateNewClientAction
     data class UpdateClientClassification(val name: String, val id: Int) : CreateNewClientAction
 
-    // -------------------------
-    // OFFICE & STAFF
-    // -------------------------
     data class UpdateOffice(val name: String, val id: Int?) : CreateNewClientAction
     data class UpdateStaff(val name: String, val id: Int?) : CreateNewClientAction
 
-    // -------------------------
-    // STATUS
-    // -------------------------
     data class ToggleClientActive(val isActive: Boolean) : CreateNewClientAction
 
-    // -------------------------
-    // DATES
-    // -------------------------
     data class UpdateDateOfBirth(val value: Long?) : CreateNewClientAction
     data class UpdateActivationDate(val value: Long) : CreateNewClientAction
 
-    // -------------------------
-    // DATE PICKERS
-    // -------------------------
     data class ToggleDateOfBirthPicker(val show: Boolean) : CreateNewClientAction
     data class ToggleActivationDatePicker(val show: Boolean) : CreateNewClientAction
 
-    // -------------------------
-    // IMAGE
-    // -------------------------
     data class ToggleImagePickerDialog(val show: Boolean) : CreateNewClientAction
-    data class UpdateSelectedImagePath(val path: String?) : CreateNewClientAction
     data class UpdateSelectedImageFile(val file: PlatformFile?) : CreateNewClientAction
 }
 

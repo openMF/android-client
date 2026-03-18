@@ -87,7 +87,7 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.SelectableDates
-import androidx.compose.material3.SnackbarDuration
+
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -98,6 +98,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -106,6 +107,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -126,11 +129,9 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.clients.Address
-import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosCheckBox
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect
-import com.mifos.feature.client.charges.ChargesEvent
 import com.mifos.feature.client.utils.PhoneNumberUtil
 import com.mifos.feature.client.utils.rememberPlatformCameraLauncher
 import com.mifos.room.entities.client.AddressTemplate
@@ -142,14 +143,12 @@ import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
+import io.github.vinceglb.filekit.dialogs.compose.util.toImageBitmap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
-import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.Clock
@@ -221,19 +220,10 @@ internal fun CreateNewClientScreen(
                         officeList = state.officeOptions,
                         staffInOffices = state.staffInOffices,
                         clientTemplate = state.clientsTemplate,
-                        loadStaffInOffice = {
-                            onAction(CreateNewClientAction.LoadStaffInOffices(it))
-                        },
                         createClient = {
                             onAction(CreateNewClientAction.CreateClient(it))
                         },
                         onHasDatatables = hasDatatables,
-                        setFileForUpload = { filePath ->
-
-                        },
-                        onImageSelected = {
-                            onAction(CreateNewClientAction.UpdateSelectedImageFile(it))
-                        },
                         addressTemplate = state.addressTemplate,
                         isAddressEnabled = state.isAddressEnabled,
                         formState = state.formState,
@@ -256,12 +246,9 @@ private fun CreateNewClientContent(
     addressTemplate: AddressTemplate?,
     isAddressEnabled: Boolean,
     formState: CreateNewClientState.ClientFormState,
-    loadStaffInOffice: (Int) -> Unit,
-    onImageSelected: (PlatformFile?) -> Unit,
     createClient: (ClientPayloadEntity) -> Unit,
     onHasDatatables: (List<DataTableEntity>, ClientPayloadEntity) -> Unit,
-    setFileForUpload: (filePath: String?) -> Unit,
-    onAction: (CreateNewClientAction) -> Unit
+    onAction: (CreateNewClientAction) -> Unit,
 ) {
 
 
@@ -272,13 +259,13 @@ private fun CreateNewClientContent(
         type = FileKitType.Image,
     ) { file ->
         file?.let {
-            onImageSelected(file)
+            onAction(CreateNewClientAction.UpdateSelectedImageFile(it))
         }
     }
 
     val cameraLauncher = rememberPlatformCameraLauncher { file ->
         file?.let {
-            onImageSelected(file)
+            onAction(CreateNewClientAction.UpdateSelectedImageFile(it))
         }
     }
 
@@ -290,7 +277,7 @@ private fun CreateNewClientContent(
 
     LaunchedEffect(key1 = Unit) {
         if (officeList.isNotEmpty()) {
-            officeList[0].id.let { loadStaffInOffice.invoke(it) }
+            officeList[0].id.let { onAction(CreateNewClientAction.LoadStaffInOffices(it)) }
         }
     }
 
@@ -301,7 +288,7 @@ private fun CreateNewClientContent(
                     Res.string.feature_client_no_staff_associated_with_office,
                 ),
             )
-            onAction(CreateNewClientAction.UpdateStaff("",0))
+            onAction(CreateNewClientAction.UpdateStaff("", 0))
         }
     }
 
@@ -386,7 +373,7 @@ private fun CreateNewClientContent(
                 state = if (formState.showActivateDatepicker)
                     activateDatePickerState
                 else
-                    dateOfBirthDatePickerState
+                    dateOfBirthDatePickerState,
             )
         }
     }
@@ -398,7 +385,7 @@ private fun CreateNewClientContent(
             .verticalScroll(state = scrollState),
     ) {
         ClientImageSection(
-            selectedImagePath = formState.selectedImagePath
+            selectedImage = formState.selectedImage,
         ) {
             onAction(CreateNewClientAction.ToggleImagePickerDialog(true))
         }
@@ -428,17 +415,17 @@ private fun CreateNewClientContent(
         )
 
         Spacer(modifier = Modifier.height(KptTheme.spacing.md))
-        
+
         clientTemplate.genderOptions?.let { list ->
             MifosTextFieldDropdown(
                 value = formState.gender,
-                onValueChanged = {  },
+                onValueChanged = { },
                 onOptionSelected = { index, value ->
                     onAction(
                         CreateNewClientAction.UpdateGender(
                             name = value,
-                            id = list[index].id
-                        )
+                            id = list[index].id,
+                        ),
                     )
                 },
                 label = stringResource(Res.string.feature_client_gender),
@@ -446,7 +433,7 @@ private fun CreateNewClientContent(
                 readOnly = true,
             )
         }
-        
+
         MifosDatePickerTextField(
             value = formState.dateOfBirth
                 ?.let { DateHelper.getDateAsStringFromLong(it) } ?: "",
@@ -454,14 +441,14 @@ private fun CreateNewClientContent(
             openDatePicker = {
                 onAction(
                     CreateNewClientAction.ToggleDateOfBirthPicker(
-                        !formState.showDateOfBirthDatepicker
-                    )
+                        !formState.showDateOfBirthDatepicker,
+                    ),
                 )
             },
         )
 
         Spacer(modifier = Modifier.height(KptTheme.spacing.md))
-        
+
         clientTemplate.clientTypeOptions?.let { list ->
             val sorted = list.sortedBy { it.name }
 
@@ -472,8 +459,8 @@ private fun CreateNewClientContent(
                     onAction(
                         CreateNewClientAction.UpdateClientType(
                             name = value,
-                            id = sorted[index].id
-                        )
+                            id = sorted[index].id,
+                        ),
                     )
                 },
                 label = stringResource(Res.string.feature_client_client),
@@ -481,7 +468,7 @@ private fun CreateNewClientContent(
                 readOnly = true,
             )
         }
-        
+
         clientTemplate.clientClassificationOptions?.let { list ->
             val sorted = list.sortedBy { it.name }
 
@@ -492,8 +479,8 @@ private fun CreateNewClientContent(
                     onAction(
                         CreateNewClientAction.UpdateClientClassification(
                             name = value,
-                            id = sorted[index].id
-                        )
+                            id = sorted[index].id,
+                        ),
                     )
                 },
                 label = stringResource(Res.string.feature_client_client_classification),
@@ -501,7 +488,7 @@ private fun CreateNewClientContent(
                 readOnly = true,
             )
         }
-        
+
         val sortedOffices = officeList.sortedBy { it.name }
 
         MifosTextFieldDropdown(
@@ -513,10 +500,10 @@ private fun CreateNewClientContent(
                 onAction(
                     CreateNewClientAction.UpdateOffice(
                         name = value,
-                        id = officeId
-                    )
+                        id = officeId,
+                    ),
                 )
-                
+
                 onAction(CreateNewClientAction.LoadStaffInOffices(officeId))
             },
             label = stringResource(Res.string.feature_client_office_name_mandatory),
@@ -536,8 +523,8 @@ private fun CreateNewClientContent(
                     onAction(
                         CreateNewClientAction.UpdateStaff(
                             name = value,
-                            id = sortedStaff[index].id
-                        )
+                            id = sortedStaff[index].id,
+                        ),
                     )
                 },
                 label = stringResource(Res.string.feature_client_staff),
@@ -575,8 +562,8 @@ private fun CreateNewClientContent(
                     openDatePicker = {
                         onAction(
                             CreateNewClientAction.ToggleActivationDatePicker(
-                                !formState.showActivateDatepicker
-                            )
+                                !formState.showActivateDatepicker,
+                            ),
                         )
                     },
                 )
@@ -623,16 +610,16 @@ private fun CreateNewClientContent(
                     onAction(
                         CreateNewClientAction.UpdateAddressType(
                             it,
-                            formState.selectedAddressTypeId
-                        )
+                            formState.selectedAddressTypeId,
+                        ),
                     )
                 },
                 onAddressTypeSelected = { index, value ->
                     onAction(
                         CreateNewClientAction.UpdateAddressType(
                             name = value,
-                            id = sortedAddressTypeOptions[index].id
-                        )
+                            id = sortedAddressTypeOptions[index].id,
+                        ),
                     )
                 },
                 addressTypeOptions = sortedAddressTypeOptions.map { it.name },
@@ -641,16 +628,16 @@ private fun CreateNewClientContent(
                     onAction(
                         CreateNewClientAction.UpdateState(
                             it,
-                            formState.selectedStateProvinceId
-                        )
+                            formState.selectedStateProvinceId,
+                        ),
                     )
                 },
                 onStateSelected = { index, value ->
                     onAction(
                         CreateNewClientAction.UpdateState(
                             name = value,
-                            id = sortedStateOptions[index].id
-                        )
+                            id = sortedStateOptions[index].id,
+                        ),
                     )
                 },
                 stateOptions = sortedStateOptions.map { it.name },
@@ -659,16 +646,16 @@ private fun CreateNewClientContent(
                     onAction(
                         CreateNewClientAction.UpdateCountry(
                             it,
-                            formState.selectedCountryId
-                        )
+                            formState.selectedCountryId,
+                        ),
                     )
                 },
                 onCountrySelected = { index, value ->
                     onAction(
                         CreateNewClientAction.UpdateCountry(
                             name = value,
-                            id = sortedCountryOptions[index].id
-                        )
+                            id = sortedCountryOptions[index].id,
+                        ),
                     )
                 },
                 countryOptions = sortedCountryOptions.map { it.name },
@@ -685,7 +672,8 @@ private fun CreateNewClientContent(
                 .fillMaxWidth()
                 .heightIn(DesignToken.spacing.dp46),
             onClick = {
-                val clientNames = Name(formState.firstName, formState.lastName, formState.middleName)
+                val clientNames =
+                    Name(formState.firstName, formState.lastName, formState.middleName)
                 handleSubmitClick(
                     scope,
                     snackbarHostState,
@@ -694,8 +682,6 @@ private fun CreateNewClientContent(
                     createClient,
                     formState.isActive,
                     onHasDatatables,
-                    formState.selectedImagePath,
-                    setFileForUpload,
                     staffInOffices,
                     hasDatatables,
                     formState.selectedOfficeId,
@@ -739,8 +725,6 @@ private fun handleSubmitClick(
     createClient: (clientPayload: ClientPayloadEntity) -> Unit,
     isActive: Boolean,
     onHasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
-    selectedImagePath: String?,
-    setFileForUpload: (filePath: String?) -> Unit,
     staffInOffices: List<StaffEntity>,
     hasDatatables: Boolean,
     selectedOfficeId: Int?,
@@ -809,7 +793,6 @@ private fun handleSubmitClick(
             onHasDatatables.invoke(it, clientPayload)
         }
     } else {
-        setFileForUpload.invoke(selectedImagePath)
         clientPayload = clientPayload.copy(
             datatables = null,
         )
@@ -960,18 +943,34 @@ private fun ClientInputTextFields(
 }
 
 @Composable
-private fun ClientImageSection(selectedImagePath: String?, onImageClick: () -> Unit) {
+private fun ClientImageSection(
+    selectedImage: PlatformFile?,
+    onImageClick: () -> Unit,
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = KptTheme.spacing.md),
     ) {
+
+        // ✅ Load ImageBitmap asynchronously
+        val imageBitmapState = produceState<ImageBitmap?>(
+            initialValue = null,
+            key1 = selectedImage,
+        ) {
+            value = selectedImage?.toImageBitmap()
+        }
+
+        val painter = when {
+            imageBitmapState.value != null -> {
+                BitmapPainter(imageBitmapState.value!!)
+            }
+
+            else -> painterResource(Res.drawable.feature_client_ic_dp_placeholder)
+        }
+
         Image(
-            painter = if (selectedImagePath != null) {
-                rememberAsyncImagePainter(selectedImagePath)
-            } else {
-                painterResource(Res.drawable.feature_client_ic_dp_placeholder)
-            },
+            painter = painter,
             contentDescription = null,
             modifier = Modifier
                 .align(Alignment.Center)
