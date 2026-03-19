@@ -167,9 +167,7 @@ internal fun CreateNewClientScreen(
     CreateNewClientScreen(
         state = state,
         snackbarHostState = snackbarHostState,
-        onAction = {
-            viewModel.trySendAction(it)
-        },
+        onAction = remember { viewModel::trySendAction },
     )
 }
 
