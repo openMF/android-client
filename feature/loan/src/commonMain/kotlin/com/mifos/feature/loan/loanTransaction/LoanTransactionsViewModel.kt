@@ -17,7 +17,6 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.LoanTransactionsRepository
 import com.mifos.core.ui.util.BaseViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -25,14 +24,10 @@ class LoanTransactionsViewModel(
     private val repository: LoanTransactionsRepository,
     savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<LoanTransactionsState, LoanTransactionsEvent, LoanTransactionsAction>(
-    initialState = LoanTransactionsState(dialogState = LoanTransactionsState.DialogState.Loading),
+    initialState = LoanTransactionsState(uiState = LoanTransactionsState.UiState.Loading),
 ) {
 
     val loanId = savedStateHandle.toRoute<LoanTransactionScreenRoute>().loanAccountNumber
-
-    private val loanTransactionsUiStateFlow =
-        MutableStateFlow<LoanTransactionsUiState>(LoanTransactionsUiState.ShowProgressBar)
-    val loanTransactionsUiState = loanTransactionsUiStateFlow
 
     init {
         viewModelScope.launch {
@@ -52,35 +47,149 @@ class LoanTransactionsViewModel(
                 mutableStateFlow.update { it.copy(showFilterSheet = false) }
             }
             is LoanTransactionsAction.SetHideReversed -> {
-                mutableStateFlow.update { it.copy(hideReversed = action.value) }
-                applyFilters()
+                mutableStateFlow.update { currentState ->
+                    val newHideReversed = action.value
+                    val currentUiState = currentState.uiState
+                    
+                    if (currentUiState is LoanTransactionsState.UiState.Success) {
+                        val unfilteredData = currentUiState.unfilteredTransactionsTableData?.transactions ?: emptyList()
+                        
+                        val filteredTransactions = unfilteredData.filter { row ->
+                            val hideReversedCondition = !newHideReversed || !row.manuallyReversed
+                            val hideAccrualsCondition = !currentState.hideAccruals || row.transactionType != TransactionType.ACCRUAL
+                            hideReversedCondition && hideAccrualsCondition
+                        }
+                        
+                        currentState.copy(
+                            hideReversed = newHideReversed,
+                            uiState = currentUiState.copy(
+                                transactionsTableData = LoanTransactionsTableData(
+                                    transactions = filteredTransactions,
+                                ),
+                            ),
+                        )
+                    } else {
+                        currentState.copy(hideReversed = newHideReversed)
+                    }
+                }
             }
             is LoanTransactionsAction.SetHideAccruals -> {
-                mutableStateFlow.update { it.copy(hideAccruals = action.value) }
-                applyFilters()
+                mutableStateFlow.update { currentState ->
+                    val newHideAccruals = action.value
+                    val currentUiState = currentState.uiState
+                    
+                    if (currentUiState is LoanTransactionsState.UiState.Success) {
+                        val unfilteredData = currentUiState.unfilteredTransactionsTableData?.transactions ?: emptyList()
+                        
+                        val filteredTransactions = unfilteredData.filter { row ->
+                            val hideReversedCondition = !currentState.hideReversed || !row.manuallyReversed
+                            val hideAccrualsCondition = !newHideAccruals || row.transactionType != TransactionType.ACCRUAL
+                            hideReversedCondition && hideAccrualsCondition
+                        }
+                        
+                        currentState.copy(
+                            hideAccruals = newHideAccruals,
+                            uiState = currentUiState.copy(
+                                transactionsTableData = LoanTransactionsTableData(
+                                    transactions = filteredTransactions,
+                                ),
+                            ),
+                        )
+                    } else {
+                        currentState.copy(hideAccruals = newHideAccruals)
+                    }
+                }
+            }
+            LoanTransactionsAction.ExportTransactions -> {
+                // TODO: Will be implemented in future PR
+            }
+            LoanTransactionsAction.ClearFilters -> {
+                mutableStateFlow.update { currentState ->
+                    val currentUiState = currentState.uiState
+                    
+                    if (currentUiState is LoanTransactionsState.UiState.Success) {
+                        val unfilteredData = currentUiState.unfilteredTransactionsTableData
+                        
+                        currentState.copy(
+                            hideReversed = false,
+                            hideAccruals = false,
+                            uiState = currentUiState.copy(
+                                transactionsTableData = unfilteredData,
+                            ),
+                        )
+                    } else {
+                        currentState.copy(
+                            hideReversed = false,
+                            hideAccruals = false,
+                        )
+                    }
+                }
+            }
+            is LoanTransactionsAction.SelectRow -> {
+                mutableStateFlow.update { currentState ->
+                    val currentUiState = currentState.uiState
+                    if (currentUiState is LoanTransactionsState.UiState.Success) {
+                        currentState.copy(
+                            uiState = currentUiState.copy(
+                                selectedRow = action.row,
+                                isBottomSheetOpen = true,
+                            ),
+                        )
+                    } else {
+                        currentState
+                    }
+                }
+            }
+            LoanTransactionsAction.DismissBottomSheet -> {
+                mutableStateFlow.update { currentState ->
+                    val currentUiState = currentState.uiState
+                    if (currentUiState is LoanTransactionsState.UiState.Success) {
+                        currentState.copy(
+                            uiState = currentUiState.copy(
+                                isBottomSheetOpen = false,
+                                selectedRow = null,
+                            ),
+                        )
+                    } else {
+                        currentState
+                    }
+                }
+            }
+            is LoanTransactionsAction.OnActionSelected -> {
+                // TODO: Handle the action based on action string and id
+                mutableStateFlow.update { currentState ->
+                    val currentUiState = currentState.uiState
+                    if (currentUiState is LoanTransactionsState.UiState.Success) {
+                        currentState.copy(
+                            uiState = currentUiState.copy(
+                                isBottomSheetOpen = false,
+                                selectedRow = null,
+                            ),
+                        )
+                    } else {
+                        currentState
+                    }
+                }
             }
         }
     }
 
     suspend fun loadLoanTransaction() {
         mutableStateFlow.update {
-            it.copy(dialogState = LoanTransactionsState.DialogState.Loading)
+            it.copy(uiState = LoanTransactionsState.UiState.Loading)
         }
         repository.getLoanTransactions(loanId).collect { state ->
             when (state) {
                 is DataState.Error -> {
                     mutableStateFlow.update {
-                        it.copy(dialogState = LoanTransactionsState.DialogState.Error(state.message))
+                        it.copy(uiState = LoanTransactionsState.UiState.Error(state.message))
                     }
-                    loanTransactionsUiStateFlow.value =
-                        LoanTransactionsUiState.ShowFetchingError(state.message)
                 }
 
                 DataState.Loading -> {
                     mutableStateFlow.update {
-                        it.copy(dialogState = LoanTransactionsState.DialogState.Loading)
+                        it.copy(uiState = LoanTransactionsState.UiState.Loading)
                     }
-                    loanTransactionsUiStateFlow.value = LoanTransactionsUiState.ShowProgressBar
                 }
 
                 is DataState.Success -> {
@@ -91,7 +200,7 @@ class LoanTransactionsViewModel(
                     val transactionsData =
                         loanWithAssociations.transactions.mapIndexed { index, transaction ->
 
-                            LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData(
+                            LoanTransactionsTableData.TransactionRowData(
                                 number = (index + 1).toString(),
                                 id = transaction.id?.toString() ?: "-",
                                 office = transaction.officeName ?: "-",
@@ -140,59 +249,19 @@ class LoanTransactionsViewModel(
                             )
                         }
 
-                    loanTransactionsUiStateFlow.value =
-                        LoanTransactionsUiState.ShowLoanTransaction(
-                            transactionsTableData = LoanTransactionsUiState.LoanTransactionsTableData(
-                                transactions = transactionsData,
+                    val tableData = LoanTransactionsTableData(transactions = transactionsData)
+
+                    mutableStateFlow.update {
+                        it.copy(
+                            uiState = LoanTransactionsState.UiState.Success(
+                                transactionsTableData = tableData,
+                                unfilteredTransactionsTableData = tableData,
                             ),
                         )
-
-                    mutableStateFlow.update { it.copy(dialogState = null) }
-                    applyFilters()
+                    }
                 }
             }
         }
-    }
-
-    private fun applyFilters() {
-        val currentUiState = loanTransactionsUiStateFlow.value
-        if (currentUiState is LoanTransactionsUiState.ShowLoanTransaction) {
-            val currentState = stateFlow.value
-            val allTransactions = currentUiState.transactionsTableData?.transactions ?: emptyList()
-
-            val filteredTransactions = allTransactions.filter { row ->
-                val hideReversedCondition = !currentState.hideReversed || !row.manuallyReversed
-                val hideAccrualsCondition = !currentState.hideAccruals || row.transactionType != TransactionType.ACCRUAL
-                hideReversedCondition && hideAccrualsCondition
-            }
-
-            loanTransactionsUiStateFlow.value = currentUiState.copy(
-                transactionsTableData = LoanTransactionsUiState.LoanTransactionsTableData(
-                    transactions = filteredTransactions,
-                ),
-            )
-        }
-    }
-
-    fun onRowAction(row: LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData) {
-        val currentState = loanTransactionsUiStateFlow.value
-        if (currentState is LoanTransactionsUiState.ShowLoanTransaction) {
-            loanTransactionsUiStateFlow.value =
-                currentState.copy(selectedRow = row, isBottomSheetOpen = true)
-        }
-    }
-
-    fun dismissBottomSheet() {
-        val currentState = loanTransactionsUiStateFlow.value
-        if (currentState is LoanTransactionsUiState.ShowLoanTransaction) {
-            loanTransactionsUiStateFlow.value =
-                currentState.copy(isBottomSheetOpen = false, selectedRow = null)
-        }
-    }
-
-    fun onActionSelected(action: TransactionAction, id: Int) {
-        // TODO: Handle the action based on action string and id
-        dismissBottomSheet()
     }
 }
 
@@ -200,11 +269,17 @@ data class LoanTransactionsState(
     val hideReversed: Boolean = false,
     val hideAccruals: Boolean = false,
     val showFilterSheet: Boolean = false,
-    val dialogState: DialogState? = null,
+    val uiState: UiState = UiState.Loading,
 ) {
-    sealed interface DialogState {
-        data object Loading : DialogState
-        data class Error(val message: String) : DialogState
+    sealed interface UiState {
+        data object Loading : UiState
+        data class Error(val message: String) : UiState
+        data class Success(
+            val transactionsTableData: LoanTransactionsTableData? = null,
+            val unfilteredTransactionsTableData: LoanTransactionsTableData? = null,
+            val selectedRow: LoanTransactionsTableData.TransactionRowData? = null,
+            val isBottomSheetOpen: Boolean = false,
+        ) : UiState
     }
 }
 
@@ -218,4 +293,9 @@ sealed interface LoanTransactionsAction {
     data object DismissFilterSheet : LoanTransactionsAction
     data class SetHideReversed(val value: Boolean) : LoanTransactionsAction
     data class SetHideAccruals(val value: Boolean) : LoanTransactionsAction
+    data object ClearFilters : LoanTransactionsAction
+    data object ExportTransactions : LoanTransactionsAction
+    data class SelectRow(val row: LoanTransactionsTableData.TransactionRowData) : LoanTransactionsAction
+    data object DismissBottomSheet : LoanTransactionsAction
+    data class OnActionSelected(val action: TransactionAction, val id: Int) : LoanTransactionsAction
 }
