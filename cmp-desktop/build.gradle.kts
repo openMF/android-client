@@ -52,7 +52,7 @@ compose.desktop {
             description = "Desktop Application"
             copyright = "© 2024 Mifos Initiative. All rights reserved."
             vendor = "Mifos Initiative"
-            licenseFile.set(project.file("../LICENSE"))
+            licenseFile.set(project.file("../LICENCE"))
             includeAllModules = true
 
             macOS {

@@ -11,6 +11,8 @@ package com.mifos.core.network.services
 
 import com.mifos.core.model.objects.account.loan.LoanApproval
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
+import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRequest
+import com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplate
 import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
@@ -124,4 +126,40 @@ interface LoanService {
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.CHARGES)
     fun getListOfCharges(@Path("clientId") clientId: Int): Flow<Page<ChargesEntity>>
+
+    /**
+     * Account Transfer API Endpoints
+     */
+
+    /**
+     * Retrieve account transfer template for populating UI dropdowns
+     *
+     * @param fromOfficeId Source office ID
+     * @param fromClientId Source client ID
+     * @param fromAccountType Source account type ID
+     * @param fromAccountId Source account ID
+     * @return AccountTransferTemplate with available options
+     */
+    @GET(APIEndPoint.ACCOUNT_TRANSFERS + "/template")
+    fun getAccountTransferTemplate(
+        @Query("fromClientId") fromClientId: Int,
+        @Query("fromAccountType") fromAccountType: Int,
+        @Query("fromAccountId") fromAccountId: Int,
+        @Query("fromOfficeId") fromOfficeId: Int? = null,
+        @Query("toOfficeId") toOfficeId: Int? = null,
+        @Query("toClientId") toClientId: Int? = null,
+        @Query("toAccountType") toAccountType: Int? = null,
+        @Query("toAccountId") toAccountId: Int? = null,
+    ): Flow<AccountTransferTemplate>
+
+    /**
+     * Submit an account transfer
+     *
+     * @param request Account transfer request payload
+     * @return HttpResponse to check status and handle error/success appropriately
+     */
+    @POST(APIEndPoint.ACCOUNT_TRANSFERS)
+    suspend fun submitAccountTransfer(
+        @Body request: AccountTransferRequest,
+    ): HttpResponse
 }

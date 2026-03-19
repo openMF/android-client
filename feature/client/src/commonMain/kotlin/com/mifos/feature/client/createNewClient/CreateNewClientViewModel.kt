@@ -10,7 +10,6 @@
 package com.mifos.feature.client.createNewClient
 
 import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_Image_Upload_Failed
 import androidclient.feature.client.generated.resources.feature_client_Image_Upload_Successful
 import androidclient.feature.client.generated.resources.feature_client_client_created_successfully
 import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_address_configuration
@@ -166,7 +165,8 @@ class CreateNewClientViewModel(
                         CreateNewClientUiState.ShowWaitingForCheckerApproval(Res.string.feature_client_waiting_for_checker_approval)
                 }
             } catch (e: Exception) {
-                MFErrorParser.errorMessage(e)
+                val err = MFErrorParser.errorMessage(e)
+                _createNewClientUiState.value = CreateNewClientUiState.ShowStringError(err)
             }
         }
     }
@@ -195,9 +195,8 @@ class CreateNewClientViewModel(
                         id,
                     )
             } catch (e: Exception) {
-                _createNewClientUiState.value =
-                    CreateNewClientUiState.ShowError(Res.string.feature_client_Image_Upload_Failed)
-                MFErrorParser.errorMessage(e)
+                val err = MFErrorParser.errorMessage(e)
+                _createNewClientUiState.value = CreateNewClientUiState.ShowStringError(err)
             }
         }
     }
