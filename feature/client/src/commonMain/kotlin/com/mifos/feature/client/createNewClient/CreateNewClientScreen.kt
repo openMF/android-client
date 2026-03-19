@@ -333,11 +333,8 @@ private fun CreateNewClientContent(
     var selectedStaffId: Int? by rememberSaveable { mutableStateOf(0) }
 
     var isActive by rememberSaveable { mutableStateOf(false) }
-    var dateOfBirth by rememberSaveable {
-        mutableLongStateOf(
-            Clock.System.now().toEpochMilliseconds(),
-        )
-    }
+    var dateOfBirth by rememberSaveable { mutableStateOf<Long?>(null) }
+
     var activationDate by rememberSaveable {
         mutableLongStateOf(
             Clock.System.now().toEpochMilliseconds(),
@@ -402,7 +399,7 @@ private fun CreateNewClientContent(
         },
     )
     val dateOfBirthDatePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = dateOfBirth,
+        initialSelectedDateMillis = null,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
@@ -505,7 +502,7 @@ private fun CreateNewClientContent(
         Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosDatePickerTextField(
-            value = DateHelper.getDateAsStringFromLong(dateOfBirth),
+            value = dateOfBirth?.let { DateHelper.getDateAsStringFromLong(it) } ?: "",
             label = stringResource(Res.string.feature_client_dob),
             openDatePicker = { showDateOfBirthDatepicker = !showDateOfBirthDatepicker },
         )
@@ -734,7 +731,7 @@ private fun handleSubmitClick(
     genderId: Int,
     selectedStaffId: Int?,
     activationDate: Long,
-    dateOfBirth: Long,
+    dateOfBirth: Long?,
     mobileNumber: String,
     externalId: String,
     isAddressEnabled: Boolean,
@@ -808,7 +805,7 @@ private fun createClientPayload(
     staffInOffices: List<StaffEntity>,
     isActive: Boolean,
     activationDate: Long,
-    dateOfBirth: Long,
+    dateOfBirth: Long?,
     middleName: String,
     mobileNumber: String,
     externalId: String,
@@ -828,6 +825,10 @@ private fun createClientPayload(
     countryId: Int,
     postalCode: String,
 ): ClientPayloadEntity {
+    val formattedActivationDate = if (isActive) formatDate(activationDate) else null
+    val formattedDateOfBirth = dateOfBirth?.let { formatDate(it) }
+    val hasAnyDate = formattedActivationDate != null || formattedDateOfBirth != null
+
     var clientPayload = ClientPayloadEntity(
         // Mandatory fields
         firstname = firstName,
@@ -837,27 +838,27 @@ private fun createClientPayload(
 
         // Optional fields with default values
         active = isActive,
-        activationDate = formatDate(activationDate),
-        dateOfBirth = formatDate(dateOfBirth),
-        dateFormat = ApiDateFormatter.DATE_FORMAT,
+        activationDate = formattedActivationDate,
+        dateOfBirth = formattedDateOfBirth,
+        dateFormat = if (hasAnyDate) ApiDateFormatter.DATE_FORMAT else null,
         locale = ApiDateFormatter.LOCALE,
     )
     if (isAddressEnabled) {
         val address = Address(
-            addressTypeId = addressTypeId,
+            addressTypeId = if (addressTypeId > 0) addressTypeId else null,
             isActive = isAddressActive,
-            addressLine1 = addressLine1,
-            addressLine2 = addressLine2,
-            addressLine3 = addressLine3,
-            city = city,
-            stateProvinceId = stateProvinceId,
-            countryId = countryId,
-            postalCode = postalCode,
+            addressLine1 = addressLine1.ifBlank { null },
+            addressLine2 = addressLine2.ifBlank { null },
+            addressLine3 = addressLine3.ifBlank { null },
+            city = city.ifBlank { null },
+            stateProvinceId = if (stateProvinceId > 0) stateProvinceId else null,
+            countryId = if (countryId > 0) countryId else null,
+            postalCode = postalCode.ifBlank { null },
         )
         clientPayload = clientPayload.copy(address = listOf(address))
     }
 
-    // Optional fields
+    // optional fields
     if (middleName.isNotEmpty()) {
         clientPayload = clientPayload.copy(middlename = middleName)
     }
@@ -867,16 +868,16 @@ private fun createClientPayload(
     if (externalId.isNotEmpty()) {
         clientPayload = clientPayload.copy(externalId = externalId)
     }
-    if (clientTemplate.genderOptions?.isNotEmpty() == true) {
+    if (clientTemplate.genderOptions?.isNotEmpty() == true && genderId > 0) {
         clientPayload = clientPayload.copy(genderId = genderId)
     }
-    if (staffInOffices.isNotEmpty()) {
+    if (staffInOffices.isNotEmpty() && selectedStaffId != null && selectedStaffId > 0) {
         clientPayload = clientPayload.copy(staffId = selectedStaffId)
     }
-    if (clientTemplate.clientTypeOptions?.isNotEmpty() == true) {
+    if (clientTemplate.clientTypeOptions?.isNotEmpty() == true && selectedClientId > 0) {
         clientPayload = clientPayload.copy(clientTypeId = selectedClientId)
     }
-    if (clientTemplate.clientClassificationOptions?.isNotEmpty() == true) {
+    if (clientTemplate.clientClassificationOptions?.isNotEmpty() == true && selectedClientClassificationId > 0) {
         clientPayload = clientPayload.copy(clientClassificationId = selectedClientClassificationId)
     }
     return clientPayload
@@ -1292,7 +1293,7 @@ private fun isAddressTypeIdValid(
     snackbarHostState: SnackbarHostState,
 ): Boolean {
     return when {
-        addressTypeId < 0 -> {
+        addressTypeId <= 0 -> {
             scope.launch {
                 snackbarHostState.showSnackbar(
                     message = getString(
