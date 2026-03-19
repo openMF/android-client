@@ -24,7 +24,6 @@ import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
-import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * ViewModel for reject-loan state and actions.
