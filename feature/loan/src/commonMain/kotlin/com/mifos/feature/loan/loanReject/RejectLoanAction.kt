@@ -19,7 +19,6 @@ internal sealed interface RejectLoanAction {
     data class NoteChanged(val note: String) : RejectLoanAction
     data object SubmitClicked : RejectLoanAction
     data object CancelClicked : RejectLoanAction
-    data object DismissError : RejectLoanAction
     data object DiscardConfirmed : RejectLoanAction
     data object DiscardDismissed : RejectLoanAction
 }

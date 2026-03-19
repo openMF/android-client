@@ -73,7 +73,6 @@ import com.mifos.core.domain.useCases.LoadSavingsAccountsAndTemplateUseCase
 import com.mifos.core.domain.useCases.LoginUseCase
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
 import com.mifos.core.domain.useCases.RejectCheckerUseCase
-import com.mifos.core.domain.useCases.RejectLoanUseCase
 import com.mifos.core.domain.useCases.RemoveDocumentUseCase
 import com.mifos.core.domain.useCases.SaveIndividualCollectionSheetUseCase
 import com.mifos.core.domain.useCases.ServerConfigValidatorUseCase
@@ -154,7 +153,6 @@ val UseCaseModule = module {
     factoryOf(::LoginUseCase)
     factoryOf(::PasswordValidationUseCase)
     factoryOf(::RejectCheckerUseCase)
-    factoryOf(::RejectLoanUseCase)
     factoryOf(::RemoveDocumentUseCase)
     factoryOf(::SaveIndividualCollectionSheetUseCase)
     factoryOf(::SubmitCollectionSheetUseCase)

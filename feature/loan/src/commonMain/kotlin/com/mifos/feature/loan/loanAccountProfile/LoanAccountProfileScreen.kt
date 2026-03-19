@@ -40,7 +40,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -57,6 +56,7 @@ import androidx.navigation.NavController
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCard
+import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
@@ -160,26 +160,18 @@ internal fun LoanAccountProfileScreen(
     }
 
     if (state.dialogState == null) {
-        Box(
-            modifier = modifier.fillMaxSize(),
-        ) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-            ) {
-                MifosBreadcrumbNavBar(navController)
-
-                state.loanAccount?.let { loanAccount ->
-                    LoanAccountContent(
-                        state = state,
-                        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
-                    )
-                }
+        MifosScaffold(
+            modifier = modifier,
+            snackbarHostState = snackbarHostState,
+            topBar = { MifosBreadcrumbNavBar(navController) },
+        ) { paddingValues ->
+            state.loanAccount?.let { loanAccount ->
+                LoanAccountContent(
+                    state = state,
+                    onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+                    modifier = Modifier.padding(paddingValues),
+                )
             }
-
-            SnackbarHost(
-                hostState = snackbarHostState,
-                modifier = Modifier.align(Alignment.BottomCenter),
-            )
         }
     }
 

@@ -62,6 +62,7 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -80,13 +81,9 @@ internal fun RejectLoanScreen(
         when (event) {
             RejectLoanEvent.NavigateBack -> navigateBack()
             RejectLoanEvent.RejectSuccess -> onRejectSuccess()
-        }
-    }
-
-    LaunchedEffect(state.submissionError) {
-        state.submissionError?.let { message ->
-            snackbarHostState.showSnackbar(message = message)
-            viewModel.trySendAction(RejectLoanAction.DismissError)
+            is RejectLoanEvent.SubmissionError -> {
+                snackbarHostState.showSnackbar(message = event.message)
+            }
         }
     }
 
@@ -105,10 +102,6 @@ internal fun RejectLoanScreen(
                 onAction = viewModel::trySendAction,
             )
 
-            if (state.isLoading) {
-                MifosProgressIndicator()
-            }
-
             MifosDialogBox(
                 title = stringResource(Res.string.feature_loan_reject_discard_title),
                 showDialogState = state.showDiscardDialog,
@@ -118,6 +111,10 @@ internal fun RejectLoanScreen(
                 onDismiss = { viewModel.trySendAction(RejectLoanAction.DiscardDismissed) },
                 message = stringResource(Res.string.feature_loan_reject_discard_message),
             )
+
+            if (state.isLoading) {
+                MifosProgressIndicatorOverlay()
+            }
         }
     }
 }

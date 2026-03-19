@@ -17,7 +17,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DateHelper.today
-import com.mifos.core.domain.useCases.RejectLoanUseCase
+import com.mifos.core.data.repository.LoanAccountRejectRepository
 import com.mifos.core.model.objects.account.loan.RejectLoanPayload
 import com.mifos.core.model.utils.DateConstants
 import com.mifos.core.ui.util.BaseViewModel
@@ -30,14 +30,13 @@ import kotlin.coroutines.cancellation.CancellationException
  * ViewModel for reject-loan state and actions.
  */
 internal class RejectLoanViewModel(
-    private val rejectLoanUseCase: RejectLoanUseCase,
+    private val repository: LoanAccountRejectRepository,
     savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<RejectLoanViewState, RejectLoanEvent, RejectLoanAction>(
     initialState = RejectLoanViewState(rejectedOnDate = today()),
 ) {
 
-    private val loanId = savedStateHandle.get<Int>("loanId")
-        ?: savedStateHandle.toRoute<LoanRejectScreenRoute>().loanId
+    private val loanId = savedStateHandle.toRoute<LoanRejectScreenRoute>().loanId
 
     private val initialDate = state.rejectedOnDate
 
@@ -58,10 +57,6 @@ internal class RejectLoanViewModel(
 
             RejectLoanAction.SubmitClicked -> submitLoanRejection()
             RejectLoanAction.CancelClicked -> onCancelClicked()
-            RejectLoanAction.DismissError -> {
-                mutableStateFlow.update { it.copy(submissionError = null) }
-            }
-
             RejectLoanAction.DiscardConfirmed -> {
                 mutableStateFlow.update { it.copy(showDiscardDialog = false) }
                 sendEvent(RejectLoanEvent.NavigateBack)
@@ -96,9 +91,7 @@ internal class RejectLoanViewModel(
                 return@launch
             }
 
-            mutableStateFlow.update {
-                it.copy(isLoading = true, submissionError = null)
-            }
+            mutableStateFlow.update { it.copy(isLoading = true) }
 
             val payload = RejectLoanPayload(
                 rejectedOnDate = ApiDateFormatter.formatForApi(validatedState.rejectedOnDate),
@@ -108,27 +101,16 @@ internal class RejectLoanViewModel(
             )
 
             try {
-                rejectLoanUseCase(loanId, payload)
-                mutableStateFlow.update {
-                    it.copy(
-                        isLoading = false,
-                        submissionError = null,
-                    )
-                }
+                repository.rejectLoan(loanId, payload)
+                mutableStateFlow.update { it.copy(isLoading = false) }
                 sendEvent(RejectLoanEvent.RejectSuccess)
-            } catch (e: CancellationException) {
-                throw e
             } catch (e: Exception) {
                 val errorMessage = e.message
                     ?.takeIf { it.isNotBlank() }
                     ?: getString(Res.string.feature_loan_unknown_error_occured)
 
-                mutableStateFlow.update {
-                    it.copy(
-                        isLoading = false,
-                        submissionError = errorMessage,
-                    )
-                }
+                mutableStateFlow.update { it.copy(isLoading = false) }
+                sendEvent(RejectLoanEvent.SubmissionError(errorMessage))
             }
         }
     }

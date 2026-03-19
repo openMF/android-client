@@ -20,6 +20,5 @@ internal data class RejectLoanViewState(
     val note: String = "",
     val isLoading: Boolean = false,
     val rejectedOnDateError: String? = null,
-    val submissionError: String? = null,
     val showDiscardDialog: Boolean = false,
 )
