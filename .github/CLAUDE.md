@@ -1,7 +1,7 @@
 # GitHub Actions - CI/CD Infrastructure
 
 **Last Updated:** 2026-02-13
-**Reusable Workflows:** `openMF/mifos-x-actionhub@v1.0.8`
+**Reusable Workflows:** `openMF/mifos-x-actionhub@v1.0.11`
 **Custom Actions:** 13 total (4 Android, 4 iOS, 2 macOS, 1 Desktop, 1 Web, 1 Static Analysis)
 
 [← Back to Main](../CLAUDE.md)
@@ -20,7 +20,7 @@
 
 ## Overview
 
-This project uses **reusable workflows** from `openMF/mifos-x-actionhub` repository. All workflows are version-pinned to `@v1.0.8` for stability.
+This project uses **reusable workflows** from `openMF/mifos-x-actionhub` repository. All workflows are version-pinned to `@v1.0.11` for stability.
 
 **Architecture:**
 ```
@@ -47,7 +47,7 @@ Fastlane Lanes (fastlane/Fastfile)
 
 **Reusable Workflow:**
 ```yaml
-uses: openMF/mifos-x-actionhub/.github/workflows/multi-platform-build-and-publish.yaml@v1.0.8
+uses: openMF/mifos-x-actionhub/.github/workflows/multi-platform-build-and-publish.yaml@v1.0.11
 ```
 
 **Jobs (10):**
@@ -104,7 +104,7 @@ inputs:
 
 **Reusable Workflow:**
 ```yaml
-uses: openMF/mifos-x-actionhub/.github/workflows/pr-check.yaml@v1.0.8
+uses: openMF/mifos-x-actionhub/.github/workflows/pr-check.yaml@v1.0.11
 ```
 
 **Jobs (5):**
@@ -144,7 +144,7 @@ inputs:
 
 **Reusable Workflow:**
 ```yaml
-uses: openMF/mifos-x-actionhub/.github/workflows/promote-to-production.yaml@v1.0.8
+uses: openMF/mifos-x-actionhub/.github/workflows/promote-to-production.yaml@v1.0.11
 ```
 
 **Jobs (1):**
