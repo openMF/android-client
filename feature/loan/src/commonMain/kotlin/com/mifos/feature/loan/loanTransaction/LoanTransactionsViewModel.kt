@@ -50,16 +50,16 @@ class LoanTransactionsViewModel(
                 mutableStateFlow.update { currentState ->
                     val newHideReversed = action.value
                     val currentUiState = currentState.uiState
-                    
+
                     if (currentUiState is LoanTransactionsState.UiState.Success) {
                         val unfilteredData = currentUiState.unfilteredTransactionsTableData?.transactions ?: emptyList()
-                        
+
                         val filteredTransactions = unfilteredData.filter { row ->
                             val hideReversedCondition = !newHideReversed || !row.manuallyReversed
                             val hideAccrualsCondition = !currentState.hideAccruals || row.transactionType != TransactionType.ACCRUAL
                             hideReversedCondition && hideAccrualsCondition
                         }
-                        
+
                         currentState.copy(
                             hideReversed = newHideReversed,
                             uiState = currentUiState.copy(
@@ -77,16 +77,16 @@ class LoanTransactionsViewModel(
                 mutableStateFlow.update { currentState ->
                     val newHideAccruals = action.value
                     val currentUiState = currentState.uiState
-                    
+
                     if (currentUiState is LoanTransactionsState.UiState.Success) {
                         val unfilteredData = currentUiState.unfilteredTransactionsTableData?.transactions ?: emptyList()
-                        
+
                         val filteredTransactions = unfilteredData.filter { row ->
                             val hideReversedCondition = !currentState.hideReversed || !row.manuallyReversed
                             val hideAccrualsCondition = !newHideAccruals || row.transactionType != TransactionType.ACCRUAL
                             hideReversedCondition && hideAccrualsCondition
                         }
-                        
+
                         currentState.copy(
                             hideAccruals = newHideAccruals,
                             uiState = currentUiState.copy(
@@ -106,10 +106,10 @@ class LoanTransactionsViewModel(
             LoanTransactionsAction.ClearFilters -> {
                 mutableStateFlow.update { currentState ->
                     val currentUiState = currentState.uiState
-                    
+
                     if (currentUiState is LoanTransactionsState.UiState.Success) {
                         val unfilteredData = currentUiState.unfilteredTransactionsTableData
-                        
+
                         currentState.copy(
                             hideReversed = false,
                             hideAccruals = false,
