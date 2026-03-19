@@ -19,8 +19,8 @@ import kotlinx.serialization.Serializable
 data class LoanRepaymentScreenRoute(
     var clientName: String = "",
     var loanId: Int = 0,
-    var loanAccountNumber: String,
-    var loanProductName: String,
+    var loanAccountNumber: String = "",
+    var loanProductName: String = "",
     var amountInArrears: Double? = 0.0,
 )
 
@@ -42,6 +42,14 @@ fun NavController.navigateToLoanRepaymentScreen(loanWithAssociations: LoanWithAs
             loanAccountNumber = loanWithAssociations.accountNo,
             loanProductName = loanWithAssociations.loanProductName,
             amountInArrears = loanWithAssociations.summary.totalOverdue,
+        ),
+    )
+}
+
+fun NavController.navigateToLoanRepaymentScreen(loanId: Int) {
+    navigate(
+        LoanRepaymentScreenRoute(
+            loanId = loanId,
         ),
     )
 }
