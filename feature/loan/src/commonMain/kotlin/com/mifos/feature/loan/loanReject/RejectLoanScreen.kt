@@ -38,6 +38,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -91,7 +92,7 @@ internal fun RejectLoanScreen(
         ) {
             RejectLoanContent(
                 state = state,
-                onAction = viewModel::trySendAction,
+                onAction = remember(viewModel) { viewModel::trySendAction },
             )
 
             // Discard dialog
@@ -107,7 +108,7 @@ internal fun RejectLoanScreen(
 
             // Success / error dialog
             when (val dialogState = state.dialogState) {
-                is DialogState.Success -> {
+                is RejectLoanState.DialogState.Success -> {
                     MifosDialogBox(
                         title = stringResource(Res.string.feature_loan_loan_rejected_message),
                         showDialogState = true,
@@ -118,7 +119,7 @@ internal fun RejectLoanScreen(
                         message = stringResource(Res.string.feature_loan_reject_success),
                     )
                 }
-                is DialogState.Error -> {
+                is RejectLoanState.DialogState.Error -> {
                     MifosDialogBox(
                         title = stringResource(Res.string.feature_loan_reject_title),
                         showDialogState = true,
@@ -141,7 +142,7 @@ internal fun RejectLoanScreen(
 
 @Composable
 private fun RejectLoanContent(
-    state: RejectLoanViewState,
+    state: RejectLoanState,
     onAction: (RejectLoanAction) -> Unit,
 ) {
     val rejectedOnLabel = stringResource(Res.string.feature_loan_rejected_on_label)
