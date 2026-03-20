@@ -20,6 +20,7 @@ import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.basemodel.APIEndPoint
+import com.mifos.room.entities.accounts.loans.CreditBalanceRefundRequest
 import com.mifos.room.entities.accounts.loans.Loan
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
@@ -68,6 +69,12 @@ interface LoanService {
         @Body loanRepaymentRequest: LoanRepaymentRequestEntity?,
     ): LoanRepaymentResponseEntity
 
+    @POST(APIEndPoint.LOANS + "/{loanId}/transactions?command=creditBalanceRefund")
+    suspend fun submitCreditBalanceRefund(
+        @Path("loanId") loanId: Int,
+        @Body request: CreditBalanceRefundRequest?,
+    ): LoanRepaymentResponseEntity
+
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=repaymentSchedule")
     fun getLoanRepaymentSchedule(@Path("loanId") loanId: Int): Flow<LoanWithAssociationsEntity>
 
@@ -99,7 +106,7 @@ interface LoanService {
      * 1. repayment
      * 2. disburse
      * 3. waiver
-     * 4. refundbycash
+     * 4. refundByCash
      * 5. foreclosure
      *
      * @param loanId Loan Id

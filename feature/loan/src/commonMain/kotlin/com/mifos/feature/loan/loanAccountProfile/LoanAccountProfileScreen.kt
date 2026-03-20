@@ -10,6 +10,7 @@
 package com.mifos.feature.loan.loanAccountProfile
 
 import androidclient.feature.loan.generated.resources.Res
+import androidclient.feature.loan.generated.resources.feature_loan_credit_balance_refund
 import androidclient.feature.loan.generated.resources.feature_loan_profile_account
 import androidclient.feature.loan.generated.resources.feature_loan_profile_action_repayment
 import androidclient.feature.loan.generated.resources.feature_loan_profile_error_details_not_found
@@ -39,6 +40,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -85,11 +87,16 @@ internal fun LoanAccountProfileScreen(
     navigateToDocuments: (Int) -> Unit,
     navigateToNotes: (Int) -> Unit,
     navigateToTransferScreen: (loanId: Int, accountNumber: String, clientId: Int, currencyCode: String, officeId: Int) -> Unit,
+    onCreditBalanceRefundClick: (LoanWithAssociationsEntity) -> Unit,
     navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: LoanAccountProfileViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.trySendAction(LoanAccountAction.OnRefresh)
+    }
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
@@ -110,6 +117,7 @@ internal fun LoanAccountProfileScreen(
                             account.clientOfficeId,
                         )
                     }
+                    LoanProfileAction.CreditBalanceRefund -> onCreditBalanceRefundClick(account)
                 }
             }
             is LoanAccountEvent.NavigateToDetail -> {
@@ -187,6 +195,21 @@ private fun LoanAccountContent(
                 style = MifosTypography.labelMediumEmphasized,
                 color = AppColors.customWhite,
             )
+        }
+
+        if (loanAccount.status.overpaid == true) {
+            Spacer(Modifier.height(KptTheme.spacing.sm))
+
+            MifosButton(
+                onClick = { onAction(LoanAccountAction.OnCreditBalanceRefundClick) },
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(
+                    text = stringResource(Res.string.feature_loan_credit_balance_refund),
+                    style = MifosTypography.labelMediumEmphasized,
+                    color = AppColors.customWhite,
+                )
+            }
         }
 
         Spacer(Modifier.height(KptTheme.spacing.lg))

@@ -142,6 +142,8 @@ internal class LoanAccountProfileViewModel(
             LoanAccountAction.OnNextActionClick -> handleNextAction()
             is LoanAccountAction.OnDetailItemClick -> sendEvent(LoanAccountEvent.NavigateToDetail(action.item))
             LoanAccountAction.OnAccountClick -> sendEvent(LoanAccountEvent.NavigateToAccountDetails)
+            LoanAccountAction.OnCreditBalanceRefundClick -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.CreditBalanceRefund))
+            LoanAccountAction.OnRefresh -> loadLoanAccountDetails(route.loanId)
         }
     }
 
@@ -196,6 +198,7 @@ sealed interface LoanProfileAction {
     data object Approve : LoanProfileAction
     data object Repayment : LoanProfileAction
     data object Transfer : LoanProfileAction
+    data object CreditBalanceRefund : LoanProfileAction
 }
 
 sealed interface LoanAccountEvent {
@@ -211,4 +214,6 @@ sealed interface LoanAccountAction {
     data object OnNextActionClick : LoanAccountAction
     data class OnDetailItemClick(val item: LoanAccountProfileActionItem) : LoanAccountAction
     data object OnAccountClick : LoanAccountAction
+    data object OnCreditBalanceRefundClick : LoanAccountAction
+    data object OnRefresh : LoanAccountAction
 }

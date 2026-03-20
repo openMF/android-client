@@ -20,6 +20,7 @@ import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.PaymentTypeOptionEntity
+import com.mifos.room.entities.accounts.loans.CreditBalanceRefundRequest
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
@@ -202,6 +203,23 @@ class DataManagerLoan(
                  */
                 loanDaoHelper.saveLoanRepaymentTransaction(loanId, request)
         }
+    }
+
+    /**
+     * This Method submits a credit balance refund transaction for a loan account.
+     * When the user is online (userStatus = false), the request goes directly to the server.
+     * Endpoint: POST /loans/{loanId}/transactions?command=creditBalanceRefund
+     * Returns LoanRepaymentResponseEntity with the transaction details.
+     *
+     * @param loanId Loan id of the loan
+     * @param request Request body containing refund transaction details
+     * @return LoanRepaymentResponseEntity
+     */
+    suspend fun submitCreditBalanceRefund(
+        loanId: Int,
+        request: CreditBalanceRefundRequest,
+    ): LoanRepaymentResponseEntity {
+        return mBaseApiManager.loanService.submitCreditBalanceRefund(loanId, request)
     }
 
     /**
