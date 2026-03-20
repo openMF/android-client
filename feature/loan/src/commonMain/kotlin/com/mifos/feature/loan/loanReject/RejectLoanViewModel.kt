@@ -11,7 +11,6 @@ package com.mifos.feature.loan.loanReject
 
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_reject_date_error_future
-import androidclient.feature.loan.generated.resources.feature_loan_unknown_error_occured
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -22,6 +21,7 @@ import com.mifos.core.data.repository.LoanAccountRejectRepository
 import com.mifos.core.model.objects.account.loan.RejectLoanPayload
 import com.mifos.core.model.utils.DateConstants
 import com.mifos.core.ui.util.BaseViewModel
+import com.mifos.feature.loan.loanReject.RejectLoanAction.Internal
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -69,6 +69,39 @@ internal class RejectLoanViewModel(
             RejectLoanAction.DismissDialog -> {
                 mutableStateFlow.update { it.copy(dialogState = null) }
             }
+
+            RejectLoanAction.DismissSuccessDialog -> {
+                mutableStateFlow.update { it.copy(dialogState = null) }
+                sendEvent(RejectLoanEvent.NavigateBackWithSuccess)
+            }
+
+            is Internal.RejectResultReceived -> handleRejectResult(action.dataState)
+        }
+    }
+
+    private fun handleRejectResult(dataState: DataState<*>) {
+        when (dataState) {
+            is DataState.Loading -> {
+                mutableStateFlow.update { it.copy(isLoading = true) }
+            }
+
+            is DataState.Success -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        isLoading = false,
+                        dialogState = DialogState.Success,
+                    )
+                }
+            }
+
+            is DataState.Error -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        isLoading = false,
+                        dialogState = DialogState.Error(dataState.message),
+                    )
+                }
+            }
         }
     }
 
@@ -103,29 +136,7 @@ internal class RejectLoanViewModel(
             )
 
             repository.rejectLoan(loanId, payload).collect { dataState ->
-                when (dataState) {
-                    is DataState.Loading -> {
-                        mutableStateFlow.update { it.copy(isLoading = true) }
-                    }
-
-                    is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(isLoading = false)
-                        }
-                        sendEvent(RejectLoanEvent.NavigateBack)
-                    }
-
-                    is DataState.Error -> {
-                        val errorMessage = dataState.message
-                            ?: getString(Res.string.feature_loan_unknown_error_occured)
-                        mutableStateFlow.update {
-                            it.copy(
-                                isLoading = false,
-                                dialogState = DialogState.Error(errorMessage),
-                            )
-                        }
-                    }
-                }
+                sendAction(Internal.RejectResultReceived(dataState))
             }
         }
     }

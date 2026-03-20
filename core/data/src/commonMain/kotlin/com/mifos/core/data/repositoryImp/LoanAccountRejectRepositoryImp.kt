@@ -10,6 +10,7 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.LoanAccountRejectRepository
 import com.mifos.core.model.objects.account.loan.RejectLoanPayload
 import com.mifos.core.model.objects.account.loan.RejectLoanResponse
@@ -24,16 +25,10 @@ class LoanAccountRejectRepositoryImp(
     private val dataManagerLoan: DataManagerLoan,
 ) : LoanAccountRejectRepository {
 
-    override suspend fun rejectLoan(
+    override fun rejectLoan(
         loanId: Int,
         rejectLoanPayload: RejectLoanPayload,
-    ): Flow<DataState<RejectLoanResponse>> = flow {
-        try {
-            emit(DataState.Loading)
-            val response = dataManagerLoan.rejectLoan(loanId, rejectLoanPayload)
-            emit(DataState.Success(response))
-        } catch (e: Exception) {
-            emit(DataState.Error(e, null))
-        }
-    }
+    ): Flow<DataState<RejectLoanResponse>> =
+        flow { emit(dataManagerLoan.rejectLoan(loanId, rejectLoanPayload)) }
+            .asDataStateFlow()
 }

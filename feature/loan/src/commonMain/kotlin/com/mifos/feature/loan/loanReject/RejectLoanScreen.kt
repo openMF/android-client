@@ -11,10 +11,13 @@ package com.mifos.feature.loan.loanReject
 
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_cancel
+import androidclient.feature.loan.generated.resources.feature_loan_dialog_action_ok
+import androidclient.feature.loan.generated.resources.feature_loan_loan_rejected_message
 import androidclient.feature.loan.generated.resources.feature_loan_reject_discard_confirm
 import androidclient.feature.loan.generated.resources.feature_loan_reject_discard_message
 import androidclient.feature.loan.generated.resources.feature_loan_reject_discard_title
 import androidclient.feature.loan.generated.resources.feature_loan_reject_note_hint
+import androidclient.feature.loan.generated.resources.feature_loan_reject_success
 import androidclient.feature.loan.generated.resources.feature_loan_reject_title
 import androidclient.feature.loan.generated.resources.feature_loan_rejected_on_label
 import androidclient.feature.loan.generated.resources.feature_loan_submit
@@ -72,9 +75,8 @@ internal fun RejectLoanScreen(
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
-            RejectLoanEvent.NavigateBack -> {
-                onRejectSuccess()
-            }
+            RejectLoanEvent.NavigateBack -> navigateBack()
+            RejectLoanEvent.NavigateBackWithSuccess -> onRejectSuccess()
         }
     }
 
@@ -103,13 +105,24 @@ internal fun RejectLoanScreen(
                 message = stringResource(Res.string.feature_loan_reject_discard_message),
             )
 
-            // Error dialog
+            // Success / error dialog
             when (val dialogState = state.dialogState) {
+                is DialogState.Success -> {
+                    MifosDialogBox(
+                        title = stringResource(Res.string.feature_loan_loan_rejected_message),
+                        showDialogState = true,
+                        confirmButtonText = stringResource(Res.string.feature_loan_dialog_action_ok),
+                        dismissButtonText = stringResource(Res.string.feature_loan_cancel),
+                        onConfirm = { viewModel.trySendAction(RejectLoanAction.DismissSuccessDialog) },
+                        onDismiss = { viewModel.trySendAction(RejectLoanAction.DismissSuccessDialog) },
+                        message = stringResource(Res.string.feature_loan_reject_success),
+                    )
+                }
                 is DialogState.Error -> {
                     MifosDialogBox(
                         title = stringResource(Res.string.feature_loan_reject_title),
                         showDialogState = true,
-                        confirmButtonText = stringResource(Res.string.feature_loan_submit),
+                        confirmButtonText = stringResource(Res.string.feature_loan_dialog_action_ok),
                         dismissButtonText = stringResource(Res.string.feature_loan_cancel),
                         onConfirm = { viewModel.trySendAction(RejectLoanAction.DismissDialog) },
                         onDismiss = { viewModel.trySendAction(RejectLoanAction.DismissDialog) },

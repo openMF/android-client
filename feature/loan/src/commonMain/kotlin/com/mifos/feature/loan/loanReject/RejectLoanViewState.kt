@@ -9,12 +9,14 @@
  */
 package com.mifos.feature.loan.loanReject
 
+import androidx.compose.runtime.Immutable
 import com.mifos.core.common.utils.DateHelper.today
 import kotlinx.datetime.LocalDate
 
 /**
  * State holder for the reject-loan screen.
  */
+@Immutable
 internal data class RejectLoanViewState(
     val rejectedOnDate: LocalDate = today(),
     val note: String = "",
@@ -25,8 +27,9 @@ internal data class RejectLoanViewState(
 )
 
 /**
- * Dialog states for error messages.
+ * Dialog states for the reject-loan screen.
  */
 internal sealed interface DialogState {
+    data object Success : DialogState
     data class Error(val message: String) : DialogState
 }

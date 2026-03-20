@@ -9,6 +9,8 @@
  */
 package com.mifos.feature.loan.loanReject
 
+import com.mifos.core.common.utils.DataState
+import com.mifos.core.model.objects.account.loan.RejectLoanResponse
 import kotlinx.datetime.LocalDate
 
 /**
@@ -22,4 +24,14 @@ internal sealed interface RejectLoanAction {
     data object DiscardConfirmed : RejectLoanAction
     data object DiscardDismissed : RejectLoanAction
     data object DismissDialog : RejectLoanAction
+    data object DismissSuccessDialog : RejectLoanAction
+
+    /**
+     * Internal-only actions triggered by repository/data flow results.
+     */
+    sealed interface Internal : RejectLoanAction {
+        data class RejectResultReceived(
+            val dataState: DataState<RejectLoanResponse>,
+        ) : Internal
+    }
 }

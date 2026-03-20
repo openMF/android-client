@@ -22,7 +22,7 @@ interface LoanAccountRejectRepository {
     /**
      * Rejects a submitted and pending loan.
      */
-    suspend fun rejectLoan(
+    fun rejectLoan(
         loanId: Int,
         rejectLoanPayload: RejectLoanPayload,
     ): Flow<DataState<RejectLoanResponse>>
