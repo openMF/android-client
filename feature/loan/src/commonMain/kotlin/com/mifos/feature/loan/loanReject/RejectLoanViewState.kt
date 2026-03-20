@@ -25,9 +25,8 @@ internal data class RejectLoanViewState(
 )
 
 /**
- * Dialog states for success/error messages.
+ * Dialog states for error messages.
  */
 internal sealed interface DialogState {
     data class Error(val message: String) : DialogState
-    data class Success(val message: String) : DialogState
 }

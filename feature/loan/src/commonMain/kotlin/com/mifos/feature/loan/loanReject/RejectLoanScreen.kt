@@ -73,11 +73,7 @@ internal fun RejectLoanScreen(
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             RejectLoanEvent.NavigateBack -> {
-                if (state.dialogState is DialogState.Success) {
-                    onRejectSuccess()
-                } else {
-                    navigateBack()
-                }
+                onRejectSuccess()
             }
         }
     }
@@ -107,19 +103,8 @@ internal fun RejectLoanScreen(
                 message = stringResource(Res.string.feature_loan_reject_discard_message),
             )
 
-            // Success/Error dialog
+            // Error dialog
             when (val dialogState = state.dialogState) {
-                is DialogState.Success -> {
-                    MifosDialogBox(
-                        title = stringResource(Res.string.feature_loan_reject_title),
-                        showDialogState = true,
-                        confirmButtonText = stringResource(Res.string.feature_loan_submit),
-                        dismissButtonText = stringResource(Res.string.feature_loan_cancel),
-                        onConfirm = { viewModel.trySendAction(RejectLoanAction.DismissDialog) },
-                        onDismiss = { viewModel.trySendAction(RejectLoanAction.DismissDialog) },
-                        message = dialogState.message,
-                    )
-                }
                 is DialogState.Error -> {
                     MifosDialogBox(
                         title = stringResource(Res.string.feature_loan_reject_title),

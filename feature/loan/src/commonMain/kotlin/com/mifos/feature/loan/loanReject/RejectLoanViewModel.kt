@@ -11,7 +11,6 @@ package com.mifos.feature.loan.loanReject
 
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_reject_date_error_future
-import androidclient.feature.loan.generated.resources.feature_loan_reject_success
 import androidclient.feature.loan.generated.resources.feature_loan_unknown_error_occured
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -110,12 +109,8 @@ internal class RejectLoanViewModel(
                     }
 
                     is DataState.Success -> {
-                        val successMessage = getString(Res.string.feature_loan_reject_success)
                         mutableStateFlow.update {
-                            it.copy(
-                                isLoading = false,
-                                dialogState = DialogState.Success(successMessage),
-                            )
+                            it.copy(isLoading = false)
                         }
                         sendEvent(RejectLoanEvent.NavigateBack)
                     }
