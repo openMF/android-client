@@ -17,7 +17,6 @@ import androidclient.feature.loan.generated.resources.feature_loan_reject_discar
 import androidclient.feature.loan.generated.resources.feature_loan_reject_note_hint
 import androidclient.feature.loan.generated.resources.feature_loan_reject_title
 import androidclient.feature.loan.generated.resources.feature_loan_rejected_on_label
-import androidclient.feature.loan.generated.resources.feature_loan_select_date
 import androidclient.feature.loan.generated.resources.feature_loan_submit
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,15 +30,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -73,20 +69,20 @@ internal fun RejectLoanScreen(
     viewModel: RejectLoanViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
-    val snackbarHostState = remember { SnackbarHostState() }
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
-            RejectLoanEvent.NavigateBack -> navigateBack()
-            RejectLoanEvent.RejectSuccess -> onRejectSuccess()
-            is RejectLoanEvent.SubmissionError -> {
-                snackbarHostState.showSnackbar(message = event.message)
+            RejectLoanEvent.NavigateBack -> {
+                if (state.dialogState is DialogState.Success) {
+                    onRejectSuccess()
+                } else {
+                    navigateBack()
+                }
             }
         }
     }
 
     MifosScaffold(
-        snackbarHostState = snackbarHostState,
         title = stringResource(Res.string.feature_loan_reject_title),
         onBackPressed = { viewModel.trySendAction(RejectLoanAction.CancelClicked) },
     ) { paddingValues ->
@@ -100,6 +96,7 @@ internal fun RejectLoanScreen(
                 onAction = viewModel::trySendAction,
             )
 
+            // Discard dialog
             MifosDialogBox(
                 title = stringResource(Res.string.feature_loan_reject_discard_title),
                 showDialogState = state.showDiscardDialog,
@@ -110,6 +107,33 @@ internal fun RejectLoanScreen(
                 message = stringResource(Res.string.feature_loan_reject_discard_message),
             )
 
+            // Success/Error dialog
+            when (val dialogState = state.dialogState) {
+                is DialogState.Success -> {
+                    MifosDialogBox(
+                        title = stringResource(Res.string.feature_loan_reject_title),
+                        showDialogState = true,
+                        confirmButtonText = stringResource(Res.string.feature_loan_submit),
+                        dismissButtonText = stringResource(Res.string.feature_loan_cancel),
+                        onConfirm = { viewModel.trySendAction(RejectLoanAction.DismissDialog) },
+                        onDismiss = { viewModel.trySendAction(RejectLoanAction.DismissDialog) },
+                        message = dialogState.message,
+                    )
+                }
+                is DialogState.Error -> {
+                    MifosDialogBox(
+                        title = stringResource(Res.string.feature_loan_reject_title),
+                        showDialogState = true,
+                        confirmButtonText = stringResource(Res.string.feature_loan_submit),
+                        dismissButtonText = stringResource(Res.string.feature_loan_cancel),
+                        onConfirm = { viewModel.trySendAction(RejectLoanAction.DismissDialog) },
+                        onDismiss = { viewModel.trySendAction(RejectLoanAction.DismissDialog) },
+                        message = dialogState.message,
+                    )
+                }
+                null -> Unit
+            }
+
             if (state.isLoading) {
                 MifosProgressIndicatorOverlay()
             }
@@ -117,7 +141,6 @@ internal fun RejectLoanScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RejectLoanContent(
     state: RejectLoanViewState,
@@ -128,35 +151,27 @@ private fun RejectLoanContent(
     val cancelLabel = stringResource(Res.string.feature_loan_cancel)
     val submitLabel = stringResource(Res.string.feature_loan_submit)
 
-    var showDatePickerDialog by rememberSaveable { mutableStateOf(false) }
+    var showDatePicker by rememberSaveable { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = state.rejectedOnDate.toEpochMillis(),
     )
 
-    if (showDatePickerDialog) {
+    if (showDatePicker) {
         DatePickerDialog(
-            onDismissRequest = { showDatePickerDialog = false },
+            onDismissRequest = { showDatePicker = false },
             confirmButton = {
                 TextButton(
                     onClick = {
+                        showDatePicker = false
                         datePickerState.selectedDateMillis?.let { millis ->
-                            onAction(
-                                RejectLoanAction.RejectedOnDateChanged(
-                                    millis.toLocalDate(),
-                                ),
-                            )
+                            onAction(RejectLoanAction.RejectedOnDateChanged(millis.toLocalDate()))
                         }
-                        showDatePickerDialog = false
                     },
-                ) {
-                    Text(stringResource(Res.string.feature_loan_select_date))
-                }
+                ) { Text(submitLabel) }
             },
             dismissButton = {
-                TextButton(
-                    onClick = { showDatePickerDialog = false },
-                ) {
-                    Text(stringResource(Res.string.feature_loan_cancel))
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text(cancelLabel)
                 }
             },
         ) {
@@ -175,7 +190,7 @@ private fun RejectLoanContent(
             value = state.rejectedOnDate.toDisplayDate(),
             label = rejectedOnLabel,
             errorMessage = state.rejectedOnDateError,
-            openDatePicker = { showDatePickerDialog = true },
+            openDatePicker = { showDatePicker = true },
             enabled = !state.isLoading,
             modifier = Modifier
                 .fillMaxWidth()

@@ -9,10 +9,13 @@
  */
 package com.mifos.core.data.repositoryImp
 
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountRejectRepository
 import com.mifos.core.model.objects.account.loan.RejectLoanPayload
 import com.mifos.core.model.objects.account.loan.RejectLoanResponse
 import com.mifos.core.network.datamanager.DataManagerLoan
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 /**
  * Default implementation for [LoanAccountRejectRepository].
@@ -24,7 +27,13 @@ class LoanAccountRejectRepositoryImp(
     override suspend fun rejectLoan(
         loanId: Int,
         rejectLoanPayload: RejectLoanPayload,
-    ): RejectLoanResponse {
-        return dataManagerLoan.rejectLoan(loanId, rejectLoanPayload)
+    ): Flow<DataState<RejectLoanResponse>> = flow {
+        try {
+            emit(DataState.Loading)
+            val response = dataManagerLoan.rejectLoan(loanId, rejectLoanPayload)
+            emit(DataState.Success(response))
+        } catch (e: Exception) {
+            emit(DataState.Error(e, null))
+        }
     }
 }

@@ -20,7 +20,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_profile_label
 import androidclient.feature.loan.generated.resources.feature_loan_profile_section_account_overview
 import androidclient.feature.loan.generated.resources.feature_loan_profile_section_actions_details
 import androidclient.feature.loan.generated.resources.feature_loan_profile_status_active
-import androidclient.feature.loan.generated.resources.feature_loan_reject_success_message
+import androidclient.feature.loan.generated.resources.feature_loan_reject_success
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -99,7 +99,7 @@ internal fun LoanAccountProfileScreen(
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
-    val rejectSuccessMessage = stringResource(Res.string.feature_loan_reject_success_message)
+    val rejectSuccessMessage = stringResource(Res.string.feature_loan_reject_success)
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {

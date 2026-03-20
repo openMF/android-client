@@ -21,4 +21,5 @@ internal sealed interface RejectLoanAction {
     data object CancelClicked : RejectLoanAction
     data object DiscardConfirmed : RejectLoanAction
     data object DiscardDismissed : RejectLoanAction
+    data object DismissDialog : RejectLoanAction
 }

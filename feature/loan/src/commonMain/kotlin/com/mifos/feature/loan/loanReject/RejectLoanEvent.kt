@@ -14,6 +14,4 @@ package com.mifos.feature.loan.loanReject
  */
 internal sealed interface RejectLoanEvent {
     data object NavigateBack : RejectLoanEvent
-    data object RejectSuccess : RejectLoanEvent
-    data class SubmissionError(val message: String) : RejectLoanEvent
 }

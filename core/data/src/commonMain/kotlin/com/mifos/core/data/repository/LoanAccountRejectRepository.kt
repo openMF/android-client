@@ -9,8 +9,10 @@
  */
 package com.mifos.core.data.repository
 
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.account.loan.RejectLoanPayload
 import com.mifos.core.model.objects.account.loan.RejectLoanResponse
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Repository contract for rejecting loan applications.
@@ -23,5 +25,5 @@ interface LoanAccountRejectRepository {
     suspend fun rejectLoan(
         loanId: Int,
         rejectLoanPayload: RejectLoanPayload,
-    ): RejectLoanResponse
+    ): Flow<DataState<RejectLoanResponse>>
 }

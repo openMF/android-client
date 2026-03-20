@@ -91,7 +91,7 @@
     <string name="feature_loan_reject_title">Reject Loan</string>
     <string name="feature_loan_rejected_on_label">Rejected On*</string>
     <string name="feature_loan_reject_note_hint">Note</string>
-    <string name="feature_loan_reject_success_message">Loan rejected successfully</string>
+    <string name="feature_loan_reject_success">Loan rejected successfully</string>
     <string name="feature_loan_reject_date_error_future">Rejected date cannot be in the future</string>
     <string name="feature_loan_reject_discard_title">Discard Changes?</string>
     <string name="feature_loan_reject_discard_message">You have unsaved changes. Are you sure you want to leave?</string>

@@ -11,11 +11,13 @@ package com.mifos.feature.loan.loanReject
 
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_reject_date_error_future
+import androidclient.feature.loan.generated.resources.feature_loan_reject_success
 import androidclient.feature.loan.generated.resources.feature_loan_unknown_error_occured
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.ApiDateFormatter
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper.today
 import com.mifos.core.data.repository.LoanAccountRejectRepository
 import com.mifos.core.model.objects.account.loan.RejectLoanPayload
@@ -64,6 +66,10 @@ internal class RejectLoanViewModel(
             RejectLoanAction.DiscardDismissed -> {
                 mutableStateFlow.update { it.copy(showDiscardDialog = false) }
             }
+
+            RejectLoanAction.DismissDialog -> {
+                mutableStateFlow.update { it.copy(dialogState = null) }
+            }
         }
     }
 
@@ -90,8 +96,6 @@ internal class RejectLoanViewModel(
                 return@launch
             }
 
-            mutableStateFlow.update { it.copy(isLoading = true) }
-
             val payload = RejectLoanPayload(
                 rejectedOnDate = ApiDateFormatter.formatForApi(validatedState.rejectedOnDate),
                 note = validatedState.note.takeIf { it.isNotBlank() },
@@ -99,17 +103,34 @@ internal class RejectLoanViewModel(
                 dateFormat = DateConstants.DATE_FORMAT,
             )
 
-            try {
-                repository.rejectLoan(loanId, payload)
-                mutableStateFlow.update { it.copy(isLoading = false) }
-                sendEvent(RejectLoanEvent.RejectSuccess)
-            } catch (e: Exception) {
-                val errorMessage = e.message
-                    ?.takeIf { it.isNotBlank() }
-                    ?: getString(Res.string.feature_loan_unknown_error_occured)
+            repository.rejectLoan(loanId, payload).collect { dataState ->
+                when (dataState) {
+                    is DataState.Loading -> {
+                        mutableStateFlow.update { it.copy(isLoading = true) }
+                    }
 
-                mutableStateFlow.update { it.copy(isLoading = false) }
-                sendEvent(RejectLoanEvent.SubmissionError(errorMessage))
+                    is DataState.Success -> {
+                        val successMessage = getString(Res.string.feature_loan_reject_success)
+                        mutableStateFlow.update {
+                            it.copy(
+                                isLoading = false,
+                                dialogState = DialogState.Success(successMessage),
+                            )
+                        }
+                        sendEvent(RejectLoanEvent.NavigateBack)
+                    }
+
+                    is DataState.Error -> {
+                        val errorMessage = dataState.message
+                            ?: getString(Res.string.feature_loan_unknown_error_occured)
+                        mutableStateFlow.update {
+                            it.copy(
+                                isLoading = false,
+                                dialogState = DialogState.Error(errorMessage),
+                            )
+                        }
+                    }
+                }
             }
         }
     }

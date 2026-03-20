@@ -21,4 +21,13 @@ internal data class RejectLoanViewState(
     val isLoading: Boolean = false,
     val rejectedOnDateError: String? = null,
     val showDiscardDialog: Boolean = false,
+    val dialogState: DialogState? = null,
 )
+
+/**
+ * Dialog states for success/error messages.
+ */
+internal sealed interface DialogState {
+    data class Error(val message: String) : DialogState
+    data class Success(val message: String) : DialogState
+}
