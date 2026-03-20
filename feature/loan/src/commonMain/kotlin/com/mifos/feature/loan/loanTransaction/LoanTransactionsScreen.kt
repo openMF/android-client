@@ -86,15 +86,19 @@ internal fun LoanTransactionsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val selectedRow by viewModel.selectedRow.collectAsStateWithLifecycle()
+    var showExportDialog by remember { mutableStateOf(false) }
 
     LoanTransactionsScreen(
         uiState = uiState,
         selectedRow = selectedRow,
+        showExportDialog = showExportDialog,
         onNavigateBack = navigateBack,
         onRetry = viewModel::retry,
         onRowSelected = viewModel::onRowSelected,
         onDismissBottomSheet = viewModel::dismissBottomSheet,
         onTransactionAction = viewModel::onTransactionAction,
+        onExportClick = { showExportDialog = true },
+        onDismissExportDialog = { showExportDialog = false },
     )
 }
 
@@ -103,14 +107,16 @@ internal fun LoanTransactionsScreen(
 internal fun LoanTransactionsScreen(
     uiState: LoanTransactionsUiState,
     selectedRow: LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData?,
+    showExportDialog: Boolean = false,
     onNavigateBack: () -> Unit = {},
     onRetry: () -> Unit = {},
     onRowSelected: (LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData) -> Unit = {},
     onDismissBottomSheet: () -> Unit = {},
     onTransactionAction: (TransactionAction, Int) -> Unit = { _, _ -> },
+    onExportClick: () -> Unit = {},
+    onDismissExportDialog: () -> Unit = {},
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    var showExportDialog by remember { mutableStateOf(false) }
 
     MifosScaffold(
         snackbarHostState = snackbarHostState,
@@ -118,7 +124,7 @@ internal fun LoanTransactionsScreen(
         onBackPressed = onNavigateBack,
         actions = {
             IconButton(
-                onClick = { showExportDialog = true },
+                onClick = onExportClick,
                 enabled = uiState is LoanTransactionsUiState.Success,
             ) {
                 Icon(
@@ -175,10 +181,10 @@ internal fun LoanTransactionsScreen(
 
     if (showExportDialog) {
         ExportTransactionsDialog(
-            onDismiss = { showExportDialog = false },
+            onDismiss = onDismissExportDialog,
             onGenerateReport = { _, _ ->
                 // Placeholder for future API call
-                showExportDialog = false
+                onDismissExportDialog()
             },
         )
     }
