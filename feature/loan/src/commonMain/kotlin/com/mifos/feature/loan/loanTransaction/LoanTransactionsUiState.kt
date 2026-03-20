@@ -9,14 +9,11 @@
  */
 package com.mifos.feature.loan.loanTransaction
 
-data class LoanTransactionsUiState(
-    val isLoading: Boolean = true,
-    val errorMessage: String? = null,
-    val transactionsTableData: LoanTransactionsTableData? = null,
-    val selectedRow: LoanTransactionsTableData.TransactionRowData? = null,
-    val isBottomSheetOpen: Boolean = false,
-    val isExportDialogOpen: Boolean = false,
-) {
+sealed interface LoanTransactionsUiState {
+    data object Loading : LoanTransactionsUiState
+    data class Error(val message: String) : LoanTransactionsUiState
+    data class Success(val tableData: LoanTransactionsTableData) : LoanTransactionsUiState
+
     data class LoanTransactionsTableData(
         val transactions: List<TransactionRowData>,
     ) {

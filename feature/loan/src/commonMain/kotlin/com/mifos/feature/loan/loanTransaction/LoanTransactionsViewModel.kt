@@ -10,69 +10,41 @@
 package com.mifos.feature.loan.loanTransaction
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.LoanTransactionsRepository
-import com.mifos.core.ui.util.BaseViewModel
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class LoanTransactionsViewModel(
     private val repository: LoanTransactionsRepository,
     savedStateHandle: SavedStateHandle,
-) : BaseViewModel<LoanTransactionsUiState, LoanTransactionsEvent, LoanTransactionsAction>(
-    initialState = LoanTransactionsUiState(),
-) {
+) : ViewModel() {
 
     private val loanId = savedStateHandle.toRoute<LoanTransactionScreenRoute>().loanAccountNumber
 
+    private val _uiState = MutableStateFlow<LoanTransactionsUiState>(LoanTransactionsUiState.Loading)
+    val uiState: StateFlow<LoanTransactionsUiState> = _uiState.asStateFlow()
+
+    private val _selectedRow = MutableStateFlow<LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData?>(null)
+    val selectedRow: StateFlow<LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData?> = _selectedRow.asStateFlow()
+
     init {
-        loadLoanTransaction()
+        loadLoanTransactions()
     }
 
-    override fun handleAction(action: LoanTransactionsAction) {
-        when (action) {
-            LoanTransactionsAction.Retry -> loadLoanTransaction()
-            LoanTransactionsAction.ShowExportDialog -> mutableStateFlow.update {
-                it.copy(isExportDialogOpen = true)
-            }
-            LoanTransactionsAction.HideExportDialog -> mutableStateFlow.update {
-                it.copy(isExportDialogOpen = false)
-            }
-            LoanTransactionsAction.DismissBottomSheet -> mutableStateFlow.update {
-                it.copy(isBottomSheetOpen = false, selectedRow = null)
-            }
-            is LoanTransactionsAction.OnRowAction -> mutableStateFlow.update {
-                it.copy(selectedRow = action.row, isBottomSheetOpen = true)
-            }
-            is LoanTransactionsAction.OnTransactionAction -> {
-                // TODO: Handle the action based on action type and id
-                mutableStateFlow.update {
-                    it.copy(isBottomSheetOpen = false, selectedRow = null)
-                }
-            }
-            LoanTransactionsAction.NavigateBack -> sendEvent(LoanTransactionsEvent.NavigateBack)
-        }
-    }
-
-    private fun loadLoanTransaction() {
+    fun loadLoanTransactions() {
         viewModelScope.launch {
             repository.getLoanTransactions(loanId).collect { dataState ->
-                when (dataState) {
-                    is DataState.Error -> mutableStateFlow.update {
-                        it.copy(
-                            isLoading = false,
-                            errorMessage = dataState.message,
-                        )
-                    }
-
-                    DataState.Loading -> mutableStateFlow.update {
-                        it.copy(isLoading = true, errorMessage = null)
-                    }
-
+                _uiState.value = when (dataState) {
+                    is DataState.Error -> LoanTransactionsUiState.Error(dataState.message)
+                    DataState.Loading -> LoanTransactionsUiState.Loading
                     is DataState.Success -> {
                         val loanWithAssociations = dataState.data
                         val currencyCode = loanWithAssociations.currency.code
@@ -80,7 +52,6 @@ class LoanTransactionsViewModel(
 
                         val transactionsData =
                             loanWithAssociations.transactions.mapIndexed { index, transaction ->
-
                                 LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData(
                                     number = (index + 1).toString(),
                                     id = transaction.id?.toString() ?: "-",
@@ -88,9 +59,7 @@ class LoanTransactionsViewModel(
                                     // TODO: map from transaction.externalId once the API field is available
                                     externalId = "-",
                                     transactionDate = if (transaction.date.isNotEmpty()) {
-                                        DateHelper.getDateAsString(
-                                            transaction.date,
-                                        )
+                                        DateHelper.getDateAsString(transaction.date)
                                     } else {
                                         "-"
                                     },
@@ -131,37 +100,31 @@ class LoanTransactionsViewModel(
                                 )
                             }
 
-                        mutableStateFlow.update {
-                            it.copy(
-                                isLoading = false,
-                                errorMessage = null,
-                                transactionsTableData = LoanTransactionsUiState.LoanTransactionsTableData(
-                                    transactions = transactionsData,
-                                ),
-                            )
-                        }
+                        LoanTransactionsUiState.Success(
+                            LoanTransactionsUiState.LoanTransactionsTableData(
+                                transactions = transactionsData,
+                            ),
+                        )
                     }
                 }
             }
         }
     }
-}
 
-sealed interface LoanTransactionsAction {
-    data object NavigateBack : LoanTransactionsAction
-    data object Retry : LoanTransactionsAction
-    data object ShowExportDialog : LoanTransactionsAction
-    data object HideExportDialog : LoanTransactionsAction
-    data object DismissBottomSheet : LoanTransactionsAction
-    data class OnRowAction(
-        val row: LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData,
-    ) : LoanTransactionsAction
-    data class OnTransactionAction(
-        val action: TransactionAction,
-        val id: Int,
-    ) : LoanTransactionsAction
-}
+    fun retry() {
+        loadLoanTransactions()
+    }
 
-sealed interface LoanTransactionsEvent {
-    data object NavigateBack : LoanTransactionsEvent
+    fun onRowSelected(row: LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData) {
+        _selectedRow.value = row
+    }
+
+    fun dismissBottomSheet() {
+        _selectedRow.value = null
+    }
+
+    fun onTransactionAction(action: TransactionAction, id: Int) {
+        // TODO: Handle the action based on action type and id
+        _selectedRow.value = null
+    }
 }
