@@ -46,6 +46,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
@@ -146,9 +147,9 @@ internal fun CreditBalanceRefundScreen(
 
                 when (val dialogState = state.dialogState) {
                     is CreditBalanceRefundState.DialogState.Loading -> {
-                        androidx.compose.material3.Surface(
+                        Surface(
                             modifier = Modifier.fillMaxSize(),
-                            color = template.core.base.designsystem.theme.KptTheme.colorScheme.background,
+                            color = KptTheme.colorScheme.background,
                         ) {
                             MifosProgressIndicator()
                         }
@@ -164,9 +165,9 @@ internal fun CreditBalanceRefundScreen(
                     }
 
                     is CreditBalanceRefundState.DialogState.Error -> {
-                        androidx.compose.material3.Surface(
+                        Surface(
                             modifier = Modifier.fillMaxSize(),
-                            color = template.core.base.designsystem.theme.KptTheme.colorScheme.background,
+                            color = KptTheme.colorScheme.background,
                         ) {
                             MifosSweetError(
                                 message = dialogState.messageRes?.let { stringResource(it) } ?: dialogState.message ?: "",
