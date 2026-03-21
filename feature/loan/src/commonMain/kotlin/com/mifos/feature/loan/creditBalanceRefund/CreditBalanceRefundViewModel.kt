@@ -23,7 +23,6 @@ import com.mifos.room.entities.accounts.loans.CreditBalanceRefundRequest
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.launch
 
 /**
  * ViewModel for the Credit Balance Refund screen.
@@ -66,7 +65,7 @@ class CreditBalanceRefundViewModel(
                     mutableStateFlow.update {
                         it.copy(
                             dialogState = CreditBalanceRefundState.DialogState.Error(
-                                messageRes = Res.string.feature_error_network_not_available
+                                messageRes = Res.string.feature_error_network_not_available,
                             ),
                         )
                     }
@@ -97,8 +96,8 @@ class CreditBalanceRefundViewModel(
                         mutableStateFlow.update {
                             it.copy(
                                 dialogState = CreditBalanceRefundState.DialogState.Error(
-                                    messageRes = Res.string.feature_error_network_not_available
-                                )
+                                    messageRes = Res.string.feature_error_network_not_available,
+                                ),
                             )
                         }
                     }
@@ -118,8 +117,8 @@ class CreditBalanceRefundViewModel(
                         mutableStateFlow.update {
                             it.copy(
                                 dialogState = CreditBalanceRefundState.DialogState.Error(
-                                    messageRes = Res.string.feature_error_network_not_available
-                                )
+                                    messageRes = Res.string.feature_error_network_not_available,
+                                ),
                             )
                         }
                     }
@@ -147,7 +146,7 @@ class CreditBalanceRefundViewModel(
                             mutableStateFlow.update {
                                 it.copy(
                                     dialogState = CreditBalanceRefundState.DialogState.Error(
-                                        messageRes = Res.string.feature_loan_profile_error_details_not_found
+                                        messageRes = Res.string.feature_loan_profile_error_details_not_found,
                                     ),
                                 )
                             }
@@ -169,12 +168,12 @@ class CreditBalanceRefundViewModel(
                             val isNetworkError = !it.networkAvailable ||
                                 result.message.contains("Unable to resolve host", ignoreCase = true) ||
                                 result.message.contains("Failed to connect", ignoreCase = true)
-                            
+
                             if (isNetworkError) {
                                 it.copy(
                                     dialogState = CreditBalanceRefundState.DialogState.Error(
-                                        messageRes = Res.string.feature_error_network_not_available
-                                    )
+                                        messageRes = Res.string.feature_error_network_not_available,
+                                    ),
                                 )
                             } else {
                                 it.copy(dialogState = CreditBalanceRefundState.DialogState.Error(message = result.message))
@@ -206,12 +205,12 @@ class CreditBalanceRefundViewModel(
                         val isNetworkError = !it.networkAvailable ||
                             result.message.contains("Unable to resolve host", ignoreCase = true) ||
                             result.message.contains("Failed to connect", ignoreCase = true)
-                        
+
                         if (isNetworkError) {
                             it.copy(
                                 dialogState = CreditBalanceRefundState.DialogState.Error(
-                                    messageRes = Res.string.feature_error_network_not_available
-                                )
+                                    messageRes = Res.string.feature_error_network_not_available,
+                                ),
                             )
                         } else {
                             it.copy(dialogState = CreditBalanceRefundState.DialogState.Error(message = result.message))

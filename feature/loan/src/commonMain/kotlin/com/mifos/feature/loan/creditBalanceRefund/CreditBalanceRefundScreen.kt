@@ -148,7 +148,7 @@ internal fun CreditBalanceRefundScreen(
                     is CreditBalanceRefundState.DialogState.Loading -> {
                         androidx.compose.material3.Surface(
                             modifier = Modifier.fillMaxSize(),
-                            color = template.core.base.designsystem.theme.KptTheme.colorScheme.background
+                            color = template.core.base.designsystem.theme.KptTheme.colorScheme.background,
                         ) {
                             MifosProgressIndicator()
                         }
@@ -166,7 +166,7 @@ internal fun CreditBalanceRefundScreen(
                     is CreditBalanceRefundState.DialogState.Error -> {
                         androidx.compose.material3.Surface(
                             modifier = Modifier.fillMaxSize(),
-                            color = template.core.base.designsystem.theme.KptTheme.colorScheme.background
+                            color = template.core.base.designsystem.theme.KptTheme.colorScheme.background,
                         ) {
                             MifosSweetError(
                                 message = dialogState.messageRes?.let { stringResource(it) } ?: dialogState.message ?: "",
