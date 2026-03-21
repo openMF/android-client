@@ -18,21 +18,18 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CreditBalanceRefundScreenRoute(
     val loanId: Int,
-    val clientName: String,
-    val loanAccountNumber: String,
-    val overpaidAmount: Double,
-    val currencyCode: String? = null,
-    val decimalPlaces: Int? = null,
 )
 
 fun NavGraphBuilder.creditBalanceRefundScreen(
     navController: NavController,
     onBackPressed: () -> Unit,
+    onRefreshParent: () -> Unit = {},
 ) {
     composable<CreditBalanceRefundScreenRoute> {
         CreditBalanceRefundScreen(
             navigateBack = onBackPressed,
             navController = navController,
+            onRefreshParent = onRefreshParent,
         )
     }
 }
@@ -41,11 +38,6 @@ fun NavController.navigateToCreditBalanceRefundScreen(loanWithAssociations: Loan
     navigate(
         CreditBalanceRefundScreenRoute(
             loanId = loanWithAssociations.id,
-            clientName = loanWithAssociations.clientName,
-            loanAccountNumber = loanWithAssociations.accountNo,
-            overpaidAmount = loanWithAssociations.totalOverpaid,
-            currencyCode = loanWithAssociations.currency.code,
-            decimalPlaces = loanWithAssociations.currency.decimalPlaces,
         ),
     )
 }

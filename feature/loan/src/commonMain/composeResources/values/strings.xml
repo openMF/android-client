@@ -427,20 +427,11 @@
     <string name="feature_loan_credit_balance_refund_submit">Submit</string>
     <string name="feature_loan_credit_balance_refund_cancel">Cancel</string>
     <string name="feature_loan_credit_balance_refund_ok">OK</string>
-    <string name="feature_loan_credit_balance_refund_retry">Retry</string>
 
-    <string name="feature_loan_credit_balance_refund_error_date_required">Transaction date is required</string>
     <string name="feature_loan_credit_balance_refund_error_amount_required">Transaction amount is required</string>
     <string name="feature_loan_credit_balance_refund_error_amount_invalid">Transaction amount must be a valid number</string>
     <string name="feature_loan_credit_balance_refund_error_amount_exceeds_overpaid">Transaction amount cannot exceed overpaid amount of %1$s</string>
     <string name="feature_loan_credit_balance_refund_error_amount_non_positive">Transaction amount must be greater than zero</string>
-
-    <string name="feature_loan_credit_balance_refund_error_bad_request">Invalid refund request. Please check your input and try again.</string>
-    <string name="feature_loan_credit_balance_refund_error_unauthorized">You do not have permission to process refunds. Please contact your administrator.</string>
-    <string name="feature_loan_credit_balance_refund_error_not_found">Loan account not found. The account may have been deleted or you may not have access.</string>
-    <string name="feature_loan_credit_balance_refund_error_server">Server error occurred. Please try again later.</string>
-    <string name="feature_loan_credit_balance_refund_error_network">Network connection unavailable. Please check your internet connection and try again.</string>
-    <string name="feature_loan_credit_balance_refund_error_unknown">An unknown error occurred. Please try again.</string>
 
     <string name="feature_loan_credit_balance_refund_success_title">Refund Successful</string>
     <string name="feature_loan_credit_balance_refund_success_message">Credit balance refund has been processed successfully.</string>

@@ -27,6 +27,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_credit_balanc
 import androidclient.feature.loan.generated.resources.feature_loan_credit_balance_refund_title
 import androidclient.feature.loan.generated.resources.feature_loan_credit_balance_refund_transaction_amount
 import androidclient.feature.loan.generated.resources.feature_loan_credit_balance_refund_transaction_date
+import androidclient.feature.loan.generated.resources.feature_loan_profile_label_client_name_placeholder
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -49,6 +50,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -61,6 +63,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosBottomSheet
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
@@ -82,17 +85,35 @@ import kotlin.time.Clock
 
 /**
  * Main screen composable for Credit Balance Refund feature.
- * Manages state and renders appropriate UI based on current state.
+ * Observes the ViewModel state and dynamically renders overlays (loading/errors)
+ * on top of the refund form.
  */
 @Composable
 internal fun CreditBalanceRefundScreen(
     navigateBack: () -> Unit,
     navController: NavController,
+    onRefreshParent: () -> Unit,
     viewModel: CreditBalanceRefundViewModel = koinViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val state by viewModel.stateFlow.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
-    var lastRequest by remember { mutableStateOf<CreditBalanceRefundRequest?>(null) }
+
+    LaunchedEffect(viewModel.eventFlow) {
+        viewModel.eventFlow.collect { event ->
+            when (event) {
+                is CreditBalanceRefundEvent.NavigateBack -> {
+                    navigateBack()
+                }
+                is CreditBalanceRefundEvent.NavigateBackWithRefresh -> {
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("refresh_loan_details", true)
+                    onRefreshParent()
+                    navigateBack()
+                }
+            }
+        }
+    }
 
     MifosScaffold(
         snackbarHostState = snackbarHostState,
@@ -105,40 +126,55 @@ internal fun CreditBalanceRefundScreen(
             MifosBreadcrumbNavBar(navController)
 
             Box(modifier = Modifier.fillMaxSize()) {
-                when (val state = uiState) {
-                    is CreditBalanceRefundUiState.Loading -> MifosProgressIndicator()
+                if (state.clientName != null || !state.networkAvailable) {
+                    CreditBalanceRefundContent(
+                        clientName = state.clientName,
+                        loanAccountNumber = state.loanAccountNumber,
+                        overpaidAmount = state.overpaidAmount,
+                        currencyCode = state.currencyCode,
+                        decimalPlaces = state.decimalPlaces,
+                        onSubmit = { request ->
+                            viewModel.trySendAction(CreditBalanceRefundAction.OnSubmitRefund(request))
+                        },
+                        onCancel = {
+                            viewModel.trySendAction(CreditBalanceRefundAction.NavigateBack)
+                        },
+                    )
+                } else if (state.dialogState == null) {
+                    MifosProgressIndicator()
+                }
 
-                    is CreditBalanceRefundUiState.ShowRefundForm -> {
-                        CreditBalanceRefundContent(
-                            clientName = state.clientName,
-                            loanAccountNumber = state.loanAccountNumber,
-                            overpaidAmount = state.overpaidAmount,
-                            currencyCode = state.currencyCode,
-                            decimalPlaces = state.decimalPlaces,
-                            onSubmit = { request ->
-                                lastRequest = request
-                                viewModel.submitRefund(request)
-                            },
-                            onCancel = navigateBack,
-                            formatCurrency = viewModel::formatCurrency,
-                        )
+                when (val dialogState = state.dialogState) {
+                    is CreditBalanceRefundState.DialogState.Loading -> {
+                        androidx.compose.material3.Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = template.core.base.designsystem.theme.KptTheme.colorScheme.background
+                        ) {
+                            MifosProgressIndicator()
+                        }
                     }
 
-                    is CreditBalanceRefundUiState.Success -> {
+                    is CreditBalanceRefundState.DialogState.Success -> {
                         SuccessBottomSheet(
-                            transactionId = state.transactionId,
-                            onDismiss = navigateBack,
+                            transactionId = dialogState.transactionId,
+                            onDismiss = {
+                                viewModel.trySendAction(CreditBalanceRefundAction.OnDismissDialog)
+                            },
                         )
                     }
 
-                    is CreditBalanceRefundUiState.Error -> {
-                        MifosSweetError(
-                            message = stringResource(state.message),
-                            onclick = {
-                                viewModel.resetToForm()
-                                lastRequest?.let { viewModel.submitRefund(it) }
-                            },
-                        )
+                    is CreditBalanceRefundState.DialogState.Error -> {
+                        androidx.compose.material3.Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = template.core.base.designsystem.theme.KptTheme.colorScheme.background
+                        ) {
+                            MifosSweetError(
+                                message = dialogState.messageRes?.let { stringResource(it) } ?: dialogState.message ?: "",
+                                onclick = {
+                                    viewModel.trySendAction(CreditBalanceRefundAction.OnRetry)
+                                },
+                            )
+                        }
                     }
                     else -> Unit
                 }
@@ -150,23 +186,26 @@ internal fun CreditBalanceRefundScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CreditBalanceRefundContent(
-    clientName: String,
+    clientName: String?,
     loanAccountNumber: String,
     overpaidAmount: Double,
     currencyCode: String?,
     decimalPlaces: Int?,
     onSubmit: (CreditBalanceRefundRequest) -> Unit,
     onCancel: () -> Unit,
-    formatCurrency: (Double?, String?, Int?) -> String,
 ) {
     var transactionDateMillis by rememberSaveable { mutableStateOf<Long?>(null) }
     var transactionDateStr by rememberSaveable { mutableStateOf("") }
-    var transactionAmount by rememberSaveable { mutableStateOf(overpaidAmount.toString()) }
+    var transactionAmount by rememberSaveable { mutableStateOf(if (overpaidAmount > 0) overpaidAmount.toString() else "") }
     var externalId by rememberSaveable { mutableStateOf("") }
     var note by rememberSaveable { mutableStateOf("") }
 
     var showDatePickerDialog by rememberSaveable { mutableStateOf(false) }
-    val formattedOverpaidAmount = formatCurrency(overpaidAmount, currencyCode, decimalPlaces)
+    val formattedOverpaidAmount = if (currencyCode != null) {
+        CurrencyFormatter.format(overpaidAmount, currencyCode, decimalPlaces)
+    } else {
+        overpaidAmount.toString()
+    }
 
     val amountDouble = transactionAmount.toDoubleOrNull()
     val amountErrorRes = when {
@@ -191,8 +230,11 @@ private fun CreditBalanceRefundContent(
         initialSelectedDateMillis = transactionDateMillis ?: Clock.System.now()
             .toEpochMilliseconds(),
         selectableDates = object : SelectableDates {
-            override fun isSelectableDate(utcTimeMillis: Long): Boolean =
-                utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                val dateStr = DateHelper.getDateMonthYearStringFromLong(utcTimeMillis)
+                val todayStr = DateHelper.getDateMonthYearStringFromLong(Clock.System.now().toEpochMilliseconds())
+                return dateStr == todayStr
+            }
         },
     )
 
@@ -209,14 +251,17 @@ private fun CreditBalanceRefundContent(
 
         Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
-        // Info Card
         Column {
             Text(
                 text = stringResource(Res.string.feature_loan_credit_balance_refund_client_name),
                 style = KptTheme.typography.labelMedium,
                 color = KptTheme.colorScheme.onSurfaceVariant,
             )
-            Text(text = clientName, style = KptTheme.typography.bodyLarge, fontWeight = FontWeight.SemiBold)
+            Text(
+                text = clientName ?: stringResource(Res.string.feature_loan_profile_label_client_name_placeholder),
+                style = KptTheme.typography.bodyLarge,
+                fontWeight = FontWeight.SemiBold,
+            )
             Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
             Text(
                 text = stringResource(Res.string.feature_loan_credit_balance_refund_loan_account_number),

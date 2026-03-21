@@ -9,24 +9,61 @@
  */
 package com.mifos.feature.loan.creditBalanceRefund
 
-import org.jetbrains.compose.resources.StringResource
+import com.mifos.room.entities.accounts.loans.CreditBalanceRefundRequest
 
-sealed class CreditBalanceRefundUiState {
+/**
+ * The single source of truth for the Credit Balance Refund UI.
+ * All display data lives here; [dialogState] drives overlay dialogs (loading/error/success).
+ * The refund form is always present in the composable hierarchy — overlays appear on top of it.
+ */
+data class CreditBalanceRefundState(
+    val dialogState: DialogState? = null,
+    val loanId: Int = 0,
+    val clientName: String? = null,
+    val loanAccountNumber: String = "",
+    val overpaidAmount: Double = 0.0,
+    val currencyCode: String? = null,
+    val decimalPlaces: Int? = null,
+    val networkAvailable: Boolean = true,
+) {
+    /**
+     * Represents the current overlay state shown on top of the refund form.
+     * Null means no overlay — the form is interactive.
+     */
+    sealed interface DialogState {
+        data object Loading : DialogState
 
-    data object Initial : CreditBalanceRefundUiState()
+        /** An error occurred. [message] comes from API, [messageRes] comes from local string resources. */
+        data class Error(
+            val message: String? = null,
+            val messageRes: org.jetbrains.compose.resources.StringResource? = null,
+        ) : DialogState
 
-    data object Loading : CreditBalanceRefundUiState()
+        data class Success(val transactionId: String) : DialogState
+    }
+}
 
-    data class ShowRefundForm(
-        val loanId: Int,
-        val clientName: String,
-        val loanAccountNumber: String,
-        val overpaidAmount: Double,
-        val currencyCode: String?,
-        val decimalPlaces: Int?,
-    ) : CreditBalanceRefundUiState()
+/**
+ * All user intentions and system-triggered actions that the ViewModel can handle.
+ * The screen calls [CreditBalanceRefundViewModel.trySendAction] to dispatch these.
+ */
+sealed interface CreditBalanceRefundAction {
+    data object NavigateBack : CreditBalanceRefundAction
 
-    data class Success(val transactionId: String) : CreditBalanceRefundUiState()
+    data object OnRetry : CreditBalanceRefundAction
 
-    data class Error(val message: StringResource) : CreditBalanceRefundUiState()
+    data object OnDismissDialog : CreditBalanceRefundAction
+
+    data class OnSubmitRefund(val request: CreditBalanceRefundRequest) : CreditBalanceRefundAction
+
+    data class LoanLoadRetry(val loanId: Int) : CreditBalanceRefundAction
+}
+
+/**
+ * One-shot navigation events emitted by the ViewModel.
+ * The Screen collects these and navigates without persisting state.
+ */
+sealed interface CreditBalanceRefundEvent {
+    data object NavigateBack : CreditBalanceRefundEvent
+    data object NavigateBackWithRefresh : CreditBalanceRefundEvent
 }

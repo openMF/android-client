@@ -9,24 +9,37 @@
  */
 package com.mifos.core.data.repository
 
+import com.mifos.core.common.utils.DataState
 import com.mifos.room.entities.accounts.loans.CreditBalanceRefundRequest
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Repository interface for Credit Balance Refund operations.
- * Provides methods to submit refund transactions for overpaid loan accounts.
+ * Provides methods to load loan details and submit refund transactions.
  */
 interface CreditBalanceRefundRepository {
 
     /**
+     * Fetches loan details (client name, account number, overpaid amount, currency)
+     * needed to populate the refund form.
+     *
+     * @param loanId The ID of the loan account
+     * @return Flow of DataState wrapping the loan details
+     */
+    fun getLoanById(loanId: Int): Flow<DataState<LoanWithAssociationsEntity?>>
+
+    /**
      * Submits a credit balance refund transaction for a loan account.
+     * Error handling (HTTP exceptions, network errors) is done inside the repository.
      *
      * @param loanId The ID of the loan account
      * @param request The refund request containing transaction details
-     * @return LoanRepaymentResponseEntity containing the transaction result
+     * @return DataState wrapping the response or an error
      */
     suspend fun submitRefund(
         loanId: Int,
         request: CreditBalanceRefundRequest,
-    ): LoanRepaymentResponseEntity
+    ): DataState<LoanRepaymentResponseEntity>
 }
