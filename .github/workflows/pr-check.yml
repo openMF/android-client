@@ -89,5 +89,6 @@ jobs:
       web_package_name: 'cmp-web' # <-- Change Your Web Package Name
       ios_package_name: 'cmp-ios' # <-- Change Your iOS Package Name
       build_ios: true # <-- Change to 'false' if you don't want to build iOS
-      use_cocoapods: true
+      use_cocoapods: false
       shared_module: ':cmp-shared'
+      java-version: '21'
