@@ -16,13 +16,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.ApiDateFormatter
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountRejectRepository
-import com.mifos.core.model.objects.account.loan.RejectLoanResponse
 import com.mifos.core.model.objects.payloads.RejectLoanPayload
 import com.mifos.core.model.utils.DateConstants
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.feature.loan.loanReject.RejectLoanAction.Internal
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
@@ -80,34 +77,6 @@ internal class RejectLoanViewModel(
                 mutableStateFlow.update { it.copy(dialogState = null) }
                 sendEvent(RejectLoanEvent.NavigateBackWithSuccess)
             }
-
-            is Internal.RejectResultReceived -> handleRejectResult(action.dataState)
-        }
-    }
-
-    private fun handleRejectResult(dataState: DataState<*>) {
-        when (dataState) {
-            is DataState.Loading -> {
-                mutableStateFlow.update { it.copy(isLoading = true) }
-            }
-
-            is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        isLoading = false,
-                        dialogState = RejectLoanState.DialogState.Success,
-                    )
-                }
-            }
-
-            is DataState.Error -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        isLoading = false,
-                        dialogState = RejectLoanState.DialogState.Error(dataState.message),
-                    )
-                }
-            }
         }
     }
 
@@ -131,6 +100,8 @@ internal class RejectLoanViewModel(
 
             if (validatedState.rejectedOnDateError != null) return@launch
 
+            mutableStateFlow.update { it.copy(isLoading = true) }
+
             val payload = RejectLoanPayload(
                 rejectedOnDate = ApiDateFormatter.formatForApi(validatedState.rejectedOnDate),
                 note = validatedState.note.takeIf { it.isNotBlank() },
@@ -138,8 +109,23 @@ internal class RejectLoanViewModel(
                 dateFormat = DateConstants.DATE_FORMAT,
             )
 
-            repository.rejectLoan(loanId, payload).collect { dataState ->
-                sendAction(Internal.RejectResultReceived(dataState))
+            try {
+                repository.rejectLoan(loanId, payload)
+                mutableStateFlow.update {
+                    it.copy(
+                        isLoading = false,
+                        dialogState = RejectLoanState.DialogState.Success,
+                    )
+                }
+            } catch (e: Exception) {
+                mutableStateFlow.update {
+                    it.copy(
+                        isLoading = false,
+                        dialogState = RejectLoanState.DialogState.Error(
+                            e.message ?: "An error occurred",
+                        ),
+                    )
+                }
             }
         }
     }
@@ -197,10 +183,4 @@ internal sealed interface RejectLoanAction {
     data object DiscardDismissed : RejectLoanAction
     data object DismissDialog : RejectLoanAction
     data object DismissSuccessDialog : RejectLoanAction
-
-    sealed interface Internal : RejectLoanAction {
-        data class RejectResultReceived(
-            val dataState: DataState<RejectLoanResponse>,
-        ) : Internal
-    }
 }
