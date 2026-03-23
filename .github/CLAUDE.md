@@ -562,13 +562,13 @@ runs-on: ${{ matrix.os }}
 
 Use `keystore-manager.sh` to encode secrets:
 
-| File in `secrets/` | GitHub Secret Name | Used By |
-|-------------------|--------------------|---------|
+| File in `secrets/`                                   | GitHub Secret Name | Used By |
+|------------------------------------------------------|--------------------|---------|
 | `firebaseAppDistributionServiceCredentialsFile.json` | `FIREBASECREDS` | Android/iOS Firebase publish |
-| `google-services.json` | `GOOGLESERVICES` | Android build/deploy |
-| `playStorePublishServiceCredentialsFile.json` | `PLAYSTORECREDS` | Play Store publish/promote |
-| `Auth_key.p8` | `APPSTORE_AUTH_KEY` | iOS build/deploy |
-| `match_ci_key` | `MATCH_SSH_PRIVATE_KEY` | iOS build/deploy (Match access) |
+| `google-services.json`                               | `GOOGLESERVICES` | Android build/deploy |
+| `playStorePublishServiceCredentialsFile.json`        | `PLAYSTORECREDS` | Play Store publish/promote |
+| `AuthKey.p8`                                         | `APPSTORE_AUTH_KEY` | iOS build/deploy |
+| `match_ci_key`                                       | `MATCH_SSH_PRIVATE_KEY` | iOS build/deploy (Match access) |
 
 **Commands:**
 ```bash
