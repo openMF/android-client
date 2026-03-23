@@ -7,20 +7,17 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.core.model.objects.account.loan
+package com.mifos.core.model.objects.payloads
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Request body for rejecting a loan application.
  */
 @Serializable
-@Parcelize
 data class RejectLoanPayload(
     val rejectedOnDate: String,
     val note: String? = null,
     val locale: String,
     val dateFormat: String,
-) : Parcelable
+)

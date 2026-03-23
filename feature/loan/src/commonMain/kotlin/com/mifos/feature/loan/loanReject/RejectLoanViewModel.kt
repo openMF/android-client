@@ -17,23 +17,27 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.DateHelper.today
 import com.mifos.core.data.repository.LoanAccountRejectRepository
-import com.mifos.core.model.objects.account.loan.RejectLoanPayload
 import com.mifos.core.model.objects.account.loan.RejectLoanResponse
+import com.mifos.core.model.objects.payloads.RejectLoanPayload
 import com.mifos.core.model.utils.DateConstants
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.loan.loanReject.RejectLoanAction.Internal
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.getString
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 internal class RejectLoanViewModel(
     private val repository: LoanAccountRejectRepository,
     savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<RejectLoanState, RejectLoanEvent, RejectLoanAction>(
-    initialState = RejectLoanState(rejectedOnDate = today()),
+    initialState = RejectLoanState(rejectedOnDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date),
 ) {
 
     private val loanId = savedStateHandle.toRoute<LoanRejectScreenRoute>().loanId
@@ -141,7 +145,7 @@ internal class RejectLoanViewModel(
     }
 
     private suspend fun validate(state: RejectLoanState): RejectLoanState {
-        return if (state.rejectedOnDate > today()) {
+        return if (state.rejectedOnDate > Clock.System.now().toLocalDateTime(TimeZone.UTC).date) {
             state.copy(
                 rejectedOnDateError = getString(Res.string.feature_loan_reject_date_error_future),
             )
@@ -154,9 +158,10 @@ internal class RejectLoanViewModel(
 /**
  * UI state for the reject-loan screen.
  */
+@OptIn(ExperimentalTime::class)
 @Immutable
 internal data class RejectLoanState(
-    val rejectedOnDate: LocalDate = today(),
+    val rejectedOnDate: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
     val note: String = "",
     val isLoading: Boolean = false,
     val rejectedOnDateError: String? = null,

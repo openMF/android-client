@@ -10,8 +10,8 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.model.objects.account.loan.RejectLoanPayload
 import com.mifos.core.model.objects.account.loan.RejectLoanResponse
+import com.mifos.core.model.objects.payloads.RejectLoanPayload
 import kotlinx.coroutines.flow.Flow
 
 /**
