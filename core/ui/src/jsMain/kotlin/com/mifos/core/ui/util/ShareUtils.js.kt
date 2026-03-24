@@ -10,6 +10,9 @@
 package com.mifos.core.ui.util
 
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asSkiaBitmap
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.download
 import kotlinx.browser.window
 
 actual object ShareUtils {
@@ -17,25 +20,12 @@ actual object ShareUtils {
     }
 
     actual suspend fun shareImage(title: String, image: ImageBitmap) {
-// TODO(KMP): FileKit.saveFile is not currently available on this source set.
-// Add the platform-specific FileKit dependency in a follow-up PR.
-
-//        FileKit.saveFile(
-//            bytes = image.asSkiaBitmap().readPixels(),
-//            baseName = "MifosQrCode",
-//            extension = "png",
-//        )
+        image.asSkiaBitmap().readPixels()
+            ?.let { FileKit.download(bytes = it, fileName = "MifosQrCode") }
     }
 
     actual suspend fun shareImage(title: String, byte: ByteArray) {
-// TODO(KMP): FileKit.saveFile is not currently available on this source set.
-// Add the platform-specific FileKit dependency in a follow-up PR.
-
-//        FileKit.saveFile(
-//            bytes = byte,
-//            baseName = "MifosQrCode",
-//            extension = "png",
-//        )
+        FileKit.download(bytes = byte, fileName = "MifosQrCode")
     }
 
     actual fun callHelpline() {
@@ -43,7 +33,8 @@ actual object ShareUtils {
     }
 
     actual fun mailHelpline() {
-        val url = "mailto:support@example.com?subject=Help%20Request&body=Hello,%20I%20need%20assistance%20with..."
+        val url =
+            "mailto:support@example.com?subject=Help%20Request&body=Hello,%20I%20need%20assistance%20with..."
         window.open(url)
     }
 

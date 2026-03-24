@@ -17,9 +17,9 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.domain.useCases.UploadClientImageUseCase
+import com.mifos.core.ui.util.ImageUtil.compressImage
 import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.core.ui.util.multipartRequestBody
-import com.mifos.feature.client.utils.compressImage
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.client.ClientEntity
@@ -67,13 +67,13 @@ class ClientDetailsViewModel(
             getUserProfile()
         }
     }
-    private fun uploadImage(id: Int, imageFile: PlatformFile) = viewModelScope.launch {
+    private fun uploadImage(id: Int, imageFile: ByteArray, name: String, extension: String) = viewModelScope.launch {
         uploadClientImageUseCase(
             id,
             multipartRequestBody(
-                file = imageFile.readBytes(),
-                extension = imageFile.extension,
-                name = imageFile.name,
+                file = imageFile,
+                extension = extension,
+                name = name,
             ),
         ).collect { result ->
             when (result) {
@@ -140,8 +140,8 @@ class ClientDetailsViewModel(
         viewModelScope.launch {
             try {
                 _showLoading.value = true
-                val compressed = compressImage(imageFile, clientId.toString())
-                uploadImage(clientId, compressed)
+                val compressed = compressImage(imageFile.readBytes())
+                uploadImage(clientId, compressed, imageFile.name, imageFile.extension)
             } catch (e: Exception) {
                 _showLoading.value = false
                 _clientDetailsUiState.value = ClientDetailsUiState.ShowError(e.message ?: "Unexpected error")
