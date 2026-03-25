@@ -28,7 +28,6 @@ import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.ImageUtil
 import com.mifos.core.ui.util.multipartRequestBody
 import com.mifos.feature.client.utils.PhoneNumberUtil
-import com.mifos.feature.client.utils.compressImage
 import com.mifos.room.entities.client.AddressTemplate
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.noncore.DataTableEntity
