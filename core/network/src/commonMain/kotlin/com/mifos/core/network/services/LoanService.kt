@@ -11,6 +11,11 @@ package com.mifos.core.network.services
 
 import com.mifos.core.model.objects.account.loan.LoanApproval
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
+import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
+import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRejectionRequest
+import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRequest
+import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleResponse
+import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleTemplate
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRequest
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplate
 import com.mifos.core.model.objects.clients.Page
@@ -161,5 +166,34 @@ interface LoanService {
     @POST(APIEndPoint.ACCOUNT_TRANSFERS)
     suspend fun submitAccountTransfer(
         @Body request: AccountTransferRequest,
+    ): HttpResponse
+
+    /**
+     * Loan Reschedule API Endpoints
+     */
+
+    @GET(APIEndPoint.RESCHEDULE_LOANS)
+    fun getLoanReschedules(
+        @Query("loanId") loanId: Int,
+    ): Flow<List<LoanRescheduleResponse>>
+
+    @GET(APIEndPoint.RESCHEDULE_LOANS + "/template")
+    fun getLoanRescheduleTemplate(): Flow<LoanRescheduleTemplate>
+
+    @POST(APIEndPoint.RESCHEDULE_LOANS)
+    suspend fun submitLoanReschedule(
+        @Body request: LoanRescheduleRequest,
+    ): HttpResponse
+
+    @POST(APIEndPoint.RESCHEDULE_LOANS + "/{scheduleId}?command=approve")
+    suspend fun approveLoanReschedule(
+        @Path("scheduleId") scheduleId: Int,
+        @Body request: LoanRescheduleApprovalRequest,
+    ): HttpResponse
+
+    @POST(APIEndPoint.RESCHEDULE_LOANS + "/{scheduleId}?command=reject")
+    suspend fun rejectLoanReschedule(
+        @Path("scheduleId") scheduleId: Int,
+        @Body request: LoanRescheduleRejectionRequest,
     ): HttpResponse
 }
