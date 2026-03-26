@@ -195,7 +195,7 @@ class CreditBalanceRefundViewModel(
                     mutableStateFlow.update {
                         it.copy(
                             dialogState = CreditBalanceRefundState.DialogState.Success(
-                                transactionId = result.data.resourceId.toString().orEmpty(),
+                                transactionId = result.data.resourceId?.toString().orEmpty(),
                             ),
                         )
                     }
