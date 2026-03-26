@@ -17,9 +17,9 @@ import androidx.navigation.navArgument
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.loan.amountTransfer.amountTransferScreen
 import com.mifos.feature.loan.amountTransfer.navigateToTransferScreen
+import com.mifos.feature.loan.createLoanReschedules.loanRescheduleFormScreen
 import com.mifos.feature.loan.creditBalanceRefund.creditBalanceRefundScreen
 import com.mifos.feature.loan.creditBalanceRefund.navigateToCreditBalanceRefundScreen
-import com.mifos.feature.loan.createLoanReschedules.loanRescheduleFormScreen
 import com.mifos.feature.loan.loanAccountProfile.loanProfileAccountDestination
 import com.mifos.feature.loan.loanAccountSummary.loanAccountSummary
 import com.mifos.feature.loan.loanApproval.LoanAccountApprovalScreen
