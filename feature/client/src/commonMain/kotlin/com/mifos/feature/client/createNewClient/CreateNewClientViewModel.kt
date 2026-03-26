@@ -23,8 +23,8 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.data.repository.CreateNewClientRepository
+import com.mifos.core.ui.util.ImageUtil.compressImage
 import com.mifos.core.ui.util.multipartRequestBody
-import com.mifos.feature.client.utils.compressImage
 import com.mifos.room.entities.client.AddressTemplate
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
@@ -180,14 +180,17 @@ class CreateNewClientViewModel(
 
         viewModelScope.launch {
             try {
-                val compressedImage = compressImage(selectedImage.value!!, id.toString())
-                val requestFile = multipartRequestBody(
-                    file = compressedImage.readBytes(),
-                    name = compressedImage.name,
-                    extension = compressedImage.extension,
-                )
+                selectedImage.value?.let { image ->
 
-                repository.uploadClientImage(id, requestFile)
+                    val compressedImageBytes = compressImage(image.readBytes())
+
+                    val requestFile = multipartRequestBody(
+                        file = compressedImageBytes,
+                        name = image.name,
+                        extension = image.extension,
+                    )
+                    repository.uploadClientImage(id, requestFile)
+                }
 
                 _createNewClientUiState.value =
                     CreateNewClientUiState.OnImageUploadSuccess(
