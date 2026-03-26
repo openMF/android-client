@@ -11,6 +11,7 @@ package com.mifos.feature.loan.di
 
 import com.mifos.feature.loan.amountTransfer.AmountTransferViewModel
 import com.mifos.feature.loan.creditBalanceRefund.CreditBalanceRefundViewModel
+import com.mifos.feature.loan.createLoanReschedules.LoanRescheduleFormViewModel
 import com.mifos.feature.loan.groupLoanAccount.GroupLoanAccountViewModel
 import com.mifos.feature.loan.loanAccount.LoanAccountViewModel
 import com.mifos.feature.loan.loanAccountProfile.LoanAccountProfileViewModel
@@ -20,6 +21,7 @@ import com.mifos.feature.loan.loanCharge.LoanChargeViewModel
 import com.mifos.feature.loan.loanDisbursement.LoanAccountDisbursementViewModel
 import com.mifos.feature.loan.loanRepayment.LoanRepaymentViewModel
 import com.mifos.feature.loan.loanRepaymentSchedule.LoanRepaymentScheduleViewModel
+import com.mifos.feature.loan.loanReschedules.LoanReschedulesViewModel
 import com.mifos.feature.loan.loanTransaction.LoanTransactionsViewModel
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountViewModel
 import org.koin.core.module.dsl.viewModelOf
@@ -39,4 +41,6 @@ val LoanModule = module {
     viewModelOf(::NewLoanAccountViewModel)
     viewModelOf(::LoanAccountProfileViewModel)
     viewModelOf(::AmountTransferViewModel)
+    viewModelOf(::LoanReschedulesViewModel)
+    viewModelOf(::LoanRescheduleFormViewModel)
 }

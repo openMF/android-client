@@ -300,7 +300,7 @@ private fun CreateNewClientContent(
     onImageSelected: (PlatformFile?) -> Unit,
     createClient: (ClientPayloadEntity) -> Unit,
     onHasDatatables: (List<DataTableEntity>, ClientPayloadEntity) -> Unit,
-    setFileForUpload: (filePath: String?) -> Unit,
+    setFileForUpload: (filePath: PlatformFile?) -> Unit,
 ) {
     var firstName by rememberSaveable { mutableStateOf("") }
     var middleName by rememberSaveable { mutableStateOf("") }
@@ -343,7 +343,7 @@ private fun CreateNewClientContent(
     var showDateOfBirthDatepicker by rememberSaveable { mutableStateOf(false) }
     var showActivateDatepicker by rememberSaveable { mutableStateOf(false) }
     var showImagePickerDialog by rememberSaveable { mutableStateOf(false) }
-    var selectedImagePath by rememberSaveable { mutableStateOf<String?>(null) }
+    var selectedImage by remember { mutableStateOf<PlatformFile?>(null) }
 
     val scrollState = rememberScrollState()
     val density = LocalDensity.current
@@ -352,16 +352,14 @@ private fun CreateNewClientContent(
         type = FileKitType.Image,
     ) { file ->
         file?.let {
-//            TODO: path not support in kmp all targets
-//            selectedImagePath = file.path
+            selectedImage = file
             onImageSelected(file)
         }
     }
 
     val cameraLauncher = rememberPlatformCameraLauncher { file ->
         file?.let {
-//            TODO: path not support in kmp all targets
-//            selectedImagePath = file.path
+            selectedImage = file
             onImageSelected(file)
         }
     }
@@ -420,7 +418,7 @@ private fun CreateNewClientContent(
             },
             removeImage = {
                 showImagePickerDialog = false
-                selectedImagePath = null
+                selectedImage = null
             },
         )
     }
@@ -466,7 +464,7 @@ private fun CreateNewClientContent(
             .fillMaxSize()
             .verticalScroll(state = scrollState),
     ) {
-        ClientImageSection(selectedImagePath = selectedImagePath) {
+        ClientImageSection(selectedImage = selectedImage) {
             showImagePickerDialog = true
         }
 
@@ -676,7 +674,7 @@ private fun CreateNewClientContent(
                     createClient,
                     isActive,
                     onHasDatatables,
-                    selectedImagePath,
+                    selectedImage,
                     setFileForUpload,
                     staffInOffices,
                     hasDatatables,
@@ -721,8 +719,8 @@ private fun handleSubmitClick(
     createClient: (clientPayload: ClientPayloadEntity) -> Unit,
     isActive: Boolean,
     onHasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
-    selectedImagePath: String?,
-    setFileForUpload: (filePath: String?) -> Unit,
+    selectedImage: PlatformFile?,
+    setFileForUpload: (filePath: PlatformFile?) -> Unit,
     staffInOffices: List<StaffEntity>,
     hasDatatables: Boolean,
     selectedOfficeId: Int?,
@@ -790,7 +788,7 @@ private fun handleSubmitClick(
             onHasDatatables.invoke(it, clientPayload)
         }
     } else {
-        setFileForUpload.invoke(selectedImagePath)
+        setFileForUpload.invoke(selectedImage)
         clientPayload = clientPayload.copy(
             datatables = null,
         )
@@ -948,15 +946,15 @@ private fun ClientInputTextFields(
 }
 
 @Composable
-private fun ClientImageSection(selectedImagePath: String?, onImageClick: () -> Unit) {
+private fun ClientImageSection(selectedImage: PlatformFile?, onImageClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = KptTheme.spacing.md),
     ) {
         Image(
-            painter = if (selectedImagePath != null) {
-                rememberAsyncImagePainter(selectedImagePath)
+            painter = if (selectedImage != null) {
+                rememberAsyncImagePainter(selectedImage)
             } else {
                 painterResource(Res.drawable.feature_client_ic_dp_placeholder)
             },

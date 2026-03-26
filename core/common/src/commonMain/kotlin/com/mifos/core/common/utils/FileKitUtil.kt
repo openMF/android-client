@@ -24,25 +24,10 @@ import kotlinx.coroutines.flow.flow
  *  Use PlatformFile object returned by pickers directly.
  */
 object FileKitUtil {
-
-    // TODO(KMP): cacheDir is supported on Android, iOS, Desktop
-    // NOT supported on Web/WASM targets
-    // val appCache = FileKit.cacheDir
-
-    // TODO(KMP): filesDir maps to private app storage
-    // NOT supported on Web/WASM targets
-    // On Desktop requires FileKit initialization with appId
-    // val appPrivateInternalStorage = FileKit.filesDir
-
-    // TODO(KMP): databasesDir is intended for Room / SQLDelight
-    // NOT supported on Web/WASM targets
-    // Not portable across all KMP platforms
-    // val appInternalStorage = FileKit.databasesDir
-
     fun pickFile(
         dialogTitle: String = "",
         extensions: Set<String> = setOf("pdf", "jpeg", "jpg", "png"),
-    ) = flow {
+    ): Flow<DataState<PlatformFile?>> = flow {
         val file = FileKit.openFilePicker(
             type = FileKitType.File(extensions),
             mode = FileKitMode.Single,
@@ -53,7 +38,7 @@ object FileKitUtil {
 
     fun pickImage(
         dialogTitle: String = "",
-    ) = flow {
+    ): Flow<DataState<PlatformFile?>> = flow {
         val image = FileKit.openFilePicker(
             type = FileKitType.Image,
             mode = FileKitMode.Single,
@@ -62,12 +47,7 @@ object FileKitUtil {
         emit(image)
     }.asDataStateFlow()
 
-    // TODO(KMP): Directory picker is NOT supported consistently
-    // Not available on Web/WASM
-    // Desktop & iOS support varies by sandbox permissions
-    // suspend fun pickDirectory(): PlatformFile? {
-    //     return FileKit.openDirectoryPicker()
-    // }
+    suspend fun pickDirectory(): PlatformFile? = platformPickDirectory()
 
     /**
      *  Android
@@ -103,47 +83,61 @@ object FileKitUtil {
         fileName: String,
         fileExtension: String,
         filesByteArray: ByteArray,
-    ) = flow {
-//        val filePath = appCache / "$fileName.$fileExtension"
-//        filePath.write(filesByteArray)
-        emit("")
-    }.asDataStateFlow()
+    ): Flow<DataState<PlatformFile>> = platformWriteFileToCache(fileName, fileExtension, filesByteArray)
 
-    // TODO(KMP): Intended ONLY for database engines (Room / SQLDelight)
-    // NOT supported on Web/WASM
-    // Should not be used for general file storage
-    // fun writeFileToApplicationInternalStorage(
-    //     fileName: String,
-    //     fileExtension: String,
-    //     filesByteArray: ByteArray,
-    // ) = flow {
-    //     val internalStorage =
-    //         appInternalStorage / "$fileName.$fileExtension"
-    //     internalStorage.write(filesByteArray)
-    //     emit(internalStorage)
-    // }.asDataStateFlow()
+    fun writeFileToApplicationPrivateInternalStorage(
+        fileName: String,
+        fileExtension: String,
+        filesByteArray: ByteArray,
+    ): Flow<DataState<PlatformFile?>> = platformWriteFileToApplicationPrivateInternalStorage(fileName, fileExtension, filesByteArray)
 
-    // TODO(KMP): Writing to user-selected directory
-    // NOT supported on Web/WASM
-    // Desktop requires explicit user permissions
-    // iOS sandbox restrictions apply
-    // fun writeToSelectedDirectory(
-    //     filesByteArray: ByteArray,
-    //     platformFile: PlatformFile,
-    // ) = flow {
-    //     emit(platformFile.write(filesByteArray))
-    // }.asDataStateFlow()
+    // Use only if you are using a database service such as room or sql delight
+    fun writeFileToApplicationInternalStorage(
+        fileName: String,
+        fileExtension: String,
+        filesByteArray: ByteArray,
+    ): Flow<DataState<PlatformFile?>> = platformWriteFileToApplicationInternalStorage(fileName, fileExtension, filesByteArray)
 
-    // TODO(KMP): File deletion is platform-dependent
-    // NOT supported on Web/WASM
-    // iOS sandbox may prevent deletion
-    // suspend fun deleteFile(
-    //     file: PlatformFile,
-    // ) {
-    //     file.delete(false)
-    // }
+    fun writeToSelectedDirectory(
+        filesByteArray: ByteArray,
+        platformFile: PlatformFile,
+    ): Flow<DataState<Unit>> = platformWriteToSelectedDirectory(filesByteArray, platformFile)
 
-    fun takePhoto() = takePhotoIfSupported()
+    suspend fun deleteFile(
+        file: PlatformFile,
+    ) = platformDeleteFile(file)
+
+    fun takePhoto(): Flow<DataState<PlatformFile?>> = platformTakePhoto()
 }
 
-expect fun takePhotoIfSupported(): Flow<DataState<PlatformFile?>>
+expect suspend fun platformPickDirectory(): PlatformFile?
+
+expect fun platformWriteFileToCache(
+    fileName: String,
+    fileExtension: String,
+    filesByteArray: ByteArray,
+): Flow<DataState<PlatformFile>>
+
+expect fun platformWriteFileToApplicationPrivateInternalStorage(
+    fileName: String,
+    fileExtension: String,
+    filesByteArray: ByteArray,
+): Flow<DataState<PlatformFile?>>
+
+// Use only if you are using a database service such as room or sqldelight
+expect fun platformWriteFileToApplicationInternalStorage(
+    fileName: String,
+    fileExtension: String,
+    filesByteArray: ByteArray,
+): Flow<DataState<PlatformFile?>>
+
+expect fun platformWriteToSelectedDirectory(
+    filesByteArray: ByteArray,
+    platformFile: PlatformFile,
+): Flow<DataState<Unit>>
+
+expect suspend fun platformDeleteFile(
+    file: PlatformFile,
+)
+
+expect fun platformTakePhoto(): Flow<DataState<PlatformFile?>>

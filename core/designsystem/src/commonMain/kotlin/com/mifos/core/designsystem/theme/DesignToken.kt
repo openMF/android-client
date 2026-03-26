@@ -412,9 +412,13 @@ data class AppSizes(
     val dp100: Dp = 100.dp,
     val dp120: Dp = 120.dp,
     val dp128: Dp = 128.dp,
+    val tableCellWidthExtraSmall: Dp = 50.dp,
     val tableCellWidthSmall: Dp = 65.dp,
     val tableCellWidthMedium: Dp = 100.dp,
+    val tableCellWidthMediumLarge: Dp = 140.dp,
     val tableCellWidthLarge: Dp = 150.dp,
+    val tableCellWidthExtraLarge: Dp = 180.dp,
+    val tableCellWidthExtraExtraLarge: Dp = 240.dp,
 )
 
 @Immutable
