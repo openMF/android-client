@@ -17,6 +17,7 @@ import androidx.navigation.navArgument
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.loan.amountTransfer.amountTransferScreen
 import com.mifos.feature.loan.amountTransfer.navigateToTransferScreen
+import com.mifos.feature.loan.createLoanReschedules.loanRescheduleFormScreen
 import com.mifos.feature.loan.loanAccountProfile.loanProfileAccountDestination
 import com.mifos.feature.loan.loanAccountSummary.loanAccountSummary
 import com.mifos.feature.loan.loanApproval.LoanAccountApprovalScreen
@@ -28,6 +29,8 @@ import com.mifos.feature.loan.loanRepayment.loanRepaymentScreen
 import com.mifos.feature.loan.loanRepayment.navigateToLoanRepaymentScreen
 import com.mifos.feature.loan.loanRepaymentSchedule.loanRepaymentSchedule
 import com.mifos.feature.loan.loanRepaymentSchedule.navigateToLoanRepaymentScheduleScreen
+import com.mifos.feature.loan.loanReschedules.loanReschedulesScreen
+import com.mifos.feature.loan.loanReschedules.navigateToLoanReschedulesScreen
 import com.mifos.feature.loan.loanTransaction.loanTransactionScreen
 import com.mifos.feature.loan.loanTransaction.navigateToLoanTransactionScreen
 import com.mifos.feature.loan.newLoanAccount.newLoanAccountDestination
@@ -91,9 +94,20 @@ fun NavGraphBuilder.loanDestination(
             onDocumentsClicked(loanId, Constants.ENTITY_TYPE_LOANS)
         },
         navigateToTransferScreen = navController::navigateToTransferScreen,
+        navigateToReschedules = navController::navigateToLoanReschedulesScreen,
     )
 
     amountTransferScreen(
+        navController = navController,
+        onBackPressed = navController::popBackStack,
+    )
+
+    loanReschedulesScreen(
+        navController = navController,
+        onBackPressed = navController::popBackStack,
+    )
+
+    loanRescheduleFormScreen(
         navController = navController,
         onBackPressed = navController::popBackStack,
     )

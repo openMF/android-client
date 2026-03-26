@@ -13,6 +13,11 @@ import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
+import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
+import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRejectionRequest
+import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRequest
+import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleResponse
+import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleTemplate
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRequest
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferResponse
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplate
@@ -368,6 +373,43 @@ class DataManagerLoan(
             }
 
             Json { ignoreUnknownKeys = true }.decodeFromString<RepaymentSchedule>(response.bodyAsText())
+        }
+    }
+
+    fun getLoanReschedules(loanId: Int): Flow<List<LoanRescheduleResponse>> {
+        return mBaseApiManager.loanService.getLoanReschedules(loanId)
+    }
+
+    fun getLoanRescheduleTemplate(): Flow<LoanRescheduleTemplate> {
+        return mBaseApiManager.loanService.getLoanRescheduleTemplate()
+    }
+
+    suspend fun submitLoanReschedule(request: LoanRescheduleRequest): GenericResponse {
+        val response = mBaseApiManager.loanService.submitLoanReschedule(request)
+        if (!response.status.isSuccess()) {
+            val errorMessage = extractErrorMessage(response)
+            throw IllegalStateException(errorMessage)
+        }
+        return Json { ignoreUnknownKeys = true }.decodeFromString<GenericResponse>(response.bodyAsText())
+    }
+
+    suspend fun approveLoanReschedule(scheduleId: Int, request: LoanRescheduleApprovalRequest) {
+        val response = mBaseApiManager.loanService.approveLoanReschedule(
+            scheduleId = scheduleId,
+            request = request,
+        )
+        if (!response.status.isSuccess()) {
+            throw IllegalStateException(extractErrorMessage(response))
+        }
+    }
+
+    suspend fun rejectLoanReschedule(scheduleId: Int, request: LoanRescheduleRejectionRequest) {
+        val response = mBaseApiManager.loanService.rejectLoanReschedule(
+            scheduleId = scheduleId,
+            request = request,
+        )
+        if (!response.status.isSuccess()) {
+            throw IllegalStateException(extractErrorMessage(response))
         }
     }
 }
