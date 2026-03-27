@@ -99,7 +99,7 @@ internal class LoanAccountGeneralViewModel(
 
                     is DataState.Error -> {
                         mutableStateFlow.update {
-                            it.copy(dialogState = LoanAccountGeneralState.DialogState.Error(getString(Res.string.feature_loan_unknown_error_occured)))
+                            it.copy(dialogState = LoanAccountGeneralState.DialogState.Error(dataState.message))
                         }
                     }
                 }
