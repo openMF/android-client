@@ -32,8 +32,8 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.LoanAccountGeneralRepository
 import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.model.entity.loan.LoanWithAssociations
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -107,7 +107,7 @@ internal class LoanAccountGeneralViewModel(
         }
     }
 
-    private suspend fun fillGeneralState(loan: LoanWithAssociationsEntity) {
+    private suspend fun fillGeneralState(loan: LoanWithAssociations) {
         val currencyCode = loan.currency.code
         val maxDigits = loan.currency.decimalPlaces
         val summary = loan.summary

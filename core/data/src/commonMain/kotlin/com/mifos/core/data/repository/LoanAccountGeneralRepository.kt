@@ -10,10 +10,10 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.core.model.entity.loan.LoanWithAssociations
 import kotlinx.coroutines.flow.Flow
 
 interface LoanAccountGeneralRepository {
 
-    fun getLoanById(loanId: Int): Flow<DataState<LoanWithAssociationsEntity?>>
+    fun getLoanById(loanId: Int): Flow<DataState<LoanWithAssociations?>>
 }

@@ -43,6 +43,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -220,9 +221,16 @@ private fun LoanSummaryTable(
 ) {
     val scrollState = rememberScrollState()
     val textColor = KptTheme.colorScheme.onBackground
-    val componentWidth = DesignToken.sizes.tableCellWidthLarge
-    val amountWidth = DesignToken.sizes.tableCellWidthMedium
-    val colWidths = listOf(componentWidth, amountWidth, amountWidth, amountWidth, amountWidth, amountWidth, amountWidth)
+    val mediumWidth = DesignToken.sizes.tableCellWidthMedium
+    val colWidths = listOf(
+        mediumWidth,
+        mediumWidth,
+        mediumWidth,
+        mediumWidth,
+        mediumWidth,
+        mediumWidth,
+        mediumWidth,
+    )
 
     val headers = listOf(
         stringResource(Res.string.feature_loan_general_summary_col_component),
@@ -344,7 +352,7 @@ private fun LoanSummaryTableCell(
     text: String,
     style: TextStyle,
     fontWeight: FontWeight,
-    textColor: androidx.compose.ui.graphics.Color,
+    textColor: Color,
     modifier: Modifier = Modifier,
 ) {
     Box(
