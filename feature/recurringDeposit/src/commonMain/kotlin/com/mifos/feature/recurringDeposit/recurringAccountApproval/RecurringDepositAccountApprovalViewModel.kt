@@ -13,64 +13,125 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.domain.useCases.ApproveRecurringDepositUseCase
+import com.mifos.core.model.objects.responses.RecurringDepositApprovalResponse
 import com.mifos.core.model.objects.template.recurring.approval.RecurringDepositApproval
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.recurringDeposit.navigation.RecurringDepositAccountApprovalRoute
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.Clock
 
 class RecurringDepositAccountApprovalViewModel(
     savedStateHandle: SavedStateHandle,
     private val approveRecurringDepositUseCase: ApproveRecurringDepositUseCase,
 ) : BaseViewModel<
-    RecurringDepositAccountApprovalUiState,
-    Unit,
+    RecurringDepositAccountApprovalState,
+    RecurringDepositAccountApprovalEvent,
     RecurringDepositAccountApprovalAction,
     >(
-    initialState = RecurringDepositAccountApprovalUiState.Initial,
+    initialState = RecurringDepositAccountApprovalState(),
 ) {
 
     private val route = savedStateHandle.toRoute<RecurringDepositAccountApprovalRoute>()
 
     override fun handleAction(action: RecurringDepositAccountApprovalAction) {
         when (action) {
-            is RecurringDepositAccountApprovalAction.Approve -> {
-                viewModelScope.launch {
-                    approveRecurringDeposit(action.approval)
+            is RecurringDepositAccountApprovalAction.Approve -> approveRecurringDeposit(action.approval)
+            is RecurringDepositAccountApprovalAction.ApprovalDateChanged -> {
+                updateState {
+                    it.copy(approvalDate = action.approvalDate)
+                }
+            }
+            RecurringDepositAccountApprovalAction.NavigateBack -> {
+                sendEvent(RecurringDepositAccountApprovalEvent.NavigateBack)
+            }
+            is RecurringDepositAccountApprovalAction.ReasonForApprovalChanged -> {
+                updateState {
+                    it.copy(reasonForApproval = action.reason)
+                }
+            }
+            is RecurringDepositAccountApprovalAction.Internal.ApprovalFailed -> {
+                updateState {
+                    it.copy(
+                        isLoading = false,
+                        approvalResponse = null,
+                        errorMessage = action.message,
+                    )
+                }
+            }
+            is RecurringDepositAccountApprovalAction.Internal.ApprovalSucceeded -> {
+                val status = action.response.changes?.status
+                if (status?.approved == true) {
+                    updateState {
+                        it.copy(
+                            isLoading = false,
+                            approvalResponse = action.response,
+                            errorMessage = null,
+                        )
+                    }
+                } else {
+                    updateState {
+                        it.copy(
+                            isLoading = false,
+                            approvalResponse = null,
+                            errorMessage = status?.value ?: status?.code,
+                        )
+                    }
                 }
             }
         }
     }
 
-    private suspend fun approveRecurringDeposit(recurringDepositApproval: RecurringDepositApproval) {
-        mutableStateFlow.update { RecurringDepositAccountApprovalUiState.ShowProgressbar }
+    private fun updateState(
+        update: (RecurringDepositAccountApprovalState) -> RecurringDepositAccountApprovalState,
+    ) {
+        mutableStateFlow.update(update)
+    }
 
-        try {
-            val response = approveRecurringDepositUseCase(
-                accountId = route.accountId,
-                approval = recurringDepositApproval,
+    private fun approveRecurringDeposit(recurringDepositApproval: RecurringDepositApproval) {
+        updateState {
+            it.copy(
+                isLoading = true,
+                approvalResponse = null,
+                errorMessage = null,
             )
-            if (response.changes?.status?.approved == true) {
-                mutableStateFlow.update {
-                    RecurringDepositAccountApprovalUiState
-                        .ShowRecurringDepositAccountApprovedSuccessfully(response)
-                }
-            } else {
-                val status = response.changes?.status
-                val message = status?.value ?: status?.code
-                mutableStateFlow.update {
-                    RecurringDepositAccountApprovalUiState.ShowError(message)
-                }
-            }
-        } catch (e: Exception) {
-            mutableStateFlow.update {
-                RecurringDepositAccountApprovalUiState.ShowError(e.message)
+        }
+
+        viewModelScope.launch {
+            try {
+                val response = approveRecurringDepositUseCase(
+                    accountId = route.accountId,
+                    approval = recurringDepositApproval,
+                )
+                sendAction(RecurringDepositAccountApprovalAction.Internal.ApprovalSucceeded(response))
+            } catch (e: Exception) {
+                sendAction(RecurringDepositAccountApprovalAction.Internal.ApprovalFailed(e.message))
             }
         }
     }
 }
 
+data class RecurringDepositAccountApprovalState(
+    val isLoading: Boolean = false,
+    val approvalDate: Long = Clock.System.now().toEpochMilliseconds(),
+    val reasonForApproval: String = "",
+    val approvalResponse: RecurringDepositApprovalResponse? = null,
+    val errorMessage: String? = null,
+)
+
+sealed interface RecurringDepositAccountApprovalEvent {
+    data object NavigateBack : RecurringDepositAccountApprovalEvent
+}
+
 sealed interface RecurringDepositAccountApprovalAction {
+    data object NavigateBack : RecurringDepositAccountApprovalAction
+    data class ApprovalDateChanged(val approvalDate: Long) : RecurringDepositAccountApprovalAction
     data class Approve(val approval: RecurringDepositApproval) :
         RecurringDepositAccountApprovalAction
+    data class ReasonForApprovalChanged(val reason: String) : RecurringDepositAccountApprovalAction
+
+    sealed interface Internal : RecurringDepositAccountApprovalAction {
+        data class ApprovalSucceeded(val response: RecurringDepositApprovalResponse) : Internal
+        data class ApprovalFailed(val message: String?) : Internal
+    }
 }

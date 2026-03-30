@@ -18,6 +18,7 @@ import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -52,6 +53,12 @@ class RecurringDepositAccountViewModel(
 
             is RecurringDepositAccountAction.Refresh -> {
                 checkNetworkAndRecurringDepositAccounts()
+            }
+
+            RecurringDepositAccountAction.OnResume -> {
+                if (state.recurringDepositAccounts.isNotEmpty()) {
+                    checkNetworkAndRecurringDepositAccounts()
+                }
             }
 
             RecurringDepositAccountAction.Search -> {
@@ -95,16 +102,15 @@ class RecurringDepositAccountViewModel(
 
     private fun checkNetworkAndRecurringDepositAccounts() {
         viewModelScope.launch {
-            networkMonitor.isOnline.collect { isConnected ->
-                when (isConnected) {
-                    true -> getRecurringDepositAccounts()
-                    false -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = RecurringDepositAccountState
-                                    .DialogState.Error("No internet connection, Try Again"),
-                            )
-                        }
+            when (networkMonitor.isOnline.first()) {
+                true -> getRecurringDepositAccounts()
+                false -> {
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = RecurringDepositAccountState
+                                .DialogState.Error("No internet connection, Try Again"),
+                            isLoading = false,
+                        )
                     }
                 }
             }
@@ -179,6 +185,7 @@ sealed class RecurringDepositAccountAction {
     data class ViewAccount(val accountNumber: String) : RecurringDepositAccountAction()
     data class ApproveAccount(val accountNumber: String) : RecurringDepositAccountAction()
     data object Refresh : RecurringDepositAccountAction()
+    data object OnResume : RecurringDepositAccountAction()
     data object ToggleFilter : RecurringDepositAccountAction()
     data object ToggleSearch : RecurringDepositAccountAction()
     data object Search : RecurringDepositAccountAction()

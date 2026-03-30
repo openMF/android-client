@@ -11,10 +11,10 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.model.objects.payloads.RecurringDepositAccountPayload
-import com.mifos.core.model.objects.responses.RecurringDepositApprovalResponse
-import com.mifos.core.model.objects.template.recurring.approval.RecurringDepositApproval
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.model.recurring.RecurringDepositApprovalRequestDto
+import com.mifos.core.network.model.recurring.RecurringDepositApprovalResponseDto
 import com.mifos.room.entities.templates.recurringDeposit.RecurringDepositAccountTemplate
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
@@ -56,8 +56,8 @@ class DataManagerRecurringAccount(
 
     suspend fun approveRecurringDepositAccount(
         accountId: String,
-        approval: RecurringDepositApproval,
-    ): RecurringDepositApprovalResponse {
+        approval: RecurringDepositApprovalRequestDto,
+    ): RecurringDepositApprovalResponseDto {
         val response = mBaseApiManager.recurringSavingsAccountService.approveRecurringDepositAccount(
             accountId,
             approval,
@@ -68,6 +68,6 @@ class DataManagerRecurringAccount(
         }
 
         val json = Json { ignoreUnknownKeys = true }
-        return json.decodeFromString<RecurringDepositApprovalResponse>(response.bodyAsText())
+        return json.decodeFromString<RecurringDepositApprovalResponseDto>(response.bodyAsText())
     }
 }

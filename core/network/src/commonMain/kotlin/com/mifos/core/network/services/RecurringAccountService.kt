@@ -10,7 +10,7 @@
 package com.mifos.core.network.services
 
 import com.mifos.core.model.objects.payloads.RecurringDepositAccountPayload
-import com.mifos.core.model.objects.template.recurring.approval.RecurringDepositApproval
+import com.mifos.core.network.model.recurring.RecurringDepositApprovalRequestDto
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.templates.recurringDeposit.RecurringDepositAccountTemplate
 import de.jensklingenberg.ktorfit.http.Body
@@ -37,6 +37,6 @@ interface RecurringAccountService {
     @POST(APIEndPoint.CREATE_RECURRING_DEPOSIT_ACCOUNTS + "/{accountId}?command=" + APIEndPoint.APPROVE)
     suspend fun approveRecurringDepositAccount(
         @Path("accountId") accountId: String,
-        @Body approval: RecurringDepositApproval,
+        @Body approval: RecurringDepositApprovalRequestDto,
     ): HttpResponse
 }

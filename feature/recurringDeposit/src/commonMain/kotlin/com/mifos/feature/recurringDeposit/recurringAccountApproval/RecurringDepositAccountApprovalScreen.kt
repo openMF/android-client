@@ -31,19 +31,15 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -53,19 +49,20 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.common.utils.DateHelper
+import com.mifos.core.designsystem.component.MifosButton
+import com.mifos.core.designsystem.component.MifosDatePickerDialog
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.DesignToken
-import com.mifos.core.model.objects.responses.RecurringDepositApprovalResponse
 import com.mifos.core.model.objects.template.recurring.approval.RecurringDepositApproval
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.components.MifosStatusDialog
 import com.mifos.core.ui.components.ResultStatus
+import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 @Composable
@@ -74,25 +71,27 @@ internal fun RecurringDepositAccountApprovalScreen(
     navigateBack: () -> Unit,
     viewModel: RecurringDepositAccountApprovalViewModel = koinViewModel(),
 ) {
-    val uiState by viewModel.stateFlow.collectAsStateWithLifecycle()
+    val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+
+    EventsEffect(viewModel.eventFlow) { event ->
+        when (event) {
+            RecurringDepositAccountApprovalEvent.NavigateBack -> navigateBack()
+        }
+    }
 
     RecurringDepositAccountApprovalScreen(
         navController = navController,
-        uiState = uiState,
-        navigateBack = navigateBack,
-        approveAccount = {
-            viewModel.trySendAction(RecurringDepositAccountApprovalAction.Approve(it))
-        },
+        state = state,
+        onAction = viewModel::trySendAction,
     )
 }
 
 @Composable
 internal fun RecurringDepositAccountApprovalScreen(
     navController: NavController,
-    uiState: RecurringDepositAccountApprovalUiState,
-    navigateBack: () -> Unit,
+    state: RecurringDepositAccountApprovalState,
     modifier: Modifier = Modifier,
-    approveAccount: (RecurringDepositApproval) -> Unit,
+    onAction: (RecurringDepositAccountApprovalAction) -> Unit,
 ) {
     MifosScaffold(
         modifier = modifier,
@@ -110,17 +109,20 @@ internal fun RecurringDepositAccountApprovalScreen(
                     .padding(horizontal = DesignToken.padding.large),
             ) {
                 RecurringDepositAccountApprovalContent(
-                    approveAccount = approveAccount,
-                    isLoading = uiState is RecurringDepositAccountApprovalUiState.ShowProgressbar,
+                    state = state,
+                    onAction = onAction,
+                    isLoading = state.isLoading,
                 )
 
-                if (uiState is RecurringDepositAccountApprovalUiState.ShowProgressbar) {
+                if (state.isLoading) {
                     MifosProgressIndicatorOverlay()
                 }
 
-                if (uiState is RecurringDepositAccountApprovalUiState.ShowRecurringDepositAccountApprovedSuccessfully) {
+                if (state.approvalResponse != null) {
                     Dialog(
-                        onDismissRequest = { navigateBack.invoke() },
+                        onDismissRequest = {
+                            onAction(RecurringDepositAccountApprovalAction.NavigateBack)
+                        },
                         properties = DialogProperties(
                             dismissOnBackPress = true,
                             dismissOnClickOutside = true,
@@ -135,7 +137,9 @@ internal fun RecurringDepositAccountApprovalScreen(
                         ) {
                             MifosStatusDialog(
                                 status = ResultStatus.SUCCESS,
-                                onConfirm = { navigateBack.invoke() },
+                                onConfirm = {
+                                    onAction(RecurringDepositAccountApprovalAction.NavigateBack)
+                                },
                                 btnText = stringResource(Res.string.feature_recurring_deposit_continue),
                                 successTitle = stringResource(Res.string.feature_recurring_deposit_success_title),
                                 successMessage = stringResource(Res.string.feature_recurring_deposit_success_message),
@@ -147,9 +151,11 @@ internal fun RecurringDepositAccountApprovalScreen(
                     }
                 }
 
-                if (uiState is RecurringDepositAccountApprovalUiState.ShowError) {
+                if (state.errorMessage != null) {
                     Dialog(
-                        onDismissRequest = { navigateBack.invoke() },
+                        onDismissRequest = {
+                            onAction(RecurringDepositAccountApprovalAction.NavigateBack)
+                        },
                         properties = DialogProperties(
                             dismissOnBackPress = true,
                             dismissOnClickOutside = true,
@@ -164,12 +170,14 @@ internal fun RecurringDepositAccountApprovalScreen(
                         ) {
                             MifosStatusDialog(
                                 status = ResultStatus.FAILURE,
-                                onConfirm = { navigateBack.invoke() },
+                                onConfirm = {
+                                    onAction(RecurringDepositAccountApprovalAction.NavigateBack)
+                                },
                                 btnText = stringResource(Res.string.feature_recurring_deposit_continue),
                                 successTitle = stringResource(Res.string.feature_recurring_deposit_success_title),
                                 successMessage = stringResource(Res.string.feature_recurring_deposit_success_message),
                                 failureTitle = stringResource(Res.string.feature_recurring_deposit_failure_title),
-                                failureMessage = uiState.message
+                                failureMessage = state.errorMessage
                                     ?: stringResource(Res.string.feature_recurring_deposit_failure_message),
                                 showButton = true,
                             )
@@ -184,55 +192,45 @@ internal fun RecurringDepositAccountApprovalScreen(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 private fun RecurringDepositAccountApprovalContent(
-    approveAccount: (recurringDepositApproval: RecurringDepositApproval) -> Unit,
+    state: RecurringDepositAccountApprovalState,
+    onAction: (RecurringDepositAccountApprovalAction) -> Unit,
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
 ) {
     val scrollState = rememberScrollState()
-    var approvalDate by rememberSaveable {
-        mutableLongStateOf(Clock.System.now().toEpochMilliseconds())
-    }
-
-    var reasonForApproval by rememberSaveable {
-        mutableStateOf("")
-    }
     val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = approvalDate,
+        initialSelectedDateMillis = state.approvalDate,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
+                return utcTimeMillis <= kotlin.time.Clock.System.now().toEpochMilliseconds()
             }
         },
     )
-
     var showDatePickerDialog by rememberSaveable {
         mutableStateOf(false)
     }
+
+    LaunchedEffect(state.approvalDate) {
+        if (datePickerState.selectedDateMillis != state.approvalDate) {
+            datePickerState.selectedDateMillis = state.approvalDate
+        }
+    }
+
     if (showDatePickerDialog) {
-        DatePickerDialog(
+        MifosDatePickerDialog(
+            datePickerState = datePickerState,
+            confirmText = stringResource(Res.string.feature_recurring_deposit_select_date),
+            dismissText = stringResource(Res.string.feature_recurring_deposit_cancel),
             onDismissRequest = {
                 showDatePickerDialog = false
             },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        datePickerState.selectedDateMillis?.let {
-                            approvalDate = it
-                        }
-                        showDatePickerDialog = false
-                    },
-                ) { Text(stringResource(Res.string.feature_recurring_deposit_select_date)) }
+            onConfirm = {
+                datePickerState.selectedDateMillis?.let {
+                    onAction(RecurringDepositAccountApprovalAction.ApprovalDateChanged(it))
+                }
+                showDatePickerDialog = false
             },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        showDatePickerDialog = false
-                    },
-                ) { Text(stringResource(Res.string.feature_recurring_deposit_cancel)) }
-            },
-        ) {
-            DatePicker(state = datePickerState)
-        }
+        )
     }
 
     Column(
@@ -251,7 +249,7 @@ private fun RecurringDepositAccountApprovalContent(
         Spacer(modifier = Modifier.height(DesignToken.spacing.large))
 
         MifosDatePickerTextField(
-            value = DateHelper.getDateAsStringFromLong(approvalDate),
+            value = DateHelper.getDateAsStringFromLong(state.approvalDate),
             label = stringResource(Res.string.feature_recurring_deposit_approval_date),
             openDatePicker = {
                 showDatePickerDialog = true
@@ -261,24 +259,28 @@ private fun RecurringDepositAccountApprovalContent(
         Spacer(modifier = Modifier.height(DesignToken.spacing.large))
 
         MifosOutlinedTextField(
-            value = reasonForApproval,
-            onValueChange = { reasonForApproval = it },
+            value = state.reasonForApproval,
+            onValueChange = {
+                onAction(RecurringDepositAccountApprovalAction.ReasonForApprovalChanged(it))
+            },
             label = stringResource(Res.string.feature_recurring_deposit_approval_reason),
             error = null,
         )
 
         Spacer(modifier = Modifier.height(DesignToken.spacing.large))
 
-        Button(
+        MifosButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(DesignToken.spacing.dp44),
             enabled = !isLoading,
             onClick = {
-                approveAccount.invoke(
-                    RecurringDepositApproval(
-                        approvedOnDate = DateHelper.getDateAsStringForApproval(approvalDate),
-                        note = reasonForApproval,
+                onAction(
+                    RecurringDepositAccountApprovalAction.Approve(
+                        RecurringDepositApproval(
+                            approvedOnDate = DateHelper.getDateAsStringForApproval(state.approvalDate),
+                            note = state.reasonForApproval,
+                        ),
                     ),
                 )
             },
@@ -286,13 +288,4 @@ private fun RecurringDepositAccountApprovalContent(
             Text(text = stringResource(Res.string.feature_recurring_deposit_save))
         }
     }
-}
-
-sealed class RecurringDepositAccountApprovalUiState {
-    data object Initial : RecurringDepositAccountApprovalUiState()
-    data object ShowProgressbar : RecurringDepositAccountApprovalUiState()
-    data class ShowRecurringDepositAccountApprovedSuccessfully(
-        val response: RecurringDepositApprovalResponse,
-    ) : RecurringDepositAccountApprovalUiState()
-    data class ShowError(val message: String? = null) : RecurringDepositAccountApprovalUiState()
 }
