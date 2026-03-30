@@ -121,6 +121,7 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.clients.Address
+import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.feature.client.utils.PhoneNumberUtil
 import com.mifos.feature.client.utils.rememberPlatformCameraLauncher
@@ -259,13 +260,12 @@ internal fun CreateNewClientScreen(
             }
 
             is CreateNewClientUiState.ShowWaitingForCheckerApproval -> {
-                LaunchedEffect(uiState.message) {
-                    snackbarHostState.showSnackbar(
-                        message = getString(Res.string.feature_client_waiting_for_checker_approval),
-                        duration = SnackbarDuration.Long,
-                    )
-                    navigateBack.invoke()
-                }
+                MifosAlertDialog(
+                    dialogText = stringResource(Res.string.feature_client_waiting_for_checker_approval),
+                    dismissText = null,
+                    onConfirmation = navigateBack,
+                    onDismissRequest = {},
+                )
             }
 
             is CreateNewClientUiState.ShowError -> {
@@ -300,7 +300,7 @@ private fun CreateNewClientContent(
     onImageSelected: (PlatformFile?) -> Unit,
     createClient: (ClientPayloadEntity) -> Unit,
     onHasDatatables: (List<DataTableEntity>, ClientPayloadEntity) -> Unit,
-    setFileForUpload: (filePath: String?) -> Unit,
+    setFileForUpload: (filePath: PlatformFile?) -> Unit,
 ) {
     var firstName by rememberSaveable { mutableStateOf("") }
     var middleName by rememberSaveable { mutableStateOf("") }
@@ -333,11 +333,8 @@ private fun CreateNewClientContent(
     var selectedStaffId: Int? by rememberSaveable { mutableStateOf(0) }
 
     var isActive by rememberSaveable { mutableStateOf(false) }
-    var dateOfBirth by rememberSaveable {
-        mutableLongStateOf(
-            Clock.System.now().toEpochMilliseconds(),
-        )
-    }
+    var dateOfBirth by rememberSaveable { mutableStateOf<Long?>(null) }
+
     var activationDate by rememberSaveable {
         mutableLongStateOf(
             Clock.System.now().toEpochMilliseconds(),
@@ -346,7 +343,7 @@ private fun CreateNewClientContent(
     var showDateOfBirthDatepicker by rememberSaveable { mutableStateOf(false) }
     var showActivateDatepicker by rememberSaveable { mutableStateOf(false) }
     var showImagePickerDialog by rememberSaveable { mutableStateOf(false) }
-    var selectedImagePath by rememberSaveable { mutableStateOf<String?>(null) }
+    var selectedImage by remember { mutableStateOf<PlatformFile?>(null) }
 
     val scrollState = rememberScrollState()
     val density = LocalDensity.current
@@ -355,16 +352,14 @@ private fun CreateNewClientContent(
         type = FileKitType.Image,
     ) { file ->
         file?.let {
-//            TODO: path not support in kmp all targets
-//            selectedImagePath = file.path
+            selectedImage = file
             onImageSelected(file)
         }
     }
 
     val cameraLauncher = rememberPlatformCameraLauncher { file ->
         file?.let {
-//            TODO: path not support in kmp all targets
-//            selectedImagePath = file.path
+            selectedImage = file
             onImageSelected(file)
         }
     }
@@ -402,7 +397,7 @@ private fun CreateNewClientContent(
         },
     )
     val dateOfBirthDatePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = dateOfBirth,
+        initialSelectedDateMillis = null,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
@@ -423,7 +418,7 @@ private fun CreateNewClientContent(
             },
             removeImage = {
                 showImagePickerDialog = false
-                selectedImagePath = null
+                selectedImage = null
             },
         )
     }
@@ -469,7 +464,7 @@ private fun CreateNewClientContent(
             .fillMaxSize()
             .verticalScroll(state = scrollState),
     ) {
-        ClientImageSection(selectedImagePath = selectedImagePath) {
+        ClientImageSection(selectedImage = selectedImage) {
             showImagePickerDialog = true
         }
 
@@ -505,7 +500,7 @@ private fun CreateNewClientContent(
         Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
         MifosDatePickerTextField(
-            value = DateHelper.getDateAsStringFromLong(dateOfBirth),
+            value = dateOfBirth?.let { DateHelper.getDateAsStringFromLong(it) } ?: "",
             label = stringResource(Res.string.feature_client_dob),
             openDatePicker = { showDateOfBirthDatepicker = !showDateOfBirthDatepicker },
         )
@@ -679,7 +674,7 @@ private fun CreateNewClientContent(
                     createClient,
                     isActive,
                     onHasDatatables,
-                    selectedImagePath,
+                    selectedImage,
                     setFileForUpload,
                     staffInOffices,
                     hasDatatables,
@@ -724,8 +719,8 @@ private fun handleSubmitClick(
     createClient: (clientPayload: ClientPayloadEntity) -> Unit,
     isActive: Boolean,
     onHasDatatables: (datatables: List<DataTableEntity>, clientPayload: ClientPayloadEntity) -> Unit,
-    selectedImagePath: String?,
-    setFileForUpload: (filePath: String?) -> Unit,
+    selectedImage: PlatformFile?,
+    setFileForUpload: (filePath: PlatformFile?) -> Unit,
     staffInOffices: List<StaffEntity>,
     hasDatatables: Boolean,
     selectedOfficeId: Int?,
@@ -734,7 +729,7 @@ private fun handleSubmitClick(
     genderId: Int,
     selectedStaffId: Int?,
     activationDate: Long,
-    dateOfBirth: Long,
+    dateOfBirth: Long?,
     mobileNumber: String,
     externalId: String,
     isAddressEnabled: Boolean,
@@ -793,7 +788,7 @@ private fun handleSubmitClick(
             onHasDatatables.invoke(it, clientPayload)
         }
     } else {
-        setFileForUpload.invoke(selectedImagePath)
+        setFileForUpload.invoke(selectedImage)
         clientPayload = clientPayload.copy(
             datatables = null,
         )
@@ -808,7 +803,7 @@ private fun createClientPayload(
     staffInOffices: List<StaffEntity>,
     isActive: Boolean,
     activationDate: Long,
-    dateOfBirth: Long,
+    dateOfBirth: Long?,
     middleName: String,
     mobileNumber: String,
     externalId: String,
@@ -828,6 +823,10 @@ private fun createClientPayload(
     countryId: Int,
     postalCode: String,
 ): ClientPayloadEntity {
+    val formattedActivationDate = if (isActive) formatDate(activationDate) else null
+    val formattedDateOfBirth = dateOfBirth?.let { formatDate(it) }
+    val hasAnyDate = formattedActivationDate != null || formattedDateOfBirth != null
+
     var clientPayload = ClientPayloadEntity(
         // Mandatory fields
         firstname = firstName,
@@ -837,27 +836,27 @@ private fun createClientPayload(
 
         // Optional fields with default values
         active = isActive,
-        activationDate = formatDate(activationDate),
-        dateOfBirth = formatDate(dateOfBirth),
-        dateFormat = ApiDateFormatter.DATE_FORMAT,
+        activationDate = formattedActivationDate,
+        dateOfBirth = formattedDateOfBirth,
+        dateFormat = if (hasAnyDate) ApiDateFormatter.DATE_FORMAT else null,
         locale = ApiDateFormatter.LOCALE,
     )
     if (isAddressEnabled) {
         val address = Address(
-            addressTypeId = addressTypeId,
+            addressTypeId = if (addressTypeId > 0) addressTypeId else null,
             isActive = isAddressActive,
-            addressLine1 = addressLine1,
-            addressLine2 = addressLine2,
-            addressLine3 = addressLine3,
-            city = city,
-            stateProvinceId = stateProvinceId,
-            countryId = countryId,
-            postalCode = postalCode,
+            addressLine1 = addressLine1.ifBlank { null },
+            addressLine2 = addressLine2.ifBlank { null },
+            addressLine3 = addressLine3.ifBlank { null },
+            city = city.ifBlank { null },
+            stateProvinceId = if (stateProvinceId > 0) stateProvinceId else null,
+            countryId = if (countryId > 0) countryId else null,
+            postalCode = postalCode.ifBlank { null },
         )
         clientPayload = clientPayload.copy(address = listOf(address))
     }
 
-    // Optional fields
+    // optional fields
     if (middleName.isNotEmpty()) {
         clientPayload = clientPayload.copy(middlename = middleName)
     }
@@ -867,16 +866,16 @@ private fun createClientPayload(
     if (externalId.isNotEmpty()) {
         clientPayload = clientPayload.copy(externalId = externalId)
     }
-    if (clientTemplate.genderOptions?.isNotEmpty() == true) {
+    if (clientTemplate.genderOptions?.isNotEmpty() == true && genderId > 0) {
         clientPayload = clientPayload.copy(genderId = genderId)
     }
-    if (staffInOffices.isNotEmpty()) {
+    if (staffInOffices.isNotEmpty() && selectedStaffId != null && selectedStaffId > 0) {
         clientPayload = clientPayload.copy(staffId = selectedStaffId)
     }
-    if (clientTemplate.clientTypeOptions?.isNotEmpty() == true) {
+    if (clientTemplate.clientTypeOptions?.isNotEmpty() == true && selectedClientId > 0) {
         clientPayload = clientPayload.copy(clientTypeId = selectedClientId)
     }
-    if (clientTemplate.clientClassificationOptions?.isNotEmpty() == true) {
+    if (clientTemplate.clientClassificationOptions?.isNotEmpty() == true && selectedClientClassificationId > 0) {
         clientPayload = clientPayload.copy(clientClassificationId = selectedClientClassificationId)
     }
     return clientPayload
@@ -947,15 +946,15 @@ private fun ClientInputTextFields(
 }
 
 @Composable
-private fun ClientImageSection(selectedImagePath: String?, onImageClick: () -> Unit) {
+private fun ClientImageSection(selectedImage: PlatformFile?, onImageClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = KptTheme.spacing.md),
     ) {
         Image(
-            painter = if (selectedImagePath != null) {
-                rememberAsyncImagePainter(selectedImagePath)
+            painter = if (selectedImage != null) {
+                rememberAsyncImagePainter(selectedImage)
             } else {
                 painterResource(Res.drawable.feature_client_ic_dp_placeholder)
             },
@@ -1292,7 +1291,7 @@ private fun isAddressTypeIdValid(
     snackbarHostState: SnackbarHostState,
 ): Boolean {
     return when {
-        addressTypeId < 0 -> {
+        addressTypeId <= 0 -> {
             scope.launch {
                 snackbarHostState.showSnackbar(
                     message = getString(

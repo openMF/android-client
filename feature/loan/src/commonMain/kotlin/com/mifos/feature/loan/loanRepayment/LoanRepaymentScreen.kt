@@ -105,25 +105,34 @@ internal fun LoanRepaymentScreen(
     viewmodel: LoanRepaymentViewModel = koinViewModel(),
 ) {
     val uiState by viewmodel.loanRepaymentUiState.collectAsStateWithLifecycle()
+    val loanDetails by viewmodel.loanDetailsState.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
-        viewmodel.checkDatabaseLoanRepaymentByLoanId()
+        if (loanDetails.loanAccountNumber.isNotEmpty()) {
+            viewmodel.checkDatabaseLoanRepaymentByLoanId()
+        }
     }
 
     LoanRepaymentScreen(
-        loanId = viewmodel.arg.loanId,
-        clientName = viewmodel.arg.clientName,
-        loanProductName = viewmodel.arg.loanProductName,
-        amountInArrears = viewmodel.arg.amountInArrears,
-        loanAccountNumber = viewmodel.arg.loanAccountNumber,
+        loanId = loanDetails.loanId,
+        clientName = loanDetails.clientName,
+        loanProductName = loanDetails.loanProductName,
+        amountInArrears = loanDetails.amountInArrears,
+        loanAccountNumber = loanDetails.loanAccountNumber,
         uiState = uiState,
         navigateBack = navigateBack,
-        onRetry = { viewmodel.checkDatabaseLoanRepaymentByLoanId() },
+        onRetry = {
+            if (loanDetails.loanAccountNumber.isEmpty()) {
+                viewmodel.loadLoanById()
+            } else {
+                viewmodel.checkDatabaseLoanRepaymentByLoanId()
+            }
+        },
         submitPayment = {
             viewmodel.submitPayment(it)
         },
         onLoanRepaymentDoesNotExistInDatabase = {
-            viewmodel.loanLoanRepaymentTemplate()
+            viewmodel.loadLoanRepaymentTemplate()
         },
         formatCurrency = viewmodel::formatCurrency,
         calculateTotal = viewmodel::calculateTotal,

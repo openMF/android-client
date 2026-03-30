@@ -39,7 +39,7 @@ class ClientLoanAccountsViewModel(
             }
 
             is ClientLoanAccountsAction.MakeRepayment -> {
-                sendEvent(ClientLoanAccountsEvent.MakeRepayment(state.clientId))
+                sendEvent(ClientLoanAccountsEvent.MakeRepayment(action.loanId))
             }
 
             ClientLoanAccountsAction.OnSearchClick -> {
@@ -231,7 +231,7 @@ sealed interface ClientLoanAccountsAction {
     data object NavigateBack : ClientLoanAccountsAction
     data object ToggleFilter : ClientLoanAccountsAction
     data object Refresh : ClientLoanAccountsAction
-    data object MakeRepayment : ClientLoanAccountsAction
+    data class MakeRepayment(val loanId: Int) : ClientLoanAccountsAction
     data class ViewAccount(val loanId: Int) : ClientLoanAccountsAction
     data class UpdateSearchValue(val query: String) : ClientLoanAccountsAction
     data object OnSearchClick : ClientLoanAccountsAction

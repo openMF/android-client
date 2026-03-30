@@ -46,4 +46,5 @@ object APIEndPoint {
 
     const val APPROVE = "approve"
     const val ACCOUNT_TRANSFERS = "accounttransfers"
+    const val RESCHEDULE_LOANS = "rescheduleloans"
 }

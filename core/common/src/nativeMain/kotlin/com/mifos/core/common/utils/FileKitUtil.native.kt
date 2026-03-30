@@ -11,15 +11,24 @@ package com.mifos.core.common.utils
 
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.download
-import io.github.vinceglb.filekit.extension
-import io.github.vinceglb.filekit.name
+import io.github.vinceglb.filekit.cacheDir
+import io.github.vinceglb.filekit.databasesDir
+import io.github.vinceglb.filekit.delete
+import io.github.vinceglb.filekit.dialogs.FileKitCameraType
+import io.github.vinceglb.filekit.dialogs.openCameraPicker
+import io.github.vinceglb.filekit.dialogs.openDirectoryPicker
+import io.github.vinceglb.filekit.div
+import io.github.vinceglb.filekit.filesDir
+import io.github.vinceglb.filekit.write
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
+val appCache = FileKit.cacheDir
+val appPrivateInternalStorage = FileKit.filesDir
+val appInternalStorage = FileKit.databasesDir
+
 actual suspend fun platformPickDirectory(): PlatformFile? {
-    // not support in WasmJs
-    return null
+    return FileKit.openDirectoryPicker()
 }
 
 actual fun platformWriteFileToCache(
@@ -27,16 +36,19 @@ actual fun platformWriteFileToCache(
     fileExtension: String,
     filesByteArray: ByteArray,
 ): Flow<DataState<PlatformFile>> = flow {
-    emit(DataState.Error(IllegalStateException("Platform not supported")))
-}
+    val filePath: PlatformFile = appCache / "$fileName.$fileExtension"
+    filePath.write(filesByteArray)
+    emit(filePath)
+}.asDataStateFlow()
 
 actual fun platformWriteFileToApplicationPrivateInternalStorage(
     fileName: String,
     fileExtension: String,
     filesByteArray: ByteArray,
 ): Flow<DataState<PlatformFile?>> = flow {
-    FileKit.download(bytes = filesByteArray, fileName = "$fileName.$fileExtension")
-    emit(null)
+    val privateInternalStorage = appPrivateInternalStorage / "$fileName.$fileExtension"
+    privateInternalStorage.write(filesByteArray)
+    emit(privateInternalStorage)
 }.asDataStateFlow()
 
 actual fun platformWriteFileToApplicationInternalStorage(
@@ -44,26 +56,25 @@ actual fun platformWriteFileToApplicationInternalStorage(
     fileExtension: String,
     filesByteArray: ByteArray,
 ): Flow<DataState<PlatformFile?>> = flow {
-    FileKit.download(bytes = filesByteArray, fileName = "$fileName.$fileExtension")
-    emit(null)
+    val internalStorage = appInternalStorage / "$fileName.$fileExtension"
+    internalStorage.write(filesByteArray)
+    emit(internalStorage)
 }.asDataStateFlow()
 
 actual fun platformWriteToSelectedDirectory(
     filesByteArray: ByteArray,
     platformFile: PlatformFile,
 ): Flow<DataState<Unit>> = flow {
-    emit(
-        FileKit.download(
-            bytes = filesByteArray,
-            fileName = "${platformFile.name}.${platformFile.extension}",
-        ),
-    )
+    emit(platformFile.write(filesByteArray))
 }.asDataStateFlow()
 
 actual suspend fun platformDeleteFile(file: PlatformFile) {
-    // not support in WasmJs.
+    file.delete(false)
 }
 
 actual fun platformTakePhoto(): Flow<DataState<PlatformFile?>> = flow {
-    emit(DataState.Error(IllegalStateException("Platform not supported")))
-}
+    val result = FileKit.openCameraPicker(
+        FileKitCameraType.Photo,
+    )
+    emit(result)
+}.asDataStateFlow()

@@ -10,7 +10,6 @@
 package com.mifos.feature.client.createNewClient
 
 import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_Image_Upload_Failed
 import androidclient.feature.client.generated.resources.feature_client_Image_Upload_Successful
 import androidclient.feature.client.generated.resources.feature_client_client_created_successfully
 import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_address_configuration
@@ -24,8 +23,8 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.data.repository.CreateNewClientRepository
+import com.mifos.core.ui.util.ImageUtil.compressImage
 import com.mifos.core.ui.util.multipartRequestBody
-import com.mifos.feature.client.utils.compressImage
 import com.mifos.room.entities.client.AddressTemplate
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
@@ -166,7 +165,8 @@ class CreateNewClientViewModel(
                         CreateNewClientUiState.ShowWaitingForCheckerApproval(Res.string.feature_client_waiting_for_checker_approval)
                 }
             } catch (e: Exception) {
-                MFErrorParser.errorMessage(e)
+                val err = MFErrorParser.errorMessage(e)
+                _createNewClientUiState.value = CreateNewClientUiState.ShowStringError(err)
             }
         }
     }
@@ -180,14 +180,17 @@ class CreateNewClientViewModel(
 
         viewModelScope.launch {
             try {
-                val compressedImage = compressImage(selectedImage.value!!, id.toString())
-                val requestFile = multipartRequestBody(
-                    file = compressedImage.readBytes(),
-                    name = compressedImage.name,
-                    extension = compressedImage.extension,
-                )
+                selectedImage.value?.let { image ->
 
-                repository.uploadClientImage(id, requestFile)
+                    val compressedImageBytes = compressImage(image.readBytes())
+
+                    val requestFile = multipartRequestBody(
+                        file = compressedImageBytes,
+                        name = image.name,
+                        extension = image.extension,
+                    )
+                    repository.uploadClientImage(id, requestFile)
+                }
 
                 _createNewClientUiState.value =
                     CreateNewClientUiState.OnImageUploadSuccess(
@@ -195,9 +198,8 @@ class CreateNewClientViewModel(
                         id,
                     )
             } catch (e: Exception) {
-                _createNewClientUiState.value =
-                    CreateNewClientUiState.ShowError(Res.string.feature_client_Image_Upload_Failed)
-                MFErrorParser.errorMessage(e)
+                val err = MFErrorParser.errorMessage(e)
+                _createNewClientUiState.value = CreateNewClientUiState.ShowStringError(err)
             }
         }
     }
