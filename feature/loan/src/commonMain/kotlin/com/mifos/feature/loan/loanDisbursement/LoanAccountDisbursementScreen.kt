@@ -11,59 +11,72 @@ package com.mifos.feature.loan.loanDisbursement
 
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_approval_disbursement_date
+import androidclient.feature.loan.generated.resources.feature_loan_available_disbursement_amount
+import androidclient.feature.loan.generated.resources.feature_loan_bank_number
 import androidclient.feature.loan.generated.resources.feature_loan_cancel
+import androidclient.feature.loan.generated.resources.feature_loan_cheque_number
 import androidclient.feature.loan.generated.resources.feature_loan_disburse_loan
 import androidclient.feature.loan.generated.resources.feature_loan_disbursement_note
+import androidclient.feature.loan.generated.resources.feature_loan_external_id
 import androidclient.feature.loan.generated.resources.feature_loan_loan_amount_disbursed
-import androidclient.feature.loan.generated.resources.feature_loan_loan_disburse_successfully
 import androidclient.feature.loan.generated.resources.feature_loan_payment_type
+import androidclient.feature.loan.generated.resources.feature_loan_receipt_number
+import androidclient.feature.loan.generated.resources.feature_loan_routing_code
 import androidclient.feature.loan.generated.resources.feature_loan_select_date
+import androidclient.feature.loan.generated.resources.feature_loan_show_account_number
+import androidclient.feature.loan.generated.resources.feature_loan_show_payment_details
+import androidclient.feature.loan.generated.resources.feature_loan_submission_failed
 import androidclient.feature.loan.generated.resources.feature_loan_submit
+import androidclient.feature.loan.generated.resources.feature_loan_unknown_error
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
-import com.mifos.core.designsystem.component.MifosSweetError
+import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.designsystem.theme.DesignToken
-import com.mifos.core.model.objects.account.loan.LoanDisbursement
-import com.mifos.core.network.GenericResponse
+import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.components.MifosStatusDialog
+import com.mifos.core.ui.components.MifosTwoButtonRow
+import com.mifos.core.ui.components.ResultStatus
+import com.mifos.core.ui.util.EventsEffect
 import com.mifos.room.entities.PaymentTypeOptionEntity
+import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
 import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -71,138 +84,135 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 
 @Composable
-internal fun LoanAccountDisbursementScreen(
+internal fun LoanAccountDisbursementScreenRoute(
+    navController: NavController,
     navigateBack: () -> Unit,
-    viewmodel: LoanAccountDisbursementViewModel = koinViewModel(),
+    navigateToLoanProfile: (Int) -> Unit,
+    viewModel: LoanAccountDisbursementViewModel = koinViewModel(),
 ) {
-    val uiState by viewmodel.loanAccountDisbursementUiState.collectAsStateWithLifecycle()
+    val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(key1 = Unit) {
-        viewmodel.loadLoanTemplate()
-    }
-
-    LoanAccountDisbursementScreen(
-        uiState = uiState,
-        navigateBack = navigateBack,
-        onRetry = { viewmodel.loadLoanTemplate() },
-        onDisburseLoan = {
-            viewmodel.disburseLoan(it)
-        },
-    )
-}
-
-@Composable
-internal fun LoanAccountDisbursementScreen(
-    uiState: LoanAccountDisbursementUiState,
-    navigateBack: () -> Unit,
-    onRetry: () -> Unit,
-    onDisburseLoan: (loanDisbursement: LoanDisbursement) -> Unit,
-) {
-    val scope = rememberCoroutineScope()
-    val snackbarHostState = remember {
-        SnackbarHostState()
+    EventsEffect(viewModel.eventFlow) { event ->
+        when (event) {
+            LoanDisbursementEvent.NavigateBack -> navigateBack()
+            is LoanDisbursementEvent.NavigateToLoanProfile -> {
+                navigateToLoanProfile(event.loanId)
+            }
+        }
     }
 
     MifosScaffold(
         snackbarHostState = snackbarHostState,
         title = stringResource(Res.string.feature_loan_disburse_loan),
         onBackPressed = navigateBack,
-    ) {
-        Box(
-            modifier = Modifier
-                .padding(it),
-        ) {
-            when (uiState) {
-                is LoanAccountDisbursementUiState.ShowDisburseLoanSuccessfully -> {
-                    val message = stringResource(Res.string.feature_loan_loan_disburse_successfully)
-                    scope.launch {
-                        snackbarHostState.showSnackbar(
-                            message = message,
-                        )
-                    }
-                    navigateBack.invoke()
-                }
-
-                is LoanAccountDisbursementUiState.ShowError -> {
-                    MifosSweetError(
-                        message = uiState.message,
-                        onclick = onRetry,
-                    )
-                }
-
-                is LoanAccountDisbursementUiState.ShowLoanTransactionTemplate -> {
+    ) { paddingValues ->
+        Box(modifier = Modifier.padding(paddingValues)) {
+            if (state.dialogState == null) {
+                state.template?.let {
                     LoanAccountDisbursementContent(
-                        initialAmount = uiState.loanTransactionTemplate.amount.toString(),
-                        paymentTypeOptions = uiState.loanTransactionTemplate.paymentTypeOptions,
-                        onDisburseLoan = onDisburseLoan,
+                        state = state,
+                        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+                        onCancel = navigateBack,
                     )
                 }
-
-                LoanAccountDisbursementUiState.ShowProgressbar -> MifosProgressIndicator()
             }
+
+            LoanAccountDisbursementDialogs(
+                dialogState = state.dialogState,
+                networkConnection = state.networkConnection,
+                onRetry = remember(viewModel) { { viewModel.trySendAction(LoanDisbursementAction.OnRetry) } },
+                onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+            )
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
+@Composable
+private fun LoanAccountDisbursementDialogs(
+    dialogState: LoanDisbursementState.DialogState?,
+    networkConnection: Boolean,
+    onRetry: () -> Unit,
+    onAction: (LoanDisbursementAction) -> Unit,
+) {
+    when (val dialog = dialogState) {
+        is LoanDisbursementState.DialogState.Loading -> {
+            MifosProgressIndicator()
+        }
+        is LoanDisbursementState.DialogState.FetchingError -> {
+            MifosErrorComponent(
+                isNetworkConnected = networkConnection,
+                message = stringResource(dialog.messageRes),
+                isRetryEnabled = true,
+                onRetry = onRetry,
+            )
+        }
+
+        is LoanDisbursementState.DialogState.ActionError -> {
+            val displayMessage = dialog.backendMessage ?: dialog.messageRes?.let { stringResource(it) } ?: stringResource(Res.string.feature_loan_unknown_error)
+
+            MifosStatusDialog(
+                status = ResultStatus.FAILURE,
+                btnText = stringResource(Res.string.feature_loan_cancel),
+                onConfirm = { onAction(LoanDisbursementAction.DismissDialog) },
+                onDismissRequest = { onAction(LoanDisbursementAction.DismissDialog) },
+                successTitle = "",
+                successMessage = "",
+                failureTitle = stringResource(Res.string.feature_loan_submission_failed),
+                failureMessage = displayMessage,
+                showAsDialog = true,
+            )
+        }
+        null -> { }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LoanAccountDisbursementContent(
-    initialAmount: String,
-    paymentTypeOptions: List<PaymentTypeOptionEntity>,
-    onDisburseLoan: (loanDisbursement: LoanDisbursement) -> Unit,
+    state: LoanDisbursementState,
+    onAction: (LoanDisbursementAction) -> Unit,
+    onCancel: () -> Unit,
 ) {
-    var disbursementDate by rememberSaveable {
-        mutableLongStateOf(Clock.System.now().toEpochMilliseconds())
-    }
-    var note by rememberSaveable {
-        mutableStateOf("")
-    }
-    var amount by rememberSaveable {
-        mutableStateOf(initialAmount)
-    }
-    var selectedPaymentType by rememberSaveable {
-        mutableStateOf("")
-    }
-    var showDatePickerDialog by rememberSaveable {
-        mutableStateOf(false)
-    }
-    var paymentTypeId by rememberSaveable {
-        mutableIntStateOf(0)
-    }
+    val scrollState = rememberScrollState()
+    var showDatePickerDialog by rememberSaveable { mutableStateOf(false) }
+
+    val currencySymbol = state.template?.currency?.displaySymbol ?: ""
+    val availableAmountRaw = state.template?.availableDisbursementAmountWithOverApplied
+        ?: state.template?.amount
+        ?: 0.0
+
+    val isSubmitEnabled = state.amount.isNotBlank() &&
+        state.amount.toDoubleOrNull() != null
+
     val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = disbursementDate,
+        initialSelectedDateMillis = state.disbursementDate,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
+                return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
             }
         },
     )
-    val scrollState = rememberScrollState()
 
     if (showDatePickerDialog) {
         DatePickerDialog(
-            onDismissRequest = {
-                showDatePickerDialog = false
-            },
+            onDismissRequest = { showDatePickerDialog = false },
             confirmButton = {
                 TextButton(
                     onClick = {
                         datePickerState.selectedDateMillis?.let {
-                            disbursementDate = it
+                            onAction(LoanDisbursementAction.UpdateDate(it))
                         }
                         showDatePickerDialog = false
                     },
                 ) { Text(stringResource(Res.string.feature_loan_select_date)) }
             },
             dismissButton = {
-                TextButton(
-                    onClick = {
-                        showDatePickerDialog = false
-                    },
-                ) { Text(stringResource(Res.string.feature_loan_cancel)) }
+                TextButton(onClick = { showDatePickerDialog = false }) {
+                    Text(stringResource(Res.string.feature_loan_cancel))
+                }
             },
         ) {
             DatePicker(state = datePickerState)
@@ -210,135 +220,241 @@ private fun LoanAccountDisbursementContent(
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState),
+        modifier = Modifier.fillMaxSize(),
     ) {
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
-
-        MifosDatePickerTextField(
-            value = DateHelper.getDateAsStringFromLong(
-                disbursementDate,
-            ),
-            label = stringResource(Res.string.feature_loan_approval_disbursement_date),
-            openDatePicker = {
-                showDatePickerDialog = true
-            },
-        )
-
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
-
-        MifosOutlinedTextField(
-            value = amount,
-            onValueChange = { amount = it },
-            label = stringResource(Res.string.feature_loan_loan_amount_disbursed),
-            error = null,
-            keyboardType = KeyboardType.Number,
-        )
-
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
-
-        MifosTextFieldDropdown(
-            value = selectedPaymentType,
-            onValueChanged = { selectedPaymentType = it },
-            onOptionSelected = { index, value ->
-                selectedPaymentType = value
-                paymentTypeId = paymentTypeOptions[index].id
-            },
-            label = stringResource(Res.string.feature_loan_payment_type),
-            options = paymentTypeOptions.map { it.name },
-            readOnly = true,
-        )
-
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
-
-        MifosOutlinedTextField(
-            value = note,
-            onValueChange = { note = it },
-            label = stringResource(Res.string.feature_loan_disbursement_note),
-            error = null,
-        )
-
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
-
-        Button(
+        Column(
             modifier = Modifier
+                .weight(1f)
                 .fillMaxWidth()
                 .padding(horizontal = KptTheme.spacing.md)
-                .heightIn(DesignToken.spacing.dp44),
-            onClick = {
-                if (isFieldValid(amount = amount)) {
-                    val date = DateHelper.getDateAsStringFromLong(
-                        disbursementDate,
-                    )
-                    val loanDisbursement = LoanDisbursement(
-                        note = note,
-                        paymentId = paymentTypeId,
-                        actualDisbursementDate = date,
-                        transactionAmount = amount.toDouble(),
-                    )
-
-                    onDisburseLoan.invoke(loanDisbursement)
-                }
-            },
+                .verticalScroll(scrollState),
         ) {
-            Text(text = stringResource(Res.string.feature_loan_submit))
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+
+            MifosDatePickerTextField(
+                value = DateHelper.getDateAsStringFromLong(state.disbursementDate),
+                label = stringResource(Res.string.feature_loan_approval_disbursement_date),
+                openDatePicker = { showDatePickerDialog = true },
+            )
+
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+
+            MifosOutlinedTextField(
+                value = state.amount,
+                onValueChange = { onAction(LoanDisbursementAction.UpdateAmount(it)) },
+                label = stringResource(Res.string.feature_loan_loan_amount_disbursed),
+                config = MifosTextFieldConfig(
+                    prefix = {
+                        Text(
+                            text = "$currencySymbol ",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    },
+                    isError = state.amountError != null,
+                    errorText = state.amountError?.let { stringResource(it) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                ),
+            )
+
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+
+            MifosOutlinedTextField(
+                value = "$currencySymbol $availableAmountRaw",
+                onValueChange = { },
+                label = stringResource(Res.string.feature_loan_available_disbursement_amount),
+                error = null,
+                readOnly = true,
+            )
+
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+
+            MifosOutlinedTextField(
+                value = state.externalId,
+                onValueChange = { onAction(LoanDisbursementAction.UpdateExternalId(it)) },
+                label = stringResource(Res.string.feature_loan_external_id),
+                error = null,
+            )
+
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+
+            val paymentOptions = state.template?.paymentTypeOptions ?: emptyList()
+            MifosTextFieldDropdown(
+                value = state.selectedPaymentType?.name ?: "",
+                onValueChanged = { },
+                onOptionSelected = { index, _ ->
+                    onAction(LoanDisbursementAction.UpdatePaymentType(paymentOptions[index]))
+                },
+                label = stringResource(Res.string.feature_loan_payment_type),
+                options = paymentOptions.map { it.name },
+                readOnly = true,
+            )
+            if (state.paymentTypeError != null) {
+                Text(
+                    text = stringResource(state.paymentTypeError),
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(start = KptTheme.spacing.sm, top = KptTheme.spacing.xs),
+                )
+            }
+
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(
+                    text = stringResource(Res.string.feature_loan_show_payment_details),
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+                Switch(
+                    checked = state.showPaymentDetails,
+                    onCheckedChange = { onAction(LoanDisbursementAction.TogglePaymentDetails(it)) },
+                )
+            }
+
+            AnimatedVisibility(visible = state.showPaymentDetails) {
+                Column {
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+
+                    MifosOutlinedTextField(
+                        value = state.accountNumber,
+                        onValueChange = { onAction(LoanDisbursementAction.UpdateAccountNumber(it)) },
+                        label = stringResource(Res.string.feature_loan_show_account_number),
+                        error = null,
+                    )
+
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+
+                    MifosOutlinedTextField(
+                        value = state.checkNumber,
+                        onValueChange = { onAction(LoanDisbursementAction.UpdateCheckNumber(it)) },
+                        label = stringResource(Res.string.feature_loan_cheque_number),
+                        error = null,
+                    )
+
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+
+                    MifosOutlinedTextField(
+                        value = state.routingCode,
+                        onValueChange = { onAction(LoanDisbursementAction.UpdateRoutingCode(it)) },
+                        label = stringResource(Res.string.feature_loan_routing_code),
+                        error = null,
+                    )
+
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+
+                    MifosOutlinedTextField(
+                        value = state.receiptNumber,
+                        onValueChange = { onAction(LoanDisbursementAction.UpdateReceiptNumber(it)) },
+                        label = stringResource(Res.string.feature_loan_receipt_number),
+                        error = null,
+                    )
+
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+
+                    MifosOutlinedTextField(
+                        value = state.bankNumber,
+                        onValueChange = { onAction(LoanDisbursementAction.UpdateBankNumber(it)) },
+                        label = stringResource(Res.string.feature_loan_bank_number),
+                        error = null,
+                    )
+
+                    Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+
+                    MifosOutlinedTextField(
+                        value = state.note,
+                        onValueChange = { onAction(LoanDisbursementAction.UpdateNote(it)) },
+                        label = stringResource(Res.string.feature_loan_disbursement_note),
+                        error = null,
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(KptTheme.spacing.xl))
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(KptTheme.spacing.md),
+        ) {
+            MifosTwoButtonRow(
+                firstBtnText = stringResource(Res.string.feature_loan_cancel),
+                secondBtnText = stringResource(Res.string.feature_loan_submit),
+                onFirstBtnClick = onCancel,
+                onSecondBtnClick = { onAction(LoanDisbursementAction.Submit) },
+                isButtonIconVisible = false,
+                isSecondButtonEnabled = isSubmitEnabled,
+            )
         }
     }
 }
 
-private fun isFieldValid(amount: String): Boolean {
-    return when {
-        amount.isEmpty() -> {
-//            Toast.makeText(
-//                context,
-//                context.resources.getString(R.string.feature_loan_error_amount_can_not_be_empty),
-//                Toast.LENGTH_SHORT,
-//            ).show()
+private class LoanDisbursementPreviewProvider : PreviewParameterProvider<LoanDisbursementState> {
 
-            false
-        }
+    val mockTemplate = LoanTransactionTemplate(
+        amount = 5000.0,
+        availableDisbursementAmountWithOverApplied = 5000.0,
+        currency = SavingAccountCurrencyEntity(
+            code = "USD",
+            displaySymbol = "$",
+            decimalPlaces = 2,
+        ),
+        paymentTypeOptions = listOf(
+            PaymentTypeOptionEntity(id = 1, name = "Cash"),
+            PaymentTypeOptionEntity(id = 2, name = "Bank Transfer"),
+        ),
+    )
 
-        !isAmountValid(amount) -> {
-//            Toast.makeText(
-//                context,
-//                context.resources.getString(R.string.feature_loan_error_invalid_amount),
-//                Toast.LENGTH_SHORT,
-//            ).show()
-
-            false
-        }
-
-        else -> {
-            true
-        }
-    }
-}
-
-private fun isAmountValid(amount: String): Boolean {
-    return amount.toDoubleOrNull() != null
-}
-
-private class LoanAccountDisbursementScreenPreviewProvider :
-    PreviewParameterProvider<LoanAccountDisbursementUiState> {
-    override val values: Sequence<LoanAccountDisbursementUiState>
+    override val values: Sequence<LoanDisbursementState>
         get() = sequenceOf(
-            LoanAccountDisbursementUiState.ShowProgressbar,
-            LoanAccountDisbursementUiState.ShowError("An error occurred"),
-            LoanAccountDisbursementUiState.ShowDisburseLoanSuccessfully(GenericResponse()),
-            LoanAccountDisbursementUiState.ShowLoanTransactionTemplate(LoanTransactionTemplate()),
+            LoanDisbursementState(
+                template = mockTemplate,
+                amount = "5000.0",
+                dialogState = null,
+            ),
+            LoanDisbursementState(
+                template = mockTemplate,
+                amount = "5000.0",
+                showPaymentDetails = true,
+                accountNumber = "123456789",
+                bankNumber = "BOA-001",
+                dialogState = null,
+            ),
+            LoanDisbursementState(
+                dialogState = LoanDisbursementState.DialogState.Loading,
+            ),
+            LoanDisbursementState(
+                dialogState = LoanDisbursementState.DialogState.FetchingError(Res.string.feature_loan_unknown_error),
+                networkConnection = true,
+            ),
         )
 }
 
 @Composable
-@Preview
-private fun PreviewLoanAccountDisbursementScreen(
-    @PreviewParameter(LoanAccountDisbursementScreenPreviewProvider::class) loanAccountDisbursementUiState: LoanAccountDisbursementUiState,
+@Preview(showBackground = true)
+private fun LoanAccountDisbursementScreenPreview(
+    @PreviewParameter(LoanDisbursementPreviewProvider::class) state: LoanDisbursementState,
 ) {
-    LoanAccountDisbursementScreen(
-        uiState = loanAccountDisbursementUiState,
-        navigateBack = { },
-        onRetry = { },
-        onDisburseLoan = { },
-    )
+    MaterialTheme {
+        Box(modifier = Modifier.fillMaxSize()) {
+            if (state.dialogState == null && state.template != null) {
+                LoanAccountDisbursementContent(
+                    state = state,
+                    onAction = {},
+                    onCancel = {},
+                )
+            }
+
+            LoanAccountDisbursementDialogs(
+                dialogState = state.dialogState,
+                networkConnection = state.networkConnection,
+                onRetry = {},
+                onAction = {},
+            )
+        }
+    }
 }

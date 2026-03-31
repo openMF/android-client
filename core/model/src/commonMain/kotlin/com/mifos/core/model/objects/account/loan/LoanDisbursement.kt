@@ -9,21 +9,22 @@
  */
 package com.mifos.core.model.objects.account.loan
 
-import com.mifos.core.model.utils.DateConstants
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.Serializable
 
-@Parcelize
+@Serializable
 data class LoanDisbursement(
-    var actualDisbursementDate: String? = null,
+    val actualDisbursementDate: String? = null,
+    val transactionAmount: Double? = null,
+    val paymentTypeId: Int? = null,
+    val externalId: String? = null,
+    val note: String? = null,
 
-    var note: String? = null,
+    val accountNumber: String? = null,
+    val checkNumber: String? = null,
+    val routingCode: String? = null,
+    val receiptNumber: String? = null,
+    val bankNumber: String? = null,
 
-    var transactionAmount: Double? = null,
-
-    var paymentId: Int? = null,
-
-    var locale: String? = DateConstants.LOCALE,
-
-    var dateFormat: String? = DateConstants.DATE_FORMAT,
-) : Parcelable
+    var locale: String? = null,
+    val dateFormat: String? = null,
+)

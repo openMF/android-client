@@ -15,20 +15,24 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LoanDisbursementScreenRoute(
-    val loanAccountNumber: Int,
+data class LoanDisbursementRoute(
+    val loanId: Int,
 )
 
-fun NavController.navigateToLoanDisbursementScreen(loanAccountNumber: Int) {
-    navigate(LoanDisbursementScreenRoute(loanAccountNumber))
+fun NavController.navigateToLoanDisbursementScreen(loanId: Int) {
+    navigate(LoanDisbursementRoute(loanId = loanId))
 }
 
 fun NavGraphBuilder.loanDisbursementScreen(
+    navController: NavController,
     onBackPressed: () -> Unit,
+    navigateToLoanProfile: (Int) -> Unit,
 ) {
-    composable<LoanDisbursementScreenRoute> {
-        LoanAccountDisbursementScreen(
+    composable<LoanDisbursementRoute> {
+        LoanAccountDisbursementScreenRoute(
+            navController = navController,
             navigateBack = onBackPressed,
+            navigateToLoanProfile = navigateToLoanProfile,
         )
     }
 }

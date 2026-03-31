@@ -78,6 +78,7 @@ import template.core.base.designsystem.theme.KptTheme
 internal fun LoanAccountProfileScreen(
     onNavigateBack: () -> Unit,
     approveLoan: (Int, LoanWithAssociationsEntity) -> Unit,
+    disburseLoan: (Int) -> Unit,
     onRepaymentClick: (LoanWithAssociationsEntity) -> Unit,
     navigateToRepaymentSchedule: (Int) -> Unit,
     navigateToTransactions: (Int) -> Unit,
@@ -100,6 +101,7 @@ internal fun LoanAccountProfileScreen(
 
                 when (event.action) {
                     LoanProfileAction.Approve -> approveLoan(account.id, account)
+                    LoanProfileAction.Disburse -> disburseLoan(account.id)
                     LoanProfileAction.Repayment -> onRepaymentClick(account)
                     LoanProfileAction.Transfer -> {
                         val account = state.loanAccount ?: return@EventsEffect

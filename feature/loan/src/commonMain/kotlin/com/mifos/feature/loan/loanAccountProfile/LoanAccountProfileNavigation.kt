@@ -30,6 +30,7 @@ fun NavGraphBuilder.loanProfileAccountDestination(
     navigateToReschedules: (Int) -> Unit,
     navigateToNotes: (Int) -> Unit,
     approveLoan: (Int, LoanWithAssociationsEntity) -> Unit,
+    disburseLoan: (Int) -> Unit,
     onRepaymentClick: (LoanWithAssociationsEntity) -> Unit,
     navigateToTransferScreen: (loanId: Int, accountNumber: String, clientId: Int, currencyCode: String, officeId: Int) -> Unit,
 ) {
@@ -44,6 +45,7 @@ fun NavGraphBuilder.loanProfileAccountDestination(
             navigateToReschedules = navigateToReschedules,
             navigateToNotes = navigateToNotes,
             approveLoan = approveLoan,
+            disburseLoan = disburseLoan,
             onRepaymentClick = onRepaymentClick,
             navigateToTransferScreen = navigateToTransferScreen,
         )
