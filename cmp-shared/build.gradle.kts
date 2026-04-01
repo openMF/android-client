@@ -15,7 +15,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.kotlin.parcelize)
-    id("org.jetbrains.kotlin.native.cocoapods")
+    alias(libs.plugins.kotlinCocoapods)
 }
 
 android {
