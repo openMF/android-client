@@ -61,7 +61,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -87,7 +86,6 @@ import kotlin.time.Clock
 
 @Composable
 internal fun LoanAccountDisbursementScreenRoute(
-    navController: NavController,
     navigateBack: () -> Unit,
     navigateToLoanProfile: (Int) -> Unit,
     viewModel: LoanAccountDisbursementViewModel = koinViewModel(),
@@ -191,7 +189,10 @@ private fun LoanAccountDisbursementContent(
         initialSelectedDateMillis = state.disbursementDate,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
+                val currentTimeMillis = Clock.System.now().toEpochMilliseconds()
+                val currentDayStart = currentTimeMillis - (currentTimeMillis % 86400000)
+                val selectedDayStart = utcTimeMillis - (utcTimeMillis % 86400000)
+                return selectedDayStart <= currentDayStart
             }
         },
     )

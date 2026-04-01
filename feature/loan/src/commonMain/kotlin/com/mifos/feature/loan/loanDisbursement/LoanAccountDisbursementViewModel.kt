@@ -23,6 +23,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountDisbursementRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
+import com.mifos.core.ui.util.BackgroundEvent
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.PaymentTypeOptionEntity
@@ -177,6 +178,7 @@ class LoanAccountDisbursementViewModel(
             mutableStateFlow.update {
                 it.copy(amountError = Res.string.feature_loan_invalid_amount_error)
             }
+            return
         }
 
         val formattedDateString = ApiDateFormatter.formatForApi(currentState.disbursementDate)
@@ -275,5 +277,5 @@ sealed interface LoanDisbursementAction {
 
 sealed interface LoanDisbursementEvent {
     data object NavigateBack : LoanDisbursementEvent
-    data class NavigateToLoanProfile(val loanId: Int) : LoanDisbursementEvent
+    data class NavigateToLoanProfile(val loanId: Int) : LoanDisbursementEvent, BackgroundEvent
 }
