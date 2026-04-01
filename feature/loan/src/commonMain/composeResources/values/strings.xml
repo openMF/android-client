@@ -91,7 +91,7 @@
 
     <string name="feature_loan_disburse_loan">Disburse Loan</string>
     <string name="feature_loan_loan_disburse_successfully">Loan disburse successfully</string>
-    <string name="feature_loan_approval_disbursement_date">Disbured On*</string>
+    <string name="feature_loan_approval_disbursement_date">Disbursed On*</string>
     <string name="feature_loan_loan_amount_disbursed">Transaction Amount*</string>
     <string name="feature_loan_submission_failed">Failed to disburse loan. Please try again.</string>
     <string name="feature_loan_payment_type">Payment Type</string>

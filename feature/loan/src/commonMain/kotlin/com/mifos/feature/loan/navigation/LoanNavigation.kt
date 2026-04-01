@@ -60,6 +60,7 @@ fun NavGraphBuilder.loanDestination(
         navController = navController,
         onBackPressed = { navController.popBackStack() },
         navigateToLoanProfile = { loanId ->
+            navController.popBackStack()
             navController.navigate(LoanAccountRoute(loanId)) {
                 popUpTo<LoanAccountRoute> { inclusive = true }
             }

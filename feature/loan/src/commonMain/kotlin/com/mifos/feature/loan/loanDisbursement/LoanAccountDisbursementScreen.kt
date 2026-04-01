@@ -361,19 +361,17 @@ private fun LoanAccountDisbursementContent(
                         label = stringResource(Res.string.feature_loan_bank_number),
                         error = null,
                     )
-
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
-
-                    MifosOutlinedTextField(
-                        value = state.note,
-                        onValueChange = { onAction(LoanDisbursementAction.UpdateNote(it)) },
-                        label = stringResource(Res.string.feature_loan_disbursement_note),
-                        error = null,
-                    )
                 }
             }
 
-            Spacer(modifier = Modifier.height(KptTheme.spacing.xl))
+            Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+
+            MifosOutlinedTextField(
+                value = state.note,
+                onValueChange = { onAction(LoanDisbursementAction.UpdateNote(it)) },
+                label = stringResource(Res.string.feature_loan_disbursement_note),
+                error = null,
+            )
         }
 
         Box(

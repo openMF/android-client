@@ -86,7 +86,7 @@ class LoanAccountDisbursementViewModel(
                     mutableStateFlow.update {
                         it.copy(
                             dialogState = LoanDisbursementState.DialogState.FetchingError(
-                                Res.string.feature_loan_profile_error_details_not_found,
+                                Res.string.feature_loan_profile_error_network_not_available,
                             ),
                         )
                     }
@@ -171,24 +171,19 @@ class LoanAccountDisbursementViewModel(
 
     private fun validateAndSubmit() {
         val currentState = stateFlow.value
-        var isValid = true
-        var amountErr: StringResource? = null
+        val parsedAmount = currentState.amount.toDoubleOrNull()
 
-        if (currentState.amount.isNotBlank() && currentState.amount.toDoubleOrNull() == null) {
-            amountErr = Res.string.feature_loan_invalid_amount_error
-            isValid = false
-        }
-
-        if (!isValid) {
-            mutableStateFlow.update { it.copy(amountError = amountErr) }
-            return
+        if (parsedAmount == null || !parsedAmount.isFinite() || parsedAmount <= 0.0) {
+            mutableStateFlow.update {
+                it.copy(amountError = Res.string.feature_loan_invalid_amount_error)
+            }
         }
 
         val formattedDateString = ApiDateFormatter.formatForApi(currentState.disbursementDate)
 
         val payload = LoanDisbursement(
             actualDisbursementDate = formattedDateString,
-            transactionAmount = currentState.amount.toDoubleOrNull(),
+            transactionAmount = parsedAmount,
             paymentTypeId = currentState.selectedPaymentType?.id,
             externalId = currentState.externalId.takeIf { it.isNotBlank() },
             accountNumber = currentState.accountNumber.takeIf { currentState.showPaymentDetails && it.isNotBlank() },
@@ -196,7 +191,7 @@ class LoanAccountDisbursementViewModel(
             routingCode = currentState.routingCode.takeIf { currentState.showPaymentDetails && it.isNotBlank() },
             receiptNumber = currentState.receiptNumber.takeIf { currentState.showPaymentDetails && it.isNotBlank() },
             bankNumber = currentState.bankNumber.takeIf { currentState.showPaymentDetails && it.isNotBlank() },
-            note = currentState.note.takeIf { currentState.showPaymentDetails && it.isNotBlank() },
+            note = currentState.note.takeIf { it.isNotBlank() },
 
             dateFormat = ApiDateFormatter.DATE_FORMAT,
             locale = ApiDateFormatter.LOCALE,
