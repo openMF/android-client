@@ -151,7 +151,10 @@ private fun LoanAccountDisbursementDialogs(
         }
 
         is LoanDisbursementState.DialogState.ActionError -> {
-            val displayMessage = dialog.backendMessage ?: dialog.messageRes?.let { stringResource(it) } ?: stringResource(Res.string.feature_loan_unknown_error)
+            val displayMessage = dialog.backendMessage
+                ?.takeUnless { it.isBlank() }
+                ?: dialog.messageRes?.let { stringResource(it) }
+                ?: stringResource(Res.string.feature_loan_unknown_error)
 
             MifosStatusDialog(
                 status = ResultStatus.FAILURE,
@@ -256,7 +259,7 @@ private fun LoanAccountDisbursementContent(
                     },
                     isError = state.amountError != null,
                     errorText = state.amountError?.let { stringResource(it) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 ),
             )
 
