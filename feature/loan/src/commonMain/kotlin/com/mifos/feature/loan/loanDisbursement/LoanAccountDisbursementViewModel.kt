@@ -172,7 +172,7 @@ class LoanAccountDisbursementViewModel(
 
     private fun validateAndSubmit() {
         val currentState = stateFlow.value
-        val parsedAmount = currentState.amount.toDoubleOrNull()
+        val parsedAmount = currentState.amount.replace(',', '.').toDoubleOrNull()
 
         if (parsedAmount == null || !parsedAmount.isFinite() || parsedAmount <= 0.0) {
             mutableStateFlow.update {

@@ -188,7 +188,7 @@ private fun LoanAccountDisbursementContent(
         ?: 0.0
 
     val isSubmitEnabled = state.amount.isNotBlank() &&
-        state.amount.toDoubleOrNull() != null
+        state.amount.replace(',', '.').toDoubleOrNull() != null
 
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = state.disbursementDate,
