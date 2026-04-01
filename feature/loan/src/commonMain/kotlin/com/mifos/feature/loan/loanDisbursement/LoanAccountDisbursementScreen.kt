@@ -61,6 +61,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -86,6 +87,7 @@ import kotlin.time.Clock
 
 @Composable
 internal fun LoanAccountDisbursementScreenRoute(
+    navController: NavController,
     navigateBack: () -> Unit,
     navigateToLoanProfile: (Int) -> Unit,
     viewModel: LoanAccountDisbursementViewModel = koinViewModel(),
