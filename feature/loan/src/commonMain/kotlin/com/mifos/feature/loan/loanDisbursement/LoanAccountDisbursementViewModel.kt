@@ -113,6 +113,9 @@ class LoanAccountDisbursementViewModel(
             is LoanDisbursementAction.TogglePaymentDetails ->
                 mutableStateFlow.update { it.copy(showPaymentDetails = action.show) }
 
+            is LoanDisbursementAction.ToggleDatePickerDialog ->
+                mutableStateFlow.update { it.copy(showDatePickerDialog = action.show) }
+
             is LoanDisbursementAction.UpdateAccountNumber ->
                 mutableStateFlow.update { it.copy(accountNumber = action.value) }
 
@@ -235,6 +238,7 @@ data class LoanDisbursementState(
     val template: LoanTransactionTemplate? = null,
     val dialogState: DialogState? = null,
     val networkConnection: Boolean = false,
+    val showDatePickerDialog: Boolean = false,
 
     val disbursementDate: Long = Clock.System.now().toEpochMilliseconds(),
     val amount: String = "",
@@ -266,6 +270,7 @@ sealed interface LoanDisbursementAction {
     data class UpdateExternalId(val id: String) : LoanDisbursementAction
     data class UpdatePaymentType(val paymentType: PaymentTypeOptionEntity) : LoanDisbursementAction
     data class TogglePaymentDetails(val show: Boolean) : LoanDisbursementAction
+    data class ToggleDatePickerDialog(val show: Boolean) : LoanDisbursementAction
     data class UpdateAccountNumber(val value: String) : LoanDisbursementAction
     data class UpdateCheckNumber(val value: String) : LoanDisbursementAction
     data class UpdateRoutingCode(val value: String) : LoanDisbursementAction

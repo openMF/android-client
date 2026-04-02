@@ -100,11 +100,11 @@
     <string name="feature_loan_error_amount_can_not_be_empty">Amount can not be empty</string>
     <string name="feature_loan_available_disbursement_amount">Available Disbursement Amount (with Over Applied)</string>
     <string name="feature_loan_show_payment_details">Show Payment Details</string>
-    <string name="feature_loan_show_account_number">Account #</string>
-    <string name="feature_loan_cheque_number">Cheque #</string>
+    <string name="feature_loan_show_account_number">Account Number</string>
+    <string name="feature_loan_cheque_number">Cheque Number</string>
     <string name="feature_loan_routing_code">Routing Code</string>
-    <string name="feature_loan_receipt_number">Receipt #</string>
-    <string name="feature_loan_bank_number">Bank #</string>
+    <string name="feature_loan_receipt_number">Receipt Number</string>
+    <string name="feature_loan_bank_number">Bank Number</string>
     <string name="feature_loan_unknown_error">Unknown Error</string>
     <string name="feature_loan_invalid_amount_error">Please enter a valid amount</string>
 

@@ -53,12 +53,11 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -180,7 +179,6 @@ private fun LoanAccountDisbursementContent(
     onCancel: () -> Unit,
 ) {
     val scrollState = rememberScrollState()
-    var showDatePickerDialog by rememberSaveable { mutableStateOf(false) }
 
     val currencySymbol = state.template?.currency?.displaySymbol ?: ""
     val availableAmountRaw = state.template?.availableDisbursementAmountWithOverApplied
@@ -202,21 +200,23 @@ private fun LoanAccountDisbursementContent(
         },
     )
 
-    if (showDatePickerDialog) {
+    if (state.showDatePickerDialog) {
         DatePickerDialog(
-            onDismissRequest = { showDatePickerDialog = false },
+            onDismissRequest = { onAction(LoanDisbursementAction.ToggleDatePickerDialog(false)) },
             confirmButton = {
                 TextButton(
                     onClick = {
                         datePickerState.selectedDateMillis?.let {
                             onAction(LoanDisbursementAction.UpdateDate(it))
                         }
-                        showDatePickerDialog = false
+                        onAction(LoanDisbursementAction.ToggleDatePickerDialog(false))
                     },
                 ) { Text(stringResource(Res.string.feature_loan_select_date)) }
             },
             dismissButton = {
-                TextButton(onClick = { showDatePickerDialog = false }) {
+                TextButton(
+                    onClick = { onAction(LoanDisbursementAction.ToggleDatePickerDialog(false)) },
+                ) {
                     Text(stringResource(Res.string.feature_loan_cancel))
                 }
             },
@@ -240,7 +240,7 @@ private fun LoanAccountDisbursementContent(
             MifosDatePickerTextField(
                 value = DateHelper.getDateAsStringFromLong(state.disbursementDate),
                 label = stringResource(Res.string.feature_loan_approval_disbursement_date),
-                openDatePicker = { showDatePickerDialog = true },
+                openDatePicker = { onAction(LoanDisbursementAction.ToggleDatePickerDialog(true)) },
             )
 
             Spacer(modifier = Modifier.height(KptTheme.spacing.md))
@@ -329,7 +329,12 @@ private fun LoanAccountDisbursementContent(
                         value = state.accountNumber,
                         onValueChange = { onAction(LoanDisbursementAction.UpdateAccountNumber(it)) },
                         label = stringResource(Res.string.feature_loan_show_account_number),
-                        error = null,
+                        config = MifosTextFieldConfig(
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number,
+                                imeAction = ImeAction.Next,
+                            ),
+                        ),
                     )
 
                     Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
@@ -338,7 +343,12 @@ private fun LoanAccountDisbursementContent(
                         value = state.checkNumber,
                         onValueChange = { onAction(LoanDisbursementAction.UpdateCheckNumber(it)) },
                         label = stringResource(Res.string.feature_loan_cheque_number),
-                        error = null,
+                        config = MifosTextFieldConfig(
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number,
+                                imeAction = ImeAction.Next,
+                            ),
+                        ),
                     )
 
                     Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
@@ -347,7 +357,12 @@ private fun LoanAccountDisbursementContent(
                         value = state.routingCode,
                         onValueChange = { onAction(LoanDisbursementAction.UpdateRoutingCode(it)) },
                         label = stringResource(Res.string.feature_loan_routing_code),
-                        error = null,
+                        config = MifosTextFieldConfig(
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number,
+                                imeAction = ImeAction.Next,
+                            ),
+                        ),
                     )
 
                     Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
@@ -356,7 +371,12 @@ private fun LoanAccountDisbursementContent(
                         value = state.receiptNumber,
                         onValueChange = { onAction(LoanDisbursementAction.UpdateReceiptNumber(it)) },
                         label = stringResource(Res.string.feature_loan_receipt_number),
-                        error = null,
+                        config = MifosTextFieldConfig(
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number,
+                                imeAction = ImeAction.Next,
+                            ),
+                        ),
                     )
 
                     Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
@@ -365,7 +385,12 @@ private fun LoanAccountDisbursementContent(
                         value = state.bankNumber,
                         onValueChange = { onAction(LoanDisbursementAction.UpdateBankNumber(it)) },
                         label = stringResource(Res.string.feature_loan_bank_number),
-                        error = null,
+                        config = MifosTextFieldConfig(
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number,
+                                imeAction = ImeAction.Done,
+                            ),
+                        ),
                     )
                 }
             }
