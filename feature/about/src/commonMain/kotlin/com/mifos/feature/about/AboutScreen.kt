@@ -74,14 +74,14 @@ internal fun AboutScreen(
                         .fillMaxWidth()
                         .padding(KptTheme.spacing.md),
                     text = stringResource(Res.string.feature_about_mifos_x_droid),
-                    style = aboutItemTextStyleBold,
+                    style = aboutItemTextStyleBold.copy(color = KptTheme.colorScheme.onBackground),
                 )
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = KptTheme.spacing.md),
                     text = stringResource(Res.string.feature_about_app),
-                    style = aboutItemTextStyle,
+                    style = aboutItemTextStyle.copy(color = KptTheme.colorScheme.onBackground),
                 )
                 Text(
                     modifier = Modifier
@@ -92,6 +92,7 @@ internal fun AboutScreen(
                         },
                     text = stringResource(Res.string.feature_about_mifos),
                     style = KptTheme.typography.bodyMedium,
+                    color = KptTheme.colorScheme.primary,
                     textAlign = TextAlign.Center,
                 )
             }
@@ -119,6 +120,10 @@ private fun AboutCardItem(
     ElevatedCard(
         modifier = Modifier.padding(horizontal = KptTheme.spacing.md, vertical = KptTheme.spacing.sm),
         elevation = CardDefaults.elevatedCardElevation(KptTheme.elevation.level0),
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = KptTheme.colorScheme.surface,
+            contentColor = KptTheme.colorScheme.onSurface,
+        ),
         onClick = { onOptionClick(about.id) },
     ) {
         Row(
@@ -129,6 +134,7 @@ private fun AboutCardItem(
                 Icon(
                     painter = painterResource(it),
                     contentDescription = stringResource(about.title),
+                    tint = KptTheme.colorScheme.onSurfaceVariant,
                 )
             }
             Column {
@@ -138,6 +144,7 @@ private fun AboutCardItem(
                         .padding(horizontal = KptTheme.spacing.md),
                     text = stringResource(about.title),
                     style = KptTheme.typography.titleMedium,
+                    color = KptTheme.colorScheme.onSurface,
                 )
                 about.subtitle?.let {
                     Text(
@@ -146,6 +153,7 @@ private fun AboutCardItem(
                             .padding(horizontal = KptTheme.spacing.md),
                         text = stringResource(it),
                         style = KptTheme.typography.bodyMedium,
+                        color = KptTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
