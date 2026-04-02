@@ -423,7 +423,6 @@
     <string name="feature_loan_transfer_success">Transfer completed successfully</string>
     <string name="feature_loan_transfer_go_back">Go Back</string>
 
-</resources>
     <string name="feature_loan_reschedules_title">Loan Reschedules</string>
     <string name="feature_loan_reschedules_empty">No reschedule history found.</string>
     <string name="feature_loan_reschedules_new_title">Reschedule</string>
