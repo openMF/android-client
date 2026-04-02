@@ -50,7 +50,7 @@ fun MifosNavigationRail(
     windowInsets: WindowInsets = NavigationRailDefaults.windowInsets,
 ) {
     Surface(
-        color = KptTheme.colorScheme.onSurface,
+        color = KptTheme.colorScheme.surface,
         contentColor = Color.Unspecified,
         modifier = modifier,
     ) {
