@@ -27,12 +27,10 @@ import androidclient.feature.loan.generated.resources.feature_loan_show_account_
 import androidclient.feature.loan.generated.resources.feature_loan_show_payment_details
 import androidclient.feature.loan.generated.resources.feature_loan_submission_failed
 import androidclient.feature.loan.generated.resources.feature_loan_submit
-import androidclient.feature.loan.generated.resources.feature_loan_unknown_error
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -47,15 +45,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -67,6 +62,7 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
+import com.mifos.core.ui.components.MifosCheckBox
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosStatusDialog
@@ -153,7 +149,7 @@ private fun LoanAccountDisbursementDialogs(
             val displayMessage = dialog.backendMessage
                 ?.takeUnless { it.isBlank() }
                 ?: dialog.messageRes?.let { stringResource(it) }
-                ?: stringResource(Res.string.feature_loan_unknown_error)
+                ?: stringResource(Res.string.feature_loan_submission_failed)
 
             MifosStatusDialog(
                 status = ResultStatus.FAILURE,
@@ -304,22 +300,15 @@ private fun LoanAccountDisbursementContent(
                 )
             }
 
-            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Text(
-                    text = stringResource(Res.string.feature_loan_show_payment_details),
-                    style = MaterialTheme.typography.bodyLarge,
-                )
-                Switch(
-                    checked = state.showPaymentDetails,
-                    onCheckedChange = { onAction(LoanDisbursementAction.TogglePaymentDetails(it)) },
-                )
-            }
+            MifosCheckBox(
+                text = stringResource(Res.string.feature_loan_show_payment_details),
+                checked = state.showPaymentDetails,
+                onCheckChanged = { onAction(LoanDisbursementAction.TogglePaymentDetails(it)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onAction(LoanDisbursementAction.TogglePaymentDetails(!state.showPaymentDetails)) }
+                    .padding(vertical = KptTheme.spacing.sm),
+            )
 
             AnimatedVisibility(visible = state.showPaymentDetails) {
                 Column {
@@ -457,7 +446,7 @@ private class LoanDisbursementPreviewProvider : PreviewParameterProvider<LoanDis
                 dialogState = LoanDisbursementState.DialogState.Loading,
             ),
             LoanDisbursementState(
-                dialogState = LoanDisbursementState.DialogState.FetchingError(Res.string.feature_loan_unknown_error),
+                dialogState = LoanDisbursementState.DialogState.FetchingError(Res.string.feature_loan_submission_failed),
                 networkConnection = true,
             ),
         )
