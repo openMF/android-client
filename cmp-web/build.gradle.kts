@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -65,4 +66,9 @@ kotlin {
 compose.resources {
     publicResClass = true
     generateResClass = always
+}
+
+tasks.withType<KotlinWebpack>().configureEach {
+    // Prevent CI webpack worker crashes due to the default Node.js heap limit.
+    nodeArgs.add("--max_old_space_size=8192")
 }
