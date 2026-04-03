@@ -157,8 +157,8 @@ class CreditBalanceRefundViewModel(
                                     clientName = loan.clientName,
                                     loanAccountNumber = loan.accountNo,
                                     overpaidAmount = loan.totalOverpaid,
-                                    currencyCode = loan.currency.code,
-                                    decimalPlaces = loan.currency.decimalPlaces,
+                                    currencyCode = loan.currencyCode,
+                                    decimalPlaces = loan.decimalPlaces,
                                 )
                             }
                         }

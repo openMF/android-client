@@ -10,9 +10,9 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.model.objects.account.loan.LoanRefundDetails
 import com.mifos.room.entities.accounts.loans.CreditBalanceRefundRequest
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -28,7 +28,7 @@ interface CreditBalanceRefundRepository {
      * @param loanId The ID of the loan account
      * @return Flow of DataState wrapping the loan details
      */
-    fun getLoanById(loanId: Int): Flow<DataState<LoanWithAssociationsEntity?>>
+    fun getLoanById(loanId: Int): Flow<DataState<LoanRefundDetails?>>
 
     /**
      * Submits a credit balance refund transaction for a loan account.

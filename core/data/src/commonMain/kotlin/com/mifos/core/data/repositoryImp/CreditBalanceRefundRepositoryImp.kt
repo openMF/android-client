@@ -13,13 +13,14 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.CreditBalanceRefundRepository
+import com.mifos.core.model.objects.account.loan.LoanRefundDetails
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.room.entities.accounts.loans.CreditBalanceRefundRequest
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 /**
  * Implementation of [CreditBalanceRefundRepository].
@@ -35,8 +36,21 @@ class CreditBalanceRefundRepositoryImp(
      * Fetches loan details required for the refund form.
      * Delegates to [DataManagerLoan.getLoanById] and wraps the result in [DataState].
      */
-    override fun getLoanById(loanId: Int): Flow<DataState<LoanWithAssociationsEntity?>> {
-        return dataManagerLoan.getLoanById(loanId).asDataStateFlow()
+
+    override fun getLoanById(loanId: Int): Flow<DataState<LoanRefundDetails?>> {
+        return dataManagerLoan.getLoanById(loanId)
+            .map { entity ->
+                entity?.let {
+                    LoanRefundDetails(
+                        id = it.id,
+                        accountNo = it.accountNo,
+                        clientName = it.clientName,
+                        totalOverpaid = it.totalOverpaid,
+                        currencyCode = it.currency?.code,
+                        decimalPlaces = it.currency?.decimalPlaces,
+                    )
+                }
+            }.asDataStateFlow()
     }
 
     /**
