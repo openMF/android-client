@@ -20,7 +20,6 @@ import androidclient.feature.loan.generated.resources.feature_loan_profile_label
 import androidclient.feature.loan.generated.resources.feature_loan_profile_section_account_overview
 import androidclient.feature.loan.generated.resources.feature_loan_profile_section_actions_details
 import androidclient.feature.loan.generated.resources.feature_loan_profile_status_active
-import androidclient.feature.loan.generated.resources.feature_loan_reject_success
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -43,7 +42,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -69,7 +67,6 @@ import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.util.TextUtil
 import com.mifos.feature.loan.loanAccountProfile.components.LoanAccountProfileActionItem
 import com.mifos.feature.loan.loanAccountProfile.components.loanProfileActionItems
-import com.mifos.feature.loan.loanReject.LOAN_REJECT_SUCCESS_RESULT_KEY
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
@@ -100,7 +97,6 @@ internal fun LoanAccountProfileScreen(
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
-    val rejectSuccessMessage = stringResource(Res.string.feature_loan_reject_success)
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
@@ -147,17 +143,6 @@ internal fun LoanAccountProfileScreen(
             }
             is LoanAccountEvent.NavigateToRejectLoan -> rejectLoan(event.loanId)
             LoanAccountEvent.NavigateToAccountDetails -> {}
-        }
-    }
-
-    LaunchedEffect(navController) {
-        val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle ?: return@LaunchedEffect
-        savedStateHandle.getStateFlow(LOAN_REJECT_SUCCESS_RESULT_KEY, false).collect { isSuccess ->
-            if (isSuccess) {
-                savedStateHandle[LOAN_REJECT_SUCCESS_RESULT_KEY] = false
-                viewModel.trySendAction(LoanAccountAction.OnRetry)
-                snackbarHostState.showSnackbar(message = rejectSuccessMessage)
-            }
         }
     }
 
