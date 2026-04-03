@@ -23,7 +23,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_general_summa
 import androidclient.feature.loan.generated.resources.feature_loan_general_summary_row_principal
 import androidclient.feature.loan.generated.resources.feature_loan_general_value_not_available
 import androidclient.feature.loan.generated.resources.feature_loan_general_value_unassigned
-import androidclient.feature.loan.generated.resources.feature_loan_unknown_error_occured
+import androidclient.feature.loan.generated.resources.feature_loan_profile_error_details_not_found
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -92,7 +92,7 @@ internal class LoanAccountGeneralViewModel(
                             }
                         } else {
                             mutableStateFlow.update {
-                                it.copy(dialogState = LoanAccountGeneralState.DialogState.Error(getString(Res.string.feature_loan_unknown_error_occured)))
+                                it.copy(dialogState = LoanAccountGeneralState.DialogState.Error(getString(Res.string.feature_loan_profile_error_details_not_found)))
                             }
                         }
                     }
