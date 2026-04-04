@@ -38,7 +38,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import cmp.navigation.authenticated.NavigationItem
-import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import core.designsystem.generated.resources.Res
@@ -47,6 +46,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.mifos.navigation.generated.resources.powered_by
 import org.mifos.navigation.generated.resources.topbarlogo
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosBottomBar(
@@ -60,7 +60,7 @@ fun MifosBottomBar(
         windowInsets = windowInsets,
         modifier = modifier
             .fillMaxWidth()
-            .background(AppColors.customWhite),
+            .background(KptTheme.colorScheme.surface),
         tonalElevation = 0.dp,
     ) {
         navigationItems.forEach { navigationItem ->

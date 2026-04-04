@@ -279,7 +279,7 @@ fun PerformanceHistoryRows(
     value: String,
     modifier: Modifier = Modifier,
     textStyle: TextStyle = TextStyle(
-        color = AppColors.customWhite,
+        color = KptTheme.colorScheme.onPrimary,
         fontStyle = KptTheme.typography.labelMedium.fontStyle,
     ),
 ) {
