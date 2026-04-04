@@ -15,6 +15,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlinCocoapods)
 }
 
 android {
@@ -54,6 +55,19 @@ kotlin {
             // Desktop specific dependencies
             implementation(compose.desktop.currentOs)
             implementation(compose.desktop.common)
+        }
+    }
+
+    cocoapods {
+        summary = "KMP Shared Module"
+        homepage = "https://github.com/openMF/kmp-project-template"
+        version = project.version.toString().substringBefore("-").substringBefore("+")
+        ios.deploymentTarget = "16.0"
+        podfile = project.file("../cmp-ios/Podfile")
+
+        framework {
+            baseName = "ComposeApp"
+            isStatic = true
         }
     }
 }
