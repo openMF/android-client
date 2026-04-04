@@ -11,8 +11,12 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
+import com.mifos.core.data.mappers.recurring.toDto
+import com.mifos.core.data.mappers.recurring.toModel
 import com.mifos.core.data.repository.RecurringAccountRepository
 import com.mifos.core.model.objects.payloads.RecurringDepositAccountPayload
+import com.mifos.core.model.objects.responses.RecurringDepositApprovalResponse
+import com.mifos.core.model.objects.template.recurring.approval.RecurringDepositApproval
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerRecurringAccount
 import com.mifos.room.entities.templates.recurringDeposit.RecurringDepositAccountTemplate
@@ -38,5 +42,15 @@ class RecurringAccountRepositoryImp(
         return dataManagerRecurringAccount.createRecurringDepositAccount(
             recurringDepositAccountPayload,
         ).asDataStateFlow()
+    }
+
+    override suspend fun approveRecurringDepositAccount(
+        accountId: String,
+        approval: RecurringDepositApproval,
+    ): RecurringDepositApprovalResponse {
+        return dataManagerRecurringAccount.approveRecurringDepositAccount(
+            accountId,
+            approval.toDto(),
+        ).toModel()
     }
 }

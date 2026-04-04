@@ -7,11 +7,13 @@
  *
  * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
-package com.mifos.feature.recurringDeposit.newRecurringDepositAccount
+package com.mifos.feature.recurringDeposit.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountScreen
+import com.mifos.feature.recurringDeposit.recurringAccountApproval.RecurringDepositAccountApprovalScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -35,4 +37,27 @@ fun NavController.navigateToRecurringAccountRoute(clientId: Int) {
     this.navigate(
         RecurringAccountRoute(clientId = clientId),
     )
+}
+
+@Serializable
+data class RecurringDepositAccountApprovalRoute(
+    val accountId: String,
+)
+
+fun NavGraphBuilder.recurringDepositAccountApprovalDestination(
+    navController: NavController,
+    navigateBack: () -> Unit,
+) {
+    composable<RecurringDepositAccountApprovalRoute> {
+        RecurringDepositAccountApprovalScreen(
+            navController = navController,
+            navigateBack = navigateBack,
+        )
+    }
+}
+
+fun NavController.navigateToRecurringDepositAccountApproval(
+    accountId: String,
+) {
+    this.navigate(RecurringDepositAccountApprovalRoute(accountId = accountId))
 }

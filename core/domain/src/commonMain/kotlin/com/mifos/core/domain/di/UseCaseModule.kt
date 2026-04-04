@@ -17,6 +17,7 @@ import com.mifos.core.domain.useCases.AddClientPinpointLocationUseCase
 import com.mifos.core.domain.useCases.AddDataTableEntryUseCase
 import com.mifos.core.domain.useCases.AddNoteUseCase
 import com.mifos.core.domain.useCases.ApproveCheckerUseCase
+import com.mifos.core.domain.useCases.ApproveRecurringDepositUseCase
 import com.mifos.core.domain.useCases.ApproveSavingsApplicationUseCase
 import com.mifos.core.domain.useCases.CalculateLoanScheduleUseCase
 import com.mifos.core.domain.useCases.CreateChargesUseCase
@@ -173,4 +174,5 @@ val UseCaseModule = module {
     factoryOf(::DeleteNoteUseCase)
     factoryOf(::CreateSignatureUseCase)
     factoryOf(::UpdateSignatureUseCase)
+    factoryOf(::ApproveRecurringDepositUseCase)
 }

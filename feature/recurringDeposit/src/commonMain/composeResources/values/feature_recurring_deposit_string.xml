@@ -77,6 +77,18 @@
     <string name="feature_recurring_account_created_successfully">Recurring deposits account created successfully</string>
     <string name="feature_error_network_not_available">Network is not Available</string>
     <string name="feature_recurring_account_deposit_frequency">Recurring Deposit Frequency</string>
+    <string name="feature_recurring_deposit_approve_account">Approve Recurring Account</string>
+    <string name="feature_recurring_deposit_account">Recurring Account</string>
+    <string name="feature_recurring_deposit_select_date">Select Date</string>
+    <string name="feature_recurring_deposit_approved_on">Approved On*</string>
+    <string name="feature_recurring_deposit_approval_date">Select Approval Date:</string>
+    <string name="feature_recurring_deposit_approval_reason">Reason for Approval</string>
+    <string name="feature_recurring_deposit_save">Save</string>
+    <string name="feature_recurring_deposit_continue">Continue</string>
+    <string name="feature_recurring_deposit_success_message">You have successfully approved the Recurring Deposit Account</string>
+    <string name="feature_recurring_deposit_success_title">Successful</string>
+    <string name="feature_recurring_deposit_failure_message">Sorry we couldn't proceed with approving the Recurring Deposit Account</string>
+    <string name="feature_recurring_deposit_failure_title">Unsuccessful</string>
 
 
 </resources>

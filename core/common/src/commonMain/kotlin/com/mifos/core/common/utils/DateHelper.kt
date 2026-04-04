@@ -17,7 +17,10 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.format
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
+import kotlinx.datetime.format.MonthNames
+import kotlinx.datetime.format.Padding
 import kotlinx.datetime.format.byUnicodePattern
+import kotlinx.datetime.format.char
 import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
@@ -39,6 +42,14 @@ object DateHelper {
     const val SHORT_MONTH = "dd-MM-yyyy"
 
     const val MONTH_FORMAT = "dd MMMM"
+
+    private val apiDateFormat = LocalDateTime.Format {
+        dayOfMonth(Padding.ZERO)
+        char(' ')
+        monthName(MonthNames.ENGLISH_FULL)
+        char(' ')
+        year()
+    }
 
     private val fullMonthFormat = LocalDateTime.Format {
         byUnicodePattern(FULL_MONTH)
@@ -450,5 +461,13 @@ object DateHelper {
         } catch (e: Exception) {
             null
         }
+    }
+
+    @OptIn(ExperimentalTime::class)
+    fun getDateAsStringForApproval(timeInMillis: Long): String {
+        val instant = Instant.fromEpochMilliseconds(timeInMillis)
+            .toLocalDateTime(TimeZone.currentSystemDefault())
+
+        return instant.format(apiDateFormat)
     }
 }

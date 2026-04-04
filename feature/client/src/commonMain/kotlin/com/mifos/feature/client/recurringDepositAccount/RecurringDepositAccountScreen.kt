@@ -38,6 +38,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,6 +46,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.common.utils.DateHelper
@@ -74,6 +78,20 @@ fun RecurringDepositAccountScreen(
     viewModel: RecurringDepositAccountViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                viewModel.trySendAction(RecurringDepositAccountAction.OnResume)
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
@@ -145,7 +163,6 @@ internal fun RecurringDepositAccountContent(
             .fillMaxSize(),
     ) {
         MifosBreadcrumbNavBar(navController)
-
         when (state.isLoading) {
             true -> MifosProgressIndicator()
             false -> {
@@ -168,7 +185,7 @@ internal fun RecurringDepositAccountContent(
                         isRecurringDepositScreenEmpty = state.recurringDepositAccounts.isEmpty(),
                     )
 
-                    // todo implement search bar functionality
+                    // TODO: implement search bar functionality
                     if (state.isSearchBarActive) {
                         MifosSearchBar(
                             query = state.searchText,
@@ -226,23 +243,30 @@ internal fun RecurringDepositAccountContent(
                                             Actions.ViewAccount(MifosIcons.Calendar),
                                         )
                                     },
-                                ) { actions ->
-                                    when (actions) {
-                                        is Actions.ViewAccount -> {
-                                            onAction(
-                                                RecurringDepositAccountAction.ViewAccount(
-                                                    recurringDeposit.accountNo ?: "",
-                                                ),
-                                            )
+                                    onActionClicked = { actions ->
+                                        recurringDeposit.accountNo?.let { accountNo ->
+                                            when (actions) {
+                                                is Actions.ViewAccount -> {
+                                                    onAction(
+                                                        RecurringDepositAccountAction.ViewAccount(
+                                                            accountNo,
+                                                        ),
+                                                    )
+                                                }
+
+                                                is Actions.ApproveAccount -> {
+                                                    onAction(
+                                                        RecurringDepositAccountAction.ApproveAccount(
+                                                            accountNo,
+                                                        ),
+                                                    )
+                                                }
+
+                                                else -> Unit
+                                            }
                                         }
-                                        is Actions.ApproveAccount -> {
-                                            RecurringDepositAccountAction.ApproveAccount(
-                                                recurringDeposit.accountNo ?: "",
-                                            )
-                                        }
-                                        else -> null
-                                    }
-                                }
+                                    },
+                                )
 
                                 Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
                             }
