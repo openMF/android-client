@@ -40,9 +40,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -95,19 +93,6 @@ internal fun LoanAccountProfileScreen(
     viewModel: LoanAccountProfileViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
-
-    val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle
-    val refreshTrigger by savedStateHandle
-        ?.getStateFlow("refresh_loan_details", false)
-        ?.collectAsStateWithLifecycle()
-        ?: mutableStateOf(false)
-
-    LaunchedEffect(refreshTrigger) {
-        if (refreshTrigger) {
-            viewModel.trySendAction(LoanAccountAction.OnRefresh)
-            savedStateHandle?.remove<Boolean>("refresh_loan_details")
-        }
-    }
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {

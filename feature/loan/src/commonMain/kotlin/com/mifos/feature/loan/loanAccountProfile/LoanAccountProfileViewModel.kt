@@ -51,8 +51,16 @@ internal class LoanAccountProfileViewModel(
 
     init {
         observeNetworkAndLoad()
+        observeLoanUpdates()
     }
 
+    private fun observeLoanUpdates() {
+        viewModelScope.launch {
+            loanRepository.loanUpdateEvents.collect {
+                loadLoanAccountDetails(route.loanId)
+            }
+        }
+    }
     private fun observeNetworkAndLoad() {
         viewModelScope.launch {
             networkMonitor.isOnline.collect { isConnected ->

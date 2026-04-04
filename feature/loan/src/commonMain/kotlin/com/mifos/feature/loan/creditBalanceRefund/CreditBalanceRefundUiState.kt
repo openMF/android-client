@@ -55,8 +55,6 @@ sealed interface CreditBalanceRefundAction {
     data object OnDismissDialog : CreditBalanceRefundAction
 
     data class OnSubmitRefund(val request: CreditBalanceRefundRequest) : CreditBalanceRefundAction
-
-    data class LoanLoadRetry(val loanId: Int) : CreditBalanceRefundAction
 }
 
 /**

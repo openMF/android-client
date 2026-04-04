@@ -106,9 +106,6 @@ internal fun CreditBalanceRefundScreen(
                     navigateBack()
                 }
                 is CreditBalanceRefundEvent.NavigateBackWithRefresh -> {
-                    navController.previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.set("refresh_loan_details", true)
                     onRefreshParent()
                     navigateBack()
                 }
