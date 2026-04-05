@@ -80,7 +80,7 @@ import template.core.base.designsystem.theme.KptTheme
 fun MifosListingComponentOutline(
     modifier: Modifier = Modifier,
     borderColor: Color = KptTheme.colorScheme.secondaryContainer,
-    backgroundColor: Color = AppColors.customWhite,
+    backgroundColor: Color = KptTheme.colorScheme.surface,
     shape: Shape = DesignToken.shapes.medium,
     content: @Composable () -> Unit,
 ) {
@@ -245,7 +245,7 @@ fun MifosDefaultListingComponent(
 fun MifosDefaultListingComponentFromStringResources(
     borderColor: Color = KptTheme.colorScheme.primary.copy(alpha = 0.5f),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
-    backgroundColor: Color = AppColors.customWhite,
+    backgroundColor: Color = KptTheme.colorScheme.surface,
     data: Map<StringResource, String>,
 ) {
     MifosListingComponentOutline(

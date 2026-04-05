@@ -194,7 +194,7 @@ private fun LoanAccountContent(
             Text(
                 text = stringResource(state.nextActionButtonRes),
                 style = MifosTypography.labelMediumEmphasized,
-                color = AppColors.customWhite,
+                color = KptTheme.colorScheme.onPrimary,
             )
         }
 
@@ -262,9 +262,9 @@ private fun LoanAccountTopCard(
             .clickable { onClick() },
         colors = CardColors(
             containerColor = KptTheme.colorScheme.primary,
-            contentColor = AppColors.customWhite,
+            contentColor = KptTheme.colorScheme.onPrimary,
             disabledContainerColor = KptTheme.colorScheme.primary,
-            disabledContentColor = AppColors.customWhite,
+            disabledContentColor = KptTheme.colorScheme.onPrimary,
         ),
     ) {
         Column(
@@ -280,7 +280,7 @@ private fun LoanAccountTopCard(
                     Text(
                         text = "${loanAccount.loanProductName?.uppercase().orEmpty()} ${loanAccount.accountNo}".trim(),
                         style = MifosTypography.titleMediumEmphasized,
-                        color = AppColors.customWhite,
+                        color = KptTheme.colorScheme.onPrimary,
                     )
 
                     Spacer(Modifier.height(KptTheme.spacing.xs))
@@ -288,7 +288,7 @@ private fun LoanAccountTopCard(
                     Text(
                         text = loanAccount.clientName ?: stringResource(Res.string.feature_loan_profile_label_client_name_placeholder),
                         style = MifosTypography.bodyMedium,
-                        color = AppColors.customWhite.copy(alpha = 0.8f),
+                        color = KptTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
                     )
                 }
 
@@ -312,7 +312,7 @@ private fun LoanAccountTopCard(
                 ) {
                     Text(
                         text = stringResource(ui.labelRes).uppercase(),
-                        color = AppColors.customWhite,
+                        color = KptTheme.colorScheme.onPrimary,
                         style = MifosTypography.labelSmallEmphasized,
                         fontWeight = FontWeight.Bold,
                     )
@@ -325,13 +325,13 @@ private fun LoanAccountTopCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(KptTheme.shapes.medium)
-                    .background(AppColors.customWhite.copy(alpha = 0.15f))
+                    .background(KptTheme.colorScheme.surface.copy(alpha = 0.15f))
                     .padding(KptTheme.spacing.md),
             ) {
                 Text(
                     text = stringResource(Res.string.feature_loan_profile_section_account_overview),
                     style = MifosTypography.labelSmallEmphasized,
-                    color = AppColors.customWhite.copy(alpha = 0.8f),
+                    color = KptTheme.colorScheme.onSurface.copy(alpha = 0.8f),
                 )
 
                 Spacer(Modifier.height(DesignToken.padding.medium))
@@ -353,7 +353,7 @@ private fun LoanAccountTopCard(
 private fun OverviewRow(
     label: String,
     value: String,
-    valueColor: Color = AppColors.customWhite,
+    valueColor: Color = KptTheme.colorScheme.onPrimary,
 ) {
     Row(
         modifier = Modifier
@@ -364,7 +364,7 @@ private fun OverviewRow(
         Text(
             text = label,
             style = MifosTypography.bodySmall,
-            color = AppColors.customWhite.copy(alpha = 0.9f),
+            color = KptTheme.colorScheme.onPrimary.copy(alpha = 0.9f),
         )
         Text(
             text = value,

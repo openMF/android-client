@@ -34,7 +34,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import com.mifos.core.designsystem.component.MifosCard
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
@@ -57,9 +56,9 @@ fun ProfileCard(
         modifier = Modifier.clickable { onClick() },
         colors = CardDefaults.cardColors(
             containerColor = KptTheme.colorScheme.primary,
-            contentColor = AppColors.customWhite,
+            contentColor = KptTheme.colorScheme.onPrimary,
             disabledContainerColor = KptTheme.colorScheme.primary,
-            disabledContentColor = AppColors.customWhite,
+            disabledContentColor = KptTheme.colorScheme.onPrimary,
         ),
     ) {
         Row(
