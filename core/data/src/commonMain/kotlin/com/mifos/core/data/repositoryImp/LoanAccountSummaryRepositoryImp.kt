@@ -12,19 +12,44 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
+import com.mifos.core.model.objects.account.loan.AssignLoanOfficerRequest
+import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerLoan
+import com.mifos.core.network.datamanager.DataManagerStaff
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.room.entities.organisation.StaffEntity
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 /**
  * Created by Aditya Gupta on 08/08/23.
  */
 class LoanAccountSummaryRepositoryImp(
     private val dataManagerLoan: DataManagerLoan,
+    private val dataManagerStaff: DataManagerStaff,
 ) : LoanAccountSummaryRepository {
 
     override fun getLoanById(loanId: Int): Flow<DataState<LoanWithAssociationsEntity?>> {
         return dataManagerLoan.getLoanById(loanId)
             .asDataStateFlow()
+    }
+
+    override fun getLoanOfficersForOffice(officeId: Int): Flow<DataState<List<StaffEntity>>> {
+        return dataManagerStaff.getStaffInOffice(officeId)
+            .map { staff -> staff.filter { it.isLoanOfficer != false } }
+            .asDataStateFlow()
+    }
+
+    override fun assignLoanOfficer(loanId: Int, request: AssignLoanOfficerRequest): Flow<DataState<GenericResponse>> {
+        return flow {
+            emit(DataState.Loading)
+            try {
+                emit(DataState.Success(dataManagerLoan.assignLoanOfficer(loanId, request)))
+            } catch (e: Exception) {
+                emit(DataState.Error(e))
+            }
+        }.catch { emit(DataState.Error(it)) }
     }
 }

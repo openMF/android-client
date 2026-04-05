@@ -18,6 +18,8 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.feature.loan.amountTransfer.amountTransferScreen
 import com.mifos.feature.loan.amountTransfer.navigateToTransferScreen
 import com.mifos.feature.loan.createLoanReschedules.loanRescheduleFormScreen
+import com.mifos.feature.loan.assignLoanOfficer.assignLoanOfficerScreen
+import com.mifos.feature.loan.assignLoanOfficer.navigateToAssignLoanOfficerScreen
 import com.mifos.feature.loan.loanAccountProfile.loanProfileAccountDestination
 import com.mifos.feature.loan.loanAccountSummary.loanAccountSummary
 import com.mifos.feature.loan.loanApproval.LoanAccountApprovalScreen
@@ -83,6 +85,8 @@ fun NavGraphBuilder.loanDestination(
         onNavigateBack = navController::popBackStack,
         navController = navController,
         approveLoan = navController::navigateToLoanApprovalScreen,
+        disburseLoan = navController::navigateToLoanDisbursementScreen,
+        navigateToAssignLoanOfficer = navController::navigateToAssignLoanOfficerScreen,
         onRepaymentClick = navController::navigateToLoanRepaymentScreen,
         navigateToRepaymentSchedule = navController::navigateToLoanRepaymentScheduleScreen,
         navigateToTransactions = navController::navigateToLoanTransactionScreen,
@@ -95,6 +99,10 @@ fun NavGraphBuilder.loanDestination(
         },
         navigateToTransferScreen = navController::navigateToTransferScreen,
         navigateToReschedules = navController::navigateToLoanReschedulesScreen,
+    )
+
+    assignLoanOfficerScreen(
+        onBackPressed = navController::popBackStack,
     )
 
     amountTransferScreen(

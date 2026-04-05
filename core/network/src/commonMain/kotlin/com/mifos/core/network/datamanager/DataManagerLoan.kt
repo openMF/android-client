@@ -11,6 +11,7 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.datastore.UserPreferencesRepository
+import com.mifos.core.model.objects.account.loan.AssignLoanOfficerRequest
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
@@ -301,6 +302,14 @@ class DataManagerLoan(
         loanDisbursement: LoanDisbursement?,
     ): Flow<GenericResponse> {
         return mBaseApiManager.loanService.disburseLoan(loanId, loanDisbursement)
+    }
+
+    suspend fun assignLoanOfficer(loanId: Int, request: AssignLoanOfficerRequest): GenericResponse {
+        val response = mBaseApiManager.loanService.assignLoanOfficer(loanId, request)
+        if (!response.status.isSuccess()) {
+            throw IllegalStateException(extractErrorMessage(response))
+        }
+        return Json { ignoreUnknownKeys = true }.decodeFromString<GenericResponse>(response.bodyAsText())
     }
 
     /**

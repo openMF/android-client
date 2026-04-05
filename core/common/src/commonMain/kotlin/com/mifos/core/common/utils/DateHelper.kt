@@ -256,6 +256,21 @@ object DateHelper {
     }
 
     /**
+     * Same calendar day as [getDateAsStringFromLong] (`dd-MM-yyyy`), formatted as `dd MMMM yyyy`
+     * with English month names via [getDateMonthYearString]. Safe for multiplatform targets where
+     * `MMMM` unicode patterns are unsupported.
+     */
+    @OptIn(ExperimentalTime::class)
+    fun getDateMonthYearStringFromLong(timeInMillis: Long): String {
+        val short = getDateAsStringFromLong(timeInMillis)
+        val parts = short.split('-')
+        require(parts.size == 3) { "Expected dd-MM-yyyy, got: $short" }
+        return getDateMonthYearString(
+            listOf(parts[0].toInt(), parts[1].toInt(), parts[2].toInt()),
+        )
+    }
+
+    /**
      * Handles the specific format "yyyy-MM-dd HH:mm:ss.SSSSSS"
      * For example "2024-09-19 05:41:18.558995"
      * Possible outputs depending on current date:
