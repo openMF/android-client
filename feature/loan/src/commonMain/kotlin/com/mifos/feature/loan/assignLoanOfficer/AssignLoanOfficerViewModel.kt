@@ -32,7 +32,6 @@ import org.jetbrains.compose.resources.getString
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
-
 internal class AssignLoanOfficerViewModel(
     savedStateHandle: SavedStateHandle,
     private val repository: LoanAccountSummaryRepository,

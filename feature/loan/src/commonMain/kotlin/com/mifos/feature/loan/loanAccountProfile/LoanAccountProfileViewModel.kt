@@ -10,10 +10,10 @@
 package com.mifos.feature.loan.loanAccountProfile
 
 import androidclient.feature.loan.generated.resources.Res
+import androidclient.feature.loan.generated.resources.feature_loan_disburse_loan
 import androidclient.feature.loan.generated.resources.feature_loan_profile_action_approve
 import androidclient.feature.loan.generated.resources.feature_loan_profile_action_repayment
 import androidclient.feature.loan.generated.resources.feature_loan_profile_action_transfer
-import androidclient.feature.loan.generated.resources.feature_loan_disburse_loan
 import androidclient.feature.loan.generated.resources.feature_loan_profile_action_view
 import androidclient.feature.loan.generated.resources.feature_loan_profile_error_details_not_found
 import androidclient.feature.loan.generated.resources.feature_loan_profile_error_network_not_available
