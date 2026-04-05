@@ -11,6 +11,7 @@ package com.mifos.feature.loan.loanAccountProfile
 
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_profile_account
+import androidclient.feature.loan.generated.resources.feature_loan_profile_action_assign_officer
 import androidclient.feature.loan.generated.resources.feature_loan_profile_action_repayment
 import androidclient.feature.loan.generated.resources.feature_loan_profile_error_details_not_found
 import androidclient.feature.loan.generated.resources.feature_loan_profile_label_arrears
@@ -51,6 +52,7 @@ import androidx.navigation.NavController
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCard
+import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
@@ -64,6 +66,7 @@ import com.mifos.core.ui.util.TextUtil
 import com.mifos.feature.loan.loanAccountProfile.components.LoanAccountProfileActionItem
 import com.mifos.feature.loan.loanAccountProfile.components.loanProfileActionItems
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
+import com.mifos.room.entities.accounts.loans.LoanTimelineEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
@@ -78,6 +81,8 @@ import template.core.base.designsystem.theme.KptTheme
 internal fun LoanAccountProfileScreen(
     onNavigateBack: () -> Unit,
     approveLoan: (Int, LoanWithAssociationsEntity) -> Unit,
+    disburseLoan: (Int) -> Unit,
+    navigateToAssignLoanOfficer: (Int) -> Unit,
     onRepaymentClick: (LoanWithAssociationsEntity) -> Unit,
     navigateToRepaymentSchedule: (Int) -> Unit,
     navigateToTransactions: (Int) -> Unit,
@@ -113,6 +118,8 @@ internal fun LoanAccountProfileScreen(
                     }
                 }
             }
+            is LoanAccountEvent.NavigateToDisburseLoan -> disburseLoan(event.loanId)
+            is LoanAccountEvent.NavigateToAssignLoanOfficer -> navigateToAssignLoanOfficer(event.loanId)
             is LoanAccountEvent.NavigateToDetail -> {
                 val loanId = state.loanAccount?.id ?: -1
 
@@ -189,6 +196,19 @@ private fun LoanAccountContent(
                 style = MifosTypography.labelMediumEmphasized,
                 color = AppColors.customWhite,
             )
+        }
+
+        if (loanAccount.canAssignLoanOfficerForProfile(state.loanProfileStatus)) {
+            Spacer(Modifier.height(KptTheme.spacing.md))
+            MifosOutlinedButton(
+                onClick = { onAction(LoanAccountAction.OnAssignLoanOfficerClick) },
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(
+                    text = stringResource(Res.string.feature_loan_profile_action_assign_officer),
+                    style = MifosTypography.labelMediumEmphasized,
+                )
+            }
         }
 
         Spacer(Modifier.height(KptTheme.spacing.lg))
@@ -397,12 +417,16 @@ private class LoanAccountPreviewProvider : PreviewParameterProvider<LoanAccountS
                         overpaid = false,
                         value = "Active",
                     ),
+                    timeline = LoanTimelineEntity(
+                        approvedOnDate = listOf(2025, 8, 5),
+                    ),
                 ),
                 statusUiModel = LoanStatusUiModel(
                     labelRes = Res.string.feature_loan_profile_status_active,
                     color = AppColors.loanActiveStatus,
                 ),
                 nextActionButtonRes = Res.string.feature_loan_profile_action_repayment,
+                loanProfileStatus = LoanProfileStatus.ACTIVE,
                 dialogState = null,
             ),
             LoanAccountState(

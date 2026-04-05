@@ -13,11 +13,13 @@ import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_profile_action_approve
 import androidclient.feature.loan.generated.resources.feature_loan_profile_action_repayment
 import androidclient.feature.loan.generated.resources.feature_loan_profile_action_transfer
+import androidclient.feature.loan.generated.resources.feature_loan_disburse_loan
 import androidclient.feature.loan.generated.resources.feature_loan_profile_action_view
 import androidclient.feature.loan.generated.resources.feature_loan_profile_error_details_not_found
 import androidclient.feature.loan.generated.resources.feature_loan_profile_error_network_not_available
 import androidclient.feature.loan.generated.resources.feature_loan_profile_failed_to_load_loan
 import androidclient.feature.loan.generated.resources.feature_loan_profile_status_active
+import androidclient.feature.loan.generated.resources.feature_loan_profile_status_approved
 import androidclient.feature.loan.generated.resources.feature_loan_profile_status_overpaid
 import androidclient.feature.loan.generated.resources.feature_loan_profile_status_pending
 import androidclient.feature.loan.generated.resources.feature_loan_profile_status_unknown
@@ -32,6 +34,7 @@ import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.loan.loanAccountProfile.components.LoanAccountProfileActionItem
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
+import com.mifos.room.entities.accounts.loans.LoanTimelineEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.update
@@ -91,6 +94,7 @@ internal class LoanAccountProfileViewModel(
                             it.copy(
                                 loanAccount = loan,
                                 dialogState = null,
+                                loanProfileStatus = currentStatus,
                                 statusUiModel = calculateStatusUi(currentStatus),
                                 nextActionButtonRes = calculateNextActionResource(currentStatus),
                             )
@@ -114,6 +118,7 @@ internal class LoanAccountProfileViewModel(
     private fun calculateNextActionResource(status: LoanProfileStatus): StringResource {
         return when (status) {
             LoanProfileStatus.PENDING -> Res.string.feature_loan_profile_action_approve
+            LoanProfileStatus.APPROVED -> Res.string.feature_loan_disburse_loan
             LoanProfileStatus.OVERPAID -> Res.string.feature_loan_profile_action_transfer
             LoanProfileStatus.ACTIVE -> Res.string.feature_loan_profile_action_repayment
             LoanProfileStatus.UNKNOWN -> Res.string.feature_loan_profile_action_view
@@ -124,6 +129,7 @@ internal class LoanAccountProfileViewModel(
         return when (status) {
             LoanProfileStatus.ACTIVE -> LoanStatusUiModel(Res.string.feature_loan_profile_status_active, AppColors.loanActiveStatus)
             LoanProfileStatus.PENDING -> LoanStatusUiModel(Res.string.feature_loan_profile_status_pending, AppColors.loanPendingStatus)
+            LoanProfileStatus.APPROVED -> LoanStatusUiModel(Res.string.feature_loan_profile_status_approved, AppColors.loanPendingStatus)
             LoanProfileStatus.OVERPAID -> LoanStatusUiModel(Res.string.feature_loan_profile_status_overpaid, AppColors.loanOverpaidStatus)
             LoanProfileStatus.UNKNOWN -> LoanStatusUiModel(Res.string.feature_loan_profile_status_unknown, AppColors.loanUnknownStatus)
         }
@@ -140,6 +146,10 @@ internal class LoanAccountProfileViewModel(
                 }
             }
             LoanAccountAction.OnNextActionClick -> handleNextAction()
+            LoanAccountAction.OnAssignLoanOfficerClick -> {
+                val id = mutableStateFlow.value.loanAccount?.id ?: return
+                sendEvent(LoanAccountEvent.NavigateToAssignLoanOfficer(id))
+            }
             is LoanAccountAction.OnDetailItemClick -> sendEvent(LoanAccountEvent.NavigateToDetail(action.item))
             LoanAccountAction.OnAccountClick -> sendEvent(LoanAccountEvent.NavigateToAccountDetails)
         }
@@ -150,6 +160,7 @@ internal class LoanAccountProfileViewModel(
 
         when (account.status.toProfileStatus()) {
             LoanProfileStatus.PENDING -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Approve))
+            LoanProfileStatus.APPROVED -> sendEvent(LoanAccountEvent.NavigateToDisburseLoan(account.id))
             LoanProfileStatus.OVERPAID -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Transfer))
             LoanProfileStatus.ACTIVE -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Repayment))
             LoanProfileStatus.UNKNOWN -> sendEvent(LoanAccountEvent.NavigateToAccountDetails)
@@ -161,6 +172,7 @@ internal class LoanAccountProfileViewModel(
         return when {
             this.pendingApproval == true -> LoanProfileStatus.PENDING
             this.overpaid == true -> LoanProfileStatus.OVERPAID
+            this.waitingForDisbursal == true -> LoanProfileStatus.APPROVED
             this.active == true -> LoanProfileStatus.ACTIVE
             else -> LoanProfileStatus.UNKNOWN
         }
@@ -170,8 +182,25 @@ internal class LoanAccountProfileViewModel(
 enum class LoanProfileStatus {
     ACTIVE,
     PENDING,
+    APPROVED,
     OVERPAID,
     UNKNOWN,
+}
+
+/**
+ * Assign loan officer only when Fineract recorded an approval ([LoanTimelineEntity.approvedOnDate])
+ * and the account is active or waiting for disbursement. Rejected / withdrawn / pending applications
+ * omit `approvedOnDate` in the API response.
+ */
+internal fun LoanWithAssociationsEntity?.canAssignLoanOfficerForProfile(profileStatus: LoanProfileStatus): Boolean {
+    if (this == null) return false
+    if (!timeline.hasRecordedApproval()) return false
+    return profileStatus == LoanProfileStatus.ACTIVE || profileStatus == LoanProfileStatus.APPROVED
+}
+
+private fun LoanTimelineEntity.hasRecordedApproval(): Boolean {
+    val date = approvedOnDate ?: return false
+    return date.size >= 3
 }
 
 data class LoanAccountState(
@@ -180,6 +209,7 @@ data class LoanAccountState(
     val networkConnection: Boolean = false,
     val statusUiModel: LoanStatusUiModel? = null,
     val nextActionButtonRes: StringResource = Res.string.feature_loan_profile_action_view,
+    val loanProfileStatus: LoanProfileStatus = LoanProfileStatus.UNKNOWN,
 ) {
     sealed interface DialogState {
         data class Error(val message: StringResource) : DialogState
@@ -201,6 +231,8 @@ sealed interface LoanProfileAction {
 sealed interface LoanAccountEvent {
     data object NavigateBack : LoanAccountEvent
     data class NavigateToAction(val action: LoanProfileAction) : LoanAccountEvent
+    data class NavigateToDisburseLoan(val loanId: Int) : LoanAccountEvent
+    data class NavigateToAssignLoanOfficer(val loanId: Int) : LoanAccountEvent
     data class NavigateToDetail(val detailItem: LoanAccountProfileActionItem) : LoanAccountEvent
     data object NavigateToAccountDetails : LoanAccountEvent
 }
@@ -209,6 +241,7 @@ sealed interface LoanAccountAction {
     data object NavigateBack : LoanAccountAction
     data object OnRetry : LoanAccountAction
     data object OnNextActionClick : LoanAccountAction
+    data object OnAssignLoanOfficerClick : LoanAccountAction
     data class OnDetailItemClick(val item: LoanAccountProfileActionItem) : LoanAccountAction
     data object OnAccountClick : LoanAccountAction
 }
