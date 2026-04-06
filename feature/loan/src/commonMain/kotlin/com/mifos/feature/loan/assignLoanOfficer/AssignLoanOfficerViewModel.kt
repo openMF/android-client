@@ -12,6 +12,7 @@
 package com.mifos.feature.loan.assignLoanOfficer
 
 import androidclient.feature.loan.generated.resources.Res
+import androidclient.feature.loan.generated.resources.feature_loan_assign_loan_officer_same_officer
 import androidclient.feature.loan.generated.resources.feature_loan_failed_to_load_loan
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -139,18 +140,24 @@ internal class AssignLoanOfficerViewModel(
         val officerId = officer.id ?: return
 
         viewModelScope.launch {
+            if (loan.loanOfficerId > 0 && officerId == loan.loanOfficerId) {
+                _uiState.update {
+                    it.copy(submitError = getString(Res.string.feature_loan_assign_loan_officer_same_officer))
+                }
+                return@launch
+            }
             _uiState.update {
                 it.copy(
                     submitInProgress = true,
                     submitError = null,
                 )
             }
-            val apiDate = DateHelper.getDateMonthYearStringFromLong(state.assignmentDateMillis)
+            val apiDate = DateHelper.getDateAsStringFromLong(state.assignmentDateMillis)
             val request = AssignLoanOfficerRequest(
                 toLoanOfficerId = officerId,
                 assignmentDate = apiDate,
                 locale = DateConstants.LOCALE,
-                dateFormat = DateConstants.DATE_FORMAT,
+                dateFormat = DateHelper.SHORT_MONTH,
                 fromLoanOfficerId = loan.loanOfficerId.takeIf { it > 0 },
             )
             repository.assignLoanOfficer(loan.id, request).collect { dataState ->
