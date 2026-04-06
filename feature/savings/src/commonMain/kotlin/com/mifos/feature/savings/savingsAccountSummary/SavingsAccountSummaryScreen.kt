@@ -311,7 +311,7 @@ private fun SavingsAccountSummaryContent(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .background(
-                        color = Color.White,
+                        color = KptTheme.colorScheme.surface,
                     ),
             ) {
                 Row(
@@ -399,7 +399,7 @@ private fun TransactionItemRow(
             .fillMaxWidth(),
         onClick = { showTransactionDetails = !showTransactionDetails },
         colors = CardDefaults.cardColors(
-            containerColor = Color.White,
+            containerColor = KptTheme.colorScheme.surface,
         ),
         shape = DesignToken.shapes.none,
     ) {

@@ -288,7 +288,7 @@ internal fun PaymentsDetailsScreen(
             OutlinedCard(
                 modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
                 colors = CardDefaults.cardColors(
-                    containerColor = Color.White,
+                    containerColor = KptTheme.colorScheme.surface,
                 ),
             ) {
                 Column(
