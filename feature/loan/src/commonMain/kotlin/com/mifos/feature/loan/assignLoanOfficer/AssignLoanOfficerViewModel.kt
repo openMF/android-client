@@ -129,6 +129,7 @@ internal class AssignLoanOfficerViewModel(
 
     fun submit() {
         val state = _uiState.value
+        if (state.submitInProgress || state.completed) return
         if (state.selectedOfficerIndex < 0) {
             _uiState.update { it.copy(officerShowError = true) }
             return

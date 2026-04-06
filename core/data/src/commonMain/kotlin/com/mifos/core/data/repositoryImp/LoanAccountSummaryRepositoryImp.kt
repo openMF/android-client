@@ -18,6 +18,7 @@ import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerStaff
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.organisation.StaffEntity
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -38,18 +39,17 @@ class LoanAccountSummaryRepositoryImp(
 
     override fun getLoanOfficersForOffice(officeId: Int): Flow<DataState<List<StaffEntity>>> {
         return dataManagerStaff.getStaffInOffice(officeId)
-            .map { staff -> staff.filter { it.isLoanOfficer != false } }
+            .map { staff -> staff.filter { it.isLoanOfficer == true } }
             .asDataStateFlow()
     }
 
     override fun assignLoanOfficer(loanId: Int, request: AssignLoanOfficerRequest): Flow<DataState<GenericResponse>> {
         return flow {
             emit(DataState.Loading)
-            try {
-                emit(DataState.Success(dataManagerLoan.assignLoanOfficer(loanId, request)))
-            } catch (e: Exception) {
-                emit(DataState.Error(e))
-            }
-        }.catch { emit(DataState.Error(it)) }
+            emit(DataState.Success(dataManagerLoan.assignLoanOfficer(loanId, request)))
+        }.catch { throwable ->
+            if (throwable is CancellationException) throw throwable
+            emit(DataState.Error(throwable))
+        }
     }
 }
