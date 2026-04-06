@@ -56,6 +56,7 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosTwoButtonRow
+import com.mifos.room.entities.organisation.StaffEntity
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
@@ -94,7 +95,7 @@ internal fun AssignLoanOfficerScreen(
         } else {
             stringResource(Res.string.feature_loan_assign_loan_officer_title)
         },
-        onBackPressed = navigateBack,
+        onBackPressed = { if (!uiState.submitInProgress) navigateBack() },
         snackbarHostState = snackbarHostState,
     ) { padding ->
         when {
@@ -127,7 +128,7 @@ internal fun AssignLoanOfficerScreen(
                         onOfficerSelected = viewModel::onOfficerSelected,
                         onAssignmentDateMillis = viewModel::onAssignmentDateMillis,
                         onSubmit = { viewModel.submit() },
-                        onCancel = navigateBack,
+                        onCancel = { if (!uiState.submitInProgress) navigateBack() },
                     )
                     if (uiState.submitInProgress) {
                         Box(
@@ -159,7 +160,7 @@ private fun AssignLoanOfficerForm(
         initialSelectedDateMillis = uiState.assignmentDateMillis.takeIf { it > 0L }
             ?: Clock.System.now().toEpochMilliseconds(),
     )
-    val officerLabels = uiState.officers.map { it.displayName ?: "${it.firstname} ${it.lastname}".trim() }
+    val officerLabels = uiState.officers.map { staffDisplayLabel(it) }
     val officerErrorText = stringResource(Res.string.feature_loan_assign_loan_officer_required)
 
     if (pickDate) {
@@ -242,7 +243,7 @@ private fun AssignLoanOfficerForm(
         MifosDatePickerTextField(
             value = DateHelper.getDateAsStringFromLong(uiState.assignmentDateMillis),
             label = stringResource(Res.string.feature_loan_assignment_date),
-            openDatePicker = { pickDate = true },
+            openDatePicker = { if (!uiState.submitInProgress) pickDate = true },
         )
 
         Spacer(Modifier.height(KptTheme.spacing.lg))
@@ -250,7 +251,7 @@ private fun AssignLoanOfficerForm(
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.feature_loan_cancel),
             secondBtnText = stringResource(Res.string.feature_loan_submit),
-            onFirstBtnClick = onCancel,
+            onFirstBtnClick = { if (!uiState.submitInProgress) onCancel() },
             onSecondBtnClick = onSubmit,
             isButtonIconVisible = false,
             isSecondButtonEnabled = uiState.selectedOfficerIndex >= 0 && !uiState.submitInProgress,
@@ -258,4 +259,14 @@ private fun AssignLoanOfficerForm(
 
         Spacer(Modifier.height(DesignToken.padding.medium))
     }
+}
+
+private fun staffDisplayLabel(officer: StaffEntity): String {
+    officer.displayName?.takeIf { it.isNotBlank() }?.let { return it }
+    val composed = listOfNotNull(
+        officer.firstname?.takeIf { it.isNotBlank() },
+        officer.lastname?.takeIf { it.isNotBlank() },
+    ).joinToString(" ")
+    if (composed.isNotBlank()) return composed
+    return officer.id?.let { "#$it" } ?: "-"
 }
