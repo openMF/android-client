@@ -12,6 +12,7 @@
 package com.mifos.feature.loan.assignLoanOfficer
 
 import androidclient.feature.loan.generated.resources.Res
+import androidclient.feature.loan.generated.resources.feature_loan_assign_loan_officer_no_officers
 import androidclient.feature.loan.generated.resources.feature_loan_assign_loan_officer_same_officer
 import androidclient.feature.loan.generated.resources.feature_loan_failed_to_load_loan
 import androidx.lifecycle.SavedStateHandle
@@ -23,6 +24,7 @@ import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.core.model.objects.account.loan.AssignLoanOfficerRequest
 import com.mifos.core.model.utils.DateConstants
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -91,26 +93,42 @@ internal class AssignLoanOfficerViewModel(
     }
 
     private suspend fun loadOfficers(officeId: Int) {
-        repository.getLoanOfficersForOffice(officeId).collect { dataState ->
-            when (dataState) {
-                is DataState.Loading -> Unit
-                is DataState.Error -> {
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            loadError = dataState.message,
-                        )
+        try {
+            repository.getLoanOfficersForOffice(officeId).collect { dataState ->
+                when (dataState) {
+                    is DataState.Loading -> Unit
+                    is DataState.Error -> {
+                        _uiState.update {
+                            it.copy(
+                                isLoading = false,
+                                loadError = dataState.message,
+                            )
+                        }
+                    }
+                    is DataState.Success -> {
+                        val officers = dataState.data
+                        _uiState.update {
+                            it.copy(
+                                officers = officers,
+                                selectedOfficerIndex = if (officers.isEmpty()) -1 else it.selectedOfficerIndex,
+                                isLoading = false,
+                                loadError = if (officers.isEmpty()) {
+                                    getString(Res.string.feature_loan_assign_loan_officer_no_officers)
+                                } else {
+                                    null
+                                },
+                            )
+                        }
                     }
                 }
-                is DataState.Success -> {
-                    _uiState.update {
-                        it.copy(
-                            officers = dataState.data,
-                            isLoading = false,
-                            loadError = null,
-                        )
-                    }
-                }
+            }
+        } catch (throwable: Throwable) {
+            if (throwable is CancellationException) throw throwable
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    loadError = throwable.message,
+                )
             }
         }
     }
@@ -160,25 +178,35 @@ internal class AssignLoanOfficerViewModel(
                 dateFormat = DateHelper.SHORT_MONTH,
                 fromLoanOfficerId = loan.loanOfficerId.takeIf { it > 0 },
             )
-            repository.assignLoanOfficer(loan.id, request).collect { dataState ->
-                when (dataState) {
-                    is DataState.Loading -> Unit
-                    is DataState.Error -> {
-                        _uiState.update {
-                            it.copy(
-                                submitInProgress = false,
-                                submitError = dataState.message,
-                            )
+            try {
+                repository.assignLoanOfficer(loan.id, request).collect { dataState ->
+                    when (dataState) {
+                        is DataState.Loading -> Unit
+                        is DataState.Error -> {
+                            _uiState.update {
+                                it.copy(
+                                    submitInProgress = false,
+                                    submitError = dataState.message,
+                                )
+                            }
+                        }
+                        is DataState.Success -> {
+                            _uiState.update {
+                                it.copy(
+                                    submitInProgress = false,
+                                    completed = true,
+                                )
+                            }
                         }
                     }
-                    is DataState.Success -> {
-                        _uiState.update {
-                            it.copy(
-                                submitInProgress = false,
-                                completed = true,
-                            )
-                        }
-                    }
+                }
+            } catch (throwable: Throwable) {
+                if (throwable is CancellationException) throw throwable
+                _uiState.update {
+                    it.copy(
+                        submitInProgress = false,
+                        submitError = throwable.message,
+                    )
                 }
             }
         }

@@ -180,6 +180,7 @@
     <string name="feature_loan_assignment_date">Assignment Date</string>
     <string name="feature_loan_assign_loan_officer_success">Loan officer assigned successfully</string>
     <string name="feature_loan_assign_loan_officer_load_failed">Could not load assign loan officer form</string>
+    <string name="feature_loan_assign_loan_officer_no_officers">No loan officers are available for this office.</string>
     <string name="feature_loan_assign_loan_officer_same_officer">This officer is already assigned to this loan. Choose a different officer.</string>
     <string name="feature_loan_profile_action_assign_officer">Assign Loan Officer</string>
     <string name="feature_loan_profile_current_loan_officer">Current loan officer</string>
