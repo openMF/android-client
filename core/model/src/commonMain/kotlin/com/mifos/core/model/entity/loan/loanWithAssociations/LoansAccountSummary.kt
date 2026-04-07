@@ -20,6 +20,7 @@ data class LoansAccountSummary(
     val currency: SavingAccountCurrency? = null,
     val principalDisbursed: Double? = null,
     val principalPaid: Double? = null,
+    val principalWaived: Double? = null,
     val principalWrittenOff: Double? = null,
     val principalOutstanding: Double? = null,
     val principalOverdue: Double? = null,

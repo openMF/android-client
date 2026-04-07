@@ -156,6 +156,7 @@ private fun LoansAccountSummaryEntity.toModel(): LoansAccountSummary {
         currency = currency?.toModel(),
         principalDisbursed = principalDisbursed,
         principalPaid = principalPaid,
+        principalWaived = principalWaived,
         principalWrittenOff = principalWrittenOff,
         principalOutstanding = principalOutstanding,
         principalOverdue = principalOverdue,

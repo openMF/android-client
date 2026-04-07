@@ -177,7 +177,7 @@ internal class LoanAccountGeneralViewModel(
                         component = getString(Res.string.feature_loan_general_summary_row_principal),
                         original = CurrencyFormatter.format(summary?.principalDisbursed, currencyCode, maxDigits),
                         paid = CurrencyFormatter.format(summary?.principalPaid, currencyCode, maxDigits),
-                        waived = CurrencyFormatter.format(0.0, currencyCode, maxDigits),
+                        waived = CurrencyFormatter.format(summary?.principalWaived, currencyCode, maxDigits),
                         writtenOff = CurrencyFormatter.format(summary?.principalWrittenOff, currencyCode, maxDigits),
                         outstanding = CurrencyFormatter.format(summary?.principalOutstanding, currencyCode, maxDigits),
                         overDue = CurrencyFormatter.format(summary?.principalOverdue, currencyCode, maxDigits),

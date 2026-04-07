@@ -38,6 +38,8 @@ data class LoansAccountSummaryEntity(
 
     val principalPaid: Double? = null,
 
+    val principalWaived: Double? = null,
+
     val principalWrittenOff: Double? = null,
 
     val principalOutstanding: Double? = null,
