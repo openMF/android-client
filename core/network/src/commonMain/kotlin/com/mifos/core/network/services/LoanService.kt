@@ -202,5 +202,5 @@ interface LoanService {
     suspend fun undoLoanApproval(
         @Path("loanId") loanId: Int,
         @Body noteRequest: LoanUndoApprovalRequest,
-    ) : HttpResponse
+    ): HttpResponse
 }

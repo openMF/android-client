@@ -1,3 +1,12 @@
+/*
+ * Copyright 2026 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.feature.loan.loanUndoApproval
 
 import androidx.lifecycle.SavedStateHandle
@@ -45,7 +54,7 @@ class LoanUndoApprovalViewModel(
     fun undoLoanApproval() {
         mutableStateFlow.update {
             it.copy(
-                dialogState = LoanUndoApprovalState.DialogState.Loading
+                dialogState = LoanUndoApprovalState.DialogState.Loading,
             )
         }
         viewModelScope.launch {
@@ -60,7 +69,7 @@ class LoanUndoApprovalViewModel(
             }.onSuccess {
                 mutableStateFlow.update {
                     it.copy(
-                        dialogState = null
+                        dialogState = null,
                     )
                 }
                 sendEvent(LoanUndoApprovalEvent.NavigationBack)

@@ -520,7 +520,8 @@ fun MifosResizableOutlinedTextField(
         OutlinedTextField(
             value = value,
             onValueChange = { onValueChange(it) },
-            placeholder = placeholder?.let { placeholder
+            placeholder = placeholder?.let {
+                placeholder
                 { Text(placeholder) }
             },
             singleLine = false,

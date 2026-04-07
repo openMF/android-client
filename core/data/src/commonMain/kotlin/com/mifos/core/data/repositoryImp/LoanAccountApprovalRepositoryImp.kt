@@ -38,7 +38,7 @@ class LoanAccountApprovalRepositoryImp(
     override suspend fun undoLoanApproval(loanId: Int, noteRequest: LoanUndoApprovalRequest) {
         dataManagerLoan.undoLoanApproval(
             loanId = loanId,
-            noteRequest = noteRequest
+            noteRequest = noteRequest,
         )
     }
 }
