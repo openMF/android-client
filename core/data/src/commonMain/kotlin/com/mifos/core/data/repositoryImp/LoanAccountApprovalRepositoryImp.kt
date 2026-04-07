@@ -13,8 +13,10 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.LoanAccountApprovalRepository
 import com.mifos.core.model.objects.account.loan.LoanApproval
+import com.mifos.core.model.objects.account.loan.LoanUndoApprovalRequest
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.datamanager.DataManagerLoan
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -22,6 +24,7 @@ import kotlinx.coroutines.flow.Flow
  */
 class LoanAccountApprovalRepositoryImp(
     private val dataManager: DataManager,
+    private val dataManagerLoan: DataManagerLoan,
 ) : LoanAccountApprovalRepository {
 
     override fun approveLoan(
@@ -30,5 +33,12 @@ class LoanAccountApprovalRepositoryImp(
     ): Flow<DataState<GenericResponse>> {
         return dataManager.approveLoan(loanId, loanApproval)
             .asDataStateFlow()
+    }
+
+    override suspend fun undoLoanApproval(loanId: Int, noteRequest: LoanUndoApprovalRequest) {
+        dataManagerLoan.undoLoanApproval(
+            loanId = loanId,
+            noteRequest = noteRequest
+        )
     }
 }

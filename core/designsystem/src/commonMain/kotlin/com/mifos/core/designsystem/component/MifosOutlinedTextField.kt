@@ -11,10 +11,16 @@ package com.mifos.core.designsystem.component
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -37,10 +43,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
@@ -54,6 +64,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
@@ -485,6 +496,75 @@ fun MifosOutlinedTextField(
     )
 }
 
+@Composable
+fun MifosResizableOutlinedTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String? = null,
+    modifier: Modifier = Modifier,
+    shape: Shape = DesignToken.shapes.medium,
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(
+        focusedBorderColor = KptTheme.colorScheme.secondaryContainer,
+        unfocusedBorderColor = KptTheme.colorScheme.secondaryContainer,
+    ),
+) {
+    val minHeight = DesignToken.sizes.cardMinHeight
+    var fieldMinHeight by remember { mutableStateOf(minHeight) }
+
+    val density = LocalDensity.current
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth(),
+    ) {
+        OutlinedTextField(
+            value = value,
+            onValueChange = { onValueChange(it) },
+            placeholder = placeholder?.let { placeholder
+                { Text(placeholder) }
+            },
+            singleLine = false,
+            maxLines = Int.MAX_VALUE,
+            modifier = modifier
+                .fillMaxWidth()
+                .height(fieldMinHeight),
+            shape = shape,
+            colors = colors,
+        )
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(KptTheme.spacing.sm)
+                .size(DesignToken.sizes.iconAverage)
+                .pointerInput(Unit) {
+                    detectDragGestures { change, dragAmount ->
+                        change.consume()
+
+                        val dragY = dragAmount.y
+                        with(density) {
+                            fieldMinHeight = (fieldMinHeight + dragY.toDp())
+                                .coerceAtLeast(minHeight)
+                                .coerceAtMost(Int.MAX_VALUE.dp)
+                        }
+                    }
+                },
+        ) {
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                val step = size.width / 4
+                for (i in 1..3) {
+                    drawLine(
+                        color = Color.Gray,
+                        start = Offset(size.width - i * step, size.height),
+                        end = Offset(size.width, size.height - i * step),
+                        strokeWidth = 2f,
+                    )
+                }
+            }
+        }
+    }
+}
+
 data class MifosTextFieldConfig(
     val enabled: Boolean = true,
     val showClearIcon: Boolean = true,
@@ -502,6 +582,18 @@ data class MifosTextFieldConfig(
     val leadingIcon: @Composable (() -> Unit)? = null,
     val prefix: @Composable (() -> Unit)? = null,
 )
+
+@Preview
+@Composable
+private fun MifosResizableOutlinedTextField_ValuePreview() {
+    var text by remember { mutableStateOf("Hello") }
+    MifosTheme {
+        MifosResizableOutlinedTextField(
+            value = text,
+            onValueChange = { text = it },
+        )
+    }
+}
 
 @Preview
 @Composable
