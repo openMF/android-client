@@ -10,7 +10,7 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.model.entity.loan.LoanWithAssociations
+import com.mifos.core.model.entity.loan.loanWithAssociations.LoanWithAssociations
 import kotlinx.coroutines.flow.Flow
 
 interface LoanAccountGeneralRepository {

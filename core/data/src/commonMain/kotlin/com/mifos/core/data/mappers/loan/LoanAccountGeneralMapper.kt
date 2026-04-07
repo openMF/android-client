@@ -9,13 +9,13 @@
  */
 package com.mifos.core.data.mappers.loan
 
-import com.mifos.core.model.entity.loan.ActualDisbursementDate
-import com.mifos.core.model.entity.loan.LoanStatus
-import com.mifos.core.model.entity.loan.LoanTimeline
-import com.mifos.core.model.entity.loan.LoanType
-import com.mifos.core.model.entity.loan.LoanWithAssociations
-import com.mifos.core.model.entity.loan.LoansAccountSummary
-import com.mifos.core.model.entity.loan.SavingAccountCurrency
+import com.mifos.core.model.entity.loan.loanWithAssociations.ActualDisbursementDate
+import com.mifos.core.model.entity.loan.loanWithAssociations.LoanStatus
+import com.mifos.core.model.entity.loan.loanWithAssociations.LoanTimeline
+import com.mifos.core.model.entity.loan.loanWithAssociations.LoanType
+import com.mifos.core.model.entity.loan.loanWithAssociations.LoanWithAssociations
+import com.mifos.core.model.entity.loan.loanWithAssociations.LoansAccountSummary
+import com.mifos.core.model.entity.loan.loanWithAssociations.SavingAccountCurrency
 import com.mifos.room.entities.accounts.loans.ActualDisbursementDateEntity
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanTimelineEntity
