@@ -24,6 +24,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_general_summa
 import androidclient.feature.loan.generated.resources.feature_loan_general_value_not_available
 import androidclient.feature.loan.generated.resources.feature_loan_general_value_unassigned
 import androidclient.feature.loan.generated.resources.feature_loan_profile_error_details_not_found
+import androidclient.feature.loan.generated.resources.feature_loan_profile_error_network_not_available
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -35,6 +36,7 @@ import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.model.entity.loan.LoanWithAssociations
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
@@ -51,7 +53,6 @@ internal class LoanAccountGeneralViewModel(
     private var loadJob: Job? = null
 
     init {
-        observeNetwork()
         loadLoanById()
     }
 
@@ -61,17 +62,23 @@ internal class LoanAccountGeneralViewModel(
         }
     }
 
-    private fun observeNetwork() {
-        viewModelScope.launch {
-            networkMonitor.isOnline.collect { isConnected ->
-                mutableStateFlow.update { it.copy(networkConnection = isConnected) }
-            }
-        }
-    }
-
     private fun loadLoanById() {
         loadJob?.cancel()
         loadJob = viewModelScope.launch {
+            val isConnected = networkMonitor.isOnline.first()
+            mutableStateFlow.update { it.copy(networkConnection = isConnected) }
+
+            if (!isConnected) {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = LoanAccountGeneralState.DialogState.Error(
+                            getString(Res.string.feature_loan_profile_error_network_not_available),
+                        ),
+                    )
+                }
+                return@launch
+            }
+
             repository.getLoanById(loanId).collect { dataState ->
                 when (dataState) {
                     is DataState.Loading -> {
