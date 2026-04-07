@@ -11,7 +11,7 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
-import com.mifos.core.data.mappers.loan.toModel
+import com.mifos.core.data.mappers.loan.LoanAccountGeneralMapper
 import com.mifos.core.data.repository.LoanAccountGeneralRepository
 import com.mifos.core.model.entity.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.network.datamanager.DataManagerLoan
@@ -27,14 +27,10 @@ class LoanAccountGeneralRepositoryImp(
 
     override fun getLoanById(loanId: Int): Flow<DataState<LoanWithAssociations?>> {
         return dataManagerLoan.getLoanById(loanId)
-            .asDataStateFlow()
-            .map { response ->
-                when (response) {
-                    is DataState.Loading -> DataState.Loading
-                    is DataState.Error -> DataState.Error(response.exception, response.data?.toModel())
-                    is DataState.Success -> DataState.Success(response.data?.toModel())
-                }
+            .map { loan ->
+                loan?.let { LoanAccountGeneralMapper.mapFromEntity(it) }
             }
+            .asDataStateFlow()
             .flowOn(ioDispatcher)
     }
 }

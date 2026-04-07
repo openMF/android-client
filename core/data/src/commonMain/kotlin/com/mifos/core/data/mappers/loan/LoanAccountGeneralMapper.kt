@@ -16,6 +16,7 @@ import com.mifos.core.model.entity.loan.loanWithAssociations.LoanType
 import com.mifos.core.model.entity.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.model.entity.loan.loanWithAssociations.LoansAccountSummary
 import com.mifos.core.model.entity.loan.loanWithAssociations.SavingAccountCurrency
+import com.mifos.core.network.data.AbstractMapper
 import com.mifos.room.entities.accounts.loans.ActualDisbursementDateEntity
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanTimelineEntity
@@ -24,54 +25,61 @@ import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
 
-fun LoanWithAssociationsEntity.toModel(): LoanWithAssociations {
-    return LoanWithAssociations(
-        id = id,
-        accountNo = accountNo,
-        status = status.toModel(),
-        clientId = clientId,
-        clientName = clientName,
-        clientOfficeId = clientOfficeId,
-        loanProductId = loanProductId,
-        loanProductName = loanProductName,
-        loanProductDescription = loanProductDescription,
-        fundId = fundId,
-        fundName = fundName,
-        loanPurposeId = loanPurposeId,
-        loanPurposeName = loanPurposeName,
-        loanOfficerId = loanOfficerId,
-        loanOfficerName = loanOfficerName,
-        loanType = loanType.toModel(),
-        currency = currency.toModel(),
-        principal = principal,
-        approvedPrincipal = approvedPrincipal,
-        termFrequency = termFrequency,
-        termPeriodFrequencyType = termPeriodFrequencyType,
-        numberOfRepayments = numberOfRepayments,
-        repaymentEvery = repaymentEvery,
-        repaymentFrequencyType = repaymentFrequencyType,
-        interestRatePerPeriod = interestRatePerPeriod,
-        interestRateFrequencyType = interestRateFrequencyType,
-        annualInterestRate = annualInterestRate,
-        amortizationType = amortizationType,
-        interestType = interestType,
-        interestCalculationPeriodType = interestCalculationPeriodType,
-        transactionProcessingStrategyId = transactionProcessingStrategyId,
-        transactionProcessingStrategyName = transactionProcessingStrategyName,
-        syncDisbursementWithMeeting = syncDisbursementWithMeeting,
-        timeline = timeline.toModel(),
-        summary = summary.toModel(),
-        repaymentSchedule = repaymentSchedule,
-        transactions = transactions,
-        feeChargesAtDisbursementCharged = feeChargesAtDisbursementCharged,
-        totalOverpaid = totalOverpaid,
-        loanCounter = loanCounter,
-        loanProductCounter = loanProductCounter,
-        multiDisburseLoan = multiDisburseLoan,
-        canDisburse = canDisburse,
-        inArrears = inArrears,
-        isNPA = isNPA,
-    )
+object LoanAccountGeneralMapper : AbstractMapper<LoanWithAssociationsEntity, LoanWithAssociations>() {
+
+    override fun mapFromEntity(entity: LoanWithAssociationsEntity): LoanWithAssociations {
+        return LoanWithAssociations(
+            id = entity.id,
+            accountNo = entity.accountNo,
+            status = entity.status.toModel(),
+            clientId = entity.clientId,
+            clientName = entity.clientName,
+            clientOfficeId = entity.clientOfficeId,
+            loanProductId = entity.loanProductId,
+            loanProductName = entity.loanProductName,
+            loanProductDescription = entity.loanProductDescription,
+            fundId = entity.fundId,
+            fundName = entity.fundName,
+            loanPurposeId = entity.loanPurposeId,
+            loanPurposeName = entity.loanPurposeName,
+            loanOfficerId = entity.loanOfficerId,
+            loanOfficerName = entity.loanOfficerName,
+            loanType = entity.loanType.toModel(),
+            currency = entity.currency.toModel(),
+            principal = entity.principal,
+            approvedPrincipal = entity.approvedPrincipal,
+            termFrequency = entity.termFrequency,
+            termPeriodFrequencyType = entity.termPeriodFrequencyType,
+            numberOfRepayments = entity.numberOfRepayments,
+            repaymentEvery = entity.repaymentEvery,
+            repaymentFrequencyType = entity.repaymentFrequencyType,
+            interestRatePerPeriod = entity.interestRatePerPeriod,
+            interestRateFrequencyType = entity.interestRateFrequencyType,
+            annualInterestRate = entity.annualInterestRate,
+            amortizationType = entity.amortizationType,
+            interestType = entity.interestType,
+            interestCalculationPeriodType = entity.interestCalculationPeriodType,
+            transactionProcessingStrategyId = entity.transactionProcessingStrategyId,
+            transactionProcessingStrategyName = entity.transactionProcessingStrategyName,
+            syncDisbursementWithMeeting = entity.syncDisbursementWithMeeting,
+            timeline = entity.timeline.toModel(),
+            summary = entity.summary.toModel(),
+            repaymentSchedule = entity.repaymentSchedule,
+            transactions = entity.transactions,
+            feeChargesAtDisbursementCharged = entity.feeChargesAtDisbursementCharged,
+            totalOverpaid = entity.totalOverpaid,
+            loanCounter = entity.loanCounter,
+            loanProductCounter = entity.loanProductCounter,
+            multiDisburseLoan = entity.multiDisburseLoan,
+            canDisburse = entity.canDisburse,
+            inArrears = entity.inArrears,
+            isNPA = entity.isNPA,
+        )
+    }
+
+    override fun mapToEntity(domainModel: LoanWithAssociations): LoanWithAssociationsEntity {
+        throw NotImplementedError("mapToEntity not yet implemented for LoanWithAssociations")
+    }
 }
 
 private fun LoanStatusEntity.toModel(): LoanStatus {
