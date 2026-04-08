@@ -73,7 +73,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewModelScope
 import com.mifos.core.designsystem.component.MifosBottomSheet
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -86,7 +85,6 @@ import com.mifos.core.model.objects.account.loan.Type
 import com.mifos.core.ui.components.MifosCheckBox
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.components.MifosProgressIndicator
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -114,11 +112,7 @@ internal fun LoanTransactionsScreen(
         state = state,
         onAction = viewModel::trySendAction,
         navigateBack = navigateBack,
-        onRetry = {
-            viewModel.viewModelScope.launch {
-                viewModel.loadLoanTransaction()
-            }
-        },
+        onRetry = { viewModel.trySendAction(LoanTransactionsAction.Refresh) },
     )
 }
 

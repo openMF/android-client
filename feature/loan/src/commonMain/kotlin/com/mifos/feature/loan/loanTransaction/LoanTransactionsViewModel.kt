@@ -174,7 +174,7 @@ class LoanTransactionsViewModel(
         }
     }
 
-    suspend fun loadLoanTransaction() {
+    private suspend fun loadLoanTransaction() {
         mutableStateFlow.update {
             it.copy(uiState = LoanTransactionsState.UiState.Loading)
         }
