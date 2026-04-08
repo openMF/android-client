@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'cmp_shared'
-    spec.version                  = '2025.10.5'
+    spec.version                  = '2026.4.1'
     spec.homepage                 = 'https://github.com/openMF/kmp-project-template'
     spec.source                   = { :http=> ''}
     spec.authors                  = ''
