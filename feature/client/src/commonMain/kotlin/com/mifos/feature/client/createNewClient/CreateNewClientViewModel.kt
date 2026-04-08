@@ -210,6 +210,9 @@ class CreateNewClientViewModel(
             is CreateNewClientAction.CreateClient -> {
                 submitClient()
             }
+            is CreateNewClientAction.LoadStaffInOffices -> {
+                loadStaffInOffices(action.id)
+            }
         }
     }
 
@@ -587,6 +590,7 @@ sealed interface CreateNewClientAction {
 
     object Retry : CreateNewClientAction
     object CreateClient : CreateNewClientAction
+    data class LoadStaffInOffices(val id: Int) : CreateNewClientAction
 
     data class UpdateFirstName(val value: String) : CreateNewClientAction
     data class UpdateMiddleName(val value: String) : CreateNewClientAction
