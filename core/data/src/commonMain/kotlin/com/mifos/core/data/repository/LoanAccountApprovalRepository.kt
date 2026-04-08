@@ -21,5 +21,5 @@ import kotlinx.coroutines.flow.Flow
 interface LoanAccountApprovalRepository {
 
     fun approveLoan(loanId: Int, loanApproval: LoanApproval?): Flow<DataState<GenericResponse>>
-    suspend fun undoLoanApproval(loanId: Int, noteRequest: LoanUndoApprovalRequest)
+    suspend fun undoLoanApproval(loanId: Int, noteRequest: LoanUndoApprovalRequest): DataState<Unit>
 }

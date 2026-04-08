@@ -35,10 +35,18 @@ class LoanAccountApprovalRepositoryImp(
             .asDataStateFlow()
     }
 
-    override suspend fun undoLoanApproval(loanId: Int, noteRequest: LoanUndoApprovalRequest) {
-        dataManagerLoan.undoLoanApproval(
-            loanId = loanId,
-            noteRequest = noteRequest,
-        )
+    override suspend fun undoLoanApproval(
+        loanId: Int,
+        noteRequest: LoanUndoApprovalRequest,
+    ): DataState<Unit> {
+        return try {
+            val response = dataManagerLoan.undoLoanApproval(
+                loanId = loanId,
+                noteRequest = noteRequest,
+            )
+            DataState.Success(response)
+        } catch (e: Exception) {
+            DataState.Error(e)
+        }
     }
 }

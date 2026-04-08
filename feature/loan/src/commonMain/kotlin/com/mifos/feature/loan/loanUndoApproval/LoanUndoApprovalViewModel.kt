@@ -12,6 +12,7 @@ package com.mifos.feature.loan.loanUndoApproval
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountApprovalRepository
 import com.mifos.core.model.objects.account.loan.LoanUndoApprovalRequest
 import com.mifos.core.ui.util.BaseViewModel
@@ -57,22 +58,25 @@ class LoanUndoApprovalViewModel(
                 dialogState = LoanUndoApprovalState.DialogState.Loading,
             )
         }
+
         viewModelScope.launch {
-            runCatching {
-                repository.undoLoanApproval(route.loanId, LoanUndoApprovalRequest(note = state.note))
-            }.onFailure { error ->
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = LoanUndoApprovalState.DialogState.Error(error.message.toString()),
-                    )
+            when (val response = repository.undoLoanApproval(route.loanId, LoanUndoApprovalRequest(note = state.note))) {
+                is DataState.Error -> {
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = LoanUndoApprovalState.DialogState.Error(response.message),
+                        )
+                    }
                 }
-            }.onSuccess {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = null,
-                    )
+                is DataState.Success -> {
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = null,
+                        )
+                    }
+                    sendEvent(LoanUndoApprovalEvent.NavigationBack)
                 }
-                sendEvent(LoanUndoApprovalEvent.NavigationBack)
+                DataState.Loading -> Unit
             }
         }
     }
