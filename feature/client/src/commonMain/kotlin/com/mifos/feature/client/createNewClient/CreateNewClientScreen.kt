@@ -255,13 +255,6 @@ private fun CreateNewClientContent(
             onAction(CreateNewClientAction.UpdateSelectedImageFile(it))
         }
     }
-
-    LaunchedEffect(key1 = Unit) {
-        if (officeList.isNotEmpty()) {
-            officeList[0].id.let { onAction(CreateNewClientAction.LoadStaffInOffices(it)) }
-        }
-    }
-
     LaunchedEffect(key1 = staffInOffices) {
         if (staffInOffices.isEmpty()) {
             snackbarHostState.showSnackbar(

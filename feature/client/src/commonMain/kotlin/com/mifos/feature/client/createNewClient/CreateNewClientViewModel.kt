@@ -21,6 +21,7 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.MFErrorParser
+import com.mifos.core.common.utils.combineDataState
 import com.mifos.core.common.utils.formatDate
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.model.objects.clients.Address
@@ -39,7 +40,6 @@ import io.github.vinceglb.filekit.extension
 import io.github.vinceglb.filekit.name
 import io.github.vinceglb.filekit.readBytes
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -207,10 +207,6 @@ class CreateNewClientViewModel(
 
             is CreateNewClientAction.Retry -> loadInitialData()
 
-            is CreateNewClientAction.LoadStaffInOffices -> {
-                loadStaffInOffices(action.officeId)
-            }
-
             is CreateNewClientAction.CreateClient -> {
                 submitClient()
             }
@@ -219,49 +215,41 @@ class CreateNewClientViewModel(
 
     private fun loadInitialData() {
         viewModelScope.launch {
-            combine(
+            combineDataState(
                 repository.clientTemplate(),
                 repository.offices(),
-            ) { clientResult, officeResult ->
-                clientResult to officeResult
-            }.collect { (clientResult, officeResult) ->
+            ) { clientTemplate, offices ->
+                clientTemplate to offices
+            }.collect { state ->
+                when (state) {
+                    is DataState.Loading -> mutableStateFlow.update {
+                        it.copy(screenState = CreateNewClientState.ScreenState.Loading)
+                    }
 
-                if (clientResult is DataState.Loading || officeResult is DataState.Loading) {
-                    mutableStateFlow.update {
+                    is DataState.Error -> mutableStateFlow.update {
                         it.copy(
-                            screenState = CreateNewClientState.ScreenState.Loading,
+                            screenState = CreateNewClientState.ScreenState.Error(
+                                state.exception.message ?: "Unknown Error",
+                            ),
                         )
                     }
-                    return@collect
-                }
 
-                if (clientResult is DataState.Error) {
-                    mutableStateFlow.update {
-                        it.copy(
-                            screenState = CreateNewClientState.ScreenState.Error(clientResult.message),
-                        )
-                    }
-                    return@collect
-                }
+                    is DataState.Success -> {
+                        val clientsTemplate = state.data.first
+                        val offices = state.data.second
 
-                if (officeResult is DataState.Error) {
-                    mutableStateFlow.update {
-                        it.copy(
-                            screenState = CreateNewClientState.ScreenState.Error(officeResult.message),
-                        )
-                    }
-                    return@collect
-                }
+                        loadAddressConfiguration()
+                        mutableStateFlow.update {
+                            it.copy(
+                                clientsTemplate = clientsTemplate,
+                                officeOptions = offices,
+                                screenState = CreateNewClientState.ScreenState.Success,
+                            )
+                        }
 
-                if (clientResult is DataState.Success && officeResult is DataState.Success) {
-                    loadAddressConfiguration()
-
-                    mutableStateFlow.update {
-                        it.copy(
-                            clientsTemplate = clientResult.data,
-                            officeOptions = officeResult.data,
-                            screenState = CreateNewClientState.ScreenState.Success,
-                        )
+                        if (offices.isNotEmpty()) {
+                            loadStaffInOffices(offices[0].id)
+                        }
                     }
                 }
             }
@@ -430,59 +418,30 @@ class CreateNewClientViewModel(
         form: CreateNewClientState.ClientFormState,
         isAddressEnabled: Boolean,
     ): Boolean {
-        if (form.firstName.isBlank()) {
-            sendEvent(
-                CreateNewClientEvent.ShowSnackBar(
-                    getString(Res.string.feature_client_error_first_name_can_not_be_empty),
-                ),
-            )
-            return false
+        val errorMessage = when {
+            form.firstName.isBlank() ->
+                getString(Res.string.feature_client_error_first_name_can_not_be_empty)
+
+            form.firstName.contains("[^a-zA-Z ]".toRegex()) ->
+                getString(Res.string.feature_client_error_first_name_should_contain_only_alphabets)
+
+            form.lastName.isBlank() ->
+                getString(Res.string.feature_client_error_last_name_can_not_be_empty)
+
+            form.lastName.contains("[^a-zA-Z ]".toRegex()) ->
+                getString(Res.string.feature_client_error_last_name_should_contain_only_alphabets)
+
+            form.middleName.isNotBlank() && form.middleName.contains("[^a-zA-Z ]".toRegex()) ->
+                getString(Res.string.feature_client_error_middle_name_should_contain_only_alphabets)
+
+            isAddressEnabled && form.selectedAddressTypeId <= 0 ->
+                getString(Res.string.feature_client_error_address_type_is_required)
+
+            else -> null
         }
 
-        if (form.firstName.contains("[^a-zA-Z ]".toRegex())) {
-            sendEvent(
-                CreateNewClientEvent.ShowSnackBar(
-                    getString(Res.string.feature_client_error_first_name_should_contain_only_alphabets),
-                ),
-            )
-            return false
-        }
-
-        if (form.lastName.isBlank()) {
-            sendEvent(
-                CreateNewClientEvent.ShowSnackBar(
-                    getString(Res.string.feature_client_error_last_name_can_not_be_empty),
-                ),
-            )
-            return false
-        }
-
-        if (form.lastName.contains("[^a-zA-Z ]".toRegex())) {
-            sendEvent(
-                CreateNewClientEvent.ShowSnackBar(
-                    getString(Res.string.feature_client_error_last_name_should_contain_only_alphabets),
-                ),
-            )
-            return false
-        }
-
-        if (form.middleName.isNotBlank() &&
-            form.middleName.contains("[^a-zA-Z ]".toRegex())
-        ) {
-            sendEvent(
-                CreateNewClientEvent.ShowSnackBar(
-                    getString(Res.string.feature_client_error_middle_name_should_contain_only_alphabets),
-                ),
-            )
-            return false
-        }
-
-        if (isAddressEnabled && form.selectedAddressTypeId <= 0) {
-            sendEvent(
-                CreateNewClientEvent.ShowSnackBar(
-                    getString(Res.string.feature_client_error_address_type_is_required),
-                ),
-            )
+        if (errorMessage != null) {
+            sendEvent(CreateNewClientEvent.ShowSnackBar(errorMessage))
             return false
         }
 
@@ -628,7 +587,6 @@ sealed interface CreateNewClientAction {
 
     object Retry : CreateNewClientAction
     object CreateClient : CreateNewClientAction
-    data class LoadStaffInOffices(val officeId: Int) : CreateNewClientAction
 
     data class UpdateFirstName(val value: String) : CreateNewClientAction
     data class UpdateMiddleName(val value: String) : CreateNewClientAction
@@ -671,5 +629,8 @@ sealed interface CreateNewClientEvent {
     object NavigateBack : CreateNewClientEvent
     class NavigateToClientDetails(val clientId: Int) : CreateNewClientEvent
     class ShowSnackBar(val message: String) : CreateNewClientEvent
-    class HasDatatables(val datatables: List<DataTableEntity>, val clientPayload: ClientPayloadEntity) : CreateNewClientEvent
+    class HasDatatables(
+        val datatables: List<DataTableEntity>,
+        val clientPayload: ClientPayloadEntity,
+    ) : CreateNewClientEvent
 }
