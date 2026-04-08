@@ -464,6 +464,7 @@ android-application = { id = "com.android.application", version.ref = "androidGr
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 android-test = { id = "com.android.test", version.ref = "androidGradlePlugin" }
 androidx-navigation = {id = "androidx.navigation.safeargs", version.ref = "androidxNavigation"}
+kotlinCocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 
 # Hilt & Room Plugins
 room = { id = "androidx.room", version.ref = "room" }

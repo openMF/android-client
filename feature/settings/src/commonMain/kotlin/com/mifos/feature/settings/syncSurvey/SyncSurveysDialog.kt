@@ -227,7 +227,7 @@ private fun SyncSurveysDialogContent(
         Box(
             modifier = Modifier
                 .clip(KptTheme.shapes.large)
-                .background(Color.White)
+                .background(KptTheme.colorScheme.surface)
                 .padding(KptTheme.spacing.md),
             contentAlignment = Alignment.Center,
         ) {

@@ -10,6 +10,10 @@
 package com.mifos.core.ui.util
 
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asSkiaBitmap
+import io.github.vinceglb.filekit.FileKit
+import io.github.vinceglb.filekit.dialogs.openFileSaver
+import io.github.vinceglb.filekit.write
 import java.awt.Desktop
 import java.net.URI
 
@@ -18,25 +22,19 @@ actual object ShareUtils {
     }
 
     actual suspend fun shareImage(title: String, image: ImageBitmap) {
-// TODO(KMP): FileKit.saveFile is not currently available on this source set.
-// Add the platform-specific FileKit dependency in a follow-up PR.
-
-//        FileKit.saveFile(
-//            bytes = image.asSkiaBitmap().readPixels(),
-//            baseName = "MifosQrCode",
-//            extension = "png",
-//        )
+        val newFile = FileKit.openFileSaver(
+            suggestedName = "MifosQrCode",
+            extension = "png",
+        )
+        image.asSkiaBitmap().readPixels()?.let { newFile?.write(it) }
     }
 
     actual suspend fun shareImage(title: String, byte: ByteArray) {
-// TODO(KMP): FileKit.saveFile is not currently available on this source set.
-// Add the platform-specific FileKit dependency in a follow-up PR.
-
-//        FileKit.saveFile(
-//            bytes = byte,
-//            baseName = "MifosQrCode",
-//            extension = "png",
-//        )
+        val newFile = FileKit.openFileSaver(
+            suggestedName = "MifosQrCode",
+            extension = "png",
+        )
+        newFile?.write(byte)
     }
 
     actual fun callHelpline() {
@@ -53,7 +51,8 @@ actual object ShareUtils {
     }
 
     actual fun mailHelpline() {
-        val uri = URI("mailto:support@example.com?subject=Help%20Request&body=Hello,%20I%20need%20assistance%20with...")
+        val uri =
+            URI("mailto:support@example.com?subject=Help%20Request&body=Hello,%20I%20need%20assistance%20with...")
         if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.MAIL)) {
             Desktop.getDesktop().mail(uri)
         }
@@ -67,7 +66,9 @@ actual object ShareUtils {
 
     actual fun openUrl(url: String) {
         try {
-            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+            if (Desktop.isDesktopSupported() && Desktop.getDesktop()
+                    .isSupported(Desktop.Action.BROWSE)
+            ) {
                 Desktop.getDesktop().browse(URI(url))
             }
         } catch (e: Exception) {
