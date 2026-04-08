@@ -30,7 +30,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -160,7 +159,7 @@ fun DataTableItem(
         shape = DesignToken.shapes.none,
         elevation = CardDefaults.cardElevation(defaultElevation = DesignToken.elevation.dp2),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White,
+            containerColor = KptTheme.colorScheme.surface,
         ),
         onClick = { onClick.invoke(dataTable) },
     ) {
