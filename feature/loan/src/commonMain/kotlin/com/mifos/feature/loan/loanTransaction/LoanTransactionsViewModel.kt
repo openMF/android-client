@@ -35,6 +35,9 @@ class LoanTransactionsViewModel(
     private val _selectedRow = MutableStateFlow<LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData?>(null)
     val selectedRow: StateFlow<LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData?> = _selectedRow.asStateFlow()
 
+    private val _exportDialogState = MutableStateFlow(ExportDialogState())
+    val exportDialogState: StateFlow<ExportDialogState> = _exportDialogState.asStateFlow()
+
     init {
         loadLoanTransactions()
     }
@@ -127,4 +130,47 @@ class LoanTransactionsViewModel(
         // TODO: Handle the action based on action type and id
         _selectedRow.value = null
     }
+
+    fun onExportClicked() {
+        _exportDialogState.value = ExportDialogState(isVisible = true)
+    }
+
+    fun onExportDismissed() {
+        _exportDialogState.value = ExportDialogState()
+    }
+
+    fun onFromDateSelected(date: Long) {
+        _exportDialogState.value = _exportDialogState.value.copy(fromDate = date)
+    }
+
+    fun onToDateSelected(date: Long) {
+        _exportDialogState.value = _exportDialogState.value.copy(toDate = date)
+    }
+
+    fun onShowFromDatePicker(show: Boolean) {
+        _exportDialogState.value = _exportDialogState.value.copy(showFromDatePicker = show)
+    }
+
+    fun onShowToDatePicker(show: Boolean) {
+        _exportDialogState.value = _exportDialogState.value.copy(showToDatePicker = show)
+    }
+
+    fun onGenerateReportClicked() {
+        // Placeholder for future API call. UI-only ticket.
+        onExportDismissed()
+    }
+}
+
+data class ExportDialogState(
+    val isVisible: Boolean = false,
+    val fromDate: Long? = null,
+    val toDate: Long? = null,
+    val showFromDatePicker: Boolean = false,
+    val showToDatePicker: Boolean = false,
+) {
+    val isValidDateRange: Boolean
+        get() = fromDate != null && toDate != null && toDate >= fromDate
+
+    val isInvalidDateRange: Boolean
+        get() = fromDate != null && toDate != null && toDate < fromDate
 }

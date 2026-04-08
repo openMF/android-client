@@ -50,9 +50,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -86,19 +84,24 @@ internal fun LoanTransactionsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val selectedRow by viewModel.selectedRow.collectAsStateWithLifecycle()
-    var showExportDialog by remember { mutableStateOf(false) }
+    val exportDialogState by viewModel.exportDialogState.collectAsStateWithLifecycle()
 
     LoanTransactionsScreen(
         uiState = uiState,
         selectedRow = selectedRow,
-        showExportDialog = showExportDialog,
+        exportDialogState = exportDialogState,
         onNavigateBack = navigateBack,
         onRetry = viewModel::retry,
         onRowSelected = viewModel::onRowSelected,
         onDismissBottomSheet = viewModel::dismissBottomSheet,
         onTransactionAction = viewModel::onTransactionAction,
-        onExportClick = { showExportDialog = true },
-        onDismissExportDialog = { showExportDialog = false },
+        onExportClick = viewModel::onExportClicked,
+        onDismissExportDialog = viewModel::onExportDismissed,
+        onFromDateSelected = viewModel::onFromDateSelected,
+        onToDateSelected = viewModel::onToDateSelected,
+        onShowFromDatePicker = viewModel::onShowFromDatePicker,
+        onShowToDatePicker = viewModel::onShowToDatePicker,
+        onGenerateReport = viewModel::onGenerateReportClicked,
     )
 }
 
@@ -107,7 +110,7 @@ internal fun LoanTransactionsScreen(
 internal fun LoanTransactionsScreen(
     uiState: LoanTransactionsUiState,
     selectedRow: LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData?,
-    showExportDialog: Boolean = false,
+    exportDialogState: ExportDialogState = ExportDialogState(),
     onNavigateBack: () -> Unit = {},
     onRetry: () -> Unit = {},
     onRowSelected: (LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData) -> Unit = {},
@@ -115,6 +118,11 @@ internal fun LoanTransactionsScreen(
     onTransactionAction: (TransactionAction, Int) -> Unit = { _, _ -> },
     onExportClick: () -> Unit = {},
     onDismissExportDialog: () -> Unit = {},
+    onFromDateSelected: (Long) -> Unit = {},
+    onToDateSelected: (Long) -> Unit = {},
+    onShowFromDatePicker: (Boolean) -> Unit = {},
+    onShowToDatePicker: (Boolean) -> Unit = {},
+    onGenerateReport: () -> Unit = {},
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -179,13 +187,15 @@ internal fun LoanTransactionsScreen(
         }
     }
 
-    if (showExportDialog) {
+    if (exportDialogState.isVisible) {
         ExportTransactionsDialog(
+            state = exportDialogState,
             onDismiss = onDismissExportDialog,
-            onGenerateReport = { _, _ ->
-                // Placeholder for future API call
-                onDismissExportDialog()
-            },
+            onFromDateSelected = onFromDateSelected,
+            onToDateSelected = onToDateSelected,
+            onShowFromDatePicker = onShowFromDatePicker,
+            onShowToDatePicker = onShowToDatePicker,
+            onGenerateReport = onGenerateReport,
         )
     }
 }

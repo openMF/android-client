@@ -34,10 +34,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosButton
@@ -52,21 +48,16 @@ import kotlin.time.ExperimentalTime
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 internal fun ExportTransactionsDialog(
+    state: ExportDialogState,
     onDismiss: () -> Unit,
-    onGenerateReport: (fromDate: Long, toDate: Long) -> Unit,
+    onFromDateSelected: (Long) -> Unit,
+    onToDateSelected: (Long) -> Unit,
+    onShowFromDatePicker: (Boolean) -> Unit,
+    onShowToDatePicker: (Boolean) -> Unit,
+    onGenerateReport: () -> Unit,
 ) {
-    var showFromDatePicker by rememberSaveable { mutableStateOf(false) }
-    var showToDatePicker by rememberSaveable { mutableStateOf(false) }
-    var fromDate: Long? by rememberSaveable { mutableStateOf(null) }
-    var toDate: Long? by rememberSaveable { mutableStateOf(null) }
-
-    val currentFromDate = fromDate
-    val currentToDate = toDate
-    val isValidDateRange = currentFromDate != null && currentToDate != null && currentToDate >= currentFromDate
-    val isInvalidDateRange = currentFromDate != null && currentToDate != null && currentToDate < currentFromDate
-
     val fromDatePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds(),
+        initialSelectedDateMillis = state.fromDate ?: Clock.System.now().toEpochMilliseconds(),
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
@@ -75,7 +66,7 @@ internal fun ExportTransactionsDialog(
     )
 
     val toDatePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = Clock.System.now().toEpochMilliseconds(),
+        initialSelectedDateMillis = state.toDate ?: Clock.System.now().toEpochMilliseconds(),
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
@@ -83,22 +74,20 @@ internal fun ExportTransactionsDialog(
         },
     )
 
-    if (showFromDatePicker) {
+    if (state.showFromDatePicker) {
         DatePickerDialog(
-            onDismissRequest = { showFromDatePicker = false },
+            onDismissRequest = { onShowFromDatePicker(false) },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        showFromDatePicker = false
-                        fromDatePickerState.selectedDateMillis?.let {
-                            fromDate = it
-                        }
+                        onShowFromDatePicker(false)
+                        fromDatePickerState.selectedDateMillis?.let { onFromDateSelected(it) }
                     },
                 ) { Text(stringResource(Res.string.feature_loan_select)) }
             },
             dismissButton = {
                 TextButton(
-                    onClick = { showFromDatePicker = false },
+                    onClick = { onShowFromDatePicker(false) },
                 ) { Text(stringResource(Res.string.feature_loan_cancel)) }
             },
         ) {
@@ -106,22 +95,20 @@ internal fun ExportTransactionsDialog(
         }
     }
 
-    if (showToDatePicker) {
+    if (state.showToDatePicker) {
         DatePickerDialog(
-            onDismissRequest = { showToDatePicker = false },
+            onDismissRequest = { onShowToDatePicker(false) },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        showToDatePicker = false
-                        toDatePickerState.selectedDateMillis?.let {
-                            toDate = it
-                        }
+                        onShowToDatePicker(false)
+                        toDatePickerState.selectedDateMillis?.let { onToDateSelected(it) }
                     },
                 ) { Text(stringResource(Res.string.feature_loan_select)) }
             },
             dismissButton = {
                 TextButton(
-                    onClick = { showToDatePicker = false },
+                    onClick = { onShowToDatePicker(false) },
                 ) { Text(stringResource(Res.string.feature_loan_cancel)) }
             },
         ) {
@@ -147,30 +134,22 @@ internal fun ExportTransactionsDialog(
                 Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
                 MifosDatePickerTextField(
-                    value = fromDate?.let { DateHelper.getDateAsStringFromLong(it) }.orEmpty(),
+                    value = state.fromDate?.let { DateHelper.getDateAsStringFromLong(it) }.orEmpty(),
                     label = stringResource(Res.string.feature_loan_from_date),
-                    openDatePicker = {
-                        fromDatePickerState.selectedDateMillis =
-                            fromDate ?: Clock.System.now().toEpochMilliseconds()
-                        showFromDatePicker = true
-                    },
+                    openDatePicker = { onShowFromDatePicker(true) },
                 )
 
                 Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
 
                 MifosDatePickerTextField(
-                    value = toDate?.let { DateHelper.getDateAsStringFromLong(it) }.orEmpty(),
+                    value = state.toDate?.let { DateHelper.getDateAsStringFromLong(it) }.orEmpty(),
                     label = stringResource(Res.string.feature_loan_to_date),
-                    errorMessage = if (isInvalidDateRange) {
+                    errorMessage = if (state.isInvalidDateRange) {
                         stringResource(Res.string.feature_loan_invalid_date_range)
                     } else {
                         null
                     },
-                    openDatePicker = {
-                        toDatePickerState.selectedDateMillis =
-                            toDate ?: Clock.System.now().toEpochMilliseconds()
-                        showToDatePicker = true
-                    },
+                    openDatePicker = { onShowToDatePicker(true) },
                 )
 
                 Spacer(modifier = Modifier.height(KptTheme.spacing.md))
@@ -193,12 +172,8 @@ internal fun ExportTransactionsDialog(
                     Spacer(modifier = Modifier.width(KptTheme.spacing.md))
 
                     MifosButton(
-                        onClick = {
-                            val from = fromDate ?: return@MifosButton
-                            val to = toDate ?: return@MifosButton
-                            onGenerateReport(from, to)
-                        },
-                        enabled = isValidDateRange,
+                        onClick = onGenerateReport,
+                        enabled = state.isValidDateRange,
                         modifier = Modifier.weight(1f),
                     ) {
                         Text(
