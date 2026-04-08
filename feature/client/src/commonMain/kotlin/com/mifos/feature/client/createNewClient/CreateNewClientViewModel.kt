@@ -21,7 +21,7 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.MFErrorParser
-import com.mifos.core.common.utils.combineDataState
+import com.mifos.core.common.utils.combineResults
 import com.mifos.core.common.utils.formatDate
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.model.objects.clients.Address
@@ -40,6 +40,7 @@ import io.github.vinceglb.filekit.extension
 import io.github.vinceglb.filekit.name
 import io.github.vinceglb.filekit.readBytes
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -218,11 +219,13 @@ class CreateNewClientViewModel(
 
     private fun loadInitialData() {
         viewModelScope.launch {
-            combineDataState(
+            combine(
                 repository.clientTemplate(),
                 repository.offices(),
-            ) { clientTemplate, offices ->
-                clientTemplate to offices
+            ) { clientState, officeState ->
+                combineResults(clientState, officeState) { clientTemplate, offices ->
+                    clientTemplate to offices
+                }
             }.collect { state ->
                 when (state) {
                     is DataState.Loading -> mutableStateFlow.update {
@@ -238,9 +241,7 @@ class CreateNewClientViewModel(
                     }
 
                     is DataState.Success -> {
-                        val clientsTemplate = state.data.first
-                        val offices = state.data.second
-
+                        val (clientsTemplate, offices) = state.data
                         loadAddressConfiguration()
                         mutableStateFlow.update {
                             it.copy(
@@ -249,7 +250,6 @@ class CreateNewClientViewModel(
                                 screenState = CreateNewClientState.ScreenState.Success,
                             )
                         }
-
                         if (offices.isNotEmpty()) {
                             loadStaffInOffices(offices[0].id)
                         }
