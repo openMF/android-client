@@ -1,0 +1,55 @@
+package com.mifos.core.data.repositoryImp
+
+import com.russhwolf.settings.Settings
+import org.mifos.authenticator.passcode.PasscodeStorageAdapter
+
+
+const val MIFOS_PASSCODE = "com.mifos.passcode"
+
+class PasscodeStorageAdapterImpl(
+    private val settings: Settings
+): PasscodeStorageAdapter {
+
+    override fun savePasscode(passcode: String) {
+        settings.putString(MIFOS_PASSCODE, passcode)
+    }
+
+    override fun loadPasscode(): String? {
+        val passcode = settings.getString(MIFOS_PASSCODE, "")
+        if (passcode.isBlank()) return null
+        return passcode
+    }
+
+    override fun deletePasscode() {
+        settings.remove(MIFOS_PASSCODE)
+    }
+
+    @Deprecated(
+        "Use BiometricStorageAdapter from the biometrics library instead.",
+        replaceWith = ReplaceWith(
+            "BiometricStorageAdapter.saveRegistrationData(registrationData)",
+            "org.mifos.authenticator.biometrics.BiometricStorageAdapter"
+        )
+    )
+    override fun saveRegistrationData(registrationData: String) {}
+
+    @Deprecated(
+        "Use BiometricStorageAdapter from the biometrics library instead.",
+        replaceWith = ReplaceWith(
+            "BiometricStorageAdapter.loadRegistrationData()",
+            "org.mifos.authenticator.biometrics.BiometricStorageAdapter"
+        )
+    )
+    override fun loadRegistrationData(): String? {
+        return null
+    }
+
+    @Deprecated(
+        "Use BiometricStorageAdapter from the biometrics library instead.",
+        replaceWith = ReplaceWith(
+            "BiometricStorageAdapter.deleteRegistrationData()",
+            "org.mifos.authenticator.biometrics.BiometricStorageAdapter"
+        )
+    )
+    override fun deleteRegistrationData() {}
+}
