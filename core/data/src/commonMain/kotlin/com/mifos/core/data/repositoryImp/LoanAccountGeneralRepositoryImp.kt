@@ -13,24 +13,35 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.mappers.loan.LoanAccountGeneralMapper
 import com.mifos.core.data.repository.LoanAccountGeneralRepository
+import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.model.entity.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.network.datamanager.DataManagerLoan
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
 class LoanAccountGeneralRepositoryImp(
     private val dataManagerLoan: DataManagerLoan,
+    private val networkMonitor: NetworkMonitor,
     private val ioDispatcher: CoroutineDispatcher,
 ) : LoanAccountGeneralRepository {
 
     override fun getLoanById(loanId: Int): Flow<DataState<LoanWithAssociations?>> {
-        return dataManagerLoan.getLoanById(loanId)
-            .map { loan ->
-                loan?.let { LoanAccountGeneralMapper.mapFromEntity(it) }
+        return combine(
+            networkMonitor.isOnline,
+            dataManagerLoan.getLoanById(loanId)
+                .map { loan -> loan?.let(LoanAccountGeneralMapper::mapFromEntity) }
+                .asDataStateFlow(),
+        ) { isOnline, dataState ->
+            if (!isOnline && dataState !is DataState.Success) {
+                DataState.Error(NetworkUnavailableException())
+            } else {
+                dataState
             }
-            .asDataStateFlow()
-            .flowOn(ioDispatcher)
+        }.flowOn(ioDispatcher)
     }
 }
+
+class NetworkUnavailableException : IllegalStateException()

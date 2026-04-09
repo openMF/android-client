@@ -32,11 +32,10 @@ import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.LoanAccountGeneralRepository
-import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.data.repositoryImp.NetworkUnavailableException
 import com.mifos.core.model.entity.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
@@ -44,7 +43,6 @@ import org.jetbrains.compose.resources.getString
 
 internal class LoanAccountGeneralViewModel(
     savedStateHandle: SavedStateHandle,
-    private val networkMonitor: NetworkMonitor,
     private val repository: LoanAccountGeneralRepository,
 ) : BaseViewModel<LoanAccountGeneralState, LoanAccountGeneralEvent, LoanAccountGeneralAction>(
     initialState = LoanAccountGeneralState(),
@@ -65,20 +63,6 @@ internal class LoanAccountGeneralViewModel(
     private fun loadLoanById() {
         loadJob?.cancel()
         loadJob = viewModelScope.launch {
-            val isConnected = networkMonitor.isOnline.first()
-            mutableStateFlow.update { it.copy(networkConnection = isConnected) }
-
-            if (!isConnected) {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = LoanAccountGeneralState.DialogState.Error(
-                            getString(Res.string.feature_loan_profile_error_network_not_available),
-                        ),
-                    )
-                }
-                return@launch
-            }
-
             repository.getLoanById(loanId).collect { dataState ->
                 when (dataState) {
                     is DataState.Loading -> {
@@ -105,8 +89,18 @@ internal class LoanAccountGeneralViewModel(
                     }
 
                     is DataState.Error -> {
+                        val isNetworkError = dataState.exception is NetworkUnavailableException
                         mutableStateFlow.update {
-                            it.copy(dialogState = LoanAccountGeneralState.DialogState.Error(dataState.message))
+                            it.copy(
+                                networkConnection = !isNetworkError,
+                                dialogState = LoanAccountGeneralState.DialogState.Error(
+                                    if (isNetworkError) {
+                                        getString(Res.string.feature_loan_profile_error_network_not_available)
+                                    } else {
+                                        dataState.message
+                                    },
+                                ),
+                            )
                         }
                     }
                 }
