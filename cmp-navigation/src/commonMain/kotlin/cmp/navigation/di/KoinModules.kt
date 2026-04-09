@@ -40,6 +40,7 @@ import com.mifos.feature.settings.di.SettingsModule
 import com.mifos.room.di.DaoModule
 import com.mifos.room.di.HelperModule
 import com.mifos.room.di.PlatformSpecificDatabaseModule
+import com.mifos.feature.passcode.di.MifosAuthenticatorModule
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -90,6 +91,7 @@ object KoinModules {
             SearchModule,
             SettingsModule,
             SearchRecordModule,
+            MifosAuthenticatorModule,
         )
     }
 

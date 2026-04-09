@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/mobile-wallet/blob/master/LICENSE.md
  */
-package com.mifos.feature.passcode
+package com.mifos.feature.passcode.mifosPasscode
 
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
@@ -27,6 +27,7 @@ import com.mifos.core.designsystem.component.MifosDialogBox
 import androidclient.feature.passcode.generated.resources.Res
 import androidclient.feature.passcode.generated.resources.feature_authenticator_error
 import androidclient.feature.passcode.generated.resources.feature_authenticator_ok
+import com.mifos.feature.passcode.components.BiometricsKey
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -50,11 +51,13 @@ internal object MifosPasscodeCurrentInfo : NavigationEventInfo()
 @Composable
 fun MifosPasscode(
     onAuthenticationSuccess: () -> Unit,
+    onBackPress: () -> Unit = {},
     onForgotButton: () -> Unit = {},
     onPasscodeCreation: () -> Unit = {},
-    onAuthenticationFailed: () -> Unit = {},
     onPasscodeChanged: () -> Unit = {},
-    onDisableBiometrics: () -> Unit = {},
+    onAuthenticationFailed: () -> Unit = {},
+    onBiometricsDisabled: () -> Unit = {},
+    allowBackNavigation: Boolean = false,
     viewModel: MifosPasscodeViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -62,15 +65,21 @@ fun MifosPasscode(
 
     val systemAuthProvider = platformAuthenticationProvider.current
     val systemAvailableAuthOption = platformAvailableAuthenticationOption.current
+    val lifeCycleOwner = LocalLifecycleOwner.current
 
     val navEventState = rememberNavigationEventState(
         currentInfo = MifosPasscodeCurrentInfo,
     )
+
     NavigationBackHandler(
         state = navEventState,
         isBackEnabled = true,
         onBackCancelled = { },
-        onBackCompleted = { },
+        onBackCompleted = {
+            if(allowBackNavigation){
+                onBackPress()
+            }
+        },
     )
 
     LaunchedEffect(Unit) {
@@ -82,7 +91,7 @@ fun MifosPasscode(
                         PasscodeResult.Created -> onPasscodeCreation()
                         PasscodeResult.Changed -> onPasscodeChanged()
                         PasscodeResult.Forgotten -> onForgotButton()
-                        PasscodeResult.ExternalAuthDisabled -> onDisableBiometrics()
+                        PasscodeResult.ExternalAuthDisabled -> onBiometricsDisabled()
                         PasscodeResult.Rejected -> onAuthenticationFailed()
                     }
                 }
@@ -90,7 +99,6 @@ fun MifosPasscode(
         }
     }
 
-    val lifeCycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifeCycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {

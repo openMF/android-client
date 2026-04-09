@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/mobile-wallet/blob/master/LICENSE.md
  */
-package com.mifos.feature.passcode
+package com.mifos.feature.passcode.mifosPasscode
 
 import androidclient.feature.passcode.generated.resources.Res
 import androidclient.feature.passcode.generated.resources.feature_authenticator_setup_biometrics_prompt

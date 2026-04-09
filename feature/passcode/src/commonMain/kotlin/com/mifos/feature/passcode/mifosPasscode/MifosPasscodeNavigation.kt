@@ -7,30 +7,22 @@
  *
  * See https://github.com/openMF/mobile-wallet/blob/master/LICENSE.md
  */
-package com.mifos.feature.passcode
+package com.mifos.feature.passcode.mifosPasscode
 
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.toRoute
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import template.core.base.ui.composableWithSlideTransitions
 import template.core.base.ui.composableWithStayTransitions
 
-// Kept as constants so they can be used as startDestination strings in NavHost
-const val ROOT_MIFOS_PASSCODE_ROUTE = "root_mifos_passcode_route"
-const val RE_AUTH_MIFOS_PASSCODE_ROUTE = "reauth_mifos_passcode_route"
 
-// @SerialName ensures composable<T> registers at the same route string as the constant above,
-// so startDestination = ROOT_MIFOS_PASSCODE_ROUTE in NavHost still matches.
 @Serializable
-@SerialName(ROOT_MIFOS_PASSCODE_ROUTE)
 data object RootPasscodeRoute
 
 @Serializable
-@SerialName(RE_AUTH_MIFOS_PASSCODE_ROUTE)
 data object ReAuthPasscodeRoute
 
 @Serializable
@@ -46,6 +38,7 @@ fun NavController.navigateToInternalMifosPasscodeScreen(
     verificationKey: String? = null,
     navOptions: NavOptions? = null,
 ) = navigate(InternalPasscodeRoute(verificationKey), navOptions)
+
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun NavGraphBuilder.rootMifosPasscodeScreen(
@@ -63,7 +56,7 @@ fun NavGraphBuilder.rootMifosPasscodeScreen(
             onPasscodeCreation = onPasscodeCreation,
             onAuthenticationFailed = onAuthenticationFailed,
             onPasscodeChanged = onPasscodeChanged,
-            onDisableBiometrics = onDisableBiometrics,
+            onBiometricsDisabled = onDisableBiometrics,
         )
     }
 }
@@ -83,7 +76,7 @@ fun NavGraphBuilder.reAuthMifosPasscodeScreen(
             onPasscodeCreation = {},
             onAuthenticationFailed = onAuthenticationFailed,
             onPasscodeChanged = onPasscodeChanged,
-            onDisableBiometrics = onDisableBiometrics,
+            onBiometricsDisabled = onDisableBiometrics,
         )
     }
 }
@@ -95,6 +88,7 @@ fun NavGraphBuilder.internalMifosPasscodeScreen(
     onAuthenticationFailed: (String?) -> Unit = {},
     onPasscodeChanged: () -> Unit = {},
     onDisableBiometrics: () -> Unit = {},
+    onBackNavigation: (String?) -> Unit = {},
 ) {
     composableWithSlideTransitions<InternalPasscodeRoute> { backStackEntry ->
         val verificationKey = backStackEntry.toRoute<InternalPasscodeRoute>().verificationKey
@@ -104,7 +98,9 @@ fun NavGraphBuilder.internalMifosPasscodeScreen(
             onPasscodeCreation = {},
             onAuthenticationFailed = { onAuthenticationFailed(verificationKey) },
             onPasscodeChanged = onPasscodeChanged,
-            onDisableBiometrics = onDisableBiometrics,
+            onBiometricsDisabled = onDisableBiometrics,
+            allowBackNavigation = true,
+            onBackPress = { onBackNavigation(verificationKey) },
         )
     }
 }

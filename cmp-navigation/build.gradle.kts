@@ -50,8 +50,8 @@ kotlin {
             implementation(projects.feature.settings)
             implementation(projects.feature.search)
             implementation(projects.feature.searchRecord)
+            implementation(projects.feature.passcode)
 
-//            implementation(project.libs.mifos.passcode)
             implementation(compose.material3)
             implementation(compose.foundation)
             implementation(compose.ui)

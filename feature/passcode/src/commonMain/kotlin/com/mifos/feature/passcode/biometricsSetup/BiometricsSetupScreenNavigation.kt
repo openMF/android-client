@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/mobile-wallet/blob/master/LICENSE.md
  */
-package com.mifos.feature.passcode
+package com.mifos.feature.passcode.biometricsSetup
 
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavController
