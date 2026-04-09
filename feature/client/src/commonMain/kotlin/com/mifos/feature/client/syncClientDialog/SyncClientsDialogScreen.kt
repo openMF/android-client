@@ -42,7 +42,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -125,7 +124,7 @@ private fun SyncClientsDialogContent(
         modifier = Modifier
             .fillMaxWidth()
             .padding(KptTheme.spacing.sm)
-            .background(Color.White),
+            .background(KptTheme.colorScheme.surface),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(

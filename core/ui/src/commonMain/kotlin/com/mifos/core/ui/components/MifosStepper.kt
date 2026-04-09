@@ -32,7 +32,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.sp
-import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -92,8 +91,8 @@ fun MifosStepper(
                                             .clip(CircleShape)
                                             .background(
                                                 when {
-                                                    index == currentIndex -> AppColors.customWhite
-                                                    else -> AppColors.stepperColor
+                                                    index == currentIndex -> KptTheme.colorScheme.onPrimary
+                                                    else -> KptTheme.colorScheme.primaryContainer
                                                 },
                                             )
                                             .clickable(enabled = index < currentIndex) {
@@ -103,7 +102,10 @@ fun MifosStepper(
                                     ) {
                                         Text(
                                             text = (index + 1).toString(),
-                                            color = KptTheme.colorScheme.primary,
+                                            color = when {
+                                                index == currentIndex -> KptTheme.colorScheme.primary
+                                                else -> KptTheme.colorScheme.onPrimaryContainer
+                                            },
                                         )
                                     }
                                     Spacer(modifier = Modifier.height(DesignToken.padding.small))
@@ -114,7 +116,7 @@ fun MifosStepper(
                                             maxFontSize = 11.sp,
                                         ),
                                         style = MifosTypography.labelSmall.copy(
-                                            color = AppColors.customWhite,
+                                            color = KptTheme.colorScheme.onPrimary,
                                         ),
                                     )
                                 }
@@ -124,7 +126,7 @@ fun MifosStepper(
                                         .padding(vertical = DesignToken.padding.large)
                                         .width(DesignToken.padding.small)
                                         .height(DesignToken.padding.dp1)
-                                        .background(AppColors.stepperColor),
+                                        .background(KptTheme.colorScheme.primaryContainer),
                                 )
                             }
                         }

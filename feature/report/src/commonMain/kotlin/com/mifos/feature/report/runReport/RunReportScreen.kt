@@ -54,7 +54,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Blue
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -162,9 +161,9 @@ internal fun RunReportScreen(
                         )
                     }
                     DropdownMenu(
-                        modifier = Modifier.background(White),
                         expanded = showMenu,
                         onDismissRequest = { showMenu = false },
+                        containerColor = KptTheme.colorScheme.surface,
                     ) {
                         MifosMenuDropDownItem(
                             option = stringResource(Res.string.feature_report_client),
