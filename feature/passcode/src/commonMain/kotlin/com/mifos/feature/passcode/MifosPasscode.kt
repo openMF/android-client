@@ -9,7 +9,6 @@
  */
 package com.mifos.feature.passcode
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -25,15 +24,16 @@ import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
 import com.mifos.core.designsystem.component.MifosDialogBox
-import mobile_wallet.feature.passcode.generated.resources.Res
-import mobile_wallet.feature.passcode.generated.resources.feature_authenticator_error
-import mobile_wallet.feature.passcode.generated.resources.feature_authenticator_ok
+import androidclient.feature.passcode.generated.resources.Res
+import androidclient.feature.passcode.generated.resources.feature_authenticator_error
+import androidclient.feature.passcode.generated.resources.feature_authenticator_ok
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.mifos.authenticator.biometrics.platformAuthenticationProvider
 import org.mifos.authenticator.biometrics.platformAvailableAuthenticationOption
 import org.mifos.authenticator.passcode.PasscodeManager
+import org.mifos.authenticator.passcode.PasscodeResult
 import org.mifos.authenticator.passcode.screen.PasscodeAppearanceConfig
 import org.mifos.authenticator.passcode.screen.PasscodeButtonConfig
 import org.mifos.authenticator.passcode.screen.PasscodeDialogConfig
@@ -42,7 +42,6 @@ import org.mifos.authenticator.passcode.screen.PasscodeKeyConfig
 import org.mifos.authenticator.passcode.screen.PasscodeLogoConfig
 import org.mifos.authenticator.passcode.screen.PasscodeScreen
 import org.mifos.authenticator.passcode.screen.PasscodeSwitchConfig
-import org.mifos.feature.passcode.BiometricsKey
 import template.core.base.designsystem.theme.KptTheme
 
 internal object MifosPasscodeCurrentInfo : NavigationEventInfo()
@@ -77,12 +76,16 @@ fun MifosPasscode(
     LaunchedEffect(Unit) {
         viewModel.eventFlow.collect { event ->
             when (event) {
-                MifosPasscodeEvent.OnAuthenticationSuccess -> onAuthenticationSuccess()
-                MifosPasscodeEvent.OnForgotButton -> onForgotButton()
-                MifosPasscodeEvent.OnPasscodeCreation -> onPasscodeCreation()
-                MifosPasscodeEvent.OnPasscodeRejected -> onAuthenticationFailed()
-                MifosPasscodeEvent.OnPasscodeChanged -> onPasscodeChanged()
-                MifosPasscodeEvent.OnDisableBiometrics -> onDisableBiometrics()
+                is MifosPasscodeEvent.NavigateForResult -> {
+                    when (event.result) {
+                        PasscodeResult.Verified -> onAuthenticationSuccess()
+                        PasscodeResult.Created -> onPasscodeCreation()
+                        PasscodeResult.Changed -> onPasscodeChanged()
+                        PasscodeResult.Forgotten -> onForgotButton()
+                        PasscodeResult.ExternalAuthDisabled -> onDisableBiometrics()
+                        PasscodeResult.Rejected -> onAuthenticationFailed()
+                    }
+                }
             }
         }
     }
@@ -113,10 +116,11 @@ fun MifosPasscode(
         title = stringResource(Res.string.feature_authenticator_error),
         showDialogState = state.dialogState != null,
         confirmButtonText = stringResource(Res.string.feature_authenticator_ok),
-        dismissButtonText = null,
+        dismissButtonText = "",
         onConfirm = {
-            when (val dialogState = state.dialogState) {
+            when (state.dialogState) {
                 is PasscodeDialogState.UserNotRegistered -> {
+                    viewModel.trySendAction(MifosPasscodeAction.ClickConfirmOnNotRegisteredDialog)
                 }
                 else -> viewModel.trySendAction(MifosPasscodeAction.DismissDialog)
             }
@@ -133,27 +137,8 @@ fun MifosPasscode(
 
     PasscodeScreen(
         passcodeManager = passcodeManager,
-        onForgotButton = {
-            viewModel.trySendAction(MifosPasscodeAction.ForgotPasscode)
-        },
-        // onPasscodeConfirm will be renamed to onAuthenticationSuccess in next update to the passcode library.
-        // It is the commonCallBack function for successful biometrics and passcode authentication.
-        onPasscodeConfirm = {
-            viewModel.trySendAction(MifosPasscodeAction.AuthenticationSuccess)
-        },
-        onPasscodeCreation = {
-            viewModel.trySendAction(MifosPasscodeAction.PasscodeCreation)
-        },
-        onPasscodeChanged = {
-            viewModel.trySendAction(MifosPasscodeAction.PasscodeChanged)
-        },
-        // onPasscodeRejected will be renamed to onAuthenticationFailed in next update to the passcode library.
-        // It is the commonCallBack function for failed biometrics and passcode authentication.
-        onPasscodeRejected = {
-            viewModel.trySendAction(MifosPasscodeAction.PasscodeRejected)
-        },
-        onDisableBiometrics = {
-            viewModel.trySendAction(MifosPasscodeAction.DisableBiometrics)
+        onResult = { result ->
+            viewModel.trySendAction(MifosPasscodeAction.HandlePasscodeResult(result))
         },
         appearanceConfig = PasscodeAppearanceConfig(
             backgroundColor = KptTheme.colorScheme.background,
@@ -165,24 +150,6 @@ fun MifosPasscode(
             inactiveDotColor = KptTheme.colorScheme.onBackground,
             visiblePasscodeTextStyle = KptTheme.typography.headlineSmall,
         ),
-        biometricButton = { modifier ->
-            AnimatedVisibility(state.showBiometricsKeyButton) {
-                BiometricsKey(
-                    modifier = modifier,
-                    systemAvailableAuthOption = systemAvailableAuthOption,
-                    onAuthenticatorClick = {
-                        viewModel.trySendAction(
-                            MifosPasscodeAction.OnAuthenticatorClick(
-                                systemAuthProvider = systemAuthProvider,
-                            ),
-                        )
-                    },
-                )
-            }
-        },
-        onBiometricError = {
-            viewModel.trySendAction(MifosPasscodeAction.BiometricError(it.toString()))
-        },
         keyConfig = PasscodeKeyConfig(
             shouldShuffleKeys = true,
             keyTextStyle = null,
@@ -209,5 +176,18 @@ fun MifosPasscode(
             dialogButtonTextColor = KptTheme.colorScheme.onSurface,
             dialogShape = null,
         ),
+        externalAuthButton = { modifier ->
+            BiometricsKey(
+                modifier = modifier,
+                systemAvailableAuthOption = systemAvailableAuthOption,
+                onClick = {
+                    viewModel.trySendAction(
+                        MifosPasscodeAction.OnAuthenticatorClick(
+                            systemAuthProvider = systemAuthProvider,
+                        ),
+                    )
+                },
+            )
+        },
     )
 }

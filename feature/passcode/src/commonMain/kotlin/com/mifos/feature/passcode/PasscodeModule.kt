@@ -7,9 +7,8 @@
  *
  * See https://github.com/openMF/mobile-wallet/blob/master/LICENSE.md
  */
-package org.mifos.feature.passcode
+package com.mifos.feature.passcode
 
-import com.mifos.feature.passcode.MifosPasscodeViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 

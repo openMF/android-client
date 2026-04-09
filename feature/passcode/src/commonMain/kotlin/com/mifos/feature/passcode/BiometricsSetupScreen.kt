@@ -7,8 +7,18 @@
  *
  * See https://github.com/openMF/mobile-wallet/blob/master/LICENSE.md
  */
-package org.mifos.feature.passcode
+package com.mifos.feature.passcode
 
+import androidclient.feature.passcode.generated.resources.Res
+import androidclient.feature.passcode.generated.resources.feature_authenticator_biometrics_usage_message
+import androidclient.feature.passcode.generated.resources.feature_authenticator_error
+import androidclient.feature.passcode.generated.resources.feature_authenticator_fingerprint_icon
+import androidclient.feature.passcode.generated.resources.feature_authenticator_ok
+import androidclient.feature.passcode.generated.resources.feature_authenticator_secure_your_app
+import androidclient.feature.passcode.generated.resources.feature_authenticator_setup_biometrics
+import androidclient.feature.passcode.generated.resources.feature_authenticator_skip_for_now
+import androidclient.feature.passcode.generated.resources.fingerprint
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,6 +27,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -24,27 +35,24 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
-import mobile_wallet.feature.passcode.generated.resources.Res
-import mobile_wallet.feature.passcode.generated.resources.feature_authenticator_biometrics_usage_message
-import mobile_wallet.feature.passcode.generated.resources.feature_authenticator_error
-import mobile_wallet.feature.passcode.generated.resources.feature_authenticator_ok
+import com.mifos.core.designsystem.component.MifosDialogBox
+import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.designsystem.theme.MifosTheme
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import org.mifos.authenticator.biometrics.platformAuthenticationProvider
-import org.mifos.authenticator.passcode.components.MifosIcon
-import org.mifospay.core.designsystem.component.MifosDialogBox
-import org.mifospay.core.designsystem.component.MifosScaffold
-import org.mifospay.core.designsystem.theme.MifosTheme
-import org.mifospay.core.ui.utils.EventsEffect
 import template.core.base.designsystem.theme.KptTheme
 
 internal object BiometricSetupScreenCurrentInfo : NavigationEventInfo()
@@ -71,10 +79,12 @@ fun BiometricSetupScreen(
 
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
-    EventsEffect(viewModel) { event ->
-        when (event) {
-            BiometricSetupScreenEvent.OnBiometricSetupSuccess -> onBiometricsRegistrationSuccess()
-            BiometricSetupScreenEvent.OnSkipBiometricSetup -> onSkipBiometricSetup()
+    LaunchedEffect(Unit) {
+        viewModel.eventFlow.collect { event ->
+            when (event) {
+                BiometricSetupScreenEvent.OnBiometricSetupSuccess -> onBiometricsRegistrationSuccess()
+                BiometricSetupScreenEvent.OnSkipBiometricSetup -> onSkipBiometricSetup()
+            }
         }
     }
 
@@ -106,7 +116,7 @@ internal fun BiometricSetupContent(
         title = stringResource(Res.string.feature_authenticator_error),
         showDialogState = state.error != null,
         confirmButtonText = stringResource(Res.string.feature_authenticator_ok),
-        dismissButtonText = null,
+        dismissButtonText = "",
         onConfirm = onDismissErrorDialog,
         onDismiss = onDismissErrorDialog,
         message = state.error,
@@ -121,12 +131,16 @@ internal fun BiometricSetupContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            MifosIcon(modifier = Modifier.fillMaxWidth())
+            Image(
+                painter = painterResource(Res.drawable.fingerprint),
+                contentDescription = stringResource(Res.string.feature_authenticator_fingerprint_icon),
+                modifier = Modifier.size(120.dp),
+            )
 
             Spacer(Modifier.height(40.dp))
 
             Text(
-                text = "Secure Your App",
+                text = stringResource(Res.string.feature_authenticator_secure_your_app),
                 style = KptTheme.typography.headlineSmall,
             )
 
@@ -137,7 +151,7 @@ internal fun BiometricSetupContent(
                 style = KptTheme.typography.bodyLarge,
                 color = KptTheme.colorScheme.inverseSurface,
                 modifier = Modifier.padding(horizontal = 16.dp),
-                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                textAlign = TextAlign.Center,
             )
 
             Spacer(Modifier.height(48.dp))
@@ -147,7 +161,10 @@ internal fun BiometricSetupContent(
                 modifier = Modifier.width(200.dp),
                 shape = RoundedCornerShape(20),
             ) {
-                Text("Setup Biometrics", color = KptTheme.colorScheme.onPrimary)
+                Text(
+                    text = stringResource(Res.string.feature_authenticator_setup_biometrics),
+                    color = KptTheme.colorScheme.onPrimary,
+                )
             }
 
             Spacer(Modifier.height(16.dp))
@@ -156,7 +173,7 @@ internal fun BiometricSetupContent(
                 onClick = onSkipBiometricSetup,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text("Skip for Now")
+                Text(text = stringResource(Res.string.feature_authenticator_skip_for_now))
             }
         }
     }

@@ -9,36 +9,34 @@
  */
 package com.mifos.feature.passcode
 
+import androidclient.feature.passcode.generated.resources.Res
+import androidclient.feature.passcode.generated.resources.feature_authenticator_setup_biometrics_prompt
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.AppLockRepository
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import mobile_wallet.feature.passcode.generated.resources.Res
-import mobile_wallet.feature.passcode.generated.resources.feature_authenticator_user_not_registered_error_message
 import org.jetbrains.compose.resources.getString
 import org.mifos.authenticator.biometrics.BiometricStorageAdapter
 import org.mifos.authenticator.biometrics.platformAuthenticator.AuthenticationResult
 import org.mifos.authenticator.biometrics.platformAuthenticator.PlatformAuthenticationProvider
 import org.mifos.authenticator.biometrics.platformAuthenticator.PlatformAuthenticatorStatus
 import org.mifos.authenticator.passcode.PasscodeManager
-import org.mifos.authenticator.passcode.PasscodeState
+import org.mifos.authenticator.passcode.PasscodeResult
 import org.mifos.authenticator.passcode.PasscodeStep
-import org.mifos.authenticator.passcode.PasscodeStorageAdapter
 import template.core.base.ui.BaseViewModel
 
 class MifosPasscodeViewModel(
     private val passcodeManager: PasscodeManager,
     private val appLockRepository: AppLockRepository,
-    private val passcodeStorageAdapter: PasscodeStorageAdapter,
     private val biometricStorageAdapter: BiometricStorageAdapter,
 ) : BaseViewModel<MifosPasscodeState, MifosPasscodeEvent, MifosPasscodeAction>(
-    initialState = MifosPasscodeState(passcodeState = passcodeManager.state.value),
+    initialState = MifosPasscodeState(),
 ) {
 
     override fun handleAction(action: MifosPasscodeAction) {
         when (action) {
             is MifosPasscodeAction.OnStart -> {
-                if (state.passcodeState.passcodeStep == PasscodeStep.Enter) {
+                if (passcodeManager.state.value.passcodeStep == PasscodeStep.Enter) {
                     appLockRepository.lockApp()
                 }
             }
@@ -53,67 +51,31 @@ class MifosPasscodeViewModel(
                 }
             }
 
-            is MifosPasscodeAction.ForgotPasscode -> {
-                appLockRepository.unlockApp()
-                sendEvent(MifosPasscodeEvent.OnForgotButton)
-            }
-
-            is MifosPasscodeAction.AuthenticationSuccess -> {
-                appLockRepository.unlockApp()
-                sendEvent(MifosPasscodeEvent.OnAuthenticationSuccess)
-            }
-
-            is MifosPasscodeAction.PasscodeCreation -> {
-                appLockRepository.unlockApp()
-                sendEvent(MifosPasscodeEvent.OnPasscodeCreation)
-            }
-
-            is MifosPasscodeAction.PasscodeRejected -> {
-                if (state.passcodeState.passcodeStep == PasscodeStep.Enter) {
-                    sendEvent(MifosPasscodeEvent.OnPasscodeRejected)
+            is MifosPasscodeAction.HandlePasscodeResult -> {
+                when (action.result) {
+                    PasscodeResult.Verified,
+                    PasscodeResult.Created,
+                    PasscodeResult.Changed,
+                    PasscodeResult.Forgotten, -> {
+                        appLockRepository.unlockApp()
+                    }
+                    PasscodeResult.ExternalAuthDisabled,
+                    PasscodeResult.Rejected,
+                    -> { }
                 }
-            }
-
-            is MifosPasscodeAction.PasscodeChanged -> {
-                sendEvent(MifosPasscodeEvent.OnPasscodeChanged)
-            }
-
-            is MifosPasscodeAction.DisableBiometrics -> {
-                sendEvent(MifosPasscodeEvent.OnDisableBiometrics)
-            }
-
-            is MifosPasscodeAction.BiometricError -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = PasscodeDialogState.Error(
-                            message = action.message,
-                        ),
-                    )
-                }
-            }
-
-            is MifosPasscodeAction.UserNotRegistered -> {
-                mutableStateFlow.update { it ->
-                    it.copy(
-                        dialogState = PasscodeDialogState.UserNotRegistered(message = action.message),
-                    )
-                }
+                sendEvent(MifosPasscodeEvent.NavigateForResult(action.result))
             }
 
             is MifosPasscodeAction.OnAuthenticatorClick -> {
-                viewModelScope.launch {
-                    val result =
-                        action.systemAuthProvider.onAuthenticatorClick(
-                            appName = "Mifos Pay",
-                            savedRegistrationData = passcodeStorageAdapter.loadRegistrationData() ?: "",
-                        )
-                    handleAuthenticationResult(result)
-                }
+                authenticateWithBiometrics(action.systemAuthProvider)
             }
 
             MifosPasscodeAction.ClickConfirmOnNotRegisteredDialog -> {
-
-                passcodeManager.trySendAction(PasscodeAction.BiometricUserNotRegistered)
+                passcodeManager.setExternalAuthEnabled(false)
+                biometricStorageAdapter.deleteRegistrationData()
+                mutableStateFlow.update {
+                    it.copy(dialogState = null)
+                }
             }
         }
     }
@@ -121,56 +83,60 @@ class MifosPasscodeViewModel(
     private fun handleResume(
         systemAuthProvider: PlatformAuthenticationProvider,
     ) {
+        val biometricsStatus = systemAuthProvider.authenticatorStatus.value
+        if (
+            biometricsStatus.contains(PlatformAuthenticatorStatus.BIOMETRICS_SET) &&
+            passcodeManager.state.value.passcodeStep == PasscodeStep.Enter
+        ) {
+            authenticateWithBiometrics(systemAuthProvider)
+        }
+    }
+
+    private fun authenticateWithBiometrics(
+        systemAuthProvider: PlatformAuthenticationProvider,
+    ) {
         viewModelScope.launch {
-            val biometricsStatus = systemAuthProvider.authenticatorStatus.value
-            if (
-                biometricsStatus.contains(PlatformAuthenticatorStatus.BIOMETRICS_SET) &&
-                state.passcodeState.passcodeStep == PasscodeStep.Enter
-            ) {
-                val result =
-                    biometricStorageAdapter.loadRegistrationData()?.let { data ->
-                        systemAuthProvider.onAuthenticatorClick(
-                            appName = "Mifos Pay",
-                            savedRegistrationData = data,
+            val registrationData = biometricStorageAdapter.loadRegistrationData() ?: return@launch
+            val result = systemAuthProvider.onAuthenticatorClick(
+                appName = "Mifos Pay",
+                savedRegistrationData = registrationData,
+            )
+            when (result) {
+                is AuthenticationResult.Error -> {
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = PasscodeDialogState.Error(result.message),
                         )
                     }
-                handleAuthenticationResult(result)
-            }
-        }
-    }
-
-    private suspend fun handleAuthenticationResult(
-        result: AuthenticationResult?,
-    ) {
-        when (result) {
-            is AuthenticationResult.Error -> {
-                sendAction(MifosPasscodeAction.BiometricError(result.message))
-            }
-
-            AuthenticationResult.Success -> {
-                if(state.passcodeState.passcodeStep == PasscodeStep.Enter) {
-                    passcodeManager.notifyExternalAuthSuccess()
-                    appLockRepository.unlockApp()
                 }
+
+                AuthenticationResult.Success -> {
+                    if (passcodeManager.state.value.passcodeStep == PasscodeStep.Enter) {
+                        passcodeManager.notifyExternalAuthSuccess()
+                        appLockRepository.unlockApp()
+                    }
+                }
+
+                AuthenticationResult.UserNotRegistered -> {
+                    val message = getString(Res.string.feature_authenticator_setup_biometrics_prompt)
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = PasscodeDialogState.UserNotRegistered(
+                                message = message,
+                            ),
+                        )
+                    }
+                }
+
+                AuthenticationResult.UserCancelled -> {}
             }
-
-            AuthenticationResult.UserNotRegistered -> {
-                sendAction(
-                    MifosPasscodeAction.UserNotRegistered("Please setup device lock & biometrics from settings")
-                )
-            }
-
-            AuthenticationResult.UserCancelled -> {}
-
-            null -> {}
         }
     }
+
 }
 
 data class MifosPasscodeState(
-    val passcodeState: PasscodeState,
     val dialogState: PasscodeDialogState? = null,
-    val showBiometricsKeyButton: Boolean = true,
 )
 
 sealed interface PasscodeDialogState {
@@ -187,25 +153,13 @@ sealed interface MifosPasscodeAction {
     ) : MifosPasscodeAction
 
     data object DismissDialog : MifosPasscodeAction
-    data object ForgotPasscode : MifosPasscodeAction
-    data object AuthenticationSuccess : MifosPasscodeAction
-    data object PasscodeCreation : MifosPasscodeAction
-    data object PasscodeRejected : MifosPasscodeAction
-    data object PasscodeChanged : MifosPasscodeAction
-    data object DisableBiometrics : MifosPasscodeAction
-    data class BiometricError(val message: String) : MifosPasscodeAction
-    data class UserNotRegistered(val message: String) : MifosPasscodeAction
-    data object ClickConfirmOnNotRegisteredDialog : MifosPasscodeAction
+    data class HandlePasscodeResult(val result: PasscodeResult) : MifosPasscodeAction
     data class OnAuthenticatorClick(
         val systemAuthProvider: PlatformAuthenticationProvider,
     ) : MifosPasscodeAction
+    data object ClickConfirmOnNotRegisteredDialog : MifosPasscodeAction
 }
 
 sealed interface MifosPasscodeEvent {
-    data object OnAuthenticationSuccess : MifosPasscodeEvent
-    data object OnForgotButton : MifosPasscodeEvent
-    data object OnPasscodeCreation : MifosPasscodeEvent
-    data object OnPasscodeRejected : MifosPasscodeEvent
-    data object OnPasscodeChanged : MifosPasscodeEvent
-    data object OnDisableBiometrics : MifosPasscodeEvent
+    data class NavigateForResult(val result: PasscodeResult) : MifosPasscodeEvent
 }
