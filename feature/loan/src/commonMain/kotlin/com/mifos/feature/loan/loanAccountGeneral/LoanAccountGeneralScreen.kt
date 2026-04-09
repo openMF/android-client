@@ -51,7 +51,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.component.MifosTableRow
-import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
@@ -201,7 +200,7 @@ private fun PerformanceHistoryRow(
     value: String,
     modifier: Modifier = Modifier,
     textStyle: TextStyle = TextStyle(
-        color = AppColors.customWhite,
+        color = KptTheme.colorScheme.onPrimary,
         fontStyle = KptTheme.typography.labelMedium.fontStyle,
     ),
 ) {
