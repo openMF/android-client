@@ -53,15 +53,13 @@ class MifosPasscodeViewModel(
 
             is MifosPasscodeAction.HandlePasscodeResult -> {
                 when (action.result) {
-                    PasscodeResult.Verified,
-                    PasscodeResult.Created,
-                    PasscodeResult.Changed -> {
-                        appLockRepository.unlockApp()
-                    }
+                    PasscodeResult.Verified -> appLockRepository.unlockApp()
                     PasscodeResult.Forgotten -> {
                         appLockRepository.deleteLock()
                         biometricStorageAdapter.deleteRegistrationData()
                     }
+                    PasscodeResult.Created,
+                    PasscodeResult.Changed,
                     PasscodeResult.ExternalAuthDisabled,
                     PasscodeResult.Rejected,
                     -> { }

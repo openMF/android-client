@@ -247,9 +247,9 @@ val RepositoryModule = module {
     singleOf(::ShareAccountRepositoryImpl) bind ShareAccountRepository::class
     singleOf(::FixedDepositRepositoryImpl) bind FixedDepositRepository::class
 
-    singleOf(::AppLockRepositoryImpl).bind<AppLockRepository>()
-    singleOf(::PasscodeStorageAdapterImpl).bind<PasscodeStorageAdapter>()
-    singleOf(::BiometricStorageAdapterImpl).bind<BiometricStorageAdapter>()
+    singleOf(::AppLockRepositoryImpl) bind(AppLockRepository::class)
+    singleOf(::PasscodeStorageAdapterImpl) bind(PasscodeStorageAdapter::class)
+    singleOf(::BiometricStorageAdapterImpl) bind(BiometricStorageAdapter::class)
 
     includes(platformModule)
     single<PlatformDependentDataModule> { getPlatformDataModule }

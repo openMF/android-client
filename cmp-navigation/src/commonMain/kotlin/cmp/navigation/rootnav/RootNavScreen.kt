@@ -21,11 +21,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import cmp.navigation.authenticated.authenticatedGraph
@@ -157,10 +155,12 @@ fun RootNavScreen(
 
         biometricSetupScreen(
             onBiometricsRegistrationSuccess = {
+                appLockRepository.unlockApp()
                 navController.popBackStack()
                 navController.navigateToAuthenticatedGraph(rootNavOptions())
             },
             onSkipBiometricSetup = {
+                appLockRepository.unlockApp()
                 navController.popBackStack()
                 navController.navigateToAuthenticatedGraph(rootNavOptions())
             },
@@ -169,8 +169,8 @@ fun RootNavScreen(
 
     val targetRoute = when (state) {
         RootNavState.Splash -> SplashRoute
-        is RootNavState.UserUnlocked -> RootPasscodeRoute
-        is RootNavState.Auth -> LoginRoute
+        is RootNavState.UserAuthenticated -> RootPasscodeRoute
+        is RootNavState.AuthenticateUser -> LoginRoute
         else -> LoginRoute
     }
 
@@ -195,11 +195,8 @@ fun RootNavScreen(
     LaunchedEffect(state) {
         when (state) {
             RootNavState.Splash -> navController.navigateToSplash(rootNavOptions())
-            RootNavState.Auth -> { navController.navigateToLogin() }
-            RootNavState.UserLocked -> {
-
-            }
-            is RootNavState.UserUnlocked -> {
+            RootNavState.AuthenticateUser -> { navController.navigateToLogin() }
+            RootNavState.UserAuthenticated -> {
                 navController.navigateToRootMifosPasscodeScreen(rootNavOptions())
             }
             else -> {}

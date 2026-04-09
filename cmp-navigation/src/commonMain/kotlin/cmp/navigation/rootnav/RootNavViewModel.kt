@@ -22,7 +22,6 @@ import template.core.base.ui.BaseViewModel
 import org.mifos.authenticator.biometrics.BiometricStorageAdapter
 import org.mifos.authenticator.passcode.PasscodeManager
 import com.mifos.core.data.repository.AppLockRepository
-import kotlin.math.log
 
 class RootNavViewModel(
     private val userDataRepository: UserPreferencesRepository,
@@ -38,27 +37,13 @@ class RootNavViewModel(
             userDataRepository.userData,
             userDataRepository.settingsInfo,
         ) { authState, settingsData ->
+
             RootNavAction.Internal.UserStateUpdateReceive(
                 userData = authState,
                 settingsData = settingsData,
             )
         }.onEach(::handleAction)
             .launchIn(viewModelScope)
-
-        appLockRepository.isAppLocked.onEach {
-            if(it){
-                mutableStateFlow.update { RootNavState.UserLocked }
-            } else  {
-                mutableStateFlow.update { RootNavState.UserUnlocked }
-            }
-        }.launchIn(viewModelScope)
-
-        userDataRepository.userData.onEach {
-            if(
-                it.isAuthenticated &&
-                !passcodeManager.state.value.loadedPasscode.isNullOrBlank()
-            ) { logOut() }
-        }.launchIn(viewModelScope)
     }
 
     override fun handleAction(action: RootNavAction) {
@@ -72,12 +57,19 @@ class RootNavViewModel(
         action: RootNavAction.Internal.UserStateUpdateReceive,
     ) {
         val userData = action.userData
-        val updatedRootNavState = when {
-            !userData.isAuthenticated -> RootNavState.Auth
 
-            else -> RootNavState.UserUnlocked
+        when(userData.isAuthenticated){
+            true -> {
+                if(passcodeManager.state.value.loadedPasscode.isNullOrBlank()) {
+                    logOut()
+                } else {
+                    mutableStateFlow.update { RootNavState.UserAuthenticated }
+                }
+            }
+            false -> {
+                mutableStateFlow.update { RootNavState.AuthenticateUser }
+            }
         }
-        mutableStateFlow.update { updatedRootNavState }
     }
 
     private fun logOut() {
@@ -87,21 +79,19 @@ class RootNavViewModel(
             userDataRepository.logOut()
             appLockRepository.deleteLock()
 
-            mutableStateFlow.update { RootNavState.Auth }
+            mutableStateFlow.update { RootNavState.AuthenticateUser }
         }
     }
 }
 
 sealed class RootNavState {
-    data object Auth : RootNavState()
+    data object AuthenticateUser : RootNavState()
 
     data object SetLanguage : RootNavState()
 
     data object Splash : RootNavState()
 
-    data object UserLocked : RootNavState()
-
-    data object UserUnlocked : RootNavState()
+    data object UserAuthenticated : RootNavState()
 }
 
 sealed interface RootNavAction {
