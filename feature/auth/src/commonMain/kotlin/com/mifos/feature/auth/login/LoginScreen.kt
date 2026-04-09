@@ -71,7 +71,6 @@ import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun LoginScreen(
-    homeIntent: () -> Unit,
     passcodeIntent: () -> Unit,
     onClickToUpdateServerConfig: () -> Unit,
     modifier: Modifier = Modifier,
@@ -118,10 +117,6 @@ internal fun LoginScreen(
             passwordError.value = state.passwordError
         }
 
-        LoginUiState.HomeActivityIntent -> {
-            showDialog.value = false
-            homeIntent()
-        }
 
         LoginUiState.PassCodeActivityIntent -> {
             showDialog.value = false
@@ -254,5 +249,5 @@ internal fun LoginScreen(
 @DevicePreview()
 @Composable
 private fun LoginScreenPreview() {
-    LoginScreen({}, {}, {})
+    LoginScreen({}, {})
 }

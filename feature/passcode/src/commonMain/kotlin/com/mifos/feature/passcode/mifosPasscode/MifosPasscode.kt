@@ -52,7 +52,7 @@ internal object MifosPasscodeCurrentInfo : NavigationEventInfo()
 fun MifosPasscode(
     onAuthenticationSuccess: () -> Unit,
     onBackPress: () -> Unit = {},
-    onForgotButton: () -> Unit = {},
+    navigateToLogin: () -> Unit = {},
     onPasscodeCreation: () -> Unit = {},
     onPasscodeChanged: () -> Unit = {},
     onAuthenticationFailed: () -> Unit = {},
@@ -90,7 +90,7 @@ fun MifosPasscode(
                         PasscodeResult.Verified -> onAuthenticationSuccess()
                         PasscodeResult.Created -> onPasscodeCreation()
                         PasscodeResult.Changed -> onPasscodeChanged()
-                        PasscodeResult.Forgotten -> onForgotButton()
+                        PasscodeResult.Forgotten -> navigateToLogin()
                         PasscodeResult.ExternalAuthDisabled -> onBiometricsDisabled()
                         PasscodeResult.Rejected -> onAuthenticationFailed()
                     }

@@ -45,14 +45,6 @@ class LoginViewModel(
     private val _loginUiState = MutableStateFlow<LoginUiState>(LoginUiState.Empty)
     val loginUiState = _loginUiState.asStateFlow()
 
-    private val passcode: StateFlow<String?> = prefManager.settingsInfo
-        .map { it.passcode }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = null,
-        )
-
     suspend fun validateUserInputs(username: String, password: String) {
         val usernameValidationResult = usernameValidationUseCase(username)
         val passwordValidationResult = passwordValidationUseCase(password)
@@ -111,7 +103,7 @@ class LoginViewModel(
                 User(
                     username = username,
                     password = password,
-                    userId = user.userId!!.toLong(),
+                    userId = user.userId!!,
                     base64EncodedAuthenticationKey = user.base64EncodedAuthenticationKey,
                     isAuthenticated = user.authenticated ?: false,
                     officeId = user.officeId!!,
@@ -121,12 +113,6 @@ class LoginViewModel(
             )
         }
 
-        _loginUiState.value = LoginUiState.HomeActivityIntent
-
-//        if (passcode.value != null) {
-//        TODO() navigate to passcode screen
-//        } else {
-//        TODO() navigate to home screen
-//        }
+        _loginUiState.value = LoginUiState.PassCodeActivityIntent
     }
 }

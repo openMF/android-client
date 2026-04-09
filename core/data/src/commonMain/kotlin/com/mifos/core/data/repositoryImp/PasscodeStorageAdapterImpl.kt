@@ -1,5 +1,6 @@
 package com.mifos.core.data.repositoryImp
 
+import com.mifos.core.datastore.UserPreferencesRepository
 import com.russhwolf.settings.Settings
 import org.mifos.authenticator.passcode.PasscodeStorageAdapter
 
@@ -7,6 +8,7 @@ import org.mifos.authenticator.passcode.PasscodeStorageAdapter
 const val MIFOS_PASSCODE = "com.mifos.passcode"
 
 class PasscodeStorageAdapterImpl(
+    private val userPreferencesRepository: UserPreferencesRepository,
     private val settings: Settings
 ): PasscodeStorageAdapter {
 

@@ -42,48 +42,39 @@ fun NavController.navigateToInternalMifosPasscodeScreen(
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun NavGraphBuilder.rootMifosPasscodeScreen(
-    onForgotButton: () -> Unit,
+    navigateToLogin: () -> Unit,
     onAuthenticationSuccess: () -> Unit,
-    onPasscodeCreation: () -> Unit = {},
+    onPasscodeCreation: () -> Unit,
     onAuthenticationFailed: () -> Unit = {},
-    onPasscodeChanged: () -> Unit = {},
-    onDisableBiometrics: () -> Unit = {},
 ) {
     composableWithStayTransitions<RootPasscodeRoute> {
         MifosPasscode(
-            onForgotButton = onForgotButton,
+            navigateToLogin = navigateToLogin,
             onAuthenticationSuccess = onAuthenticationSuccess,
             onPasscodeCreation = onPasscodeCreation,
             onAuthenticationFailed = onAuthenticationFailed,
-            onPasscodeChanged = onPasscodeChanged,
-            onBiometricsDisabled = onDisableBiometrics,
+            onPasscodeChanged = {},
+            onBiometricsDisabled = {},
         )
     }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun NavGraphBuilder.reAuthMifosPasscodeScreen(
-    onForgotButton: () -> Unit,
+    navigateToLogin: () -> Unit,
     onAuthenticationSuccess: () -> Unit,
-    onAuthenticationFailed: () -> Unit = {},
-    onPasscodeChanged: () -> Unit = {},
-    onDisableBiometrics: () -> Unit = {},
 ) {
     composableWithSlideTransitions<ReAuthPasscodeRoute> {
         MifosPasscode(
-            onForgotButton = onForgotButton,
+            navigateToLogin = navigateToLogin,
             onAuthenticationSuccess = onAuthenticationSuccess,
-            onPasscodeCreation = {},
-            onAuthenticationFailed = onAuthenticationFailed,
-            onPasscodeChanged = onPasscodeChanged,
-            onBiometricsDisabled = onDisableBiometrics,
         )
     }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun NavGraphBuilder.internalMifosPasscodeScreen(
-    onForgotButton: () -> Unit,
+    navigateToLogin: () -> Unit,
     onAuthenticationSuccess: (String?) -> Unit,
     onAuthenticationFailed: (String?) -> Unit = {},
     onPasscodeChanged: () -> Unit = {},
@@ -93,7 +84,7 @@ fun NavGraphBuilder.internalMifosPasscodeScreen(
     composableWithSlideTransitions<InternalPasscodeRoute> { backStackEntry ->
         val verificationKey = backStackEntry.toRoute<InternalPasscodeRoute>().verificationKey
         MifosPasscode(
-            onForgotButton = onForgotButton,
+            navigateToLogin = navigateToLogin,
             onAuthenticationSuccess = { onAuthenticationSuccess(verificationKey) },
             onPasscodeCreation = {},
             onAuthenticationFailed = { onAuthenticationFailed(verificationKey) },
