@@ -60,11 +60,11 @@ import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
+import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldConfig
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.ui.components.MifosCheckBox
-import com.mifos.core.ui.components.MifosErrorComponent
-import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.components.MifosStatusDialog
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.core.ui.components.ResultStatus
@@ -117,7 +117,6 @@ internal fun LoanAccountDisbursementScreenRoute(
 
             LoanAccountDisbursementDialogs(
                 dialogState = state.dialogState,
-                networkConnection = state.networkConnection,
                 onRetry = remember(viewModel) { { viewModel.trySendAction(LoanDisbursementAction.OnRetry) } },
                 onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
             )
@@ -128,20 +127,18 @@ internal fun LoanAccountDisbursementScreenRoute(
 @Composable
 private fun LoanAccountDisbursementDialogs(
     dialogState: LoanDisbursementState.DialogState?,
-    networkConnection: Boolean,
     onRetry: () -> Unit,
     onAction: (LoanDisbursementAction) -> Unit,
 ) {
     when (val dialog = dialogState) {
         is LoanDisbursementState.DialogState.Loading -> {
-            MifosProgressIndicator()
+            MifosProgressIndicatorOverlay()
         }
         is LoanDisbursementState.DialogState.FetchingError -> {
-            MifosErrorComponent(
-                isNetworkConnected = networkConnection,
+            MifosSweetError(
                 message = stringResource(dialog.messageRes),
                 isRetryEnabled = true,
-                onRetry = onRetry,
+                onclick = onRetry,
             )
         }
 
@@ -447,7 +444,6 @@ private class LoanDisbursementPreviewProvider : PreviewParameterProvider<LoanDis
             ),
             LoanDisbursementState(
                 dialogState = LoanDisbursementState.DialogState.FetchingError(Res.string.feature_loan_submission_failed),
-                networkConnection = true,
             ),
         )
 }
@@ -469,7 +465,6 @@ private fun LoanAccountDisbursementScreenPreview(
 
             LoanAccountDisbursementDialogs(
                 dialogState = state.dialogState,
-                networkConnection = state.networkConnection,
                 onRetry = {},
                 onAction = {},
             )

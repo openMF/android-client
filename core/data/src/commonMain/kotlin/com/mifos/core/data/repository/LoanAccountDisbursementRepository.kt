@@ -25,8 +25,8 @@ interface LoanAccountDisbursementRepository {
         command: String?,
     ): Flow<DataState<LoanTransactionTemplate>>
 
-    fun disburseLoan(
+    suspend fun disburseLoan(
         loanId: Int,
         loanDisbursement: LoanDisbursement?,
-    ): Flow<DataState<GenericResponse>>
+    ): DataState<GenericResponse>
 }

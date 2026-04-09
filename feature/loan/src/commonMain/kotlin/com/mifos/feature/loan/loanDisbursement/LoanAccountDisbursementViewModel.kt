@@ -21,7 +21,7 @@ import androidx.navigation.toRoute
 import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountDisbursementRepository
-import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.data.repositoryImp.NetworkUnavailableException
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.ui.util.BackgroundEvent
 import com.mifos.core.ui.util.BaseViewModel
@@ -29,7 +29,6 @@ import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
@@ -38,41 +37,16 @@ import kotlin.time.Clock
 class LoanAccountDisbursementViewModel(
     private val repository: LoanAccountDisbursementRepository,
     savedStateHandle: SavedStateHandle,
-    private val networkMonitor: NetworkMonitor,
 ) : BaseViewModel<LoanDisbursementState, LoanDisbursementEvent, LoanDisbursementAction>(
     initialState = LoanDisbursementState(),
 ) {
 
     private val route = savedStateHandle.toRoute<LoanDisbursementRoute>()
     val loanId = route.loanId
-
     private var loadJob: Job? = null
 
     init {
-        observeNetworkAndLoad()
-    }
-
-    private fun observeNetworkAndLoad() {
-        viewModelScope.launch {
-            networkMonitor.isOnline
-                .distinctUntilChanged()
-                .collect { isConnected ->
-                    mutableStateFlow.update { it.copy(networkConnection = isConnected) }
-                    if (isConnected) {
-                        if (mutableStateFlow.value.template == null) {
-                            loadLoanTemplate()
-                        }
-                    } else if (mutableStateFlow.value.template == null) {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = LoanDisbursementState.DialogState.FetchingError(
-                                    Res.string.feature_loan_profile_error_network_not_available,
-                                ),
-                            )
-                        }
-                    }
-                }
-        }
+        fetchDisbursementTemplate()
     }
 
     override fun handleAction(action: LoanDisbursementAction) {
@@ -80,19 +54,7 @@ class LoanAccountDisbursementViewModel(
             LoanDisbursementAction.DismissDialog -> mutableStateFlow.update {
                 it.copy(dialogState = null)
             }
-            LoanDisbursementAction.OnRetry -> {
-                if (stateFlow.value.networkConnection) {
-                    loadLoanTemplate()
-                } else {
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = LoanDisbursementState.DialogState.FetchingError(
-                                Res.string.feature_loan_profile_error_network_not_available,
-                            ),
-                        )
-                    }
-                }
-            }
+            LoanDisbursementAction.OnRetry -> fetchDisbursementTemplate()
 
             LoanDisbursementAction.Submit -> validateAndSubmit()
 
@@ -136,7 +98,7 @@ class LoanAccountDisbursementViewModel(
         }
     }
 
-    private fun loadLoanTemplate() {
+    private fun fetchDisbursementTemplate() {
         loadJob?.cancel()
         loadJob = viewModelScope.launch {
             repository.getLoanTransactionTemplate(loanId, APIEndPoint.DISBURSE).collect { result ->
@@ -161,12 +123,19 @@ class LoanAccountDisbursementViewModel(
                             )
                         }
                     }
-                    is DataState.Error -> mutableStateFlow.update {
-                        it.copy(
-                            dialogState = LoanDisbursementState.DialogState.FetchingError(
-                                Res.string.feature_loan_profile_failed_to_load_loan,
-                            ),
-                        )
+                    is DataState.Error -> {
+                        val isNetworkError = result.exception is NetworkUnavailableException
+                        mutableStateFlow.update {
+                            it.copy(
+                                dialogState = LoanDisbursementState.DialogState.FetchingError(
+                                    if (isNetworkError) {
+                                        Res.string.feature_loan_profile_error_network_not_available
+                                    } else {
+                                        Res.string.feature_loan_profile_failed_to_load_loan
+                                    },
+                                ),
+                            )
+                        }
                     }
                 }
             }
@@ -207,28 +176,25 @@ class LoanAccountDisbursementViewModel(
 
     private fun submitDisbursement(loanDisbursement: LoanDisbursement) {
         viewModelScope.launch {
-            repository.disburseLoan(loanId, loanDisbursement).collect { result ->
-                when (result) {
-                    is DataState.Loading ->
-                        mutableStateFlow.update {
-                            it.copy(dialogState = LoanDisbursementState.DialogState.Loading)
-                        }
+            mutableStateFlow.update { it.copy(dialogState = LoanDisbursementState.DialogState.Loading) }
 
-                    is DataState.Success -> {
-                        mutableStateFlow.update { it.copy(dialogState = null) }
-                        sendEvent(LoanDisbursementEvent.NavigateToLoanProfile(loanId))
-                    }
+            val result = repository.disburseLoan(loanId, loanDisbursement)
 
-                    is DataState.Error -> mutableStateFlow.update {
-                        val backendErrorMsg = result.exception.message
-                        it.copy(
-                            dialogState = LoanDisbursementState.DialogState.ActionError(
-                                messageRes = if (backendErrorMsg.isNullOrBlank()) Res.string.feature_loan_submission_failed else null,
-                                backendMessage = backendErrorMsg,
-                            ),
-                        )
-                    }
+            when (result) {
+                is DataState.Success -> {
+                    mutableStateFlow.update { it.copy(dialogState = null) }
+                    sendEvent(LoanDisbursementEvent.NavigateToLoanProfile(loanId))
                 }
+                is DataState.Error -> mutableStateFlow.update {
+                    val backendErrorMsg = result.exception.message
+                    it.copy(
+                        dialogState = LoanDisbursementState.DialogState.ActionError(
+                            messageRes = if (backendErrorMsg.isNullOrBlank()) Res.string.feature_loan_submission_failed else null,
+                            backendMessage = backendErrorMsg,
+                        ),
+                    )
+                }
+                else -> Unit
             }
         }
     }
@@ -237,7 +203,6 @@ class LoanAccountDisbursementViewModel(
 data class LoanDisbursementState(
     val template: LoanTransactionTemplate? = null,
     val dialogState: DialogState? = null,
-    val networkConnection: Boolean = false,
     val showDatePickerDialog: Boolean = false,
 
     val disbursementDate: Long = Clock.System.now().toEpochMilliseconds(),
