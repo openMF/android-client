@@ -60,6 +60,10 @@ kotlin {
             implementation(libs.window.size)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
+
+            implementation(libs.mifos.authenticator.passcode)
+            implementation(libs.mifos.authenticator.biometrics)
+            implementation(libs.jb.navigationevent)
         }
         androidMain.dependencies {
             implementation(libs.androidx.core.ktx)
