@@ -112,6 +112,7 @@ internal class LoanAccountGeneralViewModel(
         val currencyCode = loan.currency?.code
         val maxDigits = loan.currency?.decimalPlaces
         val summary = loan.summary
+        fun formatAmount(value: Double?) = CurrencyFormatter.format(value, currencyCode, maxDigits)
 
         val expectedMaturityDate = loan.timeline?.expectedMaturityDate
         val maturityDate = if (!expectedMaturityDate.isNullOrEmpty()) {
@@ -140,9 +141,9 @@ internal class LoanAccountGeneralViewModel(
         val externalId = loan.accountNo?.takeIf { it.isNotBlank() }
             ?: getString(Res.string.feature_loan_general_value_not_available)
 
-        val proposedAmountValue = CurrencyFormatter.format(loan.proposedPrincipal, currencyCode, maxDigits)
-        val approvedAmountValue = CurrencyFormatter.format(loan.approvedPrincipal, currencyCode, maxDigits)
-        val disbursedAmountValue = CurrencyFormatter.format(loan.principal, currencyCode, maxDigits)
+        val proposedAmountValue = formatAmount(loan.proposedPrincipal)
+        val approvedAmountValue = formatAmount(loan.approvedPrincipal)
+        val disbursedAmountValue = formatAmount(loan.principal)
 
         mutableStateFlow.update {
             it.copy(
@@ -198,47 +199,47 @@ internal class LoanAccountGeneralViewModel(
                 summaryRows = listOf(
                     LoanAccountGeneralState.SummaryRowState(
                         component = getString(Res.string.feature_loan_general_summary_row_principal),
-                        original = CurrencyFormatter.format(summary?.principalDisbursed, currencyCode, maxDigits),
-                        paid = CurrencyFormatter.format(summary?.principalPaid, currencyCode, maxDigits),
-                        waived = CurrencyFormatter.format(summary?.principalWaived, currencyCode, maxDigits),
-                        writtenOff = CurrencyFormatter.format(summary?.principalWrittenOff, currencyCode, maxDigits),
-                        outstanding = CurrencyFormatter.format(summary?.principalOutstanding, currencyCode, maxDigits),
-                        overDue = CurrencyFormatter.format(summary?.principalOverdue, currencyCode, maxDigits),
+                        original = formatAmount(summary?.principalDisbursed),
+                        paid = formatAmount(summary?.principalPaid),
+                        waived = formatAmount(summary?.principalWaived),
+                        writtenOff = formatAmount(summary?.principalWrittenOff),
+                        outstanding = formatAmount(summary?.principalOutstanding),
+                        overDue = formatAmount(summary?.principalOverdue),
                     ),
                     LoanAccountGeneralState.SummaryRowState(
                         component = getString(Res.string.feature_loan_general_summary_row_interest),
-                        original = CurrencyFormatter.format(summary?.interestCharged, currencyCode, maxDigits),
-                        paid = CurrencyFormatter.format(summary?.interestPaid, currencyCode, maxDigits),
-                        waived = CurrencyFormatter.format(summary?.interestWaived, currencyCode, maxDigits),
-                        writtenOff = CurrencyFormatter.format(summary?.interestWrittenOff, currencyCode, maxDigits),
-                        outstanding = CurrencyFormatter.format(summary?.interestOutstanding, currencyCode, maxDigits),
-                        overDue = CurrencyFormatter.format(summary?.interestOverdue, currencyCode, maxDigits),
+                        original = formatAmount(summary?.interestCharged),
+                        paid = formatAmount(summary?.interestPaid),
+                        waived = formatAmount(summary?.interestWaived),
+                        writtenOff = formatAmount(summary?.interestWrittenOff),
+                        outstanding = formatAmount(summary?.interestOutstanding),
+                        overDue = formatAmount(summary?.interestOverdue),
                     ),
                     LoanAccountGeneralState.SummaryRowState(
                         component = getString(Res.string.feature_loan_general_summary_row_fees),
-                        original = CurrencyFormatter.format(summary?.feeChargesCharged, currencyCode, maxDigits),
-                        paid = CurrencyFormatter.format(summary?.feeChargesPaid, currencyCode, maxDigits),
-                        waived = CurrencyFormatter.format(summary?.feeChargesWaived, currencyCode, maxDigits),
-                        writtenOff = CurrencyFormatter.format(summary?.feeChargesWrittenOff, currencyCode, maxDigits),
-                        outstanding = CurrencyFormatter.format(summary?.feeChargesOutstanding, currencyCode, maxDigits),
-                        overDue = CurrencyFormatter.format(summary?.feeChargesOverdue, currencyCode, maxDigits),
+                        original = formatAmount(summary?.feeChargesCharged),
+                        paid = formatAmount(summary?.feeChargesPaid),
+                        waived = formatAmount(summary?.feeChargesWaived),
+                        writtenOff = formatAmount(summary?.feeChargesWrittenOff),
+                        outstanding = formatAmount(summary?.feeChargesOutstanding),
+                        overDue = formatAmount(summary?.feeChargesOverdue),
                     ),
                     LoanAccountGeneralState.SummaryRowState(
                         component = getString(Res.string.feature_loan_general_summary_row_penalties),
-                        original = CurrencyFormatter.format(summary?.penaltyChargesCharged, currencyCode, maxDigits),
-                        paid = CurrencyFormatter.format(summary?.penaltyChargesPaid, currencyCode, maxDigits),
-                        waived = CurrencyFormatter.format(summary?.penaltyChargesWaived, currencyCode, maxDigits),
-                        writtenOff = CurrencyFormatter.format(summary?.penaltyChargesWrittenOff, currencyCode, maxDigits),
-                        outstanding = CurrencyFormatter.format(summary?.penaltyChargesOutstanding, currencyCode, maxDigits),
-                        overDue = CurrencyFormatter.format(summary?.penaltyChargesOverdue, currencyCode, maxDigits),
+                        original = formatAmount(summary?.penaltyChargesCharged),
+                        paid = formatAmount(summary?.penaltyChargesPaid),
+                        waived = formatAmount(summary?.penaltyChargesWaived),
+                        writtenOff = formatAmount(summary?.penaltyChargesWrittenOff),
+                        outstanding = formatAmount(summary?.penaltyChargesOutstanding),
+                        overDue = formatAmount(summary?.penaltyChargesOverdue),
                     ),
                 ),
-                totalOriginal = CurrencyFormatter.format(summary?.totalExpectedRepayment, currencyCode, maxDigits),
-                totalPaid = CurrencyFormatter.format(summary?.totalRepayment, currencyCode, maxDigits),
-                totalWaived = CurrencyFormatter.format(summary?.totalWaived, currencyCode, maxDigits),
-                totalWrittenOff = CurrencyFormatter.format(summary?.totalWrittenOff, currencyCode, maxDigits),
-                totalOutstanding = CurrencyFormatter.format(summary?.totalOutstanding, currencyCode, maxDigits),
-                totalOverDue = CurrencyFormatter.format(summary?.totalOverdue, currencyCode, maxDigits),
+                totalOriginal = formatAmount(summary?.totalExpectedRepayment),
+                totalPaid = formatAmount(summary?.totalRepayment),
+                totalWaived = formatAmount(summary?.totalWaived),
+                totalWrittenOff = formatAmount(summary?.totalWrittenOff),
+                totalOutstanding = formatAmount(summary?.totalOutstanding),
+                totalOverDue = formatAmount(summary?.totalOverdue),
             )
         }
     }
