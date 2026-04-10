@@ -43,6 +43,7 @@ data class LoanWithAssociations(
     val currency: SavingAccountCurrency? = null,
     val principal: Double? = null,
     val approvedPrincipal: Double? = null,
+    val proposedPrincipal: Double? = null,
     val termFrequency: Int? = null,
     val termPeriodFrequencyType: TermPeriodFrequencyType? = null,
     val numberOfRepayments: Int? = null,

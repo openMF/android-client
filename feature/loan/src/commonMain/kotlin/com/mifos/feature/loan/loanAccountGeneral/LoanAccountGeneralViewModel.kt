@@ -140,6 +140,10 @@ internal class LoanAccountGeneralViewModel(
         val externalId = loan.accountNo?.takeIf { it.isNotBlank() }
             ?: getString(Res.string.feature_loan_general_value_not_available)
 
+        val proposedAmountValue = CurrencyFormatter.format(loan.proposedPrincipal, currencyCode, maxDigits)
+        val approvedAmountValue = CurrencyFormatter.format(loan.approvedPrincipal, currencyCode, maxDigits)
+        val disbursedAmountValue = CurrencyFormatter.format(loan.principal, currencyCode, maxDigits)
+
         mutableStateFlow.update {
             it.copy(
                 dialogState = null,
@@ -150,9 +154,9 @@ internal class LoanAccountGeneralViewModel(
                 currency = currencyDisplay,
                 loanPurpose = loanPurpose,
                 externalId = externalId,
-                proposedAmount = CurrencyFormatter.format(loan.approvedPrincipal, currencyCode, maxDigits),
-                approvedAmount = CurrencyFormatter.format(loan.approvedPrincipal, currencyCode, maxDigits),
-                disbursedAmount = CurrencyFormatter.format(loan.principal, currencyCode, maxDigits),
+                proposedAmount = proposedAmountValue,
+                approvedAmount = approvedAmountValue,
+                disbursedAmount = disbursedAmountValue,
                 details = listOf(
                     mapOf(
                         Res.string.feature_loan_general_detail_disbursement_date to disbursementDate,
@@ -161,9 +165,9 @@ internal class LoanAccountGeneralViewModel(
                         Res.string.feature_loan_general_detail_currency to currencyDisplay,
                     ),
                     mapOf(
-                        Res.string.feature_loan_general_detail_proposed_amount to CurrencyFormatter.format(loan.approvedPrincipal, currencyCode, maxDigits),
-                        Res.string.feature_loan_general_detail_approved_amount to CurrencyFormatter.format(loan.approvedPrincipal, currencyCode, maxDigits),
-                        Res.string.feature_loan_general_detail_disbursed_amount to CurrencyFormatter.format(loan.principal, currencyCode, maxDigits),
+                        Res.string.feature_loan_general_detail_proposed_amount to proposedAmountValue,
+                        Res.string.feature_loan_general_detail_approved_amount to approvedAmountValue,
+                        Res.string.feature_loan_general_detail_disbursed_amount to disbursedAmountValue,
                     ),
                 ),
                 summaryRows = listOf(

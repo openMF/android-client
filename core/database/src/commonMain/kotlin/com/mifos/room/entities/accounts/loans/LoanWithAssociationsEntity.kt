@@ -129,6 +129,8 @@ data class LoanWithAssociationsEntity(
 
     val approvedPrincipal: Double = 0.0,
 
+    val proposedPrincipal: Double = 0.0,
+
     val termFrequency: Int = 0,
 
     @IgnoredOnParcel

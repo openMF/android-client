@@ -48,6 +48,7 @@ object LoanAccountGeneralMapper : AbstractMapper<LoanWithAssociationsEntity, Loa
             currency = entity.currency.toModel(),
             principal = entity.principal,
             approvedPrincipal = entity.approvedPrincipal,
+            proposedPrincipal = entity.proposedPrincipal,
             termFrequency = entity.termFrequency,
             termPeriodFrequencyType = entity.termPeriodFrequencyType,
             numberOfRepayments = entity.numberOfRepayments,
