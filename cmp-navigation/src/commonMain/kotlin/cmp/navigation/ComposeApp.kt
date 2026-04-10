@@ -19,6 +19,7 @@ import com.mifos.core.datastore.model.DarkThemeConfig
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.ui.util.EventsEffect
 import org.koin.compose.viewmodel.koinViewModel
+import org.mifos.authenticator.biometrics.PlatformAuthenticatorLocalCompositionProvider
 
 @Composable
 fun ComposeApp(
@@ -44,14 +45,17 @@ fun ComposeApp(
         DarkThemeConfig.FOLLOW_SYSTEM -> isSystemInDarkTheme()
     }
 
-    MifosTheme(
-        darkTheme = darkTheme,
-        androidTheme = uiState.isAndroidTheme,
-        shouldDisplayDynamicTheming = uiState.isDynamicColorsEnabled,
-    ) {
-        RootNavScreen(
-            modifier = modifier,
-            onSplashScreenRemoved = onSplashScreenRemoved,
-        )
+    PlatformAuthenticatorLocalCompositionProvider {
+        MifosTheme(
+            darkTheme = darkTheme,
+            androidTheme = uiState.isAndroidTheme,
+            shouldDisplayDynamicTheming = uiState.isDynamicColorsEnabled,
+        ) {
+            RootNavScreen(
+                modifier = modifier,
+                onSplashScreenRemoved = onSplashScreenRemoved,
+            )
+        }
     }
+
 }

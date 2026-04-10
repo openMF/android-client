@@ -18,16 +18,19 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import template.core.base.ui.BaseViewModel
 import org.mifos.authenticator.biometrics.BiometricStorageAdapter
 import org.mifos.authenticator.passcode.PasscodeManager
 import com.mifos.core.data.repository.AppLockRepository
+import com.mifos.core.ui.util.BaseViewModel
+import org.mifos.authenticator.passcode.PasscodeStorageAdapter
+
 
 class RootNavViewModel(
     private val userDataRepository: UserPreferencesRepository,
     private val appLockRepository: AppLockRepository,
     private val passcodeManager: PasscodeManager,
     private val biometricStorageAdapter: BiometricStorageAdapter,
+    private val passcodeStorageAdapter: PasscodeStorageAdapter,
 ) : BaseViewModel<RootNavState, Unit, RootNavAction>(
     initialState = RootNavState.Splash,
 ) {
@@ -60,7 +63,7 @@ class RootNavViewModel(
 
         when(userData.isAuthenticated){
             true -> {
-                if(passcodeManager.state.value.loadedPasscode.isNullOrBlank()) {
+                if(passcodeStorageAdapter.loadPasscode().isNullOrBlank()) {
                     logOut()
                 } else {
                     mutableStateFlow.update { RootNavState.UserAuthenticated }

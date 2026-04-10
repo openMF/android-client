@@ -13,8 +13,16 @@ import com.mifos.feature.passcode.biometricsSetup.BiometricSetupScreenViewmodel
 import com.mifos.feature.passcode.mifosPasscode.MifosPasscodeViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
+import org.mifos.authenticator.biometrics.BiometricStorageAdapter
+import org.mifos.authenticator.passcode.PasscodeManager
+import org.mifos.authenticator.passcode.PasscodeStorageAdapter
 
 val MifosAuthenticatorModule = module {
+    single {
+        val isBiometricsEnabled = !get<BiometricStorageAdapter>().loadRegistrationData().isNullOrBlank()
+
+        PasscodeManager(get<PasscodeStorageAdapter>(), isBiometricsEnabled)
+    }
     viewModelOf(::BiometricSetupScreenViewmodel)
     viewModelOf(::MifosPasscodeViewModel)
 }
