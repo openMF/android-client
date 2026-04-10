@@ -94,7 +94,6 @@ fun RootNavScreen(
             RootNavState.UserAuthenticated -> {
                 navController.navigateToRootMifosPasscodeScreen(rootNavOptions())
             }
-            else -> {}
         }
     }
 

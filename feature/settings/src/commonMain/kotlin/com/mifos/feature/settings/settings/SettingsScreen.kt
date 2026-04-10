@@ -54,15 +54,18 @@ import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
+import org.mifos.authenticator.passcode.PasscodeManager
 import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun SettingsScreen(
     onBackPressed: () -> Unit,
     navigateToLoginScreen: () -> Unit,
-    changePasscode: (String) -> Unit,
+    changePasscode: () -> Unit,
     onClickUpdateConfig: () -> Unit,
+    passcodeManager: PasscodeManager = koinInject(),
     viewModel: SettingsViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -70,7 +73,10 @@ internal fun SettingsScreen(
     SettingsScreen(
         onBackPressed = onBackPressed,
         state = uiState,
-        changePasscode = { changePasscode(uiState.passcode) },
+        changePasscode = {
+            passcodeManager.changePasscode()
+            changePasscode()
+        },
         handleEndpointUpdate = { baseURL, tenant ->
             if (viewModel.tryUpdatingEndpoint(selectedBaseUrl = baseURL, selectedTenant = tenant)) {
                 navigateToLoginScreen()
@@ -97,6 +103,8 @@ internal fun SettingsScreen(
     onBackPressed: () -> Unit,
     onClickUpdateConfig: () -> Unit,
     changePasscode: () -> Unit,
+    onEnableBiometrics:() -> Unit,
+    onDisableBiometrics:() -> Unit,
     handleEndpointUpdate: (baseURL: String, tenant: String) -> Unit,
     updateTheme: (theme: AppTheme) -> Unit,
     updateLanguage: (language: MifosAppLanguage) -> Unit,
@@ -106,6 +114,8 @@ internal fun SettingsScreen(
     var showThemeUpdateDialog by rememberSaveable { mutableStateOf(false) }
     var showSyncSurveyDialog by rememberSaveable { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
+
+
 
     MifosScaffold(
         onBackPressed = onBackPressed,
@@ -125,6 +135,10 @@ internal fun SettingsScreen(
                         SettingsCardItem.THEME -> showThemeUpdateDialog = true
 
                         SettingsCardItem.PASSCODE -> changePasscode()
+
+                        SettingsCardItem.BIOMETRICS -> {
+
+                        }
 
                         SettingsCardItem.ENDPOINT -> showEndpointUpdateDialog = true
 

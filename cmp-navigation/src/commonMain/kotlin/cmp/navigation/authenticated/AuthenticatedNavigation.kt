@@ -27,6 +27,7 @@ import com.mifos.feature.loan.groupLoanAccount.groupLoanScreen
 import com.mifos.feature.loan.loanAccount.addLoanAccountScreen
 import com.mifos.feature.offline.navigation.offlineNavGraph
 import com.mifos.feature.passcode.mifosPasscode.internalMifosPasscodeScreen
+import com.mifos.feature.passcode.mifosPasscode.navigateToInternalMifosPasscodeScreen
 import com.mifos.feature.path.tracking.navigation.pathTrackingRoute
 import com.mifos.feature.report.navigation.reportNavGraph
 import com.mifos.feature.settings.navigation.navigateToServerConfigGraph
@@ -120,7 +121,7 @@ internal fun NavGraphBuilder.authenticatedGraph(
         settingsScreen(
             navigateBack = navController::popBackStack,
             navigateToLoginScreen = {},
-            changePasscode = {},
+            changePasscode = navController::navigateToInternalMifosPasscodeScreen,
             onClickUpdateConfig = {
                 navController.navigateToServerConfigGraph()
             },

@@ -26,7 +26,7 @@ fun NavController.navigateToSettingsScreen() {
 fun NavGraphBuilder.settingsScreen(
     navigateBack: () -> Unit,
     navigateToLoginScreen: () -> Unit,
-    changePasscode: (String) -> Unit,
+    changePasscode: () -> Unit,
     onClickUpdateConfig: () -> Unit,
 ) {
     composable<SettingsRoute> {

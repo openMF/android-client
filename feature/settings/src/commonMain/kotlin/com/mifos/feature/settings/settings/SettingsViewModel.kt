@@ -12,6 +12,8 @@ package com.mifos.feature.settings.settings
 import androidclient.feature.settings.generated.resources.Res
 import androidclient.feature.settings.generated.resources.feature_settings_change_passcode
 import androidclient.feature.settings.generated.resources.feature_settings_change_passcode_desc
+import androidclient.feature.settings.generated.resources.feature_settings_enable_disable_biometrics
+import androidclient.feature.settings.generated.resources.feature_settings_enable_disable_biometrics_desc
 import androidclient.feature.settings.generated.resources.feature_settings_instance_url
 import androidclient.feature.settings.generated.resources.feature_settings_instance_url_desc
 import androidclient.feature.settings.generated.resources.feature_settings_language
@@ -23,14 +25,17 @@ import androidclient.feature.settings.generated.resources.feature_settings_sync_
 import androidclient.feature.settings.generated.resources.feature_settings_theme
 import androidclient.feature.settings.generated.resources.feature_settings_theme_desc
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.enums.MifosAppLanguage
+import com.mifos.core.data.repository.UserVerificationRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.datastore.model.AppTheme
 import com.mifos.core.datastore.model.DarkThemeConfig
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.LanguageConfig
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
@@ -38,9 +43,19 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.getString
+import org.mifos.authenticator.biometrics.platformAuthenticator.PlatformAuthenticationProvider
+import org.mifos.authenticator.biometrics.platformAuthenticator.RegistrationResult
+import org.mifos.authenticator.passcode.PasscodeManager
+
+
+const val DISABLE_BIOMETRICS_VERIFICATION_KEY = "com.mifos.authentication.verification.key"
 
 class SettingsViewModel(
     private val prefManager: UserPreferencesRepository,
+    private val passcodeManager: PasscodeManager,
+    private val userVerificationRepository: UserVerificationRepository,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     val uiState: StateFlow<SettingsUiState> = prefManager
@@ -60,6 +75,10 @@ class SettingsViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, SettingsUiState.DEFAULT)
 
+    val authenticationSuccess: MutableStateFlow<Boolean?> =
+        savedStateHandle.getMutableStateFlow(DISABLE_BIOMETRICS_VERIFICATION_KEY, null)
+
+
     fun updateTheme(theme: AppTheme) {
         viewModelScope.launch {
             prefManager.updateTheme(
@@ -69,6 +88,78 @@ class SettingsViewModel(
                     AppTheme.SYSTEM -> DarkThemeConfig.FOLLOW_SYSTEM
                 },
             )
+        }
+    }
+
+    private fun handlePasscodeVerification() {
+        viewModelScope.launch {
+            authenticationSuccess.collect { result ->
+                when (result) {
+                    true -> {
+                        if (userVerificationRepository.consumeVerification()) {
+                            passcodeManager.trySendAction(PasscodeAction.DeleteBiometricRegistration)
+                            mutableStateFlow.update {
+                                it.copy(
+                                    isBiometricsRegistered = false,
+                                )
+                            }
+                        }
+                        savedStateHandle.remove<Boolean?>(DISABLE_BIOMETRICS_VERIFICATION_KEY)
+                        authenticationSuccess.value = null
+                    }
+                    false -> {
+                        mutableStateFlow.update {
+                            it.copy(isBiometricsRegistered = true)
+                        }
+                        savedStateHandle.remove<Boolean?>(DISABLE_BIOMETRICS_VERIFICATION_KEY)
+                        authenticationSuccess.value = null
+                    }
+                    null -> {}
+                }
+            }
+        }
+    }
+
+    private fun handleBiometricsAuthRegistration(
+        systemAuthProvider: PlatformAuthenticationProvider,
+    ) {
+        viewModelScope.launch {
+            val result = systemAuthProvider.registerUser(
+                userName = mutableStateFlow.value.client.id.toString(),
+                emailId = mutableStateFlow.value.client.emailAddress,
+                displayName = mutableStateFlow.value.client.displayName,
+            )
+
+            when (result) {
+                is RegistrationResult.Success -> {
+                    passcodeManager.trySendAction(PasscodeAction.SaveBiometricRegistration(result.message))
+                }
+                RegistrationResult.PlatformAuthenticatorNotSet -> {
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = DialogState.Error(
+                                message = getString(Res.string.feature_settings_biometrics_not_set),
+                            ),
+                        )
+                    }
+                }
+                RegistrationResult.PlatformAuthenticatorNotAvailable -> {
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = DialogState.Error(
+                                message = getString(Res.string.feature_settings_biometrics_not_available),
+                            ),
+                        )
+                    }
+                }
+                is RegistrationResult.Error -> {
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = DialogState.Error(message = result.message),
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -117,6 +208,11 @@ enum class SettingsCardItem(
         title = Res.string.feature_settings_change_passcode,
         details = Res.string.feature_settings_change_passcode_desc,
         icon = MifosIcons.Password,
+    ),
+    BIOMETRICS(
+        title = Res.string.feature_settings_enable_disable_biometrics,
+        details = Res.string.feature_settings_enable_disable_biometrics_desc,
+        icon = MifosIcons.Fingerprint,
     ),
     ENDPOINT(
         title = Res.string.feature_settings_instance_url,
