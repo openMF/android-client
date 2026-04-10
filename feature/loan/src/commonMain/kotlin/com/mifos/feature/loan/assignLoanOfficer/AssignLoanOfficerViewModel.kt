@@ -14,9 +14,9 @@ package com.mifos.feature.loan.assignLoanOfficer
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_assign_loan_officer_no_officers
 import androidclient.feature.loan.generated.resources.feature_loan_assign_loan_officer_same_officer
+import androidclient.feature.loan.generated.resources.feature_loan_assign_loan_officer_success
 import androidclient.feature.loan.generated.resources.feature_loan_failed_to_load_loan
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
@@ -24,12 +24,10 @@ import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.core.model.objects.account.loan.AssignLoanOfficerRequest
 import com.mifos.core.model.utils.DateConstants
+import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import kotlin.time.Clock
@@ -38,53 +36,58 @@ import kotlin.time.ExperimentalTime
 internal class AssignLoanOfficerViewModel(
     savedStateHandle: SavedStateHandle,
     private val repository: LoanAccountSummaryRepository,
-) : ViewModel() {
+) : BaseViewModel<AssignLoanOfficerUiState, AssignLoanOfficerEffect, AssignLoanOfficerAction>(
+    initialState = AssignLoanOfficerUiState.Loading,
+) {
 
     private val route = savedStateHandle.toRoute<AssignLoanOfficerRoute>()
     private val loanId: Int = route.loanId
 
-    private val _uiState = MutableStateFlow(
-        AssignLoanOfficerUiState(
-            assignmentDateMillis = Clock.System.now().toEpochMilliseconds(),
-        ),
-    )
-    val uiState: StateFlow<AssignLoanOfficerUiState> = _uiState.asStateFlow()
+    val uiState: StateFlow<AssignLoanOfficerUiState> = stateFlow
+    val effects = eventFlow
 
     private var officersLoadJob: Job? = null
     private var officersLoadStarted: Boolean = false
 
     init {
+        trySendAction(AssignLoanOfficerAction.LoadLoan)
+    }
+
+    override fun handleAction(action: AssignLoanOfficerAction) {
+        when (action) {
+            AssignLoanOfficerAction.LoadLoan -> loadLoan()
+            is AssignLoanOfficerAction.LoadOfficers -> {
+                officersLoadJob = viewModelScope.launch { loadOfficers(action.officeId) }
+            }
+            is AssignLoanOfficerAction.SelectOfficer -> {
+                updateContent { it.copy(selectedOfficerIndex = action.index, officerShowError = false) }
+            }
+            is AssignLoanOfficerAction.UpdateAssignmentDate -> {
+                updateContent { it.copy(assignmentDateMillis = action.millis) }
+            }
+            AssignLoanOfficerAction.Submit -> submitInternal()
+        }
+    }
+
+    private fun loadLoan() {
         viewModelScope.launch {
-            repository.getLoanById(loanId).collect { dataState ->
+            repository.getLoanForAssignOfficer(loanId).collect { dataState ->
                 when (dataState) {
-                    is DataState.Loading -> {
-                        _uiState.update { it.copy(isLoading = true, loadError = null) }
-                    }
-                    is DataState.Error -> {
-                        _uiState.update {
-                            it.copy(
-                                isLoading = false,
-                                loadError = dataState.message,
-                            )
-                        }
-                    }
+                    is DataState.Loading -> mutableStateFlow.value = AssignLoanOfficerUiState.Loading
+                    is DataState.Error -> showLoadError(dataState.message)
                     is DataState.Success -> {
                         val loan = dataState.data
                         if (loan == null) {
-                            _uiState.update {
-                                it.copy(
-                                    isLoading = false,
-                                    loadError = getString(Res.string.feature_loan_failed_to_load_loan),
-                                )
-                            }
-                        } else {
-                            _uiState.update { it.copy(loan = loan) }
-                            if (!officersLoadStarted) {
-                                officersLoadStarted = true
-                                officersLoadJob = viewModelScope.launch {
-                                    loadOfficers(loan.clientOfficeId)
-                                }
-                            }
+                            showLoadError(getString(Res.string.feature_loan_failed_to_load_loan))
+                            return@collect
+                        }
+                        mutableStateFlow.value = AssignLoanOfficerUiState.Content(
+                            loan = loan,
+                            assignmentDateMillis = Clock.System.now().toEpochMilliseconds(),
+                        )
+                        if (!officersLoadStarted) {
+                            officersLoadStarted = true
+                            trySendAction(AssignLoanOfficerAction.LoadOfficers(loan.clientOfficeId))
                         }
                     }
                 }
@@ -94,126 +97,105 @@ internal class AssignLoanOfficerViewModel(
 
     private suspend fun loadOfficers(officeId: Int) {
         try {
-            repository.getLoanOfficersForOffice(officeId).collect { dataState ->
+            repository.getLoanOfficerStaffOptions(officeId).collect { dataState ->
                 when (dataState) {
                     is DataState.Loading -> Unit
-                    is DataState.Error -> {
-                        _uiState.update {
-                            it.copy(
-                                isLoading = false,
-                                loadError = dataState.message,
-                            )
-                        }
-                    }
+                    is DataState.Error -> showLoadError(dataState.message)
                     is DataState.Success -> {
                         val officers = dataState.data
-                        _uiState.update {
-                            it.copy(
-                                officers = officers,
-                                selectedOfficerIndex = if (officers.isEmpty()) -1 else it.selectedOfficerIndex,
-                                isLoading = false,
-                                loadError = if (officers.isEmpty()) {
-                                    getString(Res.string.feature_loan_assign_loan_officer_no_officers)
-                                } else {
-                                    null
-                                },
-                            )
+                        if (officers.isEmpty()) {
+                            showLoadError(getString(Res.string.feature_loan_assign_loan_officer_no_officers))
+                        } else {
+                            updateContent { current ->
+                                current.copy(
+                                    officers = officers,
+                                    selectedOfficerIndex = current.selectedOfficerIndex.takeIf { it in officers.indices } ?: -1,
+                                )
+                            }
                         }
                     }
                 }
             }
         } catch (throwable: Throwable) {
             if (throwable is CancellationException) throw throwable
-            _uiState.update {
-                it.copy(
-                    isLoading = false,
-                    loadError = throwable.message,
-                )
-            }
+            showLoadError(throwable.message)
         }
     }
 
     fun onOfficerSelected(index: Int) {
-        _uiState.update {
-            it.copy(
-                selectedOfficerIndex = index,
-                officerShowError = false,
-            )
-        }
+        trySendAction(AssignLoanOfficerAction.SelectOfficer(index))
     }
 
     fun onAssignmentDateMillis(millis: Long) {
-        _uiState.update { it.copy(assignmentDateMillis = millis) }
+        trySendAction(AssignLoanOfficerAction.UpdateAssignmentDate(millis))
     }
 
     fun submit() {
-        val state = _uiState.value
-        if (state.submitInProgress || state.completed) return
+        trySendAction(AssignLoanOfficerAction.Submit)
+    }
+
+    private fun submitInternal() {
+        val state = mutableStateFlow.value as? AssignLoanOfficerUiState.Content ?: return
+        if (state.submitInProgress) return
         if (state.selectedOfficerIndex < 0) {
-            _uiState.update { it.copy(officerShowError = true) }
+            updateContent { it.copy(officerShowError = true) }
             return
         }
         val officer = state.officers.getOrNull(state.selectedOfficerIndex) ?: return
-        val loan = state.loan ?: return
-        val officerId = officer.id ?: return
+        val officerId = officer.id
+        val loan = state.loan
 
         viewModelScope.launch {
             if (loan.loanOfficerId > 0 && officerId == loan.loanOfficerId) {
-                _uiState.update {
-                    it.copy(submitError = getString(Res.string.feature_loan_assign_loan_officer_same_officer))
-                }
+                sendEvent(
+                    AssignLoanOfficerEffect.ShowMessage(
+                        getString(Res.string.feature_loan_assign_loan_officer_same_officer),
+                    ),
+                )
                 return@launch
             }
-            _uiState.update {
-                it.copy(
-                    submitInProgress = true,
-                    submitError = null,
-                )
-            }
-            val apiDate = DateHelper.getDateAsStringFromLong(state.assignmentDateMillis)
+
+            updateContent { it.copy(submitInProgress = true) }
             val request = AssignLoanOfficerRequest(
                 toLoanOfficerId = officerId,
-                assignmentDate = apiDate,
+                assignmentDate = DateHelper.getDateAsStringFromLong(state.assignmentDateMillis),
                 locale = DateConstants.LOCALE,
                 dateFormat = DateHelper.SHORT_MONTH,
                 fromLoanOfficerId = loan.loanOfficerId.takeIf { it > 0 },
             )
-            try {
-                repository.assignLoanOfficer(loan.id, request).collect { dataState ->
-                    when (dataState) {
-                        is DataState.Loading -> Unit
-                        is DataState.Error -> {
-                            _uiState.update {
-                                it.copy(
-                                    submitInProgress = false,
-                                    submitError = dataState.message,
-                                )
-                            }
-                        }
-                        is DataState.Success -> {
-                            _uiState.update {
-                                it.copy(
-                                    submitInProgress = false,
-                                    completed = true,
-                                )
-                            }
-                        }
-                    }
-                }
-            } catch (throwable: Throwable) {
-                if (throwable is CancellationException) throw throwable
-                _uiState.update {
-                    it.copy(
-                        submitInProgress = false,
-                        submitError = throwable.message,
+
+            when (val result = repository.assignLoanOfficer(loan.id, request)) {
+                is DataState.Success -> {
+                    updateContent { it.copy(submitInProgress = false) }
+                    sendEvent(
+                        AssignLoanOfficerEffect.ShowMessage(
+                            getString(Res.string.feature_loan_assign_loan_officer_success),
+                        ),
                     )
+                    sendEvent(AssignLoanOfficerEffect.NavigateBack)
                 }
+                is DataState.Error -> {
+                    updateContent { it.copy(submitInProgress = false) }
+                    sendEvent(AssignLoanOfficerEffect.ShowMessage(result.message))
+                }
+                DataState.Loading -> Unit
             }
         }
     }
 
-    fun consumeSubmitError() {
-        _uiState.update { it.copy(submitError = null) }
+    private suspend fun showLoadError(message: String?) {
+        mutableStateFlow.value = AssignLoanOfficerUiState.Error(message)
+        sendEvent(
+            AssignLoanOfficerEffect.ShowMessage(
+                message.orEmpty().ifBlank { getString(Res.string.feature_loan_failed_to_load_loan) },
+            ),
+        )
+        sendEvent(AssignLoanOfficerEffect.NavigateBack)
+    }
+
+    private fun updateContent(block: (AssignLoanOfficerUiState.Content) -> AssignLoanOfficerUiState.Content) {
+        val current = mutableStateFlow.value as? AssignLoanOfficerUiState.Content ?: return
+        mutableStateFlow.value = block(current)
     }
 
     override fun onCleared() {
