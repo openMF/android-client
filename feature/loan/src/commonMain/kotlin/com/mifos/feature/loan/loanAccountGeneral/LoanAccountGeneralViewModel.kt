@@ -158,16 +158,41 @@ internal class LoanAccountGeneralViewModel(
                 approvedAmount = approvedAmountValue,
                 disbursedAmount = disbursedAmountValue,
                 details = listOf(
-                    mapOf(
-                        Res.string.feature_loan_general_detail_disbursement_date to disbursementDate,
-                        Res.string.feature_loan_general_detail_loan_purpose to loanPurpose,
-                        Res.string.feature_loan_general_detail_loan_officer to loanOfficer,
-                        Res.string.feature_loan_general_detail_currency to currencyDisplay,
+                    LoanAccountGeneralState.LoanDetailGroupState(
+                        items = listOf(
+                            LoanAccountGeneralState.LoanDetailItem.Text(
+                                label = Res.string.feature_loan_general_detail_disbursement_date,
+                                value = disbursementDate,
+                            ),
+                            LoanAccountGeneralState.LoanDetailItem.Text(
+                                label = Res.string.feature_loan_general_detail_loan_purpose,
+                                value = loanPurpose,
+                            ),
+                            LoanAccountGeneralState.LoanDetailItem.Text(
+                                label = Res.string.feature_loan_general_detail_loan_officer,
+                                value = loanOfficer,
+                            ),
+                            LoanAccountGeneralState.LoanDetailItem.Text(
+                                label = Res.string.feature_loan_general_detail_currency,
+                                value = currencyDisplay,
+                            ),
+                        ),
                     ),
-                    mapOf(
-                        Res.string.feature_loan_general_detail_proposed_amount to proposedAmountValue,
-                        Res.string.feature_loan_general_detail_approved_amount to approvedAmountValue,
-                        Res.string.feature_loan_general_detail_disbursed_amount to disbursedAmountValue,
+                    LoanAccountGeneralState.LoanDetailGroupState(
+                        items = listOf(
+                            LoanAccountGeneralState.LoanDetailItem.Text(
+                                label = Res.string.feature_loan_general_detail_proposed_amount,
+                                value = proposedAmountValue,
+                            ),
+                            LoanAccountGeneralState.LoanDetailItem.Text(
+                                label = Res.string.feature_loan_general_detail_approved_amount,
+                                value = approvedAmountValue,
+                            ),
+                            LoanAccountGeneralState.LoanDetailItem.Text(
+                                label = Res.string.feature_loan_general_detail_disbursed_amount,
+                                value = disbursedAmountValue,
+                            ),
+                        ),
                     ),
                 ),
                 summaryRows = listOf(
@@ -224,7 +249,7 @@ data class LoanAccountGeneralState(
     val networkConnection: Boolean = false,
     val numberOfRepayments: String = "",
     val maturityDate: String = "",
-    val details: List<Map<StringResource, String>> = emptyList(),
+    val details: List<LoanDetailGroupState> = emptyList(),
     val summaryRows: List<SummaryRowState> = emptyList(),
     val totalOriginal: String = "",
     val totalPaid: String = "",
@@ -244,6 +269,17 @@ data class LoanAccountGeneralState(
     sealed interface DialogState {
         data object Loading : DialogState
         data class Error(val message: String) : DialogState
+    }
+
+    data class LoanDetailGroupState(
+        val items: List<LoanDetailItem>,
+    )
+
+    sealed interface LoanDetailItem {
+        data class Text(
+            val label: StringResource,
+            val value: String,
+        ) : LoanDetailItem
     }
 
     data class SummaryRowState(

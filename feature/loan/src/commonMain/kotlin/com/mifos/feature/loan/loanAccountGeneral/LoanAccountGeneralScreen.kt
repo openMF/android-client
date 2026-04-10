@@ -341,7 +341,12 @@ private fun LoanDetailsSection(
         verticalArrangement = Arrangement.spacedBy(DesignToken.padding.medium),
     ) {
         state.details.forEach { detailGroup ->
-            MifosDefaultListingComponentFromStringResources(data = detailGroup)
+            val listingData = detailGroup.items.associate { item ->
+                when (item) {
+                    is LoanAccountGeneralState.LoanDetailItem.Text -> item.label to item.value
+                }
+            }
+            MifosDefaultListingComponentFromStringResources(data = listingData)
         }
     }
 }
