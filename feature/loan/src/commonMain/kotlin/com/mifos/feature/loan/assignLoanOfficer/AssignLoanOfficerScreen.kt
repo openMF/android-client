@@ -10,10 +10,8 @@
 package com.mifos.feature.loan.assignLoanOfficer
 
 import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_assign_loan_officer_load_failed
 import androidclient.feature.loan.generated.resources.feature_loan_assign_loan_officer_new_officer
 import androidclient.feature.loan.generated.resources.feature_loan_assign_loan_officer_required
-import androidclient.feature.loan.generated.resources.feature_loan_assign_loan_officer_success
 import androidclient.feature.loan.generated.resources.feature_loan_assign_loan_officer_title
 import androidclient.feature.loan.generated.resources.feature_loan_assign_loan_officer_to_officer
 import androidclient.feature.loan.generated.resources.feature_loan_assignment_date
@@ -56,7 +54,7 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosTwoButtonRow
-import com.mifos.room.entities.organisation.StaffEntity
+import com.mifos.core.model.entity.accounts.loan.StaffOption
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
@@ -70,36 +68,30 @@ internal fun AssignLoanOfficerScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
-    val successMessage = stringResource(Res.string.feature_loan_assign_loan_officer_success)
-    val genericLoadFailed = stringResource(Res.string.feature_loan_assign_loan_officer_load_failed)
 
-    LaunchedEffect(uiState.completed) {
-        if (uiState.completed) {
-            snackbarHostState.showSnackbar(successMessage)
-            navigateBack()
+    LaunchedEffect(Unit) {
+        viewModel.effects.collect { effect ->
+            when (effect) {
+                is AssignLoanOfficerEffect.ShowMessage -> snackbarHostState.showSnackbar(effect.message)
+                AssignLoanOfficerEffect.NavigateBack -> navigateBack()
+            }
         }
     }
 
-    LaunchedEffect(uiState.submitError) {
-        val err = uiState.submitError
-        if (err != null) {
-            snackbarHostState.showSnackbar(err)
-            viewModel.consumeSubmitError()
-        }
-    }
-
-    val hasExistingLoanOfficer = (uiState.loan?.loanOfficerId ?: 0) > 0
+    val contentState = uiState as? AssignLoanOfficerUiState.Content
+    val hasExistingLoanOfficer = (contentState?.loan?.loanOfficerId ?: 0) > 0
+    val submitInProgress = contentState?.submitInProgress == true
     MifosScaffold(
         title = if (hasExistingLoanOfficer) {
             stringResource(Res.string.feature_loan_profile_change_loan_officer)
         } else {
             stringResource(Res.string.feature_loan_assign_loan_officer_title)
         },
-        onBackPressed = { if (!uiState.submitInProgress) navigateBack() },
+        onBackPressed = { if (!submitInProgress) navigateBack() },
         snackbarHostState = snackbarHostState,
     ) { padding ->
-        when {
-            uiState.isLoading -> {
+        when (val state = uiState) {
+            AssignLoanOfficerUiState.Loading -> {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -108,29 +100,24 @@ internal fun AssignLoanOfficerScreen(
                     MifosProgressIndicator()
                 }
             }
-            uiState.loadError != null -> {
-                val message = uiState.loadError.orEmpty().ifBlank { genericLoadFailed }
-                LaunchedEffect(message) {
-                    snackbarHostState.showSnackbar(message)
-                    navigateBack()
-                }
+            is AssignLoanOfficerUiState.Error -> {
                 Box(Modifier.fillMaxSize().padding(padding))
             }
-            else -> {
+            is AssignLoanOfficerUiState.Content -> {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(padding),
                 ) {
                     AssignLoanOfficerForm(
-                        uiState = uiState,
+                        uiState = state,
                         modifier = Modifier.fillMaxSize(),
                         onOfficerSelected = viewModel::onOfficerSelected,
                         onAssignmentDateMillis = viewModel::onAssignmentDateMillis,
                         onSubmit = { viewModel.submit() },
-                        onCancel = { if (!uiState.submitInProgress) navigateBack() },
+                        onCancel = { if (!state.submitInProgress) navigateBack() },
                     )
-                    if (uiState.submitInProgress) {
+                    if (state.submitInProgress) {
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -148,7 +135,7 @@ internal fun AssignLoanOfficerScreen(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 private fun AssignLoanOfficerForm(
-    uiState: AssignLoanOfficerUiState,
+    uiState: AssignLoanOfficerUiState.Content,
     onOfficerSelected: (Int) -> Unit,
     onAssignmentDateMillis: (Long) -> Unit,
     onSubmit: () -> Unit,
@@ -261,12 +248,12 @@ private fun AssignLoanOfficerForm(
     }
 }
 
-private fun staffDisplayLabel(officer: StaffEntity): String {
+private fun staffDisplayLabel(officer: StaffOption): String {
     officer.displayName?.takeIf { it.isNotBlank() }?.let { return it }
     val composed = listOfNotNull(
         officer.firstname?.takeIf { it.isNotBlank() },
         officer.lastname?.takeIf { it.isNotBlank() },
     ).joinToString(" ")
     if (composed.isNotBlank()) return composed
-    return officer.id?.let { "#$it" } ?: "-"
+    return "#${officer.id}"
 }

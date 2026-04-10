@@ -9,18 +9,38 @@
  */
 package com.mifos.feature.loan.assignLoanOfficer
 
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
-import com.mifos.room.entities.organisation.StaffEntity
+import com.mifos.core.model.entity.accounts.loan.LoanForAssignOfficer
+import com.mifos.core.model.entity.accounts.loan.StaffOption
 
-internal data class AssignLoanOfficerUiState(
-    val isLoading: Boolean = true,
-    val loadError: String? = null,
-    val loan: LoanWithAssociationsEntity? = null,
-    val officers: List<StaffEntity> = emptyList(),
-    val selectedOfficerIndex: Int = -1,
-    val officerShowError: Boolean = false,
-    val assignmentDateMillis: Long = 0L,
-    val submitInProgress: Boolean = false,
-    val submitError: String? = null,
-    val completed: Boolean = false,
-)
+internal sealed interface AssignLoanOfficerUiState {
+    data object Loading : AssignLoanOfficerUiState
+
+    data class Error(
+        val message: String?,
+    ) : AssignLoanOfficerUiState
+
+    data class Content(
+        val loan: LoanForAssignOfficer,
+        val officers: List<StaffOption> = emptyList(),
+        val selectedOfficerIndex: Int = -1,
+        val officerShowError: Boolean = false,
+        val assignmentDateMillis: Long,
+        val submitInProgress: Boolean = false,
+    ) : AssignLoanOfficerUiState
+}
+
+internal sealed interface AssignLoanOfficerEffect {
+    data class ShowMessage(
+        val message: String,
+    ) : AssignLoanOfficerEffect
+
+    data object NavigateBack : AssignLoanOfficerEffect
+}
+
+internal sealed interface AssignLoanOfficerAction {
+    data object LoadLoan : AssignLoanOfficerAction
+    data class LoadOfficers(val officeId: Int) : AssignLoanOfficerAction
+    data class SelectOfficer(val index: Int) : AssignLoanOfficerAction
+    data class UpdateAssignmentDate(val millis: Long) : AssignLoanOfficerAction
+    data object Submit : AssignLoanOfficerAction
+}
