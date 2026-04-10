@@ -29,6 +29,7 @@ class AppLockRepositoryImpl(
 
     override fun deleteLock() {
         settings.remove(APP_LOCK_FLAG)
+        _isAppLocked.value = true
     }
 
 }

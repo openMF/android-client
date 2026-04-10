@@ -14,6 +14,7 @@ import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.datastore.model.AppSettings
 import com.mifos.core.model.objects.users.User
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -36,11 +37,18 @@ class RootNavViewModel(
 ) {
 
     init {
+        // One-time check: user reopened app without a passcode → force logout
+        viewModelScope.launch {
+            val userData = userDataRepository.userData.first()
+            if (userData.isAuthenticated && passcodeStorageAdapter.loadPasscode().isNullOrBlank()) {
+                logOut()
+            }
+        }
+
         combine(
             userDataRepository.userData,
             userDataRepository.settingsInfo,
         ) { authState, settingsData ->
-
             RootNavAction.Internal.UserStateUpdateReceive(
                 userData = authState,
                 settingsData = settingsData,
@@ -53,6 +61,7 @@ class RootNavViewModel(
         when (action) {
             is RootNavAction.Internal.UserStateUpdateReceive -> handleUserStateUpdateReceive(action)
             RootNavAction.LogOutUser -> logOut()
+            RootNavAction.UnlockApp -> unlockApp()
         }
     }
 
@@ -61,11 +70,9 @@ class RootNavViewModel(
     ) {
         val userData = action.userData
 
-        when(userData.isAuthenticated){
+        when (userData.isAuthenticated) {
             true -> {
-                if(passcodeStorageAdapter.loadPasscode().isNullOrBlank()) {
-                    logOut()
-                } else {
+                if (!passcodeStorageAdapter.loadPasscode().isNullOrBlank()) {
                     mutableStateFlow.update { RootNavState.UserAuthenticated }
                 }
             }
@@ -85,20 +92,23 @@ class RootNavViewModel(
             mutableStateFlow.update { RootNavState.AuthenticateUser }
         }
     }
+
+    private fun unlockApp() {
+        appLockRepository.unlockApp()
+    }
 }
 
 sealed class RootNavState {
-    data object AuthenticateUser : RootNavState()
-
-    data object SetLanguage : RootNavState()
-
     data object Splash : RootNavState()
+
+    data object AuthenticateUser : RootNavState()
 
     data object UserAuthenticated : RootNavState()
 }
 
 sealed interface RootNavAction {
     data object LogOutUser: RootNavAction
+    data object UnlockApp: RootNavAction
 
     sealed interface Internal {
 

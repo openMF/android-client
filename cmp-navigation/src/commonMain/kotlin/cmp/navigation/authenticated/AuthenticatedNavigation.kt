@@ -26,6 +26,7 @@ import com.mifos.feature.individualCollectionSheet.navigation.individualCollecti
 import com.mifos.feature.loan.groupLoanAccount.groupLoanScreen
 import com.mifos.feature.loan.loanAccount.addLoanAccountScreen
 import com.mifos.feature.offline.navigation.offlineNavGraph
+import com.mifos.feature.passcode.mifosPasscode.internalMifosPasscodeScreen
 import com.mifos.feature.path.tracking.navigation.pathTrackingRoute
 import com.mifos.feature.report.navigation.reportNavGraph
 import com.mifos.feature.settings.navigation.navigateToServerConfigGraph
@@ -45,10 +46,46 @@ internal fun NavController.navigateToAuthenticatedGraph(navOptions: NavOptions? 
 @OptIn(InternalSerializationApi::class, ExperimentalSerializationApi::class)
 internal fun NavGraphBuilder.authenticatedGraph(
     navController: NavController,
+    onClickLogout: () -> Unit,
 ) {
     navigation<AuthenticatedGraph>(
         startDestination = AuthenticatedNavbar,
     ) {
+
+        internalMifosPasscodeScreen(
+            navigateToLogin = onClickLogout,
+            onAuthenticationSuccess = {verificationKey ->
+                verificationKey?.let {
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set(it, true)
+                }
+                navController.popBackStack()
+            },
+            onAuthenticationFailed = { verificationKey ->
+                verificationKey?.let {
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set(it, false)
+                }
+                navController.popBackStack()
+            },
+            onPasscodeChanged = {
+                navController.popBackStack()
+            },
+            onDisableBiometrics = {
+                navController.popBackStack()
+            },
+            onBackNavigation = {verificationKey ->
+                verificationKey?.let {
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set(it, false)
+                }
+                navController.popBackStack()
+            },
+        )
+
         authenticatedNavbarGraph(
             onDrawerItemClick = {
                 navController.navigate(it) {

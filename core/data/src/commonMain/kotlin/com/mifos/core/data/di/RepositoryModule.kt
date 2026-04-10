@@ -79,6 +79,7 @@ import com.mifos.core.data.repository.SyncGroupPayloadsRepository
 import com.mifos.core.data.repository.SyncGroupsDialogRepository
 import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
 import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
+import com.mifos.core.data.repository.UserVerificationRepository
 import com.mifos.core.data.repositoryImp.ActivateRepositoryImp
 import com.mifos.core.data.repositoryImp.AmountTransferRepositoryImp
 import com.mifos.core.data.repositoryImp.AppLockRepositoryImpl
@@ -148,6 +149,7 @@ import com.mifos.core.data.repositoryImp.SyncGroupPayloadsRepositoryImp
 import com.mifos.core.data.repositoryImp.SyncGroupsDialogRepositoryImp
 import com.mifos.core.data.repositoryImp.SyncLoanRepaymentTransactionRepositoryImp
 import com.mifos.core.data.repositoryImp.SyncSavingsAccountTransactionRepositoryImp
+import com.mifos.core.data.repositoryImp.UserVerificationRepositoryImpl
 import com.mifos.core.data.util.NetworkMonitor
 import kotlinx.coroutines.CoroutineDispatcher
 import org.koin.core.module.dsl.singleOf
@@ -250,6 +252,7 @@ val RepositoryModule = module {
     singleOf(::AppLockRepositoryImpl) bind(AppLockRepository::class)
     singleOf(::PasscodeStorageAdapterImpl) bind(PasscodeStorageAdapter::class)
     singleOf(::BiometricStorageAdapterImpl) bind(BiometricStorageAdapter::class)
+    singleOf(::UserVerificationRepositoryImpl) bind(UserVerificationRepository::class)
 
     includes(platformModule)
     single<PlatformDependentDataModule> { getPlatformDataModule }

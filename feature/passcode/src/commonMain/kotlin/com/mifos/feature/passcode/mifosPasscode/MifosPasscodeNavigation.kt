@@ -14,7 +14,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.toRoute
+import com.mifos.core.data.repository.UserVerificationRepository
 import kotlinx.serialization.Serializable
+import org.koin.compose.koinInject
 import template.core.base.ui.composableWithSlideTransitions
 import template.core.base.ui.composableWithStayTransitions
 
@@ -82,10 +84,15 @@ fun NavGraphBuilder.internalMifosPasscodeScreen(
     onBackNavigation: (String?) -> Unit = {},
 ) {
     composableWithSlideTransitions<InternalPasscodeRoute> { backStackEntry ->
+        val userVerificationRepository = koinInject<UserVerificationRepository>()
         val verificationKey = backStackEntry.toRoute<InternalPasscodeRoute>().verificationKey
+
         MifosPasscode(
             navigateToLogin = navigateToLogin,
-            onAuthenticationSuccess = { onAuthenticationSuccess(verificationKey) },
+            onAuthenticationSuccess = {
+                userVerificationRepository.recordVerification()
+                onAuthenticationSuccess(verificationKey)
+            },
             onPasscodeCreation = {},
             onAuthenticationFailed = { onAuthenticationFailed(verificationKey) },
             onPasscodeChanged = onPasscodeChanged,

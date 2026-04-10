@@ -68,7 +68,6 @@ fun RootNavScreen(
     val isAppLocked by appLockRepository.isAppLocked.collectAsStateWithLifecycle()
     val lifeCycleObserver = LocalLifecycleOwner.current.lifecycle
 
-    val previousStateReference = remember { mutableStateOf(state) }
     val onStopTime = remember { mutableStateOf(Long.MAX_VALUE) }
 
     val isNotSplashScreen = state != RootNavState.Splash
@@ -82,6 +81,21 @@ fun RootNavScreen(
         }
         launchSingleTop = true
         restoreState = false
+    }
+
+
+    // Use a LaunchedEffect to ensure we don't navigate too soon when the app first opens. This
+    // avoids a bug that first appeared in Compose Material3 1.2.0-rc01 that causes the initial
+    // transition to appear corrupted.
+    LaunchedEffect(state) {
+        when (state) {
+            RootNavState.Splash -> navController.navigateToSplash(rootNavOptions())
+            RootNavState.AuthenticateUser -> navController.navigateToLogin(rootNavOptions())
+            RootNavState.UserAuthenticated -> {
+                navController.navigateToRootMifosPasscodeScreen(rootNavOptions())
+            }
+            else -> {}
+        }
     }
 
     DisposableEffect(lifeCycleObserver) {
@@ -122,7 +136,12 @@ fun RootNavScreen(
         popExitTransition = { toExitTransition()(this) },
     ) {
         splashDestination()
-        authenticatedGraph(navController)
+        authenticatedGraph(
+            navController = navController,
+            onClickLogout = {
+                viewModel.trySendAction(RootNavAction.LogOutUser)
+            }
+        )
         authNavGraph(
             navigatePasscode = navController::navigateToRootMifosPasscodeScreen,
             updateServerConfig = navController::navigateToServerConfigGraph,
@@ -155,53 +174,18 @@ fun RootNavScreen(
 
         biometricSetupScreen(
             onBiometricsRegistrationSuccess = {
-                appLockRepository.unlockApp()
+                viewModel.trySendAction(RootNavAction.UnlockApp)
                 navController.popBackStack()
                 navController.navigateToAuthenticatedGraph(rootNavOptions())
             },
             onSkipBiometricSetup = {
-                appLockRepository.unlockApp()
+                viewModel.trySendAction(RootNavAction.UnlockApp)
                 navController.popBackStack()
                 navController.navigateToAuthenticatedGraph(rootNavOptions())
             },
         )
     }
 
-    val targetRoute = when (state) {
-        RootNavState.Splash -> SplashRoute
-        is RootNavState.UserAuthenticated -> RootPasscodeRoute
-        is RootNavState.AuthenticateUser -> LoginRoute
-        else -> LoginRoute
-    }
-
-    val currentRoute = navController.currentDestination?.rootLevelRoute()
-
-    // Don't navigate if we are already at the correct root. This notably happens during process
-    // death. In this case, the NavHost already restores state, so we don't have to navigate.
-    // However, if the route is correct but the underlying state is different, we should still
-    // proceed in order to get a fresh version of that route.
-    if (currentRoute == targetRoute.toObjectNavigationRoute() &&
-        previousStateReference.value == state
-    ) {
-        previousStateReference.value == state
-        return
-    }
-    previousStateReference.value = state
-
-
-    // Use a LaunchedEffect to ensure we don't navigate too soon when the app first opens. This
-    // avoids a bug that first appeared in Compose Material3 1.2.0-rc01 that causes the initial
-    // transition to appear corrupted.
-    LaunchedEffect(state) {
-        when (state) {
-            RootNavState.Splash -> navController.navigateToSplash(rootNavOptions())
-            RootNavState.AuthenticateUser -> { navController.navigateToLogin() }
-            RootNavState.UserAuthenticated -> {
-                navController.navigateToRootMifosPasscodeScreen(rootNavOptions())
-            }
-            else -> {}
-        }
-    }
 }
 
 private fun NavDestination?.rootLevelRoute(): String? = when {
