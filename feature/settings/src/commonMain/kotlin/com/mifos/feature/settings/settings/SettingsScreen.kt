@@ -14,6 +14,7 @@ import androidclient.feature.settings.generated.resources.feature_settings
 import androidclient.feature.settings.generated.resources.feature_settings_change_app_theme
 import androidclient.feature.settings.generated.resources.feature_settings_choose_language
 import androidclient.feature.settings.generated.resources.feature_settings_languages
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -40,10 +41,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import co.touchlab.kermit.Logger
 import com.mifos.core.common.enums.MifosAppLanguage
 import com.mifos.core.datastore.model.AppTheme
+import com.mifos.core.designsystem.component.MifosDialogBox
 import com.mifos.core.designsystem.component.MifosRadioButtonDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.UpdateEndpointDialogScreen
@@ -56,6 +57,7 @@ import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
+import org.mifos.authenticator.biometrics.platformAuthenticationProvider
 import org.mifos.authenticator.passcode.PasscodeManager
 import template.core.base.designsystem.theme.KptTheme
 
@@ -70,12 +72,24 @@ internal fun SettingsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    val authProvider = platformAuthenticationProvider.current
+
     SettingsScreen(
         onBackPressed = onBackPressed,
         state = uiState,
         changePasscode = {
             passcodeManager.changePasscode()
             changePasscode()
+        },
+        onEnableDisableBiometrics = {
+            if(uiState.isBiometricsRegistered) {
+                viewModel.disableBiometrics()
+            } else {
+                viewModel.registerBiometrics(authProvider)
+            }
+        },
+        dismissBiometricsError = {
+            viewModel.updateBiometricsErrorState(null)
         },
         handleEndpointUpdate = { baseURL, tenant ->
             if (viewModel.tryUpdatingEndpoint(selectedBaseUrl = baseURL, selectedTenant = tenant)) {
@@ -103,8 +117,8 @@ internal fun SettingsScreen(
     onBackPressed: () -> Unit,
     onClickUpdateConfig: () -> Unit,
     changePasscode: () -> Unit,
-    onEnableBiometrics:() -> Unit,
-    onDisableBiometrics:() -> Unit,
+    onEnableDisableBiometrics:() -> Unit,
+    dismissBiometricsError: () -> Unit,
     handleEndpointUpdate: (baseURL: String, tenant: String) -> Unit,
     updateTheme: (theme: AppTheme) -> Unit,
     updateLanguage: (language: MifosAppLanguage) -> Unit,
@@ -114,7 +128,6 @@ internal fun SettingsScreen(
     var showThemeUpdateDialog by rememberSaveable { mutableStateOf(false) }
     var showSyncSurveyDialog by rememberSaveable { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
-
 
 
     MifosScaffold(
@@ -136,9 +149,7 @@ internal fun SettingsScreen(
 
                         SettingsCardItem.PASSCODE -> changePasscode()
 
-                        SettingsCardItem.BIOMETRICS -> {
-
-                        }
+                        SettingsCardItem.BIOMETRICS -> onEnableDisableBiometrics()
 
                         SettingsCardItem.ENDPOINT -> showEndpointUpdateDialog = true
 
@@ -186,6 +197,20 @@ internal fun SettingsScreen(
                 handleEndpointUpdate(url, tenant)
                 showEndpointUpdateDialog = false
             },
+        )
+    }
+
+    AnimatedVisibility(state.biometricRegistrationError!=null) {
+        MifosDialogBox(
+            title = "Biometrics Registration Error",
+            showDialogState = state.biometricRegistrationError!=null,
+            confirmButtonText = "",
+            dismissButtonText = "OK",
+            onConfirm = {},
+            onDismiss = {
+                dismissBiometricsError()
+            },
+            message = state.biometricRegistrationError,
         )
     }
 }
@@ -298,5 +323,7 @@ private fun PreviewSettingsScreen() {
         updateTheme = {},
         changePasscode = {},
         onClickUpdateConfig = {},
+        onEnableDisableBiometrics = {},
+        dismissBiometricsError = {},
     )
 }

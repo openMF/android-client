@@ -10,6 +10,8 @@
 package com.mifos.feature.settings.settings
 
 import androidclient.feature.settings.generated.resources.Res
+import androidclient.feature.settings.generated.resources.feature_settings_biometrics_not_available
+import androidclient.feature.settings.generated.resources.feature_settings_biometrics_not_set
 import androidclient.feature.settings.generated.resources.feature_settings_change_passcode
 import androidclient.feature.settings.generated.resources.feature_settings_change_passcode_desc
 import androidclient.feature.settings.generated.resources.feature_settings_enable_disable_biometrics
@@ -44,17 +46,22 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
+import org.mifos.authenticator.biometrics.BiometricStorageAdapter
 import org.mifos.authenticator.biometrics.platformAuthenticator.PlatformAuthenticationProvider
 import org.mifos.authenticator.biometrics.platformAuthenticator.RegistrationResult
 import org.mifos.authenticator.passcode.PasscodeManager
 
 
 const val DISABLE_BIOMETRICS_VERIFICATION_KEY = "com.mifos.authentication.verification.key"
+private const val DEFAULT_USER_ID = "default_user"
+private const val DEFAULT_USER_EMAIL = "default@mifos.org"
+private const val DEFAULT_DISPLAY_NAME = "Mifos User"
 
 class SettingsViewModel(
     private val prefManager: UserPreferencesRepository,
     private val passcodeManager: PasscodeManager,
     private val userVerificationRepository: UserVerificationRepository,
+    private val biometricStorageAdapter: BiometricStorageAdapter,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -71,6 +78,7 @@ class SettingsViewModel(
                     else -> AppTheme.SYSTEM
                 },
                 language = settings.language,
+                isBiometricsRegistered = passcodeManager.state.value.isExternalAuthEnabled
             )
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, SettingsUiState.DEFAULT)
@@ -91,26 +99,21 @@ class SettingsViewModel(
         }
     }
 
-    private fun handlePasscodeVerification() {
+    fun disableBiometrics() {
         viewModelScope.launch {
             authenticationSuccess.collect { result ->
                 when (result) {
                     true -> {
                         if (userVerificationRepository.consumeVerification()) {
-                            passcodeManager.trySendAction(PasscodeAction.DeleteBiometricRegistration)
-                            mutableStateFlow.update {
-                                it.copy(
-                                    isBiometricsRegistered = false,
-                                )
-                            }
+                            passcodeManager.setExternalAuthEnabled(false)
+                            biometricStorageAdapter.deleteRegistrationData()
+                            uiState.value.isBiometricsRegistered = false
                         }
                         savedStateHandle.remove<Boolean?>(DISABLE_BIOMETRICS_VERIFICATION_KEY)
                         authenticationSuccess.value = null
                     }
                     false -> {
-                        mutableStateFlow.update {
-                            it.copy(isBiometricsRegistered = true)
-                        }
+                        uiState.value.isBiometricsRegistered = true
                         savedStateHandle.remove<Boolean?>(DISABLE_BIOMETRICS_VERIFICATION_KEY)
                         authenticationSuccess.value = null
                     }
@@ -120,48 +123,44 @@ class SettingsViewModel(
         }
     }
 
-    private fun handleBiometricsAuthRegistration(
+    fun registerBiometrics(
         systemAuthProvider: PlatformAuthenticationProvider,
     ) {
         viewModelScope.launch {
             val result = systemAuthProvider.registerUser(
-                userName = mutableStateFlow.value.client.id.toString(),
-                emailId = mutableStateFlow.value.client.emailAddress,
-                displayName = mutableStateFlow.value.client.displayName,
+                userName = DEFAULT_USER_ID,
+                emailId = DEFAULT_USER_EMAIL,
+                displayName = DEFAULT_DISPLAY_NAME,
             )
 
             when (result) {
                 is RegistrationResult.Success -> {
-                    passcodeManager.trySendAction(PasscodeAction.SaveBiometricRegistration(result.message))
+                    passcodeManager.setExternalAuthEnabled(true)
+                    biometricStorageAdapter.saveRegistrationData(result.message)
                 }
                 RegistrationResult.PlatformAuthenticatorNotSet -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = DialogState.Error(
-                                message = getString(Res.string.feature_settings_biometrics_not_set),
-                            ),
-                        )
-                    }
+                    updateBiometricsErrorState(
+                        getString(Res.string.feature_settings_biometrics_not_set)
+                    )
                 }
                 RegistrationResult.PlatformAuthenticatorNotAvailable -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = DialogState.Error(
-                                message = getString(Res.string.feature_settings_biometrics_not_available),
-                            ),
-                        )
-                    }
+                    updateBiometricsErrorState(
+                        getString(Res.string.feature_settings_biometrics_not_available)
+                    )
                 }
                 is RegistrationResult.Error -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = DialogState.Error(message = result.message),
-                        )
-                    }
+                    updateBiometricsErrorState(result.message)
                 }
+
+                RegistrationResult.UserCancelled -> {}
             }
         }
     }
+
+    fun updateBiometricsErrorState(error: String?) {
+        uiState.value.biometricRegistrationError = error
+    }
+
 
     fun updateLanguage(language: String): Boolean {
         return (language == MifosAppLanguage.SYSTEM_LANGUAGE.code)
@@ -232,6 +231,8 @@ data class SettingsUiState(
     val passcode: String,
     val theme: AppTheme = AppTheme.SYSTEM,
     val language: LanguageConfig = LanguageConfig.DEFAULT,
+    var biometricRegistrationError: String? = null,
+    var isBiometricsRegistered: Boolean = false,
 ) {
     companion object {
         val DEFAULT = SettingsUiState(
