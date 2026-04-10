@@ -27,7 +27,7 @@ iosApp/Pods/*
 iosApp/iosApp.xcworkspace/*
 iosApp/iosApp.xcodeproj/*
 !iosApp/iosApp.xcodeproj/project.pbxproj
-cmp-shared/mifospay-shared.podspec
+cmp-shared/cmp_shared.podspec
 cmp-ios/Pods/*
 cmp-ios/Podfile.lock
 
