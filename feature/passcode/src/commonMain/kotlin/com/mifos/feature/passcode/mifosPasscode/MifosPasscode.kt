@@ -59,6 +59,7 @@ fun MifosPasscode(
     onAuthenticationFailed: () -> Unit = {},
     onBiometricsDisabled: () -> Unit = {},
     allowBackNavigation: Boolean = false,
+    allowBiometricAuth: Boolean = true,
     viewModel: MifosPasscodeViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -100,7 +101,7 @@ fun MifosPasscode(
         }
     }
 
-    DisposableEffect(lifeCycleOwner) {
+    DisposableEffect(lifeCycleOwner, allowBiometricAuth) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_START -> {
@@ -111,6 +112,7 @@ fun MifosPasscode(
                     viewModel.trySendAction(
                         MifosPasscodeAction.OnResume(
                             systemAuthProvider = systemAuthProvider,
+                            allowBiometricAuth = allowBiometricAuth,
                         ),
                     )
                 }
@@ -185,18 +187,22 @@ fun MifosPasscode(
             dialogButtonTextColor = KptTheme.colorScheme.onSurface,
             dialogShape = null,
         ),
-        externalAuthButton = { modifier ->
-            BiometricsKey(
-                modifier = modifier,
-                systemAvailableAuthOption = systemAvailableAuthOption,
-                onClick = {
-                    viewModel.trySendAction(
-                        MifosPasscodeAction.OnAuthenticatorClick(
-                            systemAuthProvider = systemAuthProvider,
-                        ),
-                    )
-                },
-            )
+        externalAuthButton = if (allowBiometricAuth) {
+            { modifier ->
+                BiometricsKey(
+                    modifier = modifier,
+                    systemAvailableAuthOption = systemAvailableAuthOption,
+                    onClick = {
+                        viewModel.trySendAction(
+                            MifosPasscodeAction.OnAuthenticatorClick(
+                                systemAuthProvider = systemAuthProvider,
+                            ),
+                        )
+                    },
+                )
+            }
+        } else {
+            null
         },
     )
 }

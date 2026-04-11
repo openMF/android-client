@@ -27,7 +27,10 @@ data object RootPasscodeRoute
 data object ReAuthPasscodeRoute
 
 @Serializable
-data class InternalPasscodeRoute(val verificationKey: String? = null)
+data class InternalPasscodeRoute(
+    val verificationKey: String? = null,
+    val allowBiometricAuth: Boolean = true,
+)
 
 fun NavController.navigateToRootMifosPasscodeScreen(navOptions: NavOptions? = null) =
     navigate(RootPasscodeRoute, navOptions)
@@ -37,8 +40,9 @@ fun NavController.navigateToReAuthMifosPasscodeScreen(navOptions: NavOptions? = 
 
 fun NavController.navigateToInternalMifosPasscodeScreen(
     verificationKey: String? = null,
+    allowBiometricAuth: Boolean = true,
     navOptions: NavOptions? = null,
-) = navigate(InternalPasscodeRoute(verificationKey), navOptions)
+) = navigate(InternalPasscodeRoute(verificationKey, allowBiometricAuth), navOptions)
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun NavGraphBuilder.rootMifosPasscodeScreen(
@@ -83,7 +87,8 @@ fun NavGraphBuilder.internalMifosPasscodeScreen(
 ) {
     composableWithSlideTransitions<InternalPasscodeRoute> { backStackEntry ->
         val userVerificationRepository = koinInject<UserVerificationRepository>()
-        val verificationKey = backStackEntry.toRoute<InternalPasscodeRoute>().verificationKey
+        val route = backStackEntry.toRoute<InternalPasscodeRoute>()
+        val verificationKey = route.verificationKey
 
         MifosPasscode(
             navigateToLogin = navigateToLogin,
@@ -96,6 +101,7 @@ fun NavGraphBuilder.internalMifosPasscodeScreen(
             onPasscodeChanged = onPasscodeChanged,
             onBiometricsDisabled = onDisableBiometrics,
             allowBackNavigation = true,
+            allowBiometricAuth = route.allowBiometricAuth,
             onBackPress = { onBackNavigation(verificationKey) },
         )
     }

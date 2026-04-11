@@ -42,7 +42,7 @@ class MifosPasscodeViewModel(
             }
 
             is MifosPasscodeAction.OnResume -> {
-                handleResume(action.systemAuthProvider)
+                handleResume(action.systemAuthProvider, action.allowBiometricAuth)
             }
 
             is MifosPasscodeAction.DismissDialog -> {
@@ -83,7 +83,10 @@ class MifosPasscodeViewModel(
 
     private fun handleResume(
         systemAuthProvider: PlatformAuthenticationProvider,
+        allowBiometricAuth: Boolean,
     ) {
+        // Mirrors the UI guard in MifosPasscode — both layers must agree to suppress biometrics.
+        if (!allowBiometricAuth) return
         val biometricsStatus = systemAuthProvider.authenticatorStatus.value
         if (
             biometricsStatus.contains(PlatformAuthenticatorStatus.BIOMETRICS_SET) &&
@@ -151,6 +154,7 @@ sealed interface MifosPasscodeAction {
     data object OnStart : MifosPasscodeAction
     data class OnResume(
         val systemAuthProvider: PlatformAuthenticationProvider,
+        val allowBiometricAuth: Boolean,
     ) : MifosPasscodeAction
 
     data object DismissDialog : MifosPasscodeAction
