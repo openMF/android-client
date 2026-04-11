@@ -226,22 +226,6 @@
     <string name="feature_loan_payment_success_transaction_label">Transaction ID: %1$s</string>
     <string name="feature_loan_payment_success_title">Payment Successful</string>
 
-    <!-- Loan Repayment - Transaction Breakdown -->
-    <string name="feature_loan_transaction_breakdown">Transaction Breakdown</string>
-    <string name="feature_loan_interest">Interest</string>
-    <string name="feature_loan_fees">Fees</string>
-    <string name="feature_loan_penalties">Penalties</string>
-    <string name="feature_loan_no_penalties_found">No penalties found</string>
-
-    <!-- Loan Repayment - Payment Details -->
-    <string name="feature_loan_show_payment_details">Show Payment Details</string>
-    <string name="feature_loan_waive_penalties">Waive Penalties</string>
-    <string name="feature_loan_cheque_number">Cheque #</string>
-    <string name="feature_loan_routing_code">Routing Code</string>
-    <string name="feature_loan_receipt_number">Receipt #</string>
-    <string name="feature_loan_bank_number">Bank #</string>
-    <string name="feature_loan_note">Note</string>
-
     <!-- New Loan Account -->
     <string name="new_loan_account_title">New Loan Account</string>
 
