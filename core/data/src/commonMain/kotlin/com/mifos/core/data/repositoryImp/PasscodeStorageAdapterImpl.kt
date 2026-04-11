@@ -1,16 +1,24 @@
+/*
+ * Copyright 2026 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ */
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.russhwolf.settings.Settings
 import org.mifos.authenticator.passcode.PasscodeStorageAdapter
 
-
 const val MIFOS_PASSCODE = "com.mifos.passcode"
 
 class PasscodeStorageAdapterImpl(
     private val userPreferencesRepository: UserPreferencesRepository,
-    private val settings: Settings
-): PasscodeStorageAdapter {
+    private val settings: Settings,
+) : PasscodeStorageAdapter {
 
     override fun savePasscode(passcode: String) {
         settings.putString(MIFOS_PASSCODE, passcode)
@@ -30,8 +38,8 @@ class PasscodeStorageAdapterImpl(
         "Use BiometricStorageAdapter from the biometrics library instead.",
         replaceWith = ReplaceWith(
             "BiometricStorageAdapter.saveRegistrationData(registrationData)",
-            "org.mifos.authenticator.biometrics.BiometricStorageAdapter"
-        )
+            "org.mifos.authenticator.biometrics.BiometricStorageAdapter",
+        ),
     )
     override fun saveRegistrationData(registrationData: String) {}
 
@@ -39,8 +47,8 @@ class PasscodeStorageAdapterImpl(
         "Use BiometricStorageAdapter from the biometrics library instead.",
         replaceWith = ReplaceWith(
             "BiometricStorageAdapter.loadRegistrationData()",
-            "org.mifos.authenticator.biometrics.BiometricStorageAdapter"
-        )
+            "org.mifos.authenticator.biometrics.BiometricStorageAdapter",
+        ),
     )
     override fun loadRegistrationData(): String? {
         return null
@@ -50,8 +58,8 @@ class PasscodeStorageAdapterImpl(
         "Use BiometricStorageAdapter from the biometrics library instead.",
         replaceWith = ReplaceWith(
             "BiometricStorageAdapter.deleteRegistrationData()",
-            "org.mifos.authenticator.biometrics.BiometricStorageAdapter"
-        )
+            "org.mifos.authenticator.biometrics.BiometricStorageAdapter",
+        ),
     )
     override fun deleteRegistrationData() {}
 }

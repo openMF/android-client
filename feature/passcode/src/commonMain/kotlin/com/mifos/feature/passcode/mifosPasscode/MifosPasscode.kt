@@ -5,10 +5,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/mobile-wallet/blob/master/LICENSE.md
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.feature.passcode.mifosPasscode
 
+import androidclient.feature.passcode.generated.resources.Res
+import androidclient.feature.passcode.generated.resources.feature_authenticator_error
+import androidclient.feature.passcode.generated.resources.feature_authenticator_ok
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -24,9 +27,6 @@ import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
 import com.mifos.core.designsystem.component.MifosDialogBox
-import androidclient.feature.passcode.generated.resources.Res
-import androidclient.feature.passcode.generated.resources.feature_authenticator_error
-import androidclient.feature.passcode.generated.resources.feature_authenticator_ok
 import com.mifos.feature.passcode.components.BiometricsKey
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -76,7 +76,7 @@ fun MifosPasscode(
         isBackEnabled = true,
         onBackCancelled = { },
         onBackCompleted = {
-            if(allowBackNavigation){
+            if (allowBackNavigation) {
                 onBackPress()
             }
         },

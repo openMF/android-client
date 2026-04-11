@@ -24,11 +24,7 @@ import com.mifos.core.domain.useCases.UsernameValidationUseCase
 import com.mifos.core.model.objects.users.User
 import com.mifos.core.network.model.PostAuthenticationResponse
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /**

@@ -117,7 +117,6 @@ internal fun LoginScreen(
             passwordError.value = state.passwordError
         }
 
-
         LoginUiState.PassCodeActivityIntent -> {
             showDialog.value = false
             passcodeIntent()

@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/mobile-wallet/blob/master/LICENSE.md
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.feature.passcode.di
 
@@ -19,7 +19,7 @@ import org.mifos.authenticator.passcode.PasscodeStorageAdapter
 
 val MifosAuthenticatorModule = module {
     single {
-        val isBiometricsEnabled = get<BiometricStorageAdapter>().loadRegistrationData()!=null
+        val isBiometricsEnabled = get<BiometricStorageAdapter>().loadRegistrationData() != null
 
         PasscodeManager(get<PasscodeStorageAdapter>(), isBiometricsEnabled)
     }

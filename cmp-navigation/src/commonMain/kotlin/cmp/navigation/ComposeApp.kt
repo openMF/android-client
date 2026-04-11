@@ -57,5 +57,4 @@ fun ComposeApp(
             )
         }
     }
-
 }

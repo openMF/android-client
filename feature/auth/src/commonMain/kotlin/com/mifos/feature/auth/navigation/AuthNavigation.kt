@@ -34,5 +34,5 @@ fun NavGraphBuilder.authNavGraph(
 }
 
 fun NavController.navigateToLogin(navOptions: NavOptions? = null) {
-    this.navigate(LoginRoute, navOptions,)
+    this.navigate(LoginRoute, navOptions)
 }

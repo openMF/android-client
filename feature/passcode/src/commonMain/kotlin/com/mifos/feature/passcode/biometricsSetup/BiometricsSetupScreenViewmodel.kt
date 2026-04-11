@@ -5,18 +5,18 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/mobile-wallet/blob/master/LICENSE.md
+ * See https://github.com/openMF/android-client/blob/master/LICENSE.md
  */
 package com.mifos.feature.passcode.biometricsSetup
 
+import androidclient.feature.passcode.generated.resources.Res
+import androidclient.feature.passcode.generated.resources.feature_authenticator_biometrics_available
+import androidclient.feature.passcode.generated.resources.feature_authenticator_biometrics_not_set
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.datastore.UserPreferencesRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import androidclient.feature.passcode.generated.resources.Res
-import androidclient.feature.passcode.generated.resources.feature_authenticator_biometrics_available
-import androidclient.feature.passcode.generated.resources.feature_authenticator_biometrics_not_set
 import org.jetbrains.compose.resources.getString
 import org.mifos.authenticator.biometrics.BiometricStorageAdapter
 import org.mifos.authenticator.biometrics.platformAuthenticator.PlatformAuthenticationProvider

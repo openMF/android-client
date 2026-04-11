@@ -86,7 +86,7 @@ internal fun SettingsScreen(
             changePasscode()
         },
         onEnableDisableBiometrics = {
-            if(biometricsState.isRegistered) {
+            if (biometricsState.isRegistered) {
                 viewModel.disableBiometrics()
             } else {
                 viewModel.registerBiometrics(authProvider)
@@ -122,7 +122,7 @@ internal fun SettingsScreen(
     onBackPressed: () -> Unit,
     onClickUpdateConfig: () -> Unit,
     changePasscode: () -> Unit,
-    onEnableDisableBiometrics:() -> Unit,
+    onEnableDisableBiometrics: () -> Unit,
     dismissBiometricsError: () -> Unit,
     handleEndpointUpdate: (baseURL: String, tenant: String) -> Unit,
     updateTheme: (theme: AppTheme) -> Unit,
@@ -133,7 +133,6 @@ internal fun SettingsScreen(
     var showThemeUpdateDialog by rememberSaveable { mutableStateOf(false) }
     var showSyncSurveyDialog by rememberSaveable { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
-
 
     MifosScaffold(
         onBackPressed = onBackPressed,
@@ -229,8 +228,11 @@ private fun SettingsCards(
     LazyColumn {
         items(SettingsCardItem.entries) { card ->
             val title = if (card == SettingsCardItem.BIOMETRICS) {
-                if (isBiometricsRegistered) Res.string.feature_settings_disable_biometrics
-                else Res.string.feature_settings_enable_biometrics
+                if (isBiometricsRegistered) {
+                    Res.string.feature_settings_disable_biometrics
+                } else {
+                    Res.string.feature_settings_enable_biometrics
+                }
             } else {
                 card.title
             }

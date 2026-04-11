@@ -53,7 +53,6 @@ import org.mifos.authenticator.biometrics.platformAuthenticator.PlatformAuthenti
 import org.mifos.authenticator.biometrics.platformAuthenticator.RegistrationResult
 import org.mifos.authenticator.passcode.PasscodeManager
 
-
 const val DISABLE_BIOMETRICS_VERIFICATION_KEY = "com.mifos.authentication.verification.key"
 private const val DEFAULT_USER_ID = "default_user"
 private const val DEFAULT_USER_EMAIL = "default@mifos.org"
@@ -87,14 +86,13 @@ class SettingsViewModel(
 
     private val _biometricsState = MutableStateFlow(
         BiometricsState(
-            isRegistered = passcodeManager.state.value.isExternalAuthEnabled
-        )
+            isRegistered = passcodeManager.state.value.isExternalAuthEnabled,
+        ),
     )
     val biometricsState: StateFlow<BiometricsState> = _biometricsState.asStateFlow()
 
     val authenticationSuccess: MutableStateFlow<Boolean?> =
         savedStateHandle.getMutableStateFlow(DISABLE_BIOMETRICS_VERIFICATION_KEY, null)
-
 
     fun updateTheme(theme: AppTheme) {
         viewModelScope.launch {
@@ -153,12 +151,12 @@ class SettingsViewModel(
                 }
                 RegistrationResult.PlatformAuthenticatorNotSet -> {
                     updateBiometricsErrorState(
-                        getString(Res.string.feature_settings_biometrics_not_set)
+                        getString(Res.string.feature_settings_biometrics_not_set),
                     )
                 }
                 RegistrationResult.PlatformAuthenticatorNotAvailable -> {
                     updateBiometricsErrorState(
-                        getString(Res.string.feature_settings_biometrics_not_available)
+                        getString(Res.string.feature_settings_biometrics_not_available),
                     )
                 }
                 is RegistrationResult.Error -> {
@@ -175,7 +173,6 @@ class SettingsViewModel(
             it.copy(error = error)
         }
     }
-
 
     fun updateLanguage(language: String): Boolean {
         return (language == MifosAppLanguage.SYSTEM_LANGUAGE.code)

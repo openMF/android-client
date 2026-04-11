@@ -38,12 +38,10 @@ import com.mifos.core.data.repository.AppLockRepository
 import com.mifos.core.ui.NonNullEnterTransitionProvider
 import com.mifos.core.ui.NonNullExitTransitionProvider
 import com.mifos.core.ui.RootTransitionProviders
-import com.mifos.feature.auth.navigation.LoginRoute
 import com.mifos.feature.auth.navigation.authNavGraph
 import com.mifos.feature.auth.navigation.navigateToLogin
 import com.mifos.feature.passcode.biometricsSetup.biometricSetupScreen
 import com.mifos.feature.passcode.biometricsSetup.navigateToBiometricSetupScreen
-import com.mifos.feature.passcode.mifosPasscode.RootPasscodeRoute
 import com.mifos.feature.passcode.mifosPasscode.navigateToReAuthMifosPasscodeScreen
 import com.mifos.feature.passcode.mifosPasscode.navigateToRootMifosPasscodeScreen
 import com.mifos.feature.passcode.mifosPasscode.reAuthMifosPasscodeScreen
@@ -83,7 +81,6 @@ fun RootNavScreen(
         restoreState = false
     }
 
-
     // Use a LaunchedEffect to ensure we don't navigate too soon when the app first opens. This
     // avoids a bug that first appeared in Compose Material3 1.2.0-rc01 that causes the initial
     // transition to appear corrupted.
@@ -120,7 +117,6 @@ fun RootNavScreen(
         onDispose { lifeCycleObserver.removeObserver(observer) }
     }
 
-
     LaunchedEffect(isNotSplashScreen) {
         if (isNotSplashScreen) onSplashScreenRemoved()
     }
@@ -139,7 +135,7 @@ fun RootNavScreen(
             navController = navController,
             onClickLogout = {
                 viewModel.trySendAction(RootNavAction.LogOutUser)
-            }
+            },
         )
         authNavGraph(
             navigatePasscode = navController::navigateToRootMifosPasscodeScreen,
@@ -184,7 +180,6 @@ fun RootNavScreen(
             },
         )
     }
-
 }
 
 private fun NavDestination?.rootLevelRoute(): String? = when {

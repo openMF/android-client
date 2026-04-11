@@ -25,7 +25,7 @@ sealed class LoginUiState {
 
     data class ShowValidationError(
         val usernameError: StringResource? = null,
-        val passwordError: StringResource? = null
+        val passwordError: StringResource? = null,
     ) : LoginUiState()
 
     data object PassCodeActivityIntent : LoginUiState()

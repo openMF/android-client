@@ -30,6 +30,7 @@ import com.mifos.feature.individualCollectionSheet.di.CollectionSheetModule
 import com.mifos.feature.loan.di.LoanModule
 import com.mifos.feature.note.di.NoteModule
 import com.mifos.feature.offline.di.OfflineModule
+import com.mifos.feature.passcode.di.MifosAuthenticatorModule
 import com.mifos.feature.path.tracking.di.PathTrackingModule
 import com.mifos.feature.recurringDeposit.di.RecurringDepositModule
 import com.mifos.feature.report.di.ReportModule
@@ -40,7 +41,6 @@ import com.mifos.feature.settings.di.SettingsModule
 import com.mifos.room.di.DaoModule
 import com.mifos.room.di.HelperModule
 import com.mifos.room.di.PlatformSpecificDatabaseModule
-import com.mifos.feature.passcode.di.MifosAuthenticatorModule
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 

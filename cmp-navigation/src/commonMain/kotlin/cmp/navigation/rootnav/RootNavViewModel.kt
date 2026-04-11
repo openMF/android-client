@@ -10,9 +10,11 @@
 package cmp.navigation.rootnav
 
 import androidx.lifecycle.viewModelScope
+import com.mifos.core.data.repository.AppLockRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.datastore.model.AppSettings
 import com.mifos.core.model.objects.users.User
+import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
@@ -21,10 +23,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mifos.authenticator.biometrics.BiometricStorageAdapter
 import org.mifos.authenticator.passcode.PasscodeManager
-import com.mifos.core.data.repository.AppLockRepository
-import com.mifos.core.ui.util.BaseViewModel
 import org.mifos.authenticator.passcode.PasscodeStorageAdapter
-
 
 class RootNavViewModel(
     private val userDataRepository: UserPreferencesRepository,
@@ -107,14 +106,14 @@ sealed class RootNavState {
 }
 
 sealed interface RootNavAction {
-    data object LogOutUser: RootNavAction
-    data object UnlockApp: RootNavAction
+    data object LogOutUser : RootNavAction
+    data object UnlockApp : RootNavAction
 
     sealed interface Internal {
 
         data class UserStateUpdateReceive(
             val userData: User,
             val settingsData: AppSettings,
-        ): RootNavAction
+        ) : RootNavAction
     }
 }
