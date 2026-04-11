@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
 @file:OptIn(ExperimentalMaterial3Api::class)
 
@@ -54,7 +54,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Blue
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -162,9 +161,9 @@ internal fun RunReportScreen(
                         )
                     }
                     DropdownMenu(
-                        modifier = Modifier.background(White),
                         expanded = showMenu,
                         onDismissRequest = { showMenu = false },
+                        containerColor = KptTheme.colorScheme.surface,
                     ) {
                         MifosMenuDropDownItem(
                             option = stringResource(Res.string.feature_report_client),

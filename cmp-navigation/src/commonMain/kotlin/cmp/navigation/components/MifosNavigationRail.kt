@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
 package cmp.navigation.components
 
@@ -39,6 +39,7 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 fun MifosNavigationRail(
@@ -49,7 +50,7 @@ fun MifosNavigationRail(
     windowInsets: WindowInsets = NavigationRailDefaults.windowInsets,
 ) {
     Surface(
-        color = Color.White,
+        color = KptTheme.colorScheme.surface,
         contentColor = Color.Unspecified,
         modifier = modifier,
     ) {

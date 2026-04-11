@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
 package com.mifos.feature.settings.syncSurvey
 
@@ -227,7 +227,7 @@ private fun SyncSurveysDialogContent(
         Box(
             modifier = Modifier
                 .clip(KptTheme.shapes.large)
-                .background(Color.White)
+                .background(KptTheme.colorScheme.surface)
                 .padding(KptTheme.spacing.md),
             contentAlignment = Alignment.Center,
         ) {

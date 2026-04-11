@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
 package cmp.navigation.components
 
@@ -50,7 +50,7 @@ import androidx.compose.ui.zIndex
 import com.mifos.core.designsystem.component.MifosNavigationRail
 import com.mifos.core.designsystem.component.MifosPullToRefreshState
 import com.mifos.core.designsystem.component.rememberMifosPullToRefreshState
-import com.mifos.core.designsystem.theme.AppColors
+import template.core.base.designsystem.theme.KptTheme
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
 @Suppress("LongMethod")
@@ -65,7 +65,7 @@ fun MifosScaffold(
     floatingActionButtonPosition: FabPosition = FabPosition.End,
     navigationData: ScaffoldNavigationData? = null,
     pullToRefreshState: MifosPullToRefreshState = rememberMifosPullToRefreshState(),
-    containerColor: Color = AppColors.customWhite,
+    containerColor: Color = KptTheme.colorScheme.background,
     contentColor: Color = contentColorFor(containerColor),
     contentWindowInsets: WindowInsets = ScaffoldDefaults
         .contentWindowInsets

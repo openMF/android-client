@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
 package com.mifos.feature.dataTable.dataTableRowDialog
 
@@ -33,7 +33,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -97,7 +96,7 @@ fun DataTableRowDialogScreen(
         Surface(
             modifier = modifier,
             shape = KptTheme.shapes.large,
-            color = Color.White,
+            color = KptTheme.colorScheme.surface,
         ) {
             Box(
                 contentAlignment = Alignment.Center,
@@ -129,7 +128,7 @@ fun DataTableRowDialogScreen(
                                 Text(
                                     text = stringResource(Res.string.feature_data_table_add_data_table),
                                     fontSize = KptTheme.typography.titleLarge.fontSize,
-                                    color = Color.Blue,
+                                    color = KptTheme.colorScheme.primary,
                                 )
                                 IconButton(onClick = { onDismiss() }) {
                                     Icon(

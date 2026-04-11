@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
 package com.mifos.feature.individualCollectionSheet.paymentDetails
 
@@ -288,7 +288,7 @@ internal fun PaymentsDetailsScreen(
             OutlinedCard(
                 modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
                 colors = CardDefaults.cardColors(
-                    containerColor = Color.White,
+                    containerColor = KptTheme.colorScheme.surface,
                 ),
             ) {
                 Column(

@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
 package com.mifos.core.designsystem.component
 
@@ -39,7 +39,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.AppColors
 import template.core.base.designsystem.theme.KptTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,7 +75,7 @@ fun MifosScaffold(
             }
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        containerColor = AppColors.customWhite,
+        containerColor = KptTheme.colorScheme.background,
         content = { paddingValues ->
             val internalPullToRefreshState = rememberPullToRefreshState()
             Box(
@@ -187,7 +186,7 @@ private fun MifosDetailTopBar(
         },
         actions = actions,
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = AppColors.customWhite,
+            containerColor = KptTheme.colorScheme.surface,
             titleContentColor = KptTheme.colorScheme.onSurface,
             navigationIconContentColor = KptTheme.colorScheme.onSurface,
             actionIconContentColor = KptTheme.colorScheme.onSurface,

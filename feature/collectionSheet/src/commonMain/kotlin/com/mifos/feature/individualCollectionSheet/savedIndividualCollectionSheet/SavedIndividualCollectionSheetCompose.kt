@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
 package com.mifos.feature.individualCollectionSheet.savedIndividualCollectionSheet
 
@@ -20,12 +20,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.mifos.core.ui.util.DevicePreview
 import org.jetbrains.compose.resources.stringResource
+import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun SavedIndividualCollectionSheetCompose(
@@ -35,7 +35,7 @@ internal fun SavedIndividualCollectionSheetCompose(
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        containerColor = Color.White,
+        containerColor = KptTheme.colorScheme.background,
     ) { paddingValue ->
         Column(
             modifier = Modifier

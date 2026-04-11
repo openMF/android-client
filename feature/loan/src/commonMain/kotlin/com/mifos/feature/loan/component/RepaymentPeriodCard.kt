@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
 package com.mifos.feature.loan.component
 
@@ -33,7 +33,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCard
@@ -72,7 +71,7 @@ fun RepaymentPeriodCard(
         shape = DesignToken.shapes.medium,
         elevation = KptTheme.elevation.level0,
         colors = CardDefaults.cardColors(
-            AppColors.customWhite,
+            KptTheme.colorScheme.surface,
         ),
         borderStroke = BorderStroke(DesignToken.spacing.dp1, KptTheme.colorScheme.secondaryContainer),
     ) {
@@ -92,7 +91,7 @@ fun RepaymentPeriodCard(
             ) {
                 Text(
                     text = period.period?.toString() ?: "-",
-                    color = Color.White,
+                    color = KptTheme.colorScheme.onPrimary,
                     style = MifosTypography.labelMedium,
                 )
             }

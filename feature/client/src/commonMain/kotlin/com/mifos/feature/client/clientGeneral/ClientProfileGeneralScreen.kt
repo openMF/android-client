@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
 package com.mifos.feature.client.clientGeneral
 
@@ -279,7 +279,7 @@ fun PerformanceHistoryRows(
     value: String,
     modifier: Modifier = Modifier,
     textStyle: TextStyle = TextStyle(
-        color = AppColors.customWhite,
+        color = KptTheme.colorScheme.onPrimary,
         fontStyle = KptTheme.typography.labelMedium.fontStyle,
     ),
 ) {

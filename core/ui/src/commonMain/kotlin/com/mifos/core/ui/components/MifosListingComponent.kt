@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
 package com.mifos.core.ui.components
 
@@ -80,7 +80,7 @@ import template.core.base.designsystem.theme.KptTheme
 fun MifosListingComponentOutline(
     modifier: Modifier = Modifier,
     borderColor: Color = KptTheme.colorScheme.secondaryContainer,
-    backgroundColor: Color = AppColors.customWhite,
+    backgroundColor: Color = KptTheme.colorScheme.surface,
     shape: Shape = DesignToken.shapes.medium,
     content: @Composable () -> Unit,
 ) {
@@ -245,7 +245,7 @@ fun MifosDefaultListingComponent(
 fun MifosDefaultListingComponentFromStringResources(
     borderColor: Color = KptTheme.colorScheme.primary.copy(alpha = 0.5f),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
-    backgroundColor: Color = AppColors.customWhite,
+    backgroundColor: Color = KptTheme.colorScheme.surface,
     data: Map<StringResource, String>,
 ) {
     MifosListingComponentOutline(

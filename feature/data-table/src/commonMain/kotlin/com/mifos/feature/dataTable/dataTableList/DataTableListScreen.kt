@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
 package com.mifos.feature.dataTable.dataTableList
 
@@ -46,7 +46,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -186,7 +185,10 @@ fun DataTableListContent(
                 .padding(KptTheme.spacing.md),
             colors = ButtonDefaults.buttonColors(containerColor = KptTheme.colorScheme.primary),
         ) {
-            Text(text = stringResource(Res.string.feature_data_table_save), color = Color.White)
+            Text(
+                text = stringResource(Res.string.feature_data_table_save),
+                color = KptTheme.colorScheme.onPrimary,
+            )
         }
     }
 }

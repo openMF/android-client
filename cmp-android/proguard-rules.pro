@@ -129,7 +129,7 @@
 -dontwarn io.ktor.client.network.sockets.SocketTimeoutException
 -dontwarn java.lang.management.RuntimeMXBean
 
--keep class org.mifospay.core.network.services.* { *;}
+-keep class com.mifos.core.network.services.* { *;}
 -keep class de.jensklingenberg.ktorfit.converter.** { *; }
 -keep class de.jensklingenberg.ktorfit.** { *; }
 -keeppackagenames de.jensklingenberg.ktorfit.*
