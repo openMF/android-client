@@ -11,25 +11,41 @@ package com.mifos.feature.loan.loanRepayment
 
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_account_number
-import androidclient.feature.loan.generated.resources.feature_loan_additional_payment
-import androidclient.feature.loan.generated.resources.feature_loan_amount
+import androidclient.feature.loan.generated.resources.feature_loan_bank_number
 import androidclient.feature.loan.generated.resources.feature_loan_cancel
+import androidclient.feature.loan.generated.resources.feature_loan_cheque_number
 import androidclient.feature.loan.generated.resources.feature_loan_dialog_action_ok
 import androidclient.feature.loan.generated.resources.feature_loan_dialog_action_pay_now
 import androidclient.feature.loan.generated.resources.feature_loan_dialog_message_sync_transaction
 import androidclient.feature.loan.generated.resources.feature_loan_failed_to_load_loan_repayment
+import androidclient.feature.loan.generated.resources.feature_loan_fees
+import androidclient.feature.loan.generated.resources.feature_loan_interest
 import androidclient.feature.loan.generated.resources.feature_loan_loan_amount_due
-import androidclient.feature.loan.generated.resources.feature_loan_loan_fees
 import androidclient.feature.loan.generated.resources.feature_loan_loan_in_arrears
 import androidclient.feature.loan.generated.resources.feature_loan_loan_repayment
+import androidclient.feature.loan.generated.resources.feature_loan_no_penalties_found
+import androidclient.feature.loan.generated.resources.feature_loan_note
 import androidclient.feature.loan.generated.resources.feature_loan_payment_success_title
 import androidclient.feature.loan.generated.resources.feature_loan_payment_success_transaction_label
 import androidclient.feature.loan.generated.resources.feature_loan_payment_type
+import androidclient.feature.loan.generated.resources.feature_loan_penalties
+import androidclient.feature.loan.generated.resources.feature_loan_principal
+import androidclient.feature.loan.generated.resources.feature_loan_receipt_number
 import androidclient.feature.loan.generated.resources.feature_loan_repayment_date
 import androidclient.feature.loan.generated.resources.feature_loan_review_payment
+import androidclient.feature.loan.generated.resources.feature_loan_routing_code
 import androidclient.feature.loan.generated.resources.feature_loan_select_date
+import androidclient.feature.loan.generated.resources.feature_loan_show_payment_details
 import androidclient.feature.loan.generated.resources.feature_loan_sync_previous_transaction
 import androidclient.feature.loan.generated.resources.feature_loan_total
+import androidclient.feature.loan.generated.resources.feature_loan_transaction_amount
+import androidclient.feature.loan.generated.resources.feature_loan_transaction_breakdown
+import androidclient.feature.loan.generated.resources.feature_loan_waive_penalties
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -52,19 +68,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SelectableDates
-import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
@@ -73,7 +83,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosBottomSheet
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
@@ -84,10 +93,10 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
-import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.components.MifosTwoButtonRow
+import com.mifos.core.ui.util.EventsEffect
 import com.mifos.room.entities.PaymentTypeOptionEntity
-import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import org.jetbrains.compose.resources.stringResource
@@ -102,214 +111,140 @@ import kotlin.time.ExperimentalTime
 @Composable
 internal fun LoanRepaymentScreen(
     navigateBack: () -> Unit,
-    viewmodel: LoanRepaymentViewModel = koinViewModel(),
+    viewModel: LoanRepaymentViewModel = koinViewModel(),
 ) {
-    val uiState by viewmodel.loanRepaymentUiState.collectAsStateWithLifecycle()
-    val loanDetails by viewmodel.loanDetailsState.collectAsStateWithLifecycle()
+    val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
-    LaunchedEffect(key1 = Unit) {
-        if (loanDetails.loanAccountNumber.isNotEmpty()) {
-            viewmodel.checkDatabaseLoanRepaymentByLoanId()
+    EventsEffect(viewModel.eventFlow) { event ->
+        when (event) {
+            LoanRepaymentEvent.NavigateBack -> navigateBack()
         }
     }
 
     LoanRepaymentScreen(
-        loanId = loanDetails.loanId,
-        clientName = loanDetails.clientName,
-        loanProductName = loanDetails.loanProductName,
-        amountInArrears = loanDetails.amountInArrears,
-        loanAccountNumber = loanDetails.loanAccountNumber,
-        uiState = uiState,
-        navigateBack = navigateBack,
-        onRetry = {
-            if (loanDetails.loanAccountNumber.isEmpty()) {
-                viewmodel.loadLoanById()
-            } else {
-                viewmodel.checkDatabaseLoanRepaymentByLoanId()
-            }
-        },
-        submitPayment = {
-            viewmodel.submitPayment(it)
-        },
-        onLoanRepaymentDoesNotExistInDatabase = {
-            viewmodel.loadLoanRepaymentTemplate()
-        },
-        formatCurrency = viewmodel::formatCurrency,
-        calculateTotal = viewmodel::calculateTotal,
-        isAllFieldsValid = viewmodel::isAllFieldsValid,
+        state = state,
+        onAction = remember(viewModel) { viewModel::trySendAction },
     )
 }
 
 @Composable
 internal fun LoanRepaymentScreen(
-    loanId: Int,
-    clientName: String,
-    loanProductName: String,
-    amountInArrears: Double?,
-    loanAccountNumber: String,
-    uiState: LoanRepaymentUiState,
-    navigateBack: () -> Unit,
-    onRetry: () -> Unit,
-    submitPayment: (request: LoanRepaymentRequestEntity) -> Unit,
-    onLoanRepaymentDoesNotExistInDatabase: () -> Unit,
-    formatCurrency: (Double?, String?, Int?) -> String,
-    calculateTotal: (String, String, String) -> Double,
-    isAllFieldsValid: (String, String, String, String) -> Boolean,
+    state: LoanRepaymentState,
+    onAction: (LoanRepaymentAction) -> Unit,
 ) {
-    val snackbarHostState = remember {
-        SnackbarHostState()
-    }
-
     MifosScaffold(
-        snackbarHostState = snackbarHostState,
-        onBackPressed = navigateBack,
+        onBackPressed = { onAction(LoanRepaymentAction.CancelClicked) },
         title = stringResource(Res.string.feature_loan_loan_repayment),
-    ) {
+    ) { paddingValues ->
         Box(
-            modifier = Modifier.padding(it),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
         ) {
-            when (uiState) {
-                is LoanRepaymentUiState.ShowError -> {
-                    MifosSweetError(message = stringResource(uiState.message)) {
-                        onRetry()
-                    }
-                }
+            if (state.loanRepaymentTemplate != null) {
+                LoanRepaymentContent(
+                    state = state,
+                    onAction = onAction,
+                )
+            }
 
-                is LoanRepaymentUiState.ShowLoanRepayTemplate -> {
-                    LoanRepaymentContent(
-                        loanId = loanId,
-                        loanAccountNumber = loanAccountNumber,
-                        clientName = clientName,
-                        loanProductName = loanProductName,
-                        amountInArrears = amountInArrears,
-                        loanRepaymentTemplate = uiState.loanRepaymentTemplate,
-                        navigateBack = navigateBack,
-                        submitPayment = submitPayment,
-                        formatCurrency = formatCurrency,
-                        calculateTotal = calculateTotal,
-                        isAllFieldsValid = isAllFieldsValid,
-                    )
-                }
+            LoanRepaymentDialogs(state = state, onAction = onAction)
 
-                LoanRepaymentUiState.ShowLoanRepaymentDoesNotExistInDatabase -> {
-                    onLoanRepaymentDoesNotExistInDatabase.invoke()
-                }
-
-                LoanRepaymentUiState.ShowLoanRepaymentExistInDatabase -> {
-                    AlertDialog(
-                        onDismissRequest = { },
-                        confirmButton = {
-                            TextButton(onClick = { navigateBack.invoke() }) {
-                                Text(text = stringResource(Res.string.feature_loan_dialog_action_ok))
-                            }
-                        },
-                        title = {
-                            Text(
-                                text = stringResource(Res.string.feature_loan_sync_previous_transaction),
-                                style = KptTheme.typography.titleLarge,
-                            )
-                        },
-                        text = { Text(text = stringResource(Res.string.feature_loan_dialog_message_sync_transaction)) },
-                    )
-                }
-
-                is LoanRepaymentUiState.ShowPaymentSubmittedSuccessfully -> {
-                    val response = uiState.loanRepaymentResponse
-                    if (response != null) {
-                        SuccessBottomSheet(
-                            response = response,
-                            onDismiss = navigateBack,
-                        )
-                    } else {
-                        LaunchedEffect(Unit) { navigateBack() }
-                    }
-                }
-
-                LoanRepaymentUiState.ShowProgressbar -> {
-                    MifosProgressIndicator()
-                }
+            if (state.isLoading) {
+                MifosProgressIndicatorOverlay()
             }
         }
+    }
+}
+
+@Composable
+private fun LoanRepaymentDialogs(
+    state: LoanRepaymentState,
+    onAction: (LoanRepaymentAction) -> Unit,
+) {
+    when (val dialogState = state.dialogState) {
+        is LoanRepaymentState.DialogState.Error -> {
+            MifosSweetError(message = stringResource(dialogState.message)) {
+                onAction(LoanRepaymentAction.RetryClicked)
+            }
+        }
+
+        LoanRepaymentState.DialogState.SyncPreviousTransaction -> {
+            AlertDialog(
+                onDismissRequest = { },
+                confirmButton = {
+                    TextButton(onClick = { onAction(LoanRepaymentAction.SyncDialogDismissed) }) {
+                        Text(text = stringResource(Res.string.feature_loan_dialog_action_ok))
+                    }
+                },
+                title = {
+                    Text(
+                        text = stringResource(Res.string.feature_loan_sync_previous_transaction),
+                        style = KptTheme.typography.titleLarge,
+                    )
+                },
+                text = {
+                    Text(
+                        text = stringResource(
+                            Res.string.feature_loan_dialog_message_sync_transaction,
+                        ),
+                    )
+                },
+            )
+        }
+
+        is LoanRepaymentState.DialogState.PaymentSuccess -> {
+            SuccessBottomSheet(
+                response = dialogState.response,
+                onDismiss = { onAction(LoanRepaymentAction.DismissSuccessDialog) },
+            )
+        }
+
+        null -> Unit
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 private fun LoanRepaymentContent(
-    loanId: Int,
-    clientName: String,
-    loanProductName: String,
-    amountInArrears: Double?,
-    loanAccountNumber: String,
-    loanRepaymentTemplate: LoanRepaymentTemplateEntity,
-    navigateBack: () -> Unit,
-    submitPayment: (request: LoanRepaymentRequestEntity) -> Unit,
-    formatCurrency: (Double?, String?, Int?) -> String,
-    calculateTotal: (String, String, String) -> Double,
-    isAllFieldsValid: (String, String, String, String) -> Boolean,
+    state: LoanRepaymentState,
+    onAction: (LoanRepaymentAction) -> Unit,
 ) {
-    var paymentType by rememberSaveable { mutableStateOf("") }
-    var amount by rememberSaveable { mutableStateOf("") }
-    var additionalPayment by rememberSaveable { mutableStateOf("") }
-    var fees by rememberSaveable { mutableStateOf("") }
-    var paymentTypeId by rememberSaveable { mutableIntStateOf(0) }
+    val scrollState = rememberScrollState()
 
-    var repaymentDate by rememberSaveable { mutableLongStateOf(Clock.System.now().toEpochMilliseconds()) }
-    var showDatePickerDialog by rememberSaveable { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = repaymentDate,
+        initialSelectedDateMillis = state.repaymentDate,
         selectableDates = object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
             }
         },
     )
-    val scrollState = rememberScrollState()
-    var showConfirmationSheet by rememberSaveable {
-        mutableStateOf(false)
-    }
 
-    val currencyCode = loanRepaymentTemplate.currency?.code
-    val decimalPlaces = loanRepaymentTemplate.currency?.decimalPlaces
-
-    if (showConfirmationSheet) {
+    if (state.showConfirmationSheet) {
         ConfirmationBottomSheet(
-            onDismiss = { showConfirmationSheet = false },
-            loanAccountNumber = loanAccountNumber,
-            paymentTypeId = paymentTypeId.toString(),
-            repaymentDate = repaymentDate,
-            paymentType = paymentType,
-            amount = amount,
-            additionalPayment = additionalPayment,
-            fees = fees,
-            total = calculateTotal(fees, amount, additionalPayment).toString(),
-            submitPayment = submitPayment,
-            currencyCode = currencyCode,
-            decimalPlaces = decimalPlaces,
-            formatCurrency = formatCurrency,
+            state = state,
+            onDismiss = { onAction(LoanRepaymentAction.DismissConfirmationSheet) },
+            onConfirm = { onAction(LoanRepaymentAction.ConfirmPayment) },
         )
     }
 
-    if (showDatePickerDialog) {
+    if (state.showDatePicker) {
         DatePickerDialog(
-            onDismissRequest = {
-                showDatePickerDialog = false
-            },
+            onDismissRequest = { onAction(LoanRepaymentAction.DismissDatePicker) },
             confirmButton = {
                 TextButton(
                     onClick = {
                         datePickerState.selectedDateMillis?.let {
-                            repaymentDate = it
+                            onAction(LoanRepaymentAction.RepaymentDateChanged(it))
                         }
-                        showDatePickerDialog = false
+                        onAction(LoanRepaymentAction.DismissDatePicker)
                     },
                 ) { Text(stringResource(Res.string.feature_loan_select_date)) }
             },
             dismissButton = {
                 TextButton(
-                    onClick = {
-                        showDatePickerDialog = false
-                    },
+                    onClick = { onAction(LoanRepaymentAction.DismissDatePicker) },
                 ) { Text(stringResource(Res.string.feature_loan_cancel)) }
             },
         ) {
@@ -328,21 +263,31 @@ private fun LoanRepaymentContent(
         Text(
             style = KptTheme.typography.bodyLarge,
             color = KptTheme.colorScheme.onBackground,
-            text = clientName,
+            text = state.clientName,
             fontWeight = FontWeight.Bold,
         )
 
         Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
 
-        FarApartTextItem(title = loanProductName, value = loanId.toString())
+        FarApartTextItem(title = state.loanProductName, value = state.loanId.toString())
         FarApartTextItem(
             title = stringResource(Res.string.feature_loan_loan_in_arrears),
-            value = formatCurrency(amountInArrears, currencyCode, decimalPlaces),
+            value = formatCurrency(state.amountInArrears, state.currencyCode, state.decimalPlaces),
         )
         FarApartTextItem(
             title = stringResource(Res.string.feature_loan_loan_amount_due),
-            value = formatCurrency(loanRepaymentTemplate.amount, currencyCode, decimalPlaces),
+            value = formatCurrency(
+                state.loanRepaymentTemplate?.amount,
+                state.currencyCode,
+                state.decimalPlaces,
+            ),
         )
+
+        Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
+        HorizontalDivider()
+        Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
+
+        TransactionBreakdownSection(state = state)
 
         Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
         HorizontalDivider()
@@ -352,13 +297,24 @@ private fun LoanRepaymentContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(min = DesignToken.sizes.inputHeight),
-            value = DateHelper.getDateAsStringFromLong(
-                repaymentDate,
-            ),
+            value = DateHelper.getDateAsStringFromLong(state.repaymentDate),
             label = stringResource(Res.string.feature_loan_repayment_date),
         ) {
-            showDatePickerDialog = true
+            onAction(LoanRepaymentAction.ShowDatePicker)
         }
+
+        Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
+
+        MifosOutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = DesignToken.sizes.inputHeight),
+            value = state.transactionAmount,
+            onValueChange = { onAction(LoanRepaymentAction.TransactionAmountChanged(it)) },
+            label = stringResource(Res.string.feature_loan_transaction_amount),
+            error = null,
+            keyboardType = KeyboardType.Number,
+        )
 
         Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
 
@@ -366,90 +322,203 @@ private fun LoanRepaymentContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(min = DesignToken.sizes.inputHeight),
-            value = paymentType,
-            onValueChanged = { paymentType = it },
+            value = state.paymentType,
+            onValueChanged = {},
             onOptionSelected = { index, value ->
-                paymentType = value
-                paymentTypeId = loanRepaymentTemplate.paymentTypeOptions?.get(index)?.id ?: 0
+                onAction(LoanRepaymentAction.PaymentTypeChanged(index, value))
             },
             label = stringResource(Res.string.feature_loan_payment_type),
-            options = if (loanRepaymentTemplate.paymentTypeOptions != null) loanRepaymentTemplate.paymentTypeOptions!!.map { it.name } else listOf(),
+            options = state.paymentTypeOptions.map { it.name },
             readOnly = true,
         )
 
-        MifosOutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = DesignToken.sizes.inputHeight),
-            value = amount,
-            onValueChange = {
-                amount = it
-            },
-            label = stringResource(Res.string.feature_loan_amount),
-            error = null,
-            keyboardType = KeyboardType.Number,
-        )
+        Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
+
+        WaivePenaltiesToggle(state = state, onAction = onAction)
+
+        Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
+
+        ShowPaymentDetailsToggle(state = state, onAction = onAction)
 
         Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
 
         MifosOutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = DesignToken.sizes.inputHeight),
-            value = additionalPayment,
-            onValueChange = {
-                additionalPayment = it
-            },
-            label = stringResource(Res.string.feature_loan_additional_payment),
+                .heightIn(min = DesignToken.sizes.inputHeight * 2),
+            value = state.note,
+            onValueChange = { onAction(LoanRepaymentAction.NoteChanged(it)) },
+            label = stringResource(Res.string.feature_loan_note),
             error = null,
-            keyboardType = KeyboardType.Number,
-        )
-
-        Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
-
-        MifosOutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = DesignToken.sizes.inputHeight),
-            value = fees,
-            onValueChange = {
-                fees = it
-            },
-            label = stringResource(Res.string.feature_loan_loan_fees),
-            error = null,
-            keyboardType = KeyboardType.Number,
-        )
-
-        Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
-
-        val calculatedTotal = calculateTotal(fees, amount, additionalPayment)
-
-        MifosOutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = DesignToken.sizes.inputHeight),
-            value = formatCurrency(calculatedTotal, currencyCode, decimalPlaces),
-            onValueChange = { },
-            label = stringResource(Res.string.feature_loan_total),
-            error = null,
-            readOnly = true,
+            singleLine = false,
+            maxLines = 4,
         )
 
         Spacer(modifier = Modifier.height(DesignToken.spacing.extraLarge))
 
-        val isValid = isAllFieldsValid(amount, additionalPayment, fees, paymentType)
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.feature_loan_cancel),
             secondBtnText = stringResource(Res.string.feature_loan_review_payment),
-            onFirstBtnClick = { navigateBack.invoke() },
-            onSecondBtnClick = {
-                if (isValid) {
-                    showConfirmationSheet = true
-                }
-            },
-            isSecondButtonEnabled = isValid,
+            onFirstBtnClick = { onAction(LoanRepaymentAction.CancelClicked) },
+            onSecondBtnClick = { onAction(LoanRepaymentAction.ReviewPaymentClicked) },
+            isSecondButtonEnabled = state.isFormValid,
             isButtonIconVisible = false,
         )
+
+        Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
+    }
+}
+
+@Composable
+private fun TransactionBreakdownSection(state: LoanRepaymentState) {
+    Text(
+        text = stringResource(Res.string.feature_loan_transaction_breakdown),
+        style = KptTheme.typography.titleMedium,
+        fontWeight = FontWeight.Bold,
+        color = KptTheme.colorScheme.onBackground,
+    )
+
+    Spacer(modifier = Modifier.height(DesignToken.spacing.small))
+
+    FarApartTextItem(
+        title = stringResource(Res.string.feature_loan_principal),
+        value = formatCurrency(state.principalPortion, state.currencyCode, state.decimalPlaces),
+    )
+    FarApartTextItem(
+        title = stringResource(Res.string.feature_loan_interest),
+        value = formatCurrency(state.interestPortion, state.currencyCode, state.decimalPlaces),
+    )
+    FarApartTextItem(
+        title = stringResource(Res.string.feature_loan_fees),
+        value = formatCurrency(state.feeChargesPortion, state.currencyCode, state.decimalPlaces),
+    )
+    FarApartTextItem(
+        title = stringResource(Res.string.feature_loan_penalties),
+        value = formatCurrency(
+            state.penaltyChargesPortion,
+            state.currencyCode,
+            state.decimalPlaces,
+        ),
+    )
+}
+
+@Composable
+private fun WaivePenaltiesToggle(
+    state: LoanRepaymentState,
+    onAction: (LoanRepaymentAction) -> Unit,
+) {
+    val hasPenalties = (state.loanRepaymentTemplate?.penaltyChargesPortion ?: 0.0) > 0.0
+
+    if (hasPenalties) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = stringResource(Res.string.feature_loan_waive_penalties),
+                style = KptTheme.typography.bodyLarge,
+            )
+            Switch(
+                checked = state.waivePenalties,
+                onCheckedChange = { onAction(LoanRepaymentAction.WaivePenaltiesToggled(it)) },
+            )
+        }
+    } else {
+        Text(
+            text = stringResource(Res.string.feature_loan_no_penalties_found),
+            style = KptTheme.typography.bodyMedium,
+            color = KptTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
+@Composable
+private fun ShowPaymentDetailsToggle(
+    state: LoanRepaymentState,
+    onAction: (LoanRepaymentAction) -> Unit,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = stringResource(Res.string.feature_loan_show_payment_details),
+            style = KptTheme.typography.bodyLarge,
+        )
+        Switch(
+            checked = state.showPaymentDetails,
+            onCheckedChange = { onAction(LoanRepaymentAction.ShowPaymentDetailsToggled(it)) },
+        )
+    }
+
+    AnimatedVisibility(
+        visible = state.showPaymentDetails,
+        enter = expandVertically() + fadeIn(),
+        exit = shrinkVertically() + fadeOut(),
+    ) {
+        Column {
+            Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
+
+            MifosOutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = DesignToken.sizes.inputHeight),
+                value = state.accountNumber,
+                onValueChange = { onAction(LoanRepaymentAction.AccountNumberChanged(it)) },
+                label = stringResource(Res.string.feature_loan_account_number),
+                error = null,
+            )
+
+            Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
+
+            MifosOutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = DesignToken.sizes.inputHeight),
+                value = state.chequeNumber,
+                onValueChange = { onAction(LoanRepaymentAction.ChequeNumberChanged(it)) },
+                label = stringResource(Res.string.feature_loan_cheque_number),
+                error = null,
+            )
+
+            Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
+
+            MifosOutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = DesignToken.sizes.inputHeight),
+                value = state.routingCode,
+                onValueChange = { onAction(LoanRepaymentAction.RoutingCodeChanged(it)) },
+                label = stringResource(Res.string.feature_loan_routing_code),
+                error = null,
+            )
+
+            Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
+
+            MifosOutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = DesignToken.sizes.inputHeight),
+                value = state.receiptNumber,
+                onValueChange = { onAction(LoanRepaymentAction.ReceiptNumberChanged(it)) },
+                label = stringResource(Res.string.feature_loan_receipt_number),
+                error = null,
+            )
+
+            Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
+
+            MifosOutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = DesignToken.sizes.inputHeight),
+                value = state.bankNumber,
+                onValueChange = { onAction(LoanRepaymentAction.BankNumberChanged(it)) },
+                label = stringResource(Res.string.feature_loan_bank_number),
+                error = null,
+            )
+        }
     }
 }
 
@@ -478,23 +547,11 @@ private fun FarApartTextItem(title: String, value: String) {
 
 @Composable
 private fun ConfirmationBottomSheet(
+    state: LoanRepaymentState,
     onDismiss: () -> Unit,
-    loanAccountNumber: String,
-    paymentTypeId: String,
-    repaymentDate: Long,
-    paymentType: String,
-    amount: String,
-    additionalPayment: String,
-    fees: String,
-    total: String,
-    submitPayment: (request: LoanRepaymentRequestEntity) -> Unit,
-    currencyCode: String? = null,
-    decimalPlaces: Int? = null,
-    formatCurrency: (Double?, String?, Int?) -> String,
+    onConfirm: () -> Unit,
 ) {
-    MifosBottomSheet(
-        onDismiss = onDismiss,
-    ) {
+    MifosBottomSheet(onDismiss = onDismiss) {
         Column(
             modifier = Modifier
                 .padding(horizontal = KptTheme.spacing.md)
@@ -508,27 +565,48 @@ private fun ConfirmationBottomSheet(
                 modifier = Modifier.padding(bottom = KptTheme.spacing.md),
             )
 
-            ReviewItem(stringResource(Res.string.feature_loan_account_number), loanAccountNumber)
+            ReviewItem(
+                stringResource(Res.string.feature_loan_account_number),
+                state.loanAccountNumber,
+            )
             ReviewItem(
                 stringResource(Res.string.feature_loan_repayment_date),
-                DateHelper.getDateAsStringFromLong(repaymentDate),
-            )
-            ReviewItem(stringResource(Res.string.feature_loan_payment_type), paymentType)
-            HorizontalDivider(modifier = Modifier.padding(vertical = KptTheme.spacing.sm))
-            ReviewItem(
-                stringResource(Res.string.feature_loan_amount),
-                formatCurrency(amount.toDoubleOrNull(), currencyCode, decimalPlaces),
+                DateHelper.getDateAsStringFromLong(state.repaymentDate),
             )
             ReviewItem(
-                stringResource(Res.string.feature_loan_additional_payment),
-                formatCurrency(additionalPayment.toDoubleOrNull(), currencyCode, decimalPlaces),
-            )
-            ReviewItem(
-                stringResource(Res.string.feature_loan_loan_fees),
-                formatCurrency(fees.toDoubleOrNull(), currencyCode, decimalPlaces),
+                stringResource(Res.string.feature_loan_payment_type),
+                state.paymentType,
             )
 
             HorizontalDivider(modifier = Modifier.padding(vertical = KptTheme.spacing.sm))
+
+            ReviewItem(
+                stringResource(Res.string.feature_loan_principal),
+                formatCurrency(state.principalPortion, state.currencyCode, state.decimalPlaces),
+            )
+            ReviewItem(
+                stringResource(Res.string.feature_loan_interest),
+                formatCurrency(state.interestPortion, state.currencyCode, state.decimalPlaces),
+            )
+            ReviewItem(
+                stringResource(Res.string.feature_loan_fees),
+                formatCurrency(state.feeChargesPortion, state.currencyCode, state.decimalPlaces),
+            )
+            ReviewItem(
+                stringResource(Res.string.feature_loan_penalties),
+                formatCurrency(
+                    state.penaltyChargesPortion,
+                    state.currencyCode,
+                    state.decimalPlaces,
+                ),
+            )
+
+            if (state.note.isNotBlank()) {
+                ReviewItem(stringResource(Res.string.feature_loan_note), state.note)
+            }
+
+            HorizontalDivider(modifier = Modifier.padding(vertical = KptTheme.spacing.sm))
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -541,7 +619,11 @@ private fun ConfirmationBottomSheet(
                     fontWeight = FontWeight.Bold,
                 )
                 Text(
-                    text = formatCurrency(total.toDoubleOrNull(), currencyCode, decimalPlaces),
+                    text = formatCurrency(
+                        state.transactionAmount.toDoubleOrNull(),
+                        state.currencyCode,
+                        state.decimalPlaces,
+                    ),
                     style = KptTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = KptTheme.colorScheme.primary,
@@ -554,18 +636,7 @@ private fun ConfirmationBottomSheet(
                 firstBtnText = stringResource(Res.string.feature_loan_cancel),
                 secondBtnText = stringResource(Res.string.feature_loan_dialog_action_pay_now),
                 onFirstBtnClick = onDismiss,
-                onSecondBtnClick = {
-                    onDismiss()
-                    val request = LoanRepaymentRequestEntity(
-                        accountNumber = loanAccountNumber,
-                        paymentTypeId = paymentTypeId,
-                        dateFormat = DateHelper.SHORT_MONTH,
-                        locale = Constants.LOCALE_EN,
-                        transactionAmount = total,
-                        transactionDate = DateHelper.getDateAsStringFromLong(repaymentDate),
-                    )
-                    submitPayment.invoke(request)
-                },
+                onSecondBtnClick = onConfirm,
                 isButtonIconVisible = false,
             )
         }
@@ -580,8 +651,16 @@ private fun ReviewItem(label: String, value: String) {
             .padding(vertical = KptTheme.spacing.xs),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Text(text = label, style = KptTheme.typography.bodyMedium, color = KptTheme.colorScheme.surfaceVariant)
-        Text(text = value, style = KptTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
+        Text(
+            text = label,
+            style = KptTheme.typography.bodyMedium,
+            color = KptTheme.colorScheme.surfaceVariant,
+        )
+        Text(
+            text = value,
+            style = KptTheme.typography.bodyMedium,
+            fontWeight = FontWeight.SemiBold,
+        )
     }
 }
 
@@ -590,9 +669,7 @@ private fun SuccessBottomSheet(
     response: LoanRepaymentResponseEntity,
     onDismiss: () -> Unit,
 ) {
-    MifosBottomSheet(
-        onDismiss = onDismiss,
-    ) {
+    MifosBottomSheet(onDismiss = onDismiss) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -618,7 +695,10 @@ private fun SuccessBottomSheet(
             Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
 
             Text(
-                text = stringResource(Res.string.feature_loan_payment_success_transaction_label, response.resourceId.toString()),
+                text = stringResource(
+                    Res.string.feature_loan_payment_success_transaction_label,
+                    response.resourceId.toString(),
+                ),
                 style = KptTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
                 color = KptTheme.colorScheme.onSurfaceVariant,
@@ -638,8 +718,12 @@ private fun SuccessBottomSheet(
     }
 }
 
+private fun formatCurrency(amount: Double?, code: String?, decimalPlaces: Int?): String {
+    return LoanRepaymentViewModel.formatCurrency(amount, code, decimalPlaces)
+}
+
 private class LoanRepaymentScreenPreviewProvider :
-    PreviewParameterProvider<LoanRepaymentUiState> {
+    PreviewParameterProvider<LoanRepaymentState> {
 
     private val samplePaymentTypeOptions = mutableListOf(
         PaymentTypeOptionEntity(
@@ -662,35 +746,38 @@ private class LoanRepaymentScreenPreviewProvider :
         paymentTypeOptions = samplePaymentTypeOptions,
     )
 
-    override val values: Sequence<LoanRepaymentUiState>
+    @OptIn(ExperimentalTime::class)
+    override val values: Sequence<LoanRepaymentState>
         get() = sequenceOf(
-            LoanRepaymentUiState.ShowLoanRepaymentExistInDatabase,
-            LoanRepaymentUiState.ShowLoanRepayTemplate(sampleLoanRepaymentTemplate),
-            LoanRepaymentUiState.ShowError(Res.string.feature_loan_failed_to_load_loan_repayment),
-            LoanRepaymentUiState.ShowLoanRepaymentDoesNotExistInDatabase,
-            LoanRepaymentUiState.ShowProgressbar,
-            LoanRepaymentUiState.ShowPaymentSubmittedSuccessfully(LoanRepaymentResponseEntity(resourceId = 123)),
+            LoanRepaymentState(
+                clientName = "Ben Kiko",
+                loanId = 2,
+                loanProductName = "Product name",
+                amountInArrears = 23.333,
+                loanAccountNumber = "25",
+                loanRepaymentTemplate = sampleLoanRepaymentTemplate,
+                repaymentDate = Clock.System.now().toEpochMilliseconds(),
+                isLoading = false,
+            ),
+            LoanRepaymentState(
+                isLoading = true,
+            ),
+            LoanRepaymentState(
+                isLoading = false,
+                dialogState = LoanRepaymentState.DialogState.Error(
+                    Res.string.feature_loan_failed_to_load_loan_repayment,
+                ),
+            ),
         )
 }
 
 @Composable
 @Preview
 private fun PreviewLoanRepaymentScreen(
-    @PreviewParameter(LoanRepaymentScreenPreviewProvider::class) loanRepaymentUiState: LoanRepaymentUiState,
+    @PreviewParameter(LoanRepaymentScreenPreviewProvider::class) state: LoanRepaymentState,
 ) {
     LoanRepaymentScreen(
-        loanId = 2,
-        clientName = "Ben Kiko",
-        loanProductName = "Product name",
-        amountInArrears = 23.333,
-        loanAccountNumber = 25.toString(),
-        uiState = loanRepaymentUiState,
-        navigateBack = {},
-        onRetry = {},
-        submitPayment = {},
-        onLoanRepaymentDoesNotExistInDatabase = {},
-        formatCurrency = { amount, code, _ -> "$code $amount" },
-        calculateTotal = { _, _, _ -> 0.0 },
-        isAllFieldsValid = { _, _, _, _ -> true },
+        state = state,
+        onAction = {},
     )
 }
