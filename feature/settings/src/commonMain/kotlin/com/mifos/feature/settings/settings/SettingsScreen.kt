@@ -69,7 +69,7 @@ internal fun SettingsScreen(
     navigateToLoginScreen: () -> Unit,
     changePasscode: () -> Unit,
     onClickUpdateConfig: () -> Unit,
-    passcodeManager: PasscodeManager = koinInject(),
+    disableBiometrics: () -> Unit = {},
     viewModel: SettingsViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -82,11 +82,12 @@ internal fun SettingsScreen(
         state = uiState,
         biometricsState = biometricsState,
         changePasscode = {
-            passcodeManager.changePasscode()
+            viewModel.changePasscode()
             changePasscode()
         },
         onEnableDisableBiometrics = {
             if (biometricsState.isRegistered) {
+                disableBiometrics()
                 viewModel.disableBiometrics()
             } else {
                 viewModel.registerBiometrics(authProvider)

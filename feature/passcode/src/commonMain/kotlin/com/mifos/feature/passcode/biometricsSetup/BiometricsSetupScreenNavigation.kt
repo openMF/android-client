@@ -14,18 +14,23 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import kotlinx.serialization.Serializable
+import template.core.base.ui.composableWithSlideTransitions
 
-const val BIOMETRIC_SETUP_ROUTE = "biometrics_setup_route"
+
+@Serializable
+data object BiometricsSetupRoute
+
 
 fun NavController.navigateToBiometricSetupScreen(navOptions: NavOptions? = null) =
-    navigate(BIOMETRIC_SETUP_ROUTE, navOptions)
+    navigate(BiometricsSetupRoute, navOptions)
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun NavGraphBuilder.biometricSetupScreen(
     onBiometricsRegistrationSuccess: () -> Unit,
     onSkipBiometricSetup: () -> Unit,
 ) {
-    composable(route = BIOMETRIC_SETUP_ROUTE) {
+    composableWithSlideTransitions<BiometricsSetupRoute> {
         BiometricSetupScreen(
             onBiometricsRegistrationSuccess,
             onSkipBiometricSetup,

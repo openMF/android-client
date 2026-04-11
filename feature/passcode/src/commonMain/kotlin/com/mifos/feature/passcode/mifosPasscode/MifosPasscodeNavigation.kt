@@ -47,7 +47,7 @@ fun NavGraphBuilder.rootMifosPasscodeScreen(
     onPasscodeCreation: () -> Unit,
     onAuthenticationFailed: () -> Unit = {},
 ) {
-    composableWithStayTransitions<RootPasscodeRoute> {
+    composableWithSlideTransitions<RootPasscodeRoute> {
         MifosPasscode(
             navigateToLogin = navigateToLogin,
             onAuthenticationSuccess = onAuthenticationSuccess,

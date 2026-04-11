@@ -28,6 +28,7 @@ fun NavGraphBuilder.settingsScreen(
     navigateToLoginScreen: () -> Unit,
     changePasscode: () -> Unit,
     onClickUpdateConfig: () -> Unit,
+    disableBiometrics: () -> Unit = {},
 ) {
     composable<SettingsRoute> {
         SettingsScreen(
@@ -35,6 +36,7 @@ fun NavGraphBuilder.settingsScreen(
             navigateToLoginScreen = navigateToLoginScreen,
             changePasscode = changePasscode,
             onClickUpdateConfig = onClickUpdateConfig,
+            disableBiometrics = disableBiometrics,
         )
     }
 }

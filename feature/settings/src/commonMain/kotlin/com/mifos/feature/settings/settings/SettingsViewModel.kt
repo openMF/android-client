@@ -168,6 +168,10 @@ class SettingsViewModel(
         }
     }
 
+    fun changePasscode() {
+        passcodeManager.changePasscode()
+    }
+
     fun updateBiometricsErrorState(error: String?) {
         _biometricsState.update {
             it.copy(error = error)
