@@ -87,7 +87,8 @@ class MifosPasscodeViewModel(
         val biometricsStatus = systemAuthProvider.authenticatorStatus.value
         if (
             biometricsStatus.contains(PlatformAuthenticatorStatus.BIOMETRICS_SET) &&
-            passcodeManager.state.value.passcodeStep == PasscodeStep.Enter
+            passcodeManager.state.value.passcodeStep == PasscodeStep.Enter &&
+            passcodeManager.state.value.isExternalAuthEnabled
         ) {
             authenticateWithBiometrics(systemAuthProvider)
         }

@@ -13,6 +13,8 @@ import androidclient.feature.settings.generated.resources.Res
 import androidclient.feature.settings.generated.resources.feature_settings
 import androidclient.feature.settings.generated.resources.feature_settings_change_app_theme
 import androidclient.feature.settings.generated.resources.feature_settings_choose_language
+import androidclient.feature.settings.generated.resources.feature_settings_disable_biometrics
+import androidclient.feature.settings.generated.resources.feature_settings_enable_biometrics
 import androidclient.feature.settings.generated.resources.feature_settings_languages
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
@@ -71,18 +73,20 @@ internal fun SettingsScreen(
     viewModel: SettingsViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val biometricsState by viewModel.biometricsState.collectAsStateWithLifecycle()
 
     val authProvider = platformAuthenticationProvider.current
 
     SettingsScreen(
         onBackPressed = onBackPressed,
         state = uiState,
+        biometricsState = biometricsState,
         changePasscode = {
             passcodeManager.changePasscode()
             changePasscode()
         },
         onEnableDisableBiometrics = {
-            if(uiState.isBiometricsRegistered) {
+            if(biometricsState.isRegistered) {
                 viewModel.disableBiometrics()
             } else {
                 viewModel.registerBiometrics(authProvider)
@@ -114,6 +118,7 @@ internal fun SettingsScreen(
 @Composable
 internal fun SettingsScreen(
     state: SettingsUiState,
+    biometricsState: BiometricsState,
     onBackPressed: () -> Unit,
     onClickUpdateConfig: () -> Unit,
     changePasscode: () -> Unit,
@@ -139,6 +144,7 @@ internal fun SettingsScreen(
             Modifier.padding(paddingValues),
         ) {
             SettingsCards(
+                isBiometricsRegistered = biometricsState.isRegistered,
                 settingsCardClicked = { item ->
                     when (item) {
                         SettingsCardItem.SYNC_SURVEY -> showSyncSurveyDialog = true
@@ -200,29 +206,36 @@ internal fun SettingsScreen(
         )
     }
 
-    AnimatedVisibility(state.biometricRegistrationError!=null) {
+    AnimatedVisibility(biometricsState.error != null) {
         MifosDialogBox(
             title = "Biometrics Registration Error",
-            showDialogState = state.biometricRegistrationError!=null,
+            showDialogState = biometricsState.error != null,
             confirmButtonText = "",
             dismissButtonText = "OK",
             onConfirm = {},
             onDismiss = {
                 dismissBiometricsError()
             },
-            message = state.biometricRegistrationError,
+            message = biometricsState.error,
         )
     }
 }
 
 @Composable
 private fun SettingsCards(
+    isBiometricsRegistered: Boolean,
     settingsCardClicked: (SettingsCardItem) -> Unit,
 ) {
     LazyColumn {
         items(SettingsCardItem.entries) { card ->
+            val title = if (card == SettingsCardItem.BIOMETRICS) {
+                if (isBiometricsRegistered) Res.string.feature_settings_disable_biometrics
+                else Res.string.feature_settings_enable_biometrics
+            } else {
+                card.title
+            }
             SettingsCardItem(
-                title = card.title,
+                title = title,
                 details = card.details,
                 icon = card.icon,
                 onclick = {
@@ -318,6 +331,7 @@ private fun PreviewSettingsScreen() {
     SettingsScreen(
         onBackPressed = {},
         state = SettingsUiState.DEFAULT,
+        biometricsState = BiometricsState(),
         handleEndpointUpdate = { _, _ -> },
         updateLanguage = {},
         updateTheme = {},

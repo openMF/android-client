@@ -40,9 +40,11 @@ import com.mifos.core.model.objects.LanguageConfig
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
@@ -78,10 +80,17 @@ class SettingsViewModel(
                     else -> AppTheme.SYSTEM
                 },
                 language = settings.language,
-                isBiometricsRegistered = passcodeManager.state.value.isExternalAuthEnabled
+
             )
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, SettingsUiState.DEFAULT)
+
+    private val _biometricsState = MutableStateFlow(
+        BiometricsState(
+            isRegistered = passcodeManager.state.value.isExternalAuthEnabled
+        )
+    )
+    val biometricsState: StateFlow<BiometricsState> = _biometricsState.asStateFlow()
 
     val authenticationSuccess: MutableStateFlow<Boolean?> =
         savedStateHandle.getMutableStateFlow(DISABLE_BIOMETRICS_VERIFICATION_KEY, null)
@@ -107,13 +116,14 @@ class SettingsViewModel(
                         if (userVerificationRepository.consumeVerification()) {
                             passcodeManager.setExternalAuthEnabled(false)
                             biometricStorageAdapter.deleteRegistrationData()
-                            uiState.value.isBiometricsRegistered = false
+                            _biometricsState.update {
+                                it.copy(isRegistered = false)
+                            }
                         }
                         savedStateHandle.remove<Boolean?>(DISABLE_BIOMETRICS_VERIFICATION_KEY)
                         authenticationSuccess.value = null
                     }
                     false -> {
-                        uiState.value.isBiometricsRegistered = true
                         savedStateHandle.remove<Boolean?>(DISABLE_BIOMETRICS_VERIFICATION_KEY)
                         authenticationSuccess.value = null
                     }
@@ -137,6 +147,9 @@ class SettingsViewModel(
                 is RegistrationResult.Success -> {
                     passcodeManager.setExternalAuthEnabled(true)
                     biometricStorageAdapter.saveRegistrationData(result.message)
+                    _biometricsState.update {
+                        it.copy(isRegistered = true)
+                    }
                 }
                 RegistrationResult.PlatformAuthenticatorNotSet -> {
                     updateBiometricsErrorState(
@@ -158,7 +171,9 @@ class SettingsViewModel(
     }
 
     fun updateBiometricsErrorState(error: String?) {
-        uiState.value.biometricRegistrationError = error
+        _biometricsState.update {
+            it.copy(error = error)
+        }
     }
 
 
@@ -231,8 +246,6 @@ data class SettingsUiState(
     val passcode: String,
     val theme: AppTheme = AppTheme.SYSTEM,
     val language: LanguageConfig = LanguageConfig.DEFAULT,
-    var biometricRegistrationError: String? = null,
-    var isBiometricsRegistered: Boolean = false,
 ) {
     companion object {
         val DEFAULT = SettingsUiState(
@@ -242,3 +255,8 @@ data class SettingsUiState(
         )
     }
 }
+
+data class BiometricsState(
+    val isRegistered: Boolean = false,
+    val error: String? = null,
+)

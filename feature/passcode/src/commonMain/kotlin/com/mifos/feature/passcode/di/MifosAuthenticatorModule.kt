@@ -19,7 +19,7 @@ import org.mifos.authenticator.passcode.PasscodeStorageAdapter
 
 val MifosAuthenticatorModule = module {
     single {
-        val isBiometricsEnabled = !get<BiometricStorageAdapter>().loadRegistrationData().isNullOrBlank()
+        val isBiometricsEnabled = get<BiometricStorageAdapter>().loadRegistrationData()!=null
 
         PasscodeManager(get<PasscodeStorageAdapter>(), isBiometricsEnabled)
     }
