@@ -204,7 +204,7 @@ private fun LoanAccountContent(
                 Text(
                     text = stringResource(Res.string.feature_loan_credit_balance_refund),
                     style = MifosTypography.labelMediumEmphasized,
-                    color = AppColors.customWhite,
+                    color = KptTheme.colorScheme.onPrimary,
                 )
             }
         }
@@ -247,8 +247,8 @@ private fun LoanAccountTopCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val currencyCode = loanAccount.currency?.code
-    val decimalPlaces = loanAccount.currency?.decimalPlaces
+    val currencyCode = loanAccount.currency.code
+    val decimalPlaces = loanAccount.currency.decimalPlaces
 
     val balance = CurrencyFormatter.format(loanAccount.summary.totalOutstanding, currencyCode, decimalPlaces)
     val arrears = CurrencyFormatter.format(loanAccount.summary.totalOverdue, currencyCode, decimalPlaces)
@@ -276,7 +276,7 @@ private fun LoanAccountTopCard(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "${loanAccount.loanProductName?.uppercase().orEmpty()} ${loanAccount.accountNo}".trim(),
+                        text = "${loanAccount.loanProductName.uppercase().orEmpty()} ${loanAccount.accountNo}".trim(),
                         style = MifosTypography.titleMediumEmphasized,
                         color = AppColors.customWhite,
                     )
@@ -336,12 +336,7 @@ private fun LoanAccountTopCard(
 
                 OverviewRow(stringResource(Res.string.feature_loan_profile_label_balance), balance)
                 OverviewRow(stringResource(Res.string.feature_loan_profile_label_arrears), arrears)
-
-                OverviewRow(
-                    label = stringResource(Res.string.feature_loan_profile_label_overpaid_by),
-                    value = overpaid,
-                    valueColor = AppColors.loanActiveStatus,
-                )
+                OverviewRow(stringResource(Res.string.feature_loan_profile_label_overpaid_by), overpaid)
             }
         }
     }

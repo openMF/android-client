@@ -17,60 +17,38 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.CreditBalanceRefundRepository
-import com.mifos.core.data.repository.LoanAccountSummaryRepository
-import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.room.entities.accounts.loans.CreditBalanceRefundRequest
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CreditBalanceRefundViewModel(
     savedStateHandle: SavedStateHandle,
-    private val networkMonitor: NetworkMonitor,
     private val repository: CreditBalanceRefundRepository,
-    private val loanSummaryRepo: LoanAccountSummaryRepository,
 ) : BaseViewModel<CreditBalanceRefundState, CreditBalanceRefundEvent, CreditBalanceRefundAction>(
     initialState = CreditBalanceRefundState(),
 ) {
 
     private val route = savedStateHandle.toRoute<CreditBalanceRefundScreenRoute>()
-    private var loadJob: Job? = null
 
     /** Cached refund request for retry operations */
     private var lastSubmitRequest: CreditBalanceRefundRequest? = null
 
     init {
         mutableStateFlow.update { it.copy(loanId = route.loanId) }
-        observeNetworkAndLoad()
+        observeLoanDetails()
     }
 
     /**
-     * Observes the global network monitor. When online, triggers the initial loan fetch.
-     * If the app starts offline, shows a network error immediately.
+     * Observes loan details from the repository.
+     * The repository handles network availability and refresh triggers internally.
+     * Network status is derived from [DataState.Error] messages emitted by the repository.
      */
-    private fun observeNetworkAndLoad() {
+    private fun observeLoanDetails() {
         viewModelScope.launch {
-            combine(
-                networkMonitor.isOnline,
-                repository.getLoanById(route.loanId),
-            ) {
-                    isConnected, loanResult ->
-                Pair(isConnected, loanResult)
-            }.collect { (isConnected, loanResult) ->
+            repository.getLoanById(route.loanId).collect { loanResult ->
                 mutableStateFlow.update { currentState ->
-                    var newState = currentState.copy(networkAvailable = isConnected)
-
-                    if (!isConnected && newState.clientName == null) {
-                        newState = newState.copy(
-                            dialogState = CreditBalanceRefundState.DialogState.Error(
-                                messageRes = Res.string.feature_error_network_not_available,
-                            ),
-                        )
-                        return@update newState
-                    }
-
+                    var newState = currentState
                     when (loanResult) {
                         is DataState.Loading -> {
                             if (newState.clientName == null && newState.dialogState !is CreditBalanceRefundState.DialogState.Success) {
@@ -87,7 +65,8 @@ class CreditBalanceRefundViewModel(
                                 )
                             } else {
                                 newState = newState.copy(
-                                    dialogState = null,
+                                    networkAvailable = true,
+                                    dialogState = newState.dialogState as? CreditBalanceRefundState.DialogState.Success,
                                     clientName = loan.clientName,
                                     loanAccountNumber = loan.accountNo,
                                     overpaidAmount = loan.totalOverpaid,
@@ -97,18 +76,19 @@ class CreditBalanceRefundViewModel(
                             }
                         }
                         is DataState.Error -> {
-                            val isNetworkError = !isConnected ||
+                            val isNetworkError = loanResult.message == "Network not available" ||
                                 loanResult.message.contains("Unable to resolve host", ignoreCase = true) ||
                                 loanResult.message.contains("Failed to connect", ignoreCase = true)
 
-                            if (isNetworkError) {
-                                newState = newState.copy(
+                            newState = if (isNetworkError) {
+                                newState.copy(
+                                    networkAvailable = false,
                                     dialogState = CreditBalanceRefundState.DialogState.Error(
                                         messageRes = Res.string.feature_error_network_not_available,
                                     ),
                                 )
                             } else {
-                                newState = newState.copy(
+                                newState.copy(
                                     dialogState = CreditBalanceRefundState.DialogState.Error(
                                         message = loanResult.message,
                                     ),
@@ -139,35 +119,10 @@ class CreditBalanceRefundViewModel(
                 }
             }
             is CreditBalanceRefundAction.OnRetry -> {
-                if (!state.networkAvailable) {
-                    viewModelScope.launch {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = CreditBalanceRefundState.DialogState.Error(
-                                    messageRes = Res.string.feature_error_network_not_available,
-                                ),
-                            )
-                        }
-                    }
-                    return
-                }
-
                 lastSubmitRequest?.let { submitRefund(it) }
             }
             is CreditBalanceRefundAction.OnSubmitRefund -> {
                 lastSubmitRequest = action.request
-                if (!state.networkAvailable) {
-                    viewModelScope.launch {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = CreditBalanceRefundState.DialogState.Error(
-                                    messageRes = Res.string.feature_error_network_not_available,
-                                ),
-                            )
-                        }
-                    }
-                    return
-                }
                 submitRefund(action.request)
             }
         }
@@ -180,8 +135,6 @@ class CreditBalanceRefundViewModel(
             when (val result = repository.submitRefund(route.loanId, request)) {
                 is DataState.Loading -> Unit
                 is DataState.Success -> {
-                    loanSummaryRepo.triggerLoanUpdate()
-
                     mutableStateFlow.update {
                         it.copy(
                             dialogState = CreditBalanceRefundState.DialogState.Success(
@@ -192,7 +145,7 @@ class CreditBalanceRefundViewModel(
                 }
                 is DataState.Error -> {
                     mutableStateFlow.update {
-                        val isNetworkError = !it.networkAvailable ||
+                        val isNetworkError = result.message == "Network not available" ||
                             result.message.contains("Unable to resolve host", ignoreCase = true) ||
                             result.message.contains("Failed to connect", ignoreCase = true)
 

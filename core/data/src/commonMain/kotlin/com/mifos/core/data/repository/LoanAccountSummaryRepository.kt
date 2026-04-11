@@ -17,9 +17,5 @@ import kotlinx.coroutines.flow.Flow
  * Created by Aditya Gupta on 08/08/23.
  */
 interface LoanAccountSummaryRepository {
-    val loanUpdateEvents: Flow<Unit>
-
-    suspend fun triggerLoanUpdate()
-
     fun getLoanById(loanId: Int): Flow<DataState<LoanWithAssociationsEntity?>>
 }

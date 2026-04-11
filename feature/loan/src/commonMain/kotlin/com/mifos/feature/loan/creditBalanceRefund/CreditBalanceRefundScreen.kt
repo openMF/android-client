@@ -284,7 +284,6 @@ private fun CreditBalanceRefundContent(
                     TextButton(
                         onClick = {
                             datePickerState.selectedDateMillis?.let {
-                                transactionDateMillis = it
                                 transactionDateStr = DateHelper.getDateMonthYearStringFromLong(it)
                             }
                             showDatePickerDialog = false
