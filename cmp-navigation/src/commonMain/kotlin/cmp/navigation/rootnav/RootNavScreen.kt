@@ -13,9 +13,11 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -49,6 +51,8 @@ import com.mifos.feature.passcode.mifosPasscode.rootMifosPasscodeScreen
 import com.mifos.feature.settings.navigation.navigateToServerConfigGraph
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
+import org.mifos.authenticator.passcode.PasscodeManager
+import org.mifos.authenticator.passcode.PasscodeStep
 import kotlin.time.Clock
 
 @Suppress("LongMethod", "CyclomaticComplexMethod")
@@ -57,6 +61,7 @@ fun RootNavScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberMifosNavController(name = "RootNavScreen"),
     viewModel: RootNavViewModel = koinViewModel(),
+    passcodeManager: PasscodeManager = koinInject(),
     appLockRepository: AppLockRepository = koinInject(),
     onSplashScreenRemoved: () -> Unit = {},
 ) {
@@ -66,7 +71,7 @@ fun RootNavScreen(
     val isAppLocked by appLockRepository.isAppLocked.collectAsStateWithLifecycle()
     val lifeCycleObserver = LocalLifecycleOwner.current.lifecycle
 
-    val onStopTime = remember { mutableStateOf(Long.MAX_VALUE) }
+    val onStopTime: MutableState<Long?> = remember { mutableStateOf(null) }
 
     val isNotSplashScreen = state != RootNavState.Splash
 
@@ -98,12 +103,17 @@ fun RootNavScreen(
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_RESUME -> {
-                    val inactiveTime = Clock.System.now().toEpochMilliseconds() - onStopTime.value
-                    Logger.a { "inactiveTime: ${inactiveTime / 1000}s" }
-                    if (inactiveTime > lockTimeOut && !isAppLocked) {
-                        navController.navigateToReAuthMifosPasscodeScreen()
+                    onStopTime.value?.let { time->
+                        val inactiveTime = Clock.System.now().toEpochMilliseconds() - time
+                        Logger.a { "inactiveTime: ${inactiveTime / 1000}s" }
+                        if (inactiveTime > lockTimeOut && !isAppLocked) {
+                            if(passcodeManager.state.value.passcodeStep == PasscodeStep.Enter) {
+                                navController.navigateToReAuthMifosPasscodeScreen()
+                            }
+                        }
                     }
-                    onStopTime.value = Long.MAX_VALUE
+
+                    onStopTime.value = null
                 }
 
                 Lifecycle.Event.ON_STOP -> {

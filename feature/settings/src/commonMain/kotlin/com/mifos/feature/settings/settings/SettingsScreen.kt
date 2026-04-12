@@ -42,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import co.touchlab.kermit.Logger
 import com.mifos.core.common.enums.MifosAppLanguage
@@ -69,13 +70,25 @@ internal fun SettingsScreen(
     navigateToLoginScreen: () -> Unit,
     changePasscode: () -> Unit,
     onClickUpdateConfig: () -> Unit,
-    disableBiometrics: () -> Unit = {},
+    disableBiometrics: (String) -> Unit = {},
+    entryStateHandle: SavedStateHandle,
     viewModel: SettingsViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val biometricsState by viewModel.biometricsState.collectAsStateWithLifecycle()
 
     val authProvider = platformAuthenticationProvider.current
+
+    val authResult by entryStateHandle
+        .getStateFlow<Boolean?>(DISABLE_BIOMETRICS_VERIFICATION_KEY, null)
+        .collectAsStateWithLifecycle()
+
+    LaunchedEffect(authResult) {
+        authResult?.let { result ->
+            viewModel.disableBiometrics(result)
+            entryStateHandle.remove<Boolean>(DISABLE_BIOMETRICS_VERIFICATION_KEY)
+        }
+    }
 
     SettingsScreen(
         onBackPressed = onBackPressed,
@@ -87,8 +100,7 @@ internal fun SettingsScreen(
         },
         onEnableDisableBiometrics = {
             if (biometricsState.isRegistered) {
-                disableBiometrics()
-                viewModel.disableBiometrics()
+                disableBiometrics(DISABLE_BIOMETRICS_VERIFICATION_KEY)
             } else {
                 viewModel.registerBiometrics(authProvider)
             }

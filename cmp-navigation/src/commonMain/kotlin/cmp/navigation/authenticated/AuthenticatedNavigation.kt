@@ -73,7 +73,12 @@ internal fun NavGraphBuilder.authenticatedGraph(
             onPasscodeChanged = {
                 navController.popBackStack()
             },
-            onDisableBiometrics = {
+            onDisableBiometrics = { verificationKey ->
+                verificationKey?.let {
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set(it, true)
+                }
                 navController.popBackStack()
             },
             onBackNavigation = { verificationKey ->
@@ -124,8 +129,11 @@ internal fun NavGraphBuilder.authenticatedGraph(
             onClickUpdateConfig = {
                 navController.navigateToServerConfigGraph()
             },
-            disableBiometrics = {
-                navController.navigateToInternalMifosPasscodeScreen(allowBiometricAuth = false)
+            disableBiometrics = { key->
+                navController.navigateToInternalMifosPasscodeScreen(
+                    verificationKey = key,
+                    allowBiometricAuth = false
+                )
             }
         )
 

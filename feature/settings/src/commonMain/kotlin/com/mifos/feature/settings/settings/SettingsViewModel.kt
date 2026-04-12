@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.enums.MifosAppLanguage
 import com.mifos.core.data.repository.UserVerificationRepository
 import com.mifos.core.datastore.UserPreferencesRepository
@@ -91,8 +92,6 @@ class SettingsViewModel(
     )
     val biometricsState: StateFlow<BiometricsState> = _biometricsState.asStateFlow()
 
-    val authenticationSuccess: MutableStateFlow<Boolean?> =
-        savedStateHandle.getMutableStateFlow(DISABLE_BIOMETRICS_VERIFICATION_KEY, null)
 
     fun updateTheme(theme: AppTheme) {
         viewModelScope.launch {
@@ -106,26 +105,25 @@ class SettingsViewModel(
         }
     }
 
-    fun disableBiometrics() {
+    fun disableBiometrics(authenticationSuccess: Boolean) {
         viewModelScope.launch {
-            authenticationSuccess.collect { result ->
-                when (result) {
-                    true -> {
-                        if (userVerificationRepository.consumeVerification()) {
-                            passcodeManager.setExternalAuthEnabled(false)
-                            biometricStorageAdapter.deleteRegistrationData()
-                            _biometricsState.update {
-                                it.copy(isRegistered = false)
-                            }
+            passcodeManager.disableExternalAuth()
+            when (authenticationSuccess) {
+                true -> {
+                    if (userVerificationRepository.consumeVerification()) {
+                        _biometricsState.update {
+                            it.copy(isRegistered = false)
                         }
-                        savedStateHandle.remove<Boolean?>(DISABLE_BIOMETRICS_VERIFICATION_KEY)
-                        authenticationSuccess.value = null
                     }
-                    false -> {
-                        savedStateHandle.remove<Boolean?>(DISABLE_BIOMETRICS_VERIFICATION_KEY)
-                        authenticationSuccess.value = null
-                    }
-                    null -> {}
+                    Logger.e("Disable-Biometrics"){"Auth Result: $authenticationSuccess"}
+                    savedStateHandle.remove<Boolean?>(DISABLE_BIOMETRICS_VERIFICATION_KEY)
+                }
+                false -> {
+                    Logger.e("Disable-Biometrics"){"Auth Result: $authenticationSuccess"}
+                    savedStateHandle.remove<Boolean?>(DISABLE_BIOMETRICS_VERIFICATION_KEY)
+                }
+                null -> {
+                    Logger.e("Disable-Biometrics"){"Auth Result: $authenticationSuccess"}
                 }
             }
         }
