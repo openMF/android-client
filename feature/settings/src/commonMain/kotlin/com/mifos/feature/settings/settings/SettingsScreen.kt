@@ -98,6 +98,7 @@ internal fun SettingsScreen(
         },
         onEnableDisableBiometrics = {
             if (biometricsState.isRegistered) {
+                viewModel.initiateDisableBiometrics()
                 disableBiometrics(DISABLE_BIOMETRICS_VERIFICATION_KEY)
             } else {
                 viewModel.registerBiometrics(authProvider)

@@ -104,13 +104,15 @@ class SettingsViewModel(
         }
     }
 
+    fun initiateDisableBiometrics() {
+        passcodeManager.disableExternalAuth()
+    }
+
     fun disableBiometrics(authenticationSuccess: Boolean) {
         viewModelScope.launch {
             when (authenticationSuccess) {
                 true -> {
                     if (userVerificationRepository.consumeVerification()) {
-//                        biometricStorageAdapter.deleteRegistrationData()
-//                        passcodeManager.setExternalAuthEnabled(false)
                         _biometricsState.update {
                             it.copy(isRegistered = false)
                         }
