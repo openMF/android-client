@@ -15,4 +15,3 @@ package com.mifos.core.data.util
 class NetworkUnavailableException(
     message: String = "Network is unavailable. Please check your connection and try again.",
 ) : Throwable(message)
-
