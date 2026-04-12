@@ -12,7 +12,6 @@ package com.mifos.feature.settings.navigation
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import androidx.navigation.toRoute
 import com.mifos.feature.settings.settings.SettingsScreen
 import com.mifos.feature.settings.updateServer.UpdateServerConfigScreenRoute
 import kotlinx.serialization.Serializable
@@ -31,14 +30,14 @@ fun NavGraphBuilder.settingsScreen(
     onClickUpdateConfig: () -> Unit,
     disableBiometrics: (String) -> Unit = {},
 ) {
-    composable<SettingsRoute> {  backStackEntry ->
+    composable<SettingsRoute> { backStackEntry ->
         SettingsScreen(
             onBackPressed = navigateBack,
             navigateToLoginScreen = navigateToLoginScreen,
             changePasscode = changePasscode,
             onClickUpdateConfig = onClickUpdateConfig,
             disableBiometrics = disableBiometrics,
-            entryStateHandle = backStackEntry.savedStateHandle
+            entryStateHandle = backStackEntry.savedStateHandle,
         )
     }
 }

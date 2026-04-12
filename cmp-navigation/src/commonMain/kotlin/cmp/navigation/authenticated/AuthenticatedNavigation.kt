@@ -129,12 +129,12 @@ internal fun NavGraphBuilder.authenticatedGraph(
             onClickUpdateConfig = {
                 navController.navigateToServerConfigGraph()
             },
-            disableBiometrics = { key->
+            disableBiometrics = { key ->
                 navController.navigateToInternalMifosPasscodeScreen(
                     verificationKey = key,
-                    allowBiometricAuth = false
+                    allowBiometricAuth = false,
                 )
-            }
+            },
         )
 
         serverConfigGraph(

@@ -103,11 +103,11 @@ fun RootNavScreen(
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_RESUME -> {
-                    onStopTime.value?.let { time->
+                    onStopTime.value?.let { time ->
                         val inactiveTime = Clock.System.now().toEpochMilliseconds() - time
                         Logger.a { "inactiveTime: ${inactiveTime / 1000}s" }
                         if (inactiveTime > lockTimeOut && !isAppLocked) {
-                            if(passcodeManager.state.value.passcodeStep == PasscodeStep.Enter) {
+                            if (passcodeManager.state.value.passcodeStep == PasscodeStep.Enter) {
                                 navController.navigateToReAuthMifosPasscodeScreen()
                             }
                         }

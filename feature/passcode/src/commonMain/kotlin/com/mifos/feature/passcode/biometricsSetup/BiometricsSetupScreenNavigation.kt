@@ -13,14 +13,11 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
-import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 import template.core.base.ui.composableWithSlideTransitions
 
-
 @Serializable
 data object BiometricsSetupRoute
-
 
 fun NavController.navigateToBiometricSetupScreen(navOptions: NavOptions? = null) =
     navigate(BiometricsSetupRoute, navOptions)

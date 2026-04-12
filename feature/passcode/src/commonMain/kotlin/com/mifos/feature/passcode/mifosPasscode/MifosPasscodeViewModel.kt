@@ -58,7 +58,7 @@ class MifosPasscodeViewModel(
                         appLockRepository.deleteLock()
                         biometricStorageAdapter.deleteRegistrationData()
                     }
-                    PasscodeResult.ExternalAuthDisabled-> {
+                    PasscodeResult.ExternalAuthDisabled -> {
                         biometricStorageAdapter.deleteRegistrationData()
                         passcodeManager.setExternalAuthEnabled(false)
                     }

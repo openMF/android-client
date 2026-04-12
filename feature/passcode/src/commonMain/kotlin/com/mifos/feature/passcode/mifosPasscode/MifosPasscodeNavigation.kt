@@ -18,7 +18,6 @@ import com.mifos.core.data.repository.UserVerificationRepository
 import kotlinx.serialization.Serializable
 import org.koin.compose.koinInject
 import template.core.base.ui.composableWithSlideTransitions
-import template.core.base.ui.composableWithStayTransitions
 
 @Serializable
 data object RootPasscodeRoute

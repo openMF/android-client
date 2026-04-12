@@ -92,7 +92,6 @@ class SettingsViewModel(
     )
     val biometricsState: StateFlow<BiometricsState> = _biometricsState.asStateFlow()
 
-
     fun updateTheme(theme: AppTheme) {
         viewModelScope.launch {
             prefManager.updateTheme(
@@ -115,15 +114,15 @@ class SettingsViewModel(
                             it.copy(isRegistered = false)
                         }
                     }
-                    Logger.e("Disable-Biometrics"){"Auth Result: $authenticationSuccess"}
+                    Logger.e("Disable-Biometrics") { "Auth Result: $authenticationSuccess" }
                     savedStateHandle.remove<Boolean?>(DISABLE_BIOMETRICS_VERIFICATION_KEY)
                 }
                 false -> {
-                    Logger.e("Disable-Biometrics"){"Auth Result: $authenticationSuccess"}
+                    Logger.e("Disable-Biometrics") { "Auth Result: $authenticationSuccess" }
                     savedStateHandle.remove<Boolean?>(DISABLE_BIOMETRICS_VERIFICATION_KEY)
                 }
                 null -> {
-                    Logger.e("Disable-Biometrics"){"Auth Result: $authenticationSuccess"}
+                    Logger.e("Disable-Biometrics") { "Auth Result: $authenticationSuccess" }
                 }
             }
         }
