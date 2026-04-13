@@ -34,7 +34,7 @@ import kotlinx.coroutines.withContext
  * }
  * ```
  */
-suspend fun <T> asDataState(
+suspend fun <T> runAsDataState(
     context: CoroutineDispatcher? = null,
     block: suspend () -> T,
 ): DataState<T> =
@@ -53,13 +53,13 @@ suspend fun <T> asDataState(
  *
  * This overload ensures the device is online before executing the block.
  * If offline, returns [DataState.Error] with [NetworkUnavailableException].
- * If online, delegates to the basic [asDataState] for execution.
+ * If online, delegates to the basic [runAsDataState] for execution.
  *
  * @param networkMonitor The [NetworkMonitor] to check network status.
  * @param context Optional [CoroutineDispatcher] to switch context for the block execution.
  * @param block The suspend lambda that performs the actual work.
  * @return [DataState.Error] with [NetworkUnavailableException] if offline,
- *         otherwise the result from [asDataState].
+ *         otherwise the result from [runAsDataState].
  *
  * Example usage:
  * ```kotlin
@@ -73,7 +73,7 @@ suspend fun <T> asDataState(
  * }
  * ```
  */
-suspend fun <T> asDataState(
+suspend fun <T> runAsDataState(
     networkMonitor: NetworkMonitor,
     context: CoroutineDispatcher? = null,
     block: suspend () -> T,
@@ -81,5 +81,5 @@ suspend fun <T> asDataState(
     if (!networkMonitor.isOnline.first()) {
         return DataState.Error(NetworkUnavailableException())
     }
-    return asDataState(context, block)
+    return runAsDataState(context, block)
 }
