@@ -26,13 +26,11 @@ import kotlinx.coroutines.withContext
  * @return [DataState.Success] with the result if successful, [DataState.Error] if exception occurs.
  *
  * Example usage:
- * ```kotlin
  * override suspend fun approveCheckerEntry(auditId: Int): DataState<GenericResponse> {
- *     return asDataState(ioDispatcher) {
+ *     return runAsDataState(ioDispatcher) {
  *         dataManagerCheckerInbox.approveCheckerEntry(auditId)
  *     }
  * }
- * ```
  */
 suspend fun <T> runAsDataState(
     context: CoroutineDispatcher? = null,
@@ -62,16 +60,14 @@ suspend fun <T> runAsDataState(
  *         otherwise the result from [runAsDataState].
  *
  * Example usage:
- * ```kotlin
  * override suspend fun disburseLoan(
  *     loanId: Int,
  *     loanDisbursement: LoanDisbursement?,
  * ): DataState<GenericResponse> {
- *     return asDataState(networkMonitor, ioDispatcher) {
+ *     return runAsDataState(networkMonitor, ioDispatcher) {
  *         dataManagerLoan.disburseLoan(loanId, loanDisbursement)
  *     }
  * }
- * ```
  */
 suspend fun <T> runAsDataState(
     networkMonitor: NetworkMonitor,
