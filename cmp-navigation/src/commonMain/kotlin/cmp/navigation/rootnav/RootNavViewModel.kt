@@ -81,6 +81,20 @@ class RootNavViewModel(
         }
     }
 
+    /**
+     * Full-wipe logout. Runs the following in order:
+     *  1. Clears the biometric registration blob (defense-in-depth; the
+     *     library's `isRegistered` flow isn't updated via this path — fine
+     *     because we're logging out and will re-init on next user session).
+     *  2. Clears the saved passcode via [PasscodeManager.logOut].
+     *  3. Clears the user session via `UserPreferencesRepository`.
+     *  4. Clears the app-lock state via [AppLockRepository].
+     *  5. Transitions the root nav back to [RootNavState.AuthenticateUser].
+     *
+     * Fires either from the explicit logout button (via
+     * [RootNavAction.LogOutUser]) or from the init-time check that detects an
+     * authenticated user with no passcode set.
+     */
     private fun logOut() {
         viewModelScope.launch {
             biometricStorageAdapter.deleteRegistrationData()
@@ -106,7 +120,10 @@ sealed class RootNavState {
 }
 
 sealed interface RootNavAction {
+    /** Full-wipe logout; runs the sequence documented on [RootNavViewModel.logOut]. */
     data object LogOutUser : RootNavAction
+
+    /** Marks the app as unlocked via [AppLockRepository.unlockApp]. Fired after biometric setup or skip. */
     data object UnlockApp : RootNavAction
 
     sealed interface Internal {

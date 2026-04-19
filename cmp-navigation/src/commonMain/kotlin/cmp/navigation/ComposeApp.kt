@@ -23,6 +23,16 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.mifos.authenticator.biometrics.BiometricStorageAdapter
 import org.mifos.authenticator.biometrics.PlatformAuthenticatorCompositionProvider
 
+/**
+ * App-level composition entry point.
+ *
+ * Wraps the nav graph in [PlatformAuthenticatorCompositionProvider] so every
+ * descendant can resolve the `platformAuthenticationProvider` /
+ * `platformAvailableAuthenticationOption` CompositionLocals used by
+ * `MifosPasscode`, `BiometricsKey`, `BiometricSetupScreen`, and the Settings
+ * biometric toggles. The [BiometricStorageAdapter] is injected here once so
+ * the library can build a single scoped `PlatformAuthenticationProvider`.
+ */
 @Composable
 fun ComposeApp(
     handleThemeMode: (osValue: Int) -> Unit,

@@ -15,8 +15,18 @@ import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 private const val VERIFICATION_TIMESTAMP_KEY = "org.mifospay.user_verification_timestamp"
+
+/** Validity window for a recorded verification token, in milliseconds. */
 private const val VERIFICATION_EXPIRY_MS = 30_000L
 
+/**
+ * [UserVerificationRepository] impl backed by [Settings] (multiplatform key-value).
+ *
+ * Persists only the timestamp of the last [recordVerification] call; validity is
+ * judged against [VERIFICATION_EXPIRY_MS] (30 seconds) during
+ * [consumeVerification]. The timestamp is always cleared on consume — even if
+ * it had expired — enforcing single-use semantics regardless of outcome.
+ */
 @OptIn(ExperimentalTime::class)
 class UserVerificationRepositoryImpl(
     private val settings: Settings,

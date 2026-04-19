@@ -76,9 +76,15 @@ internal fun SettingsScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val biometricsState by viewModel.biometricsState.collectAsStateWithLifecycle()
 
+    // Biometrics state is read directly from the library flow — single source
+    // of truth. `registerBiometrics` + `unregister` on the provider mutate it
+    // atomically; SettingsViewModel does not mirror this locally.
     val authProvider = platformAuthenticationProvider.current
     val isRegistered by authProvider.isRegistered.collectAsStateWithLifecycle()
 
+    // Disable-biometrics round-trip channel: the internal passcode screen
+    // writes this key on its verification result; we consume it here and
+    // remove it to keep the handle clean for the next disable attempt.
     val authResult by entryStateHandle
         .getStateFlow<Boolean?>(DISABLE_BIOMETRICS_VERIFICATION_KEY, null)
         .collectAsStateWithLifecycle()

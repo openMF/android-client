@@ -45,8 +45,42 @@ import org.mifos.authenticator.passcode.screen.PasscodeScreen
 import org.mifos.authenticator.passcode.screen.PasscodeSwitchConfig
 import template.core.base.designsystem.theme.KptTheme
 
+/** Navigation-event info marker for the passcode destination. */
 internal object MifosPasscodeCurrentInfo : NavigationEventInfo()
 
+/**
+ * Mifos-themed biometrics-aware wrapper around the library's
+ * `PasscodeScreen`. This is the app's canonical passcode composable — each
+ * passcode route in the nav graph delegates to it.
+ *
+ * Bridges the passcode and biometrics libraries (which never import each
+ * other). On biometric success, the wrapper's ViewModel emits a synthetic
+ * `Verified` event so the consumer only needs to handle [PasscodeResult]
+ * values — biometric success converges on [onAuthenticationSuccess].
+ *
+ * Must be hosted inside a `PlatformAuthenticatorCompositionProvider` so the
+ * `platformAuthenticationProvider` / `platformAvailableAuthenticationOption`
+ * CompositionLocals resolve.
+ *
+ * @param onAuthenticationSuccess Fired on [PasscodeResult.Verified] or
+ *        biometric success.
+ * @param onBackPress Invoked when the user performs a system back gesture and
+ *        [allowBackNavigation] is `true`; no-op otherwise.
+ * @param navigateToLogin Fired on [PasscodeResult.Forgotten] — the passcode
+ *        has been cleared and biometric registration is being wiped.
+ * @param onPasscodeCreation Fired on [PasscodeResult.Created].
+ * @param onPasscodeChanged Fired on [PasscodeResult.Changed].
+ * @param onAuthenticationFailed Fired on [PasscodeResult.Rejected].
+ * @param allowBackNavigation Whether back-press should exit this screen.
+ *        Root unlock routes set this `false`; in-app flows set it `true`.
+ * @param allowBiometricAuth When `false`, suppresses both the biometric button
+ *        and the auto-authenticate-on-resume behaviour. Set `false` for flows
+ *        where biometric bypass would defeat the security check (e.g.,
+ *        verifying before disabling biometrics or changing the passcode).
+ *        Note: the library also hides the biometric button during
+ *        `ChangeVerify` / `Create` / `Confirm` steps regardless of this flag.
+ * @param viewModel Koin-resolved [MifosPasscodeViewModel].
+ */
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MifosPasscode(

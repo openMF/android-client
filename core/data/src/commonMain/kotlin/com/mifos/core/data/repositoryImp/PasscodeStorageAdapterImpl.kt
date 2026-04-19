@@ -15,6 +15,13 @@ import org.mifos.authenticator.passcode.PasscodeStorageAdapter
 
 const val MIFOS_PASSCODE = "com.mifos.passcode"
 
+/**
+ * [PasscodeStorageAdapter] impl backed by [Settings] (multiplatform key-value).
+ *
+ * The passcode is stored verbatim under [MIFOS_PASSCODE]. [loadPasscode] returns
+ * `null` for both the "key absent" and "value blank" cases so the manager's
+ * consumer logic can treat them uniformly as "no passcode set."
+ */
 class PasscodeStorageAdapterImpl(
     private val userPreferencesRepository: UserPreferencesRepository,
     private val settings: Settings,

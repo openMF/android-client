@@ -99,6 +99,11 @@ fun RootNavScreen(
         }
     }
 
+    // Background-timeout re-auth: when the app resumes after being backgrounded
+    // longer than `lockTimeOut` (15 s), and the passcode manager is currently
+    // on its Enter step (i.e. the user had previously unlocked), push the
+    // re-auth passcode screen. Skips if the app is already locked (avoids
+    // doubling up on nav destinations) or if we're mid-change/mid-create.
     DisposableEffect(lifeCycleObserver) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
@@ -152,6 +157,9 @@ fun RootNavScreen(
             updateServerConfig = navController::navigateToServerConfigGraph,
         )
 
+        // Root passcode destination — shown when launching into an existing
+        // session. `Verified` advances to the authenticated graph;
+        // `Forgotten`/Login navigates out; `Created` flows into biometric setup.
         rootMifosPasscodeScreen(
             navigateToLogin = {
                 viewModel.trySendAction(RootNavAction.LogOutUser)
@@ -167,6 +175,8 @@ fun RootNavScreen(
             },
         )
 
+        // Re-auth destination — pushed when the app returns from background
+        // past the lock timeout. Pops back on verification success.
         reAuthMifosPasscodeScreen(
             navigateToLogin = {
                 viewModel.trySendAction(RootNavAction.LogOutUser)
@@ -177,6 +187,9 @@ fun RootNavScreen(
             },
         )
 
+        // First-time biometric setup — shown after passcode creation. Either
+        // path (register or skip) unlocks the app and advances to the
+        // authenticated graph.
         biometricSetupScreen(
             onBiometricsRegistrationSuccess = {
                 viewModel.trySendAction(RootNavAction.UnlockApp)

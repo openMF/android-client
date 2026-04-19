@@ -53,6 +53,14 @@ import org.mifos.authenticator.biometrics.platformAuthenticator.PlatformAuthenti
 import org.mifos.authenticator.biometrics.platformAuthenticator.RegistrationResult
 import org.mifos.authenticator.passcode.PasscodeManager
 
+/**
+ * `SavedStateHandle` key used by [SettingsScreen] to receive the result of the
+ * disable-biometrics passcode-verification round trip.
+ *
+ * The flow: Settings navigates to the internal passcode screen with this key;
+ * the passcode screen writes `true` on verified, `false` on cancel/back/fail;
+ * Settings observes the key and dispatches [SettingsViewModel.disableBiometrics].
+ */
 const val DISABLE_BIOMETRICS_VERIFICATION_KEY = "com.mifos.authentication.verification.key"
 private const val DEFAULT_USER_ID = "default_user"
 private const val DEFAULT_USER_EMAIL = "default@mifos.org"
@@ -98,6 +106,26 @@ class SettingsViewModel(
         }
     }
 
+    /**
+     * Consumes the disable-biometrics passcode-verification result.
+     *
+     * Called from [SettingsScreen]'s `LaunchedEffect` when
+     * [DISABLE_BIOMETRICS_VERIFICATION_KEY] flips from `null` to a boolean.
+     *
+     * On `true` (verified): consumes the one-shot
+     * [UserVerificationRepository] token and, iff the token was still valid,
+     * calls `authProvider.unregister()`. If the token had expired (30 s
+     * window), surfaces an error dialog via [updateBiometricsErrorState] so
+     * the user can retry.
+     *
+     * On `false` (cancelled, backed-out, or wrong passcode): simply clears the
+     * savedStateHandle key. No unregister, no error dialog — the user is back
+     * on Settings and the biometrics toggle still shows its pre-flow state.
+     *
+     * @param authenticationSuccess Result from the passcode verification round trip.
+     * @param authProvider Composition-scoped biometrics provider, supplied by
+     *        the screen at dispatch time.
+     */
     fun disableBiometrics(
         authenticationSuccess: Boolean,
         authProvider: PlatformAuthenticationProvider,
@@ -121,6 +149,22 @@ class SettingsViewModel(
         }
     }
 
+    /**
+     * Registers the user's biometrics with the platform authenticator. Called
+     * directly from [SettingsScreen] when the "Enable Biometrics" button is
+     * tapped; no passcode pre-verification is required (user already
+     * authenticated to reach Settings).
+     *
+     * On [RegistrationResult.Success] the library persists the registration
+     * blob internally; `authProvider.isRegistered` flips to `true` and the
+     * Settings UI re-labels the button to "Disable Biometrics" reactively.
+     *
+     * On failure variants, pushes an error message into [BiometricsState.error]
+     * for dialog display.
+     *
+     * @param systemAuthProvider Composition-scoped biometrics provider,
+     *        supplied by the screen at dispatch time.
+     */
     fun registerBiometrics(
         systemAuthProvider: PlatformAuthenticationProvider,
     ) {
@@ -152,10 +196,20 @@ class SettingsViewModel(
         }
     }
 
+    /**
+     * Puts the library's [PasscodeManager] into `ChangeVerify` step. Caller is
+     * expected to navigate to the internal passcode screen immediately after
+     * so the user can verify + re-create.
+     */
     fun changePasscode() {
         passcodeManager.changePasscode()
     }
 
+    /**
+     * Sets or clears the biometric-operation error surfaced via [BiometricsState.error].
+     * Called both internally (on registration failure) and from the screen
+     * (to dismiss after the user acknowledges the dialog).
+     */
     fun updateBiometricsErrorState(error: String?) {
         _biometricsState.update {
             it.copy(error = error)
@@ -241,6 +295,17 @@ data class SettingsUiState(
     }
 }
 
+/**
+ * Biometric-operation error state surfaced by [SettingsViewModel].
+ *
+ * Does **not** track registration status — that lives on
+ * `authProvider.isRegistered` (library StateFlow), read directly at the
+ * composable layer. Keeping a single source of truth avoids drift between
+ * VM-local state and the library flow.
+ *
+ * @property error Non-null when an error dialog should be shown. Cleared via
+ *           [SettingsViewModel.updateBiometricsErrorState].
+ */
 data class BiometricsState(
     val error: String? = null,
 )

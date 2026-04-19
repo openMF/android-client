@@ -15,6 +15,22 @@ import org.mifos.authenticator.biometrics.BiometricStorageAdapter
 const val REGISTRATION_DATA_KEY = "com.mifos.registration_data"
 const val BIOMETRIC_REGISTERED_KEY = "com.mifos.biometric_registered"
 
+/**
+ * [BiometricStorageAdapter] impl backed by [Settings] (multiplatform key-value).
+ *
+ * Uses a two-key layout:
+ *  - [BIOMETRIC_REGISTERED_KEY] — boolean flag; `true` iff a registration has
+ *    occurred. Checked first by [loadRegistrationData] to distinguish
+ *    "registered with an empty blob" (valid on Android, whose
+ *    `PlatformAuthenticator.registerUser` returns `Success("")`) from
+ *    "never registered."
+ *  - [REGISTRATION_DATA_KEY] — the registration blob returned by
+ *    `PlatformAuthenticationProvider.registerUser()` on success.
+ *
+ * **Called by the library only.** App code should not invoke these methods
+ * directly; use the provider's `registerUser()`, `onAuthenticatorClick()`,
+ * `unregister()` methods, which drive this adapter internally.
+ */
 class BiometricStorageAdapterImpl(
     private val settings: Settings,
 ) : BiometricStorageAdapter {

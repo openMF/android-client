@@ -27,6 +27,26 @@ import org.mifos.authenticator.passcode.components.PasscodeKey
 import org.mifos.authenticator.passcode.screen.PasscodeKeyConfig
 import template.core.base.designsystem.theme.KptTheme
 
+/**
+ * Platform-aware biometric unlock button for use inside the passcode screen's
+ * `externalAuthButton` slot.
+ *
+ * Picks an icon based on the device's available authenticator options (read
+ * reactively from [systemAvailableAuthOption]):
+ *  - [PlatformAuthOptions.Fingerprint] → [Icons.Default.Fingerprint]
+ *  - [PlatformAuthOptions.FaceId] → [Icons.Default.Face]
+ *  - otherwise → [Icons.Default.Lock]
+ *
+ * Renders via the passcode library's [PasscodeKey] so the visual style matches
+ * the keypad. The composable is intentionally VM-free: callers wire [onClick]
+ * to a ViewModel action that invokes
+ * `PlatformAuthenticationProvider.onAuthenticatorClick(...)`.
+ *
+ * @param systemAvailableAuthOption Source of truth for which authenticators
+ *        are usable on the current device; drives the icon.
+ * @param onClick Invoked on tap. Expected to kick off the biometric prompt.
+ * @param modifier Forwarded to the underlying [PasscodeKey].
+ */
 @Composable
 fun BiometricsKey(
     systemAvailableAuthOption: PlatformAvailableAuthenticationOption,

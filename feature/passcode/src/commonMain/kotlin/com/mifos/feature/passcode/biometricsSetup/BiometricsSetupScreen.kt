@@ -55,8 +55,25 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.mifos.authenticator.biometrics.platformAuthenticationProvider
 import template.core.base.designsystem.theme.KptTheme
 
+/** Navigation-event info marker for the biometric-setup destination. */
 internal object BiometricSetupScreenCurrentInfo : NavigationEventInfo()
 
+/**
+ * First-time biometric setup screen.
+ *
+ * Shown immediately after the user creates their passcode. Offers two paths:
+ *  - "Setup biometrics" — calls `PlatformAuthenticationProvider.registerUser()`
+ *    (via [BiometricSetupScreenViewmodel]); on success fires [onBiometricsRegistrationSuccess].
+ *  - "Skip for now" — fires [onSkipBiometricSetup] without registering.
+ *
+ * Back-press is swallowed on this screen; the user must complete either path.
+ * Must be hosted inside a `PlatformAuthenticatorCompositionProvider` so the
+ * `platformAuthenticationProvider` CompositionLocal resolves.
+ *
+ * @param onBiometricsRegistrationSuccess Fired on `RegistrationResult.Success`.
+ * @param onSkipBiometricSetup Fired when user taps the skip button.
+ * @param viewModel Koin-resolved [BiometricSetupScreenViewmodel].
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BiometricSetupScreen(
@@ -104,6 +121,10 @@ fun BiometricSetupScreen(
     )
 }
 
+/**
+ * Stateless presentation layer for [BiometricSetupScreen]. Extracted so the
+ * `@Preview` below can exercise the UI without touching Koin or the provider.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun BiometricSetupContent(

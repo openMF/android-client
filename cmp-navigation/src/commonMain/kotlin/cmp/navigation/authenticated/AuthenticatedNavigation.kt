@@ -52,6 +52,12 @@ internal fun NavGraphBuilder.authenticatedGraph(
     navigation<AuthenticatedGraph>(
         startDestination = AuthenticatedNavbar,
     ) {
+        // Internal passcode re-verification destination. Used by in-app flows
+        // that need a fresh passcode entry (change-passcode, disable-biometrics).
+        // On result, writes the verification result (true/false) into the
+        // PREVIOUS back-stack entry's SavedStateHandle under the caller's
+        // verificationKey, then pops back. Callers (e.g. SettingsScreen)
+        // observe that key to react to the outcome.
         internalMifosPasscodeScreen(
             navigateToLogin = onClickLogout,
             onAuthenticationSuccess = { verificationKey ->
@@ -117,12 +123,21 @@ internal fun NavGraphBuilder.authenticatedGraph(
         settingsScreen(
             navigateBack = navController::popBackStack,
             navigateToLoginScreen = {},
+            // Change passcode: `allowBiometricAuth = false` suppresses the
+            // biometric button so the user must re-enter the existing passcode
+            // before mutating it. Defense-in-depth; the library's step gate
+            // already hides the button during ChangeVerify step.
             changePasscode = {
                 navController.navigateToInternalMifosPasscodeScreen(allowBiometricAuth = false)
             },
             onClickUpdateConfig = {
                 navController.navigateToServerConfigGraph()
             },
+            // Disable biometrics: carries a verificationKey so the internal
+            // passcode screen mints a short-lived verification token on
+            // success; `allowBiometricAuth = false` ensures the user must
+            // re-enter the passcode (biometric bypass would defeat the check).
+            // Settings consumes the token in viewModel.disableBiometrics().
             disableBiometrics = { key ->
                 navController.navigateToInternalMifosPasscodeScreen(
                     verificationKey = key,
