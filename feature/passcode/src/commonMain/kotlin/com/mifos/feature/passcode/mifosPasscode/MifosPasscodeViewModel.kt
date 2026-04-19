@@ -85,7 +85,6 @@ class MifosPasscodeViewModel(
         systemAuthProvider: PlatformAuthenticationProvider,
         allowBiometricAuth: Boolean,
     ) {
-        // Mirrors the UI guard in MifosPasscode — both layers must agree to suppress biometrics.
         if (!allowBiometricAuth) return
         val biometricsStatus = systemAuthProvider.authenticatorStatus.value
         if (
