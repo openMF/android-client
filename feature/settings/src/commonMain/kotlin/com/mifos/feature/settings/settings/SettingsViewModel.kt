@@ -108,15 +108,10 @@ class SettingsViewModel(
                     if (userVerificationRepository.consumeVerification()) {
                         authProvider.unregister()
                     }
-                    Logger.e("Disable-Biometrics") { "Auth Result: $authenticationSuccess" }
                     savedStateHandle.remove<Boolean?>(DISABLE_BIOMETRICS_VERIFICATION_KEY)
                 }
                 false -> {
-                    Logger.e("Disable-Biometrics") { "Auth Result: $authenticationSuccess" }
-                    savedStateHandle.remove<Boolean?>(DISABLE_BIOMETRICS_VERIFICATION_KEY)
-                }
-                null -> {
-                    Logger.e("Disable-Biometrics") { "Auth Result: $authenticationSuccess" }
+                    savedStateHandle.remove(DISABLE_BIOMETRICS_VERIFICATION_KEY)
                 }
             }
         }

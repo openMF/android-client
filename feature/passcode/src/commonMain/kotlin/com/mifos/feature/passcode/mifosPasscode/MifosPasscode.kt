@@ -147,12 +147,15 @@ fun MifosPasscode(
     PasscodeScreen(
         passcodeManager = passcodeManager,
         onResult = { result ->
-            viewModel.trySendAction(
-                MifosPasscodeAction.HandlePasscodeResult(
-                    result = result,
-                    systemAuthProvider = systemAuthProvider,
-                ),
-            )
+            if (result == PasscodeResult.Forgotten) {
+                viewModel.trySendAction(
+                    MifosPasscodeAction.ForgetPasscode(
+                        systemAuthProvider = systemAuthProvider,
+                    ),
+                )
+            } else {
+                viewModel.trySendAction(MifosPasscodeAction.HandlePasscodeResult(result = result))
+            }
         },
         appearanceConfig = PasscodeAppearanceConfig(
             backgroundColor = KptTheme.colorScheme.background,

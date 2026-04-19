@@ -52,18 +52,21 @@ class MifosPasscodeViewModel(
             is MifosPasscodeAction.HandlePasscodeResult -> {
                 when (action.result) {
                     PasscodeResult.Verified -> appLockRepository.unlockApp()
-                    PasscodeResult.Forgotten -> {
-                        appLockRepository.deleteLock()
-                        viewModelScope.launch {
-                            action.systemAuthProvider.unregister()
-                        }
-                    }
                     PasscodeResult.Created,
                     PasscodeResult.Changed,
                     PasscodeResult.Rejected,
+                    PasscodeResult.Forgotten,
                     -> { }
                 }
                 sendEvent(MifosPasscodeEvent.NavigateForResult(action.result))
+            }
+
+            is MifosPasscodeAction.ForgetPasscode -> {
+                appLockRepository.deleteLock()
+                viewModelScope.launch {
+                    action.systemAuthProvider.unregister()
+                }
+                sendEvent(MifosPasscodeEvent.NavigateForResult(PasscodeResult.Forgotten))
             }
 
             is MifosPasscodeAction.OnAuthenticatorClick -> {
@@ -151,8 +154,8 @@ sealed interface MifosPasscodeAction {
     ) : MifosPasscodeAction
 
     data object DismissDialog : MifosPasscodeAction
-    data class HandlePasscodeResult(
-        val result: PasscodeResult,
+    data class HandlePasscodeResult(val result: PasscodeResult) : MifosPasscodeAction
+    data class ForgetPasscode(
         val systemAuthProvider: PlatformAuthenticationProvider,
     ) : MifosPasscodeAction
     data class OnAuthenticatorClick(
