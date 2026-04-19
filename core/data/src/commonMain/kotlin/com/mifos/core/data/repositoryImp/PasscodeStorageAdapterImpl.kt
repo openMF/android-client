@@ -33,33 +33,4 @@ class PasscodeStorageAdapterImpl(
     override fun deletePasscode() {
         settings.remove(MIFOS_PASSCODE)
     }
-
-    @Deprecated(
-        "Use BiometricStorageAdapter from the biometrics library instead.",
-        replaceWith = ReplaceWith(
-            "BiometricStorageAdapter.saveRegistrationData(registrationData)",
-            "org.mifos.authenticator.biometrics.BiometricStorageAdapter",
-        ),
-    )
-    override fun saveRegistrationData(registrationData: String) {}
-
-    @Deprecated(
-        "Use BiometricStorageAdapter from the biometrics library instead.",
-        replaceWith = ReplaceWith(
-            "BiometricStorageAdapter.loadRegistrationData()",
-            "org.mifos.authenticator.biometrics.BiometricStorageAdapter",
-        ),
-    )
-    override fun loadRegistrationData(): String? {
-        return null
-    }
-
-    @Deprecated(
-        "Use BiometricStorageAdapter from the biometrics library instead.",
-        replaceWith = ReplaceWith(
-            "BiometricStorageAdapter.deleteRegistrationData()",
-            "org.mifos.authenticator.biometrics.BiometricStorageAdapter",
-        ),
-    )
-    override fun deleteRegistrationData() {}
 }

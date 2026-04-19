@@ -18,8 +18,10 @@ import cmp.navigation.rootnav.RootNavScreen
 import com.mifos.core.datastore.model.DarkThemeConfig
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.ui.util.EventsEffect
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
-import org.mifos.authenticator.biometrics.PlatformAuthenticatorLocalCompositionProvider
+import org.mifos.authenticator.biometrics.BiometricStorageAdapter
+import org.mifos.authenticator.biometrics.PlatformAuthenticatorCompositionProvider
 
 @Composable
 fun ComposeApp(
@@ -45,7 +47,9 @@ fun ComposeApp(
         DarkThemeConfig.FOLLOW_SYSTEM -> isSystemInDarkTheme()
     }
 
-    PlatformAuthenticatorLocalCompositionProvider {
+    PlatformAuthenticatorCompositionProvider(
+        biometricStorageAdapter = koinInject<BiometricStorageAdapter>(),
+    ) {
         MifosTheme(
             darkTheme = darkTheme,
             androidTheme = uiState.isAndroidTheme,

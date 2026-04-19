@@ -73,14 +73,6 @@ internal fun NavGraphBuilder.authenticatedGraph(
             onPasscodeChanged = {
                 navController.popBackStack()
             },
-            onDisableBiometrics = { verificationKey ->
-                verificationKey?.let {
-                    navController.previousBackStackEntry
-                        ?.savedStateHandle
-                        ?.set(it, true)
-                }
-                navController.popBackStack()
-            },
             onBackNavigation = { verificationKey ->
                 verificationKey?.let {
                     navController.previousBackStackEntry

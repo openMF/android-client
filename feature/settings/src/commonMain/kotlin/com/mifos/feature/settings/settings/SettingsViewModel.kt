@@ -87,7 +87,7 @@ class SettingsViewModel(
 
     private val _biometricsState = MutableStateFlow(
         BiometricsState(
-            isRegistered = passcodeManager.state.value.isExternalAuthEnabled,
+            isRegistered = biometricStorageAdapter.loadRegistrationData() != null,
         ),
     )
     val biometricsState: StateFlow<BiometricsState> = _biometricsState.asStateFlow()
@@ -104,15 +104,12 @@ class SettingsViewModel(
         }
     }
 
-    fun initiateDisableBiometrics() {
-        passcodeManager.disableExternalAuth()
-    }
-
     fun disableBiometrics(authenticationSuccess: Boolean) {
         viewModelScope.launch {
             when (authenticationSuccess) {
                 true -> {
                     if (userVerificationRepository.consumeVerification()) {
+                        biometricStorageAdapter.deleteRegistrationData()
                         _biometricsState.update {
                             it.copy(isRegistered = false)
                         }
@@ -143,8 +140,6 @@ class SettingsViewModel(
 
             when (result) {
                 is RegistrationResult.Success -> {
-                    passcodeManager.setExternalAuthEnabled(true)
-                    biometricStorageAdapter.saveRegistrationData(result.message)
                     _biometricsState.update {
                         it.copy(isRegistered = true)
                     }

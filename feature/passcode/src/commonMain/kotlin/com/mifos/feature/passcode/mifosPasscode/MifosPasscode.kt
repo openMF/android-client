@@ -56,7 +56,6 @@ fun MifosPasscode(
     onPasscodeCreation: () -> Unit = {},
     onPasscodeChanged: () -> Unit = {},
     onAuthenticationFailed: () -> Unit = {},
-    onBiometricsDisabled: () -> Unit = {},
     allowBackNavigation: Boolean = false,
     allowBiometricAuth: Boolean = true,
     viewModel: MifosPasscodeViewModel = koinViewModel(),
@@ -66,6 +65,7 @@ fun MifosPasscode(
 
     val systemAuthProvider = platformAuthenticationProvider.current
     val systemAvailableAuthOption = platformAvailableAuthenticationOption.current
+    val isRegistered by systemAuthProvider.isRegistered.collectAsStateWithLifecycle()
     val lifeCycleOwner = LocalLifecycleOwner.current
 
     val navEventState = rememberNavigationEventState(
@@ -92,7 +92,6 @@ fun MifosPasscode(
                         PasscodeResult.Created -> onPasscodeCreation()
                         PasscodeResult.Changed -> onPasscodeChanged()
                         PasscodeResult.Forgotten -> navigateToLogin()
-                        PasscodeResult.ExternalAuthDisabled -> onBiometricsDisabled()
                         PasscodeResult.Rejected -> onAuthenticationFailed()
                     }
                 }
@@ -186,6 +185,7 @@ fun MifosPasscode(
             dialogButtonTextColor = KptTheme.colorScheme.onSurface,
             dialogShape = null,
         ),
+        isExternalAuthEnabled = allowBiometricAuth && isRegistered,
         externalAuthButton = if (allowBiometricAuth) {
             { modifier ->
                 BiometricsKey(

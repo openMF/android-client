@@ -18,10 +18,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
-import org.mifos.authenticator.biometrics.BiometricStorageAdapter
 import org.mifos.authenticator.biometrics.platformAuthenticator.PlatformAuthenticationProvider
 import org.mifos.authenticator.biometrics.platformAuthenticator.RegistrationResult
-import org.mifos.authenticator.passcode.PasscodeManager
 import template.core.base.ui.BaseViewModel
 
 private const val DEFAULT_USER_ID = "default_user"
@@ -30,8 +28,6 @@ private const val DEFAULT_DISPLAY_NAME = "Mifos User"
 
 class BiometricSetupScreenViewmodel(
     private val userPreferencesRepository: UserPreferencesRepository,
-    private val passcodeManager: PasscodeManager,
-    private val biometricStorageAdapter: BiometricStorageAdapter,
 ) : BaseViewModel<
     BiometricSetupScreenState,
     BiometricSetupScreenEvent,
@@ -65,8 +61,6 @@ class BiometricSetupScreenViewmodel(
 
             when (result) {
                 is RegistrationResult.Success -> {
-                    biometricStorageAdapter.saveRegistrationData(result.message)
-                    passcodeManager.setExternalAuthEnabled(true)
                     sendEvent(BiometricSetupScreenEvent.OnBiometricSetupSuccess)
                 }
                 RegistrationResult.PlatformAuthenticatorNotSet -> {

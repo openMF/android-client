@@ -174,8 +174,8 @@ uiAndroidVersion = "1.7.8"
 
 mokoPermissions = "0.20.1"
 
-mifosAuthenticatorPasscode="2.1.0"
-mifosAuthenticatorBiometrics="2.1.0"
+mifosAuthenticatorPasscode="2.2.0"
+mifosAuthenticatorBiometrics="2.2.0"
 
 [libraries]
 androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "androidxActivity" }

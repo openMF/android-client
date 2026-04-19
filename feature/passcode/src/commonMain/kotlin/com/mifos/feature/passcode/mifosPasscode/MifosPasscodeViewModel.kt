@@ -58,10 +58,6 @@ class MifosPasscodeViewModel(
                         appLockRepository.deleteLock()
                         biometricStorageAdapter.deleteRegistrationData()
                     }
-                    PasscodeResult.ExternalAuthDisabled -> {
-                        biometricStorageAdapter.deleteRegistrationData()
-                        passcodeManager.setExternalAuthEnabled(false)
-                    }
                     PasscodeResult.Created,
                     PasscodeResult.Changed,
                     PasscodeResult.Rejected,
@@ -75,8 +71,6 @@ class MifosPasscodeViewModel(
             }
 
             MifosPasscodeAction.ClickConfirmOnNotRegisteredDialog -> {
-                passcodeManager.setExternalAuthEnabled(false)
-                biometricStorageAdapter.deleteRegistrationData()
                 mutableStateFlow.update {
                     it.copy(dialogState = null)
                 }
@@ -94,7 +88,7 @@ class MifosPasscodeViewModel(
         if (
             biometricsStatus.contains(PlatformAuthenticatorStatus.BIOMETRICS_SET) &&
             passcodeManager.state.value.passcodeStep == PasscodeStep.Enter &&
-            passcodeManager.state.value.isExternalAuthEnabled
+            systemAuthProvider.isRegistered.value
         ) {
             authenticateWithBiometrics(systemAuthProvider)
         }
@@ -104,11 +98,7 @@ class MifosPasscodeViewModel(
         systemAuthProvider: PlatformAuthenticationProvider,
     ) {
         viewModelScope.launch {
-            val registrationData = biometricStorageAdapter.loadRegistrationData() ?: return@launch
-            val result = systemAuthProvider.onAuthenticatorClick(
-                appName = "Mifos Pay",
-                savedRegistrationData = registrationData,
-            )
+            val result = systemAuthProvider.onAuthenticatorClick(appName = "Mifos Pay")
             when (result) {
                 is AuthenticationResult.Error -> {
                     mutableStateFlow.update {
@@ -120,8 +110,8 @@ class MifosPasscodeViewModel(
 
                 AuthenticationResult.Success -> {
                     if (passcodeManager.state.value.passcodeStep == PasscodeStep.Enter) {
-                        passcodeManager.notifyExternalAuthSuccess()
                         appLockRepository.unlockApp()
+                        sendEvent(MifosPasscodeEvent.NavigateForResult(PasscodeResult.Verified))
                     }
                 }
 

@@ -57,7 +57,6 @@ fun NavGraphBuilder.rootMifosPasscodeScreen(
             onPasscodeCreation = onPasscodeCreation,
             onAuthenticationFailed = onAuthenticationFailed,
             onPasscodeChanged = {},
-            onBiometricsDisabled = {},
         )
     }
 }
@@ -81,7 +80,6 @@ fun NavGraphBuilder.internalMifosPasscodeScreen(
     onAuthenticationSuccess: (String?) -> Unit,
     onAuthenticationFailed: (String?) -> Unit = {},
     onPasscodeChanged: () -> Unit = {},
-    onDisableBiometrics: (String?) -> Unit = {},
     onBackNavigation: (String?) -> Unit = {},
 ) {
     composableWithSlideTransitions<InternalPasscodeRoute> { backStackEntry ->
@@ -98,10 +96,6 @@ fun NavGraphBuilder.internalMifosPasscodeScreen(
             onPasscodeCreation = {},
             onAuthenticationFailed = { onAuthenticationFailed(verificationKey) },
             onPasscodeChanged = onPasscodeChanged,
-            onBiometricsDisabled = {
-                userVerificationRepository.recordVerification()
-                onDisableBiometrics(verificationKey)
-            },
             allowBackNavigation = true,
             allowBiometricAuth = route.allowBiometricAuth,
             onBackPress = { onBackNavigation(verificationKey) },
