@@ -1,0 +1,73 @@
+reviews:
+  path_instructions:
+    - path: "**/*ViewModel.kt"
+      instructions: |
+        Mifos MVI architecture rules:
+        
+        - All new features must follow MVI
+        - ViewModel must extend BaseViewModel
+        
+        Required:
+        - Use *State, *Event, *Action
+        - Naming must be consistent (FeatureViewModel, FeatureState, FeatureEvent, FeatureAction)
+        - Follow unidirectional flow:
+          Action → ViewModel → State → UI
+        
+        Flag:
+        - Missing *State / *Event / *Action
+        - ViewModel not extending BaseViewModel
+
+    - path: "**/*Screen.kt"
+      instructions: |
+        Mifos screen architecture rules:
+        
+        UI consistency:
+        - Avoid hardcoded values (dp, sp, padding, fontSize, colors)
+        - Use DesignToken, KptTheme, AppColors, MifosTypography for spacing, typography, and colors
+        
+        Code quality:
+        - Keep Composables small and readable
+        - Avoid deeply nested UI
+        
+        Each screen must follow 2-layer structure:
+
+        - *Screen:
+          - inject ViewModel (koinViewModel)
+          - collect StateFlow
+          - handle EventsEffect and navigation
+          - should only handle state, events, and navigation
+
+        - *ScreenContent:
+          - render UI from state
+          - trigger actions via onAction
+          - must NOT contain business logic
+
+        Flag:
+        - Missing ScreenContent separation
+        - UI logic inside *Screen
+        - Business logic inside Composables
+        - Hardcoded strings instead of using string resources
+        - Hardcoded dp/sp values
+        - Direct styling instead of using DesignToken or theme
+
+    - path: "**/composeResources/values/strings.xml"
+      instructions: |
+        String resource conventions (Mifos standard):
+        
+        Naming:
+        - All keys must follow:
+          feature_{feature_name}_{ui_text_in_snake_case}
+        
+        Examples:
+          "In Advance" → feature_loan_in_advance
+          "Outstanding" → feature_loan_outstanding
+        
+        - Avoid generic names like: title, text1, label
+        - The suffix should be a short, readable representation of the UI text
+        - Avoid multiple keys representing the same UI text
+        - Keys must be lowercase and use snake_case
+        
+        Flag:
+        - Incorrect naming pattern
+        - Generic or unclear key names
+        - Duplicate keys for same UI text
