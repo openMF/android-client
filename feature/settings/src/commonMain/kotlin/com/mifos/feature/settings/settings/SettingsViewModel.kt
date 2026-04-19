@@ -49,7 +49,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
-import org.mifos.authenticator.biometrics.BiometricStorageAdapter
 import org.mifos.authenticator.biometrics.platformAuthenticator.PlatformAuthenticationProvider
 import org.mifos.authenticator.biometrics.platformAuthenticator.RegistrationResult
 import org.mifos.authenticator.passcode.PasscodeManager
@@ -63,7 +62,6 @@ class SettingsViewModel(
     private val prefManager: UserPreferencesRepository,
     private val passcodeManager: PasscodeManager,
     private val userVerificationRepository: UserVerificationRepository,
-    private val biometricStorageAdapter: BiometricStorageAdapter,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -85,11 +83,7 @@ class SettingsViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, SettingsUiState.DEFAULT)
 
-    private val _biometricsState = MutableStateFlow(
-        BiometricsState(
-            isRegistered = biometricStorageAdapter.loadRegistrationData() != null,
-        ),
-    )
+    private val _biometricsState = MutableStateFlow(BiometricsState())
     val biometricsState: StateFlow<BiometricsState> = _biometricsState.asStateFlow()
 
     fun updateTheme(theme: AppTheme) {
@@ -104,15 +98,15 @@ class SettingsViewModel(
         }
     }
 
-    fun disableBiometrics(authenticationSuccess: Boolean) {
+    fun disableBiometrics(
+        authenticationSuccess: Boolean,
+        authProvider: PlatformAuthenticationProvider,
+    ) {
         viewModelScope.launch {
             when (authenticationSuccess) {
                 true -> {
                     if (userVerificationRepository.consumeVerification()) {
-                        biometricStorageAdapter.deleteRegistrationData()
-                        _biometricsState.update {
-                            it.copy(isRegistered = false)
-                        }
+                        authProvider.unregister()
                     }
                     Logger.e("Disable-Biometrics") { "Auth Result: $authenticationSuccess" }
                     savedStateHandle.remove<Boolean?>(DISABLE_BIOMETRICS_VERIFICATION_KEY)
@@ -139,11 +133,7 @@ class SettingsViewModel(
             )
 
             when (result) {
-                is RegistrationResult.Success -> {
-                    _biometricsState.update {
-                        it.copy(isRegistered = true)
-                    }
-                }
+                is RegistrationResult.Success -> { }
                 RegistrationResult.PlatformAuthenticatorNotSet -> {
                     updateBiometricsErrorState(
                         getString(Res.string.feature_settings_biometrics_not_set),
@@ -253,6 +243,5 @@ data class SettingsUiState(
 }
 
 data class BiometricsState(
-    val isRegistered: Boolean = false,
     val error: String? = null,
 )

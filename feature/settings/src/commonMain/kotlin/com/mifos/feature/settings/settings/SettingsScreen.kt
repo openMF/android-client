@@ -76,6 +76,7 @@ internal fun SettingsScreen(
     val biometricsState by viewModel.biometricsState.collectAsStateWithLifecycle()
 
     val authProvider = platformAuthenticationProvider.current
+    val isRegistered by authProvider.isRegistered.collectAsStateWithLifecycle()
 
     val authResult by entryStateHandle
         .getStateFlow<Boolean?>(DISABLE_BIOMETRICS_VERIFICATION_KEY, null)
@@ -83,7 +84,7 @@ internal fun SettingsScreen(
 
     LaunchedEffect(authResult) {
         authResult?.let { result ->
-            viewModel.disableBiometrics(result)
+            viewModel.disableBiometrics(result, authProvider)
             entryStateHandle.remove<Boolean>(DISABLE_BIOMETRICS_VERIFICATION_KEY)
         }
     }
@@ -92,12 +93,13 @@ internal fun SettingsScreen(
         onBackPressed = onBackPressed,
         state = uiState,
         biometricsState = biometricsState,
+        isBiometricsRegistered = isRegistered,
         changePasscode = {
             viewModel.changePasscode()
             changePasscode()
         },
         onEnableDisableBiometrics = {
-            if (biometricsState.isRegistered) {
+            if (isRegistered) {
                 disableBiometrics(DISABLE_BIOMETRICS_VERIFICATION_KEY)
             } else {
                 viewModel.registerBiometrics(authProvider)
@@ -130,6 +132,7 @@ internal fun SettingsScreen(
 internal fun SettingsScreen(
     state: SettingsUiState,
     biometricsState: BiometricsState,
+    isBiometricsRegistered: Boolean,
     onBackPressed: () -> Unit,
     onClickUpdateConfig: () -> Unit,
     changePasscode: () -> Unit,
@@ -154,7 +157,7 @@ internal fun SettingsScreen(
             Modifier.padding(paddingValues),
         ) {
             SettingsCards(
-                isBiometricsRegistered = biometricsState.isRegistered,
+                isBiometricsRegistered = isBiometricsRegistered,
                 settingsCardClicked = { item ->
                     when (item) {
                         SettingsCardItem.SYNC_SURVEY -> showSyncSurveyDialog = true
@@ -345,6 +348,7 @@ private fun PreviewSettingsScreen() {
         onBackPressed = {},
         state = SettingsUiState.DEFAULT,
         biometricsState = BiometricsState(),
+        isBiometricsRegistered = false,
         handleEndpointUpdate = { _, _ -> },
         updateLanguage = {},
         updateTheme = {},

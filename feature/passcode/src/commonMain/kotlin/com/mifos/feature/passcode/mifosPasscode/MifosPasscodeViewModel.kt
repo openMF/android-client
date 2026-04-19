@@ -16,7 +16,6 @@ import com.mifos.core.data.repository.AppLockRepository
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
-import org.mifos.authenticator.biometrics.BiometricStorageAdapter
 import org.mifos.authenticator.biometrics.platformAuthenticator.AuthenticationResult
 import org.mifos.authenticator.biometrics.platformAuthenticator.PlatformAuthenticationProvider
 import org.mifos.authenticator.biometrics.platformAuthenticator.PlatformAuthenticatorStatus
@@ -28,7 +27,6 @@ import template.core.base.ui.BaseViewModel
 class MifosPasscodeViewModel(
     private val passcodeManager: PasscodeManager,
     private val appLockRepository: AppLockRepository,
-    private val biometricStorageAdapter: BiometricStorageAdapter,
 ) : BaseViewModel<MifosPasscodeState, MifosPasscodeEvent, MifosPasscodeAction>(
     initialState = MifosPasscodeState(),
 ) {
@@ -56,7 +54,9 @@ class MifosPasscodeViewModel(
                     PasscodeResult.Verified -> appLockRepository.unlockApp()
                     PasscodeResult.Forgotten -> {
                         appLockRepository.deleteLock()
-                        biometricStorageAdapter.deleteRegistrationData()
+                        viewModelScope.launch {
+                            action.systemAuthProvider.unregister()
+                        }
                     }
                     PasscodeResult.Created,
                     PasscodeResult.Changed,
@@ -151,7 +151,10 @@ sealed interface MifosPasscodeAction {
     ) : MifosPasscodeAction
 
     data object DismissDialog : MifosPasscodeAction
-    data class HandlePasscodeResult(val result: PasscodeResult) : MifosPasscodeAction
+    data class HandlePasscodeResult(
+        val result: PasscodeResult,
+        val systemAuthProvider: PlatformAuthenticationProvider,
+    ) : MifosPasscodeAction
     data class OnAuthenticatorClick(
         val systemAuthProvider: PlatformAuthenticationProvider,
     ) : MifosPasscodeAction

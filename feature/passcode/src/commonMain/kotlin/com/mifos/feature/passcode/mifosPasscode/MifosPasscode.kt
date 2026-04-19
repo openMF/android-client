@@ -147,7 +147,12 @@ fun MifosPasscode(
     PasscodeScreen(
         passcodeManager = passcodeManager,
         onResult = { result ->
-            viewModel.trySendAction(MifosPasscodeAction.HandlePasscodeResult(result))
+            viewModel.trySendAction(
+                MifosPasscodeAction.HandlePasscodeResult(
+                    result = result,
+                    systemAuthProvider = systemAuthProvider,
+                ),
+            )
         },
         appearanceConfig = PasscodeAppearanceConfig(
             backgroundColor = KptTheme.colorScheme.background,
