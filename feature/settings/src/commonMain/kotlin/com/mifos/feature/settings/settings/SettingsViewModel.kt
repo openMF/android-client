@@ -26,6 +26,7 @@ import androidclient.feature.settings.generated.resources.feature_settings_sync_
 import androidclient.feature.settings.generated.resources.feature_settings_sync_survey_desc
 import androidclient.feature.settings.generated.resources.feature_settings_theme
 import androidclient.feature.settings.generated.resources.feature_settings_theme_desc
+import androidclient.feature.settings.generated.resources.feature_settings_verification_expired
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -106,11 +107,15 @@ class SettingsViewModel(
                 true -> {
                     if (userVerificationRepository.consumeVerification()) {
                         authProvider.unregister()
+                    } else {
+                        updateBiometricsErrorState(
+                            getString(Res.string.feature_settings_verification_expired),
+                        )
                     }
                     savedStateHandle.remove<Boolean?>(DISABLE_BIOMETRICS_VERIFICATION_KEY)
                 }
                 false -> {
-                    savedStateHandle.remove(DISABLE_BIOMETRICS_VERIFICATION_KEY)
+                    savedStateHandle.remove<Boolean?>(DISABLE_BIOMETRICS_VERIFICATION_KEY)
                 }
             }
         }

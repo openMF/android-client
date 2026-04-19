@@ -90,7 +90,7 @@ fun NavGraphBuilder.internalMifosPasscodeScreen(
         MifosPasscode(
             navigateToLogin = navigateToLogin,
             onAuthenticationSuccess = {
-                userVerificationRepository.recordVerification()
+                verificationKey?.let { userVerificationRepository.recordVerification() }
                 onAuthenticationSuccess(verificationKey)
             },
             onPasscodeCreation = {},

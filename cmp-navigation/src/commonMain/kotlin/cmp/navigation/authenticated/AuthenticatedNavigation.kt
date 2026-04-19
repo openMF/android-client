@@ -117,7 +117,9 @@ internal fun NavGraphBuilder.authenticatedGraph(
         settingsScreen(
             navigateBack = navController::popBackStack,
             navigateToLoginScreen = {},
-            changePasscode = { navController.navigateToInternalMifosPasscodeScreen() },
+            changePasscode = {
+                navController.navigateToInternalMifosPasscodeScreen(allowBiometricAuth = false)
+            },
             onClickUpdateConfig = {
                 navController.navigateToServerConfigGraph()
             },

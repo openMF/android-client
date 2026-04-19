@@ -31,6 +31,7 @@
     <string name="feature_settings_biometrics_not_set">Biometrics not set up on this device</string>
     <string name="feature_settings_biometrics_not_available">Biometrics not available on this device</string>
     <string name="feature_settings_biometrics_registration_error">Biometrics Registration Error</string>
+    <string name="feature_settings_verification_expired">Verification expired. Please try again.</string>
     <string name="feature_settings_instance_url">Instance URL</string>
     <string name="feature_settings_instance_url_desc">Update Instance URL</string>
     <string name="feature_settings_server_config">Server Config</string>
