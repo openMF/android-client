@@ -30,7 +30,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.touchlab.kermit.Logger
 import com.mifos.core.common.enums.MifosAppLanguage
 import com.mifos.core.data.repository.UserVerificationRepository
 import com.mifos.core.datastore.UserPreferencesRepository
