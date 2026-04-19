@@ -21,7 +21,7 @@
     <string name="feature_authenticator_user_not_registered_error_message">Biometrics not registered or invalid registration data. Re-Enable biometrics from app settings</string>
     <string name="feature_authenticator_biometrics_usage_message">Use biometrics (fingerprint or face) for faster and more secure access</string>
     <string name="feature_authenticator_biometrics_not_set">Biometrics not set up on this device</string>
-    <string name="feature_authenticator_biometrics_available">Biometrics not available on this device</string>
+    <string name="feature_authenticator_biometrics_not_available">Biometrics not available on this device</string>
     <string name="feature_authenticator_secure_your_app">Secure Your App</string>
     <string name="feature_authenticator_setup_biometrics">Setup Biometrics</string>
     <string name="feature_authenticator_skip_for_now">Skip for Now</string>

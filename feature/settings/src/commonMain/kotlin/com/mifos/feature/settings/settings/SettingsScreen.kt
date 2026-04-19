@@ -11,6 +11,7 @@ package com.mifos.feature.settings.settings
 
 import androidclient.feature.settings.generated.resources.Res
 import androidclient.feature.settings.generated.resources.feature_settings
+import androidclient.feature.settings.generated.resources.feature_settings_biometrics_registration_error
 import androidclient.feature.settings.generated.resources.feature_settings_change_app_theme
 import androidclient.feature.settings.generated.resources.feature_settings_choose_language
 import androidclient.feature.settings.generated.resources.feature_settings_disable_biometrics
@@ -221,7 +222,7 @@ internal fun SettingsScreen(
 
     AnimatedVisibility(biometricsState.error != null) {
         MifosDialogBox(
-            title = "Biometrics Registration Error",
+            title = stringResource(Res.string.feature_settings_biometrics_registration_error),
             showDialogState = biometricsState.error != null,
             confirmButtonText = "",
             dismissButtonText = "OK",

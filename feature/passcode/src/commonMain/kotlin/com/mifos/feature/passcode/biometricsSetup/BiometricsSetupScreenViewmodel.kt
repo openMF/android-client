@@ -10,7 +10,7 @@
 package com.mifos.feature.passcode.biometricsSetup
 
 import androidclient.feature.passcode.generated.resources.Res
-import androidclient.feature.passcode.generated.resources.feature_authenticator_biometrics_available
+import androidclient.feature.passcode.generated.resources.feature_authenticator_biometrics_not_available
 import androidclient.feature.passcode.generated.resources.feature_authenticator_biometrics_not_set
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.datastore.UserPreferencesRepository
@@ -73,7 +73,7 @@ class BiometricSetupScreenViewmodel(
                 RegistrationResult.PlatformAuthenticatorNotAvailable -> {
                     mutableStateFlow.update {
                         it.copy(
-                            error = getString(Res.string.feature_authenticator_biometrics_available),
+                            error = getString(Res.string.feature_authenticator_biometrics_not_available),
                         )
                     }
                 }
