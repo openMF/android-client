@@ -34,6 +34,7 @@ fun NavGraphBuilder.loanAccountSummary(
     approveLoan: (loanId: Int, loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
     disburseLoan: (Int) -> Unit,
     onRepaymentClick: (LoanWithAssociationsEntity) -> Unit,
+    onCreateGuarantorClicked: (Int) -> Unit,
     navController: NavController,
 ) {
     composable<LoanAccountSummaryScreenRoute> {
@@ -46,6 +47,7 @@ fun NavGraphBuilder.loanAccountSummary(
             approveLoan = approveLoan,
             disburseLoan = disburseLoan,
             onRepaymentClick = onRepaymentClick,
+            onCreateGuarantorClicked = onCreateGuarantorClicked,
             onNavigateBack = onBackPressed,
             navController = navController,
         )

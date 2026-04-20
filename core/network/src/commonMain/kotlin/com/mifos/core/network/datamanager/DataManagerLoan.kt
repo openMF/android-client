@@ -24,6 +24,8 @@ import com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplat
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.LoansPayload
+import com.mifos.core.network.model.guarantor.CreateGuarantorRequestDto
+import com.mifos.core.network.model.guarantor.GuarantorTemplateDto
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
@@ -110,6 +112,17 @@ class DataManagerLoan(
 
     fun getLoansAccountTemplate(clientId: Int, productId: Int): Flow<LoanTemplate> {
         return mBaseApiManager.loanService.getLoansAccountTemplate(clientId, productId)
+    }
+
+    suspend fun getGuarantorTemplate(loanId: Int): GuarantorTemplateDto {
+        return mBaseApiManager.loanService.getGuarantorTemplate(loanId)
+    }
+
+    suspend fun createGuarantor(
+        loanId: Int,
+        request: CreateGuarantorRequestDto,
+    ): GenericResponse {
+        return mBaseApiManager.loanService.createGuarantor(loanId, request)
     }
 
     fun createLoansAccount(loansPayload: LoansPayload?): Flow<HttpResponse> {

@@ -10,6 +10,9 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.model.entity.accounts.loan.CreateGuarantorRequest
+import com.mifos.core.model.entity.accounts.loan.GuarantorTemplate
+import com.mifos.core.network.GenericResponse
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -19,4 +22,11 @@ import kotlinx.coroutines.flow.Flow
 interface LoanAccountSummaryRepository {
 
     fun getLoanById(loanId: Int): Flow<DataState<LoanWithAssociationsEntity?>>
+
+    suspend fun getGuarantorTemplate(loanId: Int): DataState<GuarantorTemplate>
+
+    suspend fun createGuarantor(
+        loanId: Int,
+        request: CreateGuarantorRequest,
+    ): DataState<GenericResponse>
 }

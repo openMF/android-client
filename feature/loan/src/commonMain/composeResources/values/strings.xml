@@ -457,4 +457,20 @@
     <string name="feature_loan_reschedule_fetch_failed">Failed to load reschedule history.</string>
     <string name="feature_loan_reschedule_approve_failed">Failed to approve reschedule.</string>
     <string name="feature_loan_reschedule_delete_failed">Failed to delete reschedule.</string>
+    <string name="feature_loan_create_guarantor">Create Guarantor</string>
+    <string name="feature_loan_create_guarantor_title">Create Guarantor</string>
+    <string name="feature_loan_create_guarantor_existing_client">Existing Client</string>
+    <string name="feature_loan_create_guarantor_name">Name</string>
+    <string name="feature_loan_create_guarantor_relationship">Relationship*</string>
+    <string name="feature_loan_create_guarantor_first_name">First Name*</string>
+    <string name="feature_loan_create_guarantor_last_name">Last Name*</string>
+    <string name="feature_loan_create_guarantor_date_of_birth">Date of Birth</string>
+    <string name="feature_loan_create_guarantor_address_line_1">Address Line 1</string>
+    <string name="feature_loan_create_guarantor_address_line_2">Address Line 2</string>
+    <string name="feature_loan_create_guarantor_city">City</string>
+    <string name="feature_loan_create_guarantor_zip">Zip</string>
+    <string name="feature_loan_create_guarantor_mobile">Mobile</string>
+    <string name="feature_loan_create_guarantor_residence_phone">Residence Phone #</string>
+    <string name="feature_loan_create_guarantor_submit_success">Guarantor created successfully</string>
+    <string name="feature_loan_create_guarantor_error_invalid_status">Create Guarantor is available only for approved loans.</string>
 </resources>

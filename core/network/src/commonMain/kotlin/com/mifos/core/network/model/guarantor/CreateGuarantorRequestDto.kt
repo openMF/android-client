@@ -1,0 +1,29 @@
+/*
+ * Copyright 2026 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
+ */
+package com.mifos.core.network.model.guarantor
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class CreateGuarantorRequestDto(
+    val existingClientId: Int? = null,
+    val clientRelationshipTypeId: Int,
+    val firstname: String? = null,
+    val lastname: String? = null,
+    val dateOfBirth: String? = null,
+    val addressLine1: String? = null,
+    val addressLine2: String? = null,
+    val city: String? = null,
+    val zip: String? = null,
+    val mobileNumber: String? = null,
+    val housePhoneNumber: String? = null,
+    val dateFormat: String = "dd MMMM yyyy",
+    val locale: String = "en",
+)
