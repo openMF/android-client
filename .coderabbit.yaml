@@ -77,12 +77,12 @@ reviews:
     - path: "**"
       instructions: |
         PR Title Suggestion Guidelines:
-
+        
         Analyze the pull request changes (diff) and suggest an improved PR title if needed.
-
+        
         Follow commit message format:
         <type>(<scope>): <subject>
-
+        
         Type must be one of:
         - feat: new feature
         - fix: bug fix
@@ -91,30 +91,32 @@ reviews:
         - test: test-related changes
         - chore: maintenance, dependency updates
         - misc: other non-production changes
-
+        
         Rules:
         - Use present tense (e.g., "add login validation", not "added")
         - Keep subject concise and meaningful
         - Use lowercase (no Title Case)
         - Avoid vague titles like "update code", "fix issue"
         - Scope should reflect module/feature if identifiable (e.g., loan, auth, ui)
-
+        - Do NOT include JIRA ticket numbers or IDs in the PR title (e.g., MIFOS-123)
+        
         Based on the code changes:
         - Identify the primary intent of the PR
         - Infer appropriate type and optional scope
         - Suggest a better PR title
-
+        
         Output:
         - If current PR title is weak, unclear, or not following convention → suggest a better one
         - Format suggestion clearly like:
-
+        
           Suggested PR Title:
           feat(loan): implement loan dashboard screen
-
+        
         Flag:
         - Missing type prefix
         - Non-descriptive or vague title
         - Incorrect format
+        - Presence of JIRA ticket number in title
 
     - path: "**"
       instructions: |
