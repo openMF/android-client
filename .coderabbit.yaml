@@ -156,3 +156,45 @@ reviews:
         - "Missing Jira ticket link in PR description"
         - "Please include both 'Before' and 'After' sections with media"
         - "Before and after evidence is required even for non-UI changes to verify no regressions"
+
+    - path: "**"
+      instructions: |
+        Additional Code Review Guidelines (Mifos-specific):
+        
+        1. Null Safety & Stability
+        - Avoid using `!!` operator
+        - Handle null cases explicitly using safe calls or proper state handling
+        - Do not assume values are always non-null without guarantees
+        
+        2. Architecture Boundaries
+        - ViewModel must not depend on specific network/library implementations
+        - Avoid exposing low-level exceptions (e.g., Ktor exceptions) to UI layer
+        - Ensure proper separation between data, domain, and presentation layers
+        - Do not format data (currency, dates, calculations) inside the UI layer
+        - All formatting must be handled in the ViewModel and exposed via state (e.g., StateFlow)
+        
+        3. Performance Considerations
+        - Avoid unnecessary recompositions in Compose
+        - Do not attach heavy logic to frequently changing states (e.g., scrollState)
+        - Prefer lifting state up instead of recomputing in child composables
+        
+        4. Compose & Navigation Best Practices
+        - NEVER trigger navigation functions or side-effects directly during composition
+        - Always wrap navigation calls inside `LaunchedEffect` or `EventsEffect` to avoid repeated execution on recomposition
+        - Avoid triggering intensive side-effects during recomposition
+        
+        5. UI Structure
+        - Dialogs must be separated into their own composables (e.g., `*DialogScreen` or `*DialogContent`)
+        - Do not embed dialogs inline within complex main screens
+        
+        6. Localization Consistency
+        - Ensure all supported languages are updated consistently across modules
+        - Avoid duplicate or conflicting locale folders (e.g., values-in vs values-id)
+        - Verify translations exist for newly added UI strings
+        
+        7. Code Cleanliness
+        - Avoid unnecessary inline comments unless critical
+        - Remove leftover debug or commented code
+        
+        Output:
+        - Provide actionable suggestions when violations are detected
