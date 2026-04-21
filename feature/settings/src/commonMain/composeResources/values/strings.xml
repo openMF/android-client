@@ -24,6 +24,14 @@
     <string name="feature_settings_theme_desc">Select theme</string>
     <string name="feature_settings_change_passcode">Change Passcode</string>
     <string name="feature_settings_change_passcode_desc">Change App Passcode</string>
+    <string name="feature_settings_enable_biometrics">Enable biometrics</string>
+    <string name="feature_settings_disable_biometrics">Disable biometrics</string>
+    <string name="feature_settings_enable_disable_biometrics">Enable/Disable Biometrics</string>
+    <string name="feature_settings_enable_disable_biometrics_desc">Enable/Disable Biometrics</string>
+    <string name="feature_settings_biometrics_not_set">Biometrics not set up on this device</string>
+    <string name="feature_settings_biometrics_not_available">Biometrics not available on this device</string>
+    <string name="feature_settings_biometrics_registration_error">Biometrics Registration Error</string>
+    <string name="feature_settings_verification_expired">Verification expired. Please try again.</string>
     <string name="feature_settings_instance_url">Instance URL</string>
     <string name="feature_settings_instance_url_desc">Update Instance URL</string>
     <string name="feature_settings_server_config">Server Config</string>
