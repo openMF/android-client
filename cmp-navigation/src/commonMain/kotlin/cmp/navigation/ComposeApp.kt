@@ -18,8 +18,21 @@ import cmp.navigation.rootnav.RootNavScreen
 import com.mifos.core.datastore.model.DarkThemeConfig
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.ui.util.EventsEffect
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
+import org.mifos.authenticator.biometrics.BiometricStorageAdapter
+import org.mifos.authenticator.biometrics.PlatformAuthenticatorCompositionProvider
 
+/**
+ * App-level composition entry point.
+ *
+ * Wraps the nav graph in [PlatformAuthenticatorCompositionProvider] so every
+ * descendant can resolve the `platformAuthenticationProvider` /
+ * `platformAvailableAuthenticationOption` CompositionLocals used by
+ * `MifosPasscode`, `BiometricsKey`, `BiometricSetupScreen`, and the Settings
+ * biometric toggles. The [BiometricStorageAdapter] is injected here once so
+ * the library can build a single scoped `PlatformAuthenticationProvider`.
+ */
 @Composable
 fun ComposeApp(
     handleThemeMode: (osValue: Int) -> Unit,
@@ -44,14 +57,18 @@ fun ComposeApp(
         DarkThemeConfig.FOLLOW_SYSTEM -> isSystemInDarkTheme()
     }
 
-    MifosTheme(
-        darkTheme = darkTheme,
-        androidTheme = uiState.isAndroidTheme,
-        shouldDisplayDynamicTheming = uiState.isDynamicColorsEnabled,
+    PlatformAuthenticatorCompositionProvider(
+        biometricStorageAdapter = koinInject<BiometricStorageAdapter>(),
     ) {
-        RootNavScreen(
-            modifier = modifier,
-            onSplashScreenRemoved = onSplashScreenRemoved,
-        )
+        MifosTheme(
+            darkTheme = darkTheme,
+            androidTheme = uiState.isAndroidTheme,
+            shouldDisplayDynamicTheming = uiState.isDynamicColorsEnabled,
+        ) {
+            RootNavScreen(
+                modifier = modifier,
+                onSplashScreenRemoved = onSplashScreenRemoved,
+            )
+        }
     }
 }

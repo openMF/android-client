@@ -14,6 +14,7 @@ import com.mifos.core.data.datasource.SearchRecordLocalDataSource
 import com.mifos.core.data.datasource.SearchRecordLocalDataSourceImpl
 import com.mifos.core.data.repository.ActivateRepository
 import com.mifos.core.data.repository.AmountTransferRepository
+import com.mifos.core.data.repository.AppLockRepository
 import com.mifos.core.data.repository.CenterDetailsRepository
 import com.mifos.core.data.repository.CenterListRepository
 import com.mifos.core.data.repository.ChargeRepository
@@ -78,8 +79,11 @@ import com.mifos.core.data.repository.SyncGroupPayloadsRepository
 import com.mifos.core.data.repository.SyncGroupsDialogRepository
 import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
 import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
+import com.mifos.core.data.repository.UserVerificationRepository
 import com.mifos.core.data.repositoryImp.ActivateRepositoryImp
 import com.mifos.core.data.repositoryImp.AmountTransferRepositoryImp
+import com.mifos.core.data.repositoryImp.AppLockRepositoryImpl
+import com.mifos.core.data.repositoryImp.BiometricStorageAdapterImpl
 import com.mifos.core.data.repositoryImp.CenterDetailsRepositoryImp
 import com.mifos.core.data.repositoryImp.CenterListRepositoryImp
 import com.mifos.core.data.repositoryImp.ChargeRepositoryImp
@@ -119,6 +123,7 @@ import com.mifos.core.data.repositoryImp.LoginRepositoryImp
 import com.mifos.core.data.repositoryImp.NewIndividualCollectionSheetRepositoryImp
 import com.mifos.core.data.repositoryImp.NoteRepositoryImp
 import com.mifos.core.data.repositoryImp.OfflineDashboardRepositoryImp
+import com.mifos.core.data.repositoryImp.PasscodeStorageAdapterImpl
 import com.mifos.core.data.repositoryImp.PathTrackingRepositoryImp
 import com.mifos.core.data.repositoryImp.PinPointClientRepositoryImp
 import com.mifos.core.data.repositoryImp.RecurringAccountRepositoryImp
@@ -144,12 +149,15 @@ import com.mifos.core.data.repositoryImp.SyncGroupPayloadsRepositoryImp
 import com.mifos.core.data.repositoryImp.SyncGroupsDialogRepositoryImp
 import com.mifos.core.data.repositoryImp.SyncLoanRepaymentTransactionRepositoryImp
 import com.mifos.core.data.repositoryImp.SyncSavingsAccountTransactionRepositoryImp
+import com.mifos.core.data.repositoryImp.UserVerificationRepositoryImpl
 import com.mifos.core.data.util.NetworkMonitor
 import kotlinx.coroutines.CoroutineDispatcher
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import org.mifos.authenticator.biometrics.BiometricStorageAdapter
+import org.mifos.authenticator.passcode.PasscodeStorageAdapter
 
 val RepositoryModule = module {
     single<CoroutineDispatcher> { get(named(MifosDispatchers.IO.name)) }
@@ -240,6 +248,11 @@ val RepositoryModule = module {
     singleOf(::RecurringAccountRepositoryImp) bind RecurringAccountRepository::class
     singleOf(::ShareAccountRepositoryImpl) bind ShareAccountRepository::class
     singleOf(::FixedDepositRepositoryImpl) bind FixedDepositRepository::class
+
+    singleOf(::AppLockRepositoryImpl) bind(AppLockRepository::class)
+    singleOf(::PasscodeStorageAdapterImpl) bind(PasscodeStorageAdapter::class)
+    singleOf(::BiometricStorageAdapterImpl) bind(BiometricStorageAdapter::class)
+    singleOf(::UserVerificationRepositoryImpl) bind(UserVerificationRepository::class)
 
     includes(platformModule)
     single<PlatformDependentDataModule> { getPlatformDataModule }

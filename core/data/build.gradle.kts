@@ -39,6 +39,12 @@ kotlin {
             api(projects.core.datastore)
             api(projects.core.network)
             api(projects.core.database)
+
+            implementation(libs.mifos.authenticator.passcode)
+            implementation(libs.mifos.authenticator.biometrics)
+            implementation(libs.multiplatform.settings)
+            implementation(libs.multiplatform.settings.serialization)
+            implementation(libs.multiplatform.settings.coroutines)
         }
         androidMain.dependencies {
             api(libs.ktor.client.okhttp)

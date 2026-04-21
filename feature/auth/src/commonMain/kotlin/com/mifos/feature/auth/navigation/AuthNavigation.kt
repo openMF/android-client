@@ -11,7 +11,9 @@ package com.mifos.feature.auth.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.navOptions
 import androidx.navigation.navigation
 import com.mifos.feature.auth.login.LoginScreen
 import kotlinx.serialization.Serializable
@@ -20,19 +22,17 @@ import kotlinx.serialization.Serializable
 object LoginRoute
 
 fun NavGraphBuilder.authNavGraph(
-    navigateHome: () -> Unit,
     navigatePasscode: () -> Unit,
     updateServerConfig: () -> Unit,
 ) {
     composable<LoginRoute> {
         LoginScreen(
-            homeIntent = navigateHome,
             passcodeIntent = navigatePasscode,
             onClickToUpdateServerConfig = updateServerConfig,
         )
     }
 }
 
-fun NavController.navigateToLogin() {
-    this.navigate(LoginRoute)
+fun NavController.navigateToLogin(navOptions: NavOptions? = null) {
+    this.navigate(LoginRoute, navOptions)
 }
