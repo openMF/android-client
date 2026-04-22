@@ -26,15 +26,18 @@ fun NavController.navigateToSettingsScreen() {
 fun NavGraphBuilder.settingsScreen(
     navigateBack: () -> Unit,
     navigateToLoginScreen: () -> Unit,
-    changePasscode: (String) -> Unit,
+    changePasscode: () -> Unit,
     onClickUpdateConfig: () -> Unit,
+    disableBiometrics: (String) -> Unit = {},
 ) {
-    composable<SettingsRoute> {
+    composable<SettingsRoute> { backStackEntry ->
         SettingsScreen(
             onBackPressed = navigateBack,
             navigateToLoginScreen = navigateToLoginScreen,
             changePasscode = changePasscode,
             onClickUpdateConfig = onClickUpdateConfig,
+            disableBiometrics = disableBiometrics,
+            entryStateHandle = backStackEntry.savedStateHandle,
         )
     }
 }

@@ -50,8 +50,8 @@ kotlin {
             implementation(projects.feature.settings)
             implementation(projects.feature.search)
             implementation(projects.feature.searchRecord)
+            implementation(projects.feature.passcode)
 
-//            implementation(project.libs.mifos.passcode)
             implementation(compose.material3)
             implementation(compose.foundation)
             implementation(compose.ui)
@@ -60,6 +60,10 @@ kotlin {
             implementation(libs.window.size)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
+
+            implementation(libs.mifos.authenticator.passcode)
+            implementation(libs.mifos.authenticator.biometrics)
+            implementation(libs.jb.navigationevent)
         }
         androidMain.dependencies {
             implementation(libs.androidx.core.ktx)
