@@ -131,6 +131,7 @@ sealed class LoanAccountProfileActionItem(
     data object RejectLoan : LoanAccountProfileActionItem(
         title = LoanRes.string.feature_loan_profile_item_reject_loan_title,
         subTitle = LoanRes.string.feature_loan_profile_item_reject_loan_subtitle,
+        icon = UiRes.drawable.design_services,
     )
 }
 
@@ -148,4 +149,5 @@ internal val loanProfileActionItems: ImmutableList<LoanAccountProfileActionItem>
     LoanAccountProfileActionItem.Documents,
     LoanAccountProfileActionItem.Notes,
     LoanAccountProfileActionItem.StandingInstructions,
+    LoanAccountProfileActionItem.RejectLoan,
 )

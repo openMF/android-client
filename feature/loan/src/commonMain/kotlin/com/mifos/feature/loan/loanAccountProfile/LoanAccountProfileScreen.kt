@@ -32,16 +32,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -49,12 +47,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCard
-import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
@@ -67,6 +65,7 @@ import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.util.TextUtil
 import com.mifos.feature.loan.loanAccountProfile.components.LoanAccountProfileActionItem
 import com.mifos.feature.loan.loanAccountProfile.components.loanProfileActionItems
+import com.mifos.feature.loan.loanReject.LOAN_REJECT_SUCCESS_RESULT_KEY
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
@@ -92,11 +91,21 @@ internal fun LoanAccountProfileScreen(
     navigateToTransferScreen: (loanId: Int, accountNumber: String, clientId: Int, currencyCode: String, officeId: Int) -> Unit,
     rejectLoan: (loanId: Int) -> Unit,
     navController: NavController,
+    entryStateHandle: SavedStateHandle,
     modifier: Modifier = Modifier,
     viewModel: LoanAccountProfileViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
-    val snackbarHostState = remember { SnackbarHostState() }
+    val rejectSuccess by entryStateHandle
+        .getStateFlow<Boolean?>(LOAN_REJECT_SUCCESS_RESULT_KEY, null)
+        .collectAsStateWithLifecycle()
+
+    LaunchedEffect(rejectSuccess) {
+        if (rejectSuccess == true) {
+            viewModel.trySendAction(LoanAccountAction.OnRetry)
+            entryStateHandle.remove<Boolean>(LOAN_REJECT_SUCCESS_RESULT_KEY)
+        }
+    }
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
@@ -135,7 +144,6 @@ internal fun LoanAccountProfileScreen(
                     LoanAccountProfileActionItem.Originators,
                     LoanAccountProfileActionItem.Collateral,
                     LoanAccountProfileActionItem.TermVariations,
-                    LoanAccountProfileActionItem.Reschedules,
                     LoanAccountProfileActionItem.StandingInstructions,
                     LoanAccountProfileActionItem.RejectLoan,
                     -> Unit
@@ -147,16 +155,15 @@ internal fun LoanAccountProfileScreen(
     }
 
     if (state.dialogState == null) {
-        MifosScaffold(
-            modifier = modifier,
-            snackbarHostState = snackbarHostState,
-            topBar = { MifosBreadcrumbNavBar(navController) },
-        ) { paddingValues ->
-            state.loanAccount?.let { loanAccount ->
+        Column(
+            modifier = modifier.fillMaxSize(),
+        ) {
+            MifosBreadcrumbNavBar(navController)
+
+            state.loanAccount?.let {
                 LoanAccountContent(
                     state = state,
                     onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
-                    modifier = Modifier.padding(paddingValues),
                 )
             }
         }
@@ -217,68 +224,28 @@ private fun LoanAccountContent(
 
         Spacer(Modifier.height(DesignToken.padding.medium))
 
-        loanProfileActionItems.forEach { item ->
-            MifosRowCard(
-                title = stringResource(item.title),
-                imageVector = item.icon,
-                leftValues = listOf(
-                    TextUtil(
-                        text = stringResource(item.subTitle),
-                        style = MifosTypography.bodySmall,
-                        color = KptTheme.colorScheme.secondary,
+        loanProfileActionItems
+            .filterNot {
+                it is LoanAccountProfileActionItem.RejectLoan &&
+                    loanAccount.status.pendingApproval != true
+            }
+            .forEach { item ->
+                MifosRowCard(
+                    title = stringResource(item.title),
+                    imageVector = item.icon,
+                    leftValues = listOf(
+                        TextUtil(
+                            text = stringResource(item.subTitle),
+                            style = MifosTypography.bodySmall,
+                            color = KptTheme.colorScheme.secondary,
+                        ),
                     ),
-                ),
-                rightValues = emptyList(),
-                modifier = Modifier
-                    .clickable { onAction(LoanAccountAction.OnDetailItemClick(item)) }
-                    .padding(vertical = DesignToken.padding.medium),
-            )
-        }
-
-        if (loanAccount.status.pendingApproval == true) {
-            val rejectItem = LoanAccountProfileActionItem.RejectLoan
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onAction(LoanAccountAction.OnDetailItemClick(rejectItem)) }
-                    .padding(vertical = DesignToken.padding.medium),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Icon(
-                    imageVector = MifosIcons.Cancel,
-                    contentDescription = null,
+                    rightValues = emptyList(),
                     modifier = Modifier
-                        .size(DesignToken.sizes.iconExtraLarge)
-                        .background(
-                            color = KptTheme.colorScheme.surfaceBright,
-                            shape = CircleShape,
-                        )
-                        .padding(DesignToken.padding.small),
-                )
-                Spacer(Modifier.width(DesignToken.padding.medium))
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
-                ) {
-                    Text(
-                        text = stringResource(rejectItem.title),
-                        style = MifosTypography.titleSmallEmphasized,
-                        color = KptTheme.colorScheme.onSurface,
-                    )
-                    Text(
-                        text = stringResource(rejectItem.subTitle),
-                        style = MifosTypography.bodySmall,
-                        color = KptTheme.colorScheme.secondary,
-                    )
-                }
-                Spacer(Modifier.width(DesignToken.padding.medium))
-                Icon(
-                    imageVector = MifosIcons.ChevronRight,
-                    contentDescription = null,
-                    modifier = Modifier.size(DesignToken.sizes.iconSmall),
+                        .clickable { onAction(LoanAccountAction.OnDetailItemClick(item)) }
+                        .padding(vertical = DesignToken.padding.medium),
                 )
             }
-        }
 
         Spacer(Modifier.height(KptTheme.spacing.md))
     }

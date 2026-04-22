@@ -34,7 +34,7 @@ fun NavGraphBuilder.loanProfileAccountDestination(
     navigateToTransferScreen: (loanId: Int, accountNumber: String, clientId: Int, currencyCode: String, officeId: Int) -> Unit,
     rejectLoan: (loanId: Int) -> Unit,
 ) {
-    composable<LoanAccountRoute> {
+    composable<LoanAccountRoute> { backStackEntry ->
         LoanAccountProfileScreen(
             onNavigateBack = onNavigateBack,
             navController = navController,
@@ -48,6 +48,7 @@ fun NavGraphBuilder.loanProfileAccountDestination(
             onRepaymentClick = onRepaymentClick,
             navigateToTransferScreen = navigateToTransferScreen,
             rejectLoan = rejectLoan,
+            entryStateHandle = backStackEntry.savedStateHandle,
         )
     }
 }

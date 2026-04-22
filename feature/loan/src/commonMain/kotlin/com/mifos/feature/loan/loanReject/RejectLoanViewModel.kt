@@ -16,6 +16,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.ApiDateFormatter
+import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountRejectRepository
 import com.mifos.core.model.objects.payloads.RejectLoanPayload
 import com.mifos.core.model.utils.DateConstants
@@ -34,7 +35,9 @@ internal class RejectLoanViewModel(
     private val repository: LoanAccountRejectRepository,
     savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<RejectLoanState, RejectLoanEvent, RejectLoanAction>(
-    initialState = RejectLoanState(rejectedOnDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date),
+    initialState = RejectLoanState(
+        rejectedOnDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
+    ),
 ) {
 
     private val loanId = savedStateHandle.toRoute<LoanRejectScreenRoute>().loanId
@@ -109,20 +112,19 @@ internal class RejectLoanViewModel(
                 dateFormat = DateConstants.DATE_FORMAT,
             )
 
-            try {
-                repository.rejectLoan(loanId, payload)
-                mutableStateFlow.update {
+            when (val result = repository.rejectLoan(loanId, payload)) {
+                DataState.Loading -> Unit
+                is DataState.Success -> mutableStateFlow.update {
                     it.copy(
                         isLoading = false,
                         dialogState = RejectLoanState.DialogState.Success,
                     )
                 }
-            } catch (e: Exception) {
-                mutableStateFlow.update {
+                is DataState.Error -> mutableStateFlow.update {
                     it.copy(
                         isLoading = false,
                         dialogState = RejectLoanState.DialogState.Error(
-                            e.message ?: "An error occurred",
+                            result.message.ifBlank { "An error occurred" },
                         ),
                     )
                 }
