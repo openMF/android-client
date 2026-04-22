@@ -1,6 +1,34 @@
 # yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
 
 reviews:
+  auto_title_placeholder: "@coderabbitai"
+  auto_title_instructions: |
+    Generate a title following: <type>(<scope>): <subject>
+    Types: feat, fix, docs, refactor, test, chore, misc
+    Rules: present tense, lowercase, no Jira IDs, scope reflects module/feature.
+
+  pre_merge_checks:
+    title:
+      mode: warning
+      requirements: |
+        Follow commit message format: <type>(<scope>): <subject>
+          Types: feat, fix, docs, refactor, test, chore, misc
+          - Present tense, lowercase, concise
+          - Scope reflects module/feature (loan, auth, ui) if identifiable
+          - Do NOT include JIRA ticket numbers/IDs (e.g., MIFOSAC-123)
+
+    description:
+      mode: warning
+    custom_checks:
+      - name: Jira link and Before/After sections
+        mode: warning
+        instructions: |
+          PR description must include:
+          1. A valid Jira link (e.g., https://mifosforge.jira.com/browse/MIFOSAC-1234)
+          2. Non-empty "Before:" and "After:" sections, each with media (image/video)
+          Required even for domain/data/refactor changes. Flag missing Jira link,
+          missing/empty sections, or sections without media.
+
   path_instructions:
     - path: "**/*ViewModel.kt"
       instructions: |
@@ -52,7 +80,7 @@ reviews:
         - Hardcoded dp/sp values
         - Direct styling instead of using DesignToken or theme
 
-    - path: "**/composeResources/values/strings.xml"
+    - path: "**/composeResources/values/*strings.xml"
       instructions: |
         String resource conventions (Mifos standard):
         
@@ -74,90 +102,7 @@ reviews:
         - Generic or unclear key names
         - Duplicate keys for same UI text
 
-    - path: "**"
-      instructions: |
-        PR Title Suggestion Guidelines:
-        
-        Analyze the pull request changes (diff) and suggest an improved PR title if needed.
-        
-        Follow commit message format:
-        <type>(<scope>): <subject>
-        
-        Type must be one of:
-        - feat: new feature
-        - fix: bug fix
-        - docs: documentation changes
-        - refactor: code change without behavior change
-        - test: test-related changes
-        - chore: maintenance, dependency updates
-        - misc: other non-production changes
-        
-        Rules:
-        - Use present tense (e.g., "add login validation", not "added")
-        - Keep subject concise and meaningful
-        - Use lowercase (no Title Case)
-        - Avoid vague titles like "update code", "fix issue"
-        - Scope should reflect module/feature if identifiable (e.g., loan, auth, ui)
-        - Do NOT include JIRA ticket numbers or IDs in the PR title (e.g., MIFOS-123)
-        
-        Based on the code changes:
-        - Identify the primary intent of the PR
-        - Infer appropriate type and optional scope
-        - Suggest a better PR title
-        
-        Output:
-        - If current PR title is weak, unclear, or not following convention → suggest a better one
-        - Format suggestion clearly like:
-        
-          Suggested PR Title:
-          feat(loan): implement loan dashboard screen
-        
-        Flag:
-        - Missing type prefix
-        - Non-descriptive or vague title
-        - Incorrect format
-        - Presence of JIRA ticket number in title
-
-    - path: "**"
-      instructions: |
-        PR Description Validation (Mifos standard):
-
-        The pull request description must include:
-
-        1. Jira Ticket:
-          - A valid Jira link must be present
-          - Example:
-            https://mifosforge.jira.com/browse/MIFOSAC-1234
-
-        2. Before and After Evidence (MANDATORY for ALL PRs):
-          - PR description must strictly contain the following sections:
-
-            Before:
-            After:
-
-          - Each section must include supporting media (image or video link)
-          - Sections must not be empty
-          - Required even for:
-            - Domain layer changes
-            - Data layer changes
-            - Refactors
-          - Purpose: to ensure and prove no regressions
-
-        Validation Rules:
-        - Missing Jira link → flag
-        - Missing "Before" or "After" section → flag
-        - Empty "Before" or "After" section → flag
-        - Missing media in either section → flag
-
-        Output:
-        - Provide clear actionable comments
-
-        Examples:
-        - "Missing Jira ticket link in PR description"
-        - "Please include both 'Before' and 'After' sections with media"
-        - "Before and after evidence is required even for non-UI changes to verify no regressions"
-
-    - path: "**"
+    - path: "**/*.kt"
       instructions: |
         Additional Code Review Guidelines (Mifos-specific):
         
