@@ -1,6 +1,23 @@
 # yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: 'en-US'
+early_access: false
+
+chat:
+  auto_reply: true
 
 reviews:
+  poem: false
+  profile: "chill"
+  high_level_summary: true
+  review_status: true
+  commit_status: true
+  collapse_walkthrough: false
+
+  path_filters:
+    - '**/*'
+    - '!.github/**'
+    - '!**/*.svg'
+
   auto_title_placeholder: "@coderabbitai"
   auto_title_instructions: |
     Generate a title following: <type>(<scope>): <subject>
@@ -28,6 +45,11 @@ reviews:
           2. Non-empty "Before:" and "After:" sections, each with media (image/video)
           Required even for domain/data/refactor changes. Flag missing Jira link,
           missing/empty sections, or sections without media.
+
+  instructions: |
+    Focus on correctness, readability, and maintainability over cosmetic nitpicks.
+    - Avoid reviewing README, config, or asset files.
+    - Prioritize identifying bugs, performance issues, and architectural concerns.
 
   path_instructions:
     - path: "**/*ViewModel.kt"
@@ -143,3 +165,15 @@ reviews:
         
         Output:
         - Provide actionable suggestions when violations are detected
+
+    - path: "core-base/**"
+      instructions: |
+        Critical Module Change Detection:
+
+        - Changes in `core-base` module must be treated as high-impact.
+        - Flag any PR that modifies files inside `core-base` for careful review.
+        - Ensure changes follow existing architecture and do not introduce breaking or cross-layer dependencies.
+        - Verify that modifications in `core-base` are necessary and minimal.
+
+        Output:
+        - Clearly highlight that `core-base` is a shared foundational module and requires extra review attention.
