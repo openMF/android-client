@@ -24,6 +24,15 @@ reviews:
     Types: feat, fix, docs, refactor, test, chore, misc
     Rules: present tense, lowercase, no Jira IDs, scope reflects module/feature.
 
+  auto_review:
+    enabled: true
+    auto_incremental_review: true
+    drafts: false
+    base_branches: ['development']
+    ignore_title_keywords: ['WIP', 'Draft']
+    labels: ['!skip-ai-review']
+    ignore_usernames: ['dependabot', 'renovate[bot]']
+
   pre_merge_checks:
     title:
       mode: warning
@@ -46,15 +55,10 @@ reviews:
           Required even for domain/data/refactor changes. Flag missing Jira link,
           missing/empty sections, or sections without media.
 
-  instructions: |
-    Focus on correctness, readability, and maintainability over cosmetic nitpicks.
-    - Avoid reviewing README, config, or asset files.
-    - Prioritize identifying bugs, performance issues, and architectural concerns.
-
   path_instructions:
     - path: "**/*ViewModel.kt"
       instructions: |
-        Mifos MVI architecture rules:
+        MVI architecture rules:
         
         - All new features must follow MVI
         - ViewModel must extend BaseViewModel
@@ -71,7 +75,7 @@ reviews:
 
     - path: "**/*Screen.kt"
       instructions: |
-        Mifos screen architecture rules:
+        Screen architecture rules:
         
         UI consistency:
         - Avoid hardcoded values (dp, sp, padding, fontSize, colors)
@@ -104,7 +108,7 @@ reviews:
 
     - path: "**/composeResources/values/*strings.xml"
       instructions: |
-        String resource conventions (Mifos standard):
+        String resource conventions:
         
         Naming:
         - All keys must follow:
@@ -126,8 +130,8 @@ reviews:
 
     - path: "**/*.kt"
       instructions: |
-        Additional Code Review Guidelines (Mifos-specific):
-        
+        Additional Code Review Guidelines:
+      
         1. Null Safety & Stability
         - Avoid using `!!` operator
         - Handle null cases explicitly using safe calls or proper state handling
@@ -162,6 +166,10 @@ reviews:
         7. Code Cleanliness
         - Avoid unnecessary inline comments unless critical
         - Remove leftover debug or commented code
+        
+        8. Focus on correctness, readability, and maintainability over cosmetic nitpicks.
+        - Avoid reviewing README, config, or asset files.
+        - Prioritize identifying bugs, performance issues, and architectural concerns.
         
         Output:
         - Provide actionable suggestions when violations are detected
