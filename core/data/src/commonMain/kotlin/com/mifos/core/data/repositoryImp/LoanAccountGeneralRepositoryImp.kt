@@ -14,11 +14,11 @@ import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.mappers.loan.LoanAccountGeneralMapper
 import com.mifos.core.data.repository.LoanAccountGeneralRepository
 import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.data.util.withNetworkCheck
 import com.mifos.core.model.entity.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.network.datamanager.DataManagerLoan
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
@@ -29,19 +29,10 @@ class LoanAccountGeneralRepositoryImp(
 ) : LoanAccountGeneralRepository {
 
     override fun getLoanById(loanId: Int): Flow<DataState<LoanWithAssociations?>> {
-        return combine(
-            networkMonitor.isOnline,
+        return networkMonitor.withNetworkCheck(
             dataManagerLoan.getLoanById(loanId)
                 .map { loan -> loan?.let(LoanAccountGeneralMapper::mapFromEntity) }
                 .asDataStateFlow(),
-        ) { isOnline, dataState ->
-            if (!isOnline && dataState !is DataState.Success) {
-                DataState.Error(NetworkUnavailableException())
-            } else {
-                dataState
-            }
-        }.flowOn(ioDispatcher)
+        ).flowOn(ioDispatcher)
     }
 }
-
-class NetworkUnavailableException : IllegalStateException()

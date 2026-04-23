@@ -32,7 +32,7 @@ import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.LoanAccountGeneralRepository
-import com.mifos.core.data.repositoryImp.NetworkUnavailableException
+import com.mifos.core.data.util.NetworkUnavailableException
 import com.mifos.core.model.entity.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.Job
