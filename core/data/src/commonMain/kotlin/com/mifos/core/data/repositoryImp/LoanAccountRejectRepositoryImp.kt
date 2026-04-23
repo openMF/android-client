@@ -14,6 +14,7 @@ import com.mifos.core.data.repository.LoanAccountRejectRepository
 import com.mifos.core.model.objects.account.loan.RejectLoanResponse
 import com.mifos.core.model.objects.payloads.RejectLoanPayload
 import com.mifos.core.network.datamanager.DataManagerLoan
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
@@ -33,8 +34,9 @@ class LoanAccountRejectRepositoryImp(
             try {
                 val response = dataManagerLoan.rejectLoan(loanId, rejectLoanPayload)
                 DataState.Success(response)
-            } catch (e: Exception) {
-                DataState.Error(e)
+            } catch (throwable: Throwable) {
+                if (throwable is CancellationException) throw throwable
+                DataState.Error(throwable)
             }
         }
     }

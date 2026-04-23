@@ -10,7 +10,9 @@
 package com.mifos.feature.loan.loanReject
 
 import androidclient.feature.loan.generated.resources.Res
+import androidclient.feature.loan.generated.resources.feature_loan_error_network_not_available
 import androidclient.feature.loan.generated.resources.feature_loan_reject_date_error_future
+import androidclient.feature.loan.generated.resources.feature_loan_unknown_error_occured
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -18,9 +20,11 @@ import androidx.navigation.toRoute
 import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountRejectRepository
+import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.model.objects.payloads.RejectLoanPayload
 import com.mifos.core.model.utils.DateConstants
 import com.mifos.core.ui.util.BaseViewModel
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
@@ -33,6 +37,7 @@ import kotlin.time.ExperimentalTime
 @OptIn(ExperimentalTime::class)
 internal class RejectLoanViewModel(
     private val repository: LoanAccountRejectRepository,
+    private val networkMonitor: NetworkMonitor,
     savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<RejectLoanState, RejectLoanEvent, RejectLoanAction>(
     initialState = RejectLoanState(
@@ -43,6 +48,10 @@ internal class RejectLoanViewModel(
     private val loanId = savedStateHandle.toRoute<LoanRejectScreenRoute>().loanId
 
     private val initialDate = state.rejectedOnDate
+
+    init {
+        observeNetworkStatus()
+    }
 
     override fun handleAction(action: RejectLoanAction) {
         when (action) {
@@ -103,7 +112,18 @@ internal class RejectLoanViewModel(
 
             if (validatedState.rejectedOnDateError != null) return@launch
 
-            mutableStateFlow.update { it.copy(isLoading = true) }
+            if (!validatedState.networkConnection) {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = RejectLoanState.DialogState.Error(
+                            getString(Res.string.feature_loan_error_network_not_available),
+                        ),
+                    )
+                }
+                return@launch
+            }
+
+            mutableStateFlow.update { it.copy(isLoading = true, dialogState = null) }
 
             val payload = RejectLoanPayload(
                 rejectedOnDate = ApiDateFormatter.formatForApi(validatedState.rejectedOnDate),
@@ -112,23 +132,42 @@ internal class RejectLoanViewModel(
                 dateFormat = DateConstants.DATE_FORMAT,
             )
 
-            when (val result = repository.rejectLoan(loanId, payload)) {
-                DataState.Loading -> Unit
-                is DataState.Success -> mutableStateFlow.update {
+            val result = repository.rejectLoan(loanId, payload)
+
+            when {
+                result is DataState.Success -> mutableStateFlow.update {
                     it.copy(
                         isLoading = false,
                         dialogState = RejectLoanState.DialogState.Success,
                     )
                 }
-                is DataState.Error -> mutableStateFlow.update {
+                result is DataState.Error -> mutableStateFlow.update {
                     it.copy(
                         isLoading = false,
                         dialogState = RejectLoanState.DialogState.Error(
-                            result.message.ifBlank { "An error occurred" },
+                            result.message.ifBlank { getString(Res.string.feature_loan_unknown_error_occured) },
+                        ),
+                    )
+                }
+                else -> mutableStateFlow.update {
+                    it.copy(
+                        isLoading = false,
+                        dialogState = RejectLoanState.DialogState.Error(
+                            getString(Res.string.feature_loan_unknown_error_occured),
                         ),
                     )
                 }
             }
+        }
+    }
+
+    private fun observeNetworkStatus() {
+        viewModelScope.launch {
+            networkMonitor.isOnline
+                .distinctUntilChanged()
+                .collect { isOnline ->
+                    mutableStateFlow.update { it.copy(networkConnection = isOnline) }
+                }
         }
     }
 
@@ -151,6 +190,7 @@ internal class RejectLoanViewModel(
 internal data class RejectLoanState(
     val rejectedOnDate: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
     val note: String = "",
+    val networkConnection: Boolean = false,
     val isLoading: Boolean = false,
     val rejectedOnDateError: String? = null,
     val showDiscardDialog: Boolean = false,
