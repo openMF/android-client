@@ -25,6 +25,7 @@ import com.mifos.core.model.objects.payloads.RejectLoanPayload
 import com.mifos.core.model.utils.DateConstants
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
@@ -112,7 +113,8 @@ internal class RejectLoanViewModel(
 
             if (validatedState.rejectedOnDateError != null) return@launch
 
-            if (!validatedState.networkConnection) {
+            val isOnline = validatedState.networkConnection || networkMonitor.isOnline.first()
+            if (!isOnline) {
                 mutableStateFlow.update {
                     it.copy(
                         dialogState = RejectLoanState.DialogState.Error(

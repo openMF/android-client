@@ -136,7 +136,7 @@ internal class LoanAccountProfileViewModel(
                 loadLoanAccountDetails(route.loanId)
             } else {
                 mutableStateFlow.update {
-                    it.copy(dialogState = LoanAccountState.DialogState.Error(Res.string.feature_loan_profile_error_details_not_found))
+                    it.copy(dialogState = LoanAccountState.DialogState.Error(Res.string.feature_loan_profile_error_network_not_available))
                 }
             }
             LoanAccountAction.OnNextActionClick -> handleNextAction()
