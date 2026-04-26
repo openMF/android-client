@@ -1,4 +1,3 @@
-# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
 language: 'en-US'
 early_access: false
 
@@ -8,7 +7,7 @@ chat:
 reviews:
   poem: false
   profile: "chill"
-  high_level_summary: true
+  high_level_summary: false
   review_status: true
   commit_status: true
   collapse_walkthrough: false
@@ -28,14 +27,20 @@ reviews:
     enabled: true
     auto_incremental_review: true
     drafts: false
-    base_branches: ['development']
+    base_branches: ['development', 'feat/MIFOSAC-759']
     ignore_title_keywords: ['WIP', 'Draft']
     labels: ['!skip-ai-review']
     ignore_usernames: ['dependabot', 'renovate[bot]']
 
   pre_merge_checks:
+    issue_assessment:
+      mode: "off"
+
+    docstrings:
+      mode: "off"
+
     title:
-      mode: warning
+      mode: error
       requirements: |
         Follow commit message format: <type>(<scope>): <subject>
           Types: feat, fix, docs, refactor, test, chore, misc
@@ -44,16 +49,32 @@ reviews:
           - Do NOT include JIRA ticket numbers/IDs (e.g., MIFOSAC-123)
 
     description:
-      mode: warning
+      mode: error
+
     custom_checks:
       - name: Jira link and Before/After sections
-        mode: warning
+        mode: error
         instructions: |
           PR description must include:
           1. A valid Jira link (e.g., https://mifosforge.jira.com/browse/MIFOSAC-1234)
           2. Non-empty "Before:" and "After:" sections, each with media (image/video)
           Required even for domain/data/refactor changes. Flag missing Jira link,
           missing/empty sections, or sections without media.
+
+  instructions: |
+    Always review the PR title.
+    
+    If the title is not meaningful or not in the correct format:
+    - Suggest a better title
+    - Base it on:
+      - code changes in the PR
+      - Jira ticket title (if available)
+    
+    Follow commit message format: <type>(<scope>): <subject>
+      Types: feat, fix, docs, refactor, test, chore, misc
+      - Present tense, lowercase, concise
+      - Scope reflects module/feature (loan, auth, ui) if identifiable
+      - Do NOT include JIRA ticket numbers/IDs (e.g., MIFOSAC-123)
 
   path_instructions:
     - path: "**/*ViewModel.kt"
@@ -171,6 +192,15 @@ reviews:
         - Avoid reviewing README, config, or asset files.
         - Prioritize identifying bugs, performance issues, and architectural concerns.
         
+        9. API Guidelines
+        - Functions making one-shot API requests MUST use the `suspend` modifier.
+        - Functions that return Flow<T> MUST NOT use the `suspend` modifier.
+          They should directly return a Flow.
+        - API responses must be wrapped into Flow<DataState<T>> within the service/network layer itself.
+          Do NOT wrap suspend results into Flow in higher layers such as ViewModel or use cases.
+        - The `.asDataStateFlow()` extension MUST be applied within the service/network layer where the Flow is created.
+        - ViewModel and other higher layers should only consume Flow<DataState<T>> and must not perform any additional wrapping.
+            
         Output:
         - Provide actionable suggestions when violations are detected
 
