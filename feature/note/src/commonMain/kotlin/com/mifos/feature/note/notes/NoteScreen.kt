@@ -114,7 +114,6 @@ private fun NoteScreenDialog(
     when (state.dialogState) {
         is NoteState.DialogState.Error -> {
             MifosErrorComponent(
-                isNetworkConnected = state.networkConnection,
                 message = state.dialogState.message,
                 isRetryEnabled = true,
                 onRetry = { onAction(NoteAction.OnRetry) },

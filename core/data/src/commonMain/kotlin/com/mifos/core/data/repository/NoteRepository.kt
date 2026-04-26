@@ -24,13 +24,13 @@ interface NoteRepository {
         resourceType: String,
         resourceId: Long,
         notesPayload: NotesPayload,
-    ): GenericResponse
+    ): DataState<GenericResponse>
 
     suspend fun deleteNote(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-    ): GenericResponse
+    ): DataState<GenericResponse>
 
     fun retrieveNote(
         resourceType: String,
@@ -48,5 +48,5 @@ interface NoteRepository {
         resourceId: Long,
         noteId: Long,
         notesPayload: NotesPayload,
-    ): GenericResponse
+    ): DataState<GenericResponse>
 }

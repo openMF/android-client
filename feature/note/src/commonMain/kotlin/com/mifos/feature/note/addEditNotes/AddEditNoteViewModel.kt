@@ -10,7 +10,6 @@
 package com.mifos.feature.note.addEditNotes
 
 import androidclient.feature.note.generated.resources.Res
-import androidclient.feature.note.generated.resources.feature_note_Unexpected_error
 import androidclient.feature.note.generated.resources.feature_note_add_note
 import androidclient.feature.note.generated.resources.feature_note_button_add
 import androidclient.feature.note.generated.resources.feature_note_button_update
@@ -21,8 +20,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.data.repositoryImp.NoteRepositoryImp
-import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.data.repository.NoteRepository
 import com.mifos.core.domain.useCases.AddNoteUseCase
 import com.mifos.core.domain.useCases.UpdateNoteUseCase
 import com.mifos.core.model.objects.payloads.NotesPayload
@@ -32,19 +30,16 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 
 class AddEditNoteViewModel(
-    private val repository: NoteRepositoryImp,
+    private val repository: NoteRepository,
     private val updateNoteUseCase: UpdateNoteUseCase,
     private val addNoteUseCase: AddNoteUseCase,
     savedStateHandle: SavedStateHandle,
-    private val networkMonitor: NetworkMonitor,
 ) : BaseViewModel<AddEditNoteState, AddEditNoteEvent, AddEditNoteAction>(
     initialState = AddEditNoteState(),
 ) {
     private val route = savedStateHandle.toRoute<AddEditNoteRoute>()
 
     init {
-        getAddEditNoteOptionsAndObserveNetwork()
-
         if (route.noteId != null) {
             viewModelScope.launch {
                 loadSingleNote()
@@ -67,63 +62,14 @@ class AddEditNoteViewModel(
         }
     }
 
-    private fun getAddEditNoteOptionsAndObserveNetwork() {
-        viewModelScope.launch {
-            observeNetwork()
-        }
-    }
-
-    private fun observeNetwork() {
-        viewModelScope.launch {
-            networkMonitor.isOnline.collect { isConnected ->
-                mutableStateFlow.update { it.copy(networkConnection = isConnected) }
-            }
-        }
-    }
-
     private suspend fun loadSingleNote() {
         route.resourceType?.let { type ->
             route.noteId?.let { id ->
-                repository.retrieveNote(type, route.resourceId.toLong(), id)
-                    .collect { dataState ->
-                        when (dataState) {
-                            is DataState.Error -> {
-                                mutableStateFlow.update {
-                                    it.copy(dialogState = AddEditNoteState.DialogState.Error(Res.string.feature_note_Unexpected_error))
-                                }
-                            }
-
-                            DataState.Loading -> {
-                                mutableStateFlow.update {
-                                    it.copy(dialogState = AddEditNoteState.DialogState.Loading)
-                                }
-                            }
-
-                            is DataState.Success -> {
-                                mutableStateFlow.update {
-                                    it.copy(
-                                        dialogState = null,
-                                        textFieldNotesPayload = NotesPayload(dataState.data.note),
-                                        notesPayloadInitialData = dataState.data.note,
-                                    )
-                                }
-                            }
-                        }
-                    }
-            }
-        }
-    }
-
-    private suspend fun addNote(notesPayload: NotesPayload) {
-        route.resourceType?.let { type ->
-            addNoteUseCase(route.resourceType, route.resourceId.toLong(), notesPayload)
-                .collect { dataState ->
+                repository.retrieveNote(type, route.resourceId.toLong(), id).collect { dataState ->
                     when (dataState) {
                         is DataState.Error -> {
                             mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = AddEditNoteState.DialogState.Error(Res.string.feature_note_Unexpected_error),
-                                )
+                                it.copy(dialogState = AddEditNoteState.DialogState.Error(dataState.message))
                             }
                         }
 
@@ -137,48 +83,75 @@ class AddEditNoteViewModel(
                             mutableStateFlow.update {
                                 it.copy(
                                     dialogState = null,
-                                    notesPayloadInitialData = state.textFieldNotesPayload.note,
+                                    textFieldNotesPayload = NotesPayload(dataState.data.note),
+                                    notesPayloadInitialData = dataState.data.note,
                                 )
                             }
-                            sendEvent(AddEditNoteEvent.NavigateBackWithUpdateList)
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private suspend fun addNote(notesPayload: NotesPayload) {
+        mutableStateFlow.update {
+            it.copy(dialogState = AddEditNoteState.DialogState.Loading)
+        }
+        route.resourceType?.let { type ->
+            when (val dataState = addNoteUseCase(type, route.resourceId.toLong(), notesPayload)) {
+                is DataState.Error -> {
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = AddEditNoteState.DialogState.Error(dataState.message),
+                        )
+                    }
+                }
+
+                is DataState.Success -> {
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = null,
+                            notesPayloadInitialData = state.textFieldNotesPayload.note,
+                        )
+                    }
+                    sendEvent(AddEditNoteEvent.NavigateBackWithUpdateList)
+                }
+
+                else -> Unit
+            }
         }
     }
 
     private suspend fun editNote(notesPayload: NotesPayload) {
         route.resourceType?.let { type ->
             route.noteId?.let { id ->
-                updateNoteUseCase(type, route.resourceId.toLong(), id, notesPayload)
-                    .collect { dataState ->
-                        when (dataState) {
-                            is DataState.Error -> {
-                                mutableStateFlow.update {
-                                    it.copy(
-                                        dialogState = AddEditNoteState.DialogState.Error(Res.string.feature_note_Unexpected_error),
-                                    )
-                                }
-                            }
-
-                            DataState.Loading -> {
-                                mutableStateFlow.update {
-                                    it.copy(dialogState = AddEditNoteState.DialogState.Loading)
-                                }
-                            }
-
-                            is DataState.Success -> {
-                                mutableStateFlow.update {
-                                    it.copy(
-                                        dialogState = null,
-                                        notesPayloadInitialData = state.textFieldNotesPayload.note,
-                                    )
-                                }
-
-                                sendEvent(AddEditNoteEvent.NavigateBackWithUpdateList)
-                            }
+                when (val dataState = updateNoteUseCase(type, route.resourceId.toLong(), id, notesPayload)) {
+                    is DataState.Error -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                dialogState = AddEditNoteState.DialogState.Error(dataState.message),
+                            )
                         }
                     }
+
+                    DataState.Loading -> {
+                        mutableStateFlow.update {
+                            it.copy(dialogState = AddEditNoteState.DialogState.Loading)
+                        }
+                    }
+
+                    is DataState.Success -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                dialogState = null,
+                                notesPayloadInitialData = state.textFieldNotesPayload.note,
+                            )
+                        }
+
+                        sendEvent(AddEditNoteEvent.NavigateBackWithUpdateList)
+                    }
+                }
             }
         }
     }
@@ -259,10 +232,9 @@ data class AddEditNoteState(
     val textFieldNotesPayload: NotesPayload = NotesPayload(null),
     val notesPayloadInitialData: String? = null,
     val dialogState: DialogState? = null,
-    val networkConnection: Boolean = false,
 ) {
     sealed interface DialogState {
-        data class Error(val message: StringResource) : DialogState
+        data class Error(val message: String) : DialogState
         data object Loading : DialogState
         data object MisTouchBack : DialogState
     }

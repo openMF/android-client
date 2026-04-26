@@ -83,8 +83,7 @@ fun AddEditNoteScreenDialog(
     when (state.dialogState) {
         is AddEditNoteState.DialogState.Error -> {
             MifosErrorComponent(
-                isNetworkConnected = state.networkConnection,
-                message = stringResource(state.dialogState.message),
+                message = state.dialogState.message,
                 isRetryEnabled = true,
                 onRetry = {
                     onAction(AddEditNoteAction.OnRetry)
