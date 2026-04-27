@@ -124,22 +124,25 @@ class SyncGroupPayloadsViewModel(
             _syncGroupPayloadsUiState.value =
                 SyncGroupPayloadsUiState.Loading
 
-            when (val result = repository.createGroup(groupPayload!!)) {
-                is DataState.Error -> {
-                    val errorMessage = if (result.exception is NetworkUnavailableException) {
-                        Res.string.feature_offline_error_not_connected_internet
-                    } else {
-                        Res.string.feature_offline_error_group_sync_failed
+            groupPayload?.let { payload ->
+                when (val result = repository.createGroup(payload)) {
+                    is DataState.Error -> {
+                        val errorMessage = if (result.exception is NetworkUnavailableException) {
+                            Res.string.feature_offline_error_not_connected_internet
+                        } else {
+                            Res.string.feature_offline_error_group_sync_failed
+                        }
+
+                        _syncGroupPayloadsUiState.value =
+                            SyncGroupPayloadsUiState.Error(errorMessage)
+                        updateGroupPayload()
                     }
 
-                    _syncGroupPayloadsUiState.value = SyncGroupPayloadsUiState.Error(errorMessage)
-                    updateGroupPayload()
-                }
+                    DataState.Loading -> Unit
 
-                DataState.Loading -> Unit
-
-                is DataState.Success -> {
-                    deleteAndUpdateGroupPayload()
+                    is DataState.Success -> {
+                        deleteAndUpdateGroupPayload()
+                    }
                 }
             }
         }
