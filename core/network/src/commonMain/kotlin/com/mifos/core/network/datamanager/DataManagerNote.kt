@@ -12,7 +12,6 @@ package com.mifos.core.network.datamanager
 import com.mifos.core.model.objects.notes.Note
 import com.mifos.core.model.objects.payloads.NotesPayload
 import com.mifos.core.network.BaseApiManager
-import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
 
 class DataManagerNote(
@@ -22,7 +21,7 @@ class DataManagerNote(
         resourceType: String,
         resourceId: Long,
         notesPayload: NotesPayload,
-    ): GenericResponse {
+    ) {
         return mBaseApiManager.noteService.addNewNote(
             resourceType,
             resourceId,
@@ -34,7 +33,7 @@ class DataManagerNote(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-    ): GenericResponse {
+    ) {
         return mBaseApiManager.noteService.deleteNote(
             resourceType,
             resourceId,
@@ -69,7 +68,7 @@ class DataManagerNote(
         resourceId: Long,
         noteId: Long,
         notesPayload: NotesPayload,
-    ): GenericResponse {
+    ) {
         return mBaseApiManager.noteService.updateNote(
             resourceType,
             resourceId,

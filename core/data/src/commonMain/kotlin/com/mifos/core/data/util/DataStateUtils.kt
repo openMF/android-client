@@ -13,7 +13,6 @@ import com.mifos.core.common.utils.DataState
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
-import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * Wraps a suspend function in a [DataState] wrapper with optional coroutine dispatcher.
@@ -44,7 +43,6 @@ suspend fun <T> runAsDataState(
             DataState.Success(block())
         }
     } catch (e: Throwable) {
-        if (e is CancellationException) throw e
         DataState.Error(e)
     }
 

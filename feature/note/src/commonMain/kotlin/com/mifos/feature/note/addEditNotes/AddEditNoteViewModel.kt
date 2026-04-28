@@ -24,6 +24,7 @@ import com.mifos.core.data.repository.NoteRepository
 import com.mifos.core.domain.useCases.AddNoteUseCase
 import com.mifos.core.domain.useCases.UpdateNoteUseCase
 import com.mifos.core.model.objects.payloads.NotesPayload
+import com.mifos.core.network.GenericResponse
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -53,7 +54,6 @@ class AddEditNoteViewModel(
                 )
             }
         }
-
         mutableStateFlow.update {
             it.copy(
                 resourceId = route.resourceId,
@@ -99,60 +99,70 @@ class AddEditNoteViewModel(
             it.copy(dialogState = AddEditNoteState.DialogState.Loading)
         }
         route.resourceType?.let { type ->
-            when (val dataState = addNoteUseCase(type, route.resourceId.toLong(), notesPayload)) {
-                is DataState.Error -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = AddEditNoteState.DialogState.Error(dataState.message),
-                        )
-                    }
-                }
+            val result = addNoteUseCase(type, route.resourceId.toLong(), notesPayload)
+            sendAction(AddEditNoteAction.Internal.ReceiveAddNoteResult(result))
+        }
+    }
 
-                is DataState.Success -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = null,
-                            notesPayloadInitialData = state.textFieldNotesPayload.note,
-                        )
-                    }
-                    sendEvent(AddEditNoteEvent.NavigateBackWithUpdateList)
+    private fun editNote(notesPayload: NotesPayload) {
+        mutableStateFlow.update {
+            it.copy(dialogState = AddEditNoteState.DialogState.Loading)
+        }
+        viewModelScope.launch {
+            route.resourceType?.let { type ->
+                route.noteId?.let { id ->
+                    val result =
+                        updateNoteUseCase(type, route.resourceId.toLong(), id, notesPayload)
+                    sendAction(AddEditNoteAction.Internal.ReceiveEditNoteResult(result))
                 }
-
-                else -> Unit
             }
         }
     }
 
-    private suspend fun editNote(notesPayload: NotesPayload) {
-        route.resourceType?.let { type ->
-            route.noteId?.let { id ->
-                when (val dataState = updateNoteUseCase(type, route.resourceId.toLong(), id, notesPayload)) {
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = AddEditNoteState.DialogState.Error(dataState.message),
-                            )
-                        }
-                    }
-
-                    DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(dialogState = AddEditNoteState.DialogState.Loading)
-                        }
-                    }
-
-                    is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = null,
-                                notesPayloadInitialData = state.textFieldNotesPayload.note,
-                            )
-                        }
-
-                        sendEvent(AddEditNoteEvent.NavigateBackWithUpdateList)
-                    }
+    private fun handleAddNoteResult(action: AddEditNoteAction.Internal.ReceiveAddNoteResult) {
+        when (action.addNoteResult) {
+            is DataState.Error -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = AddEditNoteState.DialogState.Error(action.addNoteResult.message),
+                    )
                 }
             }
+
+            is DataState.Success -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = null,
+                        notesPayloadInitialData = state.textFieldNotesPayload.note,
+                    )
+                }
+                sendEvent(AddEditNoteEvent.NavigateBackWithUpdateList)
+            }
+
+            else -> Unit
+        }
+    }
+
+    private fun handleEditNoteResult(action: AddEditNoteAction.Internal.ReceiveEditNoteResult) {
+        when (action.editNoteResult) {
+            is DataState.Error -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = AddEditNoteState.DialogState.Error(action.editNoteResult.message),
+                    )
+                }
+            }
+
+            is DataState.Success -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = null,
+                        notesPayloadInitialData = state.textFieldNotesPayload.note,
+                    )
+                }
+            }
+
+            else -> Unit
         }
     }
 
@@ -218,6 +228,14 @@ class AddEditNoteViewModel(
                     sendEvent(AddEditNoteEvent.NavigateBack)
                 }
             }
+
+            is AddEditNoteAction.Internal.ReceiveEditNoteResult -> {
+                handleEditNoteResult(action)
+            }
+
+            is AddEditNoteAction.Internal.ReceiveAddNoteResult -> {
+                handleAddNoteResult(action)
+            }
         }
     }
 }
@@ -254,4 +272,13 @@ sealed interface AddEditNoteAction {
     data object DismissDialog : AddEditNoteAction
     data object MisTouchBackDialog : AddEditNoteAction
     data class TextFieldNotesPayload(val notesPayload: NotesPayload) : AddEditNoteAction
+
+    sealed interface Internal : AddEditNoteAction {
+        data class ReceiveEditNoteResult(
+            val editNoteResult: DataState<GenericResponse>,
+        ) : Internal
+        data class ReceiveAddNoteResult(
+            val addNoteResult: DataState<GenericResponse>,
+        ) : Internal
+    }
 }

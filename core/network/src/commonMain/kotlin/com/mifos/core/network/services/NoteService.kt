@@ -11,7 +11,6 @@ package com.mifos.core.network.services
 
 import com.mifos.core.model.objects.notes.Note
 import com.mifos.core.model.objects.payloads.NotesPayload
-import com.mifos.core.network.GenericResponse
 import com.mifos.room.basemodel.APIEndPoint
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.DELETE
@@ -32,14 +31,14 @@ interface NoteService {
      * @param resourceType resourceType, eg : Client, Loan, Group, Savings Account
      * @param resourceId resourceId, eg : ClientId, LoanId, GroupId, Savings AccountId
      * @param notesPayload
-     * @return [GenericResponse]
+     * @return [Unit]
      */
     @POST("{resourceType}/{resourceId}/" + APIEndPoint.NOTES)
     suspend fun addNewNote(
         @Path("resourceType") resourceType: String,
         @Path("resourceId") resourceId: Long,
         @Body notesPayload: NotesPayload,
-    ): GenericResponse
+    ): Unit
 
     /**
      * Delete a Resource Note
@@ -50,14 +49,14 @@ interface NoteService {
      * @param resourceType resourceType, eg : Client, Loan, Group, Savings Account
      * @param resourceId resourceId, eg : ClientId, LoanId, GroupId, Savings AccountId
      * @param noteId noteId
-     * @return [GenericResponse]
+     * @return [Unit]
      */
     @DELETE("{resourceType}/{resourceId}/" + APIEndPoint.NOTES + "/{noteId}")
     suspend fun deleteNote(
         @Path("resourceType") resourceType: String,
         @Path("resourceId") resourceId: Long,
         @Path("noteId") noteId: Long,
-    ): GenericResponse
+    ): Unit
 
     /**
      * Retrieve a single Note
@@ -100,7 +99,7 @@ interface NoteService {
      * @param resourceType resourceType, eg : Client, Loan, Group, Savings Account
      * @param resourceId resourceId, eg : ClientId, LoanId, GroupId, Savings AccountId
      * @param noteId noteId
-     * @param notesPayload
+     * @param Unit
      */
     @PUT("{resourceType}/{resourceId}/" + APIEndPoint.NOTES + "/{noteId}")
     suspend fun updateNote(
@@ -108,5 +107,5 @@ interface NoteService {
         @Path("resourceId") resourceId: Long,
         @Path("noteId") noteId: Long,
         @Body notesPayload: NotesPayload,
-    ): GenericResponse
+    ): Unit
 }

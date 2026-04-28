@@ -16,6 +16,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.NoteRepository
 import com.mifos.core.domain.useCases.DeleteNoteUseCase
 import com.mifos.core.model.objects.notes.Note
+import com.mifos.core.network.GenericResponse
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -87,26 +88,31 @@ class NoteViewModel(
         }
         route.resourceType?.let { type ->
             id?.let { id ->
-                when (val dataState = deleteNoteUseCase(type, route.resourceId.toLong(), id)) {
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = NoteState.DialogState.Error(dataState.message),
-                            )
-                        }
-                    }
+                val result = deleteNoteUseCase(type, route.resourceId.toLong(), id)
+                sendAction(NoteAction.Internal.ReceiveDeleteNoteResult(result))
+            }
+        }
+    }
 
-                    is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = null,
-                            )
-                        }
-                    }
-
-                    else -> Unit
+    private fun handleDeleteNoteResult(action: NoteAction.Internal.ReceiveDeleteNoteResult) {
+        when (action.deleteNoteResult) {
+            is DataState.Error -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = NoteState.DialogState.Error(action.deleteNoteResult.message),
+                    )
                 }
             }
+
+            is DataState.Success -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = null,
+                    )
+                }
+            }
+
+            else -> Unit
         }
     }
 
@@ -165,6 +171,10 @@ class NoteViewModel(
                     )
                 }
             }
+
+            is NoteAction.Internal.ReceiveDeleteNoteResult -> {
+                handleDeleteNoteResult(action)
+            }
         }
     }
 }
@@ -200,4 +210,10 @@ sealed interface NoteAction {
     data object DismissDialog : NoteAction
     data class OnToggleExpanded(val id: Long?) : NoteAction
     data object DeleteNote : NoteAction
+
+    sealed interface Internal : NoteAction {
+        data class ReceiveDeleteNoteResult(
+            val deleteNoteResult: DataState<GenericResponse>,
+        ) : Internal
+    }
 }
