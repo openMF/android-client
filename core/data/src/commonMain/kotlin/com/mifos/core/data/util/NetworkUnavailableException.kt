@@ -10,8 +10,13 @@
 package com.mifos.core.data.util
 
 /**
- * Exception thrown when network is not available and the operation requires network connectivity.
+ * Thrown when a network operation is attempted without a stable, validated
+ * internet connection.
+ *
+ * @param message Human-readable reason shown in logs and crash reports.
+ * @param cause   Optional underlying throwable.
  */
 class NetworkUnavailableException(
-    message: String = "Network is unavailable. Please check your connection and try again.",
-) : Throwable(message)
+    message: String = "No stable network connection available",
+    cause: Throwable? = null,
+) : IllegalStateException(message, cause)
