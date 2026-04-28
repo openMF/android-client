@@ -11,7 +11,6 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.NoteRepository
-import com.mifos.core.network.GenericResponse
 
 class DeleteNoteUseCase(
     val repository: NoteRepository,
@@ -20,5 +19,5 @@ class DeleteNoteUseCase(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-    ): DataState<GenericResponse> = repository.deleteNote(resourceType, resourceId, noteId)
+    ): DataState<Unit> = repository.deleteNote(resourceType, resourceId, noteId)
 }
