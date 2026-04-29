@@ -216,11 +216,11 @@ class AddEditNoteViewModel(
                 }
             }
 
-            AddEditNoteAction.MisTouchBackDialog -> {
+            AddEditNoteAction.PreventAccidentalBackDialog -> {
                 if (state.notesPayloadInitialData != state.textFieldNotesPayload.note) {
                     mutableStateFlow.update {
                         it.copy(
-                            dialogState = AddEditNoteState.DialogState.MisTouchBack,
+                            dialogState = AddEditNoteState.DialogState.PreventAccidentalBack,
                         )
                     }
                 } else {
@@ -253,7 +253,7 @@ data class AddEditNoteState(
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
         data object Loading : DialogState
-        data object MisTouchBack : DialogState
+        data object PreventAccidentalBack : DialogState
     }
 }
 
@@ -269,7 +269,7 @@ sealed interface AddEditNoteAction {
     data class AddNote(val notesPayload: NotesPayload) : AddEditNoteAction
     data class EditNote(val notesPayload: NotesPayload) : AddEditNoteAction
     data object DismissDialog : AddEditNoteAction
-    data object MisTouchBackDialog : AddEditNoteAction
+    data object PreventAccidentalBackDialog : AddEditNoteAction
     data class TextFieldNotesPayload(val notesPayload: NotesPayload) : AddEditNoteAction
 
     sealed interface Internal : AddEditNoteAction {

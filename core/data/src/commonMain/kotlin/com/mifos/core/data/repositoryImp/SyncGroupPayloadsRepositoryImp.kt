@@ -12,18 +12,13 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.SyncGroupPayloadsRepository
-import com.mifos.core.data.util.NetworkMonitor
-import com.mifos.core.data.util.runAsDataState
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.room.entities.group.GroupPayloadEntity
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 
 class SyncGroupPayloadsRepositoryImp(
     private val dataManagerGroups: DataManagerGroups,
-    private val ioDispatcher: CoroutineDispatcher,
-    private val networkMonitor: NetworkMonitor,
 ) : SyncGroupPayloadsRepository {
 
     override fun allDatabaseGroupPayload(): Flow<DataState<List<GroupPayloadEntity>>> {
@@ -31,10 +26,8 @@ class SyncGroupPayloadsRepositoryImp(
             .asDataStateFlow()
     }
 
-    override suspend fun createGroup(groupPayload: GroupPayloadEntity): DataState<SaveResponse> {
-        return runAsDataState(networkMonitor, ioDispatcher) {
-            dataManagerGroups.createGroup(groupPayload)
-        }
+    override suspend fun createGroup(groupPayload: GroupPayloadEntity): SaveResponse {
+        return dataManagerGroups.createGroup(groupPayload)
     }
 
     override fun deleteAndUpdateGroupPayloads(id: Int): Flow<DataState<List<GroupPayloadEntity>>> {

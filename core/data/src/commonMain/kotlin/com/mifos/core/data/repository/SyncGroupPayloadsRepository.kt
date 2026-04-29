@@ -18,7 +18,7 @@ interface SyncGroupPayloadsRepository {
 
     fun allDatabaseGroupPayload(): Flow<DataState<List<GroupPayloadEntity>>>
 
-    suspend fun createGroup(groupPayload: GroupPayloadEntity): DataState<SaveResponse>
+    suspend fun createGroup(groupPayload: GroupPayloadEntity): SaveResponse
 
     fun deleteAndUpdateGroupPayloads(id: Int): Flow<DataState<List<GroupPayloadEntity>>>
 

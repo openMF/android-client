@@ -95,7 +95,7 @@ fun AddEditNoteScreenDialog(
             MifosProgressIndicatorOverlay()
         }
 
-        AddEditNoteState.DialogState.MisTouchBack -> {
+        AddEditNoteState.DialogState.PreventAccidentalBack -> {
             MifosAlertDialog(
                 onDismissRequest = {
                     onAction(AddEditNoteAction.DismissDialog)
@@ -194,7 +194,7 @@ private fun AddEditNote(
             firstBtnText = stringResource(Res.string.feature_note_button_back),
             secondBtnText = stringResource(state.addUpdateButton),
             onFirstBtnClick = {
-                onAction(AddEditNoteAction.MisTouchBackDialog)
+                onAction(AddEditNoteAction.PreventAccidentalBackDialog)
             },
             onSecondBtnClick = {
                 if (state.editEnabled) {

@@ -13,13 +13,11 @@ import androidclient.feature.offline.generated.resources.Res
 import androidclient.feature.offline.generated.resources.feature_offline_error_failed_to_load_groupPayload
 import androidclient.feature.offline.generated.resources.feature_offline_error_failed_to_update_list
 import androidclient.feature.offline.generated.resources.feature_offline_error_group_sync_failed
-import androidclient.feature.offline.generated.resources.feature_offline_error_not_connected_internet
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SyncGroupPayloadsRepository
 import com.mifos.core.data.util.NetworkMonitor
-import com.mifos.core.data.util.NetworkUnavailableException
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.group.GroupPayloadEntity
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +27,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-
 /**
  * Created by Aditya Gupta on 16/08/23.
  */
@@ -123,27 +120,13 @@ class SyncGroupPayloadsViewModel(
         viewModelScope.launch {
             _syncGroupPayloadsUiState.value =
                 SyncGroupPayloadsUiState.Loading
-
-            groupPayload?.let { payload ->
-                when (val result = repository.createGroup(payload)) {
-                    is DataState.Error -> {
-                        val errorMessage = if (result.exception is NetworkUnavailableException) {
-                            Res.string.feature_offline_error_not_connected_internet
-                        } else {
-                            Res.string.feature_offline_error_group_sync_failed
-                        }
-
-                        _syncGroupPayloadsUiState.value =
-                            SyncGroupPayloadsUiState.Error(errorMessage)
-                        updateGroupPayload()
-                    }
-
-                    DataState.Loading -> Unit
-
-                    is DataState.Success -> {
-                        deleteAndUpdateGroupPayload()
-                    }
-                }
+            try {
+                repository.createGroup(groupPayload!!)
+                deleteAndUpdateGroupPayload()
+            } catch (e: Exception) {
+                _syncGroupPayloadsUiState.value =
+                    SyncGroupPayloadsUiState.Error(Res.string.feature_offline_error_group_sync_failed)
+                updateGroupPayload()
             }
         }
     }
