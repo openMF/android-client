@@ -11,6 +11,7 @@ package com.mifos.core.network.services
 
 import com.mifos.core.model.objects.notes.Note
 import com.mifos.core.model.objects.payloads.NotesPayload
+import com.mifos.core.network.GenericResponse
 import com.mifos.room.basemodel.APIEndPoint
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.DELETE
@@ -38,7 +39,7 @@ interface NoteService {
         @Path("resourceType") resourceType: String,
         @Path("resourceId") resourceId: Long,
         @Body notesPayload: NotesPayload,
-    ): Unit
+    ): GenericResponse
 
     /**
      * Delete a Resource Note
@@ -56,7 +57,7 @@ interface NoteService {
         @Path("resourceType") resourceType: String,
         @Path("resourceId") resourceId: Long,
         @Path("noteId") noteId: Long,
-    ): Unit
+    ): GenericResponse
 
     /**
      * Retrieve a single Note
@@ -107,5 +108,5 @@ interface NoteService {
         @Path("resourceId") resourceId: Long,
         @Path("noteId") noteId: Long,
         @Body notesPayload: NotesPayload,
-    ): Unit
+    ): GenericResponse
 }

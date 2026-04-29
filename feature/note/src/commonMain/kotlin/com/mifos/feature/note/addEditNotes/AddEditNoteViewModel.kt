@@ -24,6 +24,7 @@ import com.mifos.core.data.repository.NoteRepository
 import com.mifos.core.domain.useCases.AddNoteUseCase
 import com.mifos.core.domain.useCases.UpdateNoteUseCase
 import com.mifos.core.model.objects.payloads.NotesPayload
+import com.mifos.core.network.GenericResponse
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -274,10 +275,10 @@ sealed interface AddEditNoteAction {
 
     sealed interface Internal : AddEditNoteAction {
         data class ReceiveEditNoteResult(
-            val editNoteResult: DataState<Unit>,
+            val editNoteResult: DataState<GenericResponse>,
         ) : Internal
         data class ReceiveAddNoteResult(
-            val addNoteResult: DataState<Unit>,
+            val addNoteResult: DataState<GenericResponse>,
         ) : Internal
     }
 }

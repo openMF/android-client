@@ -17,6 +17,7 @@ import com.mifos.core.data.util.runAsDataState
 import com.mifos.core.data.util.withNetworkCheck
 import com.mifos.core.model.objects.notes.Note
 import com.mifos.core.model.objects.payloads.NotesPayload
+import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerNote
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -32,7 +33,7 @@ class NoteRepositoryImp(
         resourceType: String,
         resourceId: Long,
         notesPayload: NotesPayload,
-    ): DataState<Unit> {
+    ): DataState<GenericResponse> {
         return runAsDataState(
             networkMonitor,
             dispatcher.io,
@@ -45,7 +46,7 @@ class NoteRepositoryImp(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-    ): DataState<Unit> {
+    ): DataState<GenericResponse> {
         return runAsDataState(
             networkMonitor,
             dispatcher.io,
@@ -76,7 +77,7 @@ class NoteRepositoryImp(
         resourceId: Long,
         noteId: Long,
         notesPayload: NotesPayload,
-    ): DataState<Unit> {
+    ): DataState<GenericResponse> {
         return runAsDataState(
             networkMonitor,
             dispatcher.io,
