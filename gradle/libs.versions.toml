@@ -23,6 +23,7 @@ androidxMaterial = "1.6.7"
 androidxMaterialVersion = "1.7.6"
 androidxMetrics = "1.0.0"
 androidxNavigation = "2.8.5"
+navigationevent = "1.0.1"
 androidxPagingCommon = "3.4.0"
 androidxProfileinstaller = "1.4.1"
 androidxStartup = "1.2.0"
@@ -172,6 +173,9 @@ androidPackageVersion = "1.0.0"
 uiAndroidVersion = "1.7.8"
 
 mokoPermissions = "0.20.1"
+
+mifosAuthenticatorPasscode="2.2.0"
+mifosAuthenticatorBiometrics="2.2.0"
 
 [libraries]
 androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "androidxActivity" }
@@ -339,6 +343,7 @@ jb-bundle = { module = "org.jetbrains.androidx.core:core-bundle", version.ref = 
 jb-savedstate = { module = "org.jetbrains.androidx.savedstate:savedstate", version.ref = "jbSavedState" }
 jb-composeNavigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 jb-navigation = { module = "org.jetbrains.androidx.navigation:navigation-common", version.ref = "composeNavigation" }
+jb-navigationevent = {group = "org.jetbrains.androidx.navigationevent", name = "navigationevent-compose", version.ref = "navigationevent"}
 
 jetbrains-compose-material3-adaptive = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive", version.ref = "material3adaptive" }
 jetbrains-compose-material3-adaptive-layout = { group = "org.jetbrains.compose.material3.adaptive", name = "adaptive-layout", version.ref = "material3adaptive" }
@@ -448,6 +453,10 @@ moko-permissions-storage = {group ="dev.icerock.moko", name="permissions-storage
 gitlive-firebase-analytics = { module = "dev.gitlive:firebase-analytics", version.ref = "gitLive" }
 gitlive-firebase-crashlytics = { module = "dev.gitlive:firebase-crashlytics", version.ref = "gitLive" }
 gitlive-firebase-performance = { module = "dev.gitlive:firebase-performance", version.ref = "gitLive" }
+
+mifos-authenticator-passcode = {group="io.github.openmf", name="mifos-authenticator-passcode", version.ref="mifosAuthenticatorPasscode"}
+mifos-authenticator-biometrics = {group="io.github.openmf", name="mifos-authenticator-biometrics", version.ref="mifosAuthenticatorBiometrics"}
+
 
 [bundles]
 androidx-compose-ui-test = [

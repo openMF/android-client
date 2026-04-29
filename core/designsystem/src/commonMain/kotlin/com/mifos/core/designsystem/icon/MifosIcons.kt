@@ -96,6 +96,7 @@ import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Error
 import androidx.compose.material.icons.rounded.FileUpload
 import androidx.compose.material.icons.rounded.FilterList
+import androidx.compose.material.icons.rounded.Fingerprint
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
@@ -124,6 +125,9 @@ object MifosIcons {
     val Menu = Icons.Default.Menu
     val DateRange = Icons.Outlined.DateRange
     val Person = Icons.Rounded.PersonOutline
+
+    val Fingerprint = Icons.Rounded.Fingerprint
+
     val Group = Icons.Outlined.Group
     val EventRepeat = Icons.Outlined.EventRepeat
     val Date = Icons.Outlined.DateRange
