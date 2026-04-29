@@ -9,33 +9,33 @@
  */
 package com.mifos.feature.loan.loanTransaction
 
-sealed interface LoanTransactionsUiState {
+internal sealed interface LoanTransactionsUiState {
     data object Loading : LoanTransactionsUiState
     data class Error(val message: String) : LoanTransactionsUiState
     data class Success(val tableData: LoanTransactionsTableData) : LoanTransactionsUiState
-
-    data class LoanTransactionsTableData(
-        val transactions: List<TransactionRowData>,
-    ) {
-        data class TransactionRowData(
-            val number: String,
-            val id: String,
-            val office: String,
-            val externalId: String,
-            val transactionDate: String,
-            val transactionType: TransactionType,
-            val amount: String,
-            val principal: String,
-            val interest: String,
-            val fees: String,
-            val penalties: String,
-            val loanBalance: String,
-            val manuallyReversed: Boolean = false,
-        )
-    }
 }
 
-enum class TransactionType(val value: String) {
+internal data class LoanTransactionsTableData(
+    val transactions: List<TransactionRowData>,
+)
+
+internal data class TransactionRowData(
+    val number: String,
+    val id: String,
+    val office: String,
+    val externalId: String,
+    val transactionDate: String,
+    val transactionType: TransactionType,
+    val amount: String,
+    val principal: String,
+    val interest: String,
+    val fees: String,
+    val penalties: String,
+    val loanBalance: String,
+    val manuallyReversed: Boolean = false,
+)
+
+internal enum class TransactionType(val value: String) {
     ACCRUAL("Accrual"),
     DISBURSEMENT("Disbursement"),
     REPAYMENT("Repayment"),
@@ -47,7 +47,7 @@ enum class TransactionType(val value: String) {
     }
 }
 
-enum class TransactionAction {
+internal enum class TransactionAction {
     UNDO_TRANSACTION,
     VIEW_RECEIPTS,
     VIEW_JOURNAL_ENTRIES,

@@ -49,12 +49,7 @@ import kotlin.time.ExperimentalTime
 @Composable
 internal fun ExportTransactionsDialog(
     state: ExportDialogState,
-    onDismiss: () -> Unit,
-    onFromDateSelected: (Long) -> Unit,
-    onToDateSelected: (Long) -> Unit,
-    onShowFromDatePicker: (Boolean) -> Unit,
-    onShowToDatePicker: (Boolean) -> Unit,
-    onGenerateReport: () -> Unit,
+    onAction: (LoanTransactionsAction) -> Unit,
 ) {
     val fromDatePickerState = rememberDatePickerState(
         initialSelectedDateMillis = state.fromDate ?: Clock.System.now().toEpochMilliseconds(),
@@ -76,18 +71,20 @@ internal fun ExportTransactionsDialog(
 
     if (state.showFromDatePicker) {
         DatePickerDialog(
-            onDismissRequest = { onShowFromDatePicker(false) },
+            onDismissRequest = { onAction(LoanTransactionsAction.ShowFromDatePicker(false)) },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        onShowFromDatePicker(false)
-                        fromDatePickerState.selectedDateMillis?.let { onFromDateSelected(it) }
+                        onAction(LoanTransactionsAction.ShowFromDatePicker(false))
+                        fromDatePickerState.selectedDateMillis?.let {
+                            onAction(LoanTransactionsAction.FromDateSelected(it))
+                        }
                     },
                 ) { Text(stringResource(Res.string.feature_loan_select)) }
             },
             dismissButton = {
                 TextButton(
-                    onClick = { onShowFromDatePicker(false) },
+                    onClick = { onAction(LoanTransactionsAction.ShowFromDatePicker(false)) },
                 ) { Text(stringResource(Res.string.feature_loan_cancel)) }
             },
         ) {
@@ -97,18 +94,20 @@ internal fun ExportTransactionsDialog(
 
     if (state.showToDatePicker) {
         DatePickerDialog(
-            onDismissRequest = { onShowToDatePicker(false) },
+            onDismissRequest = { onAction(LoanTransactionsAction.ShowToDatePicker(false)) },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        onShowToDatePicker(false)
-                        toDatePickerState.selectedDateMillis?.let { onToDateSelected(it) }
+                        onAction(LoanTransactionsAction.ShowToDatePicker(false))
+                        toDatePickerState.selectedDateMillis?.let {
+                            onAction(LoanTransactionsAction.ToDateSelected(it))
+                        }
                     },
                 ) { Text(stringResource(Res.string.feature_loan_select)) }
             },
             dismissButton = {
                 TextButton(
-                    onClick = { onShowToDatePicker(false) },
+                    onClick = { onAction(LoanTransactionsAction.ShowToDatePicker(false)) },
                 ) { Text(stringResource(Res.string.feature_loan_cancel)) }
             },
         ) {
@@ -117,7 +116,7 @@ internal fun ExportTransactionsDialog(
     }
 
     MifosCustomDialog(
-        onDismiss = onDismiss,
+        onDismiss = { onAction(LoanTransactionsAction.DismissExportDialog) },
     ) {
         Surface(
             shape = KptTheme.shapes.medium,
@@ -134,22 +133,30 @@ internal fun ExportTransactionsDialog(
                 Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
                 MifosDatePickerTextField(
-                    value = state.fromDate?.let { DateHelper.getDateAsStringFromLong(it) }.orEmpty(),
+                    value = state.fromDate?.let {
+                        DateHelper.getDateAsStringFromLong(it)
+                    }.orEmpty(),
                     label = stringResource(Res.string.feature_loan_from_date),
-                    openDatePicker = { onShowFromDatePicker(true) },
+                    openDatePicker = {
+                        onAction(LoanTransactionsAction.ShowFromDatePicker(true))
+                    },
                 )
 
                 Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
 
                 MifosDatePickerTextField(
-                    value = state.toDate?.let { DateHelper.getDateAsStringFromLong(it) }.orEmpty(),
+                    value = state.toDate?.let {
+                        DateHelper.getDateAsStringFromLong(it)
+                    }.orEmpty(),
                     label = stringResource(Res.string.feature_loan_to_date),
                     errorMessage = if (state.isInvalidDateRange) {
                         stringResource(Res.string.feature_loan_invalid_date_range)
                     } else {
                         null
                     },
-                    openDatePicker = { onShowToDatePicker(true) },
+                    openDatePicker = {
+                        onAction(LoanTransactionsAction.ShowToDatePicker(true))
+                    },
                 )
 
                 Spacer(modifier = Modifier.height(KptTheme.spacing.md))
@@ -159,7 +166,7 @@ internal fun ExportTransactionsDialog(
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     MifosOutlinedButton(
-                        onClick = onDismiss,
+                        onClick = { onAction(LoanTransactionsAction.DismissExportDialog) },
                         modifier = Modifier.weight(1f),
                     ) {
                         Text(
@@ -172,7 +179,9 @@ internal fun ExportTransactionsDialog(
                     Spacer(modifier = Modifier.width(KptTheme.spacing.md))
 
                     MifosButton(
-                        onClick = onGenerateReport,
+                        onClick = {
+                            onAction(LoanTransactionsAction.GenerateReportClicked)
+                        },
                         enabled = state.isValidDateRange,
                         modifier = Modifier.weight(1f),
                     ) {

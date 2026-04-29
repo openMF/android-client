@@ -70,6 +70,7 @@ import com.mifos.core.model.objects.account.loan.Transaction
 import com.mifos.core.model.objects.account.loan.Type
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -82,58 +83,36 @@ internal fun LoanTransactionsScreen(
     navigateBack: () -> Unit,
     viewModel: LoanTransactionsViewModel = koinViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val selectedRow by viewModel.selectedRow.collectAsStateWithLifecycle()
-    val exportDialogState by viewModel.exportDialogState.collectAsStateWithLifecycle()
+    val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+
+    EventsEffect(viewModel.eventFlow) { event ->
+        when (event) {
+            LoanTransactionsEvent.NavigateBack -> navigateBack()
+        }
+    }
 
     LoanTransactionsScreen(
-        uiState = uiState,
-        selectedRow = selectedRow,
-        exportDialogState = exportDialogState,
-        onNavigateBack = navigateBack,
-        onRetry = viewModel::retry,
-        onRowSelected = viewModel::onRowSelected,
-        onDismissBottomSheet = viewModel::dismissBottomSheet,
-        onTransactionAction = viewModel::onTransactionAction,
-        onExportClick = viewModel::onExportClicked,
-        onDismissExportDialog = viewModel::onExportDismissed,
-        onFromDateSelected = viewModel::onFromDateSelected,
-        onToDateSelected = viewModel::onToDateSelected,
-        onShowFromDatePicker = viewModel::onShowFromDatePicker,
-        onShowToDatePicker = viewModel::onShowToDatePicker,
-        onGenerateReport = viewModel::onGenerateReportClicked,
+        state = state,
+        onAction = remember(viewModel) { viewModel::trySendAction },
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun LoanTransactionsScreen(
-    uiState: LoanTransactionsUiState,
-    selectedRow: LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData?,
-    exportDialogState: ExportDialogState = ExportDialogState(),
-    onNavigateBack: () -> Unit = {},
-    onRetry: () -> Unit = {},
-    onRowSelected: (LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData) -> Unit = {},
-    onDismissBottomSheet: () -> Unit = {},
-    onTransactionAction: (TransactionAction, Int) -> Unit = { _, _ -> },
-    onExportClick: () -> Unit = {},
-    onDismissExportDialog: () -> Unit = {},
-    onFromDateSelected: (Long) -> Unit = {},
-    onToDateSelected: (Long) -> Unit = {},
-    onShowFromDatePicker: (Boolean) -> Unit = {},
-    onShowToDatePicker: (Boolean) -> Unit = {},
-    onGenerateReport: () -> Unit = {},
+    state: LoanTransactionsState,
+    onAction: (LoanTransactionsAction) -> Unit = {},
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     MifosScaffold(
         snackbarHostState = snackbarHostState,
         title = stringResource(Res.string.feature_loan_loan_transactions),
-        onBackPressed = onNavigateBack,
+        onBackPressed = { onAction(LoanTransactionsAction.NavigateBack) },
         actions = {
             IconButton(
-                onClick = onExportClick,
-                enabled = uiState is LoanTransactionsUiState.Success,
+                onClick = { onAction(LoanTransactionsAction.ExportClicked) },
+                enabled = state.uiState is LoanTransactionsUiState.Success,
             ) {
                 Icon(
                     imageVector = MifosIcons.FileUpload,
@@ -147,7 +126,7 @@ internal fun LoanTransactionsScreen(
                 .fillMaxSize()
                 .padding(it),
         ) {
-            when (uiState) {
+            when (val uiState = state.uiState) {
                 is LoanTransactionsUiState.Loading -> {
                     MifosProgressIndicator()
                 }
@@ -155,30 +134,39 @@ internal fun LoanTransactionsScreen(
                 is LoanTransactionsUiState.Error -> {
                     MifosSweetError(
                         message = uiState.message,
-                        onclick = onRetry,
+                        onclick = { onAction(LoanTransactionsAction.Retry) },
                     )
                 }
 
                 is LoanTransactionsUiState.Success -> {
                     val tableData = uiState.tableData
                     if (tableData.transactions.isEmpty()) {
-                        MifosEmptyUi(text = stringResource(Res.string.feature_loan_no_transactions))
+                        MifosEmptyUi(
+                            text = stringResource(Res.string.feature_loan_no_transactions),
+                        )
                     } else {
                         LoanTransactionsTableContent(
                             tableData = tableData,
-                            onRowAction = onRowSelected,
+                            onRowAction = { row ->
+                                onAction(LoanTransactionsAction.RowSelected(row))
+                            },
                         )
                     }
 
-                    if (selectedRow != null) {
+                    if (state.selectedRow != null) {
                         TransactionActionsBottomSheet(
-                            transactionType = selectedRow.transactionType,
-                            manuallyReversed = selectedRow.manuallyReversed,
-                            onDismissRequest = onDismissBottomSheet,
+                            transactionType = state.selectedRow.transactionType,
+                            manuallyReversed = state.selectedRow.manuallyReversed,
+                            onDismissRequest = {
+                                onAction(LoanTransactionsAction.DismissBottomSheet)
+                            },
                             onAction = { action ->
-                                selectedRow.id.let { id ->
-                                    onTransactionAction(action, id.toInt())
-                                }
+                                onAction(
+                                    LoanTransactionsAction.TransactionActionClicked(
+                                        action = action,
+                                        id = state.selectedRow.id.toInt(),
+                                    ),
+                                )
                             },
                         )
                     }
@@ -187,23 +175,18 @@ internal fun LoanTransactionsScreen(
         }
     }
 
-    if (exportDialogState.isVisible) {
+    if (state.exportDialogState.isVisible) {
         ExportTransactionsDialog(
-            state = exportDialogState,
-            onDismiss = onDismissExportDialog,
-            onFromDateSelected = onFromDateSelected,
-            onToDateSelected = onToDateSelected,
-            onShowFromDatePicker = onShowFromDatePicker,
-            onShowToDatePicker = onShowToDatePicker,
-            onGenerateReport = onGenerateReport,
+            state = state.exportDialogState,
+            onAction = onAction,
         )
     }
 }
 
 @Composable
 private fun LoanTransactionsTableContent(
-    tableData: LoanTransactionsUiState.LoanTransactionsTableData,
-    onRowAction: (LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData) -> Unit = {},
+    tableData: LoanTransactionsTableData,
+    onRowAction: (TransactionRowData) -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
     val smallWidth = DesignToken.sizes.tableCellWidthSmall
@@ -212,29 +195,17 @@ private fun LoanTransactionsTableContent(
 
     val columnWidths =
         listOf(
-            // #
             smallWidth,
-            // id
             smallWidth,
-            // office
             mediumWidth,
-            // externalId
             mediumWidth,
-            // transaction date
             largeWidth,
-            // transaction type
             largeWidth,
-            // amount
             mediumWidth,
-            // principal
             mediumWidth,
-            // interest
             mediumWidth,
-            // fees
             mediumWidth,
-            // penalties
             mediumWidth,
-            // loan balance
             mediumWidth,
         )
 
@@ -245,32 +216,22 @@ private fun LoanTransactionsTableContent(
         Res.string.feature_loan_table_header_external_id,
         Res.string.feature_loan_table_header_transaction_date,
         Res.string.feature_loan_table_header_transaction_type,
-        // Breakdown (will span Amount, Principal, Interest, Fees, Penalties)
         Res.string.feature_loan_break_down,
         Res.string.feature_loan_table_header_loan_balance,
     )
 
     val breakdownSpanWidth = mediumWidth * 5
     val headerWidthsRow1 = listOf(
-        // #
         smallWidth,
-        // id
         smallWidth,
-        // office
         mediumWidth,
-        // externalId
         mediumWidth,
-        // transaction date
         largeWidth,
-        // transaction type
         largeWidth,
-        // breakdown (span)
         breakdownSpanWidth,
-        // loan balance
         mediumWidth,
     )
 
-    // Second header row: show Amount, Principal, Interest, Fees, Penalties under the Breakdown area
     val headersRow2 = listOf(
         "",
         "",
@@ -381,9 +342,9 @@ private fun LoanTransactionsTableContent(
 
 @Composable
 private fun TransactionRow(
-    row: LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData,
+    row: TransactionRowData,
     widths: List<Dp>,
-    onRowAction: (LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData) -> Unit = {},
+    onRowAction: (TransactionRowData) -> Unit = {},
 ) {
     val textValues = listOf(
         row.number,
@@ -526,7 +487,7 @@ private fun TransactionActionsBottomSheet(
     )
 }
 
-private class LoanTransactionsPreviewProvider : PreviewParameterProvider<LoanTransactionsUiState> {
+private class LoanTransactionsPreviewProvider : PreviewParameterProvider<LoanTransactionsState> {
     val transaction =
         Transaction(
             id = 23,
@@ -542,28 +503,30 @@ private class LoanTransactionsPreviewProvider : PreviewParameterProvider<LoanTra
             ),
         )
 
-    override val values: Sequence<LoanTransactionsUiState>
+    override val values: Sequence<LoanTransactionsState>
         get() = sequenceOf(
-            LoanTransactionsUiState.Error("Network error"),
-            LoanTransactionsUiState.Loading,
-            LoanTransactionsUiState.Success(
-                LoanTransactionsUiState.LoanTransactionsTableData(
-                    transactions = List(10) { index ->
-                        LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData(
-                            number = (index + 1).toString(),
-                            id = transaction.id?.toString() ?: "-",
-                            office = transaction.officeName ?: "-",
-                            externalId = "-",
-                            transactionDate = DateHelper.getDateAsString(transaction.date),
-                            transactionType = TransactionType.DISBURSEMENT,
-                            amount = transaction.amount?.toString() ?: "-",
-                            principal = transaction.principalPortion?.toString() ?: "-",
-                            interest = transaction.interestPortion?.toString() ?: "-",
-                            fees = transaction.feeChargesPortion?.toString() ?: "-",
-                            penalties = transaction.penaltyChargesPortion?.toString() ?: "-",
-                            loanBalance = "-",
-                        )
-                    },
+            LoanTransactionsState(uiState = LoanTransactionsUiState.Error("Network error")),
+            LoanTransactionsState(uiState = LoanTransactionsUiState.Loading),
+            LoanTransactionsState(
+                uiState = LoanTransactionsUiState.Success(
+                    LoanTransactionsTableData(
+                        transactions = List(10) { index ->
+                            TransactionRowData(
+                                number = (index + 1).toString(),
+                                id = transaction.id?.toString() ?: "-",
+                                office = transaction.officeName ?: "-",
+                                externalId = "-",
+                                transactionDate = DateHelper.getDateAsString(transaction.date),
+                                transactionType = TransactionType.DISBURSEMENT,
+                                amount = transaction.amount?.toString() ?: "-",
+                                principal = transaction.principalPortion?.toString() ?: "-",
+                                interest = transaction.interestPortion?.toString() ?: "-",
+                                fees = transaction.feeChargesPortion?.toString() ?: "-",
+                                penalties = transaction.penaltyChargesPortion?.toString() ?: "-",
+                                loanBalance = "-",
+                            )
+                        },
+                    ),
                 ),
             ),
         )
@@ -572,10 +535,9 @@ private class LoanTransactionsPreviewProvider : PreviewParameterProvider<LoanTra
 @Composable
 @Preview
 private fun PreviewLoanTransactions(
-    @PreviewParameter(LoanTransactionsPreviewProvider::class) loanTransactionsUiState: LoanTransactionsUiState,
+    @PreviewParameter(LoanTransactionsPreviewProvider::class) state: LoanTransactionsState,
 ) {
     LoanTransactionsScreen(
-        uiState = loanTransactionsUiState,
-        selectedRow = null,
+        state = state,
     )
 }
