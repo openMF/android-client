@@ -11,6 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.NoteRepository
+import com.mifos.core.model.objects.notes.NoteResponse
 import com.mifos.core.model.objects.payloads.NotesPayload
 import com.mifos.core.network.GenericResponse
 
@@ -21,5 +22,5 @@ class AddNoteUseCase(
         resourceType: String,
         resourceId: Long,
         notesPayload: NotesPayload,
-    ): DataState<GenericResponse> = repository.addNewNote(resourceType, resourceId, notesPayload)
+    ): DataState<NoteResponse> = repository.addNewNote(resourceType, resourceId, notesPayload)
 }

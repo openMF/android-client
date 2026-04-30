@@ -16,6 +16,7 @@ import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.data.util.runAsDataState
 import com.mifos.core.data.util.withNetworkCheck
 import com.mifos.core.model.objects.notes.Note
+import com.mifos.core.model.objects.notes.NoteResponse
 import com.mifos.core.model.objects.payloads.NotesPayload
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerNote
@@ -33,7 +34,7 @@ class NoteRepositoryImp(
         resourceType: String,
         resourceId: Long,
         notesPayload: NotesPayload,
-    ): DataState<GenericResponse> {
+    ): DataState<NoteResponse> {
         return runAsDataState(
             networkMonitor,
             dispatcher.io,
@@ -46,7 +47,7 @@ class NoteRepositoryImp(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-    ): DataState<GenericResponse> {
+    ): DataState<NoteResponse> {
         return runAsDataState(
             networkMonitor,
             dispatcher.io,
@@ -77,7 +78,7 @@ class NoteRepositoryImp(
         resourceId: Long,
         noteId: Long,
         notesPayload: NotesPayload,
-    ): DataState<GenericResponse> {
+    ): DataState<NoteResponse> {
         return runAsDataState(
             networkMonitor,
             dispatcher.io,

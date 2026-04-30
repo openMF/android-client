@@ -10,6 +10,7 @@
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.model.objects.notes.Note
+import com.mifos.core.model.objects.notes.NoteResponse
 import com.mifos.core.model.objects.payloads.NotesPayload
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
@@ -22,7 +23,7 @@ class DataManagerNote(
         resourceType: String,
         resourceId: Long,
         notesPayload: NotesPayload,
-    ): GenericResponse {
+    ): NoteResponse {
         return mBaseApiManager.noteService.addNewNote(
             resourceType,
             resourceId,
@@ -34,7 +35,7 @@ class DataManagerNote(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-    ): GenericResponse {
+    ): NoteResponse {
         return mBaseApiManager.noteService.deleteNote(
             resourceType,
             resourceId,
@@ -69,7 +70,7 @@ class DataManagerNote(
         resourceId: Long,
         noteId: Long,
         notesPayload: NotesPayload,
-    ): GenericResponse {
+    ): NoteResponse {
         return mBaseApiManager.noteService.updateNote(
             resourceType,
             resourceId,
