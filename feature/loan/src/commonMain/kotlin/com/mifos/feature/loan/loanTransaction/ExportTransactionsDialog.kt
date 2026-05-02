@@ -34,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosButton
@@ -51,31 +52,43 @@ internal fun ExportTransactionsDialog(
     state: ExportDialogState,
     onAction: (LoanTransactionsAction) -> Unit,
 ) {
-    val fromDatePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = state.fromDate ?: Clock.System.now().toEpochMilliseconds(),
-        selectableDates = object : SelectableDates {
+    val nowMillis = remember { Clock.System.now().toEpochMilliseconds() }
+    val minToDate = state.fromDate
+
+    val pastOnlySelectable = remember(nowMillis) {
+        object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
+                return utcTimeMillis <= nowMillis
             }
-        },
+        }
+    }
+
+    val toDateSelectable = remember(nowMillis, minToDate) {
+        object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return utcTimeMillis <= nowMillis &&
+                    (minToDate == null || utcTimeMillis >= minToDate)
+            }
+        }
+    }
+
+    val fromDatePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = state.fromDate ?: nowMillis,
+        selectableDates = pastOnlySelectable,
     )
 
     val toDatePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = state.toDate ?: Clock.System.now().toEpochMilliseconds(),
-        selectableDates = object : SelectableDates {
-            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
-            }
-        },
+        initialSelectedDateMillis = state.toDate ?: nowMillis,
+        selectableDates = toDateSelectable,
     )
 
     if (state.showFromDatePicker) {
         DatePickerDialog(
-            onDismissRequest = { onAction(LoanTransactionsAction.ShowFromDatePicker(false)) },
+            onDismissRequest = { onAction(LoanTransactionsAction.DismissFromDatePicker) },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        onAction(LoanTransactionsAction.ShowFromDatePicker(false))
+                        onAction(LoanTransactionsAction.DismissFromDatePicker)
                         fromDatePickerState.selectedDateMillis?.let {
                             onAction(LoanTransactionsAction.FromDateSelected(it))
                         }
@@ -84,7 +97,7 @@ internal fun ExportTransactionsDialog(
             },
             dismissButton = {
                 TextButton(
-                    onClick = { onAction(LoanTransactionsAction.ShowFromDatePicker(false)) },
+                    onClick = { onAction(LoanTransactionsAction.DismissFromDatePicker) },
                 ) { Text(stringResource(Res.string.feature_loan_cancel)) }
             },
         ) {
@@ -94,11 +107,11 @@ internal fun ExportTransactionsDialog(
 
     if (state.showToDatePicker) {
         DatePickerDialog(
-            onDismissRequest = { onAction(LoanTransactionsAction.ShowToDatePicker(false)) },
+            onDismissRequest = { onAction(LoanTransactionsAction.DismissToDatePicker) },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        onAction(LoanTransactionsAction.ShowToDatePicker(false))
+                        onAction(LoanTransactionsAction.DismissToDatePicker)
                         toDatePickerState.selectedDateMillis?.let {
                             onAction(LoanTransactionsAction.ToDateSelected(it))
                         }
@@ -107,7 +120,7 @@ internal fun ExportTransactionsDialog(
             },
             dismissButton = {
                 TextButton(
-                    onClick = { onAction(LoanTransactionsAction.ShowToDatePicker(false)) },
+                    onClick = { onAction(LoanTransactionsAction.DismissToDatePicker) },
                 ) { Text(stringResource(Res.string.feature_loan_cancel)) }
             },
         ) {
@@ -138,7 +151,7 @@ internal fun ExportTransactionsDialog(
                     }.orEmpty(),
                     label = stringResource(Res.string.feature_loan_from_date),
                     openDatePicker = {
-                        onAction(LoanTransactionsAction.ShowFromDatePicker(true))
+                        onAction(LoanTransactionsAction.OpenFromDatePicker)
                     },
                 )
 
@@ -155,7 +168,7 @@ internal fun ExportTransactionsDialog(
                         null
                     },
                     openDatePicker = {
-                        onAction(LoanTransactionsAction.ShowToDatePicker(true))
+                        onAction(LoanTransactionsAction.OpenToDatePicker)
                     },
                 )
 

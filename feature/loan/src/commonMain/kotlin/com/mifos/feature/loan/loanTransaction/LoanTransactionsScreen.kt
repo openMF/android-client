@@ -46,7 +46,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -103,10 +102,7 @@ internal fun LoanTransactionsScreen(
     state: LoanTransactionsState,
     onAction: (LoanTransactionsAction) -> Unit = {},
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-
     MifosScaffold(
-        snackbarHostState = snackbarHostState,
         title = stringResource(Res.string.feature_loan_loan_transactions),
         onBackPressed = { onAction(LoanTransactionsAction.NavigateBack) },
         actions = {

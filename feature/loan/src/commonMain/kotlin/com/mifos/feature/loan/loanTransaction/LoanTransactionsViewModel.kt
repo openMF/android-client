@@ -78,28 +78,48 @@ internal class LoanTransactionsViewModel(
                 }
             }
 
-            is LoanTransactionsAction.ShowFromDatePicker -> {
+            LoanTransactionsAction.OpenFromDatePicker -> {
                 mutableStateFlow.update {
                     it.copy(
                         exportDialogState = it.exportDialogState.copy(
-                            showFromDatePicker = action.show,
+                            showFromDatePicker = true,
                         ),
                     )
                 }
             }
 
-            is LoanTransactionsAction.ShowToDatePicker -> {
+            LoanTransactionsAction.DismissFromDatePicker -> {
                 mutableStateFlow.update {
                     it.copy(
                         exportDialogState = it.exportDialogState.copy(
-                            showToDatePicker = action.show,
+                            showFromDatePicker = false,
+                        ),
+                    )
+                }
+            }
+
+            LoanTransactionsAction.OpenToDatePicker -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        exportDialogState = it.exportDialogState.copy(
+                            showToDatePicker = true,
+                        ),
+                    )
+                }
+            }
+
+            LoanTransactionsAction.DismissToDatePicker -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        exportDialogState = it.exportDialogState.copy(
+                            showToDatePicker = false,
                         ),
                     )
                 }
             }
 
             LoanTransactionsAction.GenerateReportClicked -> {
-                // Placeholder for future API call. UI-only ticket.
+                // Placeholder for future API call. UI-only ticket for now, so dismiss the dialog.
                 mutableStateFlow.update { it.copy(exportDialogState = ExportDialogState()) }
             }
         }
@@ -221,8 +241,10 @@ internal sealed interface LoanTransactionsAction {
     data object DismissExportDialog : LoanTransactionsAction
     data class FromDateSelected(val date: Long) : LoanTransactionsAction
     data class ToDateSelected(val date: Long) : LoanTransactionsAction
-    data class ShowFromDatePicker(val show: Boolean) : LoanTransactionsAction
-    data class ShowToDatePicker(val show: Boolean) : LoanTransactionsAction
+    data object OpenFromDatePicker : LoanTransactionsAction
+    data object DismissFromDatePicker : LoanTransactionsAction
+    data object OpenToDatePicker : LoanTransactionsAction
+    data object DismissToDatePicker : LoanTransactionsAction
     data object GenerateReportClicked : LoanTransactionsAction
 }
 
@@ -239,4 +261,49 @@ internal data class ExportDialogState(
 
     val isInvalidDateRange: Boolean
         get() = fromDate != null && toDate != null && toDate < fromDate
+}
+
+internal sealed interface LoanTransactionsUiState {
+    data object Loading : LoanTransactionsUiState
+    data class Error(val message: String) : LoanTransactionsUiState
+    data class Success(val tableData: LoanTransactionsTableData) : LoanTransactionsUiState
+}
+
+internal data class LoanTransactionsTableData(
+    val transactions: List<TransactionRowData>,
+)
+
+internal data class TransactionRowData(
+    val number: String,
+    val id: String,
+    val office: String,
+    val externalId: String,
+    val transactionDate: String,
+    val transactionType: TransactionType,
+    val amount: String,
+    val principal: String,
+    val interest: String,
+    val fees: String,
+    val penalties: String,
+    val loanBalance: String,
+    val manuallyReversed: Boolean = false,
+)
+
+internal enum class TransactionType(val value: String) {
+    ACCRUAL("Accrual"),
+    DISBURSEMENT("Disbursement"),
+    REPAYMENT("Repayment"),
+    UNKNOWN("-"),
+    ;
+
+    companion object {
+        fun fromValue(value: String): TransactionType = entries.find { it.value == value } ?: UNKNOWN
+    }
+}
+
+internal enum class TransactionAction {
+    UNDO_TRANSACTION,
+    VIEW_RECEIPTS,
+    VIEW_JOURNAL_ENTRIES,
+    VIEW_TRANSACTION,
 }
