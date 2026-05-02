@@ -6,6 +6,38 @@ early_access: false
 chat:
   auto_reply: true
 
+knowledge_base:
+  linked_repositories:
+    - repository: "sahilshivekar/mifos-x-web-app"
+      instructions: |
+        This repository serves as a reference implementation for business logic, workflows, and API usage in the Mifos ecosystem.
+
+        Use this repository to perform cross-repo validation for:
+        
+        API Consistency:
+          - Compare API endpoints used in the KMP app with those used in the web app
+          - Ensure endpoints, request patterns, and flows are consistent
+          - Validate that Kotlin data classes (DTOs) in the KMP app align with the JSON field names and structures used in the web app DTOs
+        
+        Business Logic Alignment:
+          - Use web-app as a reference for business logic and workflows
+          - Ensure flows (loan, client, savings, transactions, authentication) follow similar steps
+          - Validate that business validation logic is consistent across platforms
+        
+        Naming & Structure:
+          - Ensure naming conventions for models, fields, and variables align with web-app patterns
+          - Maintain consistency in feature-level structure and terminology
+        
+        Flag:
+          - API usage that deviates from web-app patterns
+          - Missing or inconsistent steps in business flows
+          - Naming inconsistencies across similar features
+          - Logic that contradicts existing web-app behavior
+        
+        Note:
+          - This is context-based validation using web-app as reference
+          - Flag potential inconsistencies rather than enforcing exact matches
+
 reviews:
   poem: false
   profile: "chill"
