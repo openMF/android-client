@@ -69,7 +69,7 @@ knowledge_base:
           - This is context-based validation using web-app as reference
           - Flag potential inconsistencies rather than enforcing exact matches
 
-    - repository: "sahilshivekar/kmp-mifos-template"
+    - repository: "sahilshivekar/kmp-project-template"
       instructions: |
         This repository is the source KMP template from which all Mifos KMP apps are synced.
 
