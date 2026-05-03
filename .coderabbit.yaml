@@ -8,6 +8,37 @@ chat:
 
 knowledge_base:
   linked_repositories:
+    - repository: "sahilshivekar/fineract"
+      instructions: |
+        This repository is the source of truth for backend APIs used by Mifos apps.
+
+        Use this repository for cross-repo API validation:
+
+        API Contract Validation:
+        Verify that API endpoints used in the KMP app exist in Fineract
+        Validate HTTP methods (GET, POST, PUT, DELETE) are correct
+        Ensure request parameters, query params, and path variables match backend expectations
+
+        Request/Response Structure:
+        Cross-check Kotlin DTOs with Fineract API request/response formats
+        Validate field names, types, and nesting
+        Ensure required fields are not missing
+
+        Business Rules:
+        Validate that API usage follows correct workflows (loan creation, repayment, client creation, etc.)
+        Ensure required sequence/order of API calls is respected
+
+        Flag:
+        Non-existent or incorrect endpoints
+        Wrong HTTP method usage
+        Missing required fields in requests
+        Incorrect DTO structure vs backend contract
+        Misaligned API flow compared to backend expectations
+
+        Note:
+        Do NOT enforce exact duplication
+        Focus on correctness and contract alignment
+
     - repository: "sahilshivekar/mifos-x-web-app"
       instructions: |
         This repository serves as a reference implementation for business logic, workflows, and API usage in the Mifos ecosystem.
@@ -37,6 +68,48 @@ knowledge_base:
         Note:
           - This is context-based validation using web-app as reference
           - Flag potential inconsistencies rather than enforcing exact matches
+
+    - repository: "sahilshivekar/kmp-mifos-template"
+      instructions: |
+        This repository is the source KMP template from which all Mifos KMP apps are synced.
+
+        Core Principle:
+          - The `core-base` module is template-synced across repositories.
+          - Any modification to `core-base` in a PR is considered HIGH IMPACT.
+
+        Change Detection Rule:
+          - If a PR modifies any file inside `core-base`, treat it as a critical change.
+          - Such changes must be:
+            - Intentional
+            - Minimal
+            - Justified
+
+        Cross-Repo Consistency:
+          - Since multiple apps depend on the same template:
+            - Changes in `core-base` may require syncing across other repositories
+            - Ensure the change does not introduce inconsistencies with the template
+
+        Validation:
+          - Compare modified `core-base` files with the template implementation
+          - Check if the change:
+            - Breaks shared abstractions
+            - Introduces app-specific logic into shared module
+            - Violates modular boundaries
+
+        Flag:
+          - ANY modification inside `core-base` (always flag for review)
+          - Business logic inside `core-base`
+          - Feature-specific code added to shared module
+          - Deviations from template structure
+          - Changes without clear necessity
+
+        Reviewer Guidance:
+          - Highlight clearly:
+            "This PR modifies core-base (template-synced module) — requires careful review and possible cross-repo sync."
+
+        Note:
+          - Do NOT silently accept core-base changes
+          - Always escalate visibility of such modifications
 
 reviews:
   poem: false
@@ -292,17 +365,6 @@ reviews:
         - Entities MUST NOT be serializable (do not use `@Serializable` or implement `Serializable`).
         - Rule: Entities MUST NOT be used in ViewModels, Screens, or the Network layer.
         - Flag: If an Entity is exposed directly to the UI layer or returned by a Repository Interface.
-
-    - path: "core-base/**"
-      instructions: |
-        Critical Module Change Detection:
-        - Changes in `core-base` module must be treated as high-impact.
-        - Flag any PR that modifies files inside `core-base` for careful review.
-        - Ensure changes follow existing architecture and do not introduce breaking or cross-layer dependencies.
-        - Verify that modifications in `core-base` are necessary and minimal.
-
-        Output:
-        - Clearly highlight that `core-base` is a shared foundational module and requires extra review attention.
 
     - path: "**/*Database.kt"
       instructions: |
