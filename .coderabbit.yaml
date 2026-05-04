@@ -352,6 +352,38 @@ reviews:
           - DTO mismatch (missing/extra fields)
   
         - Always produce a fully filled table when triggered.
+        
+        After the main API table, generate TWO sections:
+        
+        1) Request Fields Comparison
+        - Compare request fields across:
+            - Fineract
+            - Mobile App
+            - Mifos Web App
+        - Use this table:
+          Request Fields:
+          | Field | Fineract | Mobile | Web App | Notes |
+          |-------|----------|--------|---------|-------|
+        
+        2) Response Fields Comparison
+        - Compare response fields across:
+            - Fineract
+            - Mobile App
+            - Mifos Web App
+        - Use this table:
+          Response Fields:
+          | Field | Fineract | Mobile | Web App | Notes |
+          |-------|----------|--------|---------|-------|
+        
+        Rules:
+          - Use field names only (no full JSON)
+          - Use dot notation for nested fields (e.g., address.city)
+          - Notes MUST mention:
+              - missing fields
+              - extra fields
+              - naming mismatches
+              - or "aligned" if correct
+          - Skip these sections if no meaningful fields are present
 
     - path: "**/data/repository/**/*.kt"
       instructions: |
