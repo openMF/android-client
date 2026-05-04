@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'cmp_shared'
-    spec.version                  = '2026.4.3'
+    spec.version                  = '2026.4.4'
     spec.homepage                 = 'https://github.com/openMF/mifos-x-field-officer-app'
     spec.source                   = { :http=> ''}
     spec.authors                  = ''
@@ -50,5 +50,5 @@ Pod::Spec.new do |spec|
             SCRIPT
         }
     ]
-    spec.resources = ['build/compose/cocoapods/compose-resources']
+    spec.resources = ['build\compose\cocoapods\compose-resources']
 end
