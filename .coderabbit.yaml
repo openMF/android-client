@@ -170,13 +170,7 @@ reviews:
             URL format: https://github.com/sahilshivekar/kmp-project-template/blob/dev/<filepath>
           - sahilshivekar/android-client → branch: feat/MIFOSAC-759
             URL format: https://github.com/sahilshivekar/android-client/blob/<branch>/<filepath>
-        
-          Never list bare file paths when the file existence is confirmed.
-            If the file exists in the repository:
-              - Generate a clickable GitHub link
-            If the file does NOT exist in that repository:
-              - DO NOT generate a clickable link
-              - Instead write: "File not present in <repository>" 
+          Never list bare file paths without a clickable hyperlink in cross-repo analysis responses.
 
     - path: "**/*ViewModel.kt"
       instructions: |
@@ -353,37 +347,37 @@ reviews:
   
         - Always produce a fully filled table when triggered.
         
-        After the main API table, generate TWO sections:
-        
-        1) Request Fields Comparison
-        - Compare request fields across:
-            - Fineract
-            - Mobile App
-            - Mifos Web App
-        - Use this table:
-          Request Fields:
-          | Field | Fineract | Mobile | Web App | Notes |
-          |-------|----------|--------|---------|-------|
-        
-        2) Response Fields Comparison
-        - Compare response fields across:
-            - Fineract
-            - Mobile App
-            - Mifos Web App
-        - Use this table:
-          Response Fields:
-          | Field | Fineract | Mobile | Web App | Notes |
-          |-------|----------|--------|---------|-------|
-        
-        Rules:
-          - Use field names only (no full JSON)
-          - Use dot notation for nested fields (e.g., address.city)
-          - Notes MUST mention:
-              - missing fields
-              - extra fields
-              - naming mismatches
-              - or "aligned" if correct
-          - Skip these sections if no meaningful fields are present
+        After the main API table, it is strictly required to generate TWO sections:
+          1) Request Fields Comparison
+          - Compare request fields across:
+              - Fineract
+              - Mobile App
+              - Mifos Web App
+          - Use this table:
+            Request Fields:
+            | Field | Fineract | Mobile | Web App | Notes |
+            |-------|----------|--------|---------|-------|
+          
+          2) Response Fields Comparison
+          - Compare response fields across:
+              - Fineract
+              - Mobile App
+              - Mifos Web App
+          - Use this table:
+            Response Fields:
+            | Field | Fineract | Mobile | Web App | Notes |
+            |-------|----------|--------|---------|-------|
+          
+          Rules:
+            - Use field names only (no full JSON)
+            - Use dot notation for nested fields (e.g., address.city)
+            - Notes MUST mention:
+                - missing fields
+                - extra fields
+                - naming mismatches
+                - or "aligned" if correct
+            - Skip these sections if no meaningful fields are present
+        It is mandatory to generate Request Fields Comparison and Response Fields Comparison
 
     - path: "**/data/repository/**/*.kt"
       instructions: |
