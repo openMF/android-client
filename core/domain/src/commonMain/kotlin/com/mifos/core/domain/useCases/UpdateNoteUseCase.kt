@@ -11,8 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.NoteRepository
-import com.mifos.core.model.objects.notes.CreateNoteRequest
-import com.mifos.core.model.objects.notes.UpdateNoteResponse
+import com.mifos.core.model.objects.payloads.NotesPayload
 
 class UpdateNoteUseCase(
     val repository: NoteRepository,
@@ -21,7 +20,7 @@ class UpdateNoteUseCase(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-        createNoteRequest: CreateNoteRequest,
-    ): DataState<UpdateNoteResponse> =
-        repository.updateNote(resourceType, resourceId, noteId, createNoteRequest)
+        notesPayload: NotesPayload,
+    ): DataState<Unit> =
+        repository.updateNote(resourceType, resourceId, noteId, notesPayload)
 }

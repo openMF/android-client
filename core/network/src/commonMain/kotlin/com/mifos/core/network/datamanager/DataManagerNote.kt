@@ -9,8 +9,8 @@
  */
 package com.mifos.core.network.datamanager
 
+import com.mifos.core.model.objects.payloads.NotesPayload
 import com.mifos.core.network.BaseApiManager
-import com.mifos.core.network.dto.note.CreateNoteRequestDto
 import com.mifos.core.network.dto.note.CreateNoteResponseDto
 import com.mifos.core.network.dto.note.DeleteNoteResponseDto
 import com.mifos.core.network.dto.note.NoteDto
@@ -23,12 +23,12 @@ class DataManagerNote(
     suspend fun addNewNote(
         resourceType: String,
         resourceId: Long,
-        createNoteRequestDto: CreateNoteRequestDto,
+        notesPayload: NotesPayload,
     ): CreateNoteResponseDto {
         return mBaseApiManager.noteService.addNewNote(
             resourceType,
             resourceId,
-            createNoteRequestDto,
+            notesPayload,
         )
     }
 
@@ -70,13 +70,13 @@ class DataManagerNote(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-        createNoteRequestDto: CreateNoteRequestDto,
+        notesPayload: NotesPayload,
     ): UpdateNoteResponseDto {
         return mBaseApiManager.noteService.updateNote(
             resourceType,
             resourceId,
             noteId,
-            createNoteRequestDto,
+            notesPayload,
         )
     }
 }

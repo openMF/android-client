@@ -11,17 +11,13 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
-import com.mifos.core.data.mappers.client.note.fromDomain
 import com.mifos.core.data.mappers.client.note.toDomain
 import com.mifos.core.data.repository.NoteRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.data.util.runAsDataState
 import com.mifos.core.data.util.withNetworkCheck
-import com.mifos.core.model.objects.notes.CreateNoteRequest
-import com.mifos.core.model.objects.notes.CreateNoteResponse
-import com.mifos.core.model.objects.notes.DeleteNoteResponse
 import com.mifos.core.model.objects.notes.Note
-import com.mifos.core.model.objects.notes.UpdateNoteResponse
+import com.mifos.core.model.objects.payloads.NotesPayload
 import com.mifos.core.network.datamanager.DataManagerNote
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -37,14 +33,13 @@ class NoteRepositoryImp(
     override suspend fun addNewNote(
         resourceType: String,
         resourceId: Long,
-        createNoteRequest: CreateNoteRequest,
-    ): DataState<CreateNoteResponse> {
+        notesPayload: NotesPayload,
+    ): DataState<Unit> {
         return runAsDataState(
             networkMonitor,
             dispatcher.io,
         ) {
-            dataManagerNote.addNewNote(resourceType, resourceId, createNoteRequest.fromDomain())
-                .toDomain()
+            dataManagerNote.addNewNote(resourceType, resourceId, notesPayload)
         }
     }
 
@@ -52,12 +47,12 @@ class NoteRepositoryImp(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-    ): DataState<DeleteNoteResponse> {
+    ): DataState<Unit> {
         return runAsDataState(
             networkMonitor,
             dispatcher.io,
         ) {
-            dataManagerNote.deleteNote(resourceType, resourceId, noteId).toDomain()
+            dataManagerNote.deleteNote(resourceType, resourceId, noteId)
         }
     }
 
@@ -90,8 +85,8 @@ class NoteRepositoryImp(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-        createNoteRequest: CreateNoteRequest,
-    ): DataState<UpdateNoteResponse> {
+        notesPayload: NotesPayload,
+    ): DataState<Unit> {
         return runAsDataState(
             networkMonitor,
             dispatcher.io,
@@ -100,8 +95,8 @@ class NoteRepositoryImp(
                 resourceType,
                 resourceId,
                 noteId,
-                createNoteRequest.fromDomain(),
-            ).toDomain()
+                notesPayload,
+            )
         }
     }
 }

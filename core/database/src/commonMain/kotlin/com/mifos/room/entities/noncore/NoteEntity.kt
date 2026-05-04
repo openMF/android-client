@@ -25,19 +25,19 @@ import template.core.base.database.PrimaryKey
 )
 data class NoteEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int? = null,
+    val id: Long? = null,
 
-    val clientId: Int? = null,
+    val clientId: Long? = null,
 
     val noteContent: String? = null,
 
-    val createdById: Int? = null,
+    val createdById: Long? = null,
 
     val createdByUsername: String? = null,
 
     val createdOn: String? = null,
 
-    val updatedById: Int? = null,
+    val updatedById: Long? = null,
 
     val updatedByUsername: String? = null,
 

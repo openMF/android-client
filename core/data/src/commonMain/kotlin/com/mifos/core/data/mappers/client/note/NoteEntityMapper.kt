@@ -14,25 +14,25 @@ import com.mifos.core.network.dto.note.NoteDto
 import com.mifos.room.entities.noncore.NoteEntity
 
 fun NoteDto.toEntity(): NoteEntity = NoteEntity(
-    id = id?.toInt(),
-    clientId = clientId?.toInt(),
+    id = id,
+    clientId = clientId,
     noteContent = note,
-    createdById = createdById?.toInt(),
+    createdById = createdById,
     createdByUsername = createdByUsername,
     createdOn = createdOn,
-    updatedById = updatedById?.toInt(),
+    updatedById = updatedById,
     updatedByUsername = updatedByUsername,
     updatedOn = updatedOn,
 )
 
 fun NoteEntity.toDomain(): Note = Note(
-    id = id?.toLong(),
-    clientId = clientId?.toLong(),
+    id = id,
+    clientId = clientId,
     note = noteContent,
-    createdById = createdById?.toLong(),
+    createdById = createdById,
     createdByUsername = createdByUsername,
     createdOn = createdOn,
-    updatedById = updatedById?.toLong(),
+    updatedById = updatedById,
     updatedByUsername = updatedByUsername,
     updatedOn = updatedOn,
 )

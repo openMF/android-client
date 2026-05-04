@@ -15,7 +15,6 @@ import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.NoteRepository
 import com.mifos.core.domain.useCases.DeleteNoteUseCase
-import com.mifos.core.model.objects.notes.DeleteNoteResponse
 import com.mifos.core.model.objects.notes.Note
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.update
@@ -213,7 +212,7 @@ sealed interface NoteAction {
 
     sealed interface Internal : NoteAction {
         data class ReceiveDeleteNoteResult(
-            val deleteNoteResult: DataState<DeleteNoteResponse>,
+            val deleteNoteResult: DataState<Unit>,
         ) : Internal
     }
 }

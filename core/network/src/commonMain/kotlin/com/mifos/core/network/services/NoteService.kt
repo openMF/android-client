@@ -9,7 +9,7 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.network.dto.note.CreateNoteRequestDto
+import com.mifos.core.model.objects.payloads.NotesPayload
 import com.mifos.core.network.dto.note.CreateNoteResponseDto
 import com.mifos.core.network.dto.note.DeleteNoteResponseDto
 import com.mifos.core.network.dto.note.NoteDto
@@ -33,14 +33,14 @@ interface NoteService {
      *
      * @param resourceType resourceType, eg : Client, Loan, Group, Savings Account
      * @param resourceId resourceId, eg : ClientId, LoanId, GroupId, Savings AccountId
-     * @param createNoteRequestDto
+     * @param notesPayload
      * @return [CreateNoteResponseDto]
      */
     @POST("{resourceType}/{resourceId}/" + APIEndPoint.NOTES)
     suspend fun addNewNote(
         @Path("resourceType") resourceType: String,
         @Path("resourceId") resourceId: Long,
-        @Body createNoteRequestDto: CreateNoteRequestDto,
+        @Body notesPayload: NotesPayload,
     ): CreateNoteResponseDto
 
     /**
@@ -102,7 +102,7 @@ interface NoteService {
      * @param resourceType resourceType, eg : Client, Loan, Group, Savings Account
      * @param resourceId resourceId, eg : ClientId, LoanId, GroupId, Savings AccountId
      * @param noteId noteId
-     * @param createNoteRequestDto
+     * @param notesPayload
      * @return UpdateNoteResponseDto
      */
     @PUT("{resourceType}/{resourceId}/" + APIEndPoint.NOTES + "/{noteId}")
@@ -110,6 +110,6 @@ interface NoteService {
         @Path("resourceType") resourceType: String,
         @Path("resourceId") resourceId: Long,
         @Path("noteId") noteId: Long,
-        @Body createNoteRequestDto: CreateNoteRequestDto,
+        @Body notesPayload: NotesPayload,
     ): UpdateNoteResponseDto
 }

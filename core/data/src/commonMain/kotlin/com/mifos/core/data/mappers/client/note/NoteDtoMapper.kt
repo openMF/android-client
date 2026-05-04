@@ -9,18 +9,8 @@
  */
 package com.mifos.core.data.mappers.client.note
 
-import com.mifos.core.model.objects.notes.Changes
-import com.mifos.core.model.objects.notes.CreateNoteRequest
-import com.mifos.core.model.objects.notes.CreateNoteResponse
-import com.mifos.core.model.objects.notes.DeleteNoteResponse
 import com.mifos.core.model.objects.notes.Note
-import com.mifos.core.model.objects.notes.UpdateNoteResponse
-import com.mifos.core.network.dto.note.ChangesDto
-import com.mifos.core.network.dto.note.CreateNoteRequestDto
-import com.mifos.core.network.dto.note.CreateNoteResponseDto
-import com.mifos.core.network.dto.note.DeleteNoteResponseDto
 import com.mifos.core.network.dto.note.NoteDto
-import com.mifos.core.network.dto.note.UpdateNoteResponseDto
 
 fun NoteDto.toDomain(): Note = Note(
     clientId = clientId,
@@ -32,29 +22,4 @@ fun NoteDto.toDomain(): Note = Note(
     updatedById = updatedById,
     updatedByUsername = updatedByUsername,
     updatedOn = updatedOn,
-)
-
-fun CreateNoteResponseDto.toDomain(): CreateNoteResponse = CreateNoteResponse(
-    officeId = officeId,
-    clientId = clientId,
-    resourceId = resourceId,
-)
-
-fun DeleteNoteResponseDto.toDomain(): DeleteNoteResponse = DeleteNoteResponse(
-    resourceId = resourceId,
-)
-
-fun ChangesDto.toDomain(): Changes = Changes(
-    note = note,
-)
-
-fun UpdateNoteResponseDto.toDomain(): UpdateNoteResponse = UpdateNoteResponse(
-    officeId = officeId,
-    clientId = clientId,
-    resourceId = resourceId,
-    changes = changes?.toDomain(),
-)
-
-fun CreateNoteRequest.fromDomain(): CreateNoteRequestDto = CreateNoteRequestDto(
-    note = note,
 )
