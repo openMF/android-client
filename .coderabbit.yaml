@@ -71,45 +71,27 @@ knowledge_base:
 
     - repository: "sahilshivekar/kmp-project-template"
       instructions: |
-        This repository is the source KMP template from which all Mifos KMP apps are synced.
-
-        Core Principle:
-          - The `core-base` module is template-synced across repositories.
-          - Any modification to `core-base` in a PR is considered HIGH IMPACT.
-
-        Change Detection Rule:
-          - If a PR modifies any file inside `core-base`, treat it as a critical change.
-          - Such changes must be:
-            - Intentional
-            - Minimal
-            - Justified
-
-        Cross-Repo Consistency:
-          - Since multiple apps depend on the same template:
-            - Changes in `core-base` may require syncing across other repositories
-            - Ensure the change does not introduce inconsistencies with the template
-
-        Validation:
-          - Compare modified `core-base` files with the template implementation
-          - Check if the change:
-            - Breaks shared abstractions
-            - Introduces app-specific logic into shared module
-            - Violates modular boundaries
-
-        Flag:
-          - ANY modification inside `core-base` (always flag for review)
-          - Business logic inside `core-base`
-          - Feature-specific code added to shared module
-          - Deviations from template structure
-          - Changes without clear necessity
-
-        Reviewer Guidance:
-          - Highlight clearly:
-            "This PR modifies core-base (template-synced module) — requires careful review and possible cross-repo sync."
-
+        This repository is the upstream source of truth. All of `core-base` and specific modules within `core` are template-synced.
+        
+        Comparative Analysis Requirement:
+          - If a PR modifies any file inside `core-base` or `core`, you MUST perform a side-by-side comparison with the template's implementation on the 'dev' branch.
+          - Do NOT simply flag that a change occurred. Your primary goal is to explain EXACTLY how the PR implementation differs from the template.
+          - Use the template file as the baseline: https://github.com/sahilshivekar/kmp-project-template/blob/dev/<filepath>
+        
+        Mandatory Output Format (for core/core-base modifications):
+          Generate a "Sync Analysis" table for each modified file:
+        
+        | File Path | Aspect/Logic      | Template (dev)             | PR Implementation  | Recommendation (Lead Architect's Advice) |
+        | :---------| :-----------------| :--------------------------| :------------------| :----------------------------------------|
+        | (link)    | (e.g., Auth Flow) | (How it works in template) | (How it works now) | (Detailed justification)                 |
+      
+        Analysis Guidelines:
+          - Handle Missing Files: If the file does not exist in the template repository, do not fail. Explicitly state that it is a new addition and evaluate if it should be upstreamed or kept local.
+          - Identify the "Why": Is the difference a bug fix that should be upstreamed to the template, or an app-specific customization?
+          - Detect Specificity: Flag if feature-specific or UI-specific logic is being injected into these shared modules.
+      
         Note:
-          - Do NOT silently accept core-base changes
-          - Always escalate visibility of such modifications
+          - The maintainer needs to see the mechanical difference. Be precise about added lines, removed abstractions, or changed function signatures compared to the template source.
 
 reviews:
   poem: false
@@ -175,6 +157,21 @@ reviews:
           missing/empty sections, or sections without media.
 
   path_instructions:
+    - path: "**"
+      instructions: |
+        Cross-repository file references:
+          When performing cross-repository analyses, always generate clickable GitHub file links
+          using the following branch mappings:
+          - sahilshivekar/mifos-x-web-app → branch: dev
+            URL format: https://github.com/sahilshivekar/mifos-x-web-app/blob/dev/<filepath>
+          - sahilshivekar/fineract → branch: develop
+            URL format: https://github.com/sahilshivekar/fineract/blob/develop/<filepath>
+          - sahilshivekar/kmp-project-template → branch: dev
+            URL format: https://github.com/sahilshivekar/kmp-project-template/blob/dev/<filepath>
+          - sahilshivekar/android-client → branch: feat/MIFOSAC-759
+            URL format: https://github.com/sahilshivekar/android-client/blob/<branch>/<filepath>
+          Never list bare file paths without a clickable hyperlink in cross-repo analysis responses.
+
     - path: "**/*ViewModel.kt"
       instructions: |
         MVI architecture rules:
@@ -316,6 +313,39 @@ reviews:
         Network Layer API Guidelines:
         - One-shot API calls MUST use `suspend`, return raw response `T`, and MUST NOT use Flow or DataState.
         - Streaming APIs MUST return `Flow<T>` and MUST NOT use `suspend` or DataState.
+        
+        Cross-Repository API Comparison Table (Network Layer Only)
+        - Generate ONE table per API (identified by URL path + HTTP method) when an API is defined or modified.
+        - If no API is present → do nothing.
+        - Never generate duplicate tables.
+  
+        - Table (MANDATORY):
+  
+          | Checkpoint         | Fineract (Backend) | Mobile App (Current PR) | Mifos Web App | Analysis & Suggestions |
+          | :------------------| :------------------| :-----------------------| :-------------| :----------------------|
+          | URL Path           |                    |                         |               |                        |
+          | HTTP Method        |                    |                         |               |                        |
+          | Request Parameters |                    |                         |               |                        |
+          | Response Structure |                    |                         |               |                        |
+  
+        - Rules:
+          - Fineract = source of truth (API contract)
+          - Mobile = extract only from network layer (endpoint, DTOs)
+          - Web App = reference only (for comparison, not authority)
+          - Do NOT include ViewModel or Repository logic
+  
+        - Analysis & Suggestions must include:
+          - mismatches (endpoint, method, params, DTO)
+          - inconsistencies with web app
+          - explicit confirmation if correct
+          - precise fixes (what to change)
+  
+        - Flag:
+          - missing required fields
+          - wrong types or nullability
+          - DTO mismatch (missing/extra fields)
+  
+        - Always produce a fully filled table when triggered.
 
     - path: "**/data/repository/**/*.kt"
       instructions: |
@@ -372,3 +402,9 @@ reviews:
         - If there is any change to a Room schema (fields added, removed, or modified in any `@Entity` class), the `version` number in the `@Database` annotation MUST be incremented.
         - Verify if a migration strategy (e.g., `Migration` or `autoMigrations`) has been implemented for the version bump.
         - Flag schema changes that do not accompany a database version increment to prevent runtime crashes.
+
+    - path: "**/{core-base,core/{analytics,common,data,database,datastore,designsystem,model,network,ui}}/**/*.kt"
+      instructions: |
+        CRITICAL: This file belongs to a template-synced module. 
+        Refer to the 'kmp-project-template' Knowledge Base. You MUST perform a side-by-side Delta Analysis with the upstream template and generate the 'Template Sync Analysis' table.
+        Focus on identifying if changes should be pushed back to the template or kept as local customizations.
