@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Mifos Initiative
+ * Copyright 2026 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,23 +7,26 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.objects.notes
+package com.mifos.core.network.dto.note
+
+import kotlinx.serialization.Serializable
 
 /**
-* GetResourceTypeResourceIdNotesNoteIdResponse
-*
-* @param clientId
-* @param createdById
-* @param createdByUsername
-* @param createdOn
-* @param id
-* @param note
-* @param updatedById
-* @param updatedByUsername
-* @param updatedOn
-*/
+ * GetResourceTypeResourceIdNotesNoteIdResponse
+ *
+ * @param clientId
+ * @param createdById
+ * @param createdByUsername
+ * @param createdOn
+ * @param id
+ * @param note
+ * @param updatedById
+ * @param updatedByUsername
+ * @param updatedOn
+ */
 
-data class Note(
+@Serializable
+data class NoteDto(
 
     val clientId: Long? = null,
 

@@ -11,17 +11,21 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
+import com.mifos.core.data.mappers.client.note.fromDomain
+import com.mifos.core.data.mappers.client.note.toDomain
 import com.mifos.core.data.repository.NoteRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.data.util.runAsDataState
 import com.mifos.core.data.util.withNetworkCheck
+import com.mifos.core.model.objects.notes.CreateNoteRequest
+import com.mifos.core.model.objects.notes.CreateNoteResponse
+import com.mifos.core.model.objects.notes.DeleteNoteResponse
 import com.mifos.core.model.objects.notes.Note
-import com.mifos.core.model.objects.notes.NoteResponse
-import com.mifos.core.model.objects.payloads.NotesPayload
-import com.mifos.core.network.GenericResponse
+import com.mifos.core.model.objects.notes.UpdateNoteResponse
 import com.mifos.core.network.datamanager.DataManagerNote
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import template.core.base.common.manager.DispatcherManager
 
 class NoteRepositoryImp(
@@ -33,13 +37,14 @@ class NoteRepositoryImp(
     override suspend fun addNewNote(
         resourceType: String,
         resourceId: Long,
-        notesPayload: NotesPayload,
-    ): DataState<NoteResponse> {
+        createNoteRequest: CreateNoteRequest,
+    ): DataState<CreateNoteResponse> {
         return runAsDataState(
             networkMonitor,
             dispatcher.io,
         ) {
-            dataManagerNote.addNewNote(resourceType, resourceId, notesPayload)
+            dataManagerNote.addNewNote(resourceType, resourceId, createNoteRequest.fromDomain())
+                .toDomain()
         }
     }
 
@@ -47,12 +52,12 @@ class NoteRepositoryImp(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-    ): DataState<NoteResponse> {
+    ): DataState<DeleteNoteResponse> {
         return runAsDataState(
             networkMonitor,
             dispatcher.io,
         ) {
-            dataManagerNote.deleteNote(resourceType, resourceId, noteId)
+            dataManagerNote.deleteNote(resourceType, resourceId, noteId).toDomain()
         }
     }
 
@@ -62,7 +67,8 @@ class NoteRepositoryImp(
         noteId: Long,
     ): Flow<DataState<Note>> =
         networkMonitor.withNetworkCheck(
-            dataManagerNote.retrieveNote(resourceType, resourceId, noteId).asDataStateFlow(),
+            dataManagerNote.retrieveNote(resourceType, resourceId, noteId).map { it.toDomain() }
+                .asDataStateFlow(),
         ).flowOn(dispatcher.io)
 
     override fun retrieveListNotes(
@@ -70,20 +76,32 @@ class NoteRepositoryImp(
         resourceId: Long,
     ): Flow<DataState<List<Note>>> =
         networkMonitor.withNetworkCheck(
-            dataManagerNote.retrieveListNotes(resourceType, resourceId).asDataStateFlow(),
+            dataManagerNote
+                .retrieveListNotes(resourceType, resourceId)
+                .map { dtoList ->
+                    dtoList.map { dto ->
+                        dto.toDomain()
+                    }
+                }
+                .asDataStateFlow(),
         ).flowOn(dispatcher.io)
 
     override suspend fun updateNote(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-        notesPayload: NotesPayload,
-    ): DataState<NoteResponse> {
+        createNoteRequest: CreateNoteRequest,
+    ): DataState<UpdateNoteResponse> {
         return runAsDataState(
             networkMonitor,
             dispatcher.io,
         ) {
-            dataManagerNote.updateNote(resourceType, resourceId, noteId, notesPayload)
+            dataManagerNote.updateNote(
+                resourceType,
+                resourceId,
+                noteId,
+                createNoteRequest.fromDomain(),
+            ).toDomain()
         }
     }
 }

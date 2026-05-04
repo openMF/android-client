@@ -46,6 +46,7 @@ kotlin{
             api(projects.core.datastore)
             api(projects.core.database)
             api(projects.core.common)
+            api(projects.core.data)
             api(libs.kotlinx.datetime)
         }
         androidMain.dependencies {

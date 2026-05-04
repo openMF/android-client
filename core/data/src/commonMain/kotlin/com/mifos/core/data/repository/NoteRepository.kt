@@ -10,10 +10,11 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.model.objects.notes.CreateNoteRequest
+import com.mifos.core.model.objects.notes.CreateNoteResponse
+import com.mifos.core.model.objects.notes.DeleteNoteResponse
 import com.mifos.core.model.objects.notes.Note
-import com.mifos.core.model.objects.notes.NoteResponse
-import com.mifos.core.model.objects.payloads.NotesPayload
-import com.mifos.core.network.GenericResponse
+import com.mifos.core.model.objects.notes.UpdateNoteResponse
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -24,14 +25,14 @@ interface NoteRepository {
     suspend fun addNewNote(
         resourceType: String,
         resourceId: Long,
-        notesPayload: NotesPayload,
-    ): DataState<NoteResponse>
+        createNoteRequest: CreateNoteRequest,
+    ): DataState<CreateNoteResponse>
 
     suspend fun deleteNote(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-    ): DataState<NoteResponse>
+    ): DataState<DeleteNoteResponse>
 
     fun retrieveNote(
         resourceType: String,
@@ -48,6 +49,6 @@ interface NoteRepository {
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-        notesPayload: NotesPayload,
-    ): DataState<NoteResponse>
+        createNoteRequest: CreateNoteRequest,
+    ): DataState<UpdateNoteResponse>
 }

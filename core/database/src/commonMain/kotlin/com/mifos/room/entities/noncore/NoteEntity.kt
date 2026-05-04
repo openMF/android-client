@@ -35,11 +35,11 @@ data class NoteEntity(
 
     val createdByUsername: String? = null,
 
-    val createdOn: Long = 0,
+    val createdOn: String? = null,
 
     val updatedById: Int? = null,
 
     val updatedByUsername: String? = null,
 
-    val updatedOn: Long = 0,
+    val updatedOn: String? = null,
 ) : Parcelable

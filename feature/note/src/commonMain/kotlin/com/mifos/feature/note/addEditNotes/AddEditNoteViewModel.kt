@@ -23,9 +23,9 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.NoteRepository
 import com.mifos.core.domain.useCases.AddNoteUseCase
 import com.mifos.core.domain.useCases.UpdateNoteUseCase
-import com.mifos.core.model.objects.notes.NoteResponse
-import com.mifos.core.model.objects.payloads.NotesPayload
-import com.mifos.core.network.GenericResponse
+import com.mifos.core.model.objects.notes.CreateNoteRequest
+import com.mifos.core.model.objects.notes.CreateNoteResponse
+import com.mifos.core.model.objects.notes.UpdateNoteResponse
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -84,7 +84,7 @@ class AddEditNoteViewModel(
                             mutableStateFlow.update {
                                 it.copy(
                                     dialogState = null,
-                                    textFieldNotesPayload = NotesPayload(dataState.data.note),
+                                    textFieldNotesPayload = CreateNoteRequest(dataState.data.note),
                                     notesPayloadInitialData = dataState.data.note,
                                 )
                             }
@@ -95,17 +95,17 @@ class AddEditNoteViewModel(
         }
     }
 
-    private suspend fun addNote(notesPayload: NotesPayload) {
+    private suspend fun addNote(createNoteRequest: CreateNoteRequest) {
         mutableStateFlow.update {
             it.copy(dialogState = AddEditNoteState.DialogState.Loading)
         }
         route.resourceType?.let { type ->
-            val result = addNoteUseCase(type, route.resourceId.toLong(), notesPayload)
+            val result = addNoteUseCase(type, route.resourceId.toLong(), createNoteRequest)
             sendAction(AddEditNoteAction.Internal.ReceiveAddNoteResult(result))
         }
     }
 
-    private fun editNote(notesPayload: NotesPayload) {
+    private fun editNote(createNoteRequest: CreateNoteRequest) {
         mutableStateFlow.update {
             it.copy(dialogState = AddEditNoteState.DialogState.Loading)
         }
@@ -113,7 +113,7 @@ class AddEditNoteViewModel(
             route.resourceType?.let { type ->
                 route.noteId?.let { id ->
                     val result =
-                        updateNoteUseCase(type, route.resourceId.toLong(), id, notesPayload)
+                        updateNoteUseCase(type, route.resourceId.toLong(), id, createNoteRequest)
                     sendAction(AddEditNoteAction.Internal.ReceiveEditNoteResult(result))
                 }
             }
@@ -179,13 +179,13 @@ class AddEditNoteViewModel(
 
             is AddEditNoteAction.AddNote -> {
                 viewModelScope.launch {
-                    addNote(action.notesPayload)
+                    addNote(action.createNoteRequest)
                 }
             }
 
             is AddEditNoteAction.EditNote -> {
                 viewModelScope.launch {
-                    editNote(action.notesPayload)
+                    editNote(action.createNoteRequest)
                 }
             }
 
@@ -205,7 +205,7 @@ class AddEditNoteViewModel(
             is AddEditNoteAction.TextFieldNotesPayload -> {
                 mutableStateFlow.update {
                     it.copy(
-                        textFieldNotesPayload = action.notesPayload,
+                        textFieldNotesPayload = action.createNoteRequest,
                     )
                 }
             }
@@ -248,7 +248,7 @@ data class AddEditNoteState(
     val addUpdateButton: StringResource = Res.string.feature_note_button_add,
     val label: StringResource = Res.string.feature_note_write_note_label,
     val title: StringResource = Res.string.feature_note_add_note,
-    val textFieldNotesPayload: NotesPayload = NotesPayload(null),
+    val textFieldNotesPayload: CreateNoteRequest = CreateNoteRequest(null),
     val notesPayloadInitialData: String? = null,
     val dialogState: DialogState? = null,
 ) {
@@ -268,18 +268,19 @@ sealed interface AddEditNoteAction {
     data object NavigateBack : AddEditNoteAction
     data object NavigateBackWithUpdateList : AddEditNoteAction
     data object OnRetry : AddEditNoteAction
-    data class AddNote(val notesPayload: NotesPayload) : AddEditNoteAction
-    data class EditNote(val notesPayload: NotesPayload) : AddEditNoteAction
+    data class AddNote(val createNoteRequest: CreateNoteRequest) : AddEditNoteAction
+    data class EditNote(val createNoteRequest: CreateNoteRequest) : AddEditNoteAction
     data object DismissDialog : AddEditNoteAction
     data object PreventAccidentalBackDialog : AddEditNoteAction
-    data class TextFieldNotesPayload(val notesPayload: NotesPayload) : AddEditNoteAction
+    data class TextFieldNotesPayload(val createNoteRequest: CreateNoteRequest) : AddEditNoteAction
 
     sealed interface Internal : AddEditNoteAction {
         data class ReceiveEditNoteResult(
-            val editNoteResult: DataState<NoteResponse>,
+            val editNoteResult: DataState<UpdateNoteResponse>,
         ) : Internal
+
         data class ReceiveAddNoteResult(
-            val addNoteResult: DataState<NoteResponse>,
+            val addNoteResult: DataState<CreateNoteResponse>,
         ) : Internal
     }
 }
