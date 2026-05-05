@@ -53,7 +53,7 @@ data class NoteDto(
  */
 @Serializable
 data class NoteTypeDto(
-    val id: Int? = null,
+    val id: Long? = null,
     val code: String? = null,
     val value: String? = null,
 )

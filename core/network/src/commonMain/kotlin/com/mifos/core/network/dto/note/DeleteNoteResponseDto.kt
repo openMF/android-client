@@ -13,5 +13,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class DeleteNoteResponseDto(
-    val resourceId: Int? = null,
+    val resourceId: Long? = null,
 )

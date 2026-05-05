@@ -13,9 +13,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UpdateNoteResponseDto(
-    val officeId: Int? = null,
-    val clientId: Int? = null,
-    val resourceId: Int? = null,
+    val officeId: Long? = null,
+    val clientId: Long? = null,
+    val resourceId: Long? = null,
     val changes: ChangesDto? = null,
 )
 
