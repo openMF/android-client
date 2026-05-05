@@ -9,11 +9,11 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.model.objects.payloads.NotesPayload
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.dto.note.CreateNoteResponseDto
 import com.mifos.core.network.dto.note.DeleteNoteResponseDto
 import com.mifos.core.network.dto.note.NoteDto
+import com.mifos.core.network.dto.note.NoteRequestDto
 import com.mifos.core.network.dto.note.UpdateNoteResponseDto
 import kotlinx.coroutines.flow.Flow
 
@@ -23,12 +23,12 @@ class DataManagerNote(
     suspend fun addNewNote(
         resourceType: String,
         resourceId: Long,
-        notesPayload: NotesPayload,
+        noteRequestDto: NoteRequestDto,
     ): CreateNoteResponseDto {
         return mBaseApiManager.noteService.addNewNote(
             resourceType,
             resourceId,
-            notesPayload,
+            noteRequestDto,
         )
     }
 
@@ -70,13 +70,13 @@ class DataManagerNote(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-        notesPayload: NotesPayload,
+        noteRequestDto: NoteRequestDto,
     ): UpdateNoteResponseDto {
         return mBaseApiManager.noteService.updateNote(
             resourceType,
             resourceId,
             noteId,
-            notesPayload,
+            noteRequestDto,
         )
     }
 }

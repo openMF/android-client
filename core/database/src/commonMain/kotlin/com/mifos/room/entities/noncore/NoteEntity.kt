@@ -9,12 +9,9 @@
  */
 package com.mifos.room.entities.noncore
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import template.core.base.database.Entity
 import template.core.base.database.PrimaryKey
 
-@Parcelize
 @Entity(
     indices = [],
     inheritSuperIndices = false,
@@ -42,4 +39,4 @@ data class NoteEntity(
     val updatedByUsername: String? = null,
 
     val updatedOn: String? = null,
-) : Parcelable
+)

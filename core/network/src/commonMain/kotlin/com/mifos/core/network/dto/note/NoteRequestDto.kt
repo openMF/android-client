@@ -12,6 +12,6 @@ package com.mifos.core.network.dto.note
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CreateNoteRequestDto(
+data class NoteRequestDto(
     val note: String? = null,
 )

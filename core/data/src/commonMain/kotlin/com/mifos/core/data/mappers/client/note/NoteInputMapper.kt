@@ -9,17 +9,9 @@
  */
 package com.mifos.core.data.mappers.client.note
 
-import com.mifos.core.model.objects.note.Note
-import com.mifos.core.network.dto.note.NoteDto
+import com.mifos.core.model.objects.note.CreateNoteInput
+import com.mifos.core.network.dto.note.NoteRequestDto
 
-fun NoteDto.toDomain(): Note = Note(
-    clientId = clientId,
-    createdById = createdById,
-    createdByUsername = createdByUsername,
-    createdOn = createdOn,
-    id = id,
+fun CreateNoteInput.toDto(): NoteRequestDto = NoteRequestDto(
     note = note,
-    updatedById = updatedById,
-    updatedByUsername = updatedByUsername,
-    updatedOn = updatedOn,
 )

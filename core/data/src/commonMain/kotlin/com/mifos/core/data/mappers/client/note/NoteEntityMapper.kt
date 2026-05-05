@@ -9,7 +9,7 @@
  */
 package com.mifos.core.data.mappers.client.note
 
-import com.mifos.core.model.objects.notes.Note
+import com.mifos.core.model.objects.note.Note
 import com.mifos.core.network.dto.note.NoteDto
 import com.mifos.room.entities.noncore.NoteEntity
 
