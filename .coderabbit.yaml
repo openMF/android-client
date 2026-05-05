@@ -171,6 +171,33 @@ reviews:
           - sahilshivekar/android-client → branch: feat/MIFOSAC-759
             URL format: https://github.com/sahilshivekar/android-client/blob/<branch>/<filepath>
           Never list bare file paths without a clickable hyperlink in cross-repo analysis responses.
+        
+        RESPONSE FORMATTING RULES (VERY IMPORTANT):
+          1. If any part of the response (such as a section, table, or suggestion block) contains:
+            - more than 1 suggestion
+            - OR more than 8 lines
+            - OR any table
+        
+          2. You MUST wrap ONLY that specific part in a collapsible markdown block:
+            <details>
+            <summary>Click to expand</summary>
+            content here
+            </details>
+        
+          3. DO NOT wrap the entire response. Only wrap the large or multi-item parts.
+        
+          4. Apply this strictly to:
+            - Suggestions
+            - Analysis sections
+            - Cross-repo tables
+            - Sync Analysis tables
+            - Long explanations
+        
+          5. ALWAYS keep a short summary OUTSIDE the collapsible block.
+        
+          6. If multiple tables exist:
+            - Each table must be in its own collapsible block
+            - Each must have a meaningful summary title
 
     - path: "**/*ViewModel.kt"
       instructions: |
@@ -263,7 +290,6 @@ reviews:
         
         2. Architecture Boundaries
         - ViewModel must not depend on specific network/library implementations
-        - Avoid exposing low-level exceptions (e.g., Ktor exceptions) to UI layer
         - Ensure proper separation between data, domain, and presentation layers
         - Do not format data (currency, dates, calculations) inside the UI layer
         - All formatting must be handled in the ViewModel and exposed via state (e.g., StateFlow)
