@@ -45,5 +45,12 @@ data class NoteDto(
     val updatedByUsername: String? = null,
 
     val updatedOn: String? = null,
+    val noteType: NoteTypeDto? = null,
+)
 
+@Serializable
+data class NoteTypeDto(
+    val id: Int? = null,
+    val code: String? = null,
+    val value: String? = null,
 )
