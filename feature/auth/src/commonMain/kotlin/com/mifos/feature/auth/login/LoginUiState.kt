@@ -23,10 +23,10 @@ sealed class LoginUiState {
 
     data class ShowError(val message: StringResource) : LoginUiState()
 
-    data class ShowValidationError(val usernameError: StringResource? = null, val passwordError: StringResource? = null) :
-        LoginUiState()
-
-    data object HomeActivityIntent : LoginUiState()
+    data class ShowValidationError(
+        val usernameError: StringResource? = null,
+        val passwordError: StringResource? = null,
+    ) : LoginUiState()
 
     data object PassCodeActivityIntent : LoginUiState()
 }

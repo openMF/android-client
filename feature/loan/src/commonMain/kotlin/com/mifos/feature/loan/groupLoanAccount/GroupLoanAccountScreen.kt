@@ -583,7 +583,7 @@ private fun GroupLoanAccountContent(
         Button(
             onClick = {
                 val loadPayload = GroupLoanPayload().apply {
-                    isAllowPartialPeriodInterestCalcualtion = selectedCalculateExactDaysIn
+                    isAllowPartialPeriodInterestCalculation = selectedCalculateExactDaysIn
                     amortizationType = selectedAmortizationId
                     this.groupId = groupId
                     dateFormat = ApiDateFormatter.DATE_FORMAT
