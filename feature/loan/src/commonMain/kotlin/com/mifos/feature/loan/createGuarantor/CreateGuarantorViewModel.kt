@@ -10,7 +10,6 @@
 package com.mifos.feature.loan.createGuarantor
 
 import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_create_guarantor_error_invalid_status
 import androidclient.feature.loan.generated.resources.feature_loan_create_guarantor_submit_success
 import androidclient.feature.loan.generated.resources.feature_loan_message_field_required
 import androidx.lifecycle.SavedStateHandle
@@ -21,7 +20,6 @@ import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.core.model.entity.accounts.loan.CreateGuarantorRequest
 import com.mifos.core.ui.util.BaseViewModel
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 
@@ -95,36 +93,19 @@ internal class CreateGuarantorViewModel(
     private fun load() {
         mutableStateFlow.value = CreateGuarantorUiState.Loading
         viewModelScope.launch {
-            when (val loanState = repository.getLoanById(route.loanId).first { it !is DataState.Loading }) {
+            when (val templateState = repository.getGuarantorTemplate(route.loanId)) {
                 is DataState.Success -> {
-                    val loan = loanState.data
-                    if (loan == null || loan.status?.waitingForDisbursal != true) {
-                        mutableStateFlow.value = CreateGuarantorUiState.Error(
-                            getString(Res.string.feature_loan_create_guarantor_error_invalid_status),
-                        )
-                        return@launch
-                    }
-
-                    when (val templateState = repository.getGuarantorTemplate(route.loanId)) {
-                        is DataState.Success -> {
-                            val template = templateState.data
-                            mutableStateFlow.value = CreateGuarantorUiState.Content(
-                                loanId = route.loanId,
-                                clientOptions = template.clientOptions,
-                                relationshipOptions = template.relationshipOptions,
-                            )
-                        }
-
-                        is DataState.Error -> {
-                            mutableStateFlow.value = CreateGuarantorUiState.Error(templateState.message)
-                        }
-
-                        DataState.Loading -> Unit
-                    }
+                    val template = templateState.data
+                    mutableStateFlow.value = CreateGuarantorUiState.Content(
+                        loanId = route.loanId,
+                        existingClient = template.clientOptions.isNotEmpty(),
+                        clientOptions = template.clientOptions,
+                        relationshipOptions = template.relationshipOptions,
+                    )
                 }
 
                 is DataState.Error -> {
-                    mutableStateFlow.value = CreateGuarantorUiState.Error(loanState.message)
+                    mutableStateFlow.value = CreateGuarantorUiState.Error(templateState.message)
                 }
 
                 DataState.Loading -> Unit

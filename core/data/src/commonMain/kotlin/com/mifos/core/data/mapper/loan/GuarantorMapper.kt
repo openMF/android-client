@@ -21,7 +21,9 @@ import com.mifos.core.network.model.guarantor.GuarantorTemplateDto
 fun GuarantorTemplateDto.toModel(): GuarantorTemplate =
     GuarantorTemplate(
         clientOptions = clientOptions.map { it.toModel() },
-        relationshipOptions = relationshipOptions.map { it.toModel() },
+        relationshipOptions = (relationshipOptions + allowedClientRelationshipTypes)
+            .distinctBy { it.id }
+            .map { it.toModel() },
     )
 
 fun GuarantorClientOptionDto.toModel(): GuarantorClientOption =
@@ -33,7 +35,7 @@ fun GuarantorClientOptionDto.toModel(): GuarantorClientOption =
 fun GuarantorRelationshipOptionDto.toModel(): GuarantorRelationshipOption =
     GuarantorRelationshipOption(
         id = id,
-        value = value.orEmpty(),
+        value = value.orEmpty().ifBlank { name.orEmpty() },
     )
 
 fun CreateGuarantorRequest.toDto(): CreateGuarantorRequestDto =

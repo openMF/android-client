@@ -97,6 +97,7 @@ fun NavGraphBuilder.loanDestination(
         navigateToNotes = { loanId ->
             onNotesClicked(loanId, Constants.ENTITY_TYPE_LOANS)
         },
+        navigateToCreateGuarantor = navController::navigateToCreateGuarantorScreen,
         navigateToDocuments = { loanId ->
             onDocumentsClicked(loanId, Constants.ENTITY_TYPE_LOANS)
         },

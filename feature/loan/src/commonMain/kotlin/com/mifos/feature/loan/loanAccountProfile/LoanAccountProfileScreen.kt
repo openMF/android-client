@@ -85,6 +85,7 @@ internal fun LoanAccountProfileScreen(
     navigateToDocuments: (Int) -> Unit,
     navigateToReschedules: (Int) -> Unit,
     navigateToNotes: (Int) -> Unit,
+    navigateToCreateGuarantor: (Int) -> Unit,
     navigateToTransferScreen: (loanId: Int, accountNumber: String, clientId: Int, currencyCode: String, officeId: Int) -> Unit,
     navController: NavController,
     modifier: Modifier = Modifier,
@@ -123,6 +124,7 @@ internal fun LoanAccountProfileScreen(
                     LoanAccountProfileActionItem.Documents -> navigateToDocuments(loanId)
                     LoanAccountProfileActionItem.Reschedules -> navigateToReschedules(loanId)
                     LoanAccountProfileActionItem.Notes -> navigateToNotes(loanId)
+                    LoanAccountProfileActionItem.Originators -> navigateToCreateGuarantor(loanId)
                     else -> { }
                 }
             }

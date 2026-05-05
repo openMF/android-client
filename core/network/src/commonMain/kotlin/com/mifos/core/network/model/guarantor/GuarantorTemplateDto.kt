@@ -9,12 +9,15 @@
  */
 package com.mifos.core.network.model.guarantor
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class GuarantorTemplateDto(
     val clientOptions: List<GuarantorClientOptionDto> = emptyList(),
     val relationshipOptions: List<GuarantorRelationshipOptionDto> = emptyList(),
+    @SerialName("allowedClientRelationshipTypes")
+    val allowedClientRelationshipTypes: List<GuarantorRelationshipOptionDto> = emptyList(),
 )
 
 @Serializable
@@ -28,4 +31,5 @@ data class GuarantorClientOptionDto(
 data class GuarantorRelationshipOptionDto(
     val id: Int,
     val value: String? = null,
+    val name: String? = null,
 )

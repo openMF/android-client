@@ -17,7 +17,6 @@ import androidclient.feature.loan.generated.resources.feature_loan_arrears
 import androidclient.feature.loan.generated.resources.feature_loan_balance
 import androidclient.feature.loan.generated.resources.feature_loan_closed
 import androidclient.feature.loan.generated.resources.feature_loan_copy
-import androidclient.feature.loan.generated.resources.feature_loan_create_guarantor
 import androidclient.feature.loan.generated.resources.feature_loan_date
 import androidclient.feature.loan.generated.resources.feature_loan_disburse_loan
 import androidclient.feature.loan.generated.resources.feature_loan_disbursed_date
@@ -703,18 +702,6 @@ private fun LoanSummaryDropdown(
                 onAction(LoanAccountSummaryAction.DropdownAction(LoanSummaryDropDownAction.OnChargesClick))
             },
         )
-        if (state.loanWithAssociations?.status?.waitingForDisbursal == true) {
-            MifosMenuDropDownItem(
-                option = stringResource(Res.string.feature_loan_create_guarantor),
-                onClick = {
-                    onAction(
-                        LoanAccountSummaryAction.DropdownAction(
-                            LoanSummaryDropDownAction.OnCreateGuarantorClick,
-                        ),
-                    )
-                },
-            )
-        }
     }
 }
 
