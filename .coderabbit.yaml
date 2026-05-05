@@ -98,6 +98,7 @@ reviews:
   profile: "chill"
   high_level_summary: false
   review_status: true
+  review_details: true
   commit_status: true
   collapse_walkthrough: false
 
