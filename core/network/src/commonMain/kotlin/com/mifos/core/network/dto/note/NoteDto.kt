@@ -12,42 +12,45 @@ package com.mifos.core.network.dto.note
 import kotlinx.serialization.Serializable
 
 /**
- * GetResourceTypeResourceIdNotesNoteIdResponse
+ * Data Transfer Object (DTO) representing a Note returned by the API.
  *
- * @param clientId
- * @param createdById
- * @param createdByUsername
- * @param createdOn
- * @param id
- * @param note
- * @param updatedById
- * @param updatedByUsername
- * @param updatedOn
+ * This model is used in the network layer to deserialize note-related responses.
+ * It may represent a single note or be part of a list of notes.
+ *
+ * @property id
+ * @property clientId
+ * @property note
+ * @property noteType
+ * @property createdById
+ * @property createdByUsername
+ * @property createdOn
+ * @property updatedById
+ * @property updatedByUsername
+ * @property updatedOn
  */
-
 @Serializable
 data class NoteDto(
-
     val clientId: Long? = null,
-
     val createdById: Long? = null,
-
     val createdByUsername: String? = null,
-
     val createdOn: String? = null,
-
     val id: Long? = null,
-
     val note: String? = null,
-
     val updatedById: Long? = null,
-
     val updatedByUsername: String? = null,
-
     val updatedOn: String? = null,
     val noteType: NoteTypeDto? = null,
 )
 
+/**
+ * DTO representing the type/category of a Note.
+ *
+ * Typically nested inside [NoteDto] and provides metadata about the note type.
+ *
+ * @property id
+ * @property code
+ * @property value
+ */
 @Serializable
 data class NoteTypeDto(
     val id: Int? = null,
