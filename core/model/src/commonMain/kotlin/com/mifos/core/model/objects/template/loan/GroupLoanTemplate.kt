@@ -63,7 +63,7 @@ data class GroupLoanTemplate(
 
     var interestCalculationPeriodType: InterestCalculationPeriodType? = null,
 
-    var allowPartialPeriodInterestCalcualtion: Boolean? = null,
+    var allowPartialPeriodInterestCalculation: Boolean? = null,
 
     var transactionProcessingStrategyId: Int? = null,
 
