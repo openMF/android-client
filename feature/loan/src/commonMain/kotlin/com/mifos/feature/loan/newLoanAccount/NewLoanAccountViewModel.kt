@@ -97,6 +97,8 @@ internal class NewLoanAccountViewModel(
 
             is NewLoanAccountAction.Finish -> handleFinish()
 
+            is NewLoanAccountAction.LoanCreated -> handleLoanCreated()
+
             is NewLoanAccountAction.OnStepChange -> handleStepChange(action)
 
             is NewLoanAccountAction.OnProductNameChange -> handleProductNameChange(action)
@@ -702,6 +704,10 @@ internal class NewLoanAccountViewModel(
         sendEvent(NewLoanAccountEvent.Finish)
     }
 
+    private fun handleLoanCreated() {
+        sendEvent(NewLoanAccountEvent.NavigateToLoanList(state.clientId))
+    }
+
     private fun handleStepChange(action: NewLoanAccountAction.OnStepChange) {
         mutableStateFlow.update {
             it.copy(
@@ -1122,6 +1128,7 @@ constructor(
 sealed interface NewLoanAccountEvent {
     data object NavigateBack : NewLoanAccountEvent
     data object Finish : NewLoanAccountEvent
+    data class NavigateToLoanList(val clientId: Int) : NewLoanAccountEvent
 }
 
 sealed interface NewLoanAccountAction {
@@ -1130,6 +1137,7 @@ sealed interface NewLoanAccountAction {
     data object PreviousStep : NewLoanAccountAction
     data object NextStep : NewLoanAccountAction
     data object Finish : NewLoanAccountAction
+    data object LoanCreated : NewLoanAccountAction
     data class OnStepChange(val newIndex: Int) : NewLoanAccountAction
     data class OnProductNameChange(val index: Int) : NewLoanAccountAction
     data class OnExternalIdChange(val value: String) : NewLoanAccountAction

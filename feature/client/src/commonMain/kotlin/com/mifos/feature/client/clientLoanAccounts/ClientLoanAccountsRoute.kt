@@ -12,6 +12,7 @@ package com.mifos.feature.client.clientLoanAccounts
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.mifos.feature.loan.newLoanAccount.NewLoanAccountRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -41,4 +42,17 @@ fun NavController.navigateToClientLoanAccountsRoute(
     clientId: Int,
 ) {
     this.navigate(ClientLoanAccountsRoute(clientId = clientId))
+}
+
+fun NavController.navigateToClientLoanAccountsAfterCreation(clientId: Int) {
+    // Drop any existing loan-list entry for this client so the destination
+    // recreates and its ViewModel reloads with the newly created loan.
+    popBackStack(
+        route = ClientLoanAccountsRoute(clientId = clientId),
+        inclusive = true,
+    )
+    navigate(ClientLoanAccountsRoute(clientId = clientId)) {
+        popUpTo<NewLoanAccountRoute> { inclusive = true }
+        launchSingleTop = true
+    }
 }

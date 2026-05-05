@@ -55,6 +55,7 @@ import com.mifos.feature.client.clientIdentifiersList.clientIdentifiersListDesti
 import com.mifos.feature.client.clientIdentifiersList.navigateBackToUpdateClientIdentifiersListScreen
 import com.mifos.feature.client.clientIdentifiersList.navigateToClientIdentifiersListScreen
 import com.mifos.feature.client.clientLoanAccounts.clientLoanAccountsDestination
+import com.mifos.feature.client.clientLoanAccounts.navigateToClientLoanAccountsAfterCreation
 import com.mifos.feature.client.clientLoanAccounts.navigateToClientLoanAccountsRoute
 import com.mifos.feature.client.clientPinpoint.PinpointClientScreen
 import com.mifos.feature.client.clientProfile.clientProfileDestination
@@ -376,6 +377,7 @@ fun NavGraphBuilder.clientNavGraph(
             onMoreInfoClicked = onMoreInfoClicked,
             onDocumentsClicked = navController::navigateToDocumentListScreen,
             onNotesClicked = navController::navigateToNoteScreen,
+            onLoanCreated = navController::navigateToClientLoanAccountsAfterCreation,
         )
 
         dataTableRoute(
