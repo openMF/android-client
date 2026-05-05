@@ -19,7 +19,6 @@ import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.auth.Auth
 import org.koin.dsl.module
-import kotlin.coroutines.EmptyCoroutineContext.get
 
 val NetworkModule = module {
     single<HttpClient>(KtorClient) {

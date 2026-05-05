@@ -9,10 +9,12 @@
  */
 package com.mifos.core.network.datamanager
 
-import com.mifos.core.model.objects.notes.Note
-import com.mifos.core.model.objects.payloads.NotesPayload
 import com.mifos.core.network.BaseApiManager
-import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.dto.note.CreateNoteResponseDto
+import com.mifos.core.network.dto.note.DeleteNoteResponseDto
+import com.mifos.core.network.dto.note.NoteDto
+import com.mifos.core.network.dto.note.NoteRequestDto
+import com.mifos.core.network.dto.note.UpdateNoteResponseDto
 import kotlinx.coroutines.flow.Flow
 
 class DataManagerNote(
@@ -21,12 +23,12 @@ class DataManagerNote(
     suspend fun addNewNote(
         resourceType: String,
         resourceId: Long,
-        notesPayload: NotesPayload,
-    ): GenericResponse {
+        noteRequestDto: NoteRequestDto,
+    ): CreateNoteResponseDto {
         return mBaseApiManager.noteService.addNewNote(
             resourceType,
             resourceId,
-            notesPayload,
+            noteRequestDto,
         )
     }
 
@@ -34,7 +36,7 @@ class DataManagerNote(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-    ): GenericResponse {
+    ): DeleteNoteResponseDto {
         return mBaseApiManager.noteService.deleteNote(
             resourceType,
             resourceId,
@@ -46,7 +48,7 @@ class DataManagerNote(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-    ): Flow<Note> {
+    ): Flow<NoteDto> {
         return mBaseApiManager.noteService.retrieveNote(
             resourceType,
             resourceId,
@@ -57,7 +59,7 @@ class DataManagerNote(
     fun retrieveListNotes(
         resourceType: String,
         resourceId: Long,
-    ): Flow<List<Note>> {
+    ): Flow<List<NoteDto>> {
         return mBaseApiManager.noteService.retrieveListNotes(
             resourceType,
             resourceId,
@@ -68,13 +70,13 @@ class DataManagerNote(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-        notesPayload: NotesPayload,
-    ): GenericResponse {
+        noteRequestDto: NoteRequestDto,
+    ): UpdateNoteResponseDto {
         return mBaseApiManager.noteService.updateNote(
             resourceType,
             resourceId,
             noteId,
-            notesPayload,
+            noteRequestDto,
         )
     }
 }
