@@ -29,6 +29,7 @@ kotlin {
             implementation(projects.core.datastore)
             implementation(projects.core.database)
             implementation(projects.core.network)
+            implementation(projects.coreBase.common)
 
             implementation(projects.feature.about)
             implementation(projects.feature.activate)
