@@ -109,6 +109,10 @@ class NoteViewModel(
                         dialogState = null,
                     )
                 }
+
+                viewModelScope.launch {
+                    loadNote()
+                }
             }
 
             else -> Unit

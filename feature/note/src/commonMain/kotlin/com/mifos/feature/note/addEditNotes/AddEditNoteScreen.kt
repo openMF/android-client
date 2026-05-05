@@ -167,13 +167,11 @@ private fun AddEditNote(
             verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.md),
         ) {
             MifosOutlinedTextField(
-                value = state.textFieldNotesPayload.note ?: "",
+                value = state.textFieldNotesPayload ?: "",
                 onValueChange = {
                     onAction(
                         AddEditNoteAction.TextFieldNotesPayload(
-                            state.textFieldNotesPayload.copy(
-                                note = it,
-                            ),
+                            it,
                         ),
                     )
                 },

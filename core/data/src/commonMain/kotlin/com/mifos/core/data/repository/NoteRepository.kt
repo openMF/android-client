@@ -12,6 +12,7 @@ package com.mifos.core.data.repository
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.note.CreateNoteInput
 import com.mifos.core.model.objects.note.Note
+import com.mifos.core.model.objects.note.UpdateNoteInput
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -46,6 +47,6 @@ interface NoteRepository {
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-        createNoteInput: CreateNoteInput,
+        updateNoteInput: UpdateNoteInput,
     ): DataState<Unit>
 }
