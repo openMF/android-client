@@ -60,9 +60,9 @@ class CloseLoanViewModel(
     }
 
     /**
-     * Processes user-originated actions and updates the UI state or sends events accordingly.
+     * Processes incoming user actions and updates the state or sends events.
      *
-     * @param action The [CloseLoanAction] to handle.
+     * @param action The user-initiated action.
      */
     override fun handleAction(action: CloseLoanAction) {
         when (action) {
@@ -88,10 +88,10 @@ class CloseLoanViewModel(
     }
 
     /**
-     * Fetches the close-loan template and the current loan details.
+     * Loads the close-loan template and current loan details.
      *
-     * The template provides metadata for the closure, while the loan details are used to
-     * determine the disbursement date, which serves as the minimum selectable closure date.
+     * The template provides closure metadata, while the loan details are used to
+     * determine the disbursement date as the lower bound for closure.
      */
     private fun loadTemplate() {
         viewModelScope.launch {
@@ -136,10 +136,9 @@ class CloseLoanViewModel(
     }
 
     /**
-     * Submits the close-loan request to the backend.
+     * Submits the close-loan request.
      *
-     * Validates that a date is selected, then invokes the [closeLoanUseCase].
-     * On success, emits [CloseLoanEvent.CloseSuccess].
+     * Formats the selected date and note into a [CloseLoanRequest] and invokes the use case.
      */
     private fun submitClose() {
         val closedOnMillis = state.closedOnDateMillis ?: return

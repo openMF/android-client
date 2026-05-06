@@ -12,15 +12,15 @@ package com.mifos.feature.loan.closeLoanAccount
 import org.jetbrains.compose.resources.StringResource
 
 /**
- * UI state for the Close Loan Account screen.
+ * Represents the UI state for the Close Loan Account screen.
  *
- * @property isTemplateLoading True if the initial template or loan data is being fetched.
- * @property loadError The error resource to display if the initial fetch fails.
- * @property closedOnDateMillis The selected close date in milliseconds, or null if none is picked.
- * @property disbursementDateMillis The loan's disbursement date, used as the minimum selectable date.
- * @property note The user-provided note for the closing transaction.
- * @property showDatePicker True if the date picker dialog should be visible.
- * @property dialogState The state of any modal dialog currently displayed (Submitting, Error, or null).
+ * @property isTemplateLoading Whether the screen is currently fetching the close template or loan details.
+ * @property loadError The error message resource if the initial data load fails.
+ * @property closedOnDateMillis The selected closure date in milliseconds. Starts as null.
+ * @property disbursementDateMillis The loan's actual disbursement date, used as the minimum selectable date.
+ * @property note The user-provided note for the loan closure.
+ * @property showDatePicker Whether the date picker dialog is currently visible.
+ * @property dialogState The state of the overlay dialog (Submitting, Error, or null).
  */
 data class CloseLoanState(
     val isTemplateLoading: Boolean = true,
@@ -37,60 +37,82 @@ data class CloseLoanState(
     val isSubmitEnabled: Boolean
         get() = closedOnDateMillis != null && dialogState !is DialogState.Submitting
 
-    /** Modal dialog state overlaid on top of the form. */
+    /**
+     * Represents the state of the overlay modal dialog.
+     */
     sealed interface DialogState {
-        /** Shown while the close request is in flight. */
+        /**
+         * State indicating that the close request is being submitted to the server.
+         */
         data object Submitting : DialogState
 
         /**
-         * Shown when the close request failed; dismissable so the user can retry.
+         * State indicating that the submission failed.
          *
-         * @property message The error message resource to display.
+         * @property message The error message to display in the dialog.
          */
         data class Error(val message: StringResource) : DialogState
     }
 }
 
-/** One-shot events emitted by [CloseLoanViewModel] to the screen. */
+/**
+ * Events sent from the ViewModel to the UI for one-time actions.
+ */
 sealed interface CloseLoanEvent {
-    /** Loan was closed successfully — screen should show success feedback and pop. */
+    /**
+     * Triggered when the loan account is closed successfully.
+     */
     data object CloseSuccess : CloseLoanEvent
 
-    /** Navigate back/cancel without closing the loan. */
+    /**
+     * Triggered when the user chooses to navigate back without closing.
+     */
     data object NavigateBack : CloseLoanEvent
 }
 
-/** User-originated actions handled by [CloseLoanViewModel]. */
+/**
+ * Actions originating from the UI to be handled by the ViewModel.
+ */
 sealed interface CloseLoanAction {
     /**
-     * User picked a new `Closed On` date in the date picker.
-     *
-     * @property millis The selected date in milliseconds.
+     * Dispatched when the user selects a date in the date picker.
+     * @property millis The selected timestamp.
      */
     data class OnDateChange(val millis: Long) : CloseLoanAction
 
     /**
-     * User typed into the note field.
-     *
+     * Dispatched when the user updates the note text field.
      * @property note The new note content.
      */
     data class OnNoteChange(val note: String) : CloseLoanAction
 
-    /** User tapped the `Closed On` field to open the date picker. */
+    /**
+     * Dispatched to show the date picker dialog.
+     */
     data object OnShowDatePicker : CloseLoanAction
 
-    /** User dismissed the date picker without confirming. */
+    /**
+     * Dispatched to hide the date picker dialog.
+     */
     data object OnHideDatePicker : CloseLoanAction
 
-    /** User tapped the Submit button. */
+    /**
+     * Dispatched when the user taps the Submit button.
+     */
     data object OnSubmit : CloseLoanAction
 
-    /** User dismissed the error dialog. */
+    /**
+     * Dispatched to dismiss the error dialog.
+     */
     data object OnDismissError : CloseLoanAction
 
-    /** User tapped retry after the initial template/loan load failed. */
+    /**
+     * Dispatched to retry loading the template data.
+     */
     data object OnRetryLoadTemplate : CloseLoanAction
 
-    /** User tapped back/cancel. */
+    /**
+     * Dispatched to navigate back.
+     */
     data object NavigateBack : CloseLoanAction
 }

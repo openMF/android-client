@@ -236,7 +236,7 @@ private fun CloseLoanContent(
 }
 
 /**
- * Displays modal dialogs for submission status and errors.
+ * Manages the display of overlay dialogs like the loading spinner and error dialog.
  *
  * @param state The current UI state.
  * @param onDismissError Callback to dismiss the error dialog.
