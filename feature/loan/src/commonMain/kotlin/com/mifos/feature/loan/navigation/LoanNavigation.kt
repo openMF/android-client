@@ -17,6 +17,8 @@ import androidx.navigation.navArgument
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.loan.amountTransfer.amountTransferScreen
 import com.mifos.feature.loan.amountTransfer.navigateToTransferScreen
+import com.mifos.feature.loan.closeLoanAccount.closeLoanAccountScreen
+import com.mifos.feature.loan.closeLoanAccount.navigateToCloseLoanScreen
 import com.mifos.feature.loan.createLoanReschedules.loanRescheduleFormScreen
 import com.mifos.feature.loan.loanAccountProfile.loanProfileAccountDestination
 import com.mifos.feature.loan.loanAccountSummary.loanAccountSummary
@@ -95,6 +97,7 @@ fun NavGraphBuilder.loanDestination(
         },
         navigateToTransferScreen = navController::navigateToTransferScreen,
         navigateToReschedules = navController::navigateToLoanReschedulesScreen,
+        navigateToCloseLoan = navController::navigateToCloseLoanScreen,
     )
 
     amountTransferScreen(
@@ -108,6 +111,10 @@ fun NavGraphBuilder.loanDestination(
     )
 
     loanRescheduleFormScreen(
+        navController = navController,
+        onBackPressed = navController::popBackStack,
+    )
+    closeLoanAccountScreen(
         navController = navController,
         onBackPressed = navController::popBackStack,
     )

@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.core.data.util.NetworkMonitor
@@ -38,6 +39,17 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 
+/**
+ * ViewModel for the Loan Account Profile screen.
+ *
+ * This ViewModel manages the loading and display of a loan's summary and its associations.
+ * It also handles navigation to various loan actions (Approve, Repayment, Transfer, etc.)
+ * and observes network status to show error states.
+ *
+ * @property savedStateHandle Handle to saved state for this ViewModel.
+ * @property networkMonitor Utility to observe network connectivity.
+ * @property loanRepository Repository to fetch loan account summary details.
+ */
 internal class LoanAccountProfileViewModel(
     savedStateHandle: SavedStateHandle,
     private val networkMonitor: NetworkMonitor,
@@ -53,6 +65,13 @@ internal class LoanAccountProfileViewModel(
         observeNetworkAndLoad()
     }
 
+    /**
+     * Observes the network connectivity and navigation results.
+     *
+     * Triggers a data load when the device comes online if data is missing.
+     * Also observes [Constants.LOAN_CLOSED] from [SavedStateHandle] to refresh the profile
+     * after a successful loan closure.
+     */
     private fun observeNetworkAndLoad() {
         viewModelScope.launch {
             networkMonitor.isOnline.collect { isConnected ->
@@ -68,8 +87,23 @@ internal class LoanAccountProfileViewModel(
                 }
             }
         }
+
+        viewModelScope.launch {
+            savedStateHandle.getStateFlow(Constants.LOAN_CLOSED, false)
+                .collect { isClosed ->
+                    if (isClosed) {
+                        loadLoanAccountDetails(route.loanId)
+                        savedStateHandle[Constants.LOAN_CLOSED] = false
+                    }
+                }
+        }
     }
 
+    /**
+     * Loads the loan account details from the repository.
+     *
+     * @param loanId The unique identifier of the loan account.
+     */
     private fun loadLoanAccountDetails(loanId: Int) {
         loadJob?.cancel()
         loadJob = viewModelScope.launch {
@@ -139,6 +173,7 @@ internal class LoanAccountProfileViewModel(
                     it.copy(dialogState = LoanAccountState.DialogState.Error(Res.string.feature_loan_profile_error_details_not_found))
                 }
             }
+            LoanAccountAction.OnRefresh -> loadLoanAccountDetails(route.loanId)
             LoanAccountAction.OnNextActionClick -> handleNextAction()
             is LoanAccountAction.OnDetailItemClick -> sendEvent(LoanAccountEvent.NavigateToDetail(action.item))
             LoanAccountAction.OnAccountClick -> sendEvent(LoanAccountEvent.NavigateToAccountDetails)
@@ -167,13 +202,29 @@ internal class LoanAccountProfileViewModel(
     }
 }
 
+/**
+ * Represents the status of a loan in the profile context.
+ */
 enum class LoanProfileStatus {
+    /** The loan is active and current. */
     ACTIVE,
+    /** The loan is awaiting approval. */
     PENDING,
+    /** The loan has been overpaid. */
     OVERPAID,
+    /** The status is unknown or unsupported. */
     UNKNOWN,
 }
 
+/**
+ * UI state for the Loan Account Profile screen.
+ *
+ * @property loanAccount The loan account details, or null if not yet loaded.
+ * @property dialogState Current modal dialog state (Loading, Error, or null).
+ * @property networkConnection True if the device has an active network connection.
+ * @property statusUiModel Visual representation of the loan status (label and color).
+ * @property nextActionButtonRes The string resource for the primary action button.
+ */
 data class LoanAccountState(
     val loanAccount: LoanWithAssociationsEntity? = null,
     val dialogState: DialogState? = null,
@@ -181,34 +232,67 @@ data class LoanAccountState(
     val statusUiModel: LoanStatusUiModel? = null,
     val nextActionButtonRes: StringResource = Res.string.feature_loan_profile_action_view,
 ) {
+    /**
+     * Dialog states for the profile screen.
+     */
     sealed interface DialogState {
+        /**
+         * Error state with a displayable message.
+         * @property message The error message resource.
+         */
         data class Error(val message: StringResource) : DialogState
+
+        /** Loading state shown during initial fetch. */
         data object Loading : DialogState
     }
 }
 
+/**
+ * UI model for the loan status badge.
+ * @property labelRes The string resource for the status label.
+ * @property color The color to use for the status badge.
+ */
 data class LoanStatusUiModel(
     val labelRes: StringResource,
     val color: Color,
 )
 
+/** Actions that can be performed on a loan profile. */
 sealed interface LoanProfileAction {
+    /** Approve a pending loan application. */
     data object Approve : LoanProfileAction
+    /** Make a repayment. */
     data object Repayment : LoanProfileAction
+    /** Perform an account transfer. */
     data object Transfer : LoanProfileAction
+    /** Close an active loan. */
+    data object CloseLoan : LoanProfileAction
 }
 
+/** Events emitted by the [LoanAccountProfileViewModel]. */
 sealed interface LoanAccountEvent {
+    /** Navigate back to the previous screen. */
     data object NavigateBack : LoanAccountEvent
+    /** Navigate to a specific loan action screen. @property action The action to perform. */
     data class NavigateToAction(val action: LoanProfileAction) : LoanAccountEvent
+    /** Navigate to a detail sub-screen. @property detailItem The detail item to show. */
     data class NavigateToDetail(val detailItem: LoanAccountProfileActionItem) : LoanAccountEvent
+    /** Navigate to the full account details screen. */
     data object NavigateToAccountDetails : LoanAccountEvent
 }
 
+/** User actions handled by the [LoanAccountProfileViewModel]. */
 sealed interface LoanAccountAction {
+    /** User tapped back. */
     data object NavigateBack : LoanAccountAction
+    /** User tapped retry on an error state. */
     data object OnRetry : LoanAccountAction
+    /** Programmatic or user-triggered refresh of data. */
+    data object OnRefresh : LoanAccountAction
+    /** User tapped the primary "Next Action" button. */
     data object OnNextActionClick : LoanAccountAction
+    /** User tapped a detail item (Transactions, Charges, etc.). @property item The item tapped. */
     data class OnDetailItemClick(val item: LoanAccountProfileActionItem) : LoanAccountAction
+    /** User tapped the loan account card for more details. */
     data object OnAccountClick : LoanAccountAction
 }

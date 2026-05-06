@@ -24,6 +24,7 @@ import com.mifos.core.data.repository.ClientDetailsEditRepository
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.data.repository.ClientListRepository
+import com.mifos.core.data.repository.CloseLoanRepository
 import com.mifos.core.data.repository.CreateNewCenterRepository
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.data.repository.CreateNewGroupRepository
@@ -93,6 +94,7 @@ import com.mifos.core.data.repositoryImp.ClientDetailsEditRepositoryImpl
 import com.mifos.core.data.repositoryImp.ClientDetailsRepositoryImp
 import com.mifos.core.data.repositoryImp.ClientIdentifiersRepositoryImp
 import com.mifos.core.data.repositoryImp.ClientListRepositoryImp
+import com.mifos.core.data.repositoryImp.CloseLoanRepositoryImp
 import com.mifos.core.data.repositoryImp.CreateNewCenterRepositoryImp
 import com.mifos.core.data.repositoryImp.CreateNewClientRepositoryImp
 import com.mifos.core.data.repositoryImp.CreateNewGroupRepositoryImp
@@ -193,6 +195,7 @@ val RepositoryModule = module {
     singleOf(::LoanAccountSummaryRepositoryImp) bind LoanAccountSummaryRepository::class
     singleOf(::LoanChargeFormRepositoryImp) bind LoanChargeFormRepository::class
     singleOf(::LoanChargeRepositoryImp) bind LoanChargeRepository::class
+    singleOf(::CloseLoanRepositoryImp) bind CloseLoanRepository::class
     singleOf(::LoanRepaymentRepositoryImp) bind LoanRepaymentRepository::class
     singleOf(::LoanRepaymentScheduleRepositoryImp) bind LoanRepaymentScheduleRepository::class
     singleOf(::LoanTransactionsRepositoryImp) bind LoanTransactionsRepository::class

@@ -239,4 +239,5 @@ object Constants {
     const val POSTAL_CODE = "postalCode"
     const val STATUS = "status"
     const val DOCUMENT_KEY = "documentKey"
+    const val LOAN_CLOSED = "loanClosed"
 }

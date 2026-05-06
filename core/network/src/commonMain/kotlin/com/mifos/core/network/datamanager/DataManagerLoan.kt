@@ -412,4 +412,18 @@ class DataManagerLoan(
             throw IllegalStateException(extractErrorMessage(response))
         }
     }
+
+    /**
+     * Closes an active loan account via the network.
+     *
+     * @param loanId The ID of the loan to close.
+     * @param request The request body containing closure date and notes.
+     * @return A [Flow] of [GenericResponse].
+     */
+    fun closeLoanAccount(
+        loanId: Int,
+        request: CloseLoanRequest,
+    ): Flow<GenericResponse> {
+        return mBaseApiManager.loanService.closeLoanAccount(loanId, request)
+    }
 }
