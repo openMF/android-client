@@ -58,84 +58,65 @@ import org.jetbrains.compose.resources.StringResource
 import androidclient.core.ui.generated.resources.Res as UiRes
 import androidclient.feature.loan.generated.resources.Res as LoanRes
 
-/**
- * Represents an action item in the loan account profile.
- *
- * Each item contains a title, subtitle, and icon used to display it in a list.
- *
- * @property title The string resource for the item's title.
- * @property subTitle The string resource for the item's subtitle.
- * @property icon The drawable resource for the item's icon.
- */
 sealed class LoanAccountProfileActionItem(
     val title: StringResource,
     val subTitle: StringResource,
     val icon: DrawableResource,
 ) {
-    /** General information about the loan. */
     data object General : LoanAccountProfileActionItem(
         title = LoanRes.string.feature_loan_profile_item_general_title,
         subTitle = LoanRes.string.feature_loan_profile_item_general_subtitle,
         icon = UiRes.drawable.design_services,
     )
 
-    /** Loan performance dashboard. */
     data object Dashboard : LoanAccountProfileActionItem(
         title = LoanRes.string.feature_loan_profile_item_dashboard_title,
         subTitle = LoanRes.string.feature_loan_profile_item_dashboard_subtitle,
         icon = UiRes.drawable.dashboard,
     )
 
-    /** Basic account details. */
     data object AccountDetails : LoanAccountProfileActionItem(
         title = LoanRes.string.feature_loan_profile_item_account_details_title,
         subTitle = LoanRes.string.feature_loan_profile_item_account_details_subtitle,
         icon = UiRes.drawable.account_details,
     )
 
-    /** Detailed repayment schedule. */
     data object RepaymentSchedule : LoanAccountProfileActionItem(
         title = LoanRes.string.feature_loan_profile_item_repayment_schedule_title,
         subTitle = LoanRes.string.feature_loan_profile_item_repayment_schedule_subtitle,
         icon = UiRes.drawable.repayment_schedule,
     )
 
-    /** List of all transactions related to this loan. */
     data object Transactions : LoanAccountProfileActionItem(
         title = LoanRes.string.feature_loan_profile_item_transactions_title,
         subTitle = LoanRes.string.feature_loan_profile_item_transactions_subtitle,
         icon = UiRes.drawable.transaction,
     )
 
-    /** Charges applied to the loan. */
     data object Charges : LoanAccountProfileActionItem(
         title = LoanRes.string.feature_loan_profile_item_charges_title,
         subTitle = LoanRes.string.feature_loan_profile_item_charges_subtitle,
         icon = UiRes.drawable.charges,
     )
 
-    /** Loan originators information. */
     data object Originators : LoanAccountProfileActionItem(
         title = LoanRes.string.feature_loan_profile_item_originators_title,
         subTitle = LoanRes.string.feature_loan_profile_item_originators_subtitle,
         icon = UiRes.drawable.originators,
     )
 
-    /** Collateral associated with the loan. */
     data object Collateral : LoanAccountProfileActionItem(
         title = LoanRes.string.feature_loan_profile_item_collateral_title,
         subTitle = LoanRes.string.feature_loan_profile_item_collateral_subtitle,
         icon = UiRes.drawable.collateral,
     )
 
-    /** Terms and conditions variations. */
     data object TermVariations : LoanAccountProfileActionItem(
         title = LoanRes.string.feature_loan_profile_item_term_variations_title,
         subTitle = LoanRes.string.feature_loan_profile_item_term_variations_subtitle,
         icon = UiRes.drawable.term_variations,
     )
 
-    /** Loan rescheduling history. */
     data object Reschedules : LoanAccountProfileActionItem(
         title = LoanRes.string.feature_loan_profile_item_reschedules_title,
         subTitle = LoanRes.string.feature_loan_profile_item_reschedules_subtitle,
@@ -149,7 +130,6 @@ sealed class LoanAccountProfileActionItem(
         icon = UiRes.drawable.documents,
     )
 
-    /** Internal notes for the loan account. */
     data object Notes : LoanAccountProfileActionItem(
         title = LoanRes.string.feature_loan_profile_item_notes_title,
         subTitle = LoanRes.string.feature_loan_profile_item_notes_subtitle,
