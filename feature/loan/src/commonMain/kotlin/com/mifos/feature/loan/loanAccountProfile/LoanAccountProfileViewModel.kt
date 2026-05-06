@@ -208,10 +208,13 @@ internal class LoanAccountProfileViewModel(
 enum class LoanProfileStatus {
     /** The loan is active and current. */
     ACTIVE,
+
     /** The loan is awaiting approval. */
     PENDING,
+
     /** The loan has been overpaid. */
     OVERPAID,
+
     /** The status is unknown or unsupported. */
     UNKNOWN,
 }
@@ -261,10 +264,13 @@ data class LoanStatusUiModel(
 sealed interface LoanProfileAction {
     /** Approve a pending loan application. */
     data object Approve : LoanProfileAction
+
     /** Make a repayment. */
     data object Repayment : LoanProfileAction
+
     /** Perform an account transfer. */
     data object Transfer : LoanProfileAction
+
     /** Close an active loan. */
     data object CloseLoan : LoanProfileAction
 }
@@ -273,10 +279,13 @@ sealed interface LoanProfileAction {
 sealed interface LoanAccountEvent {
     /** Navigate back to the previous screen. */
     data object NavigateBack : LoanAccountEvent
+
     /** Navigate to a specific loan action screen. @property action The action to perform. */
     data class NavigateToAction(val action: LoanProfileAction) : LoanAccountEvent
+
     /** Navigate to a detail sub-screen. @property detailItem The detail item to show. */
     data class NavigateToDetail(val detailItem: LoanAccountProfileActionItem) : LoanAccountEvent
+
     /** Navigate to the full account details screen. */
     data object NavigateToAccountDetails : LoanAccountEvent
 }
@@ -285,14 +294,19 @@ sealed interface LoanAccountEvent {
 sealed interface LoanAccountAction {
     /** User tapped back. */
     data object NavigateBack : LoanAccountAction
+
     /** User tapped retry on an error state. */
     data object OnRetry : LoanAccountAction
+
     /** Programmatic or user-triggered refresh of data. */
     data object OnRefresh : LoanAccountAction
+
     /** User tapped the primary "Next Action" button. */
     data object OnNextActionClick : LoanAccountAction
+
     /** User tapped a detail item (Transactions, Charges, etc.). @property item The item tapped. */
     data class OnDetailItemClick(val item: LoanAccountProfileActionItem) : LoanAccountAction
+
     /** User tapped the loan account card for more details. */
     data object OnAccountClick : LoanAccountAction
 }

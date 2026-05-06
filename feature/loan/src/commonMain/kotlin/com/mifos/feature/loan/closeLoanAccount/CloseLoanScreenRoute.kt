@@ -12,9 +12,8 @@ package com.mifos.feature.loan.closeLoanAccount
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import kotlinx.serialization.Serializable
-
 import com.mifos.core.common.utils.Constants
+import kotlinx.serialization.Serializable
 
 /**
  * Navigation route for the Close Loan Account screen.
