@@ -76,8 +76,7 @@ fun NavGraphBuilder.loanDestination(
     }
     newLoanAccountDestination(
         onNavigateBack = navController::popBackStack,
-        onFinish = navController::popBackStack,
-        onNavigateToLoanList = onLoanCreated,
+        onFinish = onLoanCreated,
         navController = navController,
     )
 

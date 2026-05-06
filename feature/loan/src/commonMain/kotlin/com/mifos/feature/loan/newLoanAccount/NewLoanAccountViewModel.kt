@@ -36,6 +36,7 @@ import com.mifos.core.network.model.LoansPayload
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState.DialogState
 import com.mifos.room.entities.templates.loans.LoanTemplate
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -96,8 +97,6 @@ internal class NewLoanAccountViewModel(
             is NewLoanAccountAction.PreviousStep -> moveToPreviousStep()
 
             is NewLoanAccountAction.Finish -> handleFinish()
-
-            is NewLoanAccountAction.LoanCreated -> handleLoanCreated()
 
             is NewLoanAccountAction.OnStepChange -> handleStepChange(action)
 
@@ -346,6 +345,8 @@ internal class NewLoanAccountViewModel(
                                 ),
                             )
                         }
+                        delay(1000)
+                        sendEvent(NewLoanAccountEvent.Finish(state.clientId))
                     }
                 }
             }
@@ -701,11 +702,7 @@ internal class NewLoanAccountViewModel(
     }
 
     private fun handleFinish() {
-        sendEvent(NewLoanAccountEvent.Finish)
-    }
-
-    private fun handleLoanCreated() {
-        sendEvent(NewLoanAccountEvent.NavigateToLoanList(state.clientId))
+        sendEvent(NewLoanAccountEvent.Finish(state.clientId))
     }
 
     private fun handleStepChange(action: NewLoanAccountAction.OnStepChange) {
@@ -790,7 +787,7 @@ internal class NewLoanAccountViewModel(
                 )
             }
         } else {
-            sendEvent(NewLoanAccountEvent.Finish)
+            sendEvent(NewLoanAccountEvent.Finish(state.clientId))
         }
     }
 
@@ -1127,8 +1124,7 @@ constructor(
 
 sealed interface NewLoanAccountEvent {
     data object NavigateBack : NewLoanAccountEvent
-    data object Finish : NewLoanAccountEvent
-    data class NavigateToLoanList(val clientId: Int) : NewLoanAccountEvent
+    data class Finish(val clientId: Int) : NewLoanAccountEvent
 }
 
 sealed interface NewLoanAccountAction {
@@ -1137,7 +1133,6 @@ sealed interface NewLoanAccountAction {
     data object PreviousStep : NewLoanAccountAction
     data object NextStep : NewLoanAccountAction
     data object Finish : NewLoanAccountAction
-    data object LoanCreated : NewLoanAccountAction
     data class OnStepChange(val newIndex: Int) : NewLoanAccountAction
     data class OnProductNameChange(val index: Int) : NewLoanAccountAction
     data class OnExternalIdChange(val value: String) : NewLoanAccountAction

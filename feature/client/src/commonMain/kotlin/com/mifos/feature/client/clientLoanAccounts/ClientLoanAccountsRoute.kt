@@ -44,9 +44,7 @@ fun NavController.navigateToClientLoanAccountsRoute(
     this.navigate(ClientLoanAccountsRoute(clientId = clientId))
 }
 
-fun NavController.navigateToClientLoanAccountsAfterCreation(clientId: Int) {
-    // Drop any existing loan-list entry for this client so the destination
-    // recreates and its ViewModel reloads with the newly created loan.
+fun NavController.navigateToClientLoanAccounts(clientId: Int) {
     popBackStack(
         route = ClientLoanAccountsRoute(clientId = clientId),
         inclusive = true,
