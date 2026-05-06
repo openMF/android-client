@@ -166,12 +166,18 @@ reviews:
   path_instructions:
     - path: "**"
       instructions: |
-        Cross-repository file references MUST use clickable GitHub links with:
-        - sahilshivekar/fineract → develop
-        - sahilshivekar/mifos-x-web-app → dev
-        - sahilshivekar/kmp-project-template → dev
-        - sahilshivekar/android-client → feat/MIFOSAC-759
-        Never use bare file paths in cross-repo analysis.
+        Cross-repository file references:
+        When performing cross-repository analyses, always generate clickable GitHub file links
+        using the following branch mappings:
+        - sahilshivekar/mifos-x-web-app → branch: dev
+          URL format: https://github.com/sahilshivekar/mifos-x-web-app/blob/dev/<filepath>
+        - sahilshivekar/fineract → branch: develop
+          URL format: https://github.com/sahilshivekar/fineract/blob/develop/<filepath>
+        - sahilshivekar/kmp-project-template → branch: dev
+          URL format: https://github.com/sahilshivekar/kmp-project-template/blob/dev/<filepath>
+        - sahilshivekar/android-client → branch: feat/MIFOSAC-759
+          URL format: https://github.com/sahilshivekar/android-client/blob/<branch>/<filepath>
+        Never list bare file paths without a clickable hyperlink in cross-repo analysis responses.
 
     - path: "**/*ViewModel.kt"
       instructions: |
