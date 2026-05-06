@@ -79,7 +79,7 @@ knowledge_base:
           - Use the template file as the baseline: https://github.com/sahilshivekar/kmp-project-template/blob/dev/<filepath>
         
         Mandatory Output Format (for core/core-base modifications):
-          Generate a "Sync Analysis" table for each modified file:
+          Generate a "Template Sync Analysis" table for each modified file:
         
         | File Path | Aspect/Logic      | Template (dev)             | PR Implementation  | Recommendation (Lead Architect's Advice) |
         | :---------| :-----------------| :--------------------------| :------------------| :----------------------------------------|
@@ -265,6 +265,7 @@ reviews:
         - One-shot API calls MUST use `suspend`, return raw response `T`, and MUST NOT use Flow or DataState.
         - Streaming APIs MUST return `Flow<T>` and MUST NOT use `suspend` or DataState.
         
+        Cross-repository API comparison is mandatory even during full PR reviews or auto reviews.
         Ktorfit interfaces and request/response DTO structures are treated as API contracts and MUST trigger cross-repository API comparison.
         Trigger API comparison when:
           - Ktorfit annotations change:
@@ -277,7 +278,8 @@ reviews:
           - request/response DTOs change
           - parameter structure, types, or nullability change
         
-        Generate EXACTLY ONE comparison block per API (URL path + HTTP method).
+        Generate exactly one API comparison section for each unique endpoint
+        (URL path + HTTP method combination).
         Do nothing if no API contract changed.
         
         - Main API Comparison Table:
@@ -290,10 +292,10 @@ reviews:
           | Response Structure |                    |                         |               |                        |
         
         - Rules:
-          - Fineract = source of truth (API contract)
-          - Mobile = extract only from network layer (endpoint, DTOs)
-          - Web App = reference only (for comparison, not authority)
-          - Do NOT include ViewModel or Repository logic
+          - `sahilshivekar/fineract` = source of truth for API contracts
+          - `sahilshivekar/mifos-x-web-app` = reference implementation only (comparison context, not authority)
+          - Mobile app analysis = extract only from the current PR network layer (endpoints, DTOs, API definitions)
+          - Do NOT include ViewModel, Repository, or UI-layer logic in API comparison responses
         
         - Analysis & Suggestions must include:
           - mismatches (endpoint, method, params, DTO)
@@ -339,6 +341,17 @@ reviews:
                 - or "aligned" if correct
             - Skip these sections if no meaningful fields are present
         It is mandatory to generate Request Fields Comparison and Response Fields Comparison
+        
+        - OUTPUT SCOPE CONSTRAINT
+          When this path instruction triggers a cross-repo API comparison response,
+          the response MUST contain ONLY the following sections:
+            1. Main API Comparison Table
+            2. Request Fields Comparison
+            3. Response Fields Comparison
+        
+          Do NOT include any other suggestions, issues, refactors, validations,
+          architecture concerns, or implementation feedback in the same response.
+          Such observations must be raised separately as normal review comments.
 
     - path: "**/data/repository/**/*.kt"
       instructions: |
@@ -396,11 +409,12 @@ reviews:
         - Verify if a migration strategy (e.g., `Migration` or `autoMigrations`) has been implemented for the version bump.
         - Flag schema changes that do not accompany a database version increment to prevent runtime crashes.
 
-    - path: "**/{core-base,core/{analytics,common,data,database,datastore,designsystem,model,network,ui}}/**/*.kt"
+    - path: "**/{core-base,core}/**/*.kt"
       instructions: |
-        CRITICAL: This file belongs to a template-synced module. 
-        Refer to the 'kmp-project-template' Knowledge Base. You MUST perform a side-by-side Delta Analysis with the upstream template and generate the 'Template Sync Analysis' table.
-        Focus on identifying if changes should be pushed back to the template or kept as local customizations.
+        CRITICAL:
+        - Files inside `core-base` and `core` are template-synced with the `sahilshivekar/kmp-project-template` repository.
+        - When this instruction triggers, cross-repository Template Sync Analysis against `kmp-project-template` is mandatory.
+        - The 'Template Sync Analysis' comparison table itself is mandatory and MUST NOT be replaced with prose summaries.
 
     - path: "**/*.kt"
       instructions: |
