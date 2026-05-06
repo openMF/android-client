@@ -84,19 +84,25 @@ knowledge_base:
         | File Path | Aspect/Logic      | Template (dev)             | PR Implementation  | Recommendation (Lead Architect's Advice) |
         | :---------| :-----------------| :--------------------------| :------------------| :----------------------------------------|
         | (link)    | (e.g., Auth Flow) | (How it works in template) | (How it works now) | (Detailed justification)                 |
-      
+        
         Analysis Guidelines:
           - Handle Missing Files: If the file does not exist in the template repository, do not fail. Explicitly state that it is a new addition and evaluate if it should be upstreamed or kept local.
           - Identify the "Why": Is the difference a bug fix that should be upstreamed to the template, or an app-specific customization?
           - Detect Specificity: Flag if feature-specific or UI-specific logic is being injected into these shared modules.
-      
+        
         Note:
           - The maintainer needs to see the mechanical difference. Be precise about added lines, removed abstractions, or changed function signatures compared to the template source.
+
+tone_instructions: |
+  Wrap each table, multi-suggestion section, or content >8 lines in its own <details><summary>...</summary></details> block.
+  Keep a short summary outside each block.
+  Always use clickable hyperlinks for file references.
 
 reviews:
   poem: false
   profile: "chill"
-  high_level_summary: false
+  high_level_summary: true
+  high_level_summary_in_walkthrough: true
   review_status: true
   review_details: true
   commit_status: true
@@ -160,45 +166,12 @@ reviews:
   path_instructions:
     - path: "**"
       instructions: |
-        Cross-repository file references:
-          When performing cross-repository analyses, always generate clickable GitHub file links
-          using the following branch mappings:
-          - sahilshivekar/mifos-x-web-app → branch: dev
-            URL format: https://github.com/sahilshivekar/mifos-x-web-app/blob/dev/<filepath>
-          - sahilshivekar/fineract → branch: develop
-            URL format: https://github.com/sahilshivekar/fineract/blob/develop/<filepath>
-          - sahilshivekar/kmp-project-template → branch: dev
-            URL format: https://github.com/sahilshivekar/kmp-project-template/blob/dev/<filepath>
-          - sahilshivekar/android-client → branch: feat/MIFOSAC-759
-            URL format: https://github.com/sahilshivekar/android-client/blob/<branch>/<filepath>
-          Never list bare file paths without a clickable hyperlink in cross-repo analysis responses.
-        
-        RESPONSE FORMATTING RULES (VERY IMPORTANT):
-          1. If any part of the response (such as a section, table, or suggestion block) contains:
-            - more than 1 suggestion
-            - OR more than 8 lines
-            - OR any table
-        
-          2. You MUST wrap ONLY that specific part in a collapsible markdown block:
-            <details>
-            <summary>Click to expand</summary>
-            content here
-            </details>
-        
-          3. DO NOT wrap the entire response. Only wrap the large or multi-item parts.
-        
-          4. Apply this strictly to:
-            - Suggestions
-            - Analysis sections
-            - Cross-repo tables
-            - Sync Analysis tables
-            - Long explanations
-        
-          5. ALWAYS keep a short summary OUTSIDE the collapsible block.
-        
-          6. If multiple tables exist:
-            - Each table must be in its own collapsible block
-            - Each must have a meaningful summary title
+        Cross-repository file references MUST use clickable GitHub links with:
+        - sahilshivekar/fineract → develop
+        - sahilshivekar/mifos-x-web-app → dev
+        - sahilshivekar/kmp-project-template → dev
+        - sahilshivekar/android-client → feat/MIFOSAC-759
+        Never use bare file paths in cross-repo analysis.
 
     - path: "**/*ViewModel.kt"
       instructions: |
@@ -280,98 +253,53 @@ reviews:
         - Generic or unclear key names
         - Duplicate keys for same UI text
 
-    - path: "**/*.kt"
-      instructions: |
-        Additional Code Review Guidelines:
-
-        1. Null Safety & Stability
-        - Avoid using `!!` operator
-        - Handle null cases explicitly using safe calls or proper state handling
-        - Do not assume values are always non-null without guarantees
-        
-        2. Architecture Boundaries
-        - ViewModel must not depend on specific network/library implementations
-        - Ensure proper separation between data, domain, and presentation layers
-        - Do not format data (currency, dates, calculations) inside the UI layer
-        - All formatting must be handled in the ViewModel and exposed via state (e.g., StateFlow)
-        
-        3. Performance Considerations
-        - Avoid unnecessary recompositions in Compose
-        - Do not attach heavy logic to frequently changing states (e.g., scrollState)
-        - Prefer lifting state up instead of recomputing in child composables
-        
-        4. Compose & Navigation Best Practices
-        - NEVER trigger navigation functions or side-effects directly during composition
-        - Always wrap navigation calls inside `LaunchedEffect` or `EventsEffect` to avoid repeated execution on recomposition
-        - Avoid triggering intensive side-effects during recomposition
-        - Navigation routes must be type-safe.
-        - Ensure all route classes or objects used for navigation are annotated with `@Serializable`.
-        
-        5. UI Structure
-        - Dialogs must be separated into their own composables
-        - Do not embed dialogs inline within complex main screens
-        
-        6. Localization Consistency
-        - Ensure all supported languages are updated consistently across modules
-        - Verify translations exist for newly added UI strings
-        
-        7. Code Cleanliness
-        - Avoid unnecessary inline comments unless critical
-        - Remove leftover debug or commented code
-        
-        8. Focus on correctness, readability, and maintainability over cosmetic nitpicks.
-        - Avoid reviewing README, config, or asset files.
-        - Prioritize identifying bugs, performance issues, and architectural concerns.
-        
-        9. Naming & Intent Rules:
-        - Follow the official Kotlin Coding Conventions:
-          https://kotlinlang.org/docs/coding-conventions.html
-        - Use self-explanatory names:
-          Names should clearly convey purpose and content without needing additional explanation.
-        - Avoid explanatory comments for names:
-          If a variable or function requires a comment to clarify its meaning, rename it.
-        - Prefer clarity over brevity:
-          Do not use cryptic or non-standard abbreviations.
-        - Ensure consistency:
-          Naming should be uniform across the codebase and align with Kotlin standards.
-
     - path: "**/network/**/*.kt"
       instructions: |
         Network Layer API Guidelines:
         - One-shot API calls MUST use `suspend`, return raw response `T`, and MUST NOT use Flow or DataState.
         - Streaming APIs MUST return `Flow<T>` and MUST NOT use `suspend` or DataState.
         
-        Cross-Repository API Comparison Table (Network Layer Only)
-        - Generate ONE table per API (identified by URL path + HTTP method) when an API is defined or modified.
-        - If no API is present → do nothing.
-        - Never generate duplicate tables.
-  
-        - Table (MANDATORY):
-  
+        Ktorfit interfaces and request/response DTO structures are treated as API contracts and MUST trigger cross-repository API comparison.
+        Trigger API comparison when:
+          - Ktorfit annotations change:
+            `@GET`, `@POST`, `@PUT`, `@DELETE`, `@PATCH`,
+            `@Multipart`, `@FormUrlEncoded`,
+            `@Body`, `@Path`, `@Query`, `@QueryMap`,
+            `@Header`, `@Headers`
+          - API functions are added/removed/modified
+          - endpoint paths change
+          - request/response DTOs change
+          - parameter structure, types, or nullability change
+        
+        Generate EXACTLY ONE comparison block per API (URL path + HTTP method).
+        Do nothing if no API contract changed.
+        
+        - Main API Comparison Table:
+        
           | Checkpoint         | Fineract (Backend) | Mobile App (Current PR) | Mifos Web App | Analysis & Suggestions |
           | :------------------| :------------------| :-----------------------| :-------------| :----------------------|
           | URL Path           |                    |                         |               |                        |
           | HTTP Method        |                    |                         |               |                        |
           | Request Parameters |                    |                         |               |                        |
           | Response Structure |                    |                         |               |                        |
-  
+        
         - Rules:
           - Fineract = source of truth (API contract)
           - Mobile = extract only from network layer (endpoint, DTOs)
           - Web App = reference only (for comparison, not authority)
           - Do NOT include ViewModel or Repository logic
-  
+        
         - Analysis & Suggestions must include:
           - mismatches (endpoint, method, params, DTO)
           - inconsistencies with web app
           - explicit confirmation if correct
           - precise fixes (what to change)
-  
+        
         - Flag:
           - missing required fields
           - wrong types or nullability
           - DTO mismatch (missing/extra fields)
-  
+        
         - Always produce a fully filled table when triggered.
         
         After the main API table, it is strictly required to generate TWO sections:
@@ -384,7 +312,7 @@ reviews:
             Request Fields:
             | Field | Fineract | Mobile | Web App | Notes |
             |-------|----------|--------|---------|-------|
-          
+        
           2) Response Fields Comparison
           - Compare response fields across:
               - Fineract
@@ -394,7 +322,7 @@ reviews:
             Response Fields:
             | Field | Fineract | Mobile | Web App | Notes |
             |-------|----------|--------|---------|-------|
-          
+        
           Rules:
             - Use field names only (no full JSON)
             - Use dot notation for nested fields (e.g., address.city)
@@ -467,3 +395,58 @@ reviews:
         CRITICAL: This file belongs to a template-synced module. 
         Refer to the 'kmp-project-template' Knowledge Base. You MUST perform a side-by-side Delta Analysis with the upstream template and generate the 'Template Sync Analysis' table.
         Focus on identifying if changes should be pushed back to the template or kept as local customizations.
+
+    - path: "**/*.kt"
+      instructions: |
+        Additional Code Review Guidelines:
+
+        1. Null Safety & Stability
+        - Avoid using `!!` operator
+        - Handle null cases explicitly using safe calls or proper state handling
+        - Do not assume values are always non-null without guarantees
+
+        2. Architecture Boundaries
+        - ViewModel must not depend on specific network/library implementations
+        - Ensure proper separation between data, domain, and presentation layers
+        - Do not format data (currency, dates, calculations) inside the UI layer
+        - All formatting must be handled in the ViewModel and exposed via state (e.g., StateFlow)
+
+        3. Performance Considerations
+        - Avoid unnecessary recompositions in Compose
+        - Do not attach heavy logic to frequently changing states (e.g., scrollState)
+        - Prefer lifting state up instead of recomputing in child composables
+
+        4. Compose & Navigation Best Practices
+        - NEVER trigger navigation functions or side-effects directly during composition
+        - Always wrap navigation calls inside `LaunchedEffect` or `EventsEffect` to avoid repeated execution on recomposition
+        - Avoid triggering intensive side-effects during recomposition
+        - Navigation routes must be type-safe.
+        - Ensure all route classes or objects used for navigation are annotated with `@Serializable`.
+
+        5. UI Structure
+        - Dialogs must be separated into their own composables
+        - Do not embed dialogs inline within complex main screens
+
+        6. Localization Consistency
+        - Ensure all supported languages are updated consistently across modules
+        - Verify translations exist for newly added UI strings
+
+        7. Code Cleanliness
+        - Avoid unnecessary inline comments unless critical
+        - Remove leftover debug or commented code
+
+        8. Focus on correctness, readability, and maintainability over cosmetic nitpicks.
+        - Avoid reviewing README, config, or asset files.
+        - Prioritize identifying bugs, performance issues, and architectural concerns.
+
+        9. Naming & Intent Rules:
+        - Follow the official Kotlin Coding Conventions:
+          https://kotlinlang.org/docs/coding-conventions.html
+        - Use self-explanatory names:
+          Names should clearly convey purpose and content without needing additional explanation.
+        - Avoid explanatory comments for names:
+          If a variable or function requires a comment to clarify its meaning, rename it.
+        - Prefer clarity over brevity:
+          Do not use cryptic or non-standard abbreviations.
+        - Ensure consistency:
+          Naming should be uniform across the codebase and align with Kotlin standards.
