@@ -76,6 +76,27 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
 
+/**
+ * The Loan Account Profile screen.
+ *
+ * Displays the loan overview, status, and provides access to various actions (repayment, transfer, close)
+ * and detailed sections (transactions, charges, etc.).
+ *
+ * @param onNavigateBack Callback to navigate back.
+ * @param approveLoan Callback to approve a pending loan.
+ * @param onRepaymentClick Callback to start a repayment.
+ * @param navigateToRepaymentSchedule Callback to view the repayment schedule.
+ * @param navigateToTransactions Callback to view transactions.
+ * @param navigateToCharges Callback to view charges.
+ * @param navigateToDocuments Callback to view documents.
+ * @param navigateToReschedules Callback to view reschedules.
+ * @param navigateToNotes Callback to view notes.
+ * @param navigateToTransferScreen Callback to perform an account transfer.
+ * @param navigateToCloseLoan Callback to close the loan.
+ * @param navController The [NavController] used for breadcrumb navigation and observing results.
+ * @param modifier Modifier for the layout.
+ * @param viewModel The [LoanAccountProfileViewModel] managing state.
+ */
 @Composable
 internal fun LoanAccountProfileScreen(
     onNavigateBack: () -> Unit,
@@ -162,6 +183,13 @@ internal fun LoanAccountProfileScreen(
     )
 }
 
+/**
+ * Main content area for the loan account profile.
+ *
+ * @param state Current UI state.
+ * @param modifier Modifier for the layout.
+ * @param onAction Callback for UI actions.
+ */
 @Composable
 private fun LoanAccountContent(
     state: LoanAccountState,
@@ -239,6 +267,14 @@ private fun LoanAccountContent(
     }
 }
 
+/**
+ * The top card showing loan product name, account number, client, and status.
+ *
+ * @param loanAccount The loan account details.
+ * @param statusUi Visual model for the status badge.
+ * @param onClick Callback when the card is clicked.
+ * @param modifier Modifier for the layout.
+ */
 @Composable
 private fun LoanAccountTopCard(
     loanAccount: LoanWithAssociationsEntity,
@@ -346,6 +382,13 @@ private fun LoanAccountTopCard(
     }
 }
 
+/**
+ * A simple row for displaying a label and a value in the overview section.
+ *
+ * @param label The label text.
+ * @param value The value text.
+ * @param valueColor The color of the value text.
+ */
 @Composable
 private fun OverviewRow(
     label: String,
@@ -371,6 +414,12 @@ private fun OverviewRow(
     }
 }
 
+/**
+ * Manages display of loading indicator and error components based on [state].
+ *
+ * @param state Current UI state.
+ * @param onRetry Callback to retry the operation.
+ */
 @Composable
 private fun LoanAccountDialogs(
     state: LoanAccountState,
@@ -390,6 +439,9 @@ private fun LoanAccountDialogs(
     }
 }
 
+/**
+ * Provides sample [LoanAccountState] data for Compose previews.
+ */
 private class LoanAccountPreviewProvider : PreviewParameterProvider<LoanAccountState> {
     override val values: Sequence<LoanAccountState>
         get() = sequenceOf(
@@ -431,6 +483,9 @@ private class LoanAccountPreviewProvider : PreviewParameterProvider<LoanAccountS
         )
 }
 
+/**
+ * Preview for the [LoanAccountProfileScreen].
+ */
 @Composable
 @Preview(showBackground = true)
 private fun LoanAccountProfileScreenPreview(

@@ -47,7 +47,6 @@ fun NavGraphBuilder.closeLoanAccountScreen(
                     ?.set(Constants.LOAN_CLOSED, true)
                 navController.popBackStack()
             },
-            navController = navController,
         )
     }
 }

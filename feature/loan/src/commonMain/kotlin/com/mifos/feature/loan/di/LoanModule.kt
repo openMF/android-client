@@ -27,6 +27,11 @@ import com.mifos.feature.loan.newLoanAccount.NewLoanAccountViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
+/**
+ * Koin module for the loan feature.
+ *
+ * Defines ViewModels for all loan-related screens.
+ */
 val LoanModule = module {
     viewModelOf(::GroupLoanAccountViewModel)
     viewModelOf(::LoanAccountViewModel)

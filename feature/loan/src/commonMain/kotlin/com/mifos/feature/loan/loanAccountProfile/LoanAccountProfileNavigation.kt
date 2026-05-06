@@ -15,11 +15,32 @@ import androidx.navigation.compose.composable
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.serialization.Serializable
 
+/**
+ * Navigation route for the Loan Account Profile screen.
+ *
+ * @property loanId The unique identifier of the loan account to display.
+ */
 @Serializable
 data class LoanAccountRoute(
     val loanId: Int = -1,
 )
 
+/**
+ * Registers the Loan Account Profile destination in the navigation graph.
+ *
+ * @param onNavigateBack Callback for the back button.
+ * @param navController The [NavController] to manage navigation.
+ * @param navigateToRepaymentSchedule Destination for repayment schedule.
+ * @param navigateToTransactions Destination for transactions.
+ * @param navigateToCharges Destination for charges.
+ * @param navigateToDocuments Destination for documents.
+ * @param navigateToReschedules Destination for reschedules.
+ * @param navigateToNotes Destination for notes.
+ * @param approveLoan Action for loan approval.
+ * @param onRepaymentClick Action for repayment.
+ * @param navigateToTransferScreen Destination for account transfer.
+ * @param navigateToCloseLoan Destination for closing the loan.
+ */
 fun NavGraphBuilder.loanProfileAccountDestination(
     onNavigateBack: () -> Unit,
     navController: NavController,
@@ -52,6 +73,11 @@ fun NavGraphBuilder.loanProfileAccountDestination(
     }
 }
 
+/**
+ * Navigates to the Loan Account Profile screen.
+ *
+ * @param loanId The unique identifier of the loan.
+ */
 fun NavController.navigateToLoanAccountProfileScreen(loanId: Int) {
     this.navigate(
         LoanAccountRoute(
