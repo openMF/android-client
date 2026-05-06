@@ -84,6 +84,7 @@ internal fun ClientLoanAccountsScreenRoute(
     navigateBack: () -> Unit,
     makeRepayment: (Int) -> Unit,
     viewAccount: (Int) -> Unit,
+    transferFund: (Int) -> Unit,
     navController: NavController,
     createAccount: (Int, String) -> Unit,
     viewModel: ClientLoanAccountsViewModel = koinViewModel(),
@@ -97,6 +98,7 @@ internal fun ClientLoanAccountsScreenRoute(
             ClientLoanAccountsEvent.NavigateBack -> navigateBack()
             is ClientLoanAccountsEvent.ViewAccount -> viewAccount(event.id)
             is ClientLoanAccountsEvent.AddAccount -> createAccount(event.clientId, event.accountNo)
+            is ClientLoanAccountsEvent.TransferFund -> transferFund(event.loanId)
         }
     }
 
@@ -183,9 +185,13 @@ private fun ClientLoanAccountsScreen(
                                             Res.string.client_loan_accounts_not_available,
                                         )
                                         ),
-                                    loanProduct = loan.productName ?: stringResource(Res.string.client_loan_accounts_not_available),
+                                    loanProduct = loan.productName
+                                        ?: stringResource(Res.string.client_loan_accounts_not_available),
                                     originalLoan = symbol + (
-                                        (loan.originalLoan ?: stringResource(Res.string.client_loan_accounts_not_available)).toString()
+                                        (
+                                            loan.originalLoan
+                                                ?: stringResource(Res.string.client_loan_accounts_not_available)
+                                            ).toString()
                                         ),
                                     amountPaid = symbol + (
                                         (
@@ -211,27 +217,27 @@ private fun ClientLoanAccountsScreen(
                                             }
                                             )
                                         ),
-                                    type = loan.loanType?.value ?: stringResource(Res.string.client_loan_accounts_not_available),
-                                    status = loan.status?.value ?: stringResource(Res.string.client_loan_accounts_not_available),
+                                    type = loan.loanType?.value
+                                        ?: stringResource(Res.string.client_loan_accounts_not_available),
+                                    status = loan.status?.value
+                                        ?: stringResource(Res.string.client_loan_accounts_not_available),
                                     // TODO check if we need to add other options as well, such as disburse and all
                                     // currently didn't add it cuz its not in the UI design
-                                    menuList = when {
-                                        loan.status?.active == true -> {
-                                            listOf(
-                                                Actions.ViewAccount(
-                                                    vectorResource(Res.drawable.wallet),
-                                                ),
+                                    menuList = buildList {
+                                        add(
+                                            Actions.ViewAccount(
+                                                vectorResource(Res.drawable.wallet),
+                                            ),
+                                        )
+
+                                        when {
+                                            loan.status?.active == true -> add(
                                                 Actions.MakeRepayment(
                                                     vectorResource(Res.drawable.cash_bundel),
                                                 ),
                                             )
-                                        }
-
-                                        else -> {
-                                            listOf(
-                                                Actions.ViewAccount(
-                                                    vectorResource(Res.drawable.wallet),
-                                                ),
+                                            loan.status?.overpaid == true -> add(
+                                                Actions.TransferFund(),
                                             )
                                         }
                                     },
@@ -240,8 +246,16 @@ private fun ClientLoanAccountsScreen(
                                             is Actions.ViewAccount -> onAction(
                                                 ClientLoanAccountsAction.ViewAccount(loan.id ?: 0),
                                             )
+
                                             is Actions.MakeRepayment -> onAction(
-                                                ClientLoanAccountsAction.MakeRepayment(loan.id ?: 0),
+                                                ClientLoanAccountsAction.MakeRepayment(
+                                                    loan.id ?: 0,
+                                                ),
+                                            )
+                                            is Actions.TransferFund -> onAction(
+                                                ClientLoanAccountsAction.TransferFund(
+                                                    loanId = loan.id ?: -1,
+                                                ),
                                             )
 
                                             else -> null

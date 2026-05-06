@@ -73,6 +73,7 @@ class ClientLoanAccountsViewModel(
                     action.loanId,
                 ),
             )
+
             is ClientLoanAccountsAction.HandleFilterClick -> handleFilterClick(action.status)
 
             is ClientLoanAccountsAction.ClearFilters -> clearFilters()
@@ -91,6 +92,14 @@ class ClientLoanAccountsViewModel(
                         ),
                     )
                 }
+            }
+
+            is ClientLoanAccountsAction.TransferFund -> {
+                sendEvent(
+                    ClientLoanAccountsEvent.TransferFund(
+                        loanId = action.loanId,
+                    ),
+                )
             }
         }
     }
@@ -188,6 +197,7 @@ class ClientLoanAccountsViewModel(
             )
         }
     }
+
     private val LoanStatusEntity.isActuallyClosed: Boolean
         get() = this.closed == true ||
             this.closedObligationsMet == true ||
@@ -222,6 +232,9 @@ sealed interface ClientLoanAccountsEvent {
     data class AddAccount(val clientId: Int, val accountNo: String) : ClientLoanAccountsEvent
     data class MakeRepayment(val id: Int) : ClientLoanAccountsEvent
     data class ViewAccount(val id: Int) : ClientLoanAccountsEvent
+    data class TransferFund(
+        val loanId: Int,
+    ) : ClientLoanAccountsEvent
 }
 
 sealed interface ClientLoanAccountsAction {
@@ -238,6 +251,9 @@ sealed interface ClientLoanAccountsAction {
     data object CloseDialog : ClientLoanAccountsAction
     data class HandleFilterClick(val status: LoanStatusFilter) : ClientLoanAccountsAction
     data object ClearFilters : ClientLoanAccountsAction
+    data class TransferFund(
+        val loanId: Int,
+    ) : ClientLoanAccountsAction
 }
 
 enum class LoanStatusFilter {

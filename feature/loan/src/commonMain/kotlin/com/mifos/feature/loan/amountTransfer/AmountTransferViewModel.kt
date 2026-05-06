@@ -26,6 +26,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.AmountTransferRepository
 import com.mifos.core.data.repository.ClientDetailsRepository
+import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.core.model.objects.account.loan.transfer.AccountOption
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRequest
 import com.mifos.core.model.objects.account.loan.transfer.AccountTypeOption
@@ -42,13 +43,14 @@ class AmountTransferViewModel(
     savedStateHandle: SavedStateHandle,
     private val clientRepo: ClientDetailsRepository,
     private val repository: AmountTransferRepository,
+    private val loanAccountSummaryRepository: LoanAccountSummaryRepository,
 ) : BaseViewModel<AmountTransferUiState, AmountTransferEvent, AmountTransferAction>(
     initialState = AmountTransferUiState(),
 ) {
     private val route = savedStateHandle.toRoute<AmountTransferScreenRoute>()
 
     init {
-        fetchClientDetails(route.fromClientId)
+        fetchLoanAccountDetails(route.fromAccountId)
     }
 
     override fun handleAction(action: AmountTransferAction) {
@@ -136,9 +138,46 @@ class AmountTransferViewModel(
 
             AmountTransferAction.OnTransferClicked -> validateFields()
             AmountTransferAction.OnRetryClick -> submitTransfer()
-            AmountTransferAction.OnRetryFetching -> fetchClientDetails(route.fromClientId)
+            AmountTransferAction.OnRetryFetching -> fetchClientDetails(state.fromClientId ?: -1)
             AmountTransferAction.CloseDialog -> mutableStateFlow.update { it.copy(dialogState = null) }
             AmountTransferAction.TransferSuccess -> sendEvent(AmountTransferEvent.NavigateBack)
+        }
+    }
+
+    private fun fetchLoanAccountDetails(accountId: Int) {
+        viewModelScope.launch {
+            loanAccountSummaryRepository.getLoanById(accountId).collect { dataState ->
+                when (dataState) {
+                    is DataState.Error -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                dialogState = AmountTransferUiState.DialogState.FetchingFailed(
+                                    dataState.message,
+                                ),
+                            )
+                        }
+                    }
+
+                    DataState.Loading -> {
+                        mutableStateFlow.update { it.copy(dialogState = AmountTransferUiState.DialogState.Loading) }
+                    }
+
+                    is DataState.Success -> {
+                        mutableStateFlow.update {
+                            it.copy(
+                                dialogState = null,
+                                fromOfficeId = dataState.data?.loanOfficerId,
+                                currency = dataState.data?.currency?.code.orEmpty(),
+                                fromClientId = dataState.data?.clientId,
+                                fromAccountNumber = dataState.data?.accountNo,
+                                fromAccountType = dataState.data?.loanType?.id ?: 0,
+                            )
+                        }
+
+                        fetchClientDetails(state.fromClientId ?: 0)
+                    }
+                }
+            }
         }
     }
 
@@ -152,8 +191,6 @@ class AmountTransferViewModel(
                         fromOfficeId = client.officeId,
                         fromClientName = client.displayName,
                         fromOfficeName = client.officeName,
-                        fromAccountNumber = route.fromAccountNumber,
-                        currency = route.currency ?: "",
                     )
                 }
 
@@ -172,10 +209,10 @@ class AmountTransferViewModel(
     private fun fetchInitialTemplate() {
         viewModelScope.launch {
             repository.getAccountTransferTemplate(
-                fromClientId = route.fromClientId,
-                fromAccountType = route.fromAccountType,
+                fromClientId = state.fromClientId ?: 0,
+                fromAccountType = state.fromAccountType,
                 fromAccountId = route.fromAccountId,
-                fromOfficeId = route.fromOfficeId ?: state.fromOfficeId,
+                fromOfficeId = state.fromOfficeId,
             ).collect { dataState ->
                 when (dataState) {
                     is DataState.Loading -> {
@@ -221,10 +258,10 @@ class AmountTransferViewModel(
             }
 
             repository.getAccountTransferTemplate(
-                fromClientId = route.fromClientId,
-                fromAccountType = route.fromAccountType,
+                fromClientId = state.fromClientId ?: -1,
+                fromAccountType = state.fromAccountType,
                 fromAccountId = route.fromAccountId,
-                fromOfficeId = route.fromOfficeId ?: state.fromOfficeId,
+                fromOfficeId = state.fromOfficeId,
                 toOfficeId = currentState.selectedOfficeId,
                 toClientId = currentState.selectedClientId,
                 toAccountType = currentState.accountTypeId,
@@ -275,8 +312,8 @@ class AmountTransferViewModel(
 
             val request = AccountTransferRequest(
                 fromOfficeId = state.fromOfficeId ?: -1,
-                fromClientId = route.fromClientId,
-                fromAccountType = route.fromAccountType,
+                fromClientId = state.fromClientId ?: -1,
+                fromAccountType = state.fromAccountType,
                 fromAccountId = route.fromAccountId,
                 toOfficeId = state.selectedOfficeId!!,
                 toClientId = state.selectedClientId!!,
@@ -397,11 +434,13 @@ data class AmountTransferUiState(
     val accountIdError: StringResource? = null,
 
     // Source account details
+    val fromClientId: Int? = null,
     val fromOfficeId: Int? = null,
     val fromOfficeName: String? = null,
     val fromClientName: String? = null,
     val fromAccountNumber: String? = null,
     val fromAccountTypeName: String = "Loan account",
+    val fromAccountType: Int = 1,
 
     val selectedOfficeName: String = "",
     val selectedClientName: String = "",

@@ -86,6 +86,7 @@
     <string name="core_ui_pay_outstanding_amount">Pay Outstanding Amount</string>
     <string name="core_ui_edit">Edit</string>
     <string name="core_ui_delete">Delete</string>
+    <string name="core_ui_transfer_fund">Transfer Fund</string>
 
     <!-- Mifos Note -->
     <string name="core_ui_note_createdBy">Created By:</string>

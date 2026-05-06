@@ -16,29 +16,15 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AmountTransferScreenRoute(
-    val fromClientId: Int,
     val fromAccountId: Int,
-    // for loan its 1
-    val fromAccountType: Int = 1,
-    val fromAccountNumber: String? = null,
-    val fromOfficeId: Int? = null,
-    val currency: String? = null,
 )
 
 fun NavController.navigateToTransferScreen(
     fromAccountId: Int,
-    fromAccountNumber: String,
-    fromClientId: Int,
-    currency: String,
-    fromOfficeId: Int,
 ) {
     navigate(
         AmountTransferScreenRoute(
-            fromClientId = fromClientId,
             fromAccountId = fromAccountId,
-            fromAccountNumber = fromAccountNumber,
-            fromOfficeId = fromOfficeId,
-            currency = currency,
         ),
     )
 }

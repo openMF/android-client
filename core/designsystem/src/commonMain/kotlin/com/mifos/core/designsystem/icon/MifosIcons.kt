@@ -60,6 +60,7 @@ import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.CurrencyExchange
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.DeleteOutline
+import androidx.compose.material.icons.outlined.Directions
 import androidx.compose.material.icons.outlined.DocumentScanner
 import androidx.compose.material.icons.outlined.Draw
 import androidx.compose.material.icons.outlined.EventRepeat
@@ -252,4 +253,6 @@ object MifosIcons {
     val Copy = Icons.Outlined.ContentCopy
     val Currency = Icons.Outlined.CurrencyExchange
     val Camera = Icons.Outlined.Camera
+
+    val TransferFund = Icons.Outlined.Directions
 }
