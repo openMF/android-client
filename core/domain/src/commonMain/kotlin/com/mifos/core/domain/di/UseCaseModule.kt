@@ -19,10 +19,10 @@ import com.mifos.core.domain.useCases.AddNoteUseCase
 import com.mifos.core.domain.useCases.ApproveCheckerUseCase
 import com.mifos.core.domain.useCases.ApproveSavingsApplicationUseCase
 import com.mifos.core.domain.useCases.CalculateLoanScheduleUseCase
-import com.mifos.core.domain.useCases.CreateGuarantorUseCase
 import com.mifos.core.domain.useCases.CreateChargesUseCase
 import com.mifos.core.domain.useCases.CreateClientIdentifierUseCase
 import com.mifos.core.domain.useCases.CreateGroupLoansAccountUseCase
+import com.mifos.core.domain.useCases.CreateGuarantorUseCase
 import com.mifos.core.domain.useCases.CreateLoanAccountUseCase
 import com.mifos.core.domain.useCases.CreateLoanChargesUseCase
 import com.mifos.core.domain.useCases.CreateSavingsAccountUseCase
@@ -53,9 +53,9 @@ import com.mifos.core.domain.useCases.GetDocumentsListUseCase
 import com.mifos.core.domain.useCases.GetGroupDetailsUseCase
 import com.mifos.core.domain.useCases.GetGroupLoansAccountTemplateUseCase
 import com.mifos.core.domain.useCases.GetGroupSavingsAccountTemplateByProductUseCase
-import com.mifos.core.domain.useCases.GetGuarantorTemplateUseCase
 import com.mifos.core.domain.useCases.GetGroupsByCenterUseCase
 import com.mifos.core.domain.useCases.GetGroupsByOfficeUseCase
+import com.mifos.core.domain.useCases.GetGuarantorTemplateUseCase
 import com.mifos.core.domain.useCases.GetIndividualCollectionSheetUseCase
 import com.mifos.core.domain.useCases.GetListOfLoanChargesUseCase
 import com.mifos.core.domain.useCases.GetLoanAndLoanRepaymentUseCase

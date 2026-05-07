@@ -11,8 +11,8 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
-import com.mifos.core.data.mapper.loan.toDto
 import com.mifos.core.data.mapper.loan.toDomain
+import com.mifos.core.data.mapper.loan.toDto
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.data.util.runAsDataState

@@ -22,4 +22,3 @@ class CreateGuarantorUseCase(
         createGuarantorInput: CreateGuarantorInput,
     ): DataState<GenericResponse> = repository.createGuarantor(loanId, createGuarantorInput)
 }
-

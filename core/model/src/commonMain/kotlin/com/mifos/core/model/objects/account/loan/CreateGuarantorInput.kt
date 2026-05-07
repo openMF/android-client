@@ -24,4 +24,3 @@ data class CreateGuarantorInput(
     val dateFormat: String,
     val locale: String,
 )
-

@@ -20,4 +20,3 @@ class GetGuarantorTemplateUseCase(
         loanId: Int,
     ): DataState<GuarantorTemplate> = repository.getGuarantorTemplate(loanId)
 }
-
