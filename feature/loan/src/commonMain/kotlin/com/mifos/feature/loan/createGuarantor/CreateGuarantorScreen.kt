@@ -115,6 +115,7 @@ private fun CreateGuarantorContent(
     navigateBack: () -> Unit,
 ) {
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
+    val filteredClientOptions = state.filteredClientOptions
 
     Column(
         modifier = modifier
@@ -132,12 +133,22 @@ private fun CreateGuarantorContent(
 
         if (state.existingClient) {
             MifosTextFieldDropdown(
-                value = state.clientOptions.getOrNull(state.selectedClientIndex)?.displayName.orEmpty(),
-                onValueChanged = {},
+                value = state.clientQuery,
+                onValueChanged = { onAction(CreateGuarantorAction.UpdateClientQuery(it)) },
                 label = stringResource(Res.string.feature_loan_create_guarantor_name),
-                options = state.clientOptions.map { it.displayName },
-                onOptionSelected = { index, _ -> onAction(CreateGuarantorAction.SelectClient(index)) },
+                options = filteredClientOptions.map { it.displayName },
+                onOptionSelected = { index, _ ->
+                    filteredClientOptions.getOrNull(index)?.let { selectedClient ->
+                        onAction(
+                            CreateGuarantorAction.SelectClient(
+                                clientId = selectedClient.id,
+                                label = selectedClient.displayName,
+                            ),
+                        )
+                    }
+                },
                 errorMessage = state.clientError,
+                readOnly = false,
             )
             Spacer(Modifier.height(DesignToken.padding.medium))
         }

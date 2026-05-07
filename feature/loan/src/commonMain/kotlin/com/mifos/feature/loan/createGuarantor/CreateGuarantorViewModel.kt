@@ -17,19 +17,27 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.data.repository.LoanAccountSummaryRepository
-import com.mifos.core.model.entity.accounts.loan.CreateGuarantorRequest
+import com.mifos.core.data.repository.SearchRepository
+import com.mifos.core.domain.useCases.CreateGuarantorUseCase
+import com.mifos.core.domain.useCases.GetGuarantorTemplateUseCase
+import com.mifos.core.model.entity.accounts.loan.GuarantorClientOption
+import com.mifos.core.model.objects.account.loan.CreateGuarantorInput
+import com.mifos.core.model.utils.DateConstants
 import com.mifos.core.ui.util.BaseViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 
 internal class CreateGuarantorViewModel(
     savedStateHandle: SavedStateHandle,
-    private val repository: LoanAccountSummaryRepository,
+    private val getGuarantorTemplateUseCase: GetGuarantorTemplateUseCase,
+    private val createGuarantorUseCase: CreateGuarantorUseCase,
+    private val searchRepository: SearchRepository,
 ) : BaseViewModel<CreateGuarantorUiState, CreateGuarantorEffect, CreateGuarantorAction>(
     initialState = CreateGuarantorUiState.Loading,
 ) {
     private val route = savedStateHandle.toRoute<CreateGuarantorRoute>()
+    private var searchClientJob: Job? = null
 
     init {
         trySendAction(CreateGuarantorAction.Load)
@@ -45,6 +53,9 @@ internal class CreateGuarantorViewModel(
                 updateContent {
                     it.copy(
                         existingClient = action.checked,
+                        clientQuery = "",
+                        selectedClientId = null,
+                        searchedClientOptions = it.clientOptions,
                         clientError = null,
                         relationshipError = null,
                         firstNameError = null,
@@ -54,7 +65,24 @@ internal class CreateGuarantorViewModel(
             }
 
             is CreateGuarantorAction.SelectClient ->
-                updateContent { it.copy(selectedClientIndex = action.index, clientError = null) }
+                updateContent {
+                    it.copy(
+                        selectedClientId = action.clientId,
+                        clientQuery = action.label,
+                        clientError = null,
+                    )
+                }
+
+            is CreateGuarantorAction.UpdateClientQuery ->
+                updateContent {
+                    it.copy(
+                        clientQuery = action.value,
+                        selectedClientId = null,
+                        clientError = null,
+                    )
+                }.also {
+                    searchClients(action.value)
+                }
 
             is CreateGuarantorAction.SelectRelationship ->
                 updateContent { it.copy(selectedRelationshipIndex = action.index, relationshipError = null) }
@@ -93,13 +121,14 @@ internal class CreateGuarantorViewModel(
     private fun load() {
         mutableStateFlow.value = CreateGuarantorUiState.Loading
         viewModelScope.launch {
-            when (val templateState = repository.getGuarantorTemplate(route.loanId)) {
+            when (val templateState = getGuarantorTemplateUseCase(route.loanId)) {
                 is DataState.Success -> {
                     val template = templateState.data
                     mutableStateFlow.value = CreateGuarantorUiState.Content(
                         loanId = route.loanId,
                         existingClient = template.clientOptions.isNotEmpty(),
                         clientOptions = template.clientOptions,
+                        searchedClientOptions = template.clientOptions,
                         relationshipOptions = template.relationshipOptions,
                     )
                 }
@@ -152,7 +181,7 @@ internal class CreateGuarantorViewModel(
             }
 
             mutableStateFlow.value = nextState.copy(submitInProgress = true)
-            val request = CreateGuarantorRequest(
+            val request = CreateGuarantorInput(
                 existingClientId = nextState.selectedClientId.takeIf { nextState.existingClient },
                 clientRelationshipTypeId = nextState.selectedRelationshipId ?: return@launch,
                 firstname = nextState.firstName.takeIf { !nextState.existingClient },
@@ -164,9 +193,11 @@ internal class CreateGuarantorViewModel(
                 zip = nextState.zip.takeIf { it.isNotBlank() },
                 mobileNumber = nextState.mobile.takeIf { it.isNotBlank() },
                 housePhoneNumber = nextState.residencePhone.takeIf { it.isNotBlank() },
+                dateFormat = DateHelper.SHORT_MONTH,
+                locale = DateConstants.LOCALE,
             )
 
-            when (val result = repository.createGuarantor(route.loanId, request)) {
+            when (val result = createGuarantorUseCase(route.loanId, request)) {
                 is DataState.Success -> {
                     updateContent { it.copy(submitInProgress = false) }
                     sendEvent(
@@ -192,5 +223,43 @@ internal class CreateGuarantorViewModel(
     ) {
         val current = mutableStateFlow.value as? CreateGuarantorUiState.Content ?: return
         mutableStateFlow.value = block(current)
+    }
+
+    private fun searchClients(query: String) {
+        val state = mutableStateFlow.value as? CreateGuarantorUiState.Content ?: return
+        if (!state.existingClient) return
+
+        searchClientJob?.cancel()
+
+        if (query.isBlank()) {
+            updateContent { it.copy(searchedClientOptions = it.clientOptions) }
+            return
+        }
+
+        searchClientJob = viewModelScope.launch {
+            searchRepository.searchResources(
+                query = query,
+                resources = "clients",
+                exactMatch = false,
+            ).collect { dataState ->
+                when (dataState) {
+                    is DataState.Success -> {
+                        val clients = dataState.data.map { searchedEntity ->
+                            GuarantorClientOption(
+                                id = searchedEntity.entityId,
+                                displayName = searchedEntity.entityName.orEmpty().ifBlank { searchedEntity.description },
+                            )
+                        }
+                        updateContent { it.copy(searchedClientOptions = clients) }
+                    }
+
+                    is DataState.Error -> {
+                        updateContent { it.copy(searchedClientOptions = emptyList()) }
+                    }
+
+                    DataState.Loading -> Unit
+                }
+            }
+        }
     }
 }

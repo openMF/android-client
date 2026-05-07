@@ -23,8 +23,10 @@ internal sealed interface CreateGuarantorUiState {
         val loanId: Int,
         val existingClient: Boolean = true,
         val clientOptions: List<GuarantorClientOption> = emptyList(),
+        val searchedClientOptions: List<GuarantorClientOption> = emptyList(),
         val relationshipOptions: List<GuarantorRelationshipOption> = emptyList(),
-        val selectedClientIndex: Int = -1,
+        val clientQuery: String = "",
+        val selectedClientId: Int? = null,
         val selectedRelationshipIndex: Int = -1,
         val firstName: String = "",
         val lastName: String = "",
@@ -41,8 +43,12 @@ internal sealed interface CreateGuarantorUiState {
         val lastNameError: String? = null,
         val submitInProgress: Boolean = false,
     ) : CreateGuarantorUiState {
-        val selectedClientId: Int?
-            get() = clientOptions.getOrNull(selectedClientIndex)?.id
+        val filteredClientOptions: List<GuarantorClientOption>
+            get() = if (clientQuery.isBlank()) {
+                clientOptions
+            } else {
+                searchedClientOptions
+            }
 
         val selectedRelationshipId: Int?
             get() = relationshipOptions.getOrNull(selectedRelationshipIndex)?.id
@@ -66,7 +72,8 @@ internal sealed interface CreateGuarantorAction {
     data object Load : CreateGuarantorAction
     data object Retry : CreateGuarantorAction
     data class ToggleExistingClient(val checked: Boolean) : CreateGuarantorAction
-    data class SelectClient(val index: Int) : CreateGuarantorAction
+    data class SelectClient(val clientId: Int, val label: String) : CreateGuarantorAction
+    data class UpdateClientQuery(val value: String) : CreateGuarantorAction
     data class SelectRelationship(val index: Int) : CreateGuarantorAction
     data class UpdateFirstName(val value: String) : CreateGuarantorAction
     data class UpdateLastName(val value: String) : CreateGuarantorAction

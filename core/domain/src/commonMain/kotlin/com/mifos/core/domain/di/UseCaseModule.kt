@@ -19,6 +19,7 @@ import com.mifos.core.domain.useCases.AddNoteUseCase
 import com.mifos.core.domain.useCases.ApproveCheckerUseCase
 import com.mifos.core.domain.useCases.ApproveSavingsApplicationUseCase
 import com.mifos.core.domain.useCases.CalculateLoanScheduleUseCase
+import com.mifos.core.domain.useCases.CreateGuarantorUseCase
 import com.mifos.core.domain.useCases.CreateChargesUseCase
 import com.mifos.core.domain.useCases.CreateClientIdentifierUseCase
 import com.mifos.core.domain.useCases.CreateGroupLoansAccountUseCase
@@ -52,6 +53,7 @@ import com.mifos.core.domain.useCases.GetDocumentsListUseCase
 import com.mifos.core.domain.useCases.GetGroupDetailsUseCase
 import com.mifos.core.domain.useCases.GetGroupLoansAccountTemplateUseCase
 import com.mifos.core.domain.useCases.GetGroupSavingsAccountTemplateByProductUseCase
+import com.mifos.core.domain.useCases.GetGuarantorTemplateUseCase
 import com.mifos.core.domain.useCases.GetGroupsByCenterUseCase
 import com.mifos.core.domain.useCases.GetGroupsByOfficeUseCase
 import com.mifos.core.domain.useCases.GetIndividualCollectionSheetUseCase
@@ -102,6 +104,7 @@ val UseCaseModule = module {
     factoryOf(::ApproveCheckerUseCase)
     factoryOf(::ApproveSavingsApplicationUseCase)
     factoryOf(::CreateChargesUseCase)
+    factoryOf(::CreateGuarantorUseCase)
     factoryOf(::CreateClientIdentifierUseCase)
     factoryOf(::CalculateLoanScheduleUseCase)
     factoryOf(::CreateGroupLoansAccountUseCase)
@@ -134,6 +137,7 @@ val UseCaseModule = module {
     factoryOf(::GetDocumentsListUseCase)
     factoryOf(::GetGroupLoansAccountTemplateUseCase)
     factoryOf(::GetGroupSavingsAccountTemplateByProductUseCase)
+    factoryOf(::GetGuarantorTemplateUseCase)
     factoryOf(::GetGroupsByCenterUseCase)
     factoryOf(::GetGroupsByOfficeUseCase)
     factoryOf(::GetIndividualCollectionSheetUseCase)

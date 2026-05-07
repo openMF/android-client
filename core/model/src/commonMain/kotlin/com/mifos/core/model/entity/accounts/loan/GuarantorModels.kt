@@ -23,17 +23,3 @@ data class GuarantorRelationshipOption(
     val id: Int,
     val value: String,
 )
-
-data class CreateGuarantorRequest(
-    val existingClientId: Int? = null,
-    val clientRelationshipTypeId: Int,
-    val firstname: String? = null,
-    val lastname: String? = null,
-    val dateOfBirth: String? = null,
-    val addressLine1: String? = null,
-    val addressLine2: String? = null,
-    val city: String? = null,
-    val zip: String? = null,
-    val mobileNumber: String? = null,
-    val housePhoneNumber: String? = null,
-)

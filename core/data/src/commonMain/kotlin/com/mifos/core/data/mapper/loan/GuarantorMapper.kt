@@ -9,36 +9,36 @@
  */
 package com.mifos.core.data.mapper.loan
 
-import com.mifos.core.model.entity.accounts.loan.CreateGuarantorRequest
 import com.mifos.core.model.entity.accounts.loan.GuarantorClientOption
 import com.mifos.core.model.entity.accounts.loan.GuarantorRelationshipOption
 import com.mifos.core.model.entity.accounts.loan.GuarantorTemplate
+import com.mifos.core.model.objects.account.loan.CreateGuarantorInput
 import com.mifos.core.network.model.guarantor.CreateGuarantorRequestDto
 import com.mifos.core.network.model.guarantor.GuarantorClientOptionDto
 import com.mifos.core.network.model.guarantor.GuarantorRelationshipOptionDto
 import com.mifos.core.network.model.guarantor.GuarantorTemplateDto
 
-fun GuarantorTemplateDto.toModel(): GuarantorTemplate =
+fun GuarantorTemplateDto.toDomain(): GuarantorTemplate =
     GuarantorTemplate(
-        clientOptions = clientOptions.map { it.toModel() },
+        clientOptions = clientOptions.map { it.toDomain() },
         relationshipOptions = (relationshipOptions + allowedClientRelationshipTypes)
             .distinctBy { it.id }
-            .map { it.toModel() },
+            .map { it.toDomain() },
     )
 
-fun GuarantorClientOptionDto.toModel(): GuarantorClientOption =
+fun GuarantorClientOptionDto.toDomain(): GuarantorClientOption =
     GuarantorClientOption(
         id = id,
         displayName = displayName.orEmpty().ifBlank { accountNo.orEmpty() },
     )
 
-fun GuarantorRelationshipOptionDto.toModel(): GuarantorRelationshipOption =
+fun GuarantorRelationshipOptionDto.toDomain(): GuarantorRelationshipOption =
     GuarantorRelationshipOption(
         id = id,
         value = value.orEmpty().ifBlank { name.orEmpty() },
     )
 
-fun CreateGuarantorRequest.toDto(): CreateGuarantorRequestDto =
+fun CreateGuarantorInput.toDto(): CreateGuarantorRequestDto =
     CreateGuarantorRequestDto(
         existingClientId = existingClientId,
         clientRelationshipTypeId = clientRelationshipTypeId,
@@ -51,4 +51,6 @@ fun CreateGuarantorRequest.toDto(): CreateGuarantorRequestDto =
         zip = zip,
         mobileNumber = mobileNumber,
         housePhoneNumber = housePhoneNumber,
+        dateFormat = dateFormat,
+        locale = locale,
     )

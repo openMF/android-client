@@ -69,7 +69,12 @@ fun MifosTextFieldDropdown(
                 }
             },
             value = value,
-            onValueChange = onValueChanged,
+            onValueChange = {
+                onValueChanged(it)
+                if (!readOnly && enabled) {
+                    isExpanded = true
+                }
+            },
             label = {
                 label?.let {
                     Text(
