@@ -138,7 +138,7 @@ class AmountTransferViewModel(
 
             AmountTransferAction.OnTransferClicked -> validateFields()
             AmountTransferAction.OnRetryClick -> submitTransfer()
-            AmountTransferAction.OnRetryFetching -> fetchClientDetails(state.fromClientId ?: -1)
+            AmountTransferAction.OnRetryFetching -> fetchClientDetails(state.fromClientId)
             AmountTransferAction.CloseDialog -> mutableStateFlow.update { it.copy(dialogState = null) }
             AmountTransferAction.TransferSuccess -> sendEvent(AmountTransferEvent.NavigateBack)
         }
@@ -170,27 +170,27 @@ class AmountTransferViewModel(
                                 currency = dataState.data?.currency?.code.orEmpty(),
                                 fromClientId = dataState.data?.clientId,
                                 fromAccountNumber = dataState.data?.accountNo,
-                                fromAccountType = dataState.data?.loanType?.id ?: 0,
+                                fromAccountType = dataState.data?.loanType?.id,
                             )
                         }
 
-                        fetchClientDetails(state.fromClientId ?: 0)
+                        fetchClientDetails(state.fromClientId)
                     }
                 }
             }
         }
     }
 
-    private fun fetchClientDetails(clientId: Int) {
+    private fun fetchClientDetails(clientId: Int?) {
         mutableStateFlow.update { it.copy(dialogState = AmountTransferUiState.DialogState.Loading) }
         viewModelScope.launch {
             try {
-                val client = clientRepo.getClient(clientId)
+                val client = clientId?.let { clientRepo.getClient(it) }
                 mutableStateFlow.update {
                     it.copy(
-                        fromOfficeId = client.officeId,
-                        fromClientName = client.displayName,
-                        fromOfficeName = client.officeName,
+                        fromOfficeId = client?.officeId,
+                        fromClientName = client?.displayName,
+                        fromOfficeName = client?.officeName,
                     )
                 }
 
@@ -208,12 +208,14 @@ class AmountTransferViewModel(
 
     private fun fetchInitialTemplate() {
         viewModelScope.launch {
-            repository.getAccountTransferTemplate(
-                fromClientId = state.fromClientId ?: 0,
-                fromAccountType = state.fromAccountType,
-                fromAccountId = route.fromAccountId,
-                fromOfficeId = state.fromOfficeId,
-            ).collect { dataState ->
+            state.fromAccountType?.let { fromAccountType ->
+                repository.getAccountTransferTemplate(
+                    fromClientId = state.fromClientId ?: 0,
+                    fromAccountType = fromAccountType,
+                    fromAccountId = route.fromAccountId,
+                    fromOfficeId = state.fromOfficeId,
+                )
+            }?.collect { dataState ->
                 when (dataState) {
                     is DataState.Loading -> {
                         mutableStateFlow.update {
@@ -257,15 +259,19 @@ class AmountTransferViewModel(
                 it.copy(dialogState = AmountTransferUiState.DialogState.Loading)
             }
 
-            repository.getAccountTransferTemplate(
-                fromClientId = state.fromClientId ?: -1,
-                fromAccountType = state.fromAccountType,
-                fromAccountId = route.fromAccountId,
-                fromOfficeId = state.fromOfficeId,
-                toOfficeId = currentState.selectedOfficeId,
-                toClientId = currentState.selectedClientId,
-                toAccountType = currentState.accountTypeId,
-            ).collect { dataState ->
+            state.fromClientId?.let { fromClientId ->
+                state.fromAccountType?.let { fromAccountType ->
+                    repository.getAccountTransferTemplate(
+                        fromClientId = fromClientId,
+                        fromAccountType = fromAccountType,
+                        fromAccountId = route.fromAccountId,
+                        fromOfficeId = state.fromOfficeId,
+                        toOfficeId = currentState.selectedOfficeId,
+                        toClientId = currentState.selectedClientId,
+                        toAccountType = currentState.accountTypeId,
+                    )
+                }
+            }?.collect { dataState ->
                 when (dataState) {
                     is DataState.Loading -> {
                         mutableStateFlow.update {
@@ -311,14 +317,14 @@ class AmountTransferViewModel(
             mutableStateFlow.update { it.copy(dialogState = AmountTransferUiState.DialogState.Loading) }
 
             val request = AccountTransferRequest(
-                fromOfficeId = state.fromOfficeId ?: -1,
-                fromClientId = state.fromClientId ?: -1,
+                fromOfficeId = state.fromOfficeId,
+                fromClientId = state.fromClientId,
                 fromAccountType = state.fromAccountType,
                 fromAccountId = route.fromAccountId,
-                toOfficeId = state.selectedOfficeId!!,
-                toClientId = state.selectedClientId!!,
-                toAccountType = state.accountTypeId!!,
-                toAccountId = state.accountId!!,
+                toOfficeId = state.selectedOfficeId,
+                toClientId = state.selectedClientId,
+                toAccountType = state.accountTypeId,
+                toAccountId = state.accountId,
                 transferDate = DateHelper.formattedFullDate,
                 transferAmount = state.amount.toDouble(),
                 transferDescription = state.description,
@@ -440,7 +446,7 @@ data class AmountTransferUiState(
     val fromClientName: String? = null,
     val fromAccountNumber: String? = null,
     val fromAccountTypeName: String = "Loan account",
-    val fromAccountType: Int = 1,
+    val fromAccountType: Int? = null,
 
     val selectedOfficeName: String = "",
     val selectedClientName: String = "",
