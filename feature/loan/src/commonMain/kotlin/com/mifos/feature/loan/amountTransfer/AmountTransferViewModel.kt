@@ -447,7 +447,6 @@ data class AmountTransferUiState(
     val fromOfficeName: String? = null,
     val fromClientName: String? = null,
     val fromAccountNumber: String? = null,
-    val fromAccountTypeName: String = "Loan account",
     val fromAccountType: Int? = null,
 
     val selectedOfficeName: String = "",
