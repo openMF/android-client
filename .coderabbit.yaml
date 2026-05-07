@@ -87,20 +87,48 @@ reviews:
         - Follow unidirectional flow:
           Action → ViewModel → State → UI
         
-        Internal action handling:
-        - Asynchronous operations (repository/database/network collection) should delegate state updates through internal actions.
-        - Prefer sending internal actions using `sendAction(...)` instead of directly mutating state inside async collectors/callbacks.
-        - State mutations should primarily happen inside `handleAction(...)` to maintain reducer-style unidirectional flow.
-        - Split large async handlers into smaller private methods responsible for:
-            - collecting data
-            - mapping results to actions
-            - reducing state
-        - Avoid chaining feature flows directly from async collectors. Prefer dispatching follow-up internal actions.
-
+        Internal reducer/action architecture rules:
+          - Async operations MUST NOT directly mutate UI state repeatedly inside
+            Flow collectors, suspend callbacks, or repository result handlers.
+          
+          - Repository/network/database results MUST be converted into internal
+            actions using `sendAction(...)`.
+          
+          - `handleAction(...)` must act as the primary reducer responsible for:
+              - state mutation
+              - reducer-style state transitions
+              - triggering follow-up actions
+          
+          - Large async methods must be split into:
+              1. async collection layer
+              2. internal action dispatching
+              3. reducer/state handling
+          
+          - Avoid directly calling another business/data-loading method from
+            repository collectors or async callbacks.
+            Prefer dispatching follow-up internal actions instead.
+          
+          Preferred pattern:
+            repository result
+              -> sendAction(...)
+                -> handleAction(...)
+                  -> mutableStateFlow.update { ... }
+  
+          Anti-pattern examples:
+            mutableStateFlow.update { ... } inside collect { }
+            fetchX() -> directly calls fetchY() inside async collector
+            large methods mixing:
+             - collection
+             - state mutation
+             - navigation
+             - business chaining
+        
         Flag:
-        - Direct `mutableStateFlow.update {}` usage repeatedly inside Flow collectors or async callbacks
-        - Large async methods handling collection, state mutation, and navigation/business chaining together
-        - Direct feature-to-feature method chaining from repository collectors instead of dispatching internal actions
+        - Multiple `mutableStateFlow.update {}` calls inside collect { }
+        - Direct state mutation inside async repository callbacks
+        - Async methods performing both collection and reducer logic
+        - Direct business-flow chaining from async collectors
+        - Missing internal reducer actions for async results
         - Missing *State / *Event / *Action
         - ViewModel not extending BaseViewModel
         - Multiple separate state flows/variables in a single ViewModel.
