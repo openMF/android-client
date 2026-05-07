@@ -11,7 +11,6 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.core.model.objects.account.loan.AssignLoanOfficerRequest
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
@@ -24,6 +23,7 @@ import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRespons
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplate
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.dto.loan.AssignLoanOfficerRequestDto
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
@@ -304,7 +304,7 @@ class DataManagerLoan(
         return mBaseApiManager.loanService.disburseLoan(loanId, loanDisbursement)
     }
 
-    suspend fun assignLoanOfficer(loanId: Int, request: AssignLoanOfficerRequest): GenericResponse {
+    suspend fun assignLoanOfficer(loanId: Int, request: AssignLoanOfficerRequestDto): GenericResponse {
         val response = mBaseApiManager.loanService.assignLoanOfficer(loanId, request)
         if (!response.status.isSuccess()) {
             throw IllegalStateException(extractErrorMessage(response))

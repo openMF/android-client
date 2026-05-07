@@ -57,6 +57,9 @@ import com.mifos.core.domain.useCases.GetGroupsByOfficeUseCase
 import com.mifos.core.domain.useCases.GetIndividualCollectionSheetUseCase
 import com.mifos.core.domain.useCases.GetListOfLoanChargesUseCase
 import com.mifos.core.domain.useCases.GetLoanAndLoanRepaymentUseCase
+import com.mifos.core.domain.useCases.AssignLoanOfficerUseCase
+import com.mifos.core.domain.useCases.GetLoanForAssignOfficerUseCase
+import com.mifos.core.domain.useCases.GetLoanOfficerStaffOptionsUseCase
 import com.mifos.core.domain.useCases.GetLoansAccountTemplateUseCase
 import com.mifos.core.domain.useCases.GetReportCategoryUseCase
 import com.mifos.core.domain.useCases.GetReportFullParameterListUseCase
@@ -173,4 +176,7 @@ val UseCaseModule = module {
     factoryOf(::DeleteNoteUseCase)
     factoryOf(::CreateSignatureUseCase)
     factoryOf(::UpdateSignatureUseCase)
+    factoryOf(::GetLoanForAssignOfficerUseCase)
+    factoryOf(::GetLoanOfficerStaffOptionsUseCase)
+    factoryOf(::AssignLoanOfficerUseCase)
 }

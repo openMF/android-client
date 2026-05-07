@@ -21,8 +21,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.data.repository.LoanAccountSummaryRepository
-import com.mifos.core.model.objects.account.loan.AssignLoanOfficerRequest
+import com.mifos.core.domain.useCases.AssignLoanOfficerUseCase
+import com.mifos.core.domain.useCases.GetLoanForAssignOfficerUseCase
+import com.mifos.core.domain.useCases.GetLoanOfficerStaffOptionsUseCase
+import com.mifos.core.model.objects.account.loan.AssignLoanOfficerInput
 import com.mifos.core.model.utils.DateConstants
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.CancellationException
@@ -35,7 +37,9 @@ import kotlin.time.ExperimentalTime
 
 internal class AssignLoanOfficerViewModel(
     savedStateHandle: SavedStateHandle,
-    private val repository: LoanAccountSummaryRepository,
+    private val getLoanForAssignOfficerUseCase: GetLoanForAssignOfficerUseCase,
+    private val getLoanOfficerStaffOptionsUseCase: GetLoanOfficerStaffOptionsUseCase,
+    private val assignLoanOfficerUseCase: AssignLoanOfficerUseCase,
 ) : BaseViewModel<AssignLoanOfficerUiState, AssignLoanOfficerEffect, AssignLoanOfficerAction>(
     initialState = AssignLoanOfficerUiState.Loading,
 ) {
@@ -71,7 +75,7 @@ internal class AssignLoanOfficerViewModel(
 
     private fun loadLoan() {
         viewModelScope.launch {
-            repository.getLoanForAssignOfficer(loanId).collect { dataState ->
+            getLoanForAssignOfficerUseCase(loanId).collect { dataState ->
                 when (dataState) {
                     is DataState.Loading -> mutableStateFlow.value = AssignLoanOfficerUiState.Loading
                     is DataState.Error -> showLoadError(dataState.message)
@@ -97,7 +101,7 @@ internal class AssignLoanOfficerViewModel(
 
     private suspend fun loadOfficers(officeId: Int) {
         try {
-            repository.getLoanOfficerStaffOptions(officeId).collect { dataState ->
+            getLoanOfficerStaffOptionsUseCase(officeId).collect { dataState ->
                 when (dataState) {
                     is DataState.Loading -> Unit
                     is DataState.Error -> showLoadError(dataState.message)
@@ -156,7 +160,7 @@ internal class AssignLoanOfficerViewModel(
             }
 
             updateContent { it.copy(submitInProgress = true) }
-            val request = AssignLoanOfficerRequest(
+            val request = AssignLoanOfficerInput(
                 toLoanOfficerId = officerId,
                 assignmentDate = DateHelper.getDateAsStringFromLong(state.assignmentDateMillis),
                 locale = DateConstants.LOCALE,
@@ -164,7 +168,7 @@ internal class AssignLoanOfficerViewModel(
                 fromLoanOfficerId = loan.loanOfficerId.takeIf { it > 0 },
             )
 
-            when (val result = repository.assignLoanOfficer(loan.id, request)) {
+            when (val result = assignLoanOfficerUseCase(loan.id, request)) {
                 is DataState.Success -> {
                     updateContent { it.copy(submitInProgress = false) }
                     sendEvent(

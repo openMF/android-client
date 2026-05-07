@@ -9,7 +9,6 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.model.objects.account.loan.AssignLoanOfficerRequest
 import com.mifos.core.model.objects.account.loan.LoanApproval
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
@@ -24,6 +23,7 @@ import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.dto.loan.AssignLoanOfficerRequestDto
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.loans.Loan
@@ -63,7 +63,7 @@ interface LoanService {
     @POST(APIEndPoint.LOANS + "/{loanId}?command=assignLoanOfficer")
     suspend fun assignLoanOfficer(
         @Path("loanId") loanId: Int,
-        @Body request: AssignLoanOfficerRequest,
+        @Body request: AssignLoanOfficerRequestDto,
     ): HttpResponse
 
     //  Mandatory Fields

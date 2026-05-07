@@ -12,7 +12,7 @@ package com.mifos.core.data.repository
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.entity.accounts.loan.LoanForAssignOfficer
 import com.mifos.core.model.entity.accounts.loan.StaffOption
-import com.mifos.core.model.objects.account.loan.AssignLoanOfficerRequest
+import com.mifos.core.model.objects.account.loan.AssignLoanOfficerInput
 import com.mifos.core.network.GenericResponse
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.organisation.StaffEntity
@@ -29,5 +29,5 @@ interface LoanAccountSummaryRepository {
     fun getLoanOfficersForOffice(officeId: Int): Flow<DataState<List<StaffEntity>>>
     fun getLoanOfficerStaffOptions(officeId: Int): Flow<DataState<List<StaffOption>>>
 
-    suspend fun assignLoanOfficer(loanId: Int, request: AssignLoanOfficerRequest): DataState<GenericResponse>
+    suspend fun assignLoanOfficer(loanId: Int, assignLoanOfficerInput: AssignLoanOfficerInput): DataState<GenericResponse>
 }

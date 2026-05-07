@@ -11,10 +11,12 @@ package com.mifos.core.data.mapper.loan
 
 import com.mifos.core.model.entity.accounts.loan.LoanForAssignOfficer
 import com.mifos.core.model.entity.accounts.loan.StaffOption
+import com.mifos.core.model.objects.account.loan.AssignLoanOfficerInput
+import com.mifos.core.network.dto.loan.AssignLoanOfficerRequestDto
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.organisation.StaffEntity
 
-fun LoanWithAssociationsEntity.toModel(): LoanForAssignOfficer =
+fun LoanWithAssociationsEntity.toDomain(): LoanForAssignOfficer =
     LoanForAssignOfficer(
         id = id,
         clientOfficeId = clientOfficeId,
@@ -22,7 +24,7 @@ fun LoanWithAssociationsEntity.toModel(): LoanForAssignOfficer =
         loanOfficerName = loanOfficerName,
     )
 
-fun StaffEntity.toModel(): StaffOption? {
+fun StaffEntity.toDomain(): StaffOption? {
     val staffId = id ?: return null
     return StaffOption(
         id = staffId,
@@ -31,3 +33,12 @@ fun StaffEntity.toModel(): StaffOption? {
         displayName = displayName,
     )
 }
+
+fun AssignLoanOfficerInput.toDto(): AssignLoanOfficerRequestDto =
+    AssignLoanOfficerRequestDto(
+        toLoanOfficerId = toLoanOfficerId,
+        assignmentDate = assignmentDate,
+        locale = locale,
+        dateFormat = dateFormat,
+        fromLoanOfficerId = fromLoanOfficerId,
+    )
