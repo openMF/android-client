@@ -6,98 +6,6 @@ early_access: false
 chat:
   auto_reply: true
 
-knowledge_base:
-  linked_repositories:
-    - repository: "sahilshivekar/fineract"
-      instructions: |
-        This repository is the source of truth for backend APIs used by Mifos apps.
-
-        Use this repository for cross-repo API validation:
-
-        API Contract Validation:
-        Verify that API endpoints used in the KMP app exist in Fineract
-        Validate HTTP methods (GET, POST, PUT, DELETE) are correct
-        Ensure request parameters, query params, and path variables match backend expectations
-
-        Request/Response Structure:
-        Cross-check Kotlin DTOs with Fineract API request/response formats
-        Validate field names, types, and nesting
-        Ensure required fields are not missing
-
-        Business Rules:
-        Validate that API usage follows correct workflows (loan creation, repayment, client creation, etc.)
-        Ensure required sequence/order of API calls is respected
-
-        Flag:
-        Non-existent or incorrect endpoints
-        Wrong HTTP method usage
-        Missing required fields in requests
-        Incorrect DTO structure vs backend contract
-        Misaligned API flow compared to backend expectations
-
-        Note:
-        Do NOT enforce exact duplication
-        Focus on correctness and contract alignment
-
-    - repository: "sahilshivekar/mifos-x-web-app"
-      instructions: |
-        This repository serves as a reference implementation for business logic, workflows, and API usage in the Mifos ecosystem.
-
-        Use this repository to perform cross-repo validation for:
-        
-        API Consistency:
-          - Compare API endpoints used in the KMP app with those used in the web app
-          - Ensure endpoints, request patterns, and flows are consistent
-          - Validate that Kotlin data classes (DTOs) in the KMP app align with the JSON field names and structures used in the web app DTOs
-        
-        Business Logic Alignment:
-          - Use web-app as a reference for business logic and workflows
-          - Ensure flows (loan, client, savings, transactions, authentication) follow similar steps
-          - Validate that business validation logic is consistent across platforms
-        
-        Naming & Structure:
-          - Ensure naming conventions for models, fields, and variables align with web-app patterns
-          - Maintain consistency in feature-level structure and terminology
-        
-        Flag:
-          - API usage that deviates from web-app patterns
-          - Missing or inconsistent steps in business flows
-          - Naming inconsistencies across similar features
-          - Logic that contradicts existing web-app behavior
-        
-        Note:
-          - This is context-based validation using web-app as reference
-          - Flag potential inconsistencies rather than enforcing exact matches
-
-    - repository: "sahilshivekar/kmp-project-template"
-      instructions: |
-        This repository is the upstream source of truth. All of `core-base` and specific modules within `core` are template-synced.
-        
-        Comparative Analysis Requirement:
-          - If a PR modifies any file inside `core-base` or `core`, you MUST perform a side-by-side comparison with the template's implementation on the 'dev' branch.
-          - Do NOT simply flag that a change occurred. Your primary goal is to explain EXACTLY how the PR implementation differs from the template.
-          - Use the template file as the baseline: https://github.com/sahilshivekar/kmp-project-template/blob/dev/<filepath>
-        
-        Mandatory Output Format (for core/core-base modifications):
-          Generate a "Template Sync Analysis" table for each modified file:
-        
-        | File Path | Aspect/Logic      | Template (dev)             | PR Implementation  | Recommendation (Lead Architect's Advice) |
-        | :---------| :-----------------| :--------------------------| :------------------| :----------------------------------------|
-        | (link)    | (e.g., Auth Flow) | (How it works in template) | (How it works now) | (Detailed justification)                 |
-        
-        Analysis Guidelines:
-          - Handle Missing Files: If the file does not exist in the template repository, do not fail. Explicitly state that it is a new addition and evaluate if it should be upstreamed or kept local.
-          - Identify the "Why": Is the difference a bug fix that should be upstreamed to the template, or an app-specific customization?
-          - Detect Specificity: Flag if feature-specific or UI-specific logic is being injected into these shared modules.
-        
-        Note:
-          - The maintainer needs to see the mechanical difference. Be precise about added lines, removed abstractions, or changed function signatures compared to the template source.
-
-tone_instructions: |
-  Wrap each table, multi-suggestion section, or content >8 lines in its own <details><summary>...</summary></details> block.
-  Keep a short summary outside each block.
-  Always use clickable hyperlinks for file references.
-
 reviews:
   poem: false
   profile: "chill"
@@ -164,24 +72,6 @@ reviews:
           missing/empty sections, or sections without media.
 
   path_instructions:
-    - path: "**"
-      instructions: |
-        Cross-repository file references:
-        When performing cross-repository analyses, always generate clickable GitHub file links
-        using the following branch mappings:
-        - sahilshivekar/mifos-x-web-app → branch: dev
-          URL format: https://github.com/sahilshivekar/mifos-x-web-app/blob/dev/<filepath>
-        - sahilshivekar/fineract → branch: develop
-          URL format: https://github.com/sahilshivekar/fineract/blob/develop/<filepath>
-        - sahilshivekar/kmp-project-template → branch: dev
-          URL format: https://github.com/sahilshivekar/kmp-project-template/blob/dev/<filepath>
-        - sahilshivekar/android-client → branch: feat/MIFOSAC-759
-          URL format: https://github.com/sahilshivekar/android-client/blob/<branch>/<filepath>
-        Rules:
-        - Never output bare GitHub URLs or plain file paths.
-        - Always use Markdown clickable hyperlinks.
-        - Hyperlink text should be concise; prefer file names or relative paths.
-
     - path: "**/*ViewModel.kt"
       instructions: |
         MVI architecture rules:
@@ -197,7 +87,20 @@ reviews:
         - Follow unidirectional flow:
           Action → ViewModel → State → UI
         
+        Internal action handling:
+        - Asynchronous operations (repository/database/network collection) should delegate state updates through internal actions.
+        - Prefer sending internal actions using `sendAction(...)` instead of directly mutating state inside async collectors/callbacks.
+        - State mutations should primarily happen inside `handleAction(...)` to maintain reducer-style unidirectional flow.
+        - Split large async handlers into smaller private methods responsible for:
+            - collecting data
+            - mapping results to actions
+            - reducing state
+        - Avoid chaining feature flows directly from async collectors. Prefer dispatching follow-up internal actions.
+
         Flag:
+        - Direct `mutableStateFlow.update {}` usage repeatedly inside Flow collectors or async callbacks
+        - Large async methods handling collection, state mutation, and navigation/business chaining together
+        - Direct feature-to-feature method chaining from repository collectors instead of dispatching internal actions
         - Missing *State / *Event / *Action
         - ViewModel not extending BaseViewModel
         - Multiple separate state flows/variables in a single ViewModel.
@@ -267,94 +170,6 @@ reviews:
         Network Layer API Guidelines:
         - One-shot API calls MUST use `suspend`, return raw response `T`, and MUST NOT use Flow or DataState.
         - Streaming APIs MUST return `Flow<T>` and MUST NOT use `suspend` or DataState.
-        
-        Cross-repository API comparison is mandatory even during full PR reviews or auto reviews.
-        Ktorfit interfaces and request/response DTO structures are treated as API contracts and MUST trigger cross-repository API comparison.
-        Trigger API comparison when:
-          - Ktorfit annotations change:
-            `@GET`, `@POST`, `@PUT`, `@DELETE`, `@PATCH`,
-            `@Multipart`, `@FormUrlEncoded`,
-            `@Body`, `@Path`, `@Query`, `@QueryMap`,
-            `@Header`, `@Headers`
-          - API functions are added/removed/modified
-          - endpoint paths change
-          - request/response DTOs change
-          - parameter structure, types, or nullability change
-        
-        Generate exactly one API comparison section for each unique endpoint
-        (URL path + HTTP method combination).
-        Do nothing if no API contract changed.
-        
-        - Main API Comparison Table:
-        
-          | Checkpoint         | Fineract (Backend) | Mobile App (Current PR) | Mifos Web App | Analysis & Suggestions |
-          | :------------------| :------------------| :-----------------------| :-------------| :----------------------|
-          | URL Path           |                    |                         |               |                        |
-          | HTTP Method        |                    |                         |               |                        |
-          | Request Parameters |                    |                         |               |                        |
-          | Response Structure |                    |                         |               |                        |
-        
-        - Rules:
-          - `sahilshivekar/fineract` = source of truth for API contracts
-          - `sahilshivekar/mifos-x-web-app` = reference implementation only (comparison context, not authority)
-          - Mobile app analysis = extract only from the current PR network layer (endpoints, DTOs, API definitions)
-          - Do NOT include ViewModel, Repository, or UI-layer logic in API comparison responses
-        
-        - Analysis & Suggestions must include:
-          - mismatches (endpoint, method, params, DTO)
-          - inconsistencies with web app
-          - explicit confirmation if correct
-          - precise fixes (what to change)
-        
-        - Flag:
-          - missing required fields
-          - wrong types or nullability
-          - DTO mismatch (missing/extra fields)
-        
-        - Always produce a fully filled table when triggered.
-        
-        After the main API table, it is strictly required to generate TWO sections:
-          1) Request Fields Comparison
-          - Compare request fields across:
-              - Fineract
-              - Mobile App
-              - Mifos Web App
-          - Use this table:
-            Request Fields:
-            | Field | Fineract | Mobile | Web App | Notes |
-            |-------|----------|--------|---------|-------|
-        
-          2) Response Fields Comparison
-          - Compare response fields across:
-              - Fineract
-              - Mobile App
-              - Mifos Web App
-          - Use this table:
-            Response Fields:
-            | Field | Fineract | Mobile | Web App | Notes |
-            |-------|----------|--------|---------|-------|
-        
-          Rules:
-            - Use field names only (no full JSON)
-            - Use dot notation for nested fields (e.g., address.city)
-            - Notes MUST mention:
-                - missing fields
-                - extra fields
-                - naming mismatches
-                - or "aligned" if correct
-            - Skip these sections if no meaningful fields are present
-        It is mandatory to generate Request Fields Comparison and Response Fields Comparison
-        
-        - OUTPUT SCOPE CONSTRAINT
-          When this path instruction triggers a cross-repo API comparison response,
-          the response MUST contain ONLY the following sections:
-            1. Main API Comparison Table
-            2. Request Fields Comparison
-            3. Response Fields Comparison
-        
-          Do NOT include any other suggestions, issues, refactors, validations,
-          architecture concerns, or implementation feedback in the same response.
-          Such observations must be raised separately as normal review comments.
 
     - path: "**/data/repository/**/*.kt"
       instructions: |
@@ -414,10 +229,12 @@ reviews:
 
     - path: "**/{core-base,core}/**/*.kt"
       instructions: |
-        CRITICAL:
-        - Files inside `core-base` and `core` are template-synced with the `sahilshivekar/kmp-project-template` repository.
-        - When this instruction triggers, cross-repository Template Sync Analysis against `kmp-project-template` is mandatory.
-        - The 'Template Sync Analysis' comparison table itself is mandatory and MUST NOT be replaced with prose summaries.
+        Critical Module Change Detection:
+        - Changes in `core-base` module must be treated as high-impact.
+        - Flag any PR that modifies files inside `core-base` for careful review.
+        - Verify that modifications in `core-base` are necessary and minimal.
+        Output:
+        - Clearly highlight that `core-base` is a shared foundational module and requires extra review attention.
 
     - path: "**/*.kt"
       instructions: |
