@@ -22,4 +22,3 @@ class AssignLoanOfficerUseCase(
         assignLoanOfficerInput: AssignLoanOfficerInput,
     ): DataState<GenericResponse> = repository.assignLoanOfficer(loanId, assignLoanOfficerInput)
 }
-

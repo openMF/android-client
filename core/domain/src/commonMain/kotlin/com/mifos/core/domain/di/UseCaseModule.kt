@@ -18,6 +18,7 @@ import com.mifos.core.domain.useCases.AddDataTableEntryUseCase
 import com.mifos.core.domain.useCases.AddNoteUseCase
 import com.mifos.core.domain.useCases.ApproveCheckerUseCase
 import com.mifos.core.domain.useCases.ApproveSavingsApplicationUseCase
+import com.mifos.core.domain.useCases.AssignLoanOfficerUseCase
 import com.mifos.core.domain.useCases.CalculateLoanScheduleUseCase
 import com.mifos.core.domain.useCases.CreateChargesUseCase
 import com.mifos.core.domain.useCases.CreateClientIdentifierUseCase
@@ -57,7 +58,6 @@ import com.mifos.core.domain.useCases.GetGroupsByOfficeUseCase
 import com.mifos.core.domain.useCases.GetIndividualCollectionSheetUseCase
 import com.mifos.core.domain.useCases.GetListOfLoanChargesUseCase
 import com.mifos.core.domain.useCases.GetLoanAndLoanRepaymentUseCase
-import com.mifos.core.domain.useCases.AssignLoanOfficerUseCase
 import com.mifos.core.domain.useCases.GetLoanForAssignOfficerUseCase
 import com.mifos.core.domain.useCases.GetLoanOfficerStaffOptionsUseCase
 import com.mifos.core.domain.useCases.GetLoansAccountTemplateUseCase

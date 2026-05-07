@@ -21,4 +21,3 @@ class GetLoanForAssignOfficerUseCase(
         loanId: Int,
     ): Flow<DataState<LoanForAssignOfficer?>> = repository.getLoanForAssignOfficer(loanId)
 }
-

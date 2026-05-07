@@ -16,4 +16,3 @@ data class AssignLoanOfficerInput(
     val dateFormat: String,
     val fromLoanOfficerId: Int? = null,
 )
-

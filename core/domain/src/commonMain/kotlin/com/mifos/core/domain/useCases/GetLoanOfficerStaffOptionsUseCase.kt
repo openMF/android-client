@@ -21,4 +21,3 @@ class GetLoanOfficerStaffOptionsUseCase(
         officeId: Int,
     ): Flow<DataState<List<StaffOption>>> = repository.getLoanOfficerStaffOptions(officeId)
 }
-

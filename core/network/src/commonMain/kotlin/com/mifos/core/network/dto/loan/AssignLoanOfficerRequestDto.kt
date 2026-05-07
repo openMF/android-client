@@ -19,4 +19,3 @@ data class AssignLoanOfficerRequestDto(
     val dateFormat: String,
     val fromLoanOfficerId: Int? = null,
 )
-
