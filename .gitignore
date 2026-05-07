@@ -99,3 +99,9 @@ mifosng-android/mifosng-android.iml
 *.hprof
 .kotlin/
 build-logic/convention/bin/
+
+# Xcode user data
+*.xcuserdata/
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcshareddata/
