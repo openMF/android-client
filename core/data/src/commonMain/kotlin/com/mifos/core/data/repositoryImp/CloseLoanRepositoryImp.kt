@@ -45,7 +45,7 @@ class CloseLoanRepositoryImp(
      * @param request The [CloseLoanRequest] for closing the loan.
      */
     override suspend fun closeLoanAccount(loanId: Int, request: CloseLoanRequest) {
-        dataManagerLoan.closeLoanAccount(loanId, request)
+        dataManagerLoan.closeLoanAccount(loanId, request).first()
     }
 
     /**
