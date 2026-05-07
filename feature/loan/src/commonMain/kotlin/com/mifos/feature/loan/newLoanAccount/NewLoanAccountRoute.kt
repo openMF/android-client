@@ -23,12 +23,14 @@ data class NewLoanAccountRoute(
 fun NavGraphBuilder.newLoanAccountDestination(
     navController: NavController,
     onNavigateBack: () -> Unit,
-    onFinish: (clientId: Int) -> Unit,
+    onFinish: () -> Unit,
+    onLoanCreated: (clientId: Int) -> Unit,
 ) {
     composable<NewLoanAccountRoute> {
         NewLoanAccountScreen(
             onNavigateBack = onNavigateBack,
             onFinish = onFinish,
+            onLoanCreated = onLoanCreated,
             navController = navController,
         )
     }

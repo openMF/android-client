@@ -346,7 +346,7 @@ internal class NewLoanAccountViewModel(
                             )
                         }
                         delay(1000)
-                        sendEvent(NewLoanAccountEvent.Finish(state.clientId))
+                        sendEvent(NewLoanAccountEvent.LoanCreationSuccess)
                     }
                 }
             }
@@ -702,7 +702,7 @@ internal class NewLoanAccountViewModel(
     }
 
     private fun handleFinish() {
-        sendEvent(NewLoanAccountEvent.Finish(state.clientId))
+        sendEvent(NewLoanAccountEvent.Finish)
     }
 
     private fun handleStepChange(action: NewLoanAccountAction.OnStepChange) {
@@ -787,7 +787,7 @@ internal class NewLoanAccountViewModel(
                 )
             }
         } else {
-            sendEvent(NewLoanAccountEvent.Finish(state.clientId))
+            sendEvent(NewLoanAccountEvent.Finish)
         }
     }
 
@@ -1124,7 +1124,8 @@ constructor(
 
 sealed interface NewLoanAccountEvent {
     data object NavigateBack : NewLoanAccountEvent
-    data class Finish(val clientId: Int) : NewLoanAccountEvent
+    data object Finish : NewLoanAccountEvent
+    data object LoanCreationSuccess : NewLoanAccountEvent
 }
 
 sealed interface NewLoanAccountAction {

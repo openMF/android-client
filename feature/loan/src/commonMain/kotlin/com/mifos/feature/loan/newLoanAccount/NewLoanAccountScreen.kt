@@ -87,7 +87,8 @@ import kotlin.time.ExperimentalTime
 internal fun NewLoanAccountScreen(
     navController: NavController,
     onNavigateBack: () -> Unit,
-    onFinish: (clientId: Int) -> Unit,
+    onFinish: () -> Unit,
+    onLoanCreated: (clientId: Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: NewLoanAccountViewModel = koinViewModel(),
 ) {
@@ -96,7 +97,8 @@ internal fun NewLoanAccountScreen(
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
             NewLoanAccountEvent.NavigateBack -> onNavigateBack()
-            is NewLoanAccountEvent.Finish -> onFinish(event.clientId)
+            NewLoanAccountEvent.Finish -> onFinish()
+            NewLoanAccountEvent.LoanCreationSuccess -> onLoanCreated(state.clientId)
         }
     }
 

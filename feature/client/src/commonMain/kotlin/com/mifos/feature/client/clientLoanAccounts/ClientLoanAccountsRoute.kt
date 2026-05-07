@@ -45,10 +45,6 @@ fun NavController.navigateToClientLoanAccountsRoute(
 }
 
 fun NavController.navigateToClientLoanAccounts(clientId: Int) {
-    popBackStack(
-        route = ClientLoanAccountsRoute(clientId = clientId),
-        inclusive = true,
-    )
     navigate(ClientLoanAccountsRoute(clientId = clientId)) {
         popUpTo<NewLoanAccountRoute> { inclusive = true }
         launchSingleTop = true
