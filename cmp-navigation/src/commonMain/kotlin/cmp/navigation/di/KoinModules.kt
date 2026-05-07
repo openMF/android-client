@@ -43,10 +43,12 @@ import com.mifos.room.di.HelperModule
 import com.mifos.room.di.PlatformSpecificDatabaseModule
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
+import template.core.base.common.di.CommonModule
 
 object KoinModules {
 
     private val commonModules = module { includes(DispatchersModule) }
+    private val coreBaseCommonModules = module { includes(CommonModule) }
     private val domainModule = module { includes(UseCaseModule) }
     private val dataModules = module { includes(RepositoryModule) }
     private val coreDataStoreModules = module { includes(PreferencesModule) }
@@ -104,5 +106,6 @@ object KoinModules {
         featureModules,
         networkModules,
         coreDataStoreModules,
+        coreBaseCommonModules,
     )
 }

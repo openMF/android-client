@@ -7,9 +7,7 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.objects.notes
-
-import kotlinx.serialization.Serializable
+package com.mifos.core.model.objects.note
 
 /**
 * GetResourceTypeResourceIdNotesNoteIdResponse
@@ -25,7 +23,6 @@ import kotlinx.serialization.Serializable
 * @param updatedOn
 */
 
-@Serializable
 data class Note(
 
     val clientId: Long? = null,

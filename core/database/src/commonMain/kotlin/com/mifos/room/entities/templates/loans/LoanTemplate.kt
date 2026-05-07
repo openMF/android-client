@@ -105,7 +105,7 @@ data class LoanTemplate(
     @IgnoredOnParcel
     val interestCalculationPeriodType: InterestCalculationPeriodType? = null,
 
-    val allowPartialPeriodInterestCalcualtion: Boolean? = null,
+    val allowPartialPeriodInterestCalculation: Boolean? = null,
 
     val transactionProcessingStrategyId: Int? = null,
 
