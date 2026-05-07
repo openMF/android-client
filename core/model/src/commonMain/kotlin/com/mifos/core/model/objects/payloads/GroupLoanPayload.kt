@@ -19,7 +19,7 @@ import kotlinx.serialization.Serializable
 @Parcelize
 @Serializable
 data class GroupLoanPayload(
-    var isAllowPartialPeriodInterestCalcualtion: Boolean? = null,
+    var isAllowPartialPeriodInterestCalculation: Boolean? = null,
     var amortizationType: Int? = null,
     var groupId: Int? = null,
     var dateFormat: String? = null,
