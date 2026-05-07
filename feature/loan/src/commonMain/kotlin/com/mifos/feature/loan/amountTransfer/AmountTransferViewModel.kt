@@ -209,12 +209,14 @@ class AmountTransferViewModel(
     private fun fetchInitialTemplate() {
         viewModelScope.launch {
             state.fromAccountType?.let { fromAccountType ->
-                repository.getAccountTransferTemplate(
-                    fromClientId = state.fromClientId ?: 0,
-                    fromAccountType = fromAccountType,
-                    fromAccountId = route.fromAccountId,
-                    fromOfficeId = state.fromOfficeId,
-                )
+                state.fromClientId?.let { fromClientId ->
+                    repository.getAccountTransferTemplate(
+                        fromClientId = fromClientId,
+                        fromAccountType = fromAccountType,
+                        fromAccountId = route.fromAccountId,
+                        fromOfficeId = state.fromOfficeId,
+                    )
+                }
             }?.collect { dataState ->
                 when (dataState) {
                     is DataState.Loading -> {
