@@ -6,6 +6,11 @@ early_access: false
 chat:
   auto_reply: true
 
+tone_instructions: |
+  Wrap each table, multi-suggestion section, or content >8 lines in its own <details><summary>...</summary></details> block.
+  Keep a short summary outside each block.
+  Always use clickable hyperlinks for file references.
+
 reviews:
   poem: false
   profile: "chill"
