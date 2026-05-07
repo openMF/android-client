@@ -244,17 +244,17 @@ private fun ClientLoanAccountsScreen(
                                     onActionClicked = { actions ->
                                         when (actions) {
                                             is Actions.ViewAccount -> onAction(
-                                                ClientLoanAccountsAction.ViewAccount(loan.id ?: 0),
+                                                ClientLoanAccountsAction.ViewAccount(loan.id),
                                             )
 
                                             is Actions.MakeRepayment -> onAction(
                                                 ClientLoanAccountsAction.MakeRepayment(
-                                                    loan.id ?: 0,
+                                                    loan.id,
                                                 ),
                                             )
                                             is Actions.TransferFund -> onAction(
                                                 ClientLoanAccountsAction.TransferFund(
-                                                    loanId = loan.id ?: -1,
+                                                    loanId = loan.id,
                                                 ),
                                             )
 

@@ -39,7 +39,7 @@ class ClientLoanAccountsViewModel(
             }
 
             is ClientLoanAccountsAction.MakeRepayment -> {
-                sendEvent(ClientLoanAccountsEvent.MakeRepayment(action.loanId))
+                action.loanId?.let { sendEvent(ClientLoanAccountsEvent.MakeRepayment(it)) }
             }
 
             ClientLoanAccountsAction.OnSearchClick -> {
@@ -68,11 +68,13 @@ class ClientLoanAccountsViewModel(
                 }
             }
 
-            is ClientLoanAccountsAction.ViewAccount -> sendEvent(
-                ClientLoanAccountsEvent.ViewAccount(
-                    action.loanId,
-                ),
-            )
+            is ClientLoanAccountsAction.ViewAccount -> action.loanId?.let { loanId ->
+                sendEvent(
+                    ClientLoanAccountsEvent.ViewAccount(
+                        loanId,
+                    ),
+                )
+            }
 
             is ClientLoanAccountsAction.HandleFilterClick -> handleFilterClick(action.status)
 
@@ -95,11 +97,13 @@ class ClientLoanAccountsViewModel(
             }
 
             is ClientLoanAccountsAction.TransferFund -> {
-                sendEvent(
-                    ClientLoanAccountsEvent.TransferFund(
-                        loanId = action.loanId,
-                    ),
-                )
+                action.loanId?.let { loanId ->
+                    sendEvent(
+                        ClientLoanAccountsEvent.TransferFund(
+                            loanId = loanId,
+                        ),
+                    )
+                }
             }
         }
     }
@@ -131,9 +135,10 @@ class ClientLoanAccountsViewModel(
             try {
                 // Todo modify search accordingly
                 // currently only supporting searching by account no
-                val loanAccounts = repository.getClientAccounts(route.clientId)
-                    .loanAccounts
-                    .filter { it.accountNo?.contains(state.searchText.trim()) == true }
+                val loanAccounts =
+                    repository.getClientAccounts(route.clientId).loanAccounts.filter {
+                        it.accountNo?.contains(state.searchText.trim()) == true
+                    }
 
                 mutableStateFlow.update {
                     it.copy(
@@ -199,10 +204,7 @@ class ClientLoanAccountsViewModel(
     }
 
     private val LoanStatusEntity.isActuallyClosed: Boolean
-        get() = this.closed == true ||
-            this.closedObligationsMet == true ||
-            this.closedRescheduled == true ||
-            this.closedWrittenOff == true
+        get() = this.closed == true || this.closedObligationsMet == true || this.closedRescheduled == true || this.closedWrittenOff == true
 
     private val LoanStatusEntity.isPending: Boolean
         get() = this.pendingApproval == true
@@ -244,15 +246,15 @@ sealed interface ClientLoanAccountsAction {
     data object NavigateBack : ClientLoanAccountsAction
     data object ToggleFilter : ClientLoanAccountsAction
     data object Refresh : ClientLoanAccountsAction
-    data class MakeRepayment(val loanId: Int) : ClientLoanAccountsAction
-    data class ViewAccount(val loanId: Int) : ClientLoanAccountsAction
+    data class MakeRepayment(val loanId: Int?) : ClientLoanAccountsAction
+    data class ViewAccount(val loanId: Int?) : ClientLoanAccountsAction
     data class UpdateSearchValue(val query: String) : ClientLoanAccountsAction
     data object OnSearchClick : ClientLoanAccountsAction
     data object CloseDialog : ClientLoanAccountsAction
     data class HandleFilterClick(val status: LoanStatusFilter) : ClientLoanAccountsAction
     data object ClearFilters : ClientLoanAccountsAction
     data class TransferFund(
-        val loanId: Int,
+        val loanId: Int?,
     ) : ClientLoanAccountsAction
 }
 
