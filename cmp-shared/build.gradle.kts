@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
 plugins {
     alias(libs.plugins.kmp.library.convention)
@@ -60,7 +60,7 @@ kotlin {
 
     cocoapods {
         summary = "KMP Shared Module"
-        homepage = "https://github.com/openMF/kmp-project-template"
+        homepage = "https://github.com/openMF/mifos-x-field-officer-app"
         version = project.version.toString().substringBefore("-").substringBefore("+")
         ios.deploymentTarget = "16.0"
         podfile = project.file("../cmp-ios/Podfile")
