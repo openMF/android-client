@@ -32,13 +32,15 @@ interface CloseLoanRepository {
      *
      * @param loanId The unique identifier of the loan account to close.
      * @param request The [CloseLoanRequest] payload.
+     * @return [DataState.Success] on completion, [DataState.Error] on failure or offline.
      */
-    suspend fun closeLoanAccount(loanId: Int, request: CloseLoanRequest)
+    suspend fun closeLoanAccount(loanId: Int, request: CloseLoanRequest): DataState<Unit>
 
     /**
      * Re-fetches the loan account from the server to ensure local state is synchronized.
      *
      * @param loanId The unique identifier of the loan account to synchronize.
+     * @return [DataState.Success] on completion, [DataState.Error] on failure or offline.
      */
-    suspend fun syncLoanAccount(loanId: Int)
+    suspend fun syncLoanAccount(loanId: Int): DataState<Unit>
 }

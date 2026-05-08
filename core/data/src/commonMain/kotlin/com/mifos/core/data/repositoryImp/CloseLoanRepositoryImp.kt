@@ -12,48 +12,51 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.CloseLoanRepository
+import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.data.util.runAsDataState
+import com.mifos.core.data.util.withNetworkCheck
 import com.mifos.core.model.objects.account.loan.CloseLoanRequest
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOn
+import template.core.base.common.manager.DispatcherManager
 
 /**
  * Default implementation of [CloseLoanRepository] backed by [DataManagerLoan].
  *
+ * Aligns with the repository pattern introduced in PR #2666:
+ * - Action methods are wrapped in [runAsDataState] with a network guard.
+ * - Observation flows are wrapped in [withNetworkCheck] and switched onto [DispatcherManager.io].
+ *
  * @property dataManagerLoan The data manager used to interact with the loan API.
+ * @property networkMonitor Reactive connectivity source for network gating.
+ * @property dispatcher Coroutine dispatcher provider for IO work.
  */
 class CloseLoanRepositoryImp(
     private val dataManagerLoan: DataManagerLoan,
+    private val networkMonitor: NetworkMonitor,
+    private val dispatcher: DispatcherManager,
 ) : CloseLoanRepository {
 
-    /**
-     * Fetches the close-loan template from the network.
-     *
-     * @param loanId The unique identifier of the loan account.
-     * @return A [Flow] emitting the [DataState] of the template.
-     */
-    override fun getCloseLoanTemplate(loanId: Int): Flow<DataState<LoanTransactionTemplate?>> {
-        return dataManagerLoan.getLoanTransactionTemplate(loanId, "close")
-            .asDataStateFlow()
+    override fun getCloseLoanTemplate(loanId: Int): Flow<DataState<LoanTransactionTemplate?>> =
+        networkMonitor.withNetworkCheck(
+            dataManagerLoan.getLoanTransactionTemplate(loanId, "close")
+                .asDataStateFlow(),
+        ).flowOn(dispatcher.io)
+
+    override suspend fun closeLoanAccount(
+        loanId: Int,
+        request: CloseLoanRequest,
+    ): DataState<Unit> = runAsDataState(networkMonitor, dispatcher.io) {
+        dataManagerLoan.closeLoanAccount(loanId, request)
+        Unit
     }
 
-    /**
-     * Submits the close loan request to the network via [DataManagerLoan].
-     *
-     * @param loanId The unique identifier of the loan account.
-     * @param request The [CloseLoanRequest] for closing the loan.
-     */
-    override suspend fun closeLoanAccount(loanId: Int, request: CloseLoanRequest) {
-        dataManagerLoan.closeLoanAccount(loanId, request).first()
-    }
-
-    /**
-     * Synchronizes the loan account data by fetching it from the network and saving it locally.
-     *
-     * @param loanId The unique identifier of the loan account.
-     */
-    override suspend fun syncLoanAccount(loanId: Int) {
-        dataManagerLoan.syncLoanById(loanId).first()
-    }
+    override suspend fun syncLoanAccount(loanId: Int): DataState<Unit> =
+        runAsDataState(networkMonitor, dispatcher.io) {
+            dataManagerLoan.syncLoanById(loanId).first()
+            Unit
+        }
 }

@@ -135,13 +135,13 @@ interface LoanService {
      *
      * @param loanId The ID of the loan to close.
      * @param request The request body containing closure date and notes.
-     * @return A [Flow] of [GenericResponse].
+     * @return [GenericResponse].
      */
     @POST(APIEndPoint.LOANS + "/{loanId}?command=close")
-    fun closeLoanAccount(
+    suspend fun closeLoanAccount(
         @Path("loanId") loanId: Int,
         @Body request: CloseLoanRequest,
-    ): Flow<GenericResponse>
+    ): GenericResponse
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.CHARGES)
     fun getListOfCharges(@Path("clientId") clientId: Int): Flow<Page<ChargesEntity>>

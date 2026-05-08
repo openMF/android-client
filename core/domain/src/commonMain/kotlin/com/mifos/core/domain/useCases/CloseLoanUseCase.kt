@@ -13,11 +13,14 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.CloseLoanRepository
 import com.mifos.core.model.objects.account.loan.CloseLoanRequest
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
 /**
  * Use case to close a loan account.
+ *
+ * Performs the close transaction; on success, best-effort syncs the loan locally so the
+ * profile reflects the closed status. Sync failure is intentionally swallowed because
+ * it should not surface as a "close failed" error to the UI.
  *
  * @property repository The [CloseLoanRepository] to perform the close operation.
  */
@@ -33,14 +36,13 @@ class CloseLoanUseCase(
      */
     operator fun invoke(loanId: Int, request: CloseLoanRequest): Flow<DataState<Unit>> = flow {
         emit(DataState.Loading)
-        repository.closeLoanAccount(loanId, request)
-
-        try {
-            repository.syncLoanAccount(loanId)
-        } catch (_: Exception) {
-            // Sync failure must not surface to UI as a close-failed error.
+        when (val result = repository.closeLoanAccount(loanId, request)) {
+            is DataState.Success -> {
+                repository.syncLoanAccount(loanId)
+                emit(DataState.Success(Unit))
+            }
+            is DataState.Error -> emit(result)
+            DataState.Loading -> Unit
         }
-
-        emit(DataState.Success(Unit))
-    }.catch { emit(DataState.Error(it, null)) }
+    }
 }

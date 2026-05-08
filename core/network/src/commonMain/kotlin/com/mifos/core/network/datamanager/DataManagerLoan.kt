@@ -419,12 +419,12 @@ class DataManagerLoan(
      *
      * @param loanId The ID of the loan to close.
      * @param request The request body containing closure date and notes.
-     * @return A [Flow] of [GenericResponse].
+     * @return [GenericResponse].
      */
-    fun closeLoanAccount(
+    suspend fun closeLoanAccount(
         loanId: Int,
         request: CloseLoanRequest,
-    ): Flow<GenericResponse> {
+    ): GenericResponse {
         return mBaseApiManager.loanService.closeLoanAccount(loanId, request)
     }
 }
