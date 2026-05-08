@@ -10,22 +10,17 @@
 package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.NoteRepository
-import com.mifos.core.model.objects.payloads.NotesPayload
-import com.mifos.core.network.GenericResponse
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import com.mifos.core.model.objects.note.UpdateNoteInput
 
 class UpdateNoteUseCase(
     val repository: NoteRepository,
 ) {
-    operator fun invoke(
+    suspend operator fun invoke(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-        notesPayload: NotesPayload,
-    ): Flow<DataState<GenericResponse>> = flow {
-        emit(repository.updateNote(resourceType, resourceId, noteId, notesPayload))
-    }.asDataStateFlow()
+        updateNoteInput: UpdateNoteInput,
+    ): DataState<Unit> =
+        repository.updateNote(resourceType, resourceId, noteId, updateNoteInput)
 }

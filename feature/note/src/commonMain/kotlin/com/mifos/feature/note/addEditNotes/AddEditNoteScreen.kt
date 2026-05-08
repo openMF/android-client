@@ -83,8 +83,7 @@ fun AddEditNoteScreenDialog(
     when (state.dialogState) {
         is AddEditNoteState.DialogState.Error -> {
             MifosErrorComponent(
-                isNetworkConnected = state.networkConnection,
-                message = stringResource(state.dialogState.message),
+                message = state.dialogState.message,
                 isRetryEnabled = true,
                 onRetry = {
                     onAction(AddEditNoteAction.OnRetry)
@@ -96,7 +95,7 @@ fun AddEditNoteScreenDialog(
             MifosProgressIndicatorOverlay()
         }
 
-        AddEditNoteState.DialogState.MisTouchBack -> {
+        AddEditNoteState.DialogState.PreventAccidentalBack -> {
             MifosAlertDialog(
                 onDismissRequest = {
                     onAction(AddEditNoteAction.DismissDialog)
@@ -168,13 +167,11 @@ private fun AddEditNote(
             verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.md),
         ) {
             MifosOutlinedTextField(
-                value = state.textFieldNotesPayload.note ?: "",
+                value = state.textFieldNotesPayload ?: "",
                 onValueChange = {
                     onAction(
                         AddEditNoteAction.TextFieldNotesPayload(
-                            state.textFieldNotesPayload.copy(
-                                note = it,
-                            ),
+                            it,
                         ),
                     )
                 },
@@ -195,7 +192,7 @@ private fun AddEditNote(
             firstBtnText = stringResource(Res.string.feature_note_button_back),
             secondBtnText = stringResource(state.addUpdateButton),
             onFirstBtnClick = {
-                onAction(AddEditNoteAction.MisTouchBackDialog)
+                onAction(AddEditNoteAction.PreventAccidentalBackDialog)
             },
             onSecondBtnClick = {
                 if (state.editEnabled) {

@@ -28,6 +28,8 @@ kotlin {
             api(projects.core.domain)
             api(projects.core.datastore)
             implementation(compose.components.uiToolingPreview)
+            implementation(libs.mifos.authenticator.passcode)
+            implementation(libs.mifos.authenticator.biometrics)
         }
     }
 }

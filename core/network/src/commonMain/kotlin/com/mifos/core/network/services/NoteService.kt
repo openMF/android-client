@@ -9,9 +9,11 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.model.objects.notes.Note
-import com.mifos.core.model.objects.payloads.NotesPayload
-import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.dto.note.CreateNoteResponseDto
+import com.mifos.core.network.dto.note.DeleteNoteResponseDto
+import com.mifos.core.network.dto.note.NoteDto
+import com.mifos.core.network.dto.note.NoteRequestDto
+import com.mifos.core.network.dto.note.UpdateNoteResponseDto
 import com.mifos.room.basemodel.APIEndPoint
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.DELETE
@@ -31,15 +33,15 @@ interface NoteService {
      *
      * @param resourceType resourceType, eg : Client, Loan, Group, Savings Account
      * @param resourceId resourceId, eg : ClientId, LoanId, GroupId, Savings AccountId
-     * @param notesPayload
-     * @return [GenericResponse]
+     * @param noteRequestDto
+     * @return [CreateNoteResponseDto]
      */
     @POST("{resourceType}/{resourceId}/" + APIEndPoint.NOTES)
     suspend fun addNewNote(
         @Path("resourceType") resourceType: String,
         @Path("resourceId") resourceId: Long,
-        @Body notesPayload: NotesPayload,
-    ): GenericResponse
+        @Body noteRequestDto: NoteRequestDto,
+    ): CreateNoteResponseDto
 
     /**
      * Delete a Resource Note
@@ -50,14 +52,14 @@ interface NoteService {
      * @param resourceType resourceType, eg : Client, Loan, Group, Savings Account
      * @param resourceId resourceId, eg : ClientId, LoanId, GroupId, Savings AccountId
      * @param noteId noteId
-     * @return [GenericResponse]
+     * @return [DeleteNoteResponseDto]
      */
     @DELETE("{resourceType}/{resourceId}/" + APIEndPoint.NOTES + "/{noteId}")
     suspend fun deleteNote(
         @Path("resourceType") resourceType: String,
         @Path("resourceId") resourceId: Long,
         @Path("noteId") noteId: Long,
-    ): GenericResponse
+    ): DeleteNoteResponseDto
 
     /**
      * Retrieve a single Note
@@ -67,14 +69,14 @@ interface NoteService {
      * @param resourceType resourceType, eg : Client, Loan, Group, Savings Account
      * @param resourceId resourceId, eg : ClientId, LoanId, GroupId, Savings AccountId
      * @param noteId noteId
-     * @return [Note]
+     * @return [Flow<NoteDto>]
      */
     @GET("{resourceType}/{resourceId}/" + APIEndPoint.NOTES + "/{noteId}")
     fun retrieveNote(
         @Path("resourceType") resourceType: String,
         @Path("resourceId") resourceId: Long,
         @Path("noteId") noteId: Long,
-    ): Flow<Note>
+    ): Flow<NoteDto>
 
     /**
      * Retrieve List of notes
@@ -84,13 +86,13 @@ interface NoteService {
      *
      * @param resourceType resourceType, eg : Client, Loan, Group, Savings Account
      * @param resourceId resourceId, eg : ClientId, LoanId, GroupId, Savings AccountId
-     * @return [List<Note>]
+     * @return [Flow<List<NoteDto>>]
      */
     @GET("{resourceType}/{resourceId}/" + APIEndPoint.NOTES)
     fun retrieveListNotes(
         @Path("resourceType") resourceType: String,
         @Path("resourceId") resourceId: Long,
-    ): Flow<List<Note>>
+    ): Flow<List<NoteDto>>
 
     /**
      * Update a Note
@@ -100,13 +102,14 @@ interface NoteService {
      * @param resourceType resourceType, eg : Client, Loan, Group, Savings Account
      * @param resourceId resourceId, eg : ClientId, LoanId, GroupId, Savings AccountId
      * @param noteId noteId
-     * @param notesPayload
+     * @param noteRequestDto
+     * @return UpdateNoteResponseDto
      */
     @PUT("{resourceType}/{resourceId}/" + APIEndPoint.NOTES + "/{noteId}")
     suspend fun updateNote(
         @Path("resourceType") resourceType: String,
         @Path("resourceId") resourceId: Long,
         @Path("noteId") noteId: Long,
-        @Body notesPayload: NotesPayload,
-    ): GenericResponse
+        @Body noteRequestDto: NoteRequestDto,
+    ): UpdateNoteResponseDto
 }
