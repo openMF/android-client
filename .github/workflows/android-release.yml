@@ -66,9 +66,6 @@ permissions:
   id-token: write
   pages: write
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 concurrency:
   group: "reusable"
   cancel-in-progress: false

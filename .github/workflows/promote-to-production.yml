@@ -66,9 +66,6 @@ concurrency:
 permissions:
   contents: write
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
   # Job to promote app from beta to production in Play Store
   play_promote_production:

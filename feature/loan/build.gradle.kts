@@ -29,6 +29,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.koin.compose.viewmodel)
+            implementation(libs.ui.backhandler)
         }
     }
 }

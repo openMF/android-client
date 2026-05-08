@@ -79,9 +79,6 @@ concurrency:
 permissions:
   contents: write
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
   pr_checks:
     name: PR Checks
