@@ -18,7 +18,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LoansPayload(
-    var allowPartialPeriodInterestCalcualtion: Boolean? = null,
+    var allowPartialPeriodInterestCalculation: Boolean? = null,
     var amortizationType: Int? = null,
     var clientId: Int? = null,
     var dateFormat: String? = null,
