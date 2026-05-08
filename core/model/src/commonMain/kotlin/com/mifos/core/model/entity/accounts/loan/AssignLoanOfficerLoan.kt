@@ -12,10 +12,10 @@ package com.mifos.core.model.entity.accounts.loan
 import kotlinx.serialization.Serializable
 
 /**
- * Domain model for assign / change loan officer flows (subset of full loan with associations).
+ * Domain model for assign/change loan officer flows.
  */
 @Serializable
-data class LoanForAssignOfficer(
+data class AssignLoanOfficerLoan(
     val id: Int,
     val clientOfficeId: Int,
     val loanOfficerId: Int,

@@ -11,12 +11,13 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
-import com.mifos.core.data.mapper.loan.toDomain
+import com.mifos.core.data.mapper.loan.toAssignLoanOfficerLoan
 import com.mifos.core.data.mapper.loan.toDto
+import com.mifos.core.data.mapper.loan.toStaffOption
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.data.util.runAsDataState
-import com.mifos.core.model.entity.accounts.loan.LoanForAssignOfficer
+import com.mifos.core.model.entity.accounts.loan.AssignLoanOfficerLoan
 import com.mifos.core.model.entity.accounts.loan.StaffOption
 import com.mifos.core.model.objects.account.loan.AssignLoanOfficerInput
 import com.mifos.core.network.GenericResponse
@@ -45,9 +46,9 @@ class LoanAccountSummaryRepositoryImp(
             .flowOn(dispatcher.io)
     }
 
-    override fun getLoanForAssignOfficer(loanId: Int): Flow<DataState<LoanForAssignOfficer?>> {
+    override fun getLoanForAssignOfficer(loanId: Int): Flow<DataState<AssignLoanOfficerLoan?>> {
         return dataManagerLoan.getLoanById(loanId)
-            .map { entity -> entity?.toDomain() }
+            .map { entity -> entity?.toAssignLoanOfficerLoan() }
             .asDataStateFlow()
             .flowOn(dispatcher.io)
     }
@@ -62,7 +63,7 @@ class LoanAccountSummaryRepositoryImp(
     override fun getLoanOfficerStaffOptions(officeId: Int): Flow<DataState<List<StaffOption>>> {
         return dataManagerStaff.getStaffInOffice(officeId)
             .map { staff ->
-                staff.filter { it.isLoanOfficer == true }.mapNotNull { it.toDomain() }
+                staff.filter { it.isLoanOfficer == true }.mapNotNull { it.toStaffOption() }
             }
             .asDataStateFlow()
             .flowOn(dispatcher.io)

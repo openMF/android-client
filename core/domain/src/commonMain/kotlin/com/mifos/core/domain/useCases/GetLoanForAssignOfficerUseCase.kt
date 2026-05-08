@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
-import com.mifos.core.model.entity.accounts.loan.LoanForAssignOfficer
+import com.mifos.core.model.entity.accounts.loan.AssignLoanOfficerLoan
 import kotlinx.coroutines.flow.Flow
 
 class GetLoanForAssignOfficerUseCase(
@@ -19,5 +19,5 @@ class GetLoanForAssignOfficerUseCase(
 ) {
     operator fun invoke(
         loanId: Int,
-    ): Flow<DataState<LoanForAssignOfficer?>> = repository.getLoanForAssignOfficer(loanId)
+    ): Flow<DataState<AssignLoanOfficerLoan?>> = repository.getLoanForAssignOfficer(loanId)
 }

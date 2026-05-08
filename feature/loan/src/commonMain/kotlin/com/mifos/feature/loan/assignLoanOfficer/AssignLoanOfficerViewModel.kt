@@ -24,6 +24,8 @@ import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.domain.useCases.AssignLoanOfficerUseCase
 import com.mifos.core.domain.useCases.GetLoanForAssignOfficerUseCase
 import com.mifos.core.domain.useCases.GetLoanOfficerStaffOptionsUseCase
+import com.mifos.core.model.entity.accounts.loan.AssignLoanOfficerLoan
+import com.mifos.core.model.entity.accounts.loan.StaffOption
 import com.mifos.core.model.objects.account.loan.AssignLoanOfficerInput
 import com.mifos.core.model.utils.DateConstants
 import com.mifos.core.ui.util.BaseViewModel
@@ -206,4 +208,37 @@ internal class AssignLoanOfficerViewModel(
         super.onCleared()
         officersLoadJob?.cancel()
     }
+}
+
+internal sealed interface AssignLoanOfficerUiState {
+    data object Loading : AssignLoanOfficerUiState
+
+    data class Error(
+        val message: String?,
+    ) : AssignLoanOfficerUiState
+
+    data class Content(
+        val loan: AssignLoanOfficerLoan,
+        val officers: List<StaffOption> = emptyList(),
+        val selectedOfficerIndex: Int = -1,
+        val officerShowError: Boolean = false,
+        val assignmentDateMillis: Long,
+        val submitInProgress: Boolean = false,
+    ) : AssignLoanOfficerUiState
+}
+
+internal sealed interface AssignLoanOfficerEffect {
+    data class ShowMessage(
+        val message: String,
+    ) : AssignLoanOfficerEffect
+
+    data object NavigateBack : AssignLoanOfficerEffect
+}
+
+internal sealed interface AssignLoanOfficerAction {
+    data object LoadLoan : AssignLoanOfficerAction
+    data class LoadOfficers(val officeId: Int) : AssignLoanOfficerAction
+    data class SelectOfficer(val index: Int) : AssignLoanOfficerAction
+    data class UpdateAssignmentDate(val millis: Long) : AssignLoanOfficerAction
+    data object Submit : AssignLoanOfficerAction
 }

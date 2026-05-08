@@ -9,22 +9,22 @@
  */
 package com.mifos.core.data.mapper.loan
 
-import com.mifos.core.model.entity.accounts.loan.LoanForAssignOfficer
+import com.mifos.core.model.entity.accounts.loan.AssignLoanOfficerLoan
 import com.mifos.core.model.entity.accounts.loan.StaffOption
 import com.mifos.core.model.objects.account.loan.AssignLoanOfficerInput
 import com.mifos.core.network.dto.loan.AssignLoanOfficerRequestDto
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.organisation.StaffEntity
 
-fun LoanWithAssociationsEntity.toDomain(): LoanForAssignOfficer =
-    LoanForAssignOfficer(
+fun LoanWithAssociationsEntity.toAssignLoanOfficerLoan(): AssignLoanOfficerLoan =
+    AssignLoanOfficerLoan(
         id = id,
         clientOfficeId = clientOfficeId,
         loanOfficerId = loanOfficerId,
         loanOfficerName = loanOfficerName,
     )
 
-fun StaffEntity.toDomain(): StaffOption? {
+fun StaffEntity.toStaffOption(): StaffOption? {
     val staffId = id ?: return null
     return StaffOption(
         id = staffId,
