@@ -51,7 +51,7 @@ import org.jetbrains.compose.resources.StringResource
  * @property loanRepository Repository to fetch loan account summary details.
  */
 internal class LoanAccountProfileViewModel(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val networkMonitor: NetworkMonitor,
     private val loanRepository: LoanAccountSummaryRepository,
 ) : BaseViewModel<LoanAccountState, LoanAccountEvent, LoanAccountAction>(
