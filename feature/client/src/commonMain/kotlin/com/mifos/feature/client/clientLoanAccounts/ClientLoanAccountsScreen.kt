@@ -133,8 +133,7 @@ private fun ClientLoanAccountsScreen(
     onAction: (ClientLoanAccountsAction) -> Unit,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
     ) {
         MifosBreadcrumbNavBar(navController)
 
@@ -142,8 +141,7 @@ private fun ClientLoanAccountsScreen(
             true -> MifosProgressIndicator()
             false -> {
                 Column(
-                    modifier = Modifier.fillMaxSize()
-                        .padding(horizontal = KptTheme.spacing.md),
+                    modifier = Modifier.fillMaxSize().padding(horizontal = KptTheme.spacing.md),
                 ) {
                     ClientsAccountHeader(
                         totalItem = state.loanAccounts.size.toString(),
@@ -169,105 +167,113 @@ private fun ClientLoanAccountsScreen(
 
                     Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
-                    if (state.loanAccounts.isEmpty()) {
-                        MifosEmptyCard(
-                            msg = stringResource(Res.string.feature_loan_account_empty_list_message),
-                            isButtonPresent = true,
-                            onClick = { onAction.invoke(ClientLoanAccountsAction.AddAccount) },
-                        )
-                    } else {
-                        LazyColumn {
-                            items(state.loanAccounts) { loan ->
-                                val symbol = loan.currency?.displaySymbol ?: ""
-                                MifosActionsLoanListingComponent(
-                                    accountNo = (
-                                        loan.accountNo ?: stringResource(
-                                            Res.string.client_loan_accounts_not_available,
-                                        )
-                                        ),
-                                    loanProduct = loan.productName
-                                        ?: stringResource(Res.string.client_loan_accounts_not_available),
-                                    originalLoan = symbol + (
-                                        (
-                                            loan.originalLoan
-                                                ?: stringResource(Res.string.client_loan_accounts_not_available)
-                                            ).toString()
-                                        ),
-                                    amountPaid = symbol + (
-                                        (
-                                            if (loan.status?.pendingApproval == true) {
-                                                stringResource(Res.string.client_loan_accounts_not_available)
-                                            } else {
-                                                (
-                                                    loan.amountPaid
-                                                        ?: 0.0
-                                                    ).toString()
-                                            }
-                                            )
-                                        ),
-                                    loanBalance = symbol + (
-                                        (
-                                            if (loan.status?.pendingApproval == true) {
-                                                stringResource(Res.string.client_loan_accounts_not_available)
-                                            } else {
-                                                (
-                                                    loan.loanBalance
-                                                        ?: 0.0
-                                                    ).toString()
-                                            }
-                                            )
-                                        ),
-                                    type = loan.loanType?.value
-                                        ?: stringResource(Res.string.client_loan_accounts_not_available),
-                                    status = loan.status?.value
-                                        ?: stringResource(Res.string.client_loan_accounts_not_available),
-                                    // TODO check if we need to add other options as well, such as disburse and all
-                                    // currently didn't add it cuz its not in the UI design
-                                    menuList = buildList {
-                                        add(
-                                            Actions.ViewAccount(
-                                                vectorResource(Res.drawable.wallet),
-                                            ),
-                                        )
-
-                                        when {
-                                            loan.status?.active == true -> add(
-                                                Actions.MakeRepayment(
-                                                    vectorResource(Res.drawable.cash_bundel),
-                                                ),
-                                            )
-                                            loan.status?.overpaid == true -> add(
-                                                Actions.TransferFund(),
-                                            )
-                                        }
-                                    },
-                                    onActionClicked = { actions ->
-                                        when (actions) {
-                                            is Actions.ViewAccount -> onAction(
-                                                ClientLoanAccountsAction.ViewAccount(loan.id),
-                                            )
-
-                                            is Actions.MakeRepayment -> onAction(
-                                                ClientLoanAccountsAction.MakeRepayment(
-                                                    loan.id,
-                                                ),
-                                            )
-                                            is Actions.TransferFund -> onAction(
-                                                ClientLoanAccountsAction.TransferFund(
-                                                    loanId = loan.id,
-                                                ),
-                                            )
-
-                                            else -> null
-                                        }
-                                    },
-                                )
-
-                                Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
-                            }
-                        }
-                    }
+                    ClientsAccountShowCard(
+                        onAction = onAction,
+                        state = state,
+                    )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ClientsAccountShowCard(
+    state: ClientLoanAccountsState,
+    modifier: Modifier = Modifier,
+    onAction: (ClientLoanAccountsAction) -> Unit,
+) {
+    if (state.loanAccounts.isEmpty()) {
+        MifosEmptyCard(
+            msg = stringResource(Res.string.feature_loan_account_empty_list_message),
+            isButtonPresent = true,
+            onClick = { onAction.invoke(ClientLoanAccountsAction.AddAccount) },
+        )
+    } else {
+        LazyColumn {
+            items(state.loanAccounts) { loan ->
+                val symbol = loan.currency?.displaySymbol ?: ""
+                MifosActionsLoanListingComponent(
+                    accountNo = (
+                        loan.accountNo ?: stringResource(
+                            Res.string.client_loan_accounts_not_available,
+                        )
+                        ),
+                    loanProduct = loan.productName
+                        ?: stringResource(Res.string.client_loan_accounts_not_available),
+                    originalLoan = symbol + (
+                        (
+                            loan.originalLoan
+                                ?: stringResource(Res.string.client_loan_accounts_not_available)
+                            ).toString()
+                        ),
+                    amountPaid = symbol + (
+                        (
+                            if (loan.status?.pendingApproval == true) {
+                                stringResource(Res.string.client_loan_accounts_not_available)
+                            } else {
+                                (loan.amountPaid ?: 0.0).toString()
+                            }
+                            )
+                        ),
+                    loanBalance = symbol + (
+                        (
+                            if (loan.status?.pendingApproval == true) {
+                                stringResource(Res.string.client_loan_accounts_not_available)
+                            } else {
+                                (loan.loanBalance ?: 0.0).toString()
+                            }
+                            )
+                        ),
+                    type = loan.loanType?.value
+                        ?: stringResource(Res.string.client_loan_accounts_not_available),
+                    status = loan.status?.value
+                        ?: stringResource(Res.string.client_loan_accounts_not_available),
+                    // TODO check if we need to add other options as well, such as disburse and all
+                    // currently didn't add it cuz its not in the UI design
+                    menuList = buildList {
+                        add(
+                            Actions.ViewAccount(
+                                vectorResource(Res.drawable.wallet),
+                            ),
+                        )
+
+                        when {
+                            loan.status?.active == true -> add(
+                                Actions.MakeRepayment(
+                                    vectorResource(Res.drawable.cash_bundel),
+                                ),
+                            )
+
+                            loan.status?.overpaid == true -> add(
+                                Actions.TransferFund(),
+                            )
+                        }
+                    },
+                    onActionClicked = { actions ->
+                        when (actions) {
+                            is Actions.ViewAccount -> onAction(
+                                ClientLoanAccountsAction.ViewAccount(loan.id),
+                            )
+
+                            is Actions.MakeRepayment -> onAction(
+                                ClientLoanAccountsAction.MakeRepayment(
+                                    loan.id,
+                                ),
+                            )
+
+                            is Actions.TransferFund -> onAction(
+                                ClientLoanAccountsAction.TransferFund(
+                                    loanId = loan.id,
+                                ),
+                            )
+
+                            else -> null
+                        }
+                    },
+                )
+
+                Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
             }
         }
     }
@@ -331,11 +337,9 @@ private fun ClientsAccountHeader(
 
                 if (isFilterActive) {
                     Box(
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
+                        modifier = Modifier.align(Alignment.TopEnd)
                             .padding(top = DesignToken.padding.medium, end = KptTheme.spacing.md)
-                            .size(DesignToken.sizes.iconMinyMiny)
-                            .clip(CircleShape)
+                            .size(DesignToken.sizes.iconMinyMiny).clip(CircleShape)
                             .background(KptTheme.colorScheme.error),
                     )
                 }
@@ -391,9 +395,7 @@ private fun FilterBottomSheet(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(DesignToken.padding.medium),
+                modifier = Modifier.fillMaxWidth().padding(DesignToken.padding.medium),
             ) {
                 Text(
                     text = stringResource(Res.string.feature_client_filters),

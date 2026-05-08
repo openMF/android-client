@@ -37,6 +37,8 @@ import com.mifos.core.model.objects.account.loan.transfer.OfficeOption
 import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
@@ -163,25 +165,22 @@ class AmountTransferViewModel(
     }
 
     private fun fetchLoanAccountDetails(accountId: Int) {
-        viewModelScope.launch {
-            loanAccountSummaryRepository.getLoanById(accountId)
-                .collect { dataState ->
-                    sendAction(
-                        AmountTransferAction.Internal.ReceiveLoanAccountDetailsResult(
-                            dataState,
-                        ),
-                    )
-                }
-        }
+        loanAccountSummaryRepository.getLoanById(accountId).onEach { result ->
+            sendAction(
+                AmountTransferAction.Internal.ReceiveLoanAccountDetailsResult(
+                    result,
+                ),
+            )
+        }.launchIn(viewModelScope)
     }
 
     private fun handleLoanAccountDetailsResult(action: AmountTransferAction.Internal.ReceiveLoanAccountDetailsResult) {
-        when (val dataState = action.loanAccountDetailsResult) {
+        when (val result = action.loanAccountDetailsResult) {
             is DataState.Error -> {
                 mutableStateFlow.update {
                     it.copy(
                         dialogState = AmountTransferUiState.DialogState.FetchingFailed(
-                            dataState.message,
+                            result.message,
                         ),
                     )
                 }
@@ -195,11 +194,11 @@ class AmountTransferViewModel(
                 mutableStateFlow.update {
                     it.copy(
                         dialogState = null,
-                        fromOfficeId = dataState.data?.loanOfficerId,
-                        currency = dataState.data?.currency?.code.orEmpty(),
-                        fromClientId = dataState.data?.clientId,
-                        fromAccountNumber = dataState.data?.accountNo,
-                        fromAccountType = dataState.data?.loanType?.id,
+                        fromOfficeId = result.data?.loanOfficerId,
+                        currency = result.data?.currency?.code.orEmpty(),
+                        fromClientId = result.data?.clientId,
+                        fromAccountNumber = result.data?.accountNo,
+                        fromAccountType = result.data?.loanType?.id,
                     )
                 }
 
@@ -234,24 +233,22 @@ class AmountTransferViewModel(
     }
 
     private fun fetchInitialTemplate() {
-        viewModelScope.launch {
-            state.fromAccountType?.let { fromAccountType ->
-                state.fromClientId?.let { fromClientId ->
-                    repository.getAccountTransferTemplate(
-                        fromClientId = fromClientId,
-                        fromAccountType = fromAccountType,
-                        fromAccountId = route.fromAccountId,
-                        fromOfficeId = state.fromOfficeId,
-                    )
-                }
-            }?.collect { dataState ->
-                sendAction(AmountTransferAction.Internal.ReceiveInitialTemplateResult(dataState))
+        state.fromAccountType?.let { fromAccountType ->
+            state.fromClientId?.let { fromClientId ->
+                repository.getAccountTransferTemplate(
+                    fromClientId = fromClientId,
+                    fromAccountType = fromAccountType,
+                    fromAccountId = route.fromAccountId,
+                    fromOfficeId = state.fromOfficeId,
+                )
             }
-        }
+        }?.onEach { result ->
+            sendAction(AmountTransferAction.Internal.ReceiveInitialTemplateResult(result))
+        }?.launchIn(viewModelScope)
     }
 
     private fun handleInitialTemplateResult(action: AmountTransferAction.Internal.ReceiveInitialTemplateResult) {
-        when (val dataState = action.initialTemplateResult) {
+        when (val result = action.initialTemplateResult) {
             is DataState.Loading -> {
                 mutableStateFlow.update {
                     it.copy(dialogState = AmountTransferUiState.DialogState.Loading)
@@ -259,7 +256,7 @@ class AmountTransferViewModel(
             }
 
             is DataState.Success -> {
-                val template = dataState.data
+                val template = result.data
                 mutableStateFlow.update { state ->
                     state.copy(
                         dialogState = null,
@@ -273,7 +270,7 @@ class AmountTransferViewModel(
                 mutableStateFlow.update {
                     it.copy(
                         dialogState = AmountTransferUiState.DialogState.FetchingFailed(
-                            dataState.message,
+                            result.message,
                         ),
                     )
                 }
@@ -287,31 +284,29 @@ class AmountTransferViewModel(
         // Only fetch if we have at least an office selected
         if (currentState.selectedOfficeId == null) return
 
-        viewModelScope.launch {
-            state.fromClientId?.let { fromClientId ->
-                state.fromAccountType?.let { fromAccountType ->
-                    repository.getAccountTransferTemplate(
-                        fromClientId = fromClientId,
-                        fromAccountType = fromAccountType,
-                        fromAccountId = route.fromAccountId,
-                        fromOfficeId = state.fromOfficeId,
-                        toOfficeId = currentState.selectedOfficeId,
-                        toClientId = currentState.selectedClientId,
-                        toAccountType = currentState.accountTypeId,
-                    )
-                }
-            }?.collect { dataState ->
-                sendAction(
-                    AmountTransferAction.Internal.ReceiveTemplateWithDependencyResult(
-                        dataState,
-                    ),
+        state.fromClientId?.let { fromClientId ->
+            state.fromAccountType?.let { fromAccountType ->
+                repository.getAccountTransferTemplate(
+                    fromClientId = fromClientId,
+                    fromAccountType = fromAccountType,
+                    fromAccountId = route.fromAccountId,
+                    fromOfficeId = state.fromOfficeId,
+                    toOfficeId = currentState.selectedOfficeId,
+                    toClientId = currentState.selectedClientId,
+                    toAccountType = currentState.accountTypeId,
                 )
             }
-        }
+        }?.onEach { dataState ->
+            sendAction(
+                AmountTransferAction.Internal.ReceiveTemplateWithDependencyResult(
+                    dataState,
+                ),
+            )
+        }?.launchIn(viewModelScope)
     }
 
     private fun handleTemplateWithDependenciesResult(action: AmountTransferAction.Internal.ReceiveTemplateWithDependencyResult) {
-        when (val dataState = action.templateWithDependencyResult) {
+        when (val result = action.templateWithDependencyResult) {
             is DataState.Loading -> {
                 mutableStateFlow.update {
                     it.copy(dialogState = AmountTransferUiState.DialogState.Loading)
@@ -319,11 +314,10 @@ class AmountTransferViewModel(
             }
 
             is DataState.Success -> {
-                val template = dataState.data
+                val template = result.data
                 mutableStateFlow.update { state ->
                     val newClients = template.toClientOptions.sortedBy { it.displayName }
-                    val newAccountTypes =
-                        template.toAccountTypeOptions.sortedBy { it.value }
+                    val newAccountTypes = template.toAccountTypeOptions.sortedBy { it.value }
                     val newAccounts = template.toAccountOptions.sortedBy { it.accountNo }
                     val offices = template.toOfficeOptions.sortedBy { it.name }
 
@@ -341,7 +335,7 @@ class AmountTransferViewModel(
                 mutableStateFlow.update {
                     it.copy(
                         dialogState = AmountTransferUiState.DialogState.FetchingFailed(
-                            dataState.message,
+                            result.message,
                         ),
                     )
                 }
