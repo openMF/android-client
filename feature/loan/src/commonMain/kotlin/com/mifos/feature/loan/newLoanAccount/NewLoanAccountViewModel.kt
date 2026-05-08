@@ -276,7 +276,7 @@ internal class NewLoanAccountViewModel(
                 loanOfficerId = if (state.loanOfficerIndex == -1) null else state.loanTemplate?.loanOfficerOptions[state.loanOfficerIndex]?.id,
                 principal = state.principalAmount.toDouble(),
                 clientId = state.clientId,
-                allowPartialPeriodInterestCalcualtion = state.isCheckedInterestPartialPeriod,
+                allowPartialPeriodInterestCalculation = state.isCheckedInterestPartialPeriod,
                 amortizationType = state.loanTemplate?.amortizationTypeOptions[state.nominalAmortizationIndex]?.id,
                 dateFormat = DateHelper.SHORT_MONTH,
                 interestCalculationPeriodType = state.loanTemplate?.interestCalculationPeriodTypeOptions[state.interestCalculationPeriodIndex]?.id,
@@ -963,7 +963,7 @@ internal class NewLoanAccountViewModel(
             },
             principal = state.principalAmount.toDoubleOrNull(),
             clientId = state.clientId,
-            allowPartialPeriodInterestCalcualtion = state.isCheckedInterestPartialPeriod,
+            allowPartialPeriodInterestCalculation = state.isCheckedInterestPartialPeriod,
             amortizationType = state.loanTemplate?.amortizationTypeOptions
                 ?.getOrNull(state.nominalAmortizationIndex)?.id,
             dateFormat = DateHelper.SHORT_MONTH,
