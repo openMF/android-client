@@ -83,8 +83,6 @@ internal class RejectLoanViewModel(
     }
 
     private fun onCancelClicked() {
-        // Ignore cancel/back while a reject submission is in flight; the in-flight
-        // call must either succeed or surface its error before the user can leave.
         if (state.dialogState is RejectLoanState.DialogState.Loading) return
 
         if (isDirty()) {
