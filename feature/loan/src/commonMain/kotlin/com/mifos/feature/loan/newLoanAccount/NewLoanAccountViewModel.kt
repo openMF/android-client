@@ -346,7 +346,7 @@ internal class NewLoanAccountViewModel(
                             )
                         }
                         delay(1000)
-                        sendEvent(NewLoanAccountEvent.LoanCreationSuccess)
+                        sendEvent(NewLoanAccountEvent.LoanCreationSuccess(state.clientId))
                     }
                 }
             }
@@ -1125,7 +1125,7 @@ constructor(
 sealed interface NewLoanAccountEvent {
     data object NavigateBack : NewLoanAccountEvent
     data object Finish : NewLoanAccountEvent
-    data object LoanCreationSuccess : NewLoanAccountEvent
+    data class LoanCreationSuccess(val clientId: Int) : NewLoanAccountEvent
 }
 
 sealed interface NewLoanAccountAction {

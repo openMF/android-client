@@ -54,8 +54,8 @@ import com.mifos.feature.client.clientIdentifiersAddUpdate.onNavigateToClientIde
 import com.mifos.feature.client.clientIdentifiersList.clientIdentifiersListDestination
 import com.mifos.feature.client.clientIdentifiersList.navigateBackToUpdateClientIdentifiersListScreen
 import com.mifos.feature.client.clientIdentifiersList.navigateToClientIdentifiersListScreen
+import com.mifos.feature.client.clientLoanAccounts.ClientLoanAccountsRoute
 import com.mifos.feature.client.clientLoanAccounts.clientLoanAccountsDestination
-import com.mifos.feature.client.clientLoanAccounts.navigateToClientLoanAccounts
 import com.mifos.feature.client.clientLoanAccounts.navigateToClientLoanAccountsRoute
 import com.mifos.feature.client.clientPinpoint.PinpointClientScreen
 import com.mifos.feature.client.clientProfile.clientProfileDestination
@@ -99,6 +99,7 @@ import com.mifos.feature.loan.loanAccountProfile.navigateToLoanAccountProfileScr
 import com.mifos.feature.loan.loanAccountSummary.navigateToLoanAccountSummaryScreen
 import com.mifos.feature.loan.loanRepayment.navigateToLoanRepaymentScreen
 import com.mifos.feature.loan.navigation.loanDestination
+import com.mifos.feature.loan.newLoanAccount.NewLoanAccountRoute
 import com.mifos.feature.loan.newLoanAccount.navigateToNewLoanAccountRoute
 import com.mifos.feature.note.navigation.noteDestination
 import com.mifos.feature.note.notes.navigateToNoteScreen
@@ -377,7 +378,12 @@ fun NavGraphBuilder.clientNavGraph(
             onMoreInfoClicked = onMoreInfoClicked,
             onDocumentsClicked = navController::navigateToDocumentListScreen,
             onNotesClicked = navController::navigateToNoteScreen,
-            onLoanCreated = navController::navigateToClientLoanAccounts,
+            onLoanCreated = { clientId ->
+                navController.navigate(ClientLoanAccountsRoute(clientId = clientId)) {
+                    popUpTo<NewLoanAccountRoute> { inclusive = true }
+                    launchSingleTop = true
+                }
+            },
         )
 
         dataTableRoute(

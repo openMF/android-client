@@ -98,7 +98,7 @@ internal fun NewLoanAccountScreen(
         when (event) {
             NewLoanAccountEvent.NavigateBack -> onNavigateBack()
             NewLoanAccountEvent.Finish -> onFinish()
-            NewLoanAccountEvent.LoanCreationSuccess -> onLoanCreated(state.clientId)
+            is NewLoanAccountEvent.LoanCreationSuccess -> onLoanCreated(event.clientId)
         }
     }
 
