@@ -129,7 +129,9 @@ class ClientLoanAccountsViewModel(
     private fun getLoanAccounts() {
         viewModelScope.launch {
             mutableStateFlow.update {
-                it.copy(isLoading = true)
+                it.copy(
+                    dialogState = ClientLoanAccountsState.DialogState.Loading,
+                )
             }
 
             try {
@@ -146,7 +148,6 @@ class ClientLoanAccountsViewModel(
                         unfilteredLoanAccounts = loanAccounts,
                         selectedStatus = emptySet(),
                         dialogState = null,
-                        isLoading = false,
                     )
                 }
             } catch (e: Exception) {
@@ -155,7 +156,6 @@ class ClientLoanAccountsViewModel(
                         dialogState = ClientLoanAccountsState.DialogState.Error(
                             e.message ?: "Unknown error",
                         ),
-                        isLoading = false,
                     )
                 }
             }
@@ -222,10 +222,10 @@ data class ClientLoanAccountsState(
     val selectedStatus: Set<LoanStatusFilter> = emptySet(),
     val isFilterDialogOpen: Boolean = false,
     val dialogState: DialogState? = null,
-    val isLoading: Boolean = false,
 ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
+        object Loading : DialogState
     }
 }
 

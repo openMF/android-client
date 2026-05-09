@@ -40,7 +40,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
@@ -72,6 +74,7 @@ import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosSearchBar
 import com.mifos.core.ui.util.EventsEffect
+import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
@@ -137,144 +140,173 @@ private fun ClientLoanAccountsScreen(
     ) {
         MifosBreadcrumbNavBar(navController)
 
-        when (state.isLoading) {
-            true -> MifosProgressIndicator()
-            false -> {
-                Column(
-                    modifier = Modifier.fillMaxSize().padding(horizontal = KptTheme.spacing.md),
-                ) {
-                    ClientsAccountHeader(
-                        totalItem = state.loanAccounts.size.toString(),
-                        onAction = onAction,
-                        isLoanScreenEmpty = state.loanAccounts.isEmpty(),
-                        isFilterActive = state.selectedStatus.isNotEmpty(),
-                    )
+        Column(
+            modifier = Modifier.fillMaxSize().padding(horizontal = KptTheme.spacing.md),
+        ) {
+            ClientsAccountHeader(
+                totalItem = state.loanAccounts.size.toString(),
+                onAction = onAction,
+                isLoanScreenEmpty = state.loanAccounts.isEmpty(),
+                isFilterActive = state.selectedStatus.isNotEmpty(),
+            )
 
-                    if (state.isSearchBarActive) {
-                        MifosSearchBar(
-                            query = state.searchText,
-                            onQueryChange = {
-                                onAction.invoke(
-                                    ClientLoanAccountsAction.UpdateSearchValue(
-                                        it,
-                                    ),
-                                )
-                            },
-                            onSearchClick = { onAction.invoke(ClientLoanAccountsAction.OnSearchClick) },
-                            onBackClick = { onAction.invoke(ClientLoanAccountsAction.ToggleSearch) },
+            if (state.isSearchBarActive) {
+                MifosSearchBar(
+                    query = state.searchText,
+                    onQueryChange = {
+                        onAction.invoke(
+                            ClientLoanAccountsAction.UpdateSearchValue(
+                                it,
+                            ),
                         )
-                    }
-
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.md))
-
-                    ClientsAccountShowCard(
-                        onAction = onAction,
-                        state = state,
-                    )
-                }
+                    },
+                    onSearchClick = { onAction.invoke(ClientLoanAccountsAction.OnSearchClick) },
+                    onBackClick = { onAction.invoke(ClientLoanAccountsAction.ToggleSearch) },
+                )
             }
+
+            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+
+            LoanAccountsList(
+                onAction = onAction,
+                loanAccounts = state.loanAccounts,
+            )
         }
     }
 }
 
 @Composable
-private fun ClientsAccountShowCard(
-    state: ClientLoanAccountsState,
-    modifier: Modifier = Modifier,
+fun LoanAccountsList(
+    loanAccounts: List<LoanAccountEntity>,
     onAction: (ClientLoanAccountsAction) -> Unit,
+    modifier: Modifier = Modifier,
+    listState: LazyListState = rememberLazyListState(),
 ) {
-    if (state.loanAccounts.isEmpty()) {
+    if (loanAccounts.isEmpty()) {
         MifosEmptyCard(
             msg = stringResource(Res.string.feature_loan_account_empty_list_message),
             isButtonPresent = true,
             onClick = { onAction.invoke(ClientLoanAccountsAction.AddAccount) },
         )
     } else {
-        LazyColumn {
-            items(state.loanAccounts) { loan ->
-                val symbol = loan.currency?.displaySymbol ?: ""
-                MifosActionsLoanListingComponent(
-                    accountNo = (
-                        loan.accountNo ?: stringResource(
-                            Res.string.client_loan_accounts_not_available,
-                        )
-                        ),
-                    loanProduct = loan.productName
-                        ?: stringResource(Res.string.client_loan_accounts_not_available),
-                    originalLoan = symbol + (
-                        (
-                            loan.originalLoan
-                                ?: stringResource(Res.string.client_loan_accounts_not_available)
-                            ).toString()
-                        ),
-                    amountPaid = symbol + (
-                        (
-                            if (loan.status?.pendingApproval == true) {
-                                stringResource(Res.string.client_loan_accounts_not_available)
-                            } else {
-                                (loan.amountPaid ?: 0.0).toString()
-                            }
-                            )
-                        ),
-                    loanBalance = symbol + (
-                        (
-                            if (loan.status?.pendingApproval == true) {
-                                stringResource(Res.string.client_loan_accounts_not_available)
-                            } else {
-                                (loan.loanBalance ?: 0.0).toString()
-                            }
-                            )
-                        ),
-                    type = loan.loanType?.value
-                        ?: stringResource(Res.string.client_loan_accounts_not_available),
-                    status = loan.status?.value
-                        ?: stringResource(Res.string.client_loan_accounts_not_available),
-                    // TODO check if we need to add other options as well, such as disburse and all
-                    // currently didn't add it cuz its not in the UI design
-                    menuList = buildList {
-                        add(
-                            Actions.ViewAccount(
-                                vectorResource(Res.drawable.wallet),
-                            ),
-                        )
+        LazyColumn(
+            modifier = modifier,
+            state = listState,
+        ) {
+            items(
+                items = loanAccounts,
+                key = { loan -> loan.id ?: loan.accountNo.orEmpty() },
+            ) { loan ->
 
-                        when {
-                            loan.status?.active == true -> add(
-                                Actions.MakeRepayment(
-                                    vectorResource(Res.drawable.cash_bundel),
-                                ),
-                            )
-
-                            loan.status?.overpaid == true -> add(
-                                Actions.TransferFund(),
-                            )
-                        }
-                    },
-                    onActionClicked = { actions ->
-                        when (actions) {
-                            is Actions.ViewAccount -> onAction(
-                                ClientLoanAccountsAction.ViewAccount(loan.id),
-                            )
-
-                            is Actions.MakeRepayment -> onAction(
-                                ClientLoanAccountsAction.MakeRepayment(
-                                    loan.id,
-                                ),
-                            )
-
-                            is Actions.TransferFund -> onAction(
-                                ClientLoanAccountsAction.TransferFund(
-                                    loanId = loan.id,
-                                ),
-                            )
-
-                            else -> null
-                        }
-                    },
+                LoanAccountItem(
+                    loan = loan,
+                    onAction = onAction,
                 )
 
-                Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+                Spacer(
+                    modifier = Modifier.height(KptTheme.spacing.sm),
+                )
             }
+        }
+    }
+}
+
+@Composable
+private fun LoanAccountItem(
+    loan: LoanAccountEntity,
+    onAction: (ClientLoanAccountsAction) -> Unit,
+) {
+    val symbol = loan.currency?.displaySymbol.orEmpty()
+
+    val notAvailable =
+        stringResource(Res.string.client_loan_accounts_not_available)
+
+    MifosActionsLoanListingComponent(
+        accountNo = loan.accountNo ?: stringResource(Res.string.client_loan_accounts_not_available),
+
+        loanProduct = loan.productName
+            ?: stringResource(Res.string.client_loan_accounts_not_available),
+
+        originalLoan = symbol + (
+            loan.originalLoan?.toString()
+                ?: stringResource(Res.string.client_loan_accounts_not_available)
+            ),
+
+        amountPaid = symbol + (
+            if (loan.status?.pendingApproval == true) {
+                stringResource(Res.string.client_loan_accounts_not_available)
+            } else {
+                (loan.amountPaid ?: 0.0).toString()
+            }
+            ),
+
+        loanBalance = symbol + (
+            if (loan.status?.pendingApproval == true) {
+                stringResource(Res.string.client_loan_accounts_not_available)
+            } else {
+                (loan.loanBalance ?: 0.0).toString()
+            }
+            ),
+
+        type = loan.loanType?.value ?: notAvailable,
+
+        status = loan.status?.value ?: notAvailable,
+
+        menuList = buildLoanActions(loan),
+
+        onActionClicked = { action ->
+            when (action) {
+                is Actions.ViewAccount -> {
+                    onAction(
+                        ClientLoanAccountsAction.ViewAccount(
+                            loan.id,
+                        ),
+                    )
+                }
+
+                is Actions.MakeRepayment -> {
+                    onAction(
+                        ClientLoanAccountsAction.MakeRepayment(
+                            loan.id,
+                        ),
+                    )
+                }
+
+                is Actions.TransferFund -> {
+                    onAction(
+                        ClientLoanAccountsAction.TransferFund(
+                            loanId = loan.id,
+                        ),
+                    )
+                }
+
+                else -> Unit
+            }
+        },
+    )
+}
+
+@Composable
+private fun buildLoanActions(
+    loan: LoanAccountEntity,
+): List<Actions> = buildList {
+    add(
+        Actions.ViewAccount(
+            vectorResource(Res.drawable.wallet),
+        ),
+    )
+
+    when {
+        loan.status?.active == true -> {
+            add(
+                Actions.MakeRepayment(
+                    vectorResource(Res.drawable.cash_bundel),
+                ),
+            )
+        }
+
+        loan.status?.overpaid == true -> {
+            add(Actions.TransferFund())
         }
     }
 }
@@ -370,7 +402,11 @@ private fun ClientLoanAccountsDialog(
             )
         }
 
-        else -> null
+        ClientLoanAccountsState.DialogState.Loading -> {
+            MifosProgressIndicator()
+        }
+
+        null -> Unit
     }
 }
 
