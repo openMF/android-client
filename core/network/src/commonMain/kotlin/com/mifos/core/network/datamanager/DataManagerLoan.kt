@@ -308,13 +308,24 @@ class DataManagerLoan(
     /**
      * Reject a submitted-and-pending loan application.
      *
-     * Thin pass-through to [com.mifos.core.network.services.LoanService.rejectLoan];
-     * Ktorfit handles deserialization into [RejectLoanResponseDto] directly.
+     * Inspects the raw [HttpResponse] so Fineract's `defaultUserMessage`
+     * survives 4xx/5xx failures (same pattern as [submitLoanReschedule]
+     * and [submitAccountTransfer]). On success, decodes the response
+     * body into [RejectLoanResponseDto]; on failure, throws an
+     * [IllegalStateException] carrying the backend's error message.
      */
     suspend fun rejectLoan(
         loanId: Int,
         request: RejectLoanRequestDto,
-    ): RejectLoanResponseDto = mBaseApiManager.loanService.rejectLoan(loanId, request)
+    ): RejectLoanResponseDto {
+        val response = mBaseApiManager.loanService.rejectLoan(loanId, request)
+        if (!response.status.isSuccess()) {
+            val errorMessage = extractErrorMessage(response)
+            throw IllegalStateException(errorMessage)
+        }
+        return Json { ignoreUnknownKeys = true }
+            .decodeFromString<RejectLoanResponseDto>(response.bodyAsText())
+    }
 
     /**
      * Account Transfer Methods

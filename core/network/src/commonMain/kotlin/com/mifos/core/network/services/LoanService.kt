@@ -24,7 +24,6 @@ import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.dto.loan.RejectLoanRequestDto
-import com.mifos.core.network.dto.loan.RejectLoanResponseDto
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.loans.Loan
@@ -68,12 +67,19 @@ interface LoanService {
      *   - `rejectedOnDate`
      *   - `locale`
      *   - `dateFormat`
+     *
+     * Returns the raw [HttpResponse] so callers can inspect the status
+     * code and extract Fineract's `defaultUserMessage` from the error
+     * body on 4xx/5xx — matching the convention used by
+     * [submitLoanReschedule] and [submitAccountTransfer]. There is no
+     * global response validator configured for the Ktor client, so each
+     * write endpoint owns its own error extraction.
      */
     @POST(APIEndPoint.LOANS + "/{loanId}?command=reject")
     suspend fun rejectLoan(
         @Path("loanId") loanId: Int,
         @Body request: RejectLoanRequestDto,
-    ): RejectLoanResponseDto
+    ): HttpResponse
 
     //  Mandatory Fields
     //  String actualDisbursementDate
