@@ -10,8 +10,7 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.model.objects.account.loan.RejectLoanResponse
-import com.mifos.core.model.objects.payloads.RejectLoanPayload
+import com.mifos.core.model.objects.loan.RejectLoanInput
 
 /**
  * Repository contract for rejecting loan applications.
@@ -19,10 +18,15 @@ import com.mifos.core.model.objects.payloads.RejectLoanPayload
 interface LoanAccountRejectRepository {
 
     /**
-     * Rejects a submitted and pending loan.
+     * Rejects a submitted-and-pending loan application.
+     *
+     * The wire response is intentionally discarded — the UI only cares about
+     * success or failure, so callers receive [DataState.Success] with [Unit]
+     * on success and [DataState.Error] otherwise (offline emits
+     * [com.mifos.core.data.util.NetworkUnavailableException]).
      */
     suspend fun rejectLoan(
         loanId: Int,
-        rejectLoanPayload: RejectLoanPayload,
-    ): DataState<RejectLoanResponse>
+        input: RejectLoanInput,
+    ): DataState<Unit>
 }

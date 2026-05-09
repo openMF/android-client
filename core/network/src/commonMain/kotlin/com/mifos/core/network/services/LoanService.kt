@@ -21,9 +21,10 @@ import com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplat
 import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
-import com.mifos.core.model.objects.payloads.RejectLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.dto.loan.RejectLoanRequestDto
+import com.mifos.core.network.dto.loan.RejectLoanResponseDto
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.loans.Loan
@@ -60,11 +61,19 @@ interface LoanService {
         @Body loanApproval: LoanApproval?,
     ): Flow<GenericResponse>
 
+    /**
+     * Reject a submitted-and-pending loan application.
+     *
+     * Mandatory fields on the body:
+     *   - `rejectedOnDate`
+     *   - `locale`
+     *   - `dateFormat`
+     */
     @POST(APIEndPoint.LOANS + "/{loanId}?command=reject")
     suspend fun rejectLoan(
         @Path("loanId") loanId: Int,
-        @Body rejectLoanPayload: RejectLoanPayload,
-    ): HttpResponse
+        @Body request: RejectLoanRequestDto,
+    ): RejectLoanResponseDto
 
     //  Mandatory Fields
     //  String actualDisbursementDate

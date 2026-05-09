@@ -7,17 +7,14 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.objects.payloads
+package com.mifos.core.data.mappers.loan
 
-import kotlinx.serialization.Serializable
+import com.mifos.core.model.objects.loan.RejectLoanInput
+import com.mifos.core.network.dto.loan.RejectLoanRequestDto
 
-/**
- * Request body for rejecting a loan application.
- */
-@Serializable
-data class RejectLoanPayload(
-    val rejectedOnDate: String,
-    val note: String? = null,
-    val locale: String,
-    val dateFormat: String,
+fun RejectLoanInput.toDto(): RejectLoanRequestDto = RejectLoanRequestDto(
+    rejectedOnDate = rejectedOnDate,
+    note = note,
+    locale = locale,
+    dateFormat = dateFormat,
 )

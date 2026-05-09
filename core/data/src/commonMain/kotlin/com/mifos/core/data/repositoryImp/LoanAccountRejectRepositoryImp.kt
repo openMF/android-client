@@ -10,34 +10,31 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.data.mappers.loan.toDto
 import com.mifos.core.data.repository.LoanAccountRejectRepository
-import com.mifos.core.model.objects.account.loan.RejectLoanResponse
-import com.mifos.core.model.objects.payloads.RejectLoanPayload
+import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.data.util.runAsDataState
+import com.mifos.core.model.objects.loan.RejectLoanInput
 import com.mifos.core.network.datamanager.DataManagerLoan
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
+import template.core.base.common.manager.DispatcherManager
 
 /**
  * Default implementation for [LoanAccountRejectRepository].
  */
 class LoanAccountRejectRepositoryImp(
     private val dataManagerLoan: DataManagerLoan,
-    private val ioDispatcher: CoroutineDispatcher,
+    private val networkMonitor: NetworkMonitor,
+    private val dispatcher: DispatcherManager,
 ) : LoanAccountRejectRepository {
 
     override suspend fun rejectLoan(
         loanId: Int,
-        rejectLoanPayload: RejectLoanPayload,
-    ): DataState<RejectLoanResponse> {
-        return withContext(ioDispatcher) {
-            try {
-                val response = dataManagerLoan.rejectLoan(loanId, rejectLoanPayload)
-                DataState.Success(response)
-            } catch (throwable: Throwable) {
-                if (throwable is CancellationException) throw throwable
-                DataState.Error(throwable)
-            }
-        }
+        input: RejectLoanInput,
+    ): DataState<Unit> = runAsDataState(
+        networkMonitor,
+        dispatcher.io,
+    ) {
+        dataManagerLoan.rejectLoan(loanId, input.toDto())
+        Unit
     }
 }

@@ -12,7 +12,6 @@ package com.mifos.core.network.datamanager
 import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
-import com.mifos.core.model.objects.account.loan.RejectLoanResponse
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRejectionRequest
@@ -22,9 +21,10 @@ import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleTempl
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRequest
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferResponse
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplate
-import com.mifos.core.model.objects.payloads.RejectLoanPayload
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.dto.loan.RejectLoanRequestDto
+import com.mifos.core.network.dto.loan.RejectLoanResponseDto
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
@@ -305,18 +305,16 @@ class DataManagerLoan(
         return mBaseApiManager.loanService.disburseLoan(loanId, loanDisbursement)
     }
 
+    /**
+     * Reject a submitted-and-pending loan application.
+     *
+     * Thin pass-through to [com.mifos.core.network.services.LoanService.rejectLoan];
+     * Ktorfit handles deserialization into [RejectLoanResponseDto] directly.
+     */
     suspend fun rejectLoan(
         loanId: Int,
-        rejectLoanPayload: RejectLoanPayload,
-    ): RejectLoanResponse {
-        val response = mBaseApiManager.loanService.rejectLoan(loanId, rejectLoanPayload)
-        if (!response.status.isSuccess()) {
-            val errorMessage = extractErrorMessage(response)
-            throw IllegalStateException(errorMessage)
-        }
-        return Json { ignoreUnknownKeys = true }
-            .decodeFromString<RejectLoanResponse>(response.bodyAsText())
-    }
+        request: RejectLoanRequestDto,
+    ): RejectLoanResponseDto = mBaseApiManager.loanService.rejectLoan(loanId, request)
 
     /**
      * Account Transfer Methods

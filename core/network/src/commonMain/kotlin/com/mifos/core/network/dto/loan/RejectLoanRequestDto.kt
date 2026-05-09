@@ -7,17 +7,17 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.objects.account.loan
+package com.mifos.core.network.dto.loan
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonElement
 
 /**
- * Response payload returned after rejecting a loan.
+ * Wire-format request body for `POST /loans/{loanId}?command=reject`.
  */
 @Serializable
-data class RejectLoanResponse(
-    val loanId: Int? = null,
-    val resourceId: Int? = null,
-    val changes: Map<String, JsonElement> = emptyMap(),
+data class RejectLoanRequestDto(
+    val rejectedOnDate: String? = null,
+    val note: String? = null,
+    val locale: String? = null,
+    val dateFormat: String? = null,
 )

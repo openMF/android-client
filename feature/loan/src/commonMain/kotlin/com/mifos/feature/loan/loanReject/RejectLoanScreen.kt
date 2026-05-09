@@ -82,6 +82,8 @@ internal fun RejectLoanScreen(
         }
     }
 
+    val isSubmitting = state.dialogState is RejectLoanState.DialogState.Loading
+
     MifosScaffold(
         title = stringResource(Res.string.feature_loan_reject_title),
         onBackPressed = { viewModel.trySendAction(RejectLoanAction.CancelClicked) },
@@ -93,33 +95,41 @@ internal fun RejectLoanScreen(
         ) {
             RejectLoanContent(
                 state = state,
+                isSubmitting = isSubmitting,
                 onAction = remember(viewModel) { viewModel::trySendAction },
             )
 
-            // Discard dialog
-            MifosDialogBox(
-                title = stringResource(Res.string.feature_loan_reject_discard_title),
-                showDialogState = state.showDiscardDialog,
-                confirmButtonText = stringResource(Res.string.feature_loan_reject_discard_confirm),
-                dismissButtonText = stringResource(Res.string.feature_loan_cancel),
-                onConfirm = { viewModel.trySendAction(RejectLoanAction.DiscardConfirmed) },
-                onDismiss = { viewModel.trySendAction(RejectLoanAction.DiscardDismissed) },
-                message = stringResource(Res.string.feature_loan_reject_discard_message),
-            )
-
-            // Success / error dialog
             when (val dialogState = state.dialogState) {
-                is RejectLoanState.DialogState.Success -> {
+                RejectLoanState.DialogState.PreventAccidentalBack -> {
+                    MifosDialogBox(
+                        title = stringResource(Res.string.feature_loan_reject_discard_title),
+                        showDialogState = true,
+                        confirmButtonText = stringResource(Res.string.feature_loan_reject_discard_confirm),
+                        dismissButtonText = stringResource(Res.string.feature_loan_cancel),
+                        onConfirm = {
+                            viewModel.trySendAction(RejectLoanAction.PreventAccidentalBackConfirmed)
+                        },
+                        onDismiss = { viewModel.trySendAction(RejectLoanAction.DismissDialog) },
+                        message = stringResource(Res.string.feature_loan_reject_discard_message),
+                    )
+                }
+
+                RejectLoanState.DialogState.Success -> {
                     MifosDialogBox(
                         title = stringResource(Res.string.feature_loan_loan_rejected_message),
                         showDialogState = true,
                         confirmButtonText = stringResource(Res.string.feature_loan_dialog_action_ok),
                         dismissButtonText = stringResource(Res.string.feature_loan_cancel),
-                        onConfirm = { viewModel.trySendAction(RejectLoanAction.DismissSuccessDialog) },
-                        onDismiss = { viewModel.trySendAction(RejectLoanAction.DismissSuccessDialog) },
+                        onConfirm = {
+                            viewModel.trySendAction(RejectLoanAction.DismissSuccessDialog)
+                        },
+                        onDismiss = {
+                            viewModel.trySendAction(RejectLoanAction.DismissSuccessDialog)
+                        },
                         message = stringResource(Res.string.feature_loan_reject_success),
                     )
                 }
+
                 is RejectLoanState.DialogState.Error -> {
                     MifosDialogBox(
                         title = stringResource(Res.string.feature_loan_reject_title),
@@ -131,10 +141,13 @@ internal fun RejectLoanScreen(
                         message = dialogState.message,
                     )
                 }
-                null -> Unit
+
+                RejectLoanState.DialogState.Loading,
+                null,
+                -> Unit
             }
 
-            if (state.isLoading) {
+            if (isSubmitting) {
                 MifosProgressIndicatorOverlay()
             }
         }
@@ -145,6 +158,7 @@ internal fun RejectLoanScreen(
 @Composable
 private fun RejectLoanContent(
     state: RejectLoanState,
+    isSubmitting: Boolean,
     onAction: (RejectLoanAction) -> Unit,
 ) {
     val rejectedOnLabel = stringResource(Res.string.feature_loan_rejected_on_label)
@@ -192,7 +206,7 @@ private fun RejectLoanContent(
             label = rejectedOnLabel,
             errorMessage = state.rejectedOnDateError,
             openDatePicker = { showDatePicker = true },
-            enabled = !state.isLoading,
+            enabled = !isSubmitting,
             modifier = Modifier
                 .fillMaxWidth()
                 .semantics {
@@ -206,7 +220,7 @@ private fun RejectLoanContent(
             onValueChange = { onAction(RejectLoanAction.NoteChanged(it)) },
             label = noteLabel,
             config = MifosTextFieldConfig(
-                enabled = !state.isLoading,
+                enabled = !isSubmitting,
                 singleLine = false,
                 minLines = 3,
                 keyboardOptions = KeyboardOptions(
@@ -227,24 +241,24 @@ private fun RejectLoanContent(
             MifosOutlinedButton(
                 text = { Text(text = cancelLabel) },
                 onClick = { onAction(RejectLoanAction.CancelClicked) },
-                enabled = !state.isLoading,
+                enabled = !isSubmitting,
                 modifier = Modifier
                     .weight(1f)
                     .semantics {
                         contentDescription = cancelLabel
-                        if (state.isLoading) disabled()
+                        if (isSubmitting) disabled()
                     },
             )
 
             MifosButton(
                 text = { Text(text = submitLabel) },
                 onClick = { onAction(RejectLoanAction.SubmitClicked) },
-                enabled = !state.isLoading,
+                enabled = !isSubmitting,
                 modifier = Modifier
                     .weight(1f)
                     .semantics {
                         contentDescription = submitLabel
-                        if (state.isLoading) disabled()
+                        if (isSubmitting) disabled()
                     },
             )
         }
