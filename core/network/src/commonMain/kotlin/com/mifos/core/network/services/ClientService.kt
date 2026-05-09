@@ -55,7 +55,6 @@ interface ClientService {
     @POST("authentication")
     suspend fun authenticate(
         @Body postAuthenticationRequest: PostAuthenticationRequest,
-        @Query("returnClientList") returnClientList: Boolean? = false,
     ): PostAuthenticationResponse
 
     /**
