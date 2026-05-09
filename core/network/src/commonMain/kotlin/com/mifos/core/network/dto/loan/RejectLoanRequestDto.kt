@@ -16,8 +16,8 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class RejectLoanRequestDto(
-    val rejectedOnDate: String? = null,
+    val rejectedOnDate: String,
+    val locale: String,
+    val dateFormat: String,
     val note: String? = null,
-    val locale: String? = null,
-    val dateFormat: String? = null,
 )

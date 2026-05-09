@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.todayIn
 import org.jetbrains.compose.resources.getString
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
@@ -37,7 +37,7 @@ internal class RejectLoanViewModel(
     savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<RejectLoanState, RejectLoanEvent, RejectLoanAction>(
     initialState = RejectLoanState(
-        rejectedOnDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
+        rejectedOnDate = Clock.System.todayIn(TimeZone.currentSystemDefault()),
     ),
 ) {
 
@@ -83,6 +83,10 @@ internal class RejectLoanViewModel(
     }
 
     private fun onCancelClicked() {
+        // Ignore cancel/back while a reject submission is in flight; the in-flight
+        // call must either succeed or surface its error before the user can leave.
+        if (state.dialogState is RejectLoanState.DialogState.Loading) return
+
         if (isDirty()) {
             mutableStateFlow.update {
                 it.copy(dialogState = RejectLoanState.DialogState.PreventAccidentalBack)
@@ -140,7 +144,8 @@ internal class RejectLoanViewModel(
     }
 
     private suspend fun validate(state: RejectLoanState): RejectLoanState {
-        return if (state.rejectedOnDate > Clock.System.now().toLocalDateTime(TimeZone.UTC).date) {
+        val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
+        return if (state.rejectedOnDate > today) {
             state.copy(
                 rejectedOnDateError = getString(Res.string.feature_loan_reject_date_error_future),
             )
@@ -156,7 +161,7 @@ internal class RejectLoanViewModel(
 @OptIn(ExperimentalTime::class)
 @Immutable
 internal data class RejectLoanState(
-    val rejectedOnDate: LocalDate = Clock.System.now().toLocalDateTime(TimeZone.UTC).date,
+    val rejectedOnDate: LocalDate = Clock.System.todayIn(TimeZone.currentSystemDefault()),
     val note: String = "",
     val rejectedOnDateError: String? = null,
     val dialogState: DialogState? = null,

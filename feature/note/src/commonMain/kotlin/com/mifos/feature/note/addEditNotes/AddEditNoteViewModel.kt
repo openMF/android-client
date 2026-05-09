@@ -191,10 +191,7 @@ class AddEditNoteViewModel(
 
             AddEditNoteAction.OnRetry -> {
                 if (state.editEnabled) {
-                    viewModelScope.launch {
-                        loadSingleNote()
-                        editNote(state.textFieldNotesPayload)
-                    }
+                    editNote(state.textFieldNotesPayload)
                 } else {
                     viewModelScope.launch {
                         addNote(state.textFieldNotesPayload)

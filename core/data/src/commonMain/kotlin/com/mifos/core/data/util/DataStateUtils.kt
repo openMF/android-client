@@ -10,6 +10,7 @@
 package com.mifos.core.data.util
 
 import com.mifos.core.common.utils.DataState
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -42,6 +43,8 @@ suspend fun <T> runAsDataState(
         } else {
             DataState.Success(block())
         }
+    } catch (e: CancellationException) {
+        throw e
     } catch (e: Throwable) {
         DataState.Error(e)
     }
