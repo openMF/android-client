@@ -9,6 +9,9 @@
  */
 package com.mifos.feature.loan.closeLoanAccount
 
+import com.mifos.core.common.utils.DataState
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
 import org.jetbrains.compose.resources.StringResource
 
 /**
@@ -115,4 +118,33 @@ sealed interface CloseLoanAction {
      * Dispatched to navigate back.
      */
     data object NavigateBack : CloseLoanAction
+
+    /**
+     * Actions dispatched internally by the ViewModel after asynchronous work completes.
+     */
+    sealed interface Internal : CloseLoanAction {
+        /**
+         * Dispatched when the close-loan template fetch completes.
+         * @property result The terminal [DataState] result of the template fetch.
+         */
+        data class TemplateLoaded(
+            val result: DataState<LoanTransactionTemplate?>,
+        ) : Internal
+
+        /**
+         * Dispatched when the loan details fetch completes.
+         * @property result The terminal [DataState] result of the loan fetch.
+         */
+        data class LoanLoaded(
+            val result: DataState<LoanWithAssociationsEntity?>,
+        ) : Internal
+
+        /**
+         * Dispatched on each emission from the close-loan request flow.
+         * @property result The current [DataState] of the close request.
+         */
+        data class CloseResult(
+            val result: DataState<Unit>,
+        ) : Internal
+    }
 }

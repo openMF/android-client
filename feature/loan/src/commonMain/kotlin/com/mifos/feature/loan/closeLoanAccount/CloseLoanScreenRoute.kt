@@ -12,7 +12,6 @@ package com.mifos.feature.loan.closeLoanAccount
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.mifos.core.common.utils.Constants
 import kotlinx.serialization.Serializable
 
 /**
@@ -28,10 +27,7 @@ data class CloseLoanScreenRoute(
 /**
  * Registers the Close Loan Account destination.
  *
- * On successful close we write [Constants.LOAN_CLOSED] into the previous back-stack entry's
- * `SavedStateHandle` so the caller can refresh its state, then pop.
- *
- * @param navController The navigation controller used to pop the stack and set the result.
+ * @param navController The navigation controller used to pop the stack on success.
  * @param onBackPressed The callback invoked when the user cancels the operation.
  */
 fun NavGraphBuilder.closeLoanAccountScreen(
@@ -41,12 +37,7 @@ fun NavGraphBuilder.closeLoanAccountScreen(
     composable<CloseLoanScreenRoute> {
         CloseLoanScreen(
             onBackPressed = onBackPressed,
-            onCloseSuccess = {
-                navController.previousBackStackEntry
-                    ?.savedStateHandle
-                    ?.set(Constants.LOAN_CLOSED, true)
-                navController.popBackStack()
-            },
+            onCloseSuccess = { navController.popBackStack() },
         )
     }
 }

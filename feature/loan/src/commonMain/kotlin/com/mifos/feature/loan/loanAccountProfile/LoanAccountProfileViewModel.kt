@@ -25,7 +25,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.core.data.util.NetworkMonitor
@@ -34,7 +33,12 @@ import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.loan.loanAccountProfile.components.LoanAccountProfileActionItem
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
@@ -42,16 +46,14 @@ import org.jetbrains.compose.resources.StringResource
 /**
  * ViewModel for the Loan Account Profile screen.
  *
- * This ViewModel manages the loading and display of a loan's summary and its associations.
- * It also handles navigation to various loan actions (Approve, Repayment, Transfer, etc.)
- * and observes network status to show error states.
- *
- * @property savedStateHandle Handle to saved state for this ViewModel.
- * @property networkMonitor Utility to observe network connectivity.
- * @property loanRepository Repository to fetch loan account summary details.
+ * Exposes the loan account as a [StateFlow] backed by a [SharingStarted.WhileSubscribed] hot
+ * pipeline so the data is observed continuously and reloads when callers re-subscribe (e.g.
+ * after navigating back from another screen). A user-initiated refresh emits into
+ * [refreshTrigger] to force a re-collection.
  */
+@OptIn(ExperimentalCoroutinesApi::class)
 internal class LoanAccountProfileViewModel(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
     private val networkMonitor: NetworkMonitor,
     private val loanRepository: LoanAccountSummaryRepository,
 ) : BaseViewModel<LoanAccountState, LoanAccountEvent, LoanAccountAction>(
@@ -59,89 +61,140 @@ internal class LoanAccountProfileViewModel(
 ) {
 
     private val route = savedStateHandle.toRoute<LoanAccountRoute>()
-    private var loadJob: Job? = null
+
+    private val refreshTrigger = MutableSharedFlow<Unit>(replay = 1).apply { tryEmit(Unit) }
+
+    private val loanFlow: StateFlow<DataState<LoanWithAssociationsEntity?>> =
+        refreshTrigger
+            .flatMapLatest { loanRepository.getLoanById(route.loanId) }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(STOP_TIMEOUT_MILLIS),
+                initialValue = DataState.Loading,
+            )
 
     init {
-        observeNetworkAndLoad()
+        observeNetwork()
+        observeLoanFlow()
     }
 
-    /**
-     * Observes the network connectivity and navigation results.
-     *
-     * Triggers a data load when the device comes online if data is missing.
-     * Also observes [Constants.LOAN_CLOSED] from [SavedStateHandle] to refresh the profile
-     * after a successful loan closure.
-     */
-    private fun observeNetworkAndLoad() {
+    override fun handleAction(action: LoanAccountAction) {
+        when (action) {
+            LoanAccountAction.NavigateBack -> sendEvent(LoanAccountEvent.NavigateBack)
+            LoanAccountAction.OnRetry -> handleRetry()
+            LoanAccountAction.OnRefresh -> refresh()
+            LoanAccountAction.OnNextActionClick -> handleNextAction()
+            is LoanAccountAction.OnDetailItemClick ->
+                sendEvent(LoanAccountEvent.NavigateToDetail(action.item))
+            LoanAccountAction.OnAccountClick ->
+                sendEvent(LoanAccountEvent.NavigateToAccountDetails)
+            is LoanAccountAction.Internal.NetworkChanged ->
+                handleNetworkChanged(action.isConnected)
+            is LoanAccountAction.Internal.LoanDataReceived ->
+                handleLoanDataReceived(action.result)
+        }
+    }
+
+    private fun observeNetwork() {
         viewModelScope.launch {
             networkMonitor.isOnline.collect { isConnected ->
-                mutableStateFlow.update { it.copy(networkConnection = isConnected) }
-                if (isConnected) {
-                    if (mutableStateFlow.value.loanAccount == null) {
-                        loadLoanAccountDetails(route.loanId)
-                    }
-                } else if (mutableStateFlow.value.loanAccount == null) {
-                    mutableStateFlow.update {
-                        it.copy(dialogState = LoanAccountState.DialogState.Error(Res.string.feature_loan_profile_error_network_not_available))
-                    }
-                }
+                sendAction(LoanAccountAction.Internal.NetworkChanged(isConnected))
             }
-        }
-
-        viewModelScope.launch {
-            savedStateHandle.getStateFlow(Constants.LOAN_CLOSED, false)
-                .collect { isClosed ->
-                    if (isClosed) {
-                        loadLoanAccountDetails(route.loanId)
-                        savedStateHandle[Constants.LOAN_CLOSED] = false
-                    }
-                }
         }
     }
 
-    /**
-     * Loads the loan account details from the repository.
-     *
-     * @param loanId The unique identifier of the loan account.
-     */
-    private fun loadLoanAccountDetails(loanId: Int) {
-        loadJob?.cancel()
-        loadJob = viewModelScope.launch {
-            loanRepository.getLoanById(loanId).collect { result ->
-                when (result) {
-                    is DataState.Success -> {
-                        val loan = result.data
-                        if (loan == null) {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = LoanAccountState.DialogState.Error(Res.string.feature_loan_profile_error_details_not_found),
-                                )
-                            }
-                            return@collect
-                        }
-                        val currentStatus = loan.status.toProfileStatus()
+    private fun observeLoanFlow() {
+        viewModelScope.launch {
+            loanFlow.collect { result ->
+                sendAction(LoanAccountAction.Internal.LoanDataReceived(result))
+            }
+        }
+    }
 
-                        mutableStateFlow.update {
-                            it.copy(
-                                loanAccount = loan,
-                                dialogState = null,
-                                statusUiModel = calculateStatusUi(currentStatus),
-                                nextActionButtonRes = calculateNextActionResource(currentStatus),
-                            )
-                        }
-                    }
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(dialogState = LoanAccountState.DialogState.Error(Res.string.feature_loan_profile_failed_to_load_loan))
-                        }
-                    }
-                    DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(dialogState = LoanAccountState.DialogState.Loading)
-                        }
+    private fun refresh() {
+        refreshTrigger.tryEmit(Unit)
+    }
+
+    private fun handleRetry() {
+        if (state.networkConnection) {
+            refresh()
+        } else {
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = LoanAccountState.DialogState.Error(
+                        Res.string.feature_loan_profile_error_details_not_found,
+                    ),
+                )
+            }
+        }
+    }
+
+    private fun handleNetworkChanged(isConnected: Boolean) {
+        mutableStateFlow.update { it.copy(networkConnection = isConnected) }
+        if (!isConnected && mutableStateFlow.value.loanAccount == null) {
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = LoanAccountState.DialogState.Error(
+                        Res.string.feature_loan_profile_error_network_not_available,
+                    ),
+                )
+            }
+        }
+    }
+
+    private fun handleLoanDataReceived(result: DataState<LoanWithAssociationsEntity?>) {
+        when (result) {
+            is DataState.Success -> handleLoanSuccess(result.data)
+            is DataState.Error -> mutableStateFlow.update {
+                it.copy(
+                    dialogState = LoanAccountState.DialogState.Error(
+                        Res.string.feature_loan_profile_failed_to_load_loan,
+                    ),
+                )
+            }
+            DataState.Loading -> {
+                if (mutableStateFlow.value.loanAccount == null) {
+                    mutableStateFlow.update {
+                        it.copy(dialogState = LoanAccountState.DialogState.Loading)
                     }
                 }
             }
+        }
+    }
+
+    private fun handleLoanSuccess(loan: LoanWithAssociationsEntity?) {
+        if (loan == null) {
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = LoanAccountState.DialogState.Error(
+                        Res.string.feature_loan_profile_error_details_not_found,
+                    ),
+                )
+            }
+            return
+        }
+        val currentStatus = loan.status.toProfileStatus()
+        mutableStateFlow.update {
+            it.copy(
+                loanAccount = loan,
+                dialogState = null,
+                statusUiModel = calculateStatusUi(currentStatus),
+                nextActionButtonRes = calculateNextActionResource(currentStatus),
+            )
+        }
+    }
+
+    private fun handleNextAction() {
+        val account = mutableStateFlow.value.loanAccount ?: return
+        when (account.status.toProfileStatus()) {
+            LoanProfileStatus.PENDING ->
+                sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Approve))
+            LoanProfileStatus.OVERPAID ->
+                sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Transfer))
+            LoanProfileStatus.ACTIVE ->
+                sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Repayment))
+            LoanProfileStatus.UNKNOWN ->
+                sendEvent(LoanAccountEvent.NavigateToAccountDetails)
         }
     }
 
@@ -163,34 +216,6 @@ internal class LoanAccountProfileViewModel(
         }
     }
 
-    override fun handleAction(action: LoanAccountAction) {
-        when (action) {
-            LoanAccountAction.NavigateBack -> sendEvent(LoanAccountEvent.NavigateBack)
-            LoanAccountAction.OnRetry -> if (stateFlow.value.networkConnection) {
-                loadLoanAccountDetails(route.loanId)
-            } else {
-                mutableStateFlow.update {
-                    it.copy(dialogState = LoanAccountState.DialogState.Error(Res.string.feature_loan_profile_error_details_not_found))
-                }
-            }
-            LoanAccountAction.OnRefresh -> loadLoanAccountDetails(route.loanId)
-            LoanAccountAction.OnNextActionClick -> handleNextAction()
-            is LoanAccountAction.OnDetailItemClick -> sendEvent(LoanAccountEvent.NavigateToDetail(action.item))
-            LoanAccountAction.OnAccountClick -> sendEvent(LoanAccountEvent.NavigateToAccountDetails)
-        }
-    }
-
-    private fun handleNextAction() {
-        val account = mutableStateFlow.value.loanAccount ?: return
-
-        when (account.status.toProfileStatus()) {
-            LoanProfileStatus.PENDING -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Approve))
-            LoanProfileStatus.OVERPAID -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Transfer))
-            LoanProfileStatus.ACTIVE -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Repayment))
-            LoanProfileStatus.UNKNOWN -> sendEvent(LoanAccountEvent.NavigateToAccountDetails)
-        }
-    }
-
     private fun LoanStatusEntity?.toProfileStatus(): LoanProfileStatus {
         if (this == null) return LoanProfileStatus.UNKNOWN
         return when {
@@ -199,6 +224,10 @@ internal class LoanAccountProfileViewModel(
             this.active == true -> LoanProfileStatus.ACTIVE
             else -> LoanProfileStatus.UNKNOWN
         }
+    }
+
+    private companion object {
+        const val STOP_TIMEOUT_MILLIS = 5_000L
     }
 }
 
@@ -309,4 +338,23 @@ sealed interface LoanAccountAction {
 
     /** User tapped the loan account card for more details. */
     data object OnAccountClick : LoanAccountAction
+
+    /**
+     * Actions dispatched internally by the ViewModel after asynchronous work completes.
+     */
+    sealed interface Internal : LoanAccountAction {
+        /**
+         * Dispatched when the device connectivity changes.
+         * @property isConnected True if the device is currently online.
+         */
+        data class NetworkChanged(val isConnected: Boolean) : Internal
+
+        /**
+         * Dispatched on each emission from the loan-data flow.
+         * @property result The current [DataState] of the loan account.
+         */
+        data class LoanDataReceived(
+            val result: DataState<LoanWithAssociationsEntity?>,
+        ) : Internal
+    }
 }

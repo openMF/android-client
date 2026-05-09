@@ -39,7 +39,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -49,7 +48,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCard
@@ -94,18 +92,6 @@ internal fun LoanAccountProfileScreen(
     viewModel: LoanAccountProfileViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
-
-    val currentEntry = navController.currentBackStackEntry
-    val loanClosedFlow = remember(currentEntry) {
-        currentEntry?.savedStateHandle?.getStateFlow(Constants.LOAN_CLOSED, false)
-    }
-    val loanClosed = loanClosedFlow?.collectAsStateWithLifecycle()?.value == true
-    LaunchedEffect(loanClosed) {
-        if (loanClosed) {
-            viewModel.trySendAction(LoanAccountAction.OnRefresh)
-            currentEntry?.savedStateHandle?.set(Constants.LOAN_CLOSED, false)
-        }
-    }
 
     EventsEffect(viewModel.eventFlow) { event ->
         val account = state.loanAccount ?: return@EventsEffect

@@ -19,11 +19,12 @@ import androidx.navigation.toRoute
 import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
+import com.mifos.core.data.repository.CloseLoanRepository
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
-import com.mifos.core.domain.useCases.CloseLoanUseCase
-import com.mifos.core.domain.useCases.GetCloseLoanTemplateUseCase
 import com.mifos.core.model.objects.account.loan.CloseLoanRequest
 import com.mifos.core.ui.util.BaseViewModel
+import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -32,17 +33,16 @@ import kotlinx.coroutines.launch
  * ViewModel for the Close Loan Account screen.
  *
  * Loads the close-loan template and the current loan (to get the disbursement date used as the
- * picker lower bound), then handles the submit flow via [CloseLoanAction.OnSubmit].
+ * picker lower bound), then handles the submit flow via [CloseLoanAction.OnSubmit]. Asynchronous
+ * results re-enter the action pipeline as [CloseLoanAction.Internal] events so the
+ * [handleAction] reducer remains the single source of state mutation.
  *
- * @property savedStateHandle Handle to saved state for this ViewModel.
- * @property closeLoanUseCase Use case to close a loan account.
- * @property getCloseLoanTemplateUseCase Use case to fetch the close-loan template.
+ * @property closeLoanRepository Repository for the close-loan transaction flow.
  * @property loanRepository Repository for fetching loan account details.
  */
 class CloseLoanViewModel(
     savedStateHandle: SavedStateHandle,
-    private val closeLoanUseCase: CloseLoanUseCase,
-    private val getCloseLoanTemplateUseCase: GetCloseLoanTemplateUseCase,
+    private val closeLoanRepository: CloseLoanRepository,
     private val loanRepository: LoanAccountSummaryRepository,
 ) : BaseViewModel<CloseLoanState, CloseLoanEvent, CloseLoanAction>(
     initialState = CloseLoanState(),
@@ -50,20 +50,12 @@ class CloseLoanViewModel(
 
     private val route = savedStateHandle.toRoute<CloseLoanScreenRoute>()
 
-    /**
-     * The unique identifier of the loan account this screen is operating on.
-     */
     val loanId: Int get() = route.loanId
 
     init {
-        loadTemplate()
+        loadInitialData()
     }
 
-    /**
-     * Processes incoming user actions and updates the state or sends events.
-     *
-     * @param action The user-initiated action.
-     */
     override fun handleAction(action: CloseLoanAction) {
         when (action) {
             is CloseLoanAction.OnDateChange -> mutableStateFlow.update {
@@ -82,97 +74,114 @@ class CloseLoanViewModel(
             CloseLoanAction.OnDismissError -> mutableStateFlow.update {
                 it.copy(dialogState = null)
             }
-            CloseLoanAction.OnRetryLoadTemplate -> loadTemplate()
+            CloseLoanAction.OnRetryLoadTemplate -> loadInitialData()
             CloseLoanAction.NavigateBack -> sendEvent(CloseLoanEvent.NavigateBack)
+            is CloseLoanAction.Internal.TemplateLoaded ->
+                handleTemplateLoaded(action.result)
+            is CloseLoanAction.Internal.LoanLoaded ->
+                handleLoanLoaded(action.result)
+            is CloseLoanAction.Internal.CloseResult ->
+                handleCloseResult(action.result)
         }
     }
 
-    /**
-     * Loads the close-loan template and current loan details.
-     *
-     * The template provides closure metadata, while the loan details are used to
-     * determine the disbursement date as the lower bound for closure.
-     */
-    private fun loadTemplate() {
+    private fun loadInitialData() {
+        mutableStateFlow.update { it.copy(isTemplateLoading = true, loadError = null) }
+        fetchTemplate()
+        fetchLoan()
+    }
+
+    private fun fetchTemplate() {
         viewModelScope.launch {
-            mutableStateFlow.update { it.copy(isTemplateLoading = true, loadError = null) }
-            val templateResult = getCloseLoanTemplateUseCase(loanId)
+            val result = closeLoanRepository.getCloseLoanTemplate(loanId)
                 .first { it !is DataState.Loading }
-            if (templateResult is DataState.Error) {
-                mutableStateFlow.update {
-                    it.copy(
-                        isTemplateLoading = false,
-                        loadError = Res.string.feature_loan_close_failed_to_load_template,
-                    )
-                }
-                return@launch
-            }
+            sendAction(CloseLoanAction.Internal.TemplateLoaded(result))
+        }
+    }
 
-            val loanResult = loanRepository.getLoanById(loanId)
+    private fun fetchLoan() {
+        viewModelScope.launch {
+            val result = loanRepository.getLoanById(loanId)
                 .first { it !is DataState.Loading }
-            when (loanResult) {
-                is DataState.Success -> {
-                    val disbursement = loanResult.data
-                        ?.timeline
-                        ?.actualDisbursementDate
-                        ?.filterNotNull()
-                        ?.let { DateHelper.getDateAsLongFromList(it) }
-                    mutableStateFlow.update {
-                        it.copy(
-                            isTemplateLoading = false,
-                            disbursementDateMillis = disbursement,
-                        )
-                    }
-                }
-                is DataState.Error -> mutableStateFlow.update {
-                    it.copy(
-                        isTemplateLoading = false,
-                        loadError = Res.string.feature_loan_profile_failed_to_load_loan,
-                    )
-                }
-                DataState.Loading -> Unit
+            sendAction(CloseLoanAction.Internal.LoanLoaded(result))
+        }
+    }
+
+    private fun handleTemplateLoaded(result: DataState<LoanTransactionTemplate?>) {
+        if (result is DataState.Error) {
+            mutableStateFlow.update {
+                it.copy(
+                    isTemplateLoading = false,
+                    loadError = Res.string.feature_loan_close_failed_to_load_template,
+                )
             }
         }
     }
 
-    /**
-     * Submits the close-loan request.
-     *
-     * Formats the selected date and note into a [CloseLoanRequest] and invokes the use case.
-     */
+    private fun handleLoanLoaded(result: DataState<LoanWithAssociationsEntity?>) {
+        when (result) {
+            is DataState.Success -> mutableStateFlow.update {
+                it.copy(
+                    isTemplateLoading = false,
+                    disbursementDateMillis = extractDisbursementMillis(result.data),
+                )
+            }
+            is DataState.Error -> mutableStateFlow.update {
+                it.copy(
+                    isTemplateLoading = false,
+                    loadError = Res.string.feature_loan_profile_failed_to_load_loan,
+                )
+            }
+            DataState.Loading -> Unit
+        }
+    }
+
+    private fun extractDisbursementMillis(loan: LoanWithAssociationsEntity?): Long? =
+        loan?.timeline
+            ?.actualDisbursementDate
+            ?.filterNotNull()
+            ?.let { DateHelper.getDateAsLongFromList(it) }
+
     private fun submitClose() {
         val closedOnMillis = state.closedOnDateMillis ?: return
+        mutableStateFlow.update { it.copy(dialogState = CloseLoanState.DialogState.Submitting) }
+
+        val request = buildCloseRequest(closedOnMillis, state.note)
+
         viewModelScope.launch {
-            mutableStateFlow.update { it.copy(dialogState = CloseLoanState.DialogState.Submitting) }
-
-            val closedOnDate = ApiDateFormatter.formatForApi(closedOnMillis)
-            val noteValue = state.note
-            val request = CloseLoanRequest(
-                closedOnDate = closedOnDate,
-                transactionDate = closedOnDate,
-                dateFormat = ApiDateFormatter.DATE_FORMAT,
-                locale = ApiDateFormatter.LOCALE,
-                note = noteValue.ifBlank { null },
-            )
-
-            closeLoanUseCase(loanId, request).collect { result ->
-                when (result) {
-                    is DataState.Success -> {
-                        mutableStateFlow.update { it.copy(dialogState = null) }
-                        sendEvent(CloseLoanEvent.CloseSuccess)
-                    }
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = CloseLoanState.DialogState.Error(
-                                    Res.string.feature_loan_close_failed,
-                                ),
-                            )
-                        }
-                    }
-                    DataState.Loading -> Unit
-                }
+            val result = closeLoanRepository.closeLoanAccount(loanId, request)
+            if (result is DataState.Success) {
+                closeLoanRepository.syncLoanAccount(loanId)
             }
+            sendAction(CloseLoanAction.Internal.CloseResult(result))
+        }
+    }
+
+    private fun buildCloseRequest(closedOnMillis: Long, note: String): CloseLoanRequest {
+        val closedOnDate = ApiDateFormatter.formatForApi(closedOnMillis)
+        return CloseLoanRequest(
+            closedOnDate = closedOnDate,
+            transactionDate = closedOnDate,
+            dateFormat = ApiDateFormatter.DATE_FORMAT,
+            locale = ApiDateFormatter.LOCALE,
+            note = note.ifBlank { null },
+        )
+    }
+
+    private fun handleCloseResult(result: DataState<Unit>) {
+        when (result) {
+            is DataState.Success -> {
+                mutableStateFlow.update { it.copy(dialogState = null) }
+                sendEvent(CloseLoanEvent.CloseSuccess)
+            }
+            is DataState.Error -> mutableStateFlow.update {
+                it.copy(
+                    dialogState = CloseLoanState.DialogState.Error(
+                        Res.string.feature_loan_close_failed,
+                    ),
+                )
+            }
+            DataState.Loading -> Unit
         }
     }
 }

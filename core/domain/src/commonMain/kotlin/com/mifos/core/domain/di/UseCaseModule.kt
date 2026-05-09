@@ -19,7 +19,6 @@ import com.mifos.core.domain.useCases.AddNoteUseCase
 import com.mifos.core.domain.useCases.ApproveCheckerUseCase
 import com.mifos.core.domain.useCases.ApproveSavingsApplicationUseCase
 import com.mifos.core.domain.useCases.CalculateLoanScheduleUseCase
-import com.mifos.core.domain.useCases.CloseLoanUseCase
 import com.mifos.core.domain.useCases.CreateChargesUseCase
 import com.mifos.core.domain.useCases.CreateClientIdentifierUseCase
 import com.mifos.core.domain.useCases.CreateGroupLoansAccountUseCase
@@ -48,7 +47,6 @@ import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.domain.useCases.GetClientPinpointLocationsUseCase
 import com.mifos.core.domain.useCases.GetClientSavingsAccountTemplateByProductUseCase
 import com.mifos.core.domain.useCases.GetClientTemplateUseCase
-import com.mifos.core.domain.useCases.GetCloseLoanTemplateUseCase
 import com.mifos.core.domain.useCases.GetDataTableInfoUseCase
 import com.mifos.core.domain.useCases.GetDocumentsListUseCase
 import com.mifos.core.domain.useCases.GetGroupDetailsUseCase
@@ -175,6 +173,4 @@ val UseCaseModule = module {
     factoryOf(::DeleteNoteUseCase)
     factoryOf(::CreateSignatureUseCase)
     factoryOf(::UpdateSignatureUseCase)
-    factoryOf(::CloseLoanUseCase)
-    factoryOf(::GetCloseLoanTemplateUseCase)
 }
