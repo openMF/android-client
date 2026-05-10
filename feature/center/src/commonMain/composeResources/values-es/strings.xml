@@ -23,12 +23,12 @@
     <string name="feature_center_meeting_frequency">Frecuencia de reuniones</string>
     <string name="feature_center_staff_name">Nombre del personal</string>
     <string name="feature_center_active_client">Clientes activos</string>
-    <string name="feature_center_active_group_loan">Préstamos de grupo activos</string>
-    <string name="feature_center_active_client_loans">Préstamos de clientes activos</string>
+    <string name="feature_center_active_group_loan">Créditos de grupo activos</string>
+    <string name="feature_center_active_client_loans">Créditos de clientes activos</string>
     <string name="feature_center_active_group_borrowers">Prestatarios del grupo activos</string>
     <string name="feature_center_active_client_borrowers">Clientes prestatarios activos</string>
-    <string name="feature_center_active_overdue_group_loans">Préstamos grupales vencidos activos</string>
-    <string name="feature_center_active_overdue_client_loans">Préstamos de clientes vencidos activos</string>
+    <string name="feature_center_active_overdue_group_loans">Créditos grupales vencidos activos</string>
+    <string name="feature_center_active_overdue_client_loans">Créditos de clientes vencidos activos</string>
 
     <string name="feature_center_unassigned">Sin asignar</string>
     <string name="feature_center_no_staff">Sin personal</string>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2024 Mifos Initiative
+
+    This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+    If a copy of the MPL was not distributed with this file,
+    You can obtain one at https://mozilla.org/MPL/2.0/.
+
+    See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
+-->
+<resources>
+    <string name="feature_settings_close_bottomsheet">Icono de Cerrar BottomSheet</string>
+    <string name="feature_settings_update_config_btn_text">Actualizar Configuración</string>
+    <string name="feature_settings_use_localhost_btn_text">Usar Localhost</string>
+    <string name="feature_settings_use_default_config_btn_text">Restablecer a predeterminado</string>
+    <string name="feature_settings_note_text">La aplicación se reiniciará después de actualizar la configuración exitosamente.</string>
+
+    <string name="feature_settings">Configuración</string>
+    <string name="feature_settings_sync_survey">Sincronizar Encuestas</string>
+    <string name="feature_settings_sync_survey_desc">Toca para sincronizar encuestas</string>
+    <string name="feature_settings_language">Idioma</string>
+    <string name="feature_settings_language_desc">Selecciona tu idioma preferido</string>
+    <string name="feature_settings_theme">Tema</string>
+    <string name="feature_settings_theme_desc">Selecciona el tema</string>
+    <string name="feature_settings_change_passcode">Cambiar Contraseña</string>
+    <string name="feature_settings_change_passcode_desc">Cambiar la contraseña de la aplicación</string>
+    <string name="feature_settings_enable_biometrics">Activar biometría</string>
+    <string name="feature_settings_disable_biometrics">Desactivar biometría</string>
+    <string name="feature_settings_enable_disable_biometrics">Activar/Desactivar Biometría</string>
+    <string name="feature_settings_enable_disable_biometrics_desc">Activar o desactivar la biometría</string>
+    <string name="feature_settings_biometrics_not_set">La biometría no está configurada en este dispositivo</string>
+    <string name="feature_settings_biometrics_not_available">La biometría no está disponible en este dispositivo</string>
+    <string name="feature_settings_biometrics_registration_error">Error al registrar biometría</string>
+    <string name="feature_settings_verification_expired">La verificación expiró. Inténtalo de nuevo.</string>
+    <string name="feature_settings_instance_url">URL de la Instancia</string>
+    <string name="feature_settings_instance_url_desc">Actualizar URL de la Instancia</string>
+    <string name="feature_settings_server_config">Configuración del Servidor</string>
+    <string name="feature_settings_server_config_desc">Actualizar Configuración del Servidor</string>
+    <string name="feature_settings_choose_language">Elegir Idioma</string>
+    <string name="feature_settings_change_app_theme">Cambiar Tema de la Aplicación</string>
+    <string name="feature_settings_error_network_not_available">La red no está disponible</string>
+    <string name="feature_settings_sync_success">Sincronizado exitosamente</string>
+    <string name="feature_settings_space" translatable="false">" "</string>
+    <string name="feature_settings_surveys">Encuestas</string>
+    <string name="feature_settings_slash" translatable="false">/</string>
+    <string name="feature_settings_cancel">Cancelar</string>
+    <string name="feature_settings_failed_sync">Sincronización Fallida</string>
+    <string name="feature_settings_hide">Ocultar</string>
+    <string name="feature_settings_total_sync_progress">Progreso Total de Sincronización</string>
+    <string name="feature_settings_syncing_response">Sincronizando Respuesta</string>
+    <string name="feature_settings_syncing_question">Sincronizando Pregunta</string>
+    <string name="feature_settings_syncing_survey">Sincronizando Encuestas</string>
+    <string name="feature_settings_total">Total</string>
+    <string name="feature_settings_name">Nombre</string>
+    <string name="feature_settings_restart">Reiniciando la app en %1$d segundos</string>
+    <string name="feature_settings_sync_surveys_full_information">Sincronizar Toda la Información de Encuestas</string>
+
+    <string-array name="feature_settings_languages" translatable="false">
+        <item>Idioma del Sistema</item>
+        <item>Inglés</item>
+        <item>हिंदी</item>
+        <item>عربى</item>
+        <item>اُردُو</item>
+        <item>বাঙালি</item>
+        <item>Español</item>
+        <item>Francés</item>
+        <item>Bahasa Indonesia</item>
+        <item>ភាសាខ្មែរ</item>
+        <item>ಕನ್ನಡ</item>
+        <item>తెలుగు</item>
+        <item>မြန်မာ</item>
+        <item>Polaco</item>
+        <item>Portugués</item>
+        <item>Ruso</item>
+        <item>Kiswahili</item>
+        <item>فارسی</item>
+    </string-array>
+
+</resources>
