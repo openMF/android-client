@@ -26,7 +26,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.data.repository.CreditBalanceRefundRepository
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.designsystem.theme.AppColors
@@ -43,7 +42,6 @@ internal class LoanAccountProfileViewModel(
     savedStateHandle: SavedStateHandle,
     private val networkMonitor: NetworkMonitor,
     private val loanRepository: LoanAccountSummaryRepository,
-    private val creditBalanceRepository: CreditBalanceRefundRepository,
 ) : BaseViewModel<LoanAccountState, LoanAccountEvent, LoanAccountAction>(
     initialState = LoanAccountState(),
 ) {
@@ -53,15 +51,6 @@ internal class LoanAccountProfileViewModel(
 
     init {
         observeNetworkAndLoad()
-        observeLoanUpdates()
-    }
-
-    private fun observeLoanUpdates() {
-        viewModelScope.launch {
-            creditBalanceRepository.updateTrigger.collect {
-                loadLoanAccountDetails(route.loanId)
-            }
-        }
     }
     private fun observeNetworkAndLoad() {
         viewModelScope.launch {

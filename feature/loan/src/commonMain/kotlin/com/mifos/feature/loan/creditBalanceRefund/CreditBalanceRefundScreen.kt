@@ -75,10 +75,10 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.model.objects.loan.CreditBalanceRefundInput
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosTwoButtonRow
-import com.mifos.room.entities.accounts.loans.CreditBalanceRefundRequest
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
@@ -189,7 +189,7 @@ private fun CreditBalanceRefundContent(
     overpaidAmount: Double,
     currencyCode: String?,
     decimalPlaces: Int?,
-    onSubmit: (CreditBalanceRefundRequest) -> Unit,
+    onSubmit: (CreditBalanceRefundInput) -> Unit,
     onCancel: () -> Unit,
 ) {
     var transactionDateMillis by rememberSaveable { mutableStateOf<Long?>(null) }
@@ -336,7 +336,7 @@ private fun CreditBalanceRefundContent(
             onFirstBtnClick = onCancel,
             onSecondBtnClick = {
                 onSubmit(
-                    CreditBalanceRefundRequest(
+                    CreditBalanceRefundInput(
                         transactionDate = transactionDateStr,
                         transactionAmount = transactionAmount.toDoubleOrNull() ?: 0.0,
                         dateFormat = "dd MMMM yyyy",

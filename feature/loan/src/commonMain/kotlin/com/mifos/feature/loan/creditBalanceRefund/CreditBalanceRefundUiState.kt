@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.loan.creditBalanceRefund
 
-import com.mifos.room.entities.accounts.loans.CreditBalanceRefundRequest
+import com.mifos.core.model.objects.loan.CreditBalanceRefundInput
 
 /**
  * The single source of truth for the Credit Balance Refund UI.
@@ -54,7 +54,7 @@ sealed interface CreditBalanceRefundAction {
 
     data object OnDismissDialog : CreditBalanceRefundAction
 
-    data class OnSubmitRefund(val request: CreditBalanceRefundRequest) : CreditBalanceRefundAction
+    data class OnSubmitRefund(val input: CreditBalanceRefundInput) : CreditBalanceRefundAction
 }
 
 /**

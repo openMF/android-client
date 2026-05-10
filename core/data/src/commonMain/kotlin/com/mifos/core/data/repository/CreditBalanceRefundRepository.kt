@@ -11,8 +11,7 @@ package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.account.loan.LoanRefundDetails
-import com.mifos.room.entities.accounts.loans.CreditBalanceRefundRequest
-import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
+import com.mifos.core.model.objects.loan.CreditBalanceRefundInput
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -20,8 +19,6 @@ import kotlinx.coroutines.flow.Flow
  * Provides methods to load loan details and submit refund transactions.
  */
 interface CreditBalanceRefundRepository {
-
-    val updateTrigger: Flow<Unit>
 
     /**
      * Fetches loan details (client name, account number, overpaid amount, currency)
@@ -37,11 +34,11 @@ interface CreditBalanceRefundRepository {
      * Error handling (HTTP exceptions, network errors) is done inside the repository.
      *
      * @param loanId The ID of the loan account
-     * @param request The refund request containing transaction details
-     * @return DataState wrapping the response or an error
+     * @param input The refund input containing transaction details
+     * @return DataState wrapping Unit on success or an error
      */
     suspend fun submitRefund(
         loanId: Int,
-        request: CreditBalanceRefundRequest,
-    ): DataState<LoanRepaymentResponseEntity>
+        input: CreditBalanceRefundInput,
+    ): DataState<Unit>
 }

@@ -23,9 +23,9 @@ import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.dto.loan.CreditBalanceRefundRequestDto
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.basemodel.APIEndPoint
-import com.mifos.room.entities.accounts.loans.CreditBalanceRefundRequest
 import com.mifos.room.entities.accounts.loans.Loan
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
@@ -77,7 +77,7 @@ interface LoanService {
     @POST(APIEndPoint.LOANS + "/{loanId}/transactions?command=creditBalanceRefund")
     suspend fun submitCreditBalanceRefund(
         @Path("loanId") loanId: Int,
-        @Body request: CreditBalanceRefundRequest?,
+        @Body request: CreditBalanceRefundRequestDto?,
     ): LoanRepaymentResponseEntity
 
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=repaymentSchedule")

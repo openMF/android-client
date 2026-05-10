@@ -23,9 +23,9 @@ import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRespons
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplate
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.dto.loan.CreditBalanceRefundRequestDto
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.PaymentTypeOptionEntity
-import com.mifos.room.entities.accounts.loans.CreditBalanceRefundRequest
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
@@ -54,37 +54,16 @@ class DataManagerLoan(
     private val prefManager: UserPreferencesRepository,
 ) {
     /**
-     * This Method sending the Request to REST API if UserStatus is 0 and
-     * get the LoanWithAssociation. The response is pass to the DatabaseHelperLoan
-     * that save the response in Database with Flow.defer and next pass the response to
-     * DataManager to pass to Presenter to show in the view.
-     *
-     *
-     * If UserStatus is 1 means User is in the Offline mode, SO it send request to
-     * DatabaseHelperLon to fetch Data from Database and give back to DataManager and DataManager
-     * gives to Presenter to show on the view.
+     * This Method fetches loan details by ID.
+     * Calls the network API directly without checking user status.
+     * Offline/online logic should be handled in the data layer (repository).
      *
      * @param loanId Loan Id of the Loan
-     * @return LoanWithAssociation
+     * @return LoanWithAssociationsEntity
      */
-    @OptIn(ExperimentalCoroutinesApi::class)
-    fun getLoanById(loanId: Int): Flow<LoanWithAssociationsEntity?> {
-        return prefManager.userInfo.flatMapLatest { userData ->
-            when (userData.userStatus) {
-                false -> flow {
-                    emit(
-                        mBaseApiManager.loanService.getLoanByIdWithAllAssociations(
-                            loanId,
-                        ),
-                    )
-                }
-
-                true ->
-                    /**
-                     * offline Mode, Return LoanWithAssociation from LoanDaoHelper.
-                     */
-                    loanDaoHelper.getLoanById(loanId)
-            }
+    fun getLoanById(loanId: Int): Flow<LoanWithAssociationsEntity> {
+        return flow {
+            emit(mBaseApiManager.loanService.getLoanByIdWithAllAssociations(loanId))
         }
     }
 
@@ -212,7 +191,7 @@ class DataManagerLoan(
 
     /**
      * This Method submits a credit balance refund transaction for a loan account.
-     * When the user is online (userStatus = false), the request goes directly to the server.
+     * Calls the network API directly.
      * Endpoint: POST /loans/{loanId}/transactions?command=creditBalanceRefund
      * Returns LoanRepaymentResponseEntity with the transaction details.
      *
@@ -222,7 +201,7 @@ class DataManagerLoan(
      */
     suspend fun submitCreditBalanceRefund(
         loanId: Int,
-        request: CreditBalanceRefundRequest,
+        request: CreditBalanceRefundRequestDto,
     ): LoanRepaymentResponseEntity {
         return mBaseApiManager.loanService.submitCreditBalanceRefund(loanId, request)
     }
