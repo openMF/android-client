@@ -26,6 +26,6 @@
     <string name="feature_search_filter_options_clients_label">Clientes</string>
     <string name="feature_search_filter_options_groups_label">Grupos</string>
     <string name="feature_search_filter_options_centers_label">Centros</string>
-    <string name="feature_search_filter_options_loans_label">Cuentas de préstamo</string>
+    <string name="feature_search_filter_options_loans_label">Cuentas de crédito</string>
     <string name="feature_search_filter_options_savings_label">Cuentas de ahorro</string>
 </resources>
