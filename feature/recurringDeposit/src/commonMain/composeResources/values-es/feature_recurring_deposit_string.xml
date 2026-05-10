@@ -55,7 +55,7 @@
     <string name="feature_recurring_deposit_calculation_days_in_year">Días en el Año</string>
     <string name="feature_recurring_deposit_valid_from_date">Válido desde la fecha</string>
     <string name="feature_recurring_deposit_grouping_by_amount">Agrupación por Monto</string>
-    <string name="feature_recurring_deposit_interest_rate_chart">TABLA DE TASAS DE INTERÉS</string>
+    <string name="feature_recurring_deposit_interest_rate_chart">Tabla de tasas de interés</string>
     <string name="feature_recurring_deposit_no_interest_chart">No hay tabla de tasas de interés disponible</string>
     <string name="feature_recurring_deposit_view">Ver</string>
     <string name="feature_recurring_deposit_rate_chart">Tabla de Tasas</string>
@@ -74,7 +74,7 @@
     <string name="feature_recurring_deposit_name">Nombre</string>
     <string name="feature_recurring_deposit_end_date">Fecha de Finalización</string>
     <string name="feature_recurring_deposit_description">Descripción</string>
-    <string name="feature_recurring_account_created_successfully">Cuenta de depósitos recurrentes creada exitosamente</string>
+    <string name="feature_recurring_account_created_successfully">Cuenta de depósito recurrente creada exitosamente</string>
     <string name="feature_error_network_not_available">La red no está disponible</string>
     <string name="feature_recurring_account_deposit_frequency">Frecuencia de Depósito Recurrente</string>
 </resources>
