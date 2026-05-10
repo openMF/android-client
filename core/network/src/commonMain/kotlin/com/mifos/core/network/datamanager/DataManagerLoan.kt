@@ -24,6 +24,8 @@ import com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplat
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.LoansPayload
+import com.mifos.core.network.model.loan.LoanForeclosureRequestDto
+import com.mifos.core.network.model.loan.LoanForeclosureTemplateDto
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
@@ -407,6 +409,39 @@ class DataManagerLoan(
         val response = mBaseApiManager.loanService.rejectLoanReschedule(
             scheduleId = scheduleId,
             request = request,
+        )
+        if (!response.status.isSuccess()) {
+            throw IllegalStateException(extractErrorMessage(response))
+        }
+    }
+
+    suspend fun getLoanForeclosureTemplate(
+        loanId: Int,
+        transactionDate: String,
+        dateFormat: String,
+        locale: String,
+    ): LoanForeclosureTemplateDto {
+        val response = mBaseApiManager.loanService.getLoanForeclosureTemplate(
+            loanId = loanId,
+            transactionDate = transactionDate,
+            dateFormat = dateFormat,
+            locale = locale,
+        )
+        if (!response.status.isSuccess()) {
+            val errorMessage = extractErrorMessage(response)
+            throw IllegalStateException(errorMessage)
+        }
+
+        return Json { ignoreUnknownKeys = true }.decodeFromString<LoanForeclosureTemplateDto>(response.bodyAsText())
+    }
+
+    suspend fun submitLoanForeclosure(
+        loanId: Int,
+        request: LoanForeclosureRequestDto,
+    ) {
+        val response = mBaseApiManager.loanService.submitLoanForeclosure(
+            loanId = loanId,
+            body = request,
         )
         if (!response.status.isSuccess()) {
             throw IllegalStateException(extractErrorMessage(response))

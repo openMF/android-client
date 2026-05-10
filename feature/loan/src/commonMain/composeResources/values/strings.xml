@@ -475,4 +475,13 @@
     <string name="feature_loan_reschedule_fetch_failed">Failed to load reschedule history.</string>
     <string name="feature_loan_reschedule_approve_failed">Failed to approve reschedule.</string>
     <string name="feature_loan_reschedule_delete_failed">Failed to delete reschedule.</string>
+
+    <!-- Loan Foreclosure -->
+    <string name="feature_loan_transaction_date">Transaction Date*</string>
+    <string name="feature_loan_interest">Interest</string>
+    <string name="feature_loan_fee_amount">Fee Amount</string>
+    <string name="feature_loan_penalty_amount">Penalty Amount*</string>
+    <string name="feature_loan_note">Note*</string>
+    <string name="feature_loan_foreclosure">Foreclosure</string>
+    <string name="feature_loan_transaction_amount_mandatory">Transaction Amount*</string>
 </resources>

@@ -24,6 +24,7 @@ import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.LoansPayload
+import com.mifos.core.network.model.loan.LoanForeclosureRequestDto
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.loans.Loan
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
@@ -195,5 +196,19 @@ interface LoanService {
     suspend fun rejectLoanReschedule(
         @Path("scheduleId") scheduleId: Int,
         @Body request: LoanRescheduleRejectionRequest,
+    ): HttpResponse
+
+    @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template?command=foreclosure")
+    suspend fun getLoanForeclosureTemplate(
+        @Path("loanId") loanId: Int,
+        @Query("transactionDate") transactionDate: String,
+        @Query("dateFormat") dateFormat: String,
+        @Query("locale") locale: String,
+    ): HttpResponse
+
+    @POST(APIEndPoint.LOANS + "/{loanId}/transactions?command=foreclosure")
+    suspend fun submitLoanForeclosure(
+        @Path("loanId") loanId: Int,
+        @Body body: LoanForeclosureRequestDto,
     ): HttpResponse
 }
