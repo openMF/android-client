@@ -13,7 +13,6 @@ import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_account_number
 import androidclient.feature.loan.generated.resources.feature_loan_disbursed_date
 import androidclient.feature.loan.generated.resources.feature_loan_error_fetching_repayment_schedule
-import androidclient.feature.loan.generated.resources.feature_loan_error_not_connected_internet
 import androidclient.feature.loan.generated.resources.principal_paid_off
 import androidclient.feature.loan.generated.resources.total_installments
 import androidx.lifecycle.SavedStateHandle
@@ -26,17 +25,14 @@ import com.mifos.core.common.utils.DataState.Loading
 import com.mifos.core.common.utils.DataState.Success
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.LoanRepaymentScheduleRepository
-import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.model.objects.account.loan.Period
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 class LoanRepaymentScheduleViewModel(
     private val repository: LoanRepaymentScheduleRepository,
-    private val networkMonitor: NetworkMonitor,
     savedStateHandle: SavedStateHandle,
 ) : BaseViewModel<LoanRepaymentScheduleState, LoanRepaymentScheduleEvent, LoanRepaymentScheduleAction>(
     initialState = run {
@@ -48,19 +44,8 @@ class LoanRepaymentScheduleViewModel(
 ) {
 
     init {
-        observeNetwork()
-    }
-
-    /**
-     * Observes the network connectivity status and updates state accordingly.
-     */
-    private fun observeNetwork() {
         viewModelScope.launch {
-            networkMonitor.isOnline
-                .distinctUntilChanged()
-                .collect { isOnline ->
-                    trySendAction(LoanRepaymentScheduleAction.ReceiveNetworkStatus(isOnline))
-                }
+            loadLoanRepaySchedule()
         }
     }
 
@@ -68,10 +53,6 @@ class LoanRepaymentScheduleViewModel(
         when (action) {
             LoanRepaymentScheduleAction.OnNavigateBack -> {
                 sendEvent(LoanRepaymentScheduleEvent.NavigateBack)
-            }
-
-            is LoanRepaymentScheduleAction.ReceiveNetworkStatus -> {
-                handleNetworkStatus(action.isOnline)
             }
 
             LoanRepaymentScheduleAction.Retry -> {
@@ -101,38 +82,9 @@ class LoanRepaymentScheduleViewModel(
         }
     }
 
-    /**
-     * Handles changes in network connectivity.
-     */
-    private fun handleNetworkStatus(isOnline: Boolean) {
-        mutableStateFlow.update { it.copy(networkStatus = isOnline) }
-
-        viewModelScope.launch {
-            if (!isOnline) {
-                mutableStateFlow.update { current ->
-                    if (current.dataState is DataState.Loading ||
-                        current.dataState is DataState.Error
-                    ) {
-                        current.copy(dataState = DataState.Error(exception = Exception(getString(Res.string.feature_loan_error_not_connected_internet))))
-                    } else {
-                        current
-                    }
-                }
-            } else {
-                loadLoanRepaySchedule()
-            }
-        }
-    }
-
     private fun retry() {
         viewModelScope.launch {
-            if (!state.networkStatus) {
-                mutableStateFlow.update {
-                    it.copy(dataState = DataState.Error(exception = Exception(getString(Res.string.feature_loan_error_not_connected_internet))))
-                }
-            } else {
-                loadLoanRepaySchedule()
-            }
+            loadLoanRepaySchedule()
         }
     }
 
@@ -334,14 +286,12 @@ class LoanRepaymentScheduleViewModel(
  * @property basicDetails A map of basic details about the loan.
  * @property repaymentScheduleTableData The repayment schedule data.
  * @property dialogState The state of the dialog to display.
- * @property networkStatus The network connectivity status.
  */
 data class LoanRepaymentScheduleState(
     val loanId: Int = 0,
     val basicDetails: Map<String, String?> = emptyMap(),
     val repaymentScheduleTableData: RepaymentScheduleTableData? = null,
     val dialogState: DialogState? = null,
-    val networkStatus: Boolean = false,
     val dataState: DataState<LoanWithAssociationsEntity> = Loading,
 ) {
     /**
@@ -418,11 +368,4 @@ sealed interface LoanRepaymentScheduleAction {
     data object ExportToPdf : LoanRepaymentScheduleAction
     data class PdfExportError(val title: String, val message: String) : LoanRepaymentScheduleAction
     data object DismissErrorDialog : LoanRepaymentScheduleAction
-
-    /**
-     * Action to receive the network status.
-     *
-     * @param isOnline Whether the device is online.
-     */
-    data class ReceiveNetworkStatus(val isOnline: Boolean) : LoanRepaymentScheduleAction
 }
