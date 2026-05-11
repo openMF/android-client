@@ -30,6 +30,7 @@ import com.mifos.feature.individualCollectionSheet.di.CollectionSheetModule
 import com.mifos.feature.loan.di.LoanModule
 import com.mifos.feature.note.di.NoteModule
 import com.mifos.feature.offline.di.OfflineModule
+import com.mifos.feature.passcode.di.MifosAuthenticatorModule
 import com.mifos.feature.path.tracking.di.PathTrackingModule
 import com.mifos.feature.recurringDeposit.di.RecurringDepositModule
 import com.mifos.feature.report.di.ReportModule
@@ -42,10 +43,12 @@ import com.mifos.room.di.HelperModule
 import com.mifos.room.di.PlatformSpecificDatabaseModule
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
+import template.core.base.common.di.CommonModule
 
 object KoinModules {
 
     private val commonModules = module { includes(DispatchersModule) }
+    private val coreBaseCommonModules = module { includes(CommonModule) }
     private val domainModule = module { includes(UseCaseModule) }
     private val dataModules = module { includes(RepositoryModule) }
     private val coreDataStoreModules = module { includes(PreferencesModule) }
@@ -90,6 +93,7 @@ object KoinModules {
             SearchModule,
             SettingsModule,
             SearchRecordModule,
+            MifosAuthenticatorModule,
         )
     }
 
@@ -102,5 +106,6 @@ object KoinModules {
         featureModules,
         networkModules,
         coreDataStoreModules,
+        coreBaseCommonModules,
     )
 }

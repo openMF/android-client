@@ -120,8 +120,8 @@ data class LoanProducts(
     @SerialName("interestCalculationPeriodType")
     var interestCalculationPeriodType: InterestCalculationPeriodType? = null,
 
-    @SerialName("allowPartialPeriodInterestCalcualtion")
-    var allowPartialPeriodInterestCalcualtion: Boolean? = null,
+    @SerialName("allowPartialPeriodInterestCalculation")
+    var allowPartialPeriodInterestCalculation: Boolean? = null,
 
     @SerialName("transactionProcessingStrategyId")
     var transactionProcessingStrategyId: Int? = null,

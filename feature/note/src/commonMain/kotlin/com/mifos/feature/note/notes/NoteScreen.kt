@@ -49,7 +49,7 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
-import com.mifos.core.model.objects.notes.Note
+import com.mifos.core.model.objects.note.Note
 import com.mifos.core.ui.components.Actions
 import com.mifos.core.ui.components.MifosActionsNoteListingComponent
 import com.mifos.core.ui.components.MifosAlertDialog
@@ -114,7 +114,6 @@ private fun NoteScreenDialog(
     when (state.dialogState) {
         is NoteState.DialogState.Error -> {
             MifosErrorComponent(
-                isNetworkConnected = state.networkConnection,
                 message = state.dialogState.message,
                 isRetryEnabled = true,
                 onRetry = { onAction(NoteAction.OnRetry) },
