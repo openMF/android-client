@@ -11,8 +11,8 @@ package com.mifos.feature.loan.newLoanAccount.pages
 
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.back
+import androidclient.feature.loan.generated.resources.feature_loan_loan_repayment_schedule
 import androidclient.feature.loan.generated.resources.next
-import androidclient.feature.loan.generated.resources.repayment_schedule
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -48,7 +48,7 @@ fun SchedulePage(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
             Text(
-                text = stringResource(Res.string.repayment_schedule),
+                text = stringResource(Res.string.feature_loan_loan_repayment_schedule),
                 style = MifosTypography.labelLargeEmphasized,
             )
 

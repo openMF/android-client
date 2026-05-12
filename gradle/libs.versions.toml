@@ -110,6 +110,8 @@ secrets = "2.0.1"
 truthVersion = '1.4.5'
 runtimeLivedata = "1.7.6"
 appcompat = "1.7.1"
+openhtmltopdf = "1.0.10"
+kotlinxHtml = "0.12.0"
 
 # Kotlin KMP Dependencies
 kotlin = "2.2.21"
@@ -327,6 +329,12 @@ firebase-crashlytics-gradlePlugin = { group = "com.google.firebase", name = "fir
 firebase-performance-gradlePlugin = { group = "com.google.firebase", name = "perf-plugin", version.ref = "firebasePerfPlugin" }
 room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "room" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+
+
+# Dependencies for pdf
+openhtmltopdf-pdfbox = { group = "com.openhtmltopdf", name = "openhtmltopdf-pdfbox", version.ref = "openhtmltopdf" }
+openhtmltopdf-svg-support = { group = "com.openhtmltopdf", name = "openhtmltopdf-svg-support", version.ref = "openhtmltopdf" }
+kotlinx-html = { group = "org.jetbrains.kotlinx", name = "kotlinx-html", version.ref = "kotlinxHtml" }
 
 # [New KMP Dependencies]
 

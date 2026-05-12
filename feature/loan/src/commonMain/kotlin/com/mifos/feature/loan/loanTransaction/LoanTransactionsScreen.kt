@@ -21,7 +21,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_table_header_
 import androidclient.feature.loan.generated.resources.feature_loan_table_header_number
 import androidclient.feature.loan.generated.resources.feature_loan_table_header_office
 import androidclient.feature.loan.generated.resources.feature_loan_table_header_penalties
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_principal
+import androidclient.feature.loan.generated.resources.feature_loan_table_header_principal_due
 import androidclient.feature.loan.generated.resources.feature_loan_table_header_transaction_date
 import androidclient.feature.loan.generated.resources.feature_loan_table_header_transaction_id
 import androidclient.feature.loan.generated.resources.feature_loan_table_header_transaction_type
@@ -252,7 +252,7 @@ private fun LoanTransactionsTableContent(
         "",
         "",
         stringResource(Res.string.feature_loan_table_header_amount),
-        stringResource(Res.string.feature_loan_table_header_principal),
+        stringResource(Res.string.feature_loan_table_header_principal_due),
         stringResource(Res.string.feature_loan_table_header_interest),
         stringResource(Res.string.feature_loan_table_header_fees),
         stringResource(Res.string.feature_loan_table_header_penalties),
