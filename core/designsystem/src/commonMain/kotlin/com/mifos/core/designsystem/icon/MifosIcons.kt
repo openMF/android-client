@@ -37,6 +37,7 @@ import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.FlashOff
 import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.IosShare
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Lock
@@ -252,4 +253,6 @@ object MifosIcons {
     val Copy = Icons.Outlined.ContentCopy
     val Currency = Icons.Outlined.CurrencyExchange
     val Camera = Icons.Outlined.Camera
+
+    val Export = Icons.Default.IosShare
 }
