@@ -21,8 +21,8 @@ data class AppSettings(
 ) {
     companion object {
         val DEFAULT = AppSettings(
-            tenant = "default",
-            baseUrl = "https://tt.mifos.community/",
+            tenant = "mifos-bank-1",
+            baseUrl = "https://apis.mifos.community/",
             appTheme = DarkThemeConfig.FOLLOW_SYSTEM,
             language = LanguageConfig.DEFAULT,
         )
