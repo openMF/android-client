@@ -137,7 +137,7 @@ class CreditBalanceRefundViewModel(
                     mutableStateFlow.update {
                         it.copy(
                             dialogState = CreditBalanceRefundState.DialogState.Success(
-                                transactionId = "Success", // Response is Unit, so we just show success
+                                transactionId = "Success",
                             ),
                         )
                     }
