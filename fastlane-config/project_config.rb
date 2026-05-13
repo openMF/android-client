@@ -74,7 +74,7 @@ module FastlaneConfig
       age_rating_config_path: "./fastlane/age_rating.json",
 
       # Primary locale — must match App Store Connect primary language
-      primary_locale: "en-GB",
+      primary_locale: "en-US",
 
       # Version configuration (fallback only - actual version read from version.txt)
       # The versionFile gradle task generates version.txt from project.version
@@ -163,7 +163,7 @@ module FastlaneConfig
             privacy_policy_url: ENV['APP_PRIVACY_URL'] || "https://mifos.org/privacy",
             description: "Kotlin Multiplatform mobile application"
           },
-          "en-GB" => {
+          "en-US" => {
             feedback_email: ENV['BETA_FEEDBACK_EMAIL'] || "team@mifos.org",
             marketing_url: ENV['APP_MARKETING_URL'] || "https://mifos.org",
             privacy_policy_url: ENV['APP_PRIVACY_URL'] || "https://mifos.org/privacy",
