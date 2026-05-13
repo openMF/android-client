@@ -45,11 +45,11 @@
     <string name="mifos" translatable="false">Mifos</string>
     <string name="full_name">Nombre</string>
     <string name="external_id">ID externo</string>
-    <string name="loanproduct">Producto de préstamo</string>
-    <string name="loantype">Tipo de préstamo</string>
+    <string name="loanproduct">Producto de crédito</string>
+    <string name="loantype">Tipo de crédito</string>
     <string name="principal">Capital</string>
-    <string name="loanterm">Plazo del préstamo</string>
-    <string name="loanterm_month">Seleccionar plazo del préstamo</string>
+    <string name="loanterm">Plazo del crédito</string>
+    <string name="loanterm_month">Seleccionar plazo del crédito</string>
     <string name="nominal">Tasa de interés anual nominal </string>
     <string name="submitted_on">Enviado el</string>
     <string name="activation_date">Fecha de activación</string>
@@ -64,7 +64,7 @@
     <string name="create_client">Crear cliente</string>
     <string name="create_savings_account">Agregar cuenta de ahorro</string>
     <string name="create_loan_account">Solicitud de crédito</string>
-    <string name="create_loan_terms">Términos del préstamo</string>
+    <string name="create_loan_terms">Términos del crédito</string>
     <string name="create_center">Crear centro</string>
     <string name="create_group">Crear grupo</string>
     <string name="create_new_group">Crear nuevo grupo</string>
@@ -75,7 +75,7 @@
     <string name="id">ID</string>
     <string name="charge_id">ID del cargo</string>
     <string name="transactions">Transacciones</string>
-    <string name="loan_transactions">Transacciones del préstamo</string>
+    <string name="loan_transactions">Transacciones del crédito</string>
     <string name="name">Nombre</string>
     <string name="charge_name">Nombre del cargo</string>
     <string name="description">Descripción</string>
@@ -94,7 +94,7 @@
     <string name="client_activated_successfully">Cliente activado exitosamente</string>
     <string name="center_activated_successfully">Centro activado exitosamente</string>
     <string name="group_created_successfully">Grupo activado exitosamente</string>
-    <string name="loan_disburse_successfully">Préstamo desembolsado exitosamente</string>
+    <string name="loan_disburse_successfully">Crédito desembolsado exitosamente</string>
     <string name="center_created_successfully">Centro creado exitosamente</string>
     <string name="savings_account_closed">Cuenta de ahorro cerrada</string>
     <string name="savings_account_activated">Cuenta de ahorro activada</string>
@@ -102,7 +102,7 @@
     <string name="more_group_info">Más información del grupo</string>
     <string name="pinpoint">Fijar ubicación exacta</string>
     <string name="charges">Cargos </string>
-    <string name="add_loan">Agregar cuenta de préstamo</string>
+    <string name="add_loan">Agregar cuenta de crédito</string>
     <string name="savings_account">Agregar cuenta de ahorro</string>
     <string name="savings_account_id">ID de cuenta de ahorro</string>
     <string name="collection_sheet">Hoja de cobranza</string>
@@ -190,7 +190,7 @@
     <string name="min_overdraft">Sobregiro mínimo para cálculo de intereses </string>
     <string name="nominal_overdraft">Tasa de interés anual nominal para sobregiros </string>
     <string name="unassigned">Sin asignar</string>
-    <string name="disburse_loan">Desembolsar préstamo</string>
+    <string name="disburse_loan">Desembolsar crédito</string>
     <string name="logging_in">Iniciando sesión</string>
     <string name="back_again">Presiona Atrás nuevamente para salir</string>
     <string name="dialog_logout">¿Estás seguro de que quieres cerrar sesión?</string>
@@ -229,7 +229,7 @@
     <string name="collectionsheet_submit_success">Hoja de cobranza enviada exitosamente.</string>
     <string name="no_collectionsheet_found">No se encontró ninguna hoja de cobranza para esta combinación.</string>
     <string name="error_generate_sheet_first">¡Por favor genera primero la hoja de cobranza!</string>
-    <string name="loan_account_num">Préstamo #</string>
+    <string name="loan_account_num">Crédito #</string>
     <string name="action">Acción</string>
     <string name="due_collection">Cobros vencidos</string>
     <string name="additional_details">Detalles adicionales</string>
@@ -241,7 +241,7 @@
     <string name="meeting_calender">Calendario de reuniones</string>
     <string name="productive_collection_sheet">Hoja de cobranza productiva</string>
     <string name="attendance">Asistencia</string>
-    <string name="collection_loan_product">Préstamo:%1$s</string>
+    <string name="collection_loan_product">Crédito:%1$s</string>
     <string name="collection_saving_product">Ahorro:%1$s</string>
     <string name="collection_heading_charges">%1$s/Cargos</string>
     <string name="generate">Generar</string>
@@ -252,7 +252,7 @@
     <string name="menu_run_report">Ejecutar reporte</string>
     <string name="menu_export_csv">Exportar CSV</string>
     <string name="msg_report_empty">¡No se obtuvieron datos para el reporte elegido!</string>
-    <string name="report_loan_purpose">"Propósito del préstamo"</string>
+    <string name="report_loan_purpose">"Propósito del crédito"</string>
     <string name="par_calculation">Cálculo de cartera en riesgo (PAR)</string>
     <string name="savings_acc_deposit">Depósito de cuenta de ahorro</string>
     <string name="glaccount">Cuenta del libro mayor</string>
@@ -267,7 +267,7 @@
     <string name="overdue_y_number">Vencimiento número Y</string>
     <string-array name="array_runreport">
         <item>Cliente</item>
-        <item>Préstamo</item>
+        <item>Crédito</item>
         <item>Ahorro</item>
         <item>Fondo</item>
         <item>Contabilidad</item>
@@ -276,15 +276,15 @@
     </string-array>
 
     <string name="loan_officer">Oficial de crédito</string>
-    <string name="sync_loanrepayment">Sincronizar transacción de pago de préstamo</string>
-    <string name="no_loanrepayment_to_sync">No hay pagos de préstamos para sincronizar</string>
-    <string name="loan_purposes">Propósitos de los préstamos</string>
+    <string name="sync_loanrepayment">Sincronizar transacción de pago de crédito</string>
+    <string name="no_loanrepayment_to_sync">No hay pagos de créditos para sincronizar</string>
+    <string name="loan_purposes">Propósitos de los créditos</string>
     <string name="loan_fund">Fondo</string>
     <string name="staff">Personal</string>
-    <string name="loan_cycle">Ciclo del préstamo</string>
+    <string name="loan_cycle">Ciclo del crédito</string>
     <string name="loan_status">Estatus</string>
     <string name="loan_in_arrears">En mora</string>
-    <string name="loan_id">ID del préstamo</string>
+    <string name="loan_id">ID del crédito</string>
     <string name="loan_account_id">ID de cuenta</string>
     <string name="loan_account_status_id">ID de estatus de cuenta</string>
     <string name="loan_product_short_name">Nombre corto del producto</string>
@@ -297,7 +297,7 @@
     <string name="loan_charges_due">Cargos vencidos</string>
     <string name="loan_total_due">Total a pagar</string>
     <string name="summary">Resumen</string>
-    <string name="loan">Préstamo</string>
+    <string name="loan">Crédito</string>
     <string name="amount_paid">Monto pagado</string>
     <string name="balance">Saldo</string>
     <string name="loan_principal">Capital</string>
@@ -306,26 +306,26 @@
     <string name="loan_penalty">Recargos</string>
     <string name="loan_amount_due">Monto a pagar</string>
     <string name="loan_repayment_date">Fecha de pago</string>
-    <string name="loan_transaction_date">Fecha de transacción del préstamo</string>
+    <string name="loan_transaction_date">Fecha de transacción del crédito</string>
     <string name="additional_payment">Pago adicional</string>
     <string name="break_down">Desglose</string>
-    <string name="loanAccounts">Cuentas de préstamo</string>
-    <string name="loanAccountSummary">Resumen de cuenta de préstamo</string>
+    <string name="loanAccounts">Cuentas de crédito</string>
+    <string name="loanAccountSummary">Resumen de cuenta de crédito</string>
     <string name="make_Repayment">Realizar pago</string>
-    <string name="loan_closed">Préstamo liquidado</string>
-    <string name="approve_loan">Aprobar préstamo</string>
-    <string name="loanAccountSummaryStatus">Resumen de cuenta de préstamo</string>
-    <string name="loan_repayment_schedule">Calendario de pagos del préstamo</string>
-    <string name="loan_rejected_message">El préstamo fue rechazado</string>
-    <string name="loan_creation_success">Solicitud de préstamo enviada exitosamente.</string>
+    <string name="loan_closed">Crédito liquidado</string>
+    <string name="approve_loan">Aprobar crédito</string>
+    <string name="loanAccountSummaryStatus">Resumen de cuenta de crédito</string>
+    <string name="loan_repayment_schedule">Calendario de pagos del crédito</string>
+    <string name="loan_rejected_message">El crédito fue rechazado</string>
+    <string name="loan_creation_success">Solicitud de crédito enviada exitosamente.</string>
     <string name="repayment">Pago</string>
-    <string name="loan_repayment">Pago de préstamo</string>
+    <string name="loan_repayment">Pago de crédito</string>
     <string name="loan_repayment_make_sure_every_field_has_a_value">¡Asegúrate de que todos los campos tengan un valor antes de enviar el pago!</string>
     <string name="repayment_date">Fecha de pago</string>
     <string name="complete">Completado</string>
     <string name="pending">Pendiente</string>
     <string name="overdue">Vencido</string>
-    <string name="process_loan_transaction">Procesar transacción de préstamo</string>
+    <string name="process_loan_transaction">Procesar transacción de crédito</string>
     <string name="transaction_action_not_set">ACCIÓN DE TRANSACCIÓN NO ESTABLECIDA</string>
     <string name="review_transaction_details">Revisar detalles del pago</string>
     <string name="process_transaction">Procesar transacción</string>
@@ -415,10 +415,10 @@
     <string name="active_clients">Clientes activos</string>
     <string name="active_group_borrowers">Prestatarios del grupo activos</string>
     <string name="active_client_borrowers">Clientes prestatarios activos</string>
-    <string name="active_overdue_group_loans">Préstamos grupales vencidos activos</string>
-    <string name="active_overdue_client_loans">Préstamos de clientes vencidos activos</string>
-    <string name="active_group_loans">Préstamos de grupo activos</string>
-    <string name="active_client_loans">Préstamos de clientes activos</string>
+    <string name="active_overdue_group_loans">Créditos grupales vencidos activos</string>
+    <string name="active_overdue_client_loans">Créditos de clientes vencidos activos</string>
+    <string name="active_group_loans">Créditos de grupo activos</string>
+    <string name="active_client_loans">Créditos de clientes activos</string>
 
     <string name="action_settings">Configuración</string>
     <string name="logout">Cerrar sesión</string>
@@ -491,7 +491,7 @@
     <string name="error_network_not_available">La red no está disponible</string>
 
     <string name="interestPostingPeriodTypeId">Por favor selecciona un periodo de contabilización</string>
-    <string name="loan_purpose">Por favor selecciona el propósito del préstamo</string>
+    <string name="loan_purpose">Por favor selecciona el propósito del crédito</string>
     <string name="interestCalculationDaysInYearTypeAdapterId">Por favor selecciona los días en el año</string>
 
     <string name="error_select_interest_type">Por favor selecciona el método de cálculo de interés</string>
@@ -544,7 +544,7 @@
     <string name="phone_number_not_valid">Número telefónico no válido</string>
     <string name="error_select_charge">Seleccionar cargo</string>
     <string name="error_select_product">Seleccionar producto de ahorro</string>
-    <string name="error_select_loan">Seleccionar producto de préstamo</string>
+    <string name="error_select_loan">Seleccionar producto de crédito</string>
     <string name="error_select_officer">Seleccionar oficial</string>
     <string name="error_select_client">Seleccionar cliente</string>
 
@@ -555,19 +555,19 @@
     <string name="sync_clients_payloads">Sincronizar datos de clientes</string>
     <string name="sync_centers_payloads">Sincronizar datos de centros</string>
     <string name="sync_centers">Centros</string>
-    <string name="sync_loanrepayments">Pagos de préstamos</string>
+    <string name="sync_loanrepayments">Pagos de créditos</string>
     <string name="sync_savingsaccounttransactions">Sincronizar transacciones de cuenta de ahorro</string>
     <string name="payloads_count">Datos (Payloads): </string>
     <string name="sync_groups">Grupos: </string>
     <string name="transactions_count">Transacción: </string>
     <string name="nothing_to_sync">No hay nada para sincronizar :)</string>
-    <string name="no_repayment_to_sync">No hay pagos de préstamos para sincronizar</string>
+    <string name="no_repayment_to_sync">No hay pagos de créditos para sincronizar</string>
     <string name="no_group_payload_to_sync">No hay datos de grupo para sincronizar</string>
     <string name="no_client_payload_to_sync">No hay datos de cliente para sincronizar</string>
     <string name="no_center_payload_to_sync">No hay datos de centro para sincronizar</string>
     <string name="no_transaction_to_sync">No hay transacciones para sincronizar</string>
     <string name="no_more_clients_to_sync">No hay más clientes para sincronizar</string>
-    <string name="all_repayment_synced">Todos los pagos de préstamos han sido sincronizados</string>
+    <string name="all_repayment_synced">Todos los pagos de créditos han sido sincronizados</string>
     <string name="all_groups_synced">Todos los grupos han sido sincronizados</string>
     <string name="all_centers_synced">Todos los centros han sido sincronizados</string>
     <string name="all_clients_synced">Todos los clientes han sido sincronizados</string>
@@ -592,9 +592,9 @@
     <string name="dialog_message_offline_sync_alert">Estás en modo sin conexión. Para sincronizar,
         debes cambiar a modo en línea. \n\nSi estás intentando sincronizar, asegúrate
         de que tu conexión a internet esté funcionando bien</string>
-    <string name="dialog_message_sync_transaction">Por favor sincroniza el pago previo del préstamo con
+    <string name="dialog_message_sync_transaction">Por favor sincroniza el pago previo del crédito con
         este ID primero. \n\nVe al menú de navegación \'Sincronización sin conexión *\' y sincroniza la transacción primero.
-        \n\nAntes de realizar un nuevo pago a esta cuenta de préstamo</string>
+        \n\nAntes de realizar un nuevo pago a esta cuenta de crédito</string>
     <string name="dialog_message_sync_savingaccounttransaction">Por favor sincroniza la transacción previa
         con este ID de cuenta de ahorro primero. \n\nVe al menú de navegación \'Sincronización sin conexión *\' y sincroniza la
         transacción primero.
@@ -633,18 +633,18 @@
     <string name="failed_to_load_clientpayload">Fallo al cargar los datos del cliente</string>
     <string name="failed_to_load_grouppayload">Fallo al cargar los datos del grupo</string>
     <string name="failed_to_load_centerpayload">Fallo al cargar los datos del centro</string>
-    <string name="failed_to_load_loanrepayment">Fallo al cargar el pago del préstamo</string>
+    <string name="failed_to_load_loanrepayment">Fallo al cargar el pago del crédito</string>
     <string name="failed_to_update_list">Fallo al actualizar la lista</string>
     <string name="failed_to_load_paymentoptions">Fallo al cargar las opciones de tipo de pago</string>
-    <string name="failed_to_update_loanrepayment">Fallo al actualizar el pago del préstamo</string>
+    <string name="failed_to_update_loanrepayment">Fallo al actualizar el pago del crédito</string>
     <string name="failed_sync">La sincronización falló</string>
     <string name="failed_to_sync_client">Fallo al sincronizar al cliente</string>
     <string name="failed_to_sync_client_and_accounts">Fallo al cargar al cliente y sus
         cuentas</string>
     <string name="failed_to_sync_clientaccounts">Fallo al sincronizar las cuentas del cliente</string>
     <string name="failed_to_sync_centeraccounts">Fallo al sincronizar las cuentas del centro</string>
-    <string name="failed_to_sync_loan">Fallo al sincronizar el préstamo</string>
-    <string name="failed_to_sync_loanrepayment">Fallo al sincronizar el pago del préstamo</string>
+    <string name="failed_to_sync_loan">Fallo al sincronizar el crédito</string>
+    <string name="failed_to_sync_loanrepayment">Fallo al sincronizar el pago del crédito</string>
     <string name="failed_to_load_client">Fallo al cargar los clientes</string>
     <string name="failed_to_fetch_savingsaccount">Fallo al obtener la cuenta de ahorro</string>
     <string name="failed_to_fetch_datatable">Fallo al obtener la tabla de datos</string>
@@ -688,12 +688,12 @@
     <string name="failed_to_load_db_surveys">Fallo al cargar las encuestas de la base de datos</string>
     <string name="failed_to_load_db_question_datas">Fallo al cargar datos de preguntas de la base de datos</string>
     <string name="failed_to_load_db_response_datas">Fallo al cargar datos de respuestas de la base de datos</string>
-    <string name="failed_to_fetch_loan_products">Fallo al obtener productos de préstamo</string>
-    <string name="failed_to_fetch_loan_template">Fallo al obtener plantilla de préstamo</string>
+    <string name="failed_to_fetch_loan_products">Fallo al obtener productos de crédito</string>
+    <string name="failed_to_fetch_loan_template">Fallo al obtener plantilla de crédito</string>
     <string name="failed_to_fetch_center_info">Fallo al obtener información del centro</string>
     <string name="failed_to_fetch_datatable_info">Fallo al obtener información de la tabla de datos</string>
     <string name="failed_to_fetch_loan_transaction_template">Fallo al obtener plantilla de la
-        transacción del préstamo</string>
+        transacción del crédito</string>
     <string name="generic_failure_message">La solicitud falló. Por favor intenta de nuevo.</string>
     <string name="havent_picked_image">No has seleccionado una imagen.</string>
 
@@ -734,7 +734,7 @@
         <item>Clientes</item>
         <item>Grupos</item>
         <item>Centros</item>
-        <item>Cuentas de préstamo</item>
+        <item>Cuentas de crédito</item>
         <item>Cuentas de ahorro</item>
     </string-array>
 
@@ -809,12 +809,12 @@
 
     <string name="checker_inbox_and_pending_tasks">Bandeja y tareas del verificador</string>
     <string name="client_approval">Aprobación del cliente</string>
-    <string name="loan_approval">Aprobación del préstamo</string>
+    <string name="loan_approval">Aprobación del crédito</string>
     <string name="loan_approval_amount_can_not_be_empty">El monto no puede estar vacío</string>
-    <string name="loan_approved">Préstamo aprobado</string>
+    <string name="loan_approved">Crédito aprobado</string>
     <string name="loan_expected_disbursement_on">Desembolso esperado el</string>
-    <string name="loan_disbursal">Desembolso del préstamo</string>
-    <string name="reschedule_loan">Reprogramar préstamo</string>
+    <string name="loan_disbursal">Desembolso del crédito</string>
+    <string name="reschedule_loan">Reprogramar crédito</string>
     <string name="checker_inbox">Bandeja del verificador</string>
     <string name="select_from_date">Seleccionar desde la fecha</string>
     <string name="select_to_date">Seleccionar hasta la fecha</string>
@@ -848,7 +848,7 @@
 
     <string name="about_app">La aplicación de Oficial de Campo es una aplicación
         desarrollada para el personal de campo del banco para llevar el control de los Clientes,
-        Centros, Grupos, Cuentas de Préstamo, Cuentas de Ahorro, etc.</string>
+        Centros, Grupos, Cuentas de Crédito, Cuentas de Ahorro, etc.</string>
     <string name="about_mifos">Desarrollado por contribuidores de Mifos</string>
     <string name="about_us_connect">Conéctate con nosotros</string>
     <string name="link">Visítanos</string>
