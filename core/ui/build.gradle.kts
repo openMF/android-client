@@ -52,6 +52,11 @@ kotlin{
             implementation(libs.crop.krop.ui)
             implementation(libs.compottie.resources)
             implementation(libs.compottie.lite)
+            implementation(libs.kotlinx.html)
+        }
+        desktopMain.dependencies {
+            implementation(libs.openhtmltopdf.pdfbox)
+            implementation(libs.openhtmltopdf.svg.support)
         }
     }
 }
