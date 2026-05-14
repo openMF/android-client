@@ -490,5 +490,4 @@
     <string name="feature_loan_create_guarantor_mobile">Mobile</string>
     <string name="feature_loan_create_guarantor_residence_phone">Residence Phone #</string>
     <string name="feature_loan_create_guarantor_submit_success">Guarantor created successfully</string>
-    <string name="feature_loan_create_guarantor_error_invalid_status">Create Guarantor is available only for approved loans.</string>
 </resources>
