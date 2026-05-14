@@ -25,6 +25,7 @@ import androidclient.feature.client.generated.resources.feature_client_status_pe
 import androidclient.feature.client.generated.resources.feature_loan_account_empty_list_message
 import androidclient.feature.client.generated.resources.filter
 import androidclient.feature.client.generated.resources.search
+import androidclient.feature.client.generated.resources.send_money
 import androidclient.feature.client.generated.resources.wallet
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -306,7 +307,11 @@ private fun buildLoanActions(
         }
 
         loan.status?.overpaid == true -> {
-            add(Actions.TransferFund())
+            add(
+                Actions.TransferFund(
+                    vectorResource(Res.drawable.send_money),
+                ),
+            )
         }
     }
 }

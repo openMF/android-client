@@ -827,7 +827,7 @@ sealed class Actions(open val icon: ImageVector, open val text: StringResource) 
         Actions(icon, Res.string.core_ui_edit)
     data class Delete(override val icon: ImageVector = MifosIcons.DeleteDocument) :
         Actions(icon, Res.string.core_ui_delete)
-    data class TransferFund(override val icon: ImageVector = MifosIcons.TransferFund) :
+    data class TransferFund(override val icon: ImageVector) :
         Actions(icon, Res.string.core_ui_transfer_fund)
 }
 
