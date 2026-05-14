@@ -7,16 +7,14 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.network.model.guarantor
+package com.mifos.core.model.objects.account.loan.guarantor
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class GuarantorTemplateDto(
     val clientOptions: List<GuarantorClientOptionDto> = emptyList(),
     val relationshipOptions: List<GuarantorRelationshipOptionDto> = emptyList(),
-    @SerialName("allowedClientRelationshipTypes")
     val allowedClientRelationshipTypes: List<GuarantorRelationshipOptionDto> = emptyList(),
 )
 

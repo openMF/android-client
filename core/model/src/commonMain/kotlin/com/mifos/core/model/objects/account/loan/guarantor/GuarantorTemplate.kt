@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.entity.accounts.loan
+package com.mifos.core.model.objects.account.loan.guarantor
 
 data class GuarantorTemplate(
     val clientOptions: List<GuarantorClientOption>,

@@ -7,9 +7,12 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.objects.account.loan
+package com.mifos.core.model.objects.account.loan.guarantor
 
-data class CreateGuarantorInput(
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class GuarantorRequestDto(
     val existingClientId: Int? = null,
     val clientRelationshipTypeId: Int,
     val firstname: String? = null,

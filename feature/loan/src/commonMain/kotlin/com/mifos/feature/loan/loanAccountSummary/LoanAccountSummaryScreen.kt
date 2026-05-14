@@ -116,7 +116,6 @@ internal fun LoanAccountSummaryScreenRoute(
     approveLoan: (loadId: Int, loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
     disburseLoan: (loanId: Int) -> Unit,
     onRepaymentClick: (loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
-    onCreateGuarantorClicked: (loanId: Int) -> Unit,
     navController: NavController,
     viewModel: LoanAccountSummaryViewModel = koinViewModel(),
 ) {
@@ -157,10 +156,6 @@ internal fun LoanAccountSummaryScreenRoute(
 
             is LoanAccountSummaryEvent.NavigateToMakeRepayment -> {
                 onRepaymentClick(event.loanWithAssociations)
-            }
-
-            is LoanAccountSummaryEvent.NavigateToCreateGuarantor -> {
-                onCreateGuarantorClicked(event.loanId)
             }
 
             is LoanAccountSummaryEvent.NavigateToLoanTransfer -> {}

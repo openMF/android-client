@@ -54,7 +54,6 @@ fun NavGraphBuilder.loanDestination(
         approveLoan = navController::navigateToLoanApprovalScreen,
         disburseLoan = navController::navigateToLoanDisbursementScreen,
         onRepaymentClick = navController::navigateToLoanRepaymentScreen,
-        onCreateGuarantorClicked = navController::navigateToCreateGuarantorScreen,
         navController = navController,
     )
 

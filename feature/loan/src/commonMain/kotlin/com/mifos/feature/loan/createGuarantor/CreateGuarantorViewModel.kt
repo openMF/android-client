@@ -20,8 +20,9 @@ import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.SearchRepository
 import com.mifos.core.domain.useCases.CreateGuarantorUseCase
 import com.mifos.core.domain.useCases.GetGuarantorTemplateUseCase
-import com.mifos.core.model.entity.accounts.loan.GuarantorClientOption
-import com.mifos.core.model.objects.account.loan.CreateGuarantorInput
+import com.mifos.core.model.objects.account.loan.guarantor.CreateGuarantorInput
+import com.mifos.core.model.objects.account.loan.guarantor.GuarantorClientOption
+import com.mifos.core.model.objects.account.loan.guarantor.GuarantorRelationshipOption
 import com.mifos.core.model.utils.DateConstants
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.Job
@@ -47,7 +48,7 @@ internal class CreateGuarantorViewModel(
         when (action) {
             CreateGuarantorAction.Load,
             CreateGuarantorAction.Retry,
-            -> load()
+            -> loadGuarantorForm()
 
             is CreateGuarantorAction.ToggleExistingClient -> {
                 updateContent {
@@ -114,11 +115,11 @@ internal class CreateGuarantorViewModel(
             is CreateGuarantorAction.UpdateResidencePhone ->
                 updateContent { it.copy(residencePhone = action.value) }
 
-            CreateGuarantorAction.Submit -> submit()
+            CreateGuarantorAction.Submit -> submitGuarantor()
         }
     }
 
-    private fun load() {
+    private fun loadGuarantorForm() {
         mutableStateFlow.value = CreateGuarantorUiState.Loading
         viewModelScope.launch {
             when (val templateState = getGuarantorTemplateUseCase(route.loanId)) {
@@ -142,7 +143,7 @@ internal class CreateGuarantorViewModel(
         }
     }
 
-    private fun submit() {
+    private fun submitGuarantor() {
         val content = mutableStateFlow.value as? CreateGuarantorUiState.Content ?: return
         if (content.submitInProgress) return
         viewModelScope.launch {
@@ -262,4 +263,79 @@ internal class CreateGuarantorViewModel(
             }
         }
     }
+}
+
+internal sealed interface CreateGuarantorUiState {
+    data object Loading : CreateGuarantorUiState
+
+    data class Error(
+        val message: String,
+    ) : CreateGuarantorUiState
+
+    data class Content(
+        val loanId: Int,
+        val existingClient: Boolean = true,
+        val clientOptions: List<GuarantorClientOption> = emptyList(),
+        val searchedClientOptions: List<GuarantorClientOption> = emptyList(),
+        val relationshipOptions: List<GuarantorRelationshipOption> = emptyList(),
+        val clientQuery: String = "",
+        val selectedClientId: Int? = null,
+        val selectedRelationshipIndex: Int = -1,
+        val firstName: String = "",
+        val lastName: String = "",
+        val dateOfBirthMillis: Long? = null,
+        val addressLine1: String = "",
+        val addressLine2: String = "",
+        val city: String = "",
+        val zip: String = "",
+        val mobile: String = "",
+        val residencePhone: String = "",
+        val clientError: String? = null,
+        val relationshipError: String? = null,
+        val firstNameError: String? = null,
+        val lastNameError: String? = null,
+        val submitInProgress: Boolean = false,
+    ) : CreateGuarantorUiState {
+        val filteredClientOptions: List<GuarantorClientOption>
+            get() = if (clientQuery.isBlank()) {
+                clientOptions
+            } else {
+                searchedClientOptions
+            }
+
+        val selectedRelationshipId: Int?
+            get() = relationshipOptions.getOrNull(selectedRelationshipIndex)?.id
+
+        val canSubmit: Boolean
+            get() = selectedRelationshipId != null &&
+                if (existingClient) {
+                    selectedClientId != null
+                } else {
+                    firstName.isNotBlank() && lastName.isNotBlank()
+                }
+    }
+}
+
+internal sealed interface CreateGuarantorEffect {
+    data class ShowMessage(val message: String) : CreateGuarantorEffect
+    data object NavigateBack : CreateGuarantorEffect
+}
+
+internal sealed interface CreateGuarantorAction {
+    data object Load : CreateGuarantorAction
+    data object Retry : CreateGuarantorAction
+    data class ToggleExistingClient(val checked: Boolean) : CreateGuarantorAction
+    data class SelectClient(val clientId: Int, val label: String) : CreateGuarantorAction
+    data class UpdateClientQuery(val value: String) : CreateGuarantorAction
+    data class SelectRelationship(val index: Int) : CreateGuarantorAction
+    data class UpdateFirstName(val value: String) : CreateGuarantorAction
+    data class UpdateLastName(val value: String) : CreateGuarantorAction
+    data class UpdateDateOfBirth(val millis: Long?) : CreateGuarantorAction
+    data class UpdateAddressLine1(val value: String) : CreateGuarantorAction
+    data class UpdateAddressLine2(val value: String) : CreateGuarantorAction
+    data class UpdateCity(val value: String) : CreateGuarantorAction
+    data class UpdateZip(val value: String) : CreateGuarantorAction
+    data class UpdateMobile(val value: String) : CreateGuarantorAction
+    data class UpdateResidencePhone(val value: String) : CreateGuarantorAction
+    data object Submit : CreateGuarantorAction
 }

@@ -24,8 +24,9 @@ import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.LoansPayload
-import com.mifos.core.network.model.guarantor.CreateGuarantorRequestDto
-import com.mifos.core.network.model.guarantor.GuarantorTemplateDto
+import com.mifos.core.model.objects.account.loan.guarantor.CreateGuarantorResponseDto
+import com.mifos.core.model.objects.account.loan.guarantor.GuarantorRequestDto
+import com.mifos.core.model.objects.account.loan.guarantor.GuarantorTemplateDto
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.loans.Loan
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
@@ -87,8 +88,8 @@ interface LoanService {
     @POST(APIEndPoint.LOANS + "/{loanId}/guarantors")
     suspend fun createGuarantor(
         @Path("loanId") loanId: Int,
-        @Body request: CreateGuarantorRequestDto,
-    ): GenericResponse
+        @Body request: GuarantorRequestDto,
+    ): CreateGuarantorResponseDto
 
     @GET(APIEndPoint.CREATE_LOANS_PRODUCTS)
     fun getAllLoans(): Flow<List<LoanProducts>>

@@ -124,9 +124,6 @@ internal class LoanAccountSummaryViewModel(
 
             LoanSummaryDropDownAction.OnChargesClick ->
                 sendEvent(LoanAccountSummaryEvent.NavigateToCharges(loanId))
-
-            LoanSummaryDropDownAction.OnCreateGuarantorClick ->
-                sendEvent(LoanAccountSummaryEvent.NavigateToCreateGuarantor(loanId))
         }
     }
 
@@ -343,7 +340,6 @@ enum class LoanSummaryDropDownAction {
     OnRepaymentScheduleClick,
     OnDocumentsClick,
     OnChargesClick,
-    OnCreateGuarantorClick,
 }
 
 sealed interface LoanAccountSummaryEvent {
@@ -367,7 +363,6 @@ sealed interface LoanAccountSummaryEvent {
     data class NavigateToDisburseLoan(val loanId: Int) : LoanAccountSummaryEvent
     data class NavigateToMakeRepayment(val loanWithAssociations: LoanWithAssociationsEntity) :
         LoanAccountSummaryEvent
-    data class NavigateToCreateGuarantor(val loanId: Int) : LoanAccountSummaryEvent
 }
 
 sealed interface LoanAccountSummaryAction {

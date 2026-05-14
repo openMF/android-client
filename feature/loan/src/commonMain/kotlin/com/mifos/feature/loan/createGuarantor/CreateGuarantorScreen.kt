@@ -82,7 +82,10 @@ internal fun CreateGuarantorScreenRoute(
 
     MifosScaffold(
         title = stringResource(Res.string.feature_loan_create_guarantor_title),
-        onBackPressed = navigateBack,
+        onBackPressed = {
+            val submitting = (uiState as? CreateGuarantorUiState.Content)?.submitInProgress == true
+            if (!submitting) navigateBack()
+        },
         snackbarHostState = snackbarHostState,
     ) { paddingValues ->
         when (val state = uiState) {

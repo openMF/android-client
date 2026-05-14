@@ -9,14 +9,16 @@
  */
 package com.mifos.core.data.mapper.loan
 
-import com.mifos.core.model.entity.accounts.loan.GuarantorClientOption
-import com.mifos.core.model.entity.accounts.loan.GuarantorRelationshipOption
-import com.mifos.core.model.entity.accounts.loan.GuarantorTemplate
-import com.mifos.core.model.objects.account.loan.CreateGuarantorInput
-import com.mifos.core.network.model.guarantor.CreateGuarantorRequestDto
-import com.mifos.core.network.model.guarantor.GuarantorClientOptionDto
-import com.mifos.core.network.model.guarantor.GuarantorRelationshipOptionDto
-import com.mifos.core.network.model.guarantor.GuarantorTemplateDto
+import com.mifos.core.model.objects.account.loan.guarantor.CreateGuarantorInput
+import com.mifos.core.model.objects.account.loan.guarantor.CreateGuarantorResponseDto
+import com.mifos.core.model.objects.account.loan.guarantor.CreatedGuarantor
+import com.mifos.core.model.objects.account.loan.guarantor.GuarantorClientOption
+import com.mifos.core.model.objects.account.loan.guarantor.GuarantorClientOptionDto
+import com.mifos.core.model.objects.account.loan.guarantor.GuarantorRelationshipOption
+import com.mifos.core.model.objects.account.loan.guarantor.GuarantorRelationshipOptionDto
+import com.mifos.core.model.objects.account.loan.guarantor.GuarantorRequestDto
+import com.mifos.core.model.objects.account.loan.guarantor.GuarantorTemplate
+import com.mifos.core.model.objects.account.loan.guarantor.GuarantorTemplateDto
 
 fun GuarantorTemplateDto.toDomain(): GuarantorTemplate =
     GuarantorTemplate(
@@ -38,8 +40,11 @@ fun GuarantorRelationshipOptionDto.toDomain(): GuarantorRelationshipOption =
         value = value.orEmpty().ifBlank { name.orEmpty() },
     )
 
-fun CreateGuarantorInput.toDto(): CreateGuarantorRequestDto =
-    CreateGuarantorRequestDto(
+fun CreateGuarantorResponseDto.toDomain(): CreatedGuarantor =
+    CreatedGuarantor(resourceId = resourceId)
+
+fun CreateGuarantorInput.toDto(): GuarantorRequestDto =
+    GuarantorRequestDto(
         existingClientId = existingClientId,
         clientRelationshipTypeId = clientRelationshipTypeId,
         firstname = firstname,
