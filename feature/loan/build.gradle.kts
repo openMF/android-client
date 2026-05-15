@@ -27,8 +27,10 @@ kotlin {
             implementation(projects.core.ui)
             implementation(libs.kotlinx.serialization.json)
             implementation(compose.components.uiToolingPreview)
+            implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.ui.backhandler)
             implementation(libs.kotlinx.html)
-
         }
     }
 }

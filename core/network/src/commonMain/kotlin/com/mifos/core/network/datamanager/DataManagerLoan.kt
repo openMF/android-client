@@ -11,6 +11,7 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.datastore.UserPreferencesRepository
+import com.mifos.core.model.objects.account.loan.CloseLoanRequest
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
@@ -411,5 +412,19 @@ class DataManagerLoan(
         if (!response.status.isSuccess()) {
             throw IllegalStateException(extractErrorMessage(response))
         }
+    }
+
+    /**
+     * Closes an active loan account via the network.
+     *
+     * @param loanId The ID of the loan to close.
+     * @param request The request body containing closure date and notes.
+     * @return [GenericResponse].
+     */
+    suspend fun closeLoanAccount(
+        loanId: Int,
+        request: CloseLoanRequest,
+    ): GenericResponse {
+        return mBaseApiManager.loanService.closeLoanAccount(loanId, request)
     }
 }

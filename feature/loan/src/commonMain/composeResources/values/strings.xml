@@ -165,6 +165,8 @@
     <string name="feature_loan_profile_item_notes_subtitle">Additional internal comments</string>
     <string name="feature_loan_profile_item_standing_instructions_title">Standing Instructions</string>
     <string name="feature_loan_profile_item_standing_instructions_subtitle">Automated payment settings</string>
+    <string name="feature_loan_profile_item_close_loan_title">Close Loan Account</string>
+    <string name="feature_loan_profile_item_close_loan_subtitle">Close this active loan account</string>
     <string name="feature_loan_profile_status_active">Active</string>
     <string name="feature_loan_profile_status_pending">Pending</string>
     <string name="feature_loan_profile_status_overpaid">Overpaid</string>
@@ -475,4 +477,16 @@
     <string name="feature_loan_reschedule_fetch_failed">Failed to load reschedule history.</string>
     <string name="feature_loan_reschedule_approve_failed">Failed to approve reschedule.</string>
     <string name="feature_loan_reschedule_delete_failed">Failed to delete reschedule.</string>
+
+    <!-- Close Loan Account -->
+    <string name="feature_loan_close_closed_on">Closed On *</string>
+    <string name="feature_loan_close_note">Note</string>
+    <string name="feature_loan_close_submit">Submit</string>
+    <string name="feature_loan_close_cancel">Cancel</string>
+    <string name="feature_loan_close_ok">OK</string>
+    <string name="feature_loan_close_retry">Retry</string>
+    <string name="feature_loan_close_success">Loan account closed successfully</string>
+    <string name="feature_loan_close_failed">Failed to close loan account</string>
+    <string name="feature_loan_close_failed_to_load_template">Failed to load close loan template</string>
+    <string name="feature_loan_close_disbursed_date_value">Disbursed Date: %1$s</string>
 </resources>

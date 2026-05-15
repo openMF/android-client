@@ -9,6 +9,7 @@
  */
 package com.mifos.core.network.services
 
+import com.mifos.core.model.objects.account.loan.CloseLoanRequest
 import com.mifos.core.model.objects.account.loan.LoanApproval
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
@@ -128,6 +129,19 @@ interface LoanService {
 
     @GET(APIEndPoint.LOANS + "/{loanId}/" + APIEndPoint.CHARGES)
     fun getListOfLoanCharges(@Path("loanId") loanId: Int): Flow<List<ChargesEntity>>
+
+    /**
+     * Closes an active loan account.
+     *
+     * @param loanId The ID of the loan to close.
+     * @param request The request body containing closure date and notes.
+     * @return [GenericResponse].
+     */
+    @POST(APIEndPoint.LOANS + "/{loanId}?command=close")
+    suspend fun closeLoanAccount(
+        @Path("loanId") loanId: Int,
+        @Body request: CloseLoanRequest,
+    ): GenericResponse
 
     @GET(APIEndPoint.CLIENTS + "/{clientId}/" + APIEndPoint.CHARGES)
     fun getListOfCharges(@Path("clientId") clientId: Int): Flow<Page<ChargesEntity>>
