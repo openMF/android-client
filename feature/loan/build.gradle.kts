@@ -30,6 +30,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.ui.backhandler)
+            implementation(libs.kotlinx.html)
         }
     }
 }

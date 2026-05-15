@@ -26,7 +26,7 @@
     <string name="feature_client_office">Sucursal</string>
     <string name="feature_client_phone_no">Número de celular</string>
     <string name="feature_client_group">Grupo</string>
-    <string name="feature_client_loan_account">Cuentas de préstamo</string>
+    <string name="feature_client_loan_account">Cuentas de crédito</string>
     <string name="feature_client_savings_account">Cuentas de ahorro</string>
     <string name="feature_client_accounts">Cuentas</string>
     <string name="feature_client_no_savings_accounts_found">No se encontraron cuentas de ahorro para este cliente</string>
@@ -40,7 +40,7 @@
     <string name="feature_client_documents">Documentos</string>
     <string name="feature_client_charges">Cargos</string>
     <string name="feature_client_add_savings_account">Agregar cuenta de ahorro</string>
-    <string name="feature_client_add_loan_account">Agregar cuenta de préstamo</string>
+    <string name="feature_client_add_loan_account">Agregar cuenta de crédito</string>
 
     <string name="feature_client_client_image_updated">Foto del cliente subida exitosamente</string>
     <string name="feature_client_client_image_deleted">Foto del cliente eliminada exitosamente</string>
@@ -254,15 +254,15 @@
     <string name="client_profile_general_header_actions">Acciones</string>
     <string name="client_profile_general_header_linked_accounts">Cuentas vinculadas</string>
 
-    <string name="client_performance_history_loan_cycle_count_label">No. de ciclos de préstamo: </string>
-    <string name="client_performance_history_active_loans_count_label">No. de préstamos activos: </string>
+    <string name="client_performance_history_loan_cycle_count_label">No. de ciclos de crédito: </string>
+    <string name="client_performance_history_active_loans_count_label">No. de créditos activos: </string>
     <string name="client_performance_history_active_savings_label">No. de cuentas de ahorro activas: </string>
-    <string name="client_performance_history_last_loan_amount_label">Último monto de préstamo: </string>
+    <string name="client_performance_history_last_loan_amount_label">Último monto de crédito: </string>
     <string name="client_performance_history_total_savings_label">Ahorros totales: </string>
 
     <string name="client_profile_general_action_title_upcoming_charges">Cargos próximos</string>
     <string name="client_profile_general_action_subtitle_upcoming_charges">Revisa todas las cuentas vinculadas</string>
-    <string name="client_profile_general_action_title_loan_accounts">Cuentas de préstamo</string>
+    <string name="client_profile_general_action_title_loan_accounts">Cuentas de crédito</string>
     <string name="client_profile_general_action_subtitle_loan_accounts">Ver o editar el domicilio vinculado</string>
     <string name="client_profile_general_action_title_saving_account">Cuentas de ahorro</string>
     <string name="client_profile_general_action_subtitle_saving_account">Revisar o editar las cuentas vinculadas</string>
@@ -445,7 +445,7 @@
 
     <string name="client_profile_select_account_type">Seleccionar tipo de cuenta</string>
     <string name="client_profile_savings_account">Cuenta de ahorro</string>
-    <string name="client_profile_loan_account">Cuenta de préstamo</string>
+    <string name="client_profile_loan_account">Cuenta de crédito</string>
     <string name="client_profile_photo_updated_success">Foto de perfil actualizada exitosamente</string>
     <string name="client_profile_photo_updated_failure">Error desconocido</string>
     <string name="client_profile_edit_success_title">Éxito</string>
@@ -460,12 +460,12 @@
     <string name="client_identifiers_identities_client_identifier_deletion_success">Identificador de cliente eliminado con éxito, ID:</string>
 
     <string name="client_apply_new_applications_title">Elegir tipo de solicitud</string>
-    <string name="client_apply_new_applications_loan_account">Nueva cuenta de préstamo</string>
+    <string name="client_apply_new_applications_loan_account">Nueva cuenta de crédito</string>
     <string name="client_apply_new_applications_savings_account">Nueva cuenta de ahorro</string>
     <string name="client_apply_new_applications_share_account">Nueva cuenta de acciones</string>
     <string name="client_apply_new_applications_recurring_account">Nueva cuenta de depósito recurrente</string>
     <string name="client_apply_new_applications_fixed_account">Nueva cuenta de depósito a plazo fijo</string>
-    <string name="client_apply_new_applications_apply_loan_account">Solicitar nueva cuenta de préstamo</string>
+    <string name="client_apply_new_applications_apply_loan_account">Solicitar nueva cuenta de crédito</string>
     <string name="client_apply_new_applications_apply_savings_account">Solicitar nueva cuenta de ahorro</string>
     <string name="client_apply_new_applications_apply_share_account">Solicitar nueva cuenta de acciones</string>
     <string name="client_apply_new_applications_apply_recurring_account">Solicitar nueva cuenta de depósito recurrente</string>
