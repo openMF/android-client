@@ -15,11 +15,6 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.mifos.core.common.utils.Constants
-import com.mifos.feature.loan.loanAccountGeneral.loanAccountGeneralDestination
-import com.mifos.feature.loan.loanAccountGeneral.navigateToLoanAccountGeneralScreen
-import com.mifos.feature.loan.loanAccountGeneral.loanAccountGeneralDestination
-import com.mifos.feature.loan.loanAccountGeneral.navigateToLoanAccountGeneralScreen
-import com.mifos.feature.loan.loanAccountProfile.components.LoanAccountProfileActionItem
 import com.mifos.feature.loan.amountTransfer.amountTransferScreen
 import com.mifos.feature.loan.amountTransfer.navigateToTransferScreen
 import com.mifos.feature.loan.assignLoanOfficer.assignLoanOfficerScreen
@@ -27,6 +22,8 @@ import com.mifos.feature.loan.assignLoanOfficer.navigateToAssignLoanOfficerScree
 import com.mifos.feature.loan.createGuarantor.createGuarantorScreen
 import com.mifos.feature.loan.createGuarantor.navigateToCreateGuarantorScreen
 import com.mifos.feature.loan.createLoanReschedules.loanRescheduleFormScreen
+import com.mifos.feature.loan.loanAccountGeneral.loanAccountGeneralDestination
+import com.mifos.feature.loan.loanAccountGeneral.navigateToLoanAccountGeneralScreen
 import com.mifos.feature.loan.loanAccountAction.loanAccountActionDestination
 import com.mifos.feature.loan.loanAccountAction.navigateToLoanAccountActionScreen
 import com.mifos.feature.loan.loanAccountAction.payments.loanPaymentsActionDestination

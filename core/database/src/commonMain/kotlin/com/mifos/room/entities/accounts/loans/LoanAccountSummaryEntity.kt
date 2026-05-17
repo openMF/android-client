@@ -27,7 +27,7 @@ import template.core.base.database.PrimaryKey
 )
 @Serializable
 @Parcelize
-data class LoansAccountSummaryEntity(
+data class LoanAccountSummaryEntity(
     @PrimaryKey(autoGenerate = true)
     val loanId: Int? = null,
 

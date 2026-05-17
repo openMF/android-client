@@ -59,7 +59,7 @@ data class LoanWithAssociations(
     val transactionProcessingStrategyName: String? = null,
     val syncDisbursementWithMeeting: Boolean? = null,
     val timeline: LoanTimeline? = null,
-    val summary: LoansAccountSummary? = null,
+    val summary: LoanAccountSummary? = null,
     val repaymentSchedule: RepaymentSchedule? = null,
     val transactions: List<Transaction>? = null,
     val feeChargesAtDisbursementCharged: Double? = null,

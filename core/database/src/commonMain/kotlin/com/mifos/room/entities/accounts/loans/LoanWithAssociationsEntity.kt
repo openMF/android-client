@@ -71,7 +71,7 @@ import template.core.base.database.PrimaryKey
             deferred = false,
         ),
         ForeignKey(
-            entity = LoansAccountSummaryEntity::class,
+            entity = LoanAccountSummaryEntity::class,
             parentColumns = ["loanId"],
             childColumns = ["summary"],
             onDelete = ForeignKeyAction.CASCADE,
@@ -181,7 +181,7 @@ data class LoanWithAssociationsEntity(
         collate = UNSPECIFIED,
         defaultValue = VALUE_UNSPECIFIED,
     )
-    val summary: LoansAccountSummaryEntity = LoansAccountSummaryEntity(),
+    val summary: LoanAccountSummaryEntity = LoanAccountSummaryEntity(),
 
     @IgnoredOnParcel
     val repaymentSchedule: RepaymentSchedule = RepaymentSchedule(),

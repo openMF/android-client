@@ -15,7 +15,7 @@ import kotlinx.serialization.Serializable
 
 @Parcelize
 @Serializable
-data class LoansAccountSummary(
+data class LoanAccountSummary(
     val loanId: Int? = null,
     val currency: SavingAccountCurrency? = null,
     val principalDisbursed: Double? = null,

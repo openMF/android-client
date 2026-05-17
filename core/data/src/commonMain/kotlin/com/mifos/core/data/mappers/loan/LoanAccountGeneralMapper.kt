@@ -10,19 +10,19 @@
 package com.mifos.core.data.mappers.loan
 
 import com.mifos.core.model.entity.loan.loanWithAssociations.ActualDisbursementDate
+import com.mifos.core.model.entity.loan.loanWithAssociations.LoanAccountSummary
 import com.mifos.core.model.entity.loan.loanWithAssociations.LoanStatus
 import com.mifos.core.model.entity.loan.loanWithAssociations.LoanTimeline
 import com.mifos.core.model.entity.loan.loanWithAssociations.LoanType
 import com.mifos.core.model.entity.loan.loanWithAssociations.LoanWithAssociations
-import com.mifos.core.model.entity.loan.loanWithAssociations.LoansAccountSummary
 import com.mifos.core.model.entity.loan.loanWithAssociations.SavingAccountCurrency
 import com.mifos.core.network.data.AbstractMapper
 import com.mifos.room.entities.accounts.loans.ActualDisbursementDateEntity
+import com.mifos.room.entities.accounts.loans.LoanAccountSummaryEntity
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanTimelineEntity
 import com.mifos.room.entities.accounts.loans.LoanTypeEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
-import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
 
 object LoanAccountGeneralMapper : AbstractMapper<LoanWithAssociationsEntity, LoanWithAssociations>() {
@@ -31,7 +31,7 @@ object LoanAccountGeneralMapper : AbstractMapper<LoanWithAssociationsEntity, Loa
         return LoanWithAssociations(
             id = entity.id,
             accountNo = entity.accountNo,
-            status = entity.status.toModel(),
+            status = entity.status.toDomain(),
             clientId = entity.clientId,
             clientName = entity.clientName,
             clientOfficeId = entity.clientOfficeId,
@@ -44,8 +44,8 @@ object LoanAccountGeneralMapper : AbstractMapper<LoanWithAssociationsEntity, Loa
             loanPurposeName = entity.loanPurposeName,
             loanOfficerId = entity.loanOfficerId,
             loanOfficerName = entity.loanOfficerName,
-            loanType = entity.loanType.toModel(),
-            currency = entity.currency.toModel(),
+            loanType = entity.loanType.toDomain(),
+            currency = entity.currency.toDomain(),
             principal = entity.principal,
             approvedPrincipal = entity.approvedPrincipal,
             proposedPrincipal = entity.proposedPrincipal,
@@ -63,8 +63,8 @@ object LoanAccountGeneralMapper : AbstractMapper<LoanWithAssociationsEntity, Loa
             transactionProcessingStrategyId = entity.transactionProcessingStrategyId,
             transactionProcessingStrategyName = entity.transactionProcessingStrategyName,
             syncDisbursementWithMeeting = entity.syncDisbursementWithMeeting,
-            timeline = entity.timeline.toModel(),
-            summary = entity.summary.toModel(),
+            timeline = entity.timeline.toDomain(),
+            summary = entity.summary.toDomain(),
             repaymentSchedule = entity.repaymentSchedule,
             transactions = entity.transactions,
             feeChargesAtDisbursementCharged = entity.feeChargesAtDisbursementCharged,
@@ -83,7 +83,7 @@ object LoanAccountGeneralMapper : AbstractMapper<LoanWithAssociationsEntity, Loa
     }
 }
 
-private fun LoanStatusEntity.toModel(): LoanStatus {
+private fun LoanStatusEntity.toDomain(): LoanStatus {
     return LoanStatus(
         id = id,
         code = code,
@@ -99,7 +99,7 @@ private fun LoanStatusEntity.toModel(): LoanStatus {
     )
 }
 
-private fun LoanTypeEntity.toModel(): LoanType {
+private fun LoanTypeEntity.toDomain(): LoanType {
     return LoanType(
         id = id,
         code = code,
@@ -107,7 +107,7 @@ private fun LoanTypeEntity.toModel(): LoanType {
     )
 }
 
-private fun SavingAccountCurrencyEntity.toModel(): SavingAccountCurrency {
+private fun SavingAccountCurrencyEntity.toDomain(): SavingAccountCurrency {
     return SavingAccountCurrency(
         id = id,
         code = code,
@@ -120,7 +120,7 @@ private fun SavingAccountCurrencyEntity.toModel(): SavingAccountCurrency {
     )
 }
 
-private fun LoanTimelineEntity.toModel(): LoanTimeline {
+private fun LoanTimelineEntity.toDomain(): LoanTimeline {
     return LoanTimeline(
         loanId = loanId,
         submittedOnDate = submittedOnDate,
@@ -132,7 +132,7 @@ private fun LoanTimelineEntity.toModel(): LoanTimeline {
         approvedByFirstname = approvedByFirstname,
         approvedByLastname = approvedByLastname,
         expectedDisbursementDate = expectedDisbursementDate,
-        actualDisburseDate = actualDisburseDate?.toModel(),
+        actualDisburseDate = actualDisburseDate?.toDomain(),
         actualDisbursementDate = actualDisbursementDate,
         disbursedByUsername = disbursedByUsername,
         disbursedByFirstname = disbursedByFirstname,
@@ -142,7 +142,7 @@ private fun LoanTimelineEntity.toModel(): LoanTimeline {
     )
 }
 
-private fun ActualDisbursementDateEntity.toModel(): ActualDisbursementDate {
+private fun ActualDisbursementDateEntity.toDomain(): ActualDisbursementDate {
     return ActualDisbursementDate(
         loanId = loanId,
         year = year,
@@ -151,10 +151,10 @@ private fun ActualDisbursementDateEntity.toModel(): ActualDisbursementDate {
     )
 }
 
-private fun LoansAccountSummaryEntity.toModel(): LoansAccountSummary {
-    return LoansAccountSummary(
+private fun LoanAccountSummaryEntity.toDomain(): LoanAccountSummary {
+    return LoanAccountSummary(
         loanId = loanId,
-        currency = currency?.toModel(),
+        currency = currency?.toDomain(),
         principalDisbursed = principalDisbursed,
         principalPaid = principalPaid,
         principalWaived = principalWaived,

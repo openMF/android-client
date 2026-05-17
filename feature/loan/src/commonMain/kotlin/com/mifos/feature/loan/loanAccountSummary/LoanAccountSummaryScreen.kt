@@ -94,10 +94,9 @@ import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect
-import com.mifos.feature.loan.utils.getLoanStatus
+import com.mifos.room.entities.accounts.loans.LoanAccountSummaryEntity
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
-import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -685,7 +684,7 @@ private fun LoanStatusEntity.isButtonActive(): Boolean {
 
 private class LoanAccountSummaryPreviewProvider :
     PreviewParameterProvider<LoanAccountSummaryState> {
-    private val demoSummary = LoansAccountSummaryEntity(
+    private val demoSummary = LoanAccountSummaryEntity(
         loanId = 12345,
         principalDisbursed = 10000.0,
         principalPaid = 4000.0,

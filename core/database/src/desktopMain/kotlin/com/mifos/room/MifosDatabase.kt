@@ -26,13 +26,13 @@ import com.mifos.room.dao.SurveyDao
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.ActualDisbursementDateEntity
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
+import com.mifos.room.entities.accounts.loans.LoanAccountSummaryEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanTimelineEntity
 import com.mifos.room.entities.accounts.loans.LoanTypeEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
-import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
@@ -91,7 +91,7 @@ import com.mifos.room.typeconverters.CustomTypeConverters
         LoanStatusEntity::class,
         LoanTypeEntity::class,
         LoanWithAssociationsEntity::class,
-        LoansAccountSummaryEntity::class,
+        LoanAccountSummaryEntity::class,
         LoanTimelineEntity::class,
         // savings package
         SavingAccountDepositTypeEntity::class,
