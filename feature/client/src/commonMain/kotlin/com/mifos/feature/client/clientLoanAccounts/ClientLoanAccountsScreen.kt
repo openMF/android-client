@@ -9,6 +9,7 @@
  */
 package com.mifos.feature.client.clientLoanAccounts
 
+import androidclient.core.ui.generated.resources.send_money
 import androidclient.feature.client.generated.resources.Res
 import androidclient.feature.client.generated.resources.add_icon
 import androidclient.feature.client.generated.resources.cash_bundel
@@ -25,7 +26,6 @@ import androidclient.feature.client.generated.resources.feature_client_status_pe
 import androidclient.feature.client.generated.resources.feature_loan_account_empty_list_message
 import androidclient.feature.client.generated.resources.filter
 import androidclient.feature.client.generated.resources.search
-import androidclient.feature.client.generated.resources.send_money
 import androidclient.feature.client.generated.resources.wallet
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -81,6 +81,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
+import androidclient.core.ui.generated.resources.Res as UiRes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -309,7 +310,7 @@ private fun buildLoanActions(
         loan.status?.overpaid == true -> {
             add(
                 Actions.TransferFund(
-                    vectorResource(Res.drawable.send_money),
+                    vectorResource(UiRes.drawable.send_money),
                 ),
             )
         }
