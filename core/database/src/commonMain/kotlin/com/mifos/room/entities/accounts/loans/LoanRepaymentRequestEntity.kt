@@ -56,4 +56,6 @@ data class LoanRepaymentRequestEntity(
     val receiptNumber: String? = null,
 
     val bankNumber: String? = null,
+
+    val externalId: String? = null,
 )

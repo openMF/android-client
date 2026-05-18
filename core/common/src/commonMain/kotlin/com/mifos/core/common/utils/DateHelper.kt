@@ -9,7 +9,6 @@
  */
 package com.mifos.core.common.utils
 
-import com.mifos.core.common.utils.FileUtils.Companion.logger
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
@@ -54,18 +53,26 @@ object DateHelper {
      * @param integersOfDate [year-month-day] (ex [2016, 4, 14])
      * @return date in the format day month year (ex 14 Apr 2016)
      */
-    fun getDateAsString(integersOfDate: List<Int>): String {
-        logger.d { "ktorClient $integersOfDate" }
-        val stringBuilder = StringBuilder()
-        stringBuilder.append(integersOfDate[2])
-            .append(' ')
-            .append(getMonthName(integersOfDate[1]))
-            .append(' ')
-            .append(integersOfDate[0])
-        return stringBuilder.toString()
+    fun getDateAsString(
+        integersOfDate: List<Int>,
+        pattern: String = "dd MMM yyyy",
+    ): String {
+        require(integersOfDate.size >= 3) {
+            "Date list must contain [year, month, day]"
+        }
+
+        val year = integersOfDate[0]
+        val month = integersOfDate[1]
+        val day = integersOfDate[2]
+
+        return pattern
+            .replace("yyyy", year.toString())
+            .replace("MMM", getMonthName(month))
+            .replace("MM", month.toString().padStart(2, '0'))
+            .replace("dd", day.toString().padStart(2, '0'))
     }
 
-    fun getDateAsString(integersOfDate: List<Long>, pattern: String): String {
+    fun getDateAsStringFromListLong(integersOfDate: List<Long>, pattern: String): String {
         return getFormatConverter(
             currentFormat = FULL_MONTH,
             requiredFormat = pattern,

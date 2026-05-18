@@ -25,11 +25,13 @@ data class LoanRepaymentScreenRoute(
 )
 
 fun NavGraphBuilder.loanRepaymentScreen(
+    navController: NavController,
     onBackPressed: () -> Unit,
 ) {
     composable<LoanRepaymentScreenRoute> {
         LoanRepaymentScreen(
             navigateBack = onBackPressed,
+            navController = navController,
         )
     }
 }

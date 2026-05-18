@@ -25,7 +25,7 @@ interface LoanRepaymentRepository {
     suspend fun submitPayment(
         loanId: Int,
         request: LoanRepaymentRequestEntity,
-    ): LoanRepaymentResponseEntity
+    ): DataState<LoanRepaymentResponseEntity>
 
     fun getDatabaseLoanRepaymentByLoanId(loanId: Int): Flow<DataState<LoanRepaymentRequestEntity?>>
 }

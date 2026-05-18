@@ -71,9 +71,10 @@ fun NavGraphBuilder.loanDestination(
     loanChargeScreen {
         navController.popBackStack()
     }
-    loanRepaymentScreen {
-        navController.popBackStack()
-    }
+    loanRepaymentScreen(
+        navController = navController,
+        onBackPressed = navController::popBackStack,
+    )
     newLoanAccountDestination(
         onNavigateBack = navController::popBackStack,
         onFinish = navController::popBackStack,
