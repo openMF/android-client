@@ -7,16 +7,13 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.data.repositoryImp
+package com.mifos.core.data.searchrecord.impl
 
-import com.mifos.core.data.datasource.SearchRecordLocalDataSource
-import com.mifos.core.data.repository.SearchRecordRepository
+import com.mifos.core.data.searchrecord.SearchRecordRepository
+import com.mifos.core.data.searchrecord.local.SearchRecordLocalDataSource
 import com.mifos.core.model.objects.searchrecord.GenericSearchRecord
 import com.mifos.core.model.objects.searchrecord.RecordType
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
 
 class SearchRecordRepositoryImpl(
     private val localDataSource: SearchRecordLocalDataSource,
@@ -25,11 +22,5 @@ class SearchRecordRepositoryImpl(
     override fun searchRecords(
         recordType: RecordType,
         query: String,
-    ): Flow<Result<List<GenericSearchRecord>>> =
-        localDataSource.searchRecords(recordType, query)
-            .map { Result.success(it) }
-            .catch { e ->
-                if (e is CancellationException) throw e
-                emit(Result.failure(e))
-            }
+    ): Flow<List<GenericSearchRecord>> = localDataSource.searchRecords(recordType, query)
 }

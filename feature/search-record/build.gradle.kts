@@ -23,9 +23,8 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(compose.ui)
-            implementation(projects.core.common)
-            implementation(projects.core.domain)
-            implementation(projects.core.model)
+            implementation(projects.core.data)
+            implementation(projects.core.ui)
             implementation(libs.kotlinx.serialization.json)
         }
     }

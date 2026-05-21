@@ -10,10 +10,12 @@
 package com.mifos.core.data.di
 
 import com.mifos.core.common.network.MifosDispatchers
-import com.mifos.core.data.datasource.SearchRecordLocalDataSource
-import com.mifos.core.data.datasource.SearchRecordLocalDataSourceImpl
 import com.mifos.core.data.activate.ActivateRepository
 import com.mifos.core.data.activate.impl.ActivateRepositoryImpl
+import com.mifos.core.data.searchrecord.SearchRecordRepository
+import com.mifos.core.data.searchrecord.impl.SearchRecordRepositoryImpl
+import com.mifos.core.data.searchrecord.local.SearchRecordLocalDataSource
+import com.mifos.core.data.searchrecord.local.SearchRecordLocalDataSourceImpl
 import com.mifos.core.data.repository.AmountTransferRepository
 import com.mifos.core.data.repository.AppLockRepository
 import com.mifos.core.data.repository.CenterDetailsRepository
@@ -67,7 +69,6 @@ import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.core.data.repository.SavingsAccountSummaryRepository
 import com.mifos.core.data.repository.SavingsAccountTransactionReceiptRepository
 import com.mifos.core.data.repository.SavingsAccountTransactionRepository
-import com.mifos.core.data.repository.SearchRecordRepository
 import com.mifos.core.data.search.SearchRepository
 import com.mifos.core.data.search.impl.SearchRepositoryImpl
 import com.mifos.core.data.repository.ShareAccountRepository
@@ -136,7 +137,6 @@ import com.mifos.core.data.repositoryImp.SavingsAccountRepositoryImp
 import com.mifos.core.data.repositoryImp.SavingsAccountSummaryRepositoryImp
 import com.mifos.core.data.repositoryImp.SavingsAccountTransactionReceiptRepositoryImpl
 import com.mifos.core.data.repositoryImp.SavingsAccountTransactionRepositoryImp
-import com.mifos.core.data.repositoryImp.SearchRecordRepositoryImpl
 import com.mifos.core.data.repositoryImp.ShareAccountRepositoryImpl
 import com.mifos.core.data.repositoryImp.SignatureRepositoryImp
 import com.mifos.core.data.repositoryImp.SurveyListRepositoryImp

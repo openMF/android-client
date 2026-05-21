@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Mifos Initiative
+ * Copyright 2026 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,9 +7,10 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.feature.searchrecord
+package com.mifos.feature.searchrecord.ui
 
 import androidclient.feature.search_record.generated.resources.Res
+import androidclient.feature.search_record.generated.resources.search_record_address
 import androidclient.feature.search_record.generated.resources.search_record_address_line_1
 import androidclient.feature.search_record.generated.resources.search_record_address_line_2
 import androidclient.feature.search_record.generated.resources.search_record_address_line_3
@@ -17,8 +18,6 @@ import androidclient.feature.search_record.generated.resources.search_record_cit
 import androidclient.feature.search_record.generated.resources.search_record_clear_icon_desc
 import androidclient.feature.search_record.generated.resources.search_record_country
 import androidclient.feature.search_record.generated.resources.search_record_empty_state
-import androidclient.feature.search_record.generated.resources.search_record_error
-import androidclient.feature.search_record.generated.resources.search_record_generic_searchLabel
 import androidclient.feature.search_record.generated.resources.search_record_input_placeholder
 import androidclient.feature.search_record.generated.resources.search_record_label_format
 import androidclient.feature.search_record.generated.resources.search_record_no_results_description
@@ -60,6 +59,8 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Constants
+import com.mifos.core.data.store.DataFreshness
+import com.mifos.core.data.store.ScreenState
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
@@ -67,8 +68,6 @@ import com.mifos.core.model.objects.searchrecord.GenericSearchRecord
 import com.mifos.core.model.objects.searchrecord.RecordType
 import com.mifos.core.ui.components.MifosActionsIdentifierListingComponent
 import com.mifos.core.ui.components.MifosAddressCard
-import com.mifos.core.ui.components.MifosAlertDialog
-import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.utils.getClientIdentifierStatus
 import org.jetbrains.compose.resources.stringResource
@@ -77,6 +76,7 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
+import template.core.base.ui.screen.ScreenContent
 
 @Composable
 internal fun SearchRecordScreen(
@@ -94,20 +94,13 @@ internal fun SearchRecordScreen(
         }
     }
 
-    val searchLabel = stringResource(
-        Res.string.search_record_label_format,
-        state.displayTitle,
-    )
-
     SearchRecordScreen(
         modifier = modifier,
         state = state,
-        searchLabel = searchLabel,
         onSearchQueryChanged = { viewModel.trySendAction(SearchRecordAction.SearchQueryChanged(it)) },
         onClearSearch = { viewModel.trySendAction(SearchRecordAction.ClearSearch) },
         onBackClick = { viewModel.trySendAction(SearchRecordAction.NavigateBack) },
         onRecordSelected = { viewModel.trySendAction(SearchRecordAction.SelectRecord(it)) },
-        onCloseDialog = { viewModel.trySendAction(SearchRecordAction.CloseDialog) },
     )
 }
 
@@ -116,61 +109,47 @@ internal fun SearchRecordScreen(
 internal fun SearchRecordScreen(
     state: SearchRecordState,
     modifier: Modifier = Modifier,
-    searchLabel: String = stringResource(Res.string.search_record_generic_searchLabel),
     onSearchQueryChanged: (String) -> Unit = {},
     onClearSearch: () -> Unit = {},
     onBackClick: () -> Unit = {},
     onRecordSelected: (GenericSearchRecord) -> Unit = {},
-    onCloseDialog: () -> Unit = {},
 ) {
+    val title = stringResource(
+        Res.string.search_record_label_format,
+        stringResource(state.displayTitle),
+    )
+
     MifosScaffold(
-        title = searchLabel,
+        title = title,
         onBackPressed = onBackClick,
     ) { paddingValues ->
-        Box(
+        Column(
             modifier = modifier
                 .fillMaxSize()
                 .padding(paddingValues),
         ) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                SearchRecordToolbar(
-                    searchQuery = state.searchQuery,
-                    onSearchQueryChanged = onSearchQueryChanged,
-                    onClearSearch = onClearSearch,
-                )
+            SearchRecordToolbar(
+                searchQuery = state.searchQuery,
+                onSearchQueryChanged = onSearchQueryChanged,
+                onClearSearch = onClearSearch,
+            )
 
-                when {
-                    state.searchRecords.isNotEmpty() -> {
-                        SearchRecordResultsList(
-                            records = state.searchRecords,
-                            onRecordSelected = onRecordSelected,
-                        )
-                    }
-                    state.isNoResultsFound -> {
+            ScreenContent(
+                state = state.screenState,
+                onRetry = { onSearchQueryChanged(state.searchQuery) },
+                showFreshnessIndicator = false,
+                empty = {
+                    if (state.searchQuery.isBlank()) {
+                        SearchRecordInitialState()
+                    } else {
                         SearchRecordNoResultsState(state.searchQuery)
                     }
-                    else -> {
-                        SearchRecordEmptyState()
-                    }
-                }
-            }
-
-            when (val dialog = state.dialogState) {
-                SearchRecordState.DialogState.Loading -> {
-                    MifosProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center),
-                    )
-                }
-
-                is SearchRecordState.DialogState.Error -> {
-                    MifosAlertDialog(
-                        dialogTitle = stringResource(Res.string.search_record_error),
-                        dialogText = dialog.message,
-                        onDismissRequest = onCloseDialog,
-                        onConfirmation = onCloseDialog,
-                    )
-                }
-                null -> { }
+                },
+            ) { records, _ ->
+                SearchRecordResultsList(
+                    records = records,
+                    onRecordSelected = onRecordSelected,
+                )
             }
         }
     }
@@ -244,9 +223,7 @@ private fun SearchRecordResultsList(
     ) {
         Spacer(modifier = Modifier.height(KptTheme.spacing.lg))
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-        ) {
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(
                 items = records,
                 key = { record -> "${record.type}-${record.id}" },
@@ -337,8 +314,7 @@ private fun GenericRecordCard(
     onRecordSelected: (GenericSearchRecord) -> Unit,
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         onClick = { onRecordSelected(record) },
     ) {
         Column(
@@ -359,17 +335,15 @@ private fun GenericRecordCard(
 }
 
 @Composable
-private fun SearchRecordEmptyState() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(KptTheme.spacing.xl),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
+private fun SearchRecordInitialState() {
+    Box(modifier = Modifier.fillMaxSize()) {
         Text(
             text = stringResource(Res.string.search_record_empty_state),
             style = KptTheme.typography.bodyMedium,
             color = KptTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(KptTheme.spacing.xl),
         )
     }
 }
@@ -399,44 +373,38 @@ private class SearchRecordPreviewProvider : PreviewParameterProvider<SearchRecor
     override val values: Sequence<SearchRecordState>
         get() = sequenceOf(
             SearchRecordState(
+                recordType = RecordType.ADDRESS,
                 searchQuery = "Kartikey",
-                displayTitle = "Client",
-                searchRecords = listOf(
-                    GenericSearchRecord(
-                        id = 1,
-                        name = "Home Address",
-                        description = "Delhi, India",
-                        type = RecordType.ADDRESS.name,
-                        metadata = mapOf(
-                            Constants.ADDRESS_LINE_1 to "123 Main",
-                            Constants.CITY to "Delhi",
-                            Constants.COUNTRY to "India",
+                screenState = ScreenState.Content(
+                    data = listOf(
+                        GenericSearchRecord(
+                            id = 1,
+                            name = "Home Address",
+                            description = "Delhi, India",
+                            type = RecordType.ADDRESS.name,
+                            metadata = mapOf(
+                                Constants.ADDRESS_LINE_1 to "123 Main",
+                                Constants.CITY to "Delhi",
+                                Constants.COUNTRY to "India",
+                            ),
                         ),
                     ),
-                    GenericSearchRecord(
-                        id = 2,
-                        name = "Passport",
-                        description = "Valid Document",
-                        type = RecordType.IDENTIFIER.name,
-                        metadata = mapOf(
-                            Constants.DOCUMENT_KEY to "A12345678",
-                            Constants.STATUS to "Active",
-                        ),
-                    ),
+                    freshness = DataFreshness.FRESH,
                 ),
             ),
             SearchRecordState(
-                displayTitle = "Client",
-                dialogState = SearchRecordState.DialogState.Loading,
+                recordType = RecordType.IDENTIFIER,
+                screenState = ScreenState.Loading,
             ),
             SearchRecordState(
-                displayTitle = "Client",
+                recordType = RecordType.ADDRESS,
                 searchQuery = "Unknown",
-                isNoResultsFound = true,
+                screenState = ScreenState.Empty,
             ),
             SearchRecordState(
-                displayTitle = "Client",
-                dialogState = SearchRecordState.DialogState.Error("Network Timeout"),
+                recordType = RecordType.ADDRESS,
+                searchQuery = "Network",
+                screenState = ScreenState.Error(error = RuntimeException()),
             ),
         )
 }
