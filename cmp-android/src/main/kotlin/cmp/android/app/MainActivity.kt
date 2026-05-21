@@ -5,71 +5,92 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
+ * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
 package cmp.android.app
 
 import android.content.res.Resources
 import android.os.Bundle
+import android.view.WindowManager
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.runtime.getValue
 import androidx.core.os.LocaleListCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.core.view.WindowCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmp.shared.SharedApp
-import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.core.ui.util.ShareUtils
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.init
 import org.koin.android.ext.android.inject
+import org.mifos.core.data.infra.NetworkMonitor
+import org.mifos.core.data.user.UserDataRepository
+import template.core.base.analytics.AnalyticsHelper
+import template.core.base.analytics.lifecycleTracker
+import template.core.base.platform.update.AppUpdateManager
+import template.core.base.platform.update.AppUpdateManagerImpl
+import template.core.base.ui.util.ShareUtils
 import java.util.Locale
 
 /**
- * Main activity class.
- * This class is used to set the content view of the activity.
+ * Main activity class. This class is used to set the content view of the
+ * activity.
  *
  * @constructor Create empty Main activity
- * @see AppCompatActivity
+ * @see ComponentActivity
  */
+@Suppress("UnusedPrivateProperty")
 class MainActivity : AppCompatActivity() {
-    /**
-     * Called when the activity is starting.
-     * This is where most initialization should go: calling [setContentView(int)] to inflate the activity's UI,
-     */
 
-    private val userPreferencesRepository: UserPreferencesRepository by inject()
+    private lateinit var appUpdateManager: AppUpdateManager
+
+    private val userPreferencesRepository: UserDataRepository by inject()
+
+    private val networkMonitor: NetworkMonitor by inject()
+
+    private val analyticsHelper: AnalyticsHelper by inject()
+    private val lifecycleTracker by lazy { analyticsHelper.lifecycleTracker() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         var shouldShowSplashScreen = true
         installSplashScreen().setKeepOnScreenCondition { shouldShowSplashScreen }
 
-        val darkThemeConfigFlow = userPreferencesRepository.appTheme
+        super.onCreate(savedInstanceState)
+        appUpdateManager = AppUpdateManagerImpl(this)
 
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+        val darkThemeConfigFlow = userPreferencesRepository.observeDarkThemeConfig
+
         setupEdgeToEdge(darkThemeConfigFlow)
+
         ShareUtils.setActivityProvider { return@setActivityProvider this }
         FileKit.init(this)
 
-        /**
-         * Set the content view of the activity.
-         * @see setContent
-         */
+        analyticsHelper.setUserId(deviceData)
+
         setContent {
+            val status by networkMonitor.isOnline.collectAsStateWithLifecycle(false)
+
+            if (status) {
+                appUpdateManager.checkForAppUpdate()
+            }
+
+            lifecycleTracker.markAppLaunchComplete()
+
             SharedApp(
+                updateScreenCapture = ::updateScreenCapture,
+                handleRecreate = ::handleRecreate,
                 handleThemeMode = {
                     AppCompatDelegate.setDefaultNightMode(it)
                 },
                 handleAppLocale = { localeTag ->
                     val currentLocales = AppCompatDelegate.getApplicationLocales()
-                    val newLocales =
-                        if (localeTag != null) {
-                            LocaleListCompat.forLanguageTags(localeTag)
-                        } else {
-                            // System Default: clear app-specific locale
-                            LocaleListCompat.getEmptyLocaleList()
-                        }
+                    val newLocales = if (localeTag != null) {
+                        LocaleListCompat.forLanguageTags(localeTag)
+                    } else {
+                        // System Default: clear app-specific locale
+                        LocaleListCompat.getEmptyLocaleList()
+                    }
 
                     // Only update if the locale has actually changed
                     if (currentLocales != newLocales) {
@@ -90,6 +111,29 @@ class MainActivity : AppCompatActivity() {
                     shouldShowSplashScreen = false
                 },
             )
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        appUpdateManager.checkForResumeUpdateState()
+        lifecycleTracker.markAppBackground()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        lifecycleTracker.markAppLaunchStart()
+    }
+
+    private fun handleRecreate() {
+        recreate()
+    }
+
+    private fun updateScreenCapture(isScreenCaptureAllowed: Boolean) {
+        if (isScreenCaptureAllowed) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        } else {
+            window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
     }
 }

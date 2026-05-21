@@ -1,38 +1,33 @@
 /*
- * Copyright 2025 Mifos Initiative
+ * Copyright 2024 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
+ * See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
+
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
+
 plugins {
     alias(libs.plugins.kmp.library.convention)
     alias(libs.plugins.cmp.feature.convention)
-    alias(libs.plugins.kmp.koin.convention)
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.jetbrainsCompose)
-    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlinCocoapods)
-}
-
-android {
-    namespace = "cmp.shared"
 }
 
 kotlin {
     listOf(
-// removed support for iosX64 to align with Jetbrains deprecation of the macosX64 targets
-//        iosX64(),
+        iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
-            optimized = true
+            // KGP rejects debuggable=true + optimized=true on the same binary
+            // (kotlin:kgp:misconfiguration:incompatible-binary-configuration).
+            optimized = buildType == NativeBuildType.RELEASE
         }
     }
 
@@ -41,14 +36,10 @@ kotlin {
             // Navigation Modules
             implementation(projects.cmpNavigation)
             implementation(compose.components.resources)
-            api(projects.core.data)
-            api(projects.core.network)
-            //put your multiplatform dependencies here
-            implementation(compose.material)
-            implementation(compose.material3)
-            api(libs.koin.core)
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
+            implementation(projects.coreBase.platform)
+            implementation(projects.coreBase.ui)
+
+            implementation(libs.coil.kt.compose)
         }
 
         desktopMain.dependencies {
@@ -60,7 +51,7 @@ kotlin {
 
     cocoapods {
         summary = "KMP Shared Module"
-        homepage = "https://github.com/openMF/mifos-x-field-officer-app"
+        homepage = "https://github.com/openMF/kmp-project-template"
         version = project.version.toString().substringBefore("-").substringBefore("+")
         ios.deploymentTarget = "16.0"
         podfile = project.file("../cmp-ios/Podfile")
@@ -70,4 +61,14 @@ kotlin {
             isStatic = true
         }
     }
+}
+
+android {
+    namespace = "cmp.shared"
+}
+
+compose.resources {
+    publicResClass = true
+    generateResClass = always
+    packageOfResClass = "cmp.shared.generated.resources"
 }

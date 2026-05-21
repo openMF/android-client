@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
+ * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
 package template.core.base.common
 
@@ -14,6 +14,12 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 
+@Deprecated(
+    message = "DataState is a bridge artifact and will be removed in a future version. " +
+        "Use ScreenState (core-base/store) for screens backed by Store5, " +
+        "or Flow<T>.asLocalScreenStream() for utility screens without a network source.",
+    replaceWith = ReplaceWith("ScreenState", "template.core.base.store.screen.ScreenState"),
+)
 sealed class DataState<out T> {
 
     /** Data that is being wrapped by [DataState]. */
@@ -46,6 +52,13 @@ sealed class DataState<out T> {
     ) : DataState<T>()
 }
 
+@Deprecated(
+    message = "Use Flow<T>.asLocalScreenStream() or Store.asScreenStream() instead.",
+    replaceWith = ReplaceWith(
+        "this.asLocalScreenStream()",
+        "template.core.base.store.screen.asLocalScreenStream",
+    ),
+)
 fun <T> Flow<T>.asDataStateFlow(): Flow<DataState<T>> =
     map<T, DataState<T>> { DataState.Success(it) }
         .onStart { emit(DataState.Loading) }
