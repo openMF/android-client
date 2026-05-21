@@ -20,9 +20,9 @@ import template.core.base.database.AppDatabaseFactory
 import kotlin.coroutines.CoroutineContext
 
 /**
- * Desktop `actual val platformModule` — provides the [MifosDatabase] singleton via
- * `AppDatabaseFactory()` (no Android Context). Migrations + entity declarations live
- * in the commonMain [MifosDatabase] file.
+ * Native (iOS) `actual val platformModule` — provides the [MifosDatabase] singleton via
+ * `AppDatabaseFactory()` with the BundledSQLiteDriver. Migrations + entity declarations
+ * live in the commonMain [MifosDatabase] file.
  */
 actual val platformModule: Module = module {
     single<MifosDatabase> {

@@ -31,6 +31,7 @@ kotlin {
             implementation(projects.core.network)
             implementation(projects.core.store)
             implementation(projects.coreBase.common)
+            implementation(projects.coreBase.security)
 
             implementation(projects.feature.about)
             implementation(projects.feature.activate)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Mifos Initiative
+ * Copyright 2026 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,13 +9,10 @@
  */
 package com.mifos.room.di
 
-import androidx.room3.migration.Migration
-import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import androidx.sqlite.execSQL
 import com.mifos.core.common.network.MifosDispatchers
-import com.mifos.core.common.utils.Constants
 import com.mifos.room.MifosDatabase
+import com.mifos.room.MifosDatabaseMigrations
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
@@ -24,60 +21,19 @@ import template.core.base.database.AppDatabaseFactory
 import kotlin.coroutines.CoroutineContext
 
 /**
- * v1 → v2: adds the `framework_submit_drafts` table — see
- * [com.mifos.room.infra.entity.DraftEntity] for the schema.
+ * Android `actual val platformModule` — provides the [MifosDatabase] singleton via
+ * `AppDatabaseFactory(androidApplication())`. Migrations + entity declarations live
+ * in the commonMain [MifosDatabase] file; this module is purely Android-specific
+ * initialization (Context, driver, dispatcher).
  */
-internal val MIGRATION_1_2 = object : Migration(1, 2) {
-    override fun migrate(connection: SQLiteConnection) {
-        connection.execSQL(
-            """
-            CREATE TABLE IF NOT EXISTS `framework_submit_drafts` (
-                `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                `formKey` TEXT NOT NULL,
-                `payloadJson` TEXT NOT NULL,
-                `status` TEXT NOT NULL,
-                `createdAtMs` INTEGER NOT NULL,
-                `updatedAtMs` INTEGER NOT NULL,
-                `errorMessage` TEXT
-            )
-            """.trimIndent(),
-        )
-    }
-}
-
-/**
- * v2 → v3: adds the `framework_fetched_at` + `store_bookkeeper` tables —
- * Phase B2 (kmp-project-template parity).
- */
-internal val MIGRATION_2_3 = object : Migration(2, 3) {
-    override fun migrate(connection: SQLiteConnection) {
-        connection.execSQL(
-            """
-            CREATE TABLE IF NOT EXISTS `framework_fetched_at` (
-                `storeKey` TEXT PRIMARY KEY NOT NULL,
-                `lastFetchedMillis` INTEGER NOT NULL
-            )
-            """.trimIndent(),
-        )
-        connection.execSQL(
-            """
-            CREATE TABLE IF NOT EXISTS `store_bookkeeper` (
-                `key` TEXT PRIMARY KEY NOT NULL,
-                `lastFailedSync` INTEGER NOT NULL
-            )
-            """.trimIndent(),
-        )
-    }
-}
-
-actual val PlatformSpecificDatabaseModule: Module = module {
+actual val platformModule: Module = module {
     single<MifosDatabase> {
         val ioContext: CoroutineContext = getKoin().get(named(MifosDispatchers.IO.name))
 
         AppDatabaseFactory(androidApplication())
-            .createDatabase(MifosDatabase::class.java, Constants.DATABASE_NAME)
+            .createDatabase(MifosDatabase::class.java, MifosDatabase.DATABASE_NAME)
             .fallbackToDestructiveMigrationOnDowngrade(false)
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+            .addMigrations(*MifosDatabaseMigrations)
             .setDriver(BundledSQLiteDriver())
             .setQueryCoroutineContext(ioContext)
             .build()

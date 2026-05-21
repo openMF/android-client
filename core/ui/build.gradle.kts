@@ -34,6 +34,7 @@ kotlin{
         commonMain.dependencies {
             api(projects.core.designsystem)
             api(projects.coreBase.ui)
+            api(projects.coreBase.store) // KptPullToRefreshState consumes ScreenDataStream / PagingScreenStream
             api(libs.kotlinx.datetime)
             implementation(libs.jb.composeViewmodel)
             implementation(libs.jb.lifecycle.compose)

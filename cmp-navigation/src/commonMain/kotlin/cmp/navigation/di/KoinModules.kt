@@ -9,7 +9,7 @@
  */
 package cmp.navigation.di
 
-import cmp.navigation.ComposeAppViewModel
+import cmp.navigation.AppViewModel
 import cmp.navigation.authenticated.AuthenticatedNavbarNavigationViewModel
 import cmp.navigation.rootnav.RootNavViewModel
 import com.mifos.core.common.network.di.DispatchersModule
@@ -39,12 +39,13 @@ import com.mifos.feature.savings.di.SavingsModule
 import com.mifos.feature.search.di.SearchModule
 import com.mifos.feature.searchrecord.di.SearchRecordModule
 import com.mifos.feature.settings.di.SettingsModule
-import com.mifos.room.di.DaoModule
+import com.mifos.room.di.DatabaseModule
 import com.mifos.room.di.HelperModule
-import com.mifos.room.di.PlatformSpecificDatabaseModule
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
+import template.core.base.analytics.di.analyticsModule
 import template.core.base.common.di.CommonModule
+import template.core.base.security.di.SecurityModule
 
 object KoinModules {
 
@@ -55,9 +56,8 @@ object KoinModules {
     private val coreDataStoreModules = module { includes(PreferencesModule) }
     private val databaseModules = module {
         includes(
-            DaoModule,
+            DatabaseModule,
             HelperModule,
-            PlatformSpecificDatabaseModule,
         )
     }
 
@@ -68,7 +68,7 @@ object KoinModules {
         )
     }
     private val sharedModule = module {
-        viewModelOf(::ComposeAppViewModel)
+        viewModelOf(::AppViewModel)
         viewModelOf(::RootNavViewModel)
         viewModelOf(::AuthenticatedNavbarNavigationViewModel)
     }
@@ -99,6 +99,7 @@ object KoinModules {
     }
 
     val allModules = listOf(
+        SecurityModule,
         sharedModule,
         commonModules,
         domainModule,
@@ -108,6 +109,7 @@ object KoinModules {
         networkModules,
         coreDataStoreModules,
         coreBaseCommonModules,
+        analyticsModule,
         appStoreModule,
     )
 }

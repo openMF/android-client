@@ -59,6 +59,7 @@ include(":cmp-navigation")
 include(":cmp-shared")
 include(":cmp-web")
 
+include(":core:analytics")
 include(":core:common")
 include(":core:data")
 include(":core:designsystem")

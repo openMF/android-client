@@ -10,18 +10,17 @@
 package com.mifos.core.data.di
 
 import com.mifos.core.data.infra.TimeZoneMonitor
-import com.mifos.core.data.infra.impl.TimeZoneMonitorImpl
-import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.Module
-import org.koin.core.module.dsl.singleOf
-import org.koin.dsl.bind
 import org.koin.dsl.module
 
-actual val platformModule: Module = module {
-    single<TimeZoneMonitor> {
-        TimeZoneMonitorImpl(
-            context = androidContext(),
-            dispatchManager = get(),
-        )
+/**
+ * `nonAndroidMain` actual for [com.mifos.core.data.di.platformModule]. Binds the
+ * simple `flowOf` [TimeZoneMonitor] impl that all non-Android targets share.
+ *
+ * Replaces the previous per-platform empty `PlatformModule.<platform>.kt` files in
+ * `desktopMain`, `nativeMain`, `jsMain`, `wasmJsMain` — those are deleted in B6c.
+ */
+actual val platformModule: Module
+    get() = module {
+        single<TimeZoneMonitor> { TimeZoneMonitorImpl() }
     }
-}
