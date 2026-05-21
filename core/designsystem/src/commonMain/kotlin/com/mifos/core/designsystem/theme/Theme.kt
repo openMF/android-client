@@ -14,10 +14,13 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import com.mifos.core.store.appScreenStateDefaults
 import template.core.base.designsystem.KptMaterialTheme
 import template.core.base.designsystem.theme.KptThemeProviderImpl
 import template.core.base.designsystem.toKptColorScheme
 import template.core.base.designsystem.toKptTypography
+import template.core.base.ui.screen.LocalScreenStateDefaults
 val lightScheme = lightColorScheme(
     primary = primaryLight,
     onPrimary = onPrimaryLight,
@@ -268,10 +271,15 @@ fun MifosTheme(
         typography = typography,
     )
 
-    KptMaterialTheme(
-        theme = theme,
-        content = content,
-    )
+    val screenStateDefaults = appScreenStateDefaults()
+
+    KptMaterialTheme(theme = theme) {
+        CompositionLocalProvider(
+            LocalScreenStateDefaults provides screenStateDefaults,
+        ) {
+            content()
+        }
+    }
 }
 
 @Composable

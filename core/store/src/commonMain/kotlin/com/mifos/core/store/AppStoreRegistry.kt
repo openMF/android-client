@@ -33,12 +33,4 @@ import template.core.base.store.infra.StoreRegistry
  * Centralizing here gives a one-place audit of every Store the app owns and prevents
  * qualifier-name collisions across feature modules.
  */
-object AppStoreRegistry : StoreRegistry() {
-    // Phase C wave-by-wave registration. Stores get added here as features migrate:
-    //   Wave 2: AboutData, AuthState, ActivationData
-    //   Wave 3: ClientList, GroupList, CenterList, SearchResults, SearchRecords
-    //   Wave 4: SavingsSubmit, RecurringDepositSubmit, NoteSubmit
-    //   Wave 5: CheckerInboxTask, PathTrackingUpdate
-    //   Wave 6: CollectionSheetSubmit, ReportGenerate, DocumentUpload
-    //   Wave 7: LoanCreate/Repayment, ClientCreate/KYC
-}
+object AppStoreRegistry : StoreRegistry()

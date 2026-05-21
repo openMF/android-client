@@ -13,17 +13,10 @@ import template.core.base.store.error.ErrorCategory
 import template.core.base.store.error.categorize
 
 /**
- * Application-level error → user-facing message mapper.
+ * Application-level error → user-facing message mapper. Layers branded copy and
+ * domain-specific exception branches on top of [categorize].
  *
- * The library default ([template.core.base.ui.defaultErrorMessage]) routes through
- * [categorize] to return generic per-category copy. This mapper layers app-specific
- * decisions on top:
- * - branded copy ("Sign in to Mifos Field Officer again." instead of "Sign in again.")
- * - domain-specific error types (Fineract API error codes — extend as features migrate)
- * - localized strings (wire `composeResources` here once string indirection lands)
- *
- * As Phase C feature waves migrate to Store5, add their Fineract-specific exception
- * branches above the [categorize] fallback.
+ * Add domain branches above the [categorize] fallback as needed.
  */
 fun mapErrorToUserMessage(error: Throwable): String = when (categorize(error)) {
     ErrorCategory.Network -> "Can't reach the server. Check your connection and try again."
@@ -31,7 +24,4 @@ fun mapErrorToUserMessage(error: Throwable): String = when (categorize(error)) {
     ErrorCategory.RateLimit -> "Too many requests. Please wait a moment and try again."
     ErrorCategory.Server -> "Our servers are having a moment. Please try again shortly."
     ErrorCategory.Generic -> error.message ?: "Something went wrong."
-    // Phase C feature-wave migrations add Fineract-specific exception branches here, e.g.
-    //   error is FineractValidationException -> "Account number must be 8-12 digits."
-    //   error is OfflineSubmissionRejectedException -> "This submission was rejected. Pull to refresh."
 }

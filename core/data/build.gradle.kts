@@ -40,6 +40,7 @@ kotlin {
             api(projects.core.network)
             api(projects.core.database)
             api(projects.coreBase.common)
+            api(projects.coreBase.store)
 
 
             implementation(libs.mifos.authenticator.passcode)

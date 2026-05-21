@@ -13,22 +13,9 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 
 /**
- * Koin module for app-level Store wiring.
- *
- * Phase C feature waves register their `Store` instances here, qualifier-bound via
- * [com.mifos.core.store.AppStoreRegistry]. Empty in this Phase B scaffold — the seam
- * exists so feature modules have one obvious DI module to extend without modifying
- * `core-base/store`.
- *
- * Wire into the Koin start-up (Phase B follow-up — `cmp-android` / `cmp-ios` app modules):
- * ```kotlin
- * startKoin {
- *     modules(appStoreModule, /* ...other modules */)
- * }
- * ```
+ * Koin module for app-level Store wiring. Feature modules add their `Store<K, V>`
+ * registrations here, qualifier-bound via [com.mifos.core.store.AppStoreRegistry].
  */
 val appStoreModule: Module = module {
-    // Phase C feature-wave registrations land here, e.g.
-    //   single(qualifier = AppStoreRegistry.ClientList) { ClientListStore(get(), get()) }
-    //   single(qualifier = AppStoreRegistry.LoanAccounts) { LoanAccountsStore(get(), get()) }
+    // single(qualifier = AppStoreRegistry.Foo) { FooStore(get(), get()) }
 }
