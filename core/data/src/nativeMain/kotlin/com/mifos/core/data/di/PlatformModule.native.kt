@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Mifos Initiative
+ * Copyright 2026 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,13 +9,7 @@
  */
 package com.mifos.core.data.di
 
-import com.mifos.core.data.util.NetworkMonitor
 import org.koin.core.module.Module
+import org.koin.dsl.module
 
-interface PlatformDependentDataModule {
-    val networkMonitor: NetworkMonitor
-}
-
-expect val platformModule: Module
-
-expect val getPlatformDataModule: PlatformDependentDataModule
+actual val platformModule: Module = module {}

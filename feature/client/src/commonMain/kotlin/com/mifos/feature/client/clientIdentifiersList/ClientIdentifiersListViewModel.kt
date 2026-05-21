@@ -15,7 +15,7 @@ import androidx.navigation.toRoute
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientIdentifiersRepository
-import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.data.infra.NetworkMonitor
 import com.mifos.core.domain.useCases.DeleteIdentifierUseCase
 import com.mifos.core.domain.useCases.GetDocumentsListUseCase
 import com.mifos.core.domain.useCases.RemoveDocumentUseCase

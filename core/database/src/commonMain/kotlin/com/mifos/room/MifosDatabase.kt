@@ -13,13 +13,15 @@ import com.mifos.room.dao.CenterDao
 import com.mifos.room.dao.ChargeDao
 import com.mifos.room.dao.ClientDao
 import com.mifos.room.dao.ColumnValueDao
-import com.mifos.room.dao.DraftDao
 import com.mifos.room.dao.GroupsDao
 import com.mifos.room.dao.LoanDao
 import com.mifos.room.dao.OfficeDao
 import com.mifos.room.dao.SavingsDao
 import com.mifos.room.dao.StaffDao
 import com.mifos.room.dao.SurveyDao
+import com.mifos.room.infra.dao.BookkeeperDao
+import com.mifos.room.infra.dao.DraftDao
+import com.mifos.room.infra.dao.FetchedAtDao
 
 @Suppress("NO_ACTUAL_FOR_EXPECT")
 expect abstract class MifosDatabase {
@@ -27,11 +29,15 @@ expect abstract class MifosDatabase {
     abstract val chargeDao: ChargeDao
     abstract val clientDao: ClientDao
     abstract val columnValueDao: ColumnValueDao
-    abstract val draftDao: DraftDao
     abstract val groupsDao: GroupsDao
     abstract val loanDao: LoanDao
     abstract val officeDao: OfficeDao
     abstract val savingsDao: SavingsDao
     abstract val staffDao: StaffDao
     abstract val surveyDao: SurveyDao
+
+    // Framework infra DAOs (Phase B2 — `infra/dao/`)
+    abstract val bookkeeperDao: BookkeeperDao
+    abstract val draftDao: DraftDao
+    abstract val fetchedAtDao: FetchedAtDao
 }

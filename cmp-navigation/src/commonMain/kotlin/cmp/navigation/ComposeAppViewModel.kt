@@ -10,7 +10,7 @@
 package cmp.navigation
 
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.data.infra.NetworkMonitor
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.datastore.model.DarkThemeConfig
 import com.mifos.core.model.objects.LanguageConfig

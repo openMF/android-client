@@ -14,7 +14,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
-import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.data.infra.NetworkMonitor
 import com.mifos.core.network.model.CollateralItemResult
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.first

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Mifos Initiative
+ * Copyright 2026 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,14 +9,7 @@
  */
 package com.mifos.core.data.di
 
-import com.mifos.core.data.util.DesktopPlatformDependentDataModule
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
-actual val getPlatformDataModule: PlatformDependentDataModule
-    get() = DesktopPlatformDependentDataModule()
-
-actual val platformModule: Module
-    get() = module {
-        single<PlatformDependentDataModule> { getPlatformDataModule }
-    }
+actual val platformModule: Module = module {}

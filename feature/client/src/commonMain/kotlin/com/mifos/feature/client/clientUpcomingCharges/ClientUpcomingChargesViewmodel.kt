@@ -16,7 +16,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import androidx.paging.PagingData
 import com.mifos.core.data.repository.ChargeRepository
-import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.data.infra.NetworkMonitor
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
