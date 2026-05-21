@@ -67,7 +67,6 @@ import com.mifos.core.domain.useCases.GetStaffInOfficeUseCase
 import com.mifos.core.domain.useCases.GetUserPathTrackingUseCase
 import com.mifos.core.domain.useCases.GroupsListPagingDataSource
 import com.mifos.core.domain.useCases.LoadSavingsAccountsAndTemplateUseCase
-import com.mifos.core.domain.useCases.LoginUseCase
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
 import com.mifos.core.domain.useCases.RejectCheckerUseCase
 import com.mifos.core.domain.useCases.RemoveDocumentUseCase
@@ -144,7 +143,6 @@ val UseCaseModule = module {
     factoryOf(::GetUserPathTrackingUseCase)
     factoryOf(::GroupsListPagingDataSource)
     factoryOf(::LoadSavingsAccountsAndTemplateUseCase)
-    factoryOf(::LoginUseCase)
     factoryOf(::PasswordValidationUseCase)
     factoryOf(::RejectCheckerUseCase)
     factoryOf(::RemoveDocumentUseCase)

@@ -51,7 +51,8 @@ import com.mifos.core.data.repository.LoanRepaymentRepository
 import com.mifos.core.data.repository.LoanRepaymentScheduleRepository
 import com.mifos.core.data.repository.LoanReschedulesRepository
 import com.mifos.core.data.repository.LoanTransactionsRepository
-import com.mifos.core.data.repository.LoginRepository
+import com.mifos.core.data.auth.LoginRepository
+import com.mifos.core.data.auth.impl.LoginRepositoryImpl
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.core.data.repository.NoteRepository
 import com.mifos.core.data.repository.OfflineDashboardRepository
@@ -119,7 +120,6 @@ import com.mifos.core.data.repositoryImp.LoanRepaymentRepositoryImp
 import com.mifos.core.data.repositoryImp.LoanRepaymentScheduleRepositoryImp
 import com.mifos.core.data.repositoryImp.LoanReschedulesRepositoryImpl
 import com.mifos.core.data.repositoryImp.LoanTransactionsRepositoryImp
-import com.mifos.core.data.repositoryImp.LoginRepositoryImp
 import com.mifos.core.data.repositoryImp.NewIndividualCollectionSheetRepositoryImp
 import com.mifos.core.data.repositoryImp.NoteRepositoryImp
 import com.mifos.core.data.repositoryImp.OfflineDashboardRepositoryImp
@@ -162,7 +162,7 @@ import org.mifos.authenticator.passcode.PasscodeStorageAdapter
 val RepositoryModule = module {
     single<CoroutineDispatcher> { get(named(MifosDispatchers.IO.name)) }
 
-    singleOf(::LoginRepositoryImp) bind LoginRepository::class
+    singleOf(::LoginRepositoryImpl) bind LoginRepository::class
     singleOf(::SearchRepositoryImp) bind SearchRepository::class
 
     // Client

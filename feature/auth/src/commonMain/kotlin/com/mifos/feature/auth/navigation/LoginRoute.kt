@@ -7,15 +7,9 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.data.repository
+package com.mifos.feature.auth.navigation
 
-import com.mifos.core.network.model.PostAuthenticationResponse
+import kotlinx.serialization.Serializable
 
-/**
- * Created by Aditya Gupta on 06/08/23.
- */
-
-interface LoginRepository {
-
-    suspend fun login(username: String, password: String): PostAuthenticationResponse
-}
+@Serializable
+object LoginRoute

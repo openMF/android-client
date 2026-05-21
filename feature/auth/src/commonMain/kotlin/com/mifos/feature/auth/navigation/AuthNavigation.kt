@@ -13,13 +13,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import androidx.navigation.navOptions
-import androidx.navigation.navigation
-import com.mifos.feature.auth.login.LoginScreen
-import kotlinx.serialization.Serializable
-
-@Serializable
-object LoginRoute
+import com.mifos.feature.auth.ui.LoginScreen
 
 fun NavGraphBuilder.authNavGraph(
     navigatePasscode: () -> Unit,
