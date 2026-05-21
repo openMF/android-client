@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.data.repository
+package com.mifos.core.data.searchrecord
 
 import com.mifos.core.model.objects.searchrecord.GenericSearchRecord
 import com.mifos.core.model.objects.searchrecord.RecordType
@@ -17,5 +17,5 @@ interface SearchRecordRepository {
     fun searchRecords(
         recordType: RecordType,
         query: String,
-    ): Flow<Result<List<GenericSearchRecord>>>
+    ): Flow<List<GenericSearchRecord>>
 }

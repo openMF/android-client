@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.data.datasource
+package com.mifos.core.data.searchrecord.local
 
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.model.objects.searchrecord.GenericSearchRecord
