@@ -98,6 +98,10 @@ interface CenterService {
      * @param centerId
      * @return GenericResponse
      */
+    @Deprecated(
+        message = "Use com.mifos.core.network.center.api.CenterApi.activate instead",
+        level = DeprecationLevel.WARNING,
+    )
     @POST(APIEndPoint.CENTERS + "/{centerId}?command=activate")
     fun activateCenter(
         @Path("centerId") centerId: Int,

@@ -12,7 +12,8 @@ package com.mifos.core.data.di
 import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.data.datasource.SearchRecordLocalDataSource
 import com.mifos.core.data.datasource.SearchRecordLocalDataSourceImpl
-import com.mifos.core.data.repository.ActivateRepository
+import com.mifos.core.data.activate.ActivateRepository
+import com.mifos.core.data.activate.impl.ActivateRepositoryImpl
 import com.mifos.core.data.repository.AmountTransferRepository
 import com.mifos.core.data.repository.AppLockRepository
 import com.mifos.core.data.repository.CenterDetailsRepository
@@ -80,7 +81,6 @@ import com.mifos.core.data.repository.SyncGroupsDialogRepository
 import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
 import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
 import com.mifos.core.data.repository.UserVerificationRepository
-import com.mifos.core.data.repositoryImp.ActivateRepositoryImp
 import com.mifos.core.data.repositoryImp.AmountTransferRepositoryImp
 import com.mifos.core.data.repositoryImp.AppLockRepositoryImpl
 import com.mifos.core.data.repositoryImp.BiometricStorageAdapterImpl
@@ -220,7 +220,7 @@ val RepositoryModule = module {
     singleOf(::SyncSavingsAccountTransactionRepositoryImp) bind SyncSavingsAccountTransactionRepository::class
 
     // Others
-    singleOf(::ActivateRepositoryImp) bind ActivateRepository::class
+    singleOf(::ActivateRepositoryImpl) bind ActivateRepository::class
     singleOf(::CheckerInboxRepositoryImp) bind CheckerInboxRepository::class
     singleOf(::CheckerInboxTasksRepositoryImp) bind CheckerInboxTasksRepository::class
     singleOf(::DataTableDataRepositoryImp) bind DataTableDataRepository::class

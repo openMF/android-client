@@ -9,14 +9,14 @@
  */
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.mifos.feature.activate
+package com.mifos.feature.activate.ui
 
 import androidclient.feature.activate.generated.resources.Res
 import androidclient.feature.activate.generated.resources.feature_activate
 import androidclient.feature.activate.generated.resources.feature_activate_activation_date
 import androidclient.feature.activate.generated.resources.feature_activate_cancel
-import androidclient.feature.activate.generated.resources.feature_activate_client
-import androidclient.feature.activate.generated.resources.feature_activate_failed_to_activate_client
+import androidclient.feature.activate.generated.resources.feature_activate_dialog_title_error
+import androidclient.feature.activate.generated.resources.feature_activate_dialog_title_success
 import androidclient.feature.activate.generated.resources.feature_activate_select
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -46,20 +46,20 @@ import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.common.utils.formatDate
+import com.mifos.core.data.store.SubmitState
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosScaffold
-import com.mifos.core.designsystem.component.MifosSweetError
-import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.ui.components.MifosAlertDialog
-import com.mifos.core.ui.components.MifosProgressIndicator
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
+import template.core.base.ui.submit.SubmitProgressOverlay
+import template.core.base.ui.submit.SubmitResultHandler
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -68,44 +68,66 @@ internal fun ActivateScreen(
     onBackPressed: () -> Unit,
     viewModel: ActivateViewModel = koinViewModel(),
 ) {
-    val state by viewModel.activateUiState.collectAsStateWithLifecycle()
+    val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+    val submitState by viewModel.submitState.collectAsStateWithLifecycle()
+
+    // Terminal-state side effects: Submitted -> show success dialog (which dismisses to back);
+    // Failed -> show error dialog (which dismisses to reset). SubmitResultHandler fires once
+    // per terminal transition.
+    var resultDialog by rememberSaveable { mutableStateOf<ResultDialog?>(null) }
+    SubmitResultHandler(
+        state = submitState,
+        onSubmitted = { resultDialog = ResultDialog.Success },
+        onFailed = { _, _ -> resultDialog = ResultDialog.Failure },
+    )
 
     ActivateScreen(
-        state = state,
-        onActivate = {
-            val clientIdAsInt: Int = try {
+        onActivate = { payload ->
+            val targetId: Int = try {
                 viewModel.id
             } catch (e: Exception) {
                 0
             }
-            when (viewModel.activateType) {
-                Constants.ACTIVATE_CLIENT -> viewModel.activateClient(
-                    clientId = clientIdAsInt,
-                    clientPayload = it,
-                )
-
-                Constants.ACTIVATE_CENTER -> viewModel.activateCenter(
-                    centerId = clientIdAsInt,
-                    centerPayload = it,
-                )
-
-                Constants.ACTIVATE_GROUP -> viewModel.activateGroup(
-                    groupId = clientIdAsInt,
-                    groupPayload = it,
-                )
-
-                else -> {}
+            val action = when (viewModel.activateType) {
+                Constants.ACTIVATE_CLIENT -> ActivateAction.ActivateClient(targetId, payload)
+                Constants.ACTIVATE_CENTER -> ActivateAction.ActivateCenter(targetId, payload)
+                Constants.ACTIVATE_GROUP -> ActivateAction.ActivateGroup(targetId, payload)
+                else -> null
             }
+            action?.let { viewModel.actionChannel.trySend(it) }
         },
         onBackPressed = onBackPressed,
+        isSubmitting = submitState is SubmitState.Submitting,
     )
+
+    SubmitProgressOverlay(visible = submitState is SubmitState.Submitting)
+
+    when (resultDialog) {
+        ResultDialog.Success -> MifosAlertDialog(
+            dialogTitle = stringResource(Res.string.feature_activate_dialog_title_success),
+            dialogText = stringResource(state.successMessage),
+            onConfirmation = { resultDialog = null; viewModel.onSubmitConsumed(); onBackPressed() },
+            onDismissRequest = { resultDialog = null; viewModel.onSubmitConsumed(); onBackPressed() },
+        )
+
+        ResultDialog.Failure -> MifosAlertDialog(
+            dialogTitle = stringResource(Res.string.feature_activate_dialog_title_error),
+            dialogText = stringResource(state.failureMessage),
+            onConfirmation = { resultDialog = null; viewModel.onSubmitConsumed() },
+            onDismissRequest = { resultDialog = null; viewModel.onSubmitConsumed() },
+        )
+
+        null -> Unit
+    }
 }
+
+private enum class ResultDialog { Success, Failure }
 
 @Composable
 internal fun ActivateScreen(
-    state: ActivateUiState,
     onActivate: (ActivatePayload) -> Unit,
     onBackPressed: () -> Unit,
+    isSubmitting: Boolean,
     modifier: Modifier = Modifier,
 ) {
     MifosScaffold(
@@ -116,22 +138,7 @@ internal fun ActivateScreen(
             modifier = modifier.padding(paddingValues)
                 .verticalScroll(rememberScrollState()),
         ) {
-            when (state) {
-                is ActivateUiState.ActivatedSuccessfully -> {
-                    MifosAlertDialog(
-                        dialogTitle = "Success",
-                        dialogText = stringResource(state.message),
-                        onConfirmation = onBackPressed,
-                        onDismissRequest = onBackPressed,
-                    )
-                }
-
-                is ActivateUiState.Error -> MifosSweetError(message = stringResource(state.message)) {}
-
-                is ActivateUiState.Loading -> MifosProgressIndicator()
-
-                is ActivateUiState.Initial -> ActivateContent(onActivate = onActivate)
-            }
+            ActivateContent(onActivate = onActivate, enabled = !isSubmitting)
         }
     }
 }
@@ -140,6 +147,7 @@ internal fun ActivateScreen(
 @Composable
 private fun ActivateContent(
     onActivate: (ActivatePayload) -> Unit,
+    enabled: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -156,24 +164,18 @@ private fun ActivateContent(
 
         if (showDatePicker) {
             DatePickerDialog(
-                onDismissRequest = {
-                    showDatePicker = false
-                },
+                onDismissRequest = { showDatePicker = false },
                 confirmButton = {
                     TextButton(
                         onClick = {
                             showDatePicker = false
-                            datePickerState.selectedDateMillis?.let {
-                                activateDate = it
-                            }
+                            datePickerState.selectedDateMillis?.let { activateDate = it }
                         },
                     ) { Text(stringResource(Res.string.feature_activate_select)) }
                 },
                 dismissButton = {
                     TextButton(
-                        onClick = {
-                            showDatePicker = false
-                        },
+                        onClick = { showDatePicker = false },
                     ) { Text(stringResource(Res.string.feature_activate_cancel)) }
                 },
             ) {
@@ -184,9 +186,7 @@ private fun ActivateContent(
         MifosDatePickerTextField(
             value = DateHelper.getDateAsStringFromLong(activateDate),
             label = stringResource(Res.string.feature_activate_activation_date),
-            openDatePicker = {
-                showDatePicker = true
-            },
+            openDatePicker = { showDatePicker = true },
         )
 
         Spacer(modifier = Modifier.height(KptTheme.spacing.md))
@@ -201,6 +201,7 @@ private fun ActivateContent(
                     ),
                 )
             },
+            enabled = enabled,
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(DesignToken.spacing.dp44)
@@ -215,23 +216,22 @@ private fun ActivateContent(
     }
 }
 
-class ActivateUiStateProvider : PreviewParameterProvider<ActivateUiState> {
-    override val values = sequenceOf(
-        ActivateUiState.Initial,
-        ActivateUiState.Loading,
-        ActivateUiState.ActivatedSuccessfully(Res.string.feature_activate_client),
-        ActivateUiState.Error(Res.string.feature_activate_failed_to_activate_client),
-    )
+// region Previews
+
+private class ActivateScreenPreviewProvider : PreviewParameterProvider<Boolean> {
+    override val values = sequenceOf(false, true) // idle, submitting
 }
 
 @Preview
 @Composable
-fun ActivateScreenPreview(
-    @PreviewParameter(ActivateUiStateProvider::class) state: ActivateUiState,
+private fun ActivateScreenPreview(
+    @PreviewParameter(ActivateScreenPreviewProvider::class) isSubmitting: Boolean,
 ) {
     ActivateScreen(
-        state = state,
         onActivate = {},
         onBackPressed = {},
+        isSubmitting = isSubmitting,
     )
 }
+
+// endregion

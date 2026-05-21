@@ -180,6 +180,10 @@ interface ClientService {
      * @param clientId
      * @return GenericResponse
      */
+    @Deprecated(
+        message = "Use com.mifos.core.network.client.api.ClientApi.activate instead",
+        level = DeprecationLevel.WARNING,
+    )
     @POST(APIEndPoint.CLIENTS + "/{clientId}?command=activate")
     fun activateClient(
         @Path("clientId") clientId: Int,

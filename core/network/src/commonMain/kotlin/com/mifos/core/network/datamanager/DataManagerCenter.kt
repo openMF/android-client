@@ -202,6 +202,10 @@ class DataManagerCenter(
      * @param centerId
      * @return GenericResponse
      */
+    @Deprecated(
+        message = "Use com.mifos.core.network.center.api.CenterApi.activate instead",
+        level = DeprecationLevel.WARNING,
+    )
     suspend fun activateCenter(
         centerId: Int,
         activatePayload: ActivatePayload?,

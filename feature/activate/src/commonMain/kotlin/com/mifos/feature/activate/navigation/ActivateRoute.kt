@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Mifos Initiative
+ * Copyright 2024 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,12 +7,12 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.feature.activate.di
+package com.mifos.feature.activate.navigation
 
-import com.mifos.feature.activate.ui.ActivateViewModel
-import org.koin.core.module.dsl.viewModelOf
-import org.koin.dsl.module
+import kotlinx.serialization.Serializable
 
-val ActivateModule = module {
-    viewModelOf(::ActivateViewModel)
-}
+@Serializable
+data class ActivateRoute(
+    val id: Int = -1,
+    val type: String = "",
+)

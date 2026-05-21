@@ -7,12 +7,6 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.feature.activate.di
+package com.mifos.core.ui.store
 
-import com.mifos.feature.activate.ui.ActivateViewModel
-import org.koin.core.module.dsl.viewModelOf
-import org.koin.dsl.module
-
-val ActivateModule = module {
-    viewModelOf(::ActivateViewModel)
-}
+typealias BaseViewModel<S, E, A> = template.core.base.ui.viewmodel.BaseViewModel<S, E, A>
