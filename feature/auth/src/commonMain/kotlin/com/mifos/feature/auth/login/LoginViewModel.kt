@@ -17,6 +17,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.data.store.SubmitState
+import com.mifos.core.data.store.submitHandler
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.LoginUseCase
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
@@ -25,11 +27,9 @@ import com.mifos.core.model.objects.users.User
 import com.mifos.core.network.model.PostAuthenticationResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-
-/**
- * Created by Aditya Gupta on 06/08/23.
- */
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class LoginViewModel(
     private val prefManager: UserPreferencesRepository,
@@ -40,6 +40,31 @@ class LoginViewModel(
 
     private val _loginUiState = MutableStateFlow<LoginUiState>(LoginUiState.Empty)
     val loginUiState = _loginUiState.asStateFlow()
+
+    private val submit = viewModelScope.submitHandler<PostAuthenticationResponse>()
+    private var pendingCredentials: Pair<String, String>? = null
+
+    init {
+        submit.state
+            .onEach { state ->
+                when (state) {
+                    is SubmitState.Idle -> Unit
+                    is SubmitState.Submitting -> {
+                        _loginUiState.value = LoginUiState.ShowProgress
+                    }
+                    is SubmitState.Submitted -> {
+                        val (username, password) = pendingCredentials ?: return@onEach
+                        persistUserAndContinue(state.result, username, password)
+                    }
+                    is SubmitState.Failed -> {
+                        _loginUiState.value =
+                            LoginUiState.ShowError(Res.string.feature_auth_error_login_failed)
+                        Logger.d("@@@", state.error)
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
+    }
 
     suspend fun validateUserInputs(username: String, password: String) {
         val usernameValidationResult = usernameValidationUseCase(username)
@@ -55,60 +80,43 @@ class LoginViewModel(
             )
             return
         }
-        viewModelScope.launch {
-            login(username, password)
-        }
-    }
 
-    private fun login(username: String, password: String) {
-        viewModelScope.launch {
-            loginUseCase(username, password).collect { result ->
-                when (result) {
-                    is DataState.Error -> {
-                        _loginUiState.value =
-                            LoginUiState.ShowError(Res.string.feature_auth_error_login_failed)
-                        Logger.d("@@@", Throwable("login: ${result.data}"))
-                    }
-
-                    is DataState.Loading -> {
-                        _loginUiState.value = LoginUiState.ShowProgress
-                    }
-
-                    is DataState.Success -> {
-                        if (result.data.authenticated == true) {
-                            onLoginSuccessful(result.data, username, password)
-                        } else {
-                            _loginUiState.value =
-                                LoginUiState.ShowError(Res.string.feature_auth_error_login_failed)
-
-                            Logger.d("@@@", Throwable("login: ${result.data}"))
-                        }
-                    }
+        pendingCredentials = username to password
+        submit.submit {
+            val terminal = loginUseCase(username, password)
+                .first { it !is DataState.Loading }
+            when (terminal) {
+                is DataState.Error -> throw terminal.exception
+                is DataState.Success -> {
+                    val response = terminal.data
+                    if (response.authenticated == true) response
+                    else throw LoginRejectedException(response)
                 }
+                is DataState.Loading -> error("Unreachable: filtered above")
             }
         }
     }
 
-    private fun onLoginSuccessful(
+    private suspend fun persistUserAndContinue(
         user: PostAuthenticationResponse,
         username: String,
         password: String,
     ) {
-        viewModelScope.launch {
-            prefManager.updateUser(
-                User(
-                    username = username,
-                    password = password,
-                    userId = user.userId!!,
-                    base64EncodedAuthenticationKey = user.base64EncodedAuthenticationKey,
-                    isAuthenticated = user.authenticated ?: false,
-                    officeId = user.officeId!!,
-                    officeName = user.officeName,
-                    permissions = user.permissions!!,
-                ),
-            )
-        }
-
+        prefManager.updateUser(
+            User(
+                username = username,
+                password = password,
+                userId = user.userId!!,
+                base64EncodedAuthenticationKey = user.base64EncodedAuthenticationKey,
+                isAuthenticated = user.authenticated ?: false,
+                officeId = user.officeId!!,
+                officeName = user.officeName,
+                permissions = user.permissions!!,
+            ),
+        )
         _loginUiState.value = LoginUiState.PassCodeActivityIntent
     }
 }
+
+private class LoginRejectedException(val response: PostAuthenticationResponse) :
+    RuntimeException("Login rejected: authenticated=${response.authenticated}")
