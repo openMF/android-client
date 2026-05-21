@@ -5,18 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
- */
-import org.jetbrains.compose.compose
-
-/*
- * Copyright 2025 Mifos Initiative
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *
- * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
+ * See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
 plugins {
     alias(libs.plugins.kmp.core.base.library.convention)
@@ -28,20 +17,25 @@ android {
 
 kotlin {
     sourceSets {
-        androidMain.dependencies {
-            implementation(libs.androidx.room.runtime)
+        commonMain.dependencies {
+            api(libs.androidx.room.runtime)
         }
 
         desktopMain.dependencies {
-            implementation(libs.androidx.room.runtime)
+            api(libs.androidx.sqlite.bundled)
         }
-
         nativeMain.dependencies {
-            implementation(libs.androidx.room.runtime)
+            api(libs.androidx.sqlite.bundled)
+        }
+        androidMain.dependencies {
+            api(libs.androidx.sqlite.bundled)
         }
 
-        nonJsCommonMain.dependencies {
-            implementation(libs.androidx.room.runtime)
+        jsMain.dependencies {
+            api(libs.androidx.sqlite.web)
+        }
+        wasmJsMain.dependencies {
+            api(libs.androidx.sqlite.web)
         }
     }
 }

@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
+ * See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
@@ -16,10 +16,10 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
+ * See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
 plugins {
-    alias(libs.plugins.kmp.library.convention)
+    alias(libs.plugins.kmp.core.base.library.convention)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
 }
@@ -37,6 +37,10 @@ kotlin {
         }
 
         commonMain.dependencies {
+            implementation(projects.coreBase.store)
+            implementation(projects.coreBase.designsystem)
+            implementation(libs.cmp.network.monitor.compose)
+
             implementation(compose.ui)
             implementation(compose.material3)
             implementation(compose.foundation)
@@ -44,6 +48,12 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.materialIconsExtended)
             implementation(compose.components.uiToolingPreview)
+
+            // Compottie — first-class Lottie support for ScreenStateVisual.Lottie.
+            // `api` so apps that pass ScreenStateVisual.Lottie(spec = { ... }) can build
+            // a LottieCompositionSpec without re-declaring the dep.
+            api(libs.compottie)
+            api(libs.compottie.resources)
 
             implementation(libs.jb.composeViewmodel)
             implementation(libs.jb.lifecycle.compose)
