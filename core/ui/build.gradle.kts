@@ -33,6 +33,7 @@ kotlin{
         }
         commonMain.dependencies {
             api(projects.core.designsystem)
+            api(projects.coreBase.ui)
             api(libs.kotlinx.datetime)
             implementation(libs.jb.composeViewmodel)
             implementation(libs.jb.lifecycle.compose)
