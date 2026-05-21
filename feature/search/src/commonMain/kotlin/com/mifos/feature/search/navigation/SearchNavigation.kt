@@ -13,14 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.ui.components.FabType
-import com.mifos.feature.search.SearchScreen
-import kotlinx.serialization.Serializable
-
-@Serializable
-data object SearchScreenRoute
+import com.mifos.feature.search.ui.SearchScreen
 
 fun NavGraphBuilder.searchNavGraph(
     onCreateClient: () -> Unit,
@@ -35,42 +30,20 @@ fun NavGraphBuilder.searchNavGraph(
     composable<SearchScreenRoute> {
         SearchScreen(
             modifier = Modifier,
-            onFabClick = {
-                when (it) {
-                    FabType.CLIENT -> {
-                        onCreateClient()
-                    }
-
-                    FabType.CENTER -> {
-                        onCreateCenter()
-                    }
-
-                    FabType.GROUP -> {
-                        onCreateGroup()
-                    }
+            onFabClick = { fabType ->
+                when (fabType) {
+                    FabType.CLIENT -> onCreateClient()
+                    FabType.CENTER -> onCreateCenter()
+                    FabType.GROUP -> onCreateGroup()
                 }
             },
             onSearchOptionClick = { searchedEntity ->
                 when (searchedEntity.entityType) {
-                    Constants.SEARCH_ENTITY_LOAN -> {
-                        onLoan(searchedEntity.entityId)
-                    }
-
-                    Constants.SEARCH_ENTITY_CLIENT -> {
-                        onClient(searchedEntity.entityId)
-                    }
-
-                    Constants.SEARCH_ENTITY_GROUP -> {
-                        onGroup(searchedEntity.entityId)
-                    }
-
-                    Constants.SEARCH_ENTITY_SAVING -> {
-                        onSavings(searchedEntity.entityId)
-                    }
-
-                    Constants.SEARCH_ENTITY_CENTER -> {
-                        onCenter(searchedEntity.entityId)
-                    }
+                    Constants.SEARCH_ENTITY_LOAN -> onLoan(searchedEntity.entityId)
+                    Constants.SEARCH_ENTITY_CLIENT -> onClient(searchedEntity.entityId)
+                    Constants.SEARCH_ENTITY_GROUP -> onGroup(searchedEntity.entityId)
+                    Constants.SEARCH_ENTITY_SAVING -> onSavings(searchedEntity.entityId)
+                    Constants.SEARCH_ENTITY_CENTER -> onCenter(searchedEntity.entityId)
                 }
             },
         )

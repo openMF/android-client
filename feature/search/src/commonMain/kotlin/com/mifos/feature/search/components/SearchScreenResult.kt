@@ -9,9 +9,6 @@
  */
 package com.mifos.feature.search.components
 
-import androidclient.feature.search.generated.resources.Res
-import androidclient.feature.search.generated.resources.feature_search_no_search_result_found
-import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,67 +32,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mifos.core.model.objects.SearchedEntity
-import com.mifos.core.ui.components.MifosEmptyUi
-import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.DevicePreview
-import com.mifos.feature.search.SearchResultState
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
-internal fun SearchScreenResult(
-    searchResultState: SearchResultState,
+internal fun SearchResultsList(
+    results: List<SearchedEntity>,
     onResultItemClick: (SearchedEntity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxSize(),
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
+        contentPadding = PaddingValues(vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        Crossfade(
-            targetState = searchResultState,
-            label = "SearchResult",
-        ) { state ->
-            when (state) {
-                is SearchResultState.Loading -> {
-                    MifosProgressIndicator()
-                }
-
-                is SearchResultState.Empty -> {
-                    if (!state.initial) {
-                        MifosEmptyUi(
-                            text = stringResource(Res.string.feature_search_no_search_result_found),
-                        )
-                    }
-                }
-
-                is SearchResultState.Error -> {
-                    MifosEmptyUi(
-                        text = state.message,
-                        modifier = Modifier.align(Alignment.Center),
-                    )
-                }
-
-                is SearchResultState.Success -> {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        contentPadding = PaddingValues(vertical = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        items(
-                            items = state.results,
-                            key = {
-                                "${it.entityType}-${it.entityId}-${it.parentId}"
-                            },
-                        ) { searchedEntity ->
-                            SearchResult(
-                                searchedEntity = searchedEntity,
-                                onSearchOptionClick = onResultItemClick,
-                            )
-                        }
-                    }
-                }
-            }
+        items(
+            items = results,
+            key = { "${it.entityType}-${it.entityId}-${it.parentId}" },
+        ) { searchedEntity ->
+            SearchResult(
+                searchedEntity = searchedEntity,
+                onSearchOptionClick = onResultItemClick,
+            )
         }
     }
 }
@@ -148,48 +105,12 @@ fun ColoredAvatar(initial: Char, backgroundColor: Color, modifier: Modifier = Mo
     }
 }
 
-fun getMaterialColor(input: String): Color {
+internal fun getMaterialColor(input: String): Color {
     val hash = input.hashCode()
     val red = (hash shr 16 and 0xFF)
     val green = (hash shr 8 and 0xFF)
     val blue = (hash and 0xFF)
     return Color(red, green, blue)
-}
-
-@DevicePreview
-@Composable
-private fun SearchScreenResultLoadingPreview() {
-    SearchScreenResult(
-        searchResultState = SearchResultState.Loading,
-        onResultItemClick = {},
-    )
-}
-
-@DevicePreview
-@Composable
-private fun SearchScreenResultInitialEmptyPreview() {
-    SearchScreenResult(
-        searchResultState = SearchResultState.Empty(),
-        onResultItemClick = {},
-    )
-}
-
-@DevicePreview
-@Composable
-private fun SearchScreenResultEmptyPreview() {
-    SearchScreenResult(
-        searchResultState = SearchResultState.Empty(true),
-        onResultItemClick = {},
-    )
-}
-
-@DevicePreview
-@Composable
-private fun SearchScreenResultErrorPreview() {
-    SearchScreenResult(
-        searchResultState = SearchResultState.Error("Unable to fetch data from server"),
-        onResultItemClick = {},
-    )
 }
 
 @DevicePreview

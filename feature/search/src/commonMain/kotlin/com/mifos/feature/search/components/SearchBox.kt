@@ -10,6 +10,9 @@
 package com.mifos.feature.search.components
 
 import androidclient.feature.search.generated.resources.Res
+import androidclient.feature.search.generated.resources.feature_search_a11y_filter_dropdown
+import androidclient.feature.search.generated.resources.feature_search_a11y_perform_search
+import androidclient.feature.search.generated.resources.feature_search_a11y_search_icon
 import androidclient.feature.search.generated.resources.feature_search_all
 import androidclient.feature.search.generated.resources.feature_search_empty_input_field
 import androidclient.feature.search.generated.resources.feature_search_exact_match
@@ -46,16 +49,16 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.util.DevicePreview
-import com.mifos.feature.search.FilterOption
-import com.mifos.feature.search.SearchScreenEvent
-import com.mifos.feature.search.SearchScreenState
+import com.mifos.feature.search.ui.FilterOption
+import com.mifos.feature.search.ui.SearchAction
+import com.mifos.feature.search.ui.SearchScreenState
 import org.jetbrains.compose.resources.stringResource
 import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun SearchBox(
     state: SearchScreenState,
-    onEvent: (SearchScreenEvent) -> Unit,
+    onEvent: (SearchAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -93,13 +96,13 @@ internal fun SearchBox(
                     leadingIcon = {
                         Icon(
                             imageVector = MifosIcons.Filter,
-                            contentDescription = "Search Icon",
+                            contentDescription = stringResource(Res.string.feature_search_a11y_search_icon),
                         )
                     },
                     trailingIcon = {
                         Icon(
                             imageVector = MifosIcons.KeyboardArrowDown,
-                            contentDescription = "Dropdown Icon",
+                            contentDescription = stringResource(Res.string.feature_search_a11y_filter_dropdown),
                         )
                     },
                     colors = AssistChipDefaults.assistChipColors().copy(
@@ -112,13 +115,13 @@ internal fun SearchBox(
             MifosOutlinedTextField(
                 value = state.searchText,
                 onValueChange = {
-                    onEvent(SearchScreenEvent.UpdateSearchText(it))
+                    onEvent(SearchAction.UpdateSearchText(it))
                 },
                 leadingIcon = MifosIcons.Search,
                 label = stringResource(Res.string.feature_search_search_hint),
                 showClearIcon = state.searchText.isNotEmpty(),
                 onClickClearIcon = {
-                    onEvent(SearchScreenEvent.ClearSearchText)
+                    onEvent(SearchAction.ClearSearchText)
                 },
                 maxLines = 1,
                 isError = state.showEmptyError,
@@ -128,7 +131,7 @@ internal fun SearchBox(
             // Search Button
             Button(
                 onClick = {
-                    onEvent(SearchScreenEvent.PerformSearch)
+                    onEvent(SearchAction.PerformSearch)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -136,7 +139,7 @@ internal fun SearchBox(
             ) {
                 Icon(
                     imageVector = MifosIcons.Search,
-                    contentDescription = "MifosIcons",
+                    contentDescription = stringResource(Res.string.feature_search_a11y_perform_search),
                 )
 
                 Text(
@@ -152,7 +155,7 @@ internal fun SearchBox(
                         interactionSource = interactionSource,
                         indication = null,
                     ) {
-                        onEvent(SearchScreenEvent.UpdateExactMatch)
+                        onEvent(SearchAction.UpdateExactMatch)
                     }
                     .padding(vertical = DesignToken.padding.medium),
                 verticalAlignment = Alignment.CenterVertically,
@@ -161,7 +164,7 @@ internal fun SearchBox(
                 Checkbox(
                     checked = state.exactMatch ?: false,
                     onCheckedChange = {
-                        onEvent(SearchScreenEvent.UpdateExactMatch)
+                        onEvent(SearchAction.UpdateExactMatch)
                     },
                     modifier = Modifier
                         .size(DesignToken.sizes.iconAverage),

@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.search.di
 
-import com.mifos.feature.search.SearchViewModel
+import com.mifos.feature.search.ui.SearchViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 

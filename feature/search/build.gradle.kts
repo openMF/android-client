@@ -23,7 +23,8 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.components.resources)
             implementation(compose.ui)
-            api(projects.core.domain)
+            implementation(projects.core.data)
+            implementation(projects.core.ui)
             implementation(compose.components.uiToolingPreview)
         }
     }

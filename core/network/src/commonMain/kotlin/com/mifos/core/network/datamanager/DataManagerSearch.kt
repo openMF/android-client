@@ -19,6 +19,10 @@ import kotlinx.coroutines.flow.Flow
 class DataManagerSearch(
     private val baseApiManager: BaseApiManager,
 ) {
+    @Deprecated(
+        message = "Use com.mifos.core.network.search.api.SearchApi.searchResources instead",
+        level = DeprecationLevel.WARNING,
+    )
     fun searchResources(
         query: String,
         resource: String?,
