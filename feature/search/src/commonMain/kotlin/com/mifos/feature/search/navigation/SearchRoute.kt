@@ -9,8 +9,7 @@
  */
 package com.mifos.feature.search.navigation
 
-sealed class SearchScreens(val route: String) {
-    data object SearchScreenRoute : SearchScreens("search_screen_route")
+import kotlinx.serialization.Serializable
 
-    data object SearchScreen : SearchScreens("search_screen")
-}
+@Serializable
+data object SearchScreenRoute

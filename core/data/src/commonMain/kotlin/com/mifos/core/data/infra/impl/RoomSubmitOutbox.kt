@@ -87,7 +87,7 @@ class RoomSubmitOutbox<P>(
     override suspend fun deleteAll() =
         dao.deleteAll()
 
-    private fun DraftEntity.toEntry(): SubmitOutboxEntry<P>? = runCatching {
+    private fun DraftEntity.toEntry(): SubmitOutboxEntry<P>? = try {
         SubmitOutboxEntry(
             id = id,
             formKey = formKey,
@@ -96,7 +96,9 @@ class RoomSubmitOutbox<P>(
             createdAtMs = createdAtMs,
             errorMessage = errorMessage,
         )
-    }.getOrNull()
+    } catch (_: Throwable) {
+        null
+    }
 }
 
 private fun currentTimeMillis(): Long = kotlin.time.Clock.System.now().toEpochMilliseconds()

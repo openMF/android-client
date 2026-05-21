@@ -68,7 +68,8 @@ import com.mifos.core.data.repository.SavingsAccountSummaryRepository
 import com.mifos.core.data.repository.SavingsAccountTransactionReceiptRepository
 import com.mifos.core.data.repository.SavingsAccountTransactionRepository
 import com.mifos.core.data.repository.SearchRecordRepository
-import com.mifos.core.data.repository.SearchRepository
+import com.mifos.core.data.search.SearchRepository
+import com.mifos.core.data.search.impl.SearchRepositoryImpl
 import com.mifos.core.data.repository.ShareAccountRepository
 import com.mifos.core.data.repository.SignatureRepository
 import com.mifos.core.data.repository.SurveyListRepository
@@ -136,7 +137,6 @@ import com.mifos.core.data.repositoryImp.SavingsAccountSummaryRepositoryImp
 import com.mifos.core.data.repositoryImp.SavingsAccountTransactionReceiptRepositoryImpl
 import com.mifos.core.data.repositoryImp.SavingsAccountTransactionRepositoryImp
 import com.mifos.core.data.repositoryImp.SearchRecordRepositoryImpl
-import com.mifos.core.data.repositoryImp.SearchRepositoryImp
 import com.mifos.core.data.repositoryImp.ShareAccountRepositoryImpl
 import com.mifos.core.data.repositoryImp.SignatureRepositoryImp
 import com.mifos.core.data.repositoryImp.SurveyListRepositoryImp
@@ -163,7 +163,7 @@ val RepositoryModule = module {
     single<CoroutineDispatcher> { get(named(MifosDispatchers.IO.name)) }
 
     singleOf(::LoginRepositoryImpl) bind LoginRepository::class
-    singleOf(::SearchRepositoryImp) bind SearchRepository::class
+    singleOf(::SearchRepositoryImpl) bind SearchRepository::class
 
     // Client
     singleOf(::ClientDetailsRepositoryImp) bind ClientDetailsRepository::class
@@ -237,7 +237,6 @@ val RepositoryModule = module {
     singleOf(::PathTrackingRepositoryImp) bind PathTrackingRepository::class
     singleOf(::ReportCategoryRepositoryImp) bind ReportCategoryRepository::class
     singleOf(::ReportDetailRepositoryImp) bind ReportDetailRepository::class
-    singleOf(::SearchRepositoryImp) bind SearchRepository::class
     singleOf(::SignatureRepositoryImp) bind SignatureRepository::class
     singleOf(::SurveyListRepositoryImp) bind SurveyListRepository::class
     singleOf(::SurveySubmitRepositoryImp) bind SurveySubmitRepository::class

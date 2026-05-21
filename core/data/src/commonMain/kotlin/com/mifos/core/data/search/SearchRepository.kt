@@ -7,20 +7,19 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.data.repository
+package com.mifos.core.data.search
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.SearchedEntity
-import kotlinx.coroutines.flow.Flow
 
-/**
- * Created by Aditya Gupta on 06/08/23.
- */
 interface SearchRepository {
 
-    fun searchResources(
+    /**
+     * Query-driven search. Each call returns fresh results (no caching, no Store —
+     * search results are ephemeral). Throws on transport / HTTP failure.
+     */
+    suspend fun searchResources(
         query: String,
         resources: String?,
         exactMatch: Boolean?,
-    ): Flow<DataState<List<SearchedEntity>>>
+    ): List<SearchedEntity>
 }

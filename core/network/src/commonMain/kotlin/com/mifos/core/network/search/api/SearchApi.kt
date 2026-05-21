@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Mifos Initiative
+ * Copyright 2025 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,27 +7,22 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.network.services
+package com.mifos.core.network.search.api
 
 import com.mifos.core.model.objects.SearchedEntity
 import com.mifos.room.basemodel.APIEndPoint
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.Query
-import kotlinx.coroutines.flow.Flow
 
 /**
- * @author fomenkoo
+ * Fineract `search` endpoint. Query-driven, no caching — each call returns fresh results.
  */
-interface SearchService {
+interface SearchApi {
 
-    @Deprecated(
-        message = "Use com.mifos.core.network.search.api.SearchApi.searchResources instead",
-        level = DeprecationLevel.WARNING,
-    )
     @GET(APIEndPoint.SEARCH)
-    fun searchResources(
+    suspend fun searchResources(
         @Query("query") query: String,
         @Query("resource") resource: String?,
         @Query("exactMatch") exactMatch: Boolean?,
-    ): Flow<List<SearchedEntity>>
+    ): List<SearchedEntity>
 }

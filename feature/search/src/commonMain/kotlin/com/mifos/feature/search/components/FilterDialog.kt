@@ -34,14 +34,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import com.mifos.core.designsystem.component.MifosDialogBox
 import com.mifos.core.ui.util.DevicePreview
-import com.mifos.feature.search.FilterOption
-import com.mifos.feature.search.SearchScreenEvent
+import com.mifos.feature.search.ui.FilterOption
+import com.mifos.feature.search.ui.SearchAction
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 internal fun FilterDialog(
     selected: FilterOption?,
-    onEvent: (SearchScreenEvent.UpdateSelectedFilter) -> Unit,
+    onEvent: (SearchAction.UpdateSelectedFilter) -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -53,7 +53,7 @@ internal fun FilterDialog(
         confirmButtonText = stringResource(Res.string.feature_search_apply),
         dismissButtonText = stringResource(Res.string.feature_search_close),
         onConfirm = {
-            onEvent(SearchScreenEvent.UpdateSelectedFilter(selectedFilter))
+            onEvent(SearchAction.UpdateSelectedFilter(selectedFilter))
             onDismiss()
         },
         onDismiss = onDismiss,
