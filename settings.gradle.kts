@@ -67,14 +67,18 @@ include(":core:domain")
 include(":core:datastore")
 include(":core:model")
 include(":core:network")
+include(":core:store")
 include(":core:ui")
 
 include(":core-base:analytics")
 include(":core-base:common")
 include(":core-base:database")
+include(":core-base:datastore")
 include(":core-base:designsystem")
 include(":core-base:network")
 include(":core-base:platform")
+include(":core-base:security")
+include(":core-base:store")
 include(":core-base:ui")
 
 // Lint Modules
