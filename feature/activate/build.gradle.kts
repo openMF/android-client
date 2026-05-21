@@ -22,6 +22,7 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.components.resources)
             implementation(compose.ui)
+            implementation(projects.core.data)
             implementation(projects.core.domain)
             implementation(compose.components.uiToolingPreview)
         }

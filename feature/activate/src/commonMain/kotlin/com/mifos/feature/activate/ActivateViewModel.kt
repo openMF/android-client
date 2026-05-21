@@ -21,13 +21,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.data.store.SubmitState
+import com.mifos.core.data.store.submitHandler
 import com.mifos.core.domain.useCases.ActivateCenterUseCase
 import com.mifos.core.domain.useCases.ActivateClientUseCase
 import com.mifos.core.domain.useCases.ActivateGroupUseCase
 import com.mifos.core.model.objects.clients.ActivatePayload
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import org.jetbrains.compose.resources.StringResource
 
 class ActivateViewModel(
     private val activateClientUseCase: ActivateClientUseCase,
@@ -39,56 +44,51 @@ class ActivateViewModel(
     val id = savedStateHandle.toRoute<ActivateRoute>().id
     val activateType = savedStateHandle.toRoute<ActivateRoute>().type
 
-    private val _activateUiState = MutableStateFlow<ActivateUiState>(ActivateUiState.Initial)
-    val activateUiState = _activateUiState.asStateFlow()
+    private val submit = viewModelScope.submitHandler<Unit>()
+    private var successMessage: StringResource = Res.string.feature_activate_client
+    private var failureMessage: StringResource = Res.string.feature_activate_failed_to_activate_client
 
-    fun activateClient(clientId: Int, clientPayload: ActivatePayload) =
-        viewModelScope.launch {
-            activateClientUseCase(clientId, clientPayload).collect { result ->
-                when (result) {
-                    is DataState.Error ->
-                        _activateUiState.value =
-                            ActivateUiState.Error(Res.string.feature_activate_failed_to_activate_client)
-
-                    is DataState.Loading -> _activateUiState.value = ActivateUiState.Loading
-
-                    is DataState.Success ->
-                        _activateUiState.value =
-                            ActivateUiState.ActivatedSuccessfully(Res.string.feature_activate_client)
-                }
+    val activateUiState: StateFlow<ActivateUiState> = submit.state
+        .map { state ->
+            when (state) {
+                is SubmitState.Idle -> ActivateUiState.Initial
+                is SubmitState.Submitting -> ActivateUiState.Loading
+                is SubmitState.Submitted<*> -> ActivateUiState.ActivatedSuccessfully(successMessage)
+                is SubmitState.Failed -> ActivateUiState.Error(failureMessage)
             }
         }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = ActivateUiState.Initial,
+        )
 
-    fun activateCenter(centerId: Int, centerPayload: ActivatePayload) =
-        viewModelScope.launch {
-            activateCenterUseCase(centerId, centerPayload).collect { result ->
-                when (result) {
-                    is DataState.Error ->
-                        _activateUiState.value =
-                            ActivateUiState.Error(Res.string.feature_activate_failed_to_activate_center)
-
-                    is DataState.Loading -> _activateUiState.value = ActivateUiState.Loading
-
-                    is DataState.Success ->
-                        _activateUiState.value =
-                            ActivateUiState.ActivatedSuccessfully(Res.string.feature_activate_center)
-                }
-            }
+    fun activateClient(clientId: Int, clientPayload: ActivatePayload) {
+        successMessage = Res.string.feature_activate_client
+        failureMessage = Res.string.feature_activate_failed_to_activate_client
+        submit.submit {
+            val terminal = activateClientUseCase(clientId, clientPayload)
+                .first { it !is DataState.Loading }
+            if (terminal is DataState.Error) throw terminal.exception
         }
+    }
 
-    fun activateGroup(groupId: Int, groupPayload: ActivatePayload) =
-        viewModelScope.launch {
-            val result = activateGroupUseCase(groupId, groupPayload)
-            when (result) {
-                is DataState.Error ->
-                    _activateUiState.value =
-                        ActivateUiState.Error(Res.string.feature_activate_failed_to_activate_group)
-
-                DataState.Loading -> Unit // unreachable
-
-                is DataState.Success ->
-                    _activateUiState.value =
-                        ActivateUiState.ActivatedSuccessfully(Res.string.feature_activate_group)
-            }
+    fun activateCenter(centerId: Int, centerPayload: ActivatePayload) {
+        successMessage = Res.string.feature_activate_center
+        failureMessage = Res.string.feature_activate_failed_to_activate_center
+        submit.submit {
+            val terminal = activateCenterUseCase(centerId, centerPayload)
+                .first { it !is DataState.Loading }
+            if (terminal is DataState.Error) throw terminal.exception
         }
+    }
+
+    fun activateGroup(groupId: Int, groupPayload: ActivatePayload) {
+        successMessage = Res.string.feature_activate_group
+        failureMessage = Res.string.feature_activate_failed_to_activate_group
+        submit.submit {
+            val terminal = activateGroupUseCase(groupId, groupPayload)
+            if (terminal is DataState.Error) throw terminal.exception
+        }
+    }
 }
