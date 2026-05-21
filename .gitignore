@@ -1,6 +1,8 @@
 *.iml
 .gradle
 /local.properties
+secrets.env
+secrets/
 /.idea/workspace.xml
 /.idea/libraries
 /build

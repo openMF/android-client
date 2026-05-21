@@ -56,6 +56,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+
           # Declare directories and files to sync
           DIRS=(
             "cmp-android"
@@ -66,33 +67,38 @@ jobs:
             "core-base"
             "build-logic"
             "fastlane"
+            "fastlane-config"
             "scripts"
             "config"
             ".github"
             ".run"
           )
-          
+
           FILES=(
             "Gemfile"
             "Gemfile.lock"
             "ci-prepush.bat"
             "ci-prepush.sh"
           )
-          
+
           # Define exclusions
+          # Consumer-branded assets and project-specific configs are preserved across syncs.
           declare -A EXCLUSIONS=(
             ["cmp-android"]="src/main/res dependencies src/main/ic_launcher-playstore.png google-services.json"
-            ["cmp-web"]="src/jsMain/resources src/wasmJsMain/resources"
-            ["cmp-desktop"]="icons"
             ["cmp-ios"]="iosApp/Assets.xcassets"
+            ["cmp-web"]="src/jsMain/resources src/wasmJsMain/resources"
+            ["cmp-desktop"]="icons build.gradle.kts"
+            ["fastlane-config"]="project_config.rb extract_config.rb"
+            [".github"]="workflows/sync-dirs.yaml"
+            ["build-logic"]="convention/src/main/kotlin/local"
             ["root"]="secrets.env"
           )
-          
+
           # Function to check if path should be excluded
           should_exclude() {
             local dir=$1
             local path=$2
-          
+
             # Check for root exclusions (when dir is "." or "root")
             if [[ "$dir" == "." || "$dir" == "root" ]] && [[ -v "EXCLUSIONS[root]" ]]; then
               local root_excluded_paths
@@ -103,7 +109,7 @@ jobs:
                 fi
               done
             fi
-          
+
             # Check directory-specific exclusions
             if [[ -v "EXCLUSIONS[$dir]" ]]; then
               local excluded_paths
@@ -116,7 +122,7 @@ jobs:
             fi
             return 1
           }
-          
+
           # Function to preserve excluded paths
           preserve_excluded() {
             local dir=$1
@@ -134,7 +140,7 @@ jobs:
               done
             fi
           }
-          
+
           # Function to restore excluded paths
           restore_excluded() {
             local dir=$1
@@ -153,7 +159,7 @@ jobs:
               done
             fi
           }
-          
+
           # Function to preserve root-level excluded files
           preserve_root_files() {
             if [[ -v "EXCLUSIONS[root]" ]]; then
@@ -168,7 +174,7 @@ jobs:
               done
             fi
           }
-          
+
           # Function to restore root-level excluded files
           restore_root_files() {
             if [[ -v "EXCLUSIONS[root]" ]]; then
@@ -182,35 +188,37 @@ jobs:
               done
             fi
           }
-          
+
           # Create temp directory for exclusions
           mkdir -p temp_excluded
-          
+
           # Preserve root-level exclusions before sync
           preserve_root_files
-          
+
           # Switch to dev branch
           git checkout dev
-          
+
           # Sync directories
           for dir in "${DIRS[@]}"; do
-            if [ ! -d "$dir" ]; then
+            if [[ ! -d "$dir" ]]; then
               echo "Creating $dir..."
               mkdir -p "$dir"
             fi
-          
+
             # Preserve excluded paths before sync
             if [[ -d "$dir" ]]; then
               preserve_excluded "$dir"
             fi
-          
+
             echo "Syncing $dir..."
-            git checkout "${{ env.TEMP_BRANCH }}" -- "$dir" || exit 1
-          
+            if ! git checkout "${{ env.TEMP_BRANCH }}" -- "$dir" 2>/dev/null; then
+              echo "Warning: Could not sync directory $dir (may not exist in upstream)"
+            fi
+
             # Restore excluded paths after sync
             restore_excluded "$dir"
           done
-          
+
           # Sync files
           for file in "${FILES[@]}"; do
             file_dir=$(dirname "$file")
@@ -225,20 +233,20 @@ jobs:
             elif should_exclude "$file_dir" "$file"; then
               echo "Skipping excluded file: $file"
               continue
-              fi
-    
-              echo "Syncing $file..."
-              if ! git checkout "${{ env.TEMP_BRANCH }}" -- "$file" 2>/dev/null; then
-                echo "Warning: Could not sync file $file (may not exist in upstream)"
+            fi
+
+            echo "Syncing $file..."
+            if ! git checkout "${{ env.TEMP_BRANCH }}" -- "$file" 2>/dev/null; then
+              echo "Warning: Could not sync file $file (may not exist in upstream)"
             fi
           done
-          
+
           # Restore root-level excluded files
           restore_root_files
-          
+
           # Cleanup temp directory
           rm -rf temp_excluded
-          
+
           echo "Sync completed successfully!"
 
       - name: Clean up temporary branch
@@ -266,32 +274,33 @@ jobs:
           title: "chore: Sync directories and files from upstream"
           body: |
             Automated sync of directories and files from upstream repository.
-            
+
             Changes included in this sync:
-            
-            **Directories**:
-            - cmp-android (excluding src/main/res, dependencies, ic_launcher-playstore.png, google-services.json)
-            - cmp-desktop (excluding icons)
+
+            **Directories:**
+            - cmp-android (excluding src/main/res, dependencies, src/main/ic_launcher-playstore.png, google-services.json)
+            - cmp-desktop (excluding icons, build.gradle.kts)
             - cmp-ios (excluding iosApp/Assets.xcassets)
             - cmp-web (excluding src/jsMain/resources, src/wasmJsMain/resources)
             - cmp-shared
             - core-base
-            - build-logic
+            - build-logic (excluding convention/src/main/kotlin/local — consumer flavor extension point)
             - fastlane
+            - fastlane-config (excluding project_config.rb, extract_config.rb)
             - scripts
             - config
-            - .github
+            - .github (excluding workflows/sync-dirs.yaml — self-overwrite guard)
             - .run
-            
-            **Files**:
+
+            **Files:**
             - Gemfile
             - Gemfile.lock
             - ci-prepush.bat
             - ci-prepush.sh
-            
-            **Root-level exclusions**:
+
+            **Root-level exclusions:**
             - secrets.env
-            
+
             ---
             Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           branch: sync-dirs-${{ github.run_number }}
