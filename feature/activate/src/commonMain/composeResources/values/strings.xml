@@ -19,5 +19,7 @@
     <string name="feature_activate_failed_to_activate_client">Failed to activate client</string>
     <string name="feature_activate_failed_to_activate_center">Failed to activate center</string>
     <string name="feature_activate_failed_to_activate_group">Failed to activate group</string>
+    <string name="feature_activate_dialog_title_success">Success</string>
+    <string name="feature_activate_dialog_title_error">Error</string>
 
 </resources>

@@ -15,6 +15,8 @@ import androidclient.feature.activate.generated.resources.Res
 import androidclient.feature.activate.generated.resources.feature_activate
 import androidclient.feature.activate.generated.resources.feature_activate_activation_date
 import androidclient.feature.activate.generated.resources.feature_activate_cancel
+import androidclient.feature.activate.generated.resources.feature_activate_dialog_title_error
+import androidclient.feature.activate.generated.resources.feature_activate_dialog_title_success
 import androidclient.feature.activate.generated.resources.feature_activate_select
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -102,14 +104,14 @@ internal fun ActivateScreen(
 
     when (resultDialog) {
         ResultDialog.Success -> MifosAlertDialog(
-            dialogTitle = "Success",
+            dialogTitle = stringResource(Res.string.feature_activate_dialog_title_success),
             dialogText = stringResource(state.successMessage),
             onConfirmation = { resultDialog = null; viewModel.onSubmitConsumed(); onBackPressed() },
             onDismissRequest = { resultDialog = null; viewModel.onSubmitConsumed(); onBackPressed() },
         )
 
         ResultDialog.Failure -> MifosAlertDialog(
-            dialogTitle = "Error",
+            dialogTitle = stringResource(Res.string.feature_activate_dialog_title_error),
             dialogText = stringResource(state.failureMessage),
             onConfirmation = { resultDialog = null; viewModel.onSubmitConsumed() },
             onDismissRequest = { resultDialog = null; viewModel.onSubmitConsumed() },
