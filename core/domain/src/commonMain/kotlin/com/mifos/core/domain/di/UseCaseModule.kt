@@ -9,9 +9,6 @@
  */
 package com.mifos.core.domain.di
 
-import com.mifos.core.domain.useCases.ActivateCenterUseCase
-import com.mifos.core.domain.useCases.ActivateClientUseCase
-import com.mifos.core.domain.useCases.ActivateGroupUseCase
 import com.mifos.core.domain.useCases.ActivateSavingsUseCase
 import com.mifos.core.domain.useCases.AddClientPinpointLocationUseCase
 import com.mifos.core.domain.useCases.AddDataTableEntryUseCase
@@ -93,9 +90,6 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 val UseCaseModule = module {
-    factoryOf(::ActivateCenterUseCase)
-    factoryOf(::ActivateClientUseCase)
-    factoryOf(::ActivateGroupUseCase)
     factoryOf(::ActivateSavingsUseCase)
     factoryOf(::AddClientPinpointLocationUseCase)
     factoryOf(::AddDataTableEntryUseCase)

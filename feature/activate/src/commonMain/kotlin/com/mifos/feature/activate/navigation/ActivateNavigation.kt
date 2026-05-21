@@ -7,18 +7,12 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.feature.activate
+package com.mifos.feature.activate.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import kotlinx.serialization.Serializable
-
-@Serializable
-data class ActivateRoute(
-    val id: Int = -1,
-    val type: String = "",
-)
+import com.mifos.feature.activate.ui.ActivateScreen
 
 fun NavGraphBuilder.activateDestination(
     onBackPressed: () -> Unit,

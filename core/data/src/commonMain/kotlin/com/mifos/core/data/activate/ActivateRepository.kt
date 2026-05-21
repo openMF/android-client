@@ -7,31 +7,30 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.data.repository
+package com.mifos.core.data.activate
 
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.network.model.PostCentersCenterIdResponse
 import com.mifos.core.network.model.PostClientsClientIdResponse
-import io.ktor.client.statement.HttpResponse
-
-/**
- * Created by Aditya Gupta on 06/08/23.
- */
 
 interface ActivateRepository {
 
     suspend fun activateClient(
         clientId: Int,
-        clientActivate: ActivatePayload?,
+        payload: ActivatePayload,
     ): PostClientsClientIdResponse
 
     suspend fun activateCenter(
         centerId: Int,
-        activatePayload: ActivatePayload?,
+        payload: ActivatePayload,
     ): PostCentersCenterIdResponse
 
+    /**
+     * Activates a group. Throws on HTTP failure or transport error — caller wraps in
+     * `SubmitHandler.submit { ... }` for structured Submitting / Submitted / Failed lifecycle.
+     */
     suspend fun activateGroup(
         groupId: Int,
-        activatePayload: ActivatePayload,
-    ): HttpResponse
+        payload: ActivatePayload,
+    )
 }

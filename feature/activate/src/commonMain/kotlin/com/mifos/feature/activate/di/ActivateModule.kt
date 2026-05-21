@@ -9,10 +9,14 @@
  */
 package com.mifos.feature.activate.di
 
-import com.mifos.feature.activate.ActivateViewModel
+import com.mifos.core.data.activate.ActivateRepository
+import com.mifos.core.data.activate.impl.ActivateRepositoryImpl
+import com.mifos.feature.activate.ui.ActivateViewModel
 import org.koin.core.module.dsl.viewModelOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val ActivateModule = module {
+    single { ActivateRepositoryImpl(get(), get(), get()) } bind ActivateRepository::class
     viewModelOf(::ActivateViewModel)
 }

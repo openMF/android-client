@@ -14,6 +14,9 @@ import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.KtorHttpClient
 import com.mifos.core.network.KtorfitClient
 import com.mifos.core.network.MifosInterceptor
+import com.mifos.core.network.center.api.createCenterApi
+import com.mifos.core.network.client.api.createClientApi
+import com.mifos.core.network.group.api.createGroupApi
 import com.mifos.core.network.utils.FlowConverterFactory
 import de.jensklingenberg.ktorfit.Ktorfit
 import io.ktor.client.HttpClient
@@ -55,4 +58,11 @@ val NetworkModule = module {
             .converterFactories(FlowConverterFactory())
             .build()
     }
+
+    // Per-resource Api factories (template's per-feature `core/network/<resource>/api/` pattern).
+    // Each feature wave adds methods to the matching resource's interface; this DI list grows
+    // as new resource APIs are introduced.
+    single { get<Ktorfit>().createClientApi() }
+    single { get<Ktorfit>().createCenterApi() }
+    single { get<Ktorfit>().createGroupApi() }
 }

@@ -260,6 +260,10 @@ class DataManagerGroups(
      * @param groupId
      * @return GenericResponse
      */
+    @Deprecated(
+        message = "Use com.mifos.core.network.group.api.GroupApi.activate instead",
+        level = DeprecationLevel.WARNING,
+    )
     suspend fun activateGroup(
         groupId: Int,
         activatePayload: ActivatePayload,

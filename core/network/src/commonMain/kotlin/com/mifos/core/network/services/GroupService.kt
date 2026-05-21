@@ -63,6 +63,10 @@ interface GroupService {
      * @param groupId
      * @return GenericResponse
      */
+    @Deprecated(
+        message = "Use com.mifos.core.network.group.api.GroupApi.activate instead",
+        level = DeprecationLevel.WARNING,
+    )
     @POST(APIEndPoint.GROUPS + "/{groupId}?command=activate")
     suspend fun activateGroup(
         @Path("groupId") groupId: Int,
