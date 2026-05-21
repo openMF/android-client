@@ -51,6 +51,9 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.ui.components.MifosAlertDialog
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
+import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
 import template.core.base.ui.submit.SubmitProgressOverlay
@@ -210,3 +213,23 @@ private fun ActivateContent(
         }
     }
 }
+
+// region Previews
+
+private class ActivateScreenPreviewProvider : PreviewParameterProvider<Boolean> {
+    override val values = sequenceOf(false, true) // idle, submitting
+}
+
+@Preview
+@Composable
+private fun ActivateScreenPreview(
+    @PreviewParameter(ActivateScreenPreviewProvider::class) isSubmitting: Boolean,
+) {
+    ActivateScreen(
+        onActivate = {},
+        onBackPressed = {},
+        isSubmitting = isSubmitting,
+    )
+}
+
+// endregion
