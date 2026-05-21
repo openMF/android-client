@@ -9,8 +9,8 @@
  */
 package com.mifos.core.data.infra.impl
 
-import com.mifos.room.dao.DraftDao
-import com.mifos.room.entities.framework.DraftEntity
+import com.mifos.room.infra.dao.DraftDao
+import com.mifos.room.infra.entity.DraftEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.KSerializer

@@ -150,7 +150,13 @@ import com.mifos.core.data.repositoryImp.SyncGroupsDialogRepositoryImp
 import com.mifos.core.data.repositoryImp.SyncLoanRepaymentTransactionRepositoryImp
 import com.mifos.core.data.repositoryImp.SyncSavingsAccountTransactionRepositoryImp
 import com.mifos.core.data.repositoryImp.UserVerificationRepositoryImpl
-import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.data.infra.NetworkMonitor
+import com.mifos.core.data.infra.StoreCacheManager
+import com.mifos.core.data.infra.impl.NetworkMonitorImpl
+import com.mifos.core.data.infra.impl.RoomFetchedAtRepository
+import com.mifos.core.data.infra.impl.StoreCacheManagerImpl
+import com.mifos.room.MifosDatabase
+import template.core.base.store.infra.FetchedAtRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
@@ -254,6 +260,19 @@ val RepositoryModule = module {
     singleOf(::UserVerificationRepositoryImpl) bind(UserVerificationRepository::class)
 
     includes(platformModule)
-    single<PlatformDependentDataModule> { getPlatformDataModule }
-    single<NetworkMonitor> { getPlatformDataModule.networkMonitor }
+
+    // Framework infra (Phase B2 — `core/data/.../infra/`)
+    single<NetworkMonitor> { NetworkMonitorImpl() }
+    single<FetchedAtRepository> { RoomFetchedAtRepository(get<MifosDatabase>().fetchedAtDao) }
+    single<StoreCacheManager> {
+        StoreCacheManagerImpl(
+            bookkeeperDao = get<MifosDatabase>().bookkeeperDao,
+            draftDao = get<MifosDatabase>().draftDao,
+        )
+    }
+
+    // Framework Room DAOs (direct injection for SubmitOutbox / Bookkeeper consumers)
+    single { get<MifosDatabase>().bookkeeperDao }
+    single { get<MifosDatabase>().draftDao }
+    single { get<MifosDatabase>().fetchedAtDao }
 }

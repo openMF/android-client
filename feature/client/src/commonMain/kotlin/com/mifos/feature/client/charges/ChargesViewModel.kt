@@ -19,7 +19,7 @@ import com.mifos.core.common.utils.Constants.LOCALE_EN
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.ChargeRepository
-import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.data.infra.NetworkMonitor
 import com.mifos.core.domain.useCases.CreateChargesUseCase
 import com.mifos.core.domain.useCases.GetChargesTemplateUseCase
 import com.mifos.core.model.objects.payloads.ChargesPayload

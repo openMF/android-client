@@ -17,7 +17,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileKitUtil
 import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.data.repository.DocumentCreateUpdateRepository
-import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.data.infra.NetworkMonitor
 import com.mifos.core.domain.useCases.CreateClientIdentifierUseCase
 import com.mifos.core.domain.useCases.DownloadDocumentUseCase
 import com.mifos.core.domain.useCases.GetDocumentsListUseCase

@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.room.entities.framework
+package com.mifos.room.infra.entity
 
 import template.core.base.database.Entity
 import template.core.base.database.PrimaryKey
@@ -23,7 +23,7 @@ import template.core.base.database.PrimaryKey
  * @param formKey     Consumer-defined identifier that groups drafts by screen/form type
  *                    (e.g. `"loan_application"`, `"client_registration"`). One pending
  *                    draft per formKey is the intended invariant — consumers enforce
- *                    uniqueness via [com.mifos.room.dao.DraftDao.deleteByFormKey] before
+ *                    uniqueness via [com.mifos.room.infra.dao.DraftDao.deleteByFormKey] before
  *                    inserting.
  * @param payloadJson Serialized form payload (JSON). The concrete type is opaque to the
  *                    framework; consumers encode/decode via kotlinx.serialization.

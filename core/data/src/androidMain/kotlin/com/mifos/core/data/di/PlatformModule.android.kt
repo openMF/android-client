@@ -9,13 +9,7 @@
  */
 package com.mifos.core.data.di
 
-import com.mifos.core.data.util.JsPlatformDependentDataModule
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
-actual val platformModule: Module
-    get() = module {
-        single<PlatformDependentDataModule> { getPlatformDataModule }
-    }
-actual val getPlatformDataModule: PlatformDependentDataModule
-    get() = JsPlatformDependentDataModule()
+actual val platformModule: Module = module {}

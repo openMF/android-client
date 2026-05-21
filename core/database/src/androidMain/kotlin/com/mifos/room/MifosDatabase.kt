@@ -16,7 +16,7 @@ import com.mifos.room.dao.CenterDao
 import com.mifos.room.dao.ChargeDao
 import com.mifos.room.dao.ClientDao
 import com.mifos.room.dao.ColumnValueDao
-import com.mifos.room.dao.DraftDao
+import com.mifos.room.infra.dao.DraftDao
 import com.mifos.room.dao.GroupsDao
 import com.mifos.room.dao.LoanDao
 import com.mifos.room.dao.OfficeDao
@@ -24,7 +24,11 @@ import com.mifos.room.dao.SavingsDao
 import com.mifos.room.dao.StaffDao
 import com.mifos.room.dao.SurveyDao
 import com.mifos.room.entities.PaymentTypeOptionEntity
-import com.mifos.room.entities.framework.DraftEntity
+import com.mifos.room.infra.dao.BookkeeperDao
+import com.mifos.room.infra.dao.FetchedAtDao
+import com.mifos.room.infra.entity.BookkeeperEntity
+import com.mifos.room.infra.entity.DraftEntity
+import com.mifos.room.infra.entity.FetchedAtEntity
 import com.mifos.room.entities.accounts.loans.ActualDisbursementDateEntity
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
@@ -150,8 +154,10 @@ import com.mifos.room.typeconverters.CustomTypeConverters
         LoanRepaymentTemplateEntity::class,
         // zip models package
         PaymentTypeOptionEntity::class,
-        // framework: submit-draft outbox
+        // framework infra (Phase B2 — `infra/entity/`)
         DraftEntity::class,
+        FetchedAtEntity::class,
+        BookkeeperEntity::class,
     ],
     version = MifosDatabase.VERSION,
     exportSchema = false,
@@ -165,7 +171,6 @@ actual abstract class MifosDatabase : RoomDatabase() {
     actual abstract val chargeDao: ChargeDao
     actual abstract val clientDao: ClientDao
     actual abstract val columnValueDao: ColumnValueDao
-    actual abstract val draftDao: DraftDao
     actual abstract val groupsDao: GroupsDao
     actual abstract val loanDao: LoanDao
     actual abstract val officeDao: OfficeDao
@@ -173,7 +178,12 @@ actual abstract class MifosDatabase : RoomDatabase() {
     actual abstract val staffDao: StaffDao
     actual abstract val surveyDao: SurveyDao
 
+    // Framework infra DAOs (Phase B2)
+    actual abstract val bookkeeperDao: BookkeeperDao
+    actual abstract val draftDao: DraftDao
+    actual abstract val fetchedAtDao: FetchedAtDao
+
     companion object {
-        const val VERSION = 2
+        const val VERSION = 3
     }
 }

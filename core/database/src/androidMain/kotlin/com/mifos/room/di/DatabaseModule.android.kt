@@ -24,8 +24,8 @@ import template.core.base.database.AppDatabaseFactory
 import kotlin.coroutines.CoroutineContext
 
 /**
- * Adds the `framework_submit_drafts` table — see
- * [com.mifos.room.entities.framework.DraftEntity] for the schema.
+ * v1 → v2: adds the `framework_submit_drafts` table — see
+ * [com.mifos.room.infra.entity.DraftEntity] for the schema.
  */
 internal val MIGRATION_1_2 = object : Migration(1, 2) {
     override fun migrate(connection: SQLiteConnection) {
@@ -45,6 +45,31 @@ internal val MIGRATION_1_2 = object : Migration(1, 2) {
     }
 }
 
+/**
+ * v2 → v3: adds the `framework_fetched_at` + `store_bookkeeper` tables —
+ * Phase B2 (kmp-project-template parity).
+ */
+internal val MIGRATION_2_3 = object : Migration(2, 3) {
+    override fun migrate(connection: SQLiteConnection) {
+        connection.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS `framework_fetched_at` (
+                `storeKey` TEXT PRIMARY KEY NOT NULL,
+                `lastFetchedMillis` INTEGER NOT NULL
+            )
+            """.trimIndent(),
+        )
+        connection.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS `store_bookkeeper` (
+                `key` TEXT PRIMARY KEY NOT NULL,
+                `lastFailedSync` INTEGER NOT NULL
+            )
+            """.trimIndent(),
+        )
+    }
+}
+
 actual val PlatformSpecificDatabaseModule: Module = module {
     single<MifosDatabase> {
         val ioContext: CoroutineContext = getKoin().get(named(MifosDispatchers.IO.name))
@@ -52,7 +77,7 @@ actual val PlatformSpecificDatabaseModule: Module = module {
         AppDatabaseFactory(androidApplication())
             .createDatabase(MifosDatabase::class.java, Constants.DATABASE_NAME)
             .fallbackToDestructiveMigrationOnDowngrade(false)
-            .addMigrations(MIGRATION_1_2)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
             .setDriver(BundledSQLiteDriver())
             .setQueryCoroutineContext(ioContext)
             .build()

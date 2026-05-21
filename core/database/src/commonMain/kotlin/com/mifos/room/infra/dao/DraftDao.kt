@@ -7,9 +7,9 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.room.dao
+package com.mifos.room.infra.dao
 
-import com.mifos.room.entities.framework.DraftEntity
+import com.mifos.room.infra.entity.DraftEntity
 import kotlinx.coroutines.flow.Flow
 import template.core.base.database.Dao
 import template.core.base.database.Insert

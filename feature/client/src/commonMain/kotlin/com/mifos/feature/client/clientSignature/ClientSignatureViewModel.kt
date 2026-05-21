@@ -20,7 +20,7 @@ import com.attafitamim.krop.core.crop.crop
 import com.attafitamim.krop.core.crop.imageCropper
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.data.infra.NetworkMonitor
 import com.mifos.core.domain.useCases.CreateSignatureUseCase
 import com.mifos.core.domain.useCases.DownloadDocumentUseCase
 import com.mifos.core.domain.useCases.GetDocumentsListUseCase

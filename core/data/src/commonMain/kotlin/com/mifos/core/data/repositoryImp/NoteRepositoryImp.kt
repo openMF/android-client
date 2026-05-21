@@ -14,7 +14,7 @@ import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.mappers.client.note.toDomain
 import com.mifos.core.data.mappers.client.note.toDto
 import com.mifos.core.data.repository.NoteRepository
-import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.data.infra.NetworkMonitor
 import com.mifos.core.data.util.runAsDataState
 import com.mifos.core.data.util.withNetworkCheck
 import com.mifos.core.model.objects.note.CreateNoteInput
