@@ -24,6 +24,10 @@ class DataManagerAuth(
      * @param password Password
      * @return Basic OAuth
      */
+    @Deprecated(
+        message = "Use com.mifos.core.network.auth.api.AuthApi.authenticate instead",
+        level = DeprecationLevel.WARNING,
+    )
     suspend fun login(username: String, password: String): PostAuthenticationResponse {
         val body = PostAuthenticationRequest(username = username, password = password)
         return baseApiManager.clientService.authenticate(body)

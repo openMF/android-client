@@ -52,6 +52,10 @@ import kotlinx.coroutines.flow.Flow
  */
 interface ClientService {
 
+    @Deprecated(
+        message = "Use com.mifos.core.network.auth.api.AuthApi.authenticate instead",
+        level = DeprecationLevel.WARNING,
+    )
     @POST("authentication")
     suspend fun authenticate(
         @Body postAuthenticationRequest: PostAuthenticationRequest,

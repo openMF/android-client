@@ -24,6 +24,7 @@ kotlin {
             implementation(compose.ui)
             implementation(projects.core.data)
             implementation(projects.core.domain)
+            implementation(projects.core.ui)
             implementation(compose.components.uiToolingPreview)
         }
     }

@@ -18,4 +18,8 @@
     <string name="feature_auth_error_password_length">Invalid password length</string>
     <string name="feature_auth_error_not_connected_internet">No Internet Connection</string>
     <string name="feature_auth_error_login_failed">Login Failed, Please Try Again Later.</string>
+    <string name="feature_auth_update_server_configuration">Update Server Configuration</string>
+    <string name="feature_auth_cd_arrow_forward">Forward arrow</string>
+    <string name="feature_auth_cd_error_icon">Error icon</string>
+    <string name="feature_auth_cd_password_visibility">Toggle password visibility</string>
 </resources>
