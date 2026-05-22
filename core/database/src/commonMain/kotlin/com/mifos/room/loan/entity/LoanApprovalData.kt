@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Mifos Initiative
+ * Copyright 2025 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,15 +7,12 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.network
+package com.mifos.room.loan.entity
 
-import com.mifos.core.model.utils.ApiDateFormatter
+import kotlinx.serialization.Serializable
 
-/**
- * Created by ADMIN on 16-Jun-15.
- */
-
-data class DefaultPayload(
-    var dateFormat: String = ApiDateFormatter.DATE_FORMAT,
-    var locale: String = ApiDateFormatter.LOCALE,
+@Serializable
+data class LoanApprovalData(
+    val loanID: Int,
+    val loanWithAssociations: LoanWithAssociationsEntity,
 )

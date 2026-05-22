@@ -28,7 +28,7 @@ import com.mifos.core.domain.useCases.CreateLoanAccountUseCase
 import com.mifos.core.domain.useCases.GetAllLoanUseCase
 import com.mifos.core.domain.useCases.GetLoansAccountTemplateUseCase
 import com.mifos.core.model.network.CollateralItem
-import com.mifos.core.model.network.LoansPayload
+import com.mifos.room.loan.entity.LoansPayload
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.ui.util.BaseViewModel

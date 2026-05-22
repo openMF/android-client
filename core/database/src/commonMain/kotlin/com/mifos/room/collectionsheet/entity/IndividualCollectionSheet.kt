@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.objects.collectionsheet
+package com.mifos.room.collectionsheet.entity
 
 import com.mifos.core.model.objects.account.loan.PaymentTypeOptions
 import com.mifos.core.model.utils.IgnoredOnParcel

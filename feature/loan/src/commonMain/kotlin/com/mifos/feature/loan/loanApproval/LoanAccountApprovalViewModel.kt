@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountApprovalRepository
-import com.mifos.core.model.objects.loan.LoanApprovalData
+import com.mifos.room.loan.entity.LoanApprovalData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

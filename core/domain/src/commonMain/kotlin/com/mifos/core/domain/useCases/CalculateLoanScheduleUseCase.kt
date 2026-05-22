@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountRepository
-import com.mifos.core.model.network.LoansPayload
+import com.mifos.room.loan.entity.LoansPayload
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import kotlinx.coroutines.flow.Flow
 

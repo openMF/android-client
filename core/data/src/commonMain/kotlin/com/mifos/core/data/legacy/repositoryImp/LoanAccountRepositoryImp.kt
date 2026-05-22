@@ -12,7 +12,7 @@ package com.mifos.core.data.legacy.repositoryImp
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.LoanAccountRepository
-import com.mifos.core.model.network.LoansPayload
+import com.mifos.room.loan.entity.LoansPayload
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.network.datamanager.DataManagerLoan

@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.common.utils
+package com.mifos.core.model.utils
 
 import com.mifos.core.model.utils.DateConstants
 import kotlinx.datetime.Instant

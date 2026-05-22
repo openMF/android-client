@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Mifos Initiative
+ * Copyright 2024 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,12 +7,15 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.objects.loan
+package com.mifos.room.savings.entity
 
 import kotlinx.serialization.Serializable
 
+/**
+ * Created by Pronay Sarker on 15/08/2024 (9:49 PM)
+ */
 @Serializable
-data class LoanApprovalData(
-    val loanID: Int,
-    val loanWithAssociations: LoanWithAssociationsEntity,
+data class SavingsSummaryData(
+    val id: Int,
+    val type: SavingAccountDepositTypeEntity,
 )

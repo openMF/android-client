@@ -64,7 +64,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
-import com.mifos.core.common.utils.ApiDateFormatter
+import com.mifos.core.model.utils.ApiDateFormatter
 import com.mifos.core.designsystem.component.MifosDialogBox
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTableRow

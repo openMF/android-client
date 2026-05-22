@@ -20,12 +20,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import com.mifos.core.common.utils.ApiDateFormatter
+import com.mifos.core.model.utils.ApiDateFormatter
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.DataTableListRepository
 import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.core.model.network.LoansPayload
+import com.mifos.room.loan.entity.LoansPayload
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.room.client.entity.ClientPayloadEntity
 import com.mifos.room.datatable.entity.DataTableEntity

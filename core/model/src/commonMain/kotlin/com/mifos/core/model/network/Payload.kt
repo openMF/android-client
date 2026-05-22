@@ -9,7 +9,7 @@
  */
 package com.mifos.core.model.network
 
-import com.mifos.core.common.utils.ApiDateFormatter
+import com.mifos.core.model.utils.ApiDateFormatter
 import kotlinx.serialization.Serializable
 
 // TODO Remove calendarId and TransactionDate from this Payload class;

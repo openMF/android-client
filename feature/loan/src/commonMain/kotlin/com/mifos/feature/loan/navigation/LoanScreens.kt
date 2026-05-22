@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.loan.navigation
 
-import com.mifos.core.model.objects.loan.LoanApprovalData
+import com.mifos.room.loan.entity.LoanApprovalData
 import com.mifos.room.loan.entity.LoanWithAssociationsEntity
 import kotlinx.serialization.json.Json
 

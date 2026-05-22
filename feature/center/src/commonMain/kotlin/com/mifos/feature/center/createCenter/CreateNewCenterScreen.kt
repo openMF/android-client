@@ -55,7 +55,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.ApiDateFormatter
+import com.mifos.core.model.utils.ApiDateFormatter
 import com.mifos.core.common.utils.formatDate
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosDatePickerTextField

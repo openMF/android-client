@@ -7,15 +7,15 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.objects.savings
-
-import kotlinx.serialization.Serializable
+package com.mifos.room.collectionsheet.entity
 
 /**
- * Created by Pronay Sarker on 15/08/2024 (9:49 PM)
+ * Created by Tarun on 25-07-2017.
  */
-@Serializable
-data class SavingsSummaryData(
-    val id: Int,
-    val type: SavingAccountDepositTypeEntity,
+data class CenterDetail(
+    var staffId: Int = 0,
+
+    var staffName: String? = null,
+
+    var meetingFallCenters: List<MeetingFallCalendar>? = ArrayList(),
 )

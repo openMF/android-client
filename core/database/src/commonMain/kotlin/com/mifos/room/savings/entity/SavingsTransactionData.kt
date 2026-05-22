@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.objects.savings
+package com.mifos.room.savings.entity
 
 import com.mifos.core.model.utils.IgnoredOnParcel
 import kotlinx.serialization.Serializable

@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.network
+package com.mifos.room.loan.entity
 
 import com.mifos.room.datatable.entity.DataTablePayload
 import kotlinx.serialization.Serializable

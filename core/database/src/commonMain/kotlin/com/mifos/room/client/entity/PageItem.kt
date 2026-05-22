@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.objects.client
+package com.mifos.room.client.entity
 
 import com.mifos.core.model.objects.timeline.Timeline
 

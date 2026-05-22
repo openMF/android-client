@@ -64,7 +64,7 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
-import com.mifos.core.model.objects.collectionsheet.CenterDetail
+import com.mifos.room.collectionsheet.entity.CenterDetail
 import com.mifos.core.model.objects.collectionsheet.CollectionSheetPayload
 import com.mifos.core.model.objects.collectionsheet.ProductiveCollectionSheetPayload
 import com.mifos.core.model.objects.collectionsheets.CollectionSheetRequestPayload

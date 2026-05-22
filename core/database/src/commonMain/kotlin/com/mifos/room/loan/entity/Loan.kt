@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.objects.loan
+package com.mifos.room.loan.entity
 
 import com.mifos.core.model.objects.account.loan.Currency
 import com.mifos.core.model.objects.account.loan.InterestCalculationPeriodType

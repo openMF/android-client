@@ -10,7 +10,7 @@
 package com.mifos.core.network.loan.api
 
 import com.mifos.core.model.GenericResponse
-import com.mifos.core.model.network.LoansPayload
+import com.mifos.room.loan.entity.LoansPayload
 import com.mifos.core.model.objects.account.loan.LoanApproval
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest

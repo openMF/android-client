@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.individualCollectionSheet.newIndividualCollectionSheet
 
-import com.mifos.core.model.objects.collectionsheet.IndividualCollectionSheet
+import com.mifos.room.collectionsheet.entity.IndividualCollectionSheet
 import com.mifos.room.office.entity.OfficeEntity
 import com.mifos.room.staff.entity.StaffEntity
 

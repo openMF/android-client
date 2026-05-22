@@ -18,7 +18,7 @@ import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.model.network.IndividualCollectionSheetPayload
 import com.mifos.core.model.objects.account.loan.PaymentTypeOptions
-import com.mifos.core.model.objects.collectionsheet.IndividualCollectionSheet
+import com.mifos.room.collectionsheet.entity.IndividualCollectionSheet
 import com.mifos.core.model.objects.collectionsheets.LoanAndClientName
 import com.mifos.feature.individualCollectionSheet.generateCollectionSheet.GenerateCollectionSheetScreen
 import com.mifos.feature.individualCollectionSheet.individualCollectionSheet.IndividualCollectionSheetScreen

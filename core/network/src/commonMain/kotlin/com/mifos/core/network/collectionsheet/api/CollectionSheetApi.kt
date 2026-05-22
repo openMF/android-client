@@ -12,9 +12,9 @@ package com.mifos.core.network.collectionsheet.api
 import com.mifos.core.model.GenericResponse
 import com.mifos.core.model.network.IndividualCollectionSheetPayload
 import com.mifos.core.model.network.RequestCollectionSheetPayload
-import com.mifos.core.model.objects.collectionsheet.CenterDetail
+import com.mifos.room.collectionsheet.entity.CenterDetail
 import com.mifos.core.model.objects.collectionsheet.CollectionSheetPayload
-import com.mifos.core.model.objects.collectionsheet.IndividualCollectionSheet
+import com.mifos.room.collectionsheet.entity.IndividualCollectionSheet
 import com.mifos.core.model.objects.collectionsheet.ProductiveCollectionSheetPayload
 import com.mifos.core.model.objects.collectionsheets.CollectionSheetRequestPayload
 import com.mifos.core.network.APIEndPoint

@@ -9,7 +9,7 @@
  */
 package com.mifos.core.model.network
 
-import com.mifos.core.common.utils.ApiDateFormatter
+import com.mifos.core.model.utils.ApiDateFormatter
 import com.mifos.core.model.objects.loan.BulkRepaymentTransactions
 import kotlinx.serialization.Serializable
 

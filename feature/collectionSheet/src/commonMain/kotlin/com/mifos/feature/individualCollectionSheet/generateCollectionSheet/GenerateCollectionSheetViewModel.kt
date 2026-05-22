@@ -32,7 +32,7 @@ import com.mifos.core.domain.useCases.GetGroupsByOfficeUseCase
 import com.mifos.core.domain.useCases.GetStaffInOfficeUseCase
 import com.mifos.core.domain.useCases.SubmitCollectionSheetUseCase
 import com.mifos.core.domain.useCases.SubmitProductiveSheetUseCase
-import com.mifos.core.model.objects.collectionsheet.CenterDetail
+import com.mifos.room.collectionsheet.entity.CenterDetail
 import com.mifos.core.model.objects.collectionsheet.CollectionSheetPayload
 import com.mifos.core.model.objects.collectionsheet.ProductiveCollectionSheetPayload
 import com.mifos.core.model.objects.collectionsheets.CollectionSheetRequestPayload

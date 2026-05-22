@@ -10,7 +10,7 @@
 package com.mifos.feature.individualCollectionSheet.navigation
 
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.model.objects.collectionsheet.IndividualCollectionSheet
+import com.mifos.room.collectionsheet.entity.IndividualCollectionSheet
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 

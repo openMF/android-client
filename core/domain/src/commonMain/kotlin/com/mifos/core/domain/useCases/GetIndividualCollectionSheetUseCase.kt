@@ -13,7 +13,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.core.model.network.RequestCollectionSheetPayload
-import com.mifos.core.model.objects.collectionsheet.IndividualCollectionSheet
+import com.mifos.room.collectionsheet.entity.IndividualCollectionSheet
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

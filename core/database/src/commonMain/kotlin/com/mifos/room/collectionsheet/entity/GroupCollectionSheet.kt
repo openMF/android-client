@@ -7,15 +7,23 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.objects.collectionsheet
+package com.mifos.room.collectionsheet.entity
 
 /**
  * Created by Tarun on 25-07-2017.
  */
-data class CenterDetail(
+data class GroupCollectionSheet(
+    var clients: MutableList<ClientCollectionSheet> = ArrayList(),
+
+    var groupId: Int = 0,
+
+    var groupName: String? = null,
+
+    var levelId: Int = 0,
+
+    var levelName: String? = null,
+
     var staffId: Int = 0,
 
     var staffName: String? = null,
-
-    var meetingFallCenters: List<MeetingFallCalendar>? = ArrayList(),
 )
