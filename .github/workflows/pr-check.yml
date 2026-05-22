@@ -67,9 +67,9 @@ name: PR Checks
 # Trigger conditions for the workflow
 on:
   push:
-    branches: [ development ]  # Runs on pushes to dev branch
+    branches: [ dev, development ]
   pull_request:
-    branches: [ development ]  # Runs on pushes to dev branch
+    branches: [ dev, development ]  # Runs on pushes to dev branch
 
 # Concurrency settings to prevent multiple simultaneous workflow runs
 concurrency:
@@ -91,3 +91,4 @@ jobs:
       build_ios: true # <-- Change to 'false' if you don't want to build iOS
       use_cocoapods: true
       shared_module: ':cmp-shared'
+      java-version: '21'
