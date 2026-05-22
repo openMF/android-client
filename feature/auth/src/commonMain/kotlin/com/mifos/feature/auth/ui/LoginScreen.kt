@@ -54,18 +54,21 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import com.mifos.core.data.store.DataFreshness
+import com.mifos.core.data.store.ScreenState
 import com.mifos.core.data.store.SubmitState
 import com.mifos.core.designsystem.component.MifosAndroidClientIcon
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
-import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
+import com.mifos.core.model.network.PostAuthenticationResponse
 import com.mifos.core.ui.util.DevicePreview
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
+import template.core.base.ui.submit.MutationScreenContent
 
 @Composable
 internal fun LoginScreen(
@@ -92,7 +95,7 @@ internal fun LoginScreen(
 
     LoginContent(
         state = state,
-        isSubmitting = submitState is SubmitState.Submitting,
+        submitState = submitState,
         onSubmit = { username, password ->
             loginViewModel.actionChannel.trySend(LoginAction.Submit(username, password))
         },
@@ -105,24 +108,20 @@ internal fun LoginScreen(
 @Composable
 internal fun LoginContent(
     state: LoginState,
-    isSubmitting: Boolean,
+    submitState: SubmitState<PostAuthenticationResponse>,
     onSubmit: (username: String, password: String) -> Unit,
     onClickToUpdateServerConfig: () -> Unit,
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
-    var userName by rememberSaveable(stateSaver = TextFieldValue.Saver) {
-        mutableStateOf(TextFieldValue(""))
-    }
-    var password by rememberSaveable(stateSaver = TextFieldValue.Saver) {
-        mutableStateOf(TextFieldValue(""))
-    }
-    var passwordVisibility: Boolean by remember { mutableStateOf(false) }
+    // Login has no server-side data to fetch (the user isn't authenticated yet),
+    // so screenState is a degenerate Content(Unit) — MutationScreenContent still
+    // gives us the SubmitProgressOverlay + SubmitResultHandler for the submit
+    // lifecycle, which is what we want for the consistent mutation-screen UX.
+    val screenState = remember { ScreenState.Content(Unit, DataFreshness.FRESH) }
 
     Scaffold(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(KptTheme.spacing.md),
+        modifier = modifier.fillMaxSize(),
         containerColor = KptTheme.colorScheme.surface,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = {
@@ -134,7 +133,6 @@ internal fun LoginContent(
             ) {
                 FilledTonalButton(
                     onClick = onClickToUpdateServerConfig,
-                    modifier = Modifier.align(Alignment.Center),
                     colors = ButtonDefaults.filledTonalButtonColors(
                         containerColor = KptTheme.colorScheme.tertiaryContainer,
                         contentColor = KptTheme.colorScheme.tertiary,
@@ -150,94 +148,125 @@ internal fun LoginContent(
             }
         },
     ) { paddingValues ->
-        Column(
+        MutationScreenContent<Unit, PostAuthenticationResponse>(
+            screenState = screenState,
+            submitState = submitState,
+            onRetry = {},
+            // Terminal `Submitted` navigation is handled by LoginViewModel emitting
+            // a NavigateToPasscode Event (after persistUser succeeds). The Screen
+            // listens via LaunchedEffect on eventFlow — see LoginScreen above. So
+            // MutationScreenContent's own onSubmitted is a no-op here.
+            onSubmitted = { _ -> },
+            modifier = Modifier.padding(paddingValues),
+        ) { _, _ ->
+            LoginForm(
+                state = state,
+                onSubmit = onSubmit,
+                isSubmitting = submitState is SubmitState.Submitting,
+            )
+        }
+    }
+}
+
+@Composable
+private fun LoginForm(
+    state: LoginState,
+    onSubmit: (username: String, password: String) -> Unit,
+    isSubmitting: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    var userName by rememberSaveable(stateSaver = TextFieldValue.Saver) {
+        mutableStateOf(TextFieldValue(""))
+    }
+    var password by rememberSaveable(stateSaver = TextFieldValue.Saver) {
+        mutableStateOf(TextFieldValue(""))
+    }
+    var passwordVisibility: Boolean by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(KptTheme.spacing.md)
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Spacer(modifier = Modifier.height(DesignToken.spacing.dp80))
+        MifosAndroidClientIcon(imageVector = painterResource(Res.drawable.feature_auth_mifos_logo))
+
+        Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(paddingValues)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Spacer(modifier = Modifier.height(DesignToken.spacing.dp80))
-            MifosAndroidClientIcon(imageVector = painterResource(Res.drawable.feature_auth_mifos_logo))
+                .padding(top = KptTheme.spacing.sm),
+            text = stringResource(Res.string.feature_auth_enter_credentials),
+            textAlign = TextAlign.Center,
+            style = KptTheme.typography.bodyMedium,
+        )
 
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = KptTheme.spacing.sm),
-                text = stringResource(Res.string.feature_auth_enter_credentials),
-                textAlign = TextAlign.Center,
-                style = KptTheme.typography.bodyMedium,
-            )
+        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
-            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        MifosOutlinedTextField(
+            value = userName,
+            onValueChanged = { userName = it },
+            icon = MifosIcons.Person,
+            label = stringResource(Res.string.feature_auth_username),
+            error = state.usernameError?.let { stringResource(it) },
+            trailingIcon = {
+                if (state.usernameError != null) {
+                    Icon(
+                        imageVector = MifosIcons.Error,
+                        contentDescription = stringResource(Res.string.feature_auth_cd_error_icon),
+                    )
+                }
+            },
+        )
 
-            MifosOutlinedTextField(
-                value = userName,
-                onValueChanged = { userName = it },
-                icon = MifosIcons.Person,
-                label = stringResource(Res.string.feature_auth_username),
-                error = state.usernameError?.let { stringResource(it) },
-                trailingIcon = {
-                    if (state.usernameError != null) {
-                        Icon(
-                            imageVector = MifosIcons.Error,
-                            contentDescription = stringResource(Res.string.feature_auth_cd_error_icon),
-                        )
-                    }
-                },
-            )
+        Spacer(modifier = Modifier.height(DesignToken.spacing.mediumSmall))
 
-            Spacer(modifier = Modifier.height(DesignToken.spacing.mediumSmall))
-
-            MifosOutlinedTextField(
-                value = password,
-                onValueChanged = { password = it },
-                visualTransformation = if (passwordVisibility) {
-                    VisualTransformation.None
-                } else {
-                    PasswordVisualTransformation()
-                },
-                icon = MifosIcons.Lock,
-                label = stringResource(Res.string.feature_auth_password),
-                error = state.passwordError?.let { stringResource(it) },
-                trailingIcon = {
-                    if (state.passwordError == null) {
-                        val image = if (passwordVisibility) {
-                            MifosIcons.Visibility
-                        } else {
-                            MifosIcons.VisibilityOff
-                        }
-                        IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
-                            Icon(
-                                imageVector = image,
-                                contentDescription = stringResource(Res.string.feature_auth_cd_password_visibility),
-                            )
-                        }
+        MifosOutlinedTextField(
+            value = password,
+            onValueChanged = { password = it },
+            visualTransformation = if (passwordVisibility) {
+                VisualTransformation.None
+            } else {
+                PasswordVisualTransformation()
+            },
+            icon = MifosIcons.Lock,
+            label = stringResource(Res.string.feature_auth_password),
+            error = state.passwordError?.let { stringResource(it) },
+            trailingIcon = {
+                if (state.passwordError == null) {
+                    val image = if (passwordVisibility) {
+                        MifosIcons.Visibility
                     } else {
+                        MifosIcons.VisibilityOff
+                    }
+                    IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
                         Icon(
-                            imageVector = MifosIcons.Error,
-                            contentDescription = stringResource(Res.string.feature_auth_cd_error_icon),
+                            imageVector = image,
+                            contentDescription = stringResource(Res.string.feature_auth_cd_password_visibility),
                         )
                     }
-                },
-            )
+                } else {
+                    Icon(
+                        imageVector = MifosIcons.Error,
+                        contentDescription = stringResource(Res.string.feature_auth_cd_error_icon),
+                    )
+                }
+            },
+        )
 
-            Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+        Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
 
-            Button(
-                onClick = { onSubmit(userName.text, password.text) },
-                enabled = !isSubmitting,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(DesignToken.spacing.dp44)
-                    .padding(horizontal = KptTheme.spacing.md),
-                contentPadding = PaddingValues(),
-            ) {
-                Text(text = stringResource(Res.string.feature_auth_login), style = KptTheme.typography.bodyLarge)
-            }
-        }
-        if (isSubmitting) {
-            MifosProgressIndicatorOverlay()
+        Button(
+            onClick = { onSubmit(userName.text, password.text) },
+            enabled = !isSubmitting,
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(DesignToken.spacing.dp44)
+                .padding(horizontal = KptTheme.spacing.md),
+            contentPadding = PaddingValues(),
+        ) {
+            Text(text = stringResource(Res.string.feature_auth_login), style = KptTheme.typography.bodyLarge)
         }
     }
 }
@@ -249,7 +278,7 @@ internal fun LoginContent(
 private fun LoginScreenIdlePreview() {
     LoginContent(
         state = LoginState(),
-        isSubmitting = false,
+        submitState = SubmitState.Idle,
         onSubmit = { _, _ -> },
         onClickToUpdateServerConfig = {},
         snackbarHostState = remember { SnackbarHostState() },
@@ -261,7 +290,7 @@ private fun LoginScreenIdlePreview() {
 private fun LoginScreenSubmittingPreview() {
     LoginContent(
         state = LoginState(),
-        isSubmitting = true,
+        submitState = SubmitState.Submitting,
         onSubmit = { _, _ -> },
         onClickToUpdateServerConfig = {},
         snackbarHostState = remember { SnackbarHostState() },
@@ -276,7 +305,7 @@ private fun LoginScreenValidationErrorPreview() {
             usernameError = Res.string.feature_auth_username,
             passwordError = Res.string.feature_auth_password,
         ),
-        isSubmitting = false,
+        submitState = SubmitState.Idle,
         onSubmit = { _, _ -> },
         onClickToUpdateServerConfig = {},
         snackbarHostState = remember { SnackbarHostState() },
