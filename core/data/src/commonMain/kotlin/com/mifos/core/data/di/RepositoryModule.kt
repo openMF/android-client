@@ -34,6 +34,8 @@ import com.mifos.core.data.repository.DataTableDataRepository
 import com.mifos.core.data.repository.DataTableListRepository
 import com.mifos.core.data.repository.DataTableRepository
 import com.mifos.core.data.repository.DataTableRowDialogRepository
+import com.mifos.core.data.document.DocumentRepository
+import com.mifos.core.data.document.impl.DocumentRepositoryImpl
 import com.mifos.core.data.repository.DocumentCreateUpdateRepository
 import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.core.data.repository.FixedDepositRepository
@@ -56,9 +58,11 @@ import com.mifos.core.data.repository.LoanTransactionsRepository
 import com.mifos.core.data.auth.LoginRepository
 import com.mifos.core.data.auth.impl.LoginRepositoryImpl
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
-import com.mifos.core.data.repository.NoteRepository
+import com.mifos.core.data.note.NoteRepository
+import com.mifos.core.data.note.impl.NoteRepositoryImpl
 import com.mifos.core.data.repository.OfflineDashboardRepository
-import com.mifos.core.data.repository.PathTrackingRepository
+import com.mifos.core.data.pathtracking.PathTrackingRepository
+import com.mifos.core.data.pathtracking.impl.PathTrackingRepositoryImpl
 import com.mifos.core.data.repository.PinPointClientRepository
 import com.mifos.core.data.repository.RecurringAccountRepository
 import com.mifos.core.data.repository.ReportCategoryRepository
@@ -123,10 +127,8 @@ import com.mifos.core.data.repositoryImp.LoanRepaymentScheduleRepositoryImp
 import com.mifos.core.data.repositoryImp.LoanReschedulesRepositoryImpl
 import com.mifos.core.data.repositoryImp.LoanTransactionsRepositoryImp
 import com.mifos.core.data.repositoryImp.NewIndividualCollectionSheetRepositoryImp
-import com.mifos.core.data.repositoryImp.NoteRepositoryImp
 import com.mifos.core.data.repositoryImp.OfflineDashboardRepositoryImp
 import com.mifos.core.data.repositoryImp.PasscodeStorageAdapterImpl
-import com.mifos.core.data.repositoryImp.PathTrackingRepositoryImp
 import com.mifos.core.data.repositoryImp.PinPointClientRepositoryImp
 import com.mifos.core.data.repositoryImp.RecurringAccountRepositoryImp
 import com.mifos.core.data.repositoryImp.ReportCategoryRepositoryImp
@@ -235,12 +237,13 @@ val RepositoryModule = module {
     singleOf(::DataTableRowDialogRepositoryImp) bind DataTableRowDialogRepository::class
     singleOf(::DocumentCreateUpdateRepositoryImp) bind DocumentCreateUpdateRepository::class
     singleOf(::DocumentListRepositoryImp) bind DocumentListRepository::class
+    singleOf(::DocumentRepositoryImpl) bind DocumentRepository::class
     singleOf(::IndividualCollectionSheetDetailsRepositoryImp) bind IndividualCollectionSheetDetailsRepository::class
     singleOf(::NewIndividualCollectionSheetRepositoryImp) bind NewIndividualCollectionSheetRepository::class
     singleOf(::GenerateCollectionSheetRepositoryImp) bind GenerateCollectionSheetRepository::class
-    singleOf(::NoteRepositoryImp) bind NoteRepository::class
+    singleOf(::NoteRepositoryImpl) bind NoteRepository::class
     singleOf(::OfflineDashboardRepositoryImp) bind OfflineDashboardRepository::class
-    singleOf(::PathTrackingRepositoryImp) bind PathTrackingRepository::class
+    singleOf(::PathTrackingRepositoryImpl) bind PathTrackingRepository::class
     singleOf(::ReportCategoryRepositoryImp) bind ReportCategoryRepository::class
     singleOf(::ReportDetailRepositoryImp) bind ReportDetailRepository::class
     singleOf(::SignatureRepositoryImp) bind SignatureRepository::class

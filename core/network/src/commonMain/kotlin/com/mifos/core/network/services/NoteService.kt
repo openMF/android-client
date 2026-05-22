@@ -23,6 +23,23 @@ import de.jensklingenberg.ktorfit.http.PUT
 import de.jensklingenberg.ktorfit.http.Path
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Migrated to per-resource [com.mifos.core.network.note.api.NoteApi] in Phase C
+ * Wave 7 of the store5-adoption epic. New code MUST use `NoteApi` (suspend-only,
+ * no Flow). This `NoteService` interface plus
+ * [com.mifos.core.network.datamanager.DataManagerNote] remain only until
+ * [com.mifos.core.network.BaseApiManager.noteService] has no live callers — at
+ * which point all 3 (`NoteService`, `DataManagerNote`, `BaseApiManager.noteService`)
+ * are deleted in Phase D cleanup.
+ */
+@Deprecated(
+    message = "Use com.mifos.core.network.note.api.NoteApi (suspend-only, no Flow).",
+    replaceWith = ReplaceWith(
+        "NoteApi",
+        "com.mifos.core.network.note.api.NoteApi",
+    ),
+    level = DeprecationLevel.WARNING,
+)
 interface NoteService {
 
     /**

@@ -17,7 +17,10 @@ import com.mifos.core.network.MifosInterceptor
 import com.mifos.core.network.auth.api.createAuthApi
 import com.mifos.core.network.center.api.createCenterApi
 import com.mifos.core.network.client.api.createClientApi
+import com.mifos.core.network.document.api.createDocumentApi
 import com.mifos.core.network.group.api.createGroupApi
+import com.mifos.core.network.note.api.createNoteApi
+import com.mifos.core.network.pathtracking.api.createPathTrackingApi
 import com.mifos.core.network.search.api.createSearchApi
 import com.mifos.core.network.utils.FlowConverterFactory
 import de.jensklingenberg.ktorfit.Ktorfit
@@ -67,6 +70,9 @@ val NetworkModule = module {
     single { get<Ktorfit>().createAuthApi() }
     single { get<Ktorfit>().createClientApi() }
     single { get<Ktorfit>().createCenterApi() }
+    single { get<Ktorfit>().createDocumentApi() }
     single { get<Ktorfit>().createGroupApi() }
+    single { get<Ktorfit>().createNoteApi() }
+    single { get<Ktorfit>().createPathTrackingApi() }
     single { get<Ktorfit>().createSearchApi() }
 }

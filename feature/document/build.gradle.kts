@@ -9,7 +9,6 @@
  */
 plugins {
     alias(libs.plugins.cmp.feature.convention)
-    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.serialization)
 }
 
@@ -19,18 +18,26 @@ android {
 
 
 kotlin {
-    sourceSets{
+    sourceSets {
         commonMain.dependencies {
             implementation(compose.material3)
             implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
             implementation(compose.ui)
-            implementation(projects.core.domain)
+            // RULE-FEATURE-USES-ONLY-CORE — feature modules only depend on
+            // projects.core.*, never projects.coreBase.* or projects.core.network.
+            // Wave 9 (Phase C of store5-adoption) dropped projects.core.domain:
+            // the surviving call sites use DocumentRepository (core.data) directly
+            // via SubmitHandler / ScreenState instead of pure-delegator use cases.
+            implementation(projects.core.common)
+            implementation(projects.core.model)
+            implementation(projects.core.data)
+            implementation(projects.core.ui)
             implementation(libs.kotlinx.serialization.json)
-            
+
             implementation(libs.filekit.core)
             implementation(libs.filekit.compose)
             implementation(libs.filekit.dialog.compose)
-            implementation(compose.components.uiToolingPreview)
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Mifos Initiative
+ * Copyright 2026 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,11 +12,7 @@ package com.mifos.feature.path.tracking.navigation
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.mifos.feature.path.tracking.PathTrackingScreen
-import kotlinx.serialization.Serializable
-
-@Serializable
-data object PathTrackingScreenRoute
+import com.mifos.feature.path.tracking.ui.PathTrackingScreen
 
 fun NavGraphBuilder.pathTrackingRoute(
     onBackPressed: () -> Unit,

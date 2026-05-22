@@ -14,6 +14,19 @@ import com.mifos.core.data.repository.DocumentListRepository
 import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * @deprecated Pure-delegator use case. Wave 9 (Phase C of store5-adoption) replaces this with
+ * direct `DocumentRepository.downloadDocument(...)` calls from the feature ViewModel, wrapped
+ * in `SubmitHandler.submit { ... }` per RULE-STORE5-FETCH-001. Retained ONLY because
+ * `feature/client` still consumes it; will be deleted in the Wave 9 → feature/client follow-up.
+ */
+@Deprecated(
+    message = "Inject DocumentRepository directly and call downloadDocument(...) via submitHandler.",
+    replaceWith = ReplaceWith(
+        "DocumentRepository.downloadDocument(entityType, entityId, documentId)",
+        "com.mifos.core.data.document.DocumentRepository",
+    ),
+)
 class DownloadDocumentUseCase(
     private val repository: DocumentListRepository,
 ) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Mifos Initiative
+ * Copyright 2026 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.note.di
 
-import com.mifos.feature.note.addEditNotes.AddEditNoteViewModel
-import com.mifos.feature.note.notes.NoteViewModel
+import com.mifos.feature.note.ui.AddEditNoteViewModel
+import com.mifos.feature.note.ui.NoteViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 

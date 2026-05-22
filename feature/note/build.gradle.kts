@@ -23,9 +23,12 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(compose.ui)
+            // RULE-FEATURE-USES-ONLY-CORE — feature modules only depend on
+            // projects.core.*, never projects.coreBase.* or projects.core.network.
             implementation(projects.core.common)
             implementation(projects.core.model)
-            implementation(projects.core.domain)
+            implementation(projects.core.data)
+            implementation(projects.core.ui)
             implementation(libs.kotlinx.serialization.json)
         }
     }
@@ -34,4 +37,3 @@ kotlin {
 dependencies {
     debugImplementation(compose.uiTooling)
 }
-

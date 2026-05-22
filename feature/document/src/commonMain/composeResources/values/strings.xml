@@ -11,8 +11,10 @@
 <resources>
     <string name="feature_document_title">Documents</string>
     <string name="feature_document_failed_to_load_documents_list">Failed to load documents list</string>
-    <string name="feature_document_failed_to_download_document">Failed to download documents list</string>
-    <string name="feature_document_failed_to_remove_document">Failed to Remove documents list</string>
+    <string name="feature_document_failed_to_download_document">Failed to download document</string>
+    <string name="feature_document_failed_to_remove_document">Failed to remove document</string>
+    <string name="feature_document_failed_to_upload_document">Failed to upload document. Please try again.</string>
+    <string name="feature_document_failed_to_update_document">Failed to update document. Please try again.</string>
     <string name="feature_document_select_option">Please select an option</string>
     <string name="feature_document_download_document">Download Document</string>
     <string name="feature_document_update_document">Update Document</string>
@@ -32,4 +34,11 @@
     <string name="feature_document_browse">BROWSE</string>
     <string name="feature_document_permission_granted">Permission to read document granted!!</string>
     <string name="feature_document_permission_denied">Permission to read document denied!!</string>
+    <string name="feature_document_supported_formats">Supported formats: xls, xlsx, pdf, doc, docx, png, jpeg, jpg.</string>
+    <string name="feature_document_cd_add_document">Add document</string>
+    <string name="feature_document_cd_download_icon">Download icon</string>
+    <string name="feature_document_cd_close_dialog">Close dialog</string>
+    <string name="feature_document_column_name">Name</string>
+    <string name="feature_document_column_description">Description</string>
+    <string name="feature_document_no_description_placeholder">-</string>
 </resources>

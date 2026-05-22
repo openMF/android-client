@@ -12,7 +12,6 @@ package com.mifos.core.domain.di
 import com.mifos.core.domain.useCases.ActivateSavingsUseCase
 import com.mifos.core.domain.useCases.AddClientPinpointLocationUseCase
 import com.mifos.core.domain.useCases.AddDataTableEntryUseCase
-import com.mifos.core.domain.useCases.AddNoteUseCase
 import com.mifos.core.domain.useCases.ApproveCheckerUseCase
 import com.mifos.core.domain.useCases.ApproveSavingsApplicationUseCase
 import com.mifos.core.domain.useCases.CalculateLoanScheduleUseCase
@@ -27,7 +26,6 @@ import com.mifos.core.domain.useCases.DeleteCheckerUseCase
 import com.mifos.core.domain.useCases.DeleteClientAddressPinpointUseCase
 import com.mifos.core.domain.useCases.DeleteDataTableEntryUseCase
 import com.mifos.core.domain.useCases.DeleteIdentifierUseCase
-import com.mifos.core.domain.useCases.DeleteNoteUseCase
 import com.mifos.core.domain.useCases.DownloadDocumentUseCase
 import com.mifos.core.domain.useCases.FetchCenterDetailsUseCase
 import com.mifos.core.domain.useCases.FetchCollectionSheetUseCase
@@ -64,7 +62,6 @@ import com.mifos.core.domain.useCases.GetRunReportWithQueryUseCase
 import com.mifos.core.domain.useCases.GetSavingsAccountAndTemplateUseCase
 import com.mifos.core.domain.useCases.GetSavingsProductTemplateUseCase
 import com.mifos.core.domain.useCases.GetStaffInOfficeUseCase
-import com.mifos.core.domain.useCases.GetUserPathTrackingUseCase
 import com.mifos.core.domain.useCases.GroupsListPagingDataSource
 import com.mifos.core.domain.useCases.LoadSavingsAccountsAndTemplateUseCase
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
@@ -76,7 +73,6 @@ import com.mifos.core.domain.useCases.SubmitCollectionSheetUseCase
 import com.mifos.core.domain.useCases.SubmitProductiveSheetUseCase
 import com.mifos.core.domain.useCases.UpdateClientIdentifierUseCase
 import com.mifos.core.domain.useCases.UpdateClientPinpointUseCase
-import com.mifos.core.domain.useCases.UpdateNoteUseCase
 import com.mifos.core.domain.useCases.UpdateSignatureUseCase
 import com.mifos.core.domain.useCases.UploadClientImageUseCase
 import com.mifos.core.domain.useCases.UsernameValidationUseCase
@@ -140,7 +136,6 @@ val UseCaseModule = module {
     factoryOf(::GetRunReportProductUseCase)
     factoryOf(::GetRunReportWithQueryUseCase)
     factoryOf(::GetStaffInOfficeUseCase)
-    factoryOf(::GetUserPathTrackingUseCase)
     factoryOf(::GroupsListPagingDataSource)
     factoryOf(::LoadSavingsAccountsAndTemplateUseCase)
     factoryOf(::PasswordValidationUseCase)
@@ -160,9 +155,6 @@ val UseCaseModule = module {
     factoryOf(::GetGroupDetailsUseCase)
     factoryOf(::GetLoanAndLoanRepaymentUseCase)
     factoryOf(::GetSavingsAccountAndTemplateUseCase)
-    factoryOf(::AddNoteUseCase)
-    factoryOf(::UpdateNoteUseCase)
-    factoryOf(::DeleteNoteUseCase)
     factoryOf(::CreateSignatureUseCase)
     factoryOf(::UpdateSignatureUseCase)
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Mifos Initiative
+ * Copyright 2026 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,26 +11,46 @@ package com.mifos.feature.note.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import com.mifos.feature.note.addEditNotes.addEditNoteRoute
-import com.mifos.feature.note.addEditNotes.navigateToAddEditNoteScreen
-import com.mifos.feature.note.notes.navigateToNoteScreenWithUpdatedList
-import com.mifos.feature.note.notes.noteRoute
+import androidx.navigation.compose.composable
+import com.mifos.feature.note.ui.AddEditNoteScreen
+import com.mifos.feature.note.ui.NoteScreen
 
 fun NavGraphBuilder.noteDestination(
     navController: NavController,
     onBackPressed: () -> Unit,
 ) {
-    noteRoute(
-        onNavigateBack = onBackPressed,
-        onNavigateAddEditNote = navController::navigateToAddEditNoteScreen,
-        navController = navController,
-    )
+    composable<NoteRoute> {
+        NoteScreen(
+            onNavigateBack = onBackPressed,
+            onNavigateAddEditNote = navController::navigateToAddEditNoteScreen,
+            navController = navController,
+        )
+    }
 
-    addEditNoteRoute(
-        onBackPressed = {
-            navController.popBackStack()
-        },
-        onNavigateWithUpdatedList = navController::navigateToNoteScreenWithUpdatedList,
-        navController = navController,
-    )
+    composable<AddEditNoteRoute> {
+        AddEditNoteScreen(
+            onBackPressed = { navController.popBackStack() },
+            onNavigateWithUpdatedList = navController::navigateToNoteScreenWithUpdatedList,
+            navController = navController,
+        )
+    }
+}
+
+fun NavController.navigateToNoteScreen(entityId: Int, entityType: String?) {
+    this.navigate(NoteRoute(entityId, entityType))
+}
+
+fun NavController.navigateToNoteScreenWithUpdatedList(entityId: Int, entityType: String?) {
+    this.navigate(NoteRoute(entityId, entityType)) {
+        popUpTo(NoteRoute(entityId, entityType)) { inclusive = true }
+        launchSingleTop = true
+    }
+}
+
+fun NavController.navigateToAddEditNoteScreen(
+    resourceId: Int,
+    resourceType: String?,
+    noteId: Long?,
+) {
+    this.navigate(AddEditNoteRoute(resourceId, resourceType, noteId))
 }

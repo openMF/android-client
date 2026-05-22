@@ -31,4 +31,12 @@
     <string name="feature_note_button_confirm">Confirm</string>
     <string name="feature_note_dialog_warning">Warning</string>
     <string name="feature_note_dialog_warning_message">Discard changes? Unsaved data will be lost.</string>
+
+    <!-- Phase C Wave 7 additions: snackbar messages + a11y content descriptions for the
+         migrated screens. -->
+    <string name="feature_note_failed_to_delete">Failed to delete note. Please try again.</string>
+    <string name="feature_note_failed_to_save">Failed to save note. Please try again.</string>
+    <string name="feature_note_cd_add_note">Add note</string>
+    <string name="feature_note_empty_text_fallback">(empty)</string>
+    <string name="feature_note_empty_user_fallback">Unknown</string>
 </resources>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Mifos Initiative
+ * Copyright 2026 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,8 +19,13 @@ android {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.core.domain)
+            // RULE-FEATURE-USES-ONLY-CORE — feature modules only depend on
+            // projects.core.*, never projects.coreBase.* or projects.core.network.
+            implementation(projects.core.common)
+            implementation(projects.core.model)
+            implementation(projects.core.data)
             implementation(projects.core.designsystem)
+            implementation(projects.core.ui)
 
             implementation(compose.ui)
             implementation(compose.material3)
@@ -31,6 +36,9 @@ kotlin {
         }
 
         androidMain.dependencies {
+            // Android-only embedded Google Map preview. Genuinely platform-bound —
+            // the cross-platform map primitive is pending (see desktop/native/js
+            // actuals which stub the map row).
             implementation(libs.maps.compose)
             implementation(libs.accompanist.permission)
         }

@@ -23,7 +23,21 @@ import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * @deprecated Replaced by `com.mifos.core.network.document.api.DocumentApi` (Phase C Wave 9
+ * of store5-adoption). The new interface is suspend-only and lives next to the per-feature
+ * `core/network/<resource>/api/` layout. This legacy `DocumentService` is retained ONLY for
+ * `core.network.BaseApiManager` + the Phase-D-pending `DataManagerDocument` (still consumed
+ * by `SignatureRepositoryImp` until Wave 10).
+ */
 interface DocumentService {
+    @Deprecated(
+        message = "Use DocumentApi.getDocuments — suspend returning List<Document>.",
+        replaceWith = ReplaceWith(
+            "DocumentApi.getDocuments(entityType, entityId)",
+            "com.mifos.core.network.document.api.DocumentApi",
+        ),
+    )
     @GET("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS)
     fun getDocuments(
         @Path("entityType") entityType: String,
@@ -38,6 +52,13 @@ interface DocumentService {
      * @param description             - Mandatory - Document Description
      * @param typedFile               - Mandatory
      */
+    @Deprecated(
+        message = "Use DocumentApi.createDocument.",
+        replaceWith = ReplaceWith(
+            "DocumentApi.createDocument(entityType, entityId, request)",
+            "com.mifos.core.network.document.api.DocumentApi",
+        ),
+    )
     @POST("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS)
     suspend fun createDocument(
         @Path("entityType") entityType: String,
@@ -58,6 +79,13 @@ interface DocumentService {
      * @return ResponseBody
      */
 
+    @Deprecated(
+        message = "Use DocumentApi.downloadDocument — suspend returning HttpResponse.",
+        replaceWith = ReplaceWith(
+            "DocumentApi.downloadDocument(entityType, entityId, documentId)",
+            "com.mifos.core.network.document.api.DocumentApi",
+        ),
+    )
     @Headers("Accept: text/plain, application/json, */*")
     @GET("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS + "/{documentId}/attachment")
     fun downloadDocument(
@@ -78,6 +106,13 @@ interface DocumentService {
      * @param documentId    - Document Id
      * @return
      */
+    @Deprecated(
+        message = "Use DocumentApi.removeDocument.",
+        replaceWith = ReplaceWith(
+            "DocumentApi.removeDocument(entityType, entityId, documentId)",
+            "com.mifos.core.network.document.api.DocumentApi",
+        ),
+    )
     @DELETE("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS + "/{documentId}")
     suspend fun removeDocument(
         @Path("entityType") entityType: String,
@@ -100,6 +135,13 @@ interface DocumentService {
      * @param description             - Mandatory - Document Description
      * @param typedFile               - Mandatory
      */
+    @Deprecated(
+        message = "Use DocumentApi.updateDocument.",
+        replaceWith = ReplaceWith(
+            "DocumentApi.updateDocument(entityType, entityId, documentId, request)",
+            "com.mifos.core.network.document.api.DocumentApi",
+        ),
+    )
     @PUT("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS + "/{documentId}")
     suspend fun updateDocument(
         @Path("entityType") entityType: String,

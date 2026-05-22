@@ -16,6 +16,19 @@ import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
+/**
+ * @deprecated Pure-delegator use case. Wave 9 (Phase C of store5-adoption) replaces this with
+ * direct `DocumentRepository.removeDocument(...)` calls from the feature ViewModel, wrapped in
+ * `SubmitHandler.submit { ... }` per RULE-STORE5-FETCH-001. Retained ONLY because
+ * `feature/client` still consumes it; will be deleted in the Wave 9 → feature/client follow-up.
+ */
+@Deprecated(
+    message = "Inject DocumentRepository directly and call removeDocument(...) via submitHandler.",
+    replaceWith = ReplaceWith(
+        "DocumentRepository.removeDocument(entityType, entityId, documentId)",
+        "com.mifos.core.data.document.DocumentRepository",
+    ),
+)
 class RemoveDocumentUseCase(
     private val repository: DocumentListRepository,
 ) {
