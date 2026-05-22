@@ -20,7 +20,6 @@ internal fun Project.configureKotlinMultiplatform() {
         jvm("desktop")
         androidTarget()
         iosSimulatorArm64()
-        iosX64()
         iosArm64()
         js(IR) {
             this.nodejs()

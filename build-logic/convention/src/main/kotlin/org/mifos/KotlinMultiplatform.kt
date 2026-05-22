@@ -15,8 +15,6 @@ internal fun Project.configureKotlinMultiplatform() {
         androidTarget()
         iosSimulatorArm64()
         iosArm64()
-// removed support for iosX64 to align with Jetbrains deprecation of the macosX64 targets
-//        iosX64()
         js(IR) {
             this.nodejs()
             binaries.executable()

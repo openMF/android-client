@@ -104,7 +104,9 @@ import com.mifos.room.typeconverters.CustomTypeConverters
  * is generated code, not hand-written.
  */
 @Suppress("NO_ACTUAL_FOR_EXPECT")
-expect object MifosDatabaseConstructor : RoomDatabaseConstructor<MifosDatabase>
+expect object MifosDatabaseConstructor : RoomDatabaseConstructor<MifosDatabase> {
+    override fun initialize(): MifosDatabase
+}
 
 /**
  * Root Room 3 database for the application.

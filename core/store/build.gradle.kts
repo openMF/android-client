@@ -29,6 +29,11 @@ kotlin {
 
             // Compose runtime — needed for the @Composable appScreenStateDefaults() factory.
             implementation(compose.runtime)
+
+            implementation(projects.core.database)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.kermit.logging)
         }
     }
 }

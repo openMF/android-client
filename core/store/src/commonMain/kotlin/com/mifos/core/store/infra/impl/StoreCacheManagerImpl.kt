@@ -7,10 +7,10 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.data.infra.impl
+package com.mifos.core.store.infra.impl
 
 import co.touchlab.kermit.Logger
-import com.mifos.core.data.infra.StoreCacheManager
+import com.mifos.core.store.infra.StoreCacheManager
 import com.mifos.room.infra.dao.BookkeeperDao
 import com.mifos.room.infra.dao.DraftDao
 import org.mobilenativefoundation.store.core5.ExperimentalStoreApi

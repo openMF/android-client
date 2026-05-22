@@ -157,10 +157,10 @@ import com.mifos.core.data.repositoryImp.SyncLoanRepaymentTransactionRepositoryI
 import com.mifos.core.data.repositoryImp.SyncSavingsAccountTransactionRepositoryImp
 import com.mifos.core.data.repositoryImp.UserVerificationRepositoryImpl
 import com.mifos.core.data.infra.NetworkMonitor
-import com.mifos.core.data.infra.StoreCacheManager
+import com.mifos.core.store.infra.StoreCacheManager
 import com.mifos.core.data.infra.impl.NetworkMonitorImpl
 import com.mifos.core.data.infra.impl.RoomFetchedAtRepository
-import com.mifos.core.data.infra.impl.StoreCacheManagerImpl
+import com.mifos.core.store.infra.impl.StoreCacheManagerImpl
 import com.mifos.room.MifosDatabase
 import template.core.base.store.infra.FetchedAtRepository
 import kotlinx.coroutines.CoroutineDispatcher

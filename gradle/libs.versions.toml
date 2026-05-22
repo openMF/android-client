@@ -91,7 +91,7 @@ playScanner = "16.1.0"
 playService = "18.5.0"
 realmVersion = "1.13.0"
 roborazzi = "1.52.0"
-room = "2.8.4"
+room = "3.0.0-alpha05"
 sqliteBundled = "2.6.2"
 #roomKtxVersion = "2.7.0-rc02"
 #roomRuntimeVersion = "2.7.0-rc02"
@@ -114,24 +114,24 @@ openhtmltopdf = "1.0.10"
 kotlinxHtml = "0.12.0"
 
 # Kotlin KMP Dependencies
-kotlin = "2.2.21"
+kotlin = "2.3.20"
 kotlinInject = "0.7.2"
 kotlinxCoroutines = "1.10.2"
 kotlinxDatetime = "0.7.1"
 kotlinxImmutable = "0.4.0"
 kotlinxSerializationJson = "1.9.0"
-ksp = "2.2.21-2.0.4"
+ksp = "2.3.6"
 
 # Ktor & Ktorfit
 ktorVersion = "3.3.3"
-ktorfit = "2.7.1"
+ktorfit = "2.7.3"
 
 # Koin CMP Dependencies
 koin = "4.1.1"
 koinAnnotationsVersion = "2.1.0"
 
 # CMP Libraries
-compose-plugin = "1.9.3"
+compose-plugin = "1.10.3"
 coil = "3.3.0"
 backHandlerVersion = "2.5.0"
 constraintLayout = "0.6.0"
@@ -142,7 +142,7 @@ kermit = "2.0.8"
 fileKit = "0.12.0"
 fileKitCompose = "0.8.8"
 wire = "5.4.0"
-uiBackhandler = "1.9.3"
+uiBackhandler = "1.10.3"
 composeSignature = "1.0.1"
 krop = "0.2.0"
 # Jetbrains CMP
@@ -260,13 +260,13 @@ androidx-metrics = { group = "androidx.metrics", name = "metrics-performance", v
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxNavigation" }
 androidx-navigation-testing = { group = "androidx.navigation", name = "navigation-testing", version.ref = "androidxNavigation" }
 
-#room
-androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
-androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
-androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
-androidx-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room" }
+#Room 3
+androidx-room-compiler = { module = "androidx.room3:room3-compiler", version.ref = "room" }
+androidx-room-ktx = { module = "androidx.room3:room3-ktx", version.ref = "room" }
+androidx-room-runtime = { module = "androidx.room3:room3-runtime", version.ref = "room" }
+androidx-room-testing = { module = "androidx.room3:room3-testing", version.ref = "room" }
 androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
+room-paging = { module = "androidx.room3:room3-paging", version.ref = "room" }
 
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqliteBundled" }
 
@@ -327,7 +327,7 @@ android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", ver
 android-tools-common = { group = "com.android.tools", name = "common", version.ref = "androidTools" }
 firebase-crashlytics-gradlePlugin = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsPlugin" }
 firebase-performance-gradlePlugin = { group = "com.google.firebase", name = "perf-plugin", version.ref = "firebasePerfPlugin" }
-room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "room" }
+room-gradlePlugin = { module = "androidx.room3:room3-gradle-plugin", version.ref = "room" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 
 
@@ -484,7 +484,7 @@ androidx-navigation = {id = "androidx.navigation.safeargs", version.ref = "andro
 kotlinCocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
 
 # Hilt & Room Plugins
-room = { id = "androidx.room", version.ref = "room" }
+room = { id = "androidx.room3", version.ref = "room" }
 mifos-android-application = { id = "mifos.android.application", version = "unspecified" }
 mifos-android-application-compose = { id = "mifos.android.application.compose", version = "unspecified" }
 mifos-android-application-flavors = { id = "mifos.android.application.flavors", version = "unspecified" }
