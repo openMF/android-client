@@ -89,6 +89,8 @@ import com.mifos.room.infra.dao.FetchedAtDao
 import com.mifos.room.infra.entity.BookkeeperEntity
 import com.mifos.room.infra.entity.DraftEntity
 import com.mifos.room.infra.entity.FetchedAtEntity
+import com.mifos.room.note.dao.NoteCacheDao
+import com.mifos.room.note.entity.NoteCacheEntity
 import com.mifos.room.typeconverters.CustomTypeConverters
 
 /**
@@ -184,6 +186,8 @@ expect object MifosDatabaseConstructor : RoomDatabaseConstructor<MifosDatabase>
         DraftEntity::class,
         FetchedAtEntity::class,
         BookkeeperEntity::class,
+        // per-feature Store5 caches (Phase C)
+        NoteCacheEntity::class,
     ],
     version = MifosDatabase.VERSION,
     exportSchema = true,
@@ -209,8 +213,11 @@ abstract class MifosDatabase : RoomDatabase() {
     abstract val draftDao: DraftDao
     abstract val fetchedAtDao: FetchedAtDao
 
+    // Per-feature Store5 cache DAOs
+    abstract val noteCacheDao: NoteCacheDao
+
     companion object {
-        const val VERSION = 3
+        const val VERSION = 4
         const val DATABASE_NAME = "mifos_field_officer.db"
     }
 }
@@ -262,8 +269,35 @@ val MIGRATION_2_3: Migration = object : Migration(2, 3) {
     }
 }
 
+/**
+ * v3 → v4: adds the `note_cache` table — Phase C Wave 7 Store5 cache for notes.
+ */
+val MIGRATION_3_4: Migration = object : Migration(3, 4) {
+    override fun migrate(connection: SQLiteConnection) {
+        connection.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS `note_cache` (
+                `cacheKey` TEXT PRIMARY KEY NOT NULL,
+                `resourceType` TEXT NOT NULL,
+                `resourceId` INTEGER NOT NULL,
+                `noteId` INTEGER NOT NULL,
+                `note` TEXT NOT NULL,
+                `clientId` INTEGER,
+                `createdById` INTEGER,
+                `createdByUsername` TEXT,
+                `createdOn` TEXT,
+                `updatedById` INTEGER,
+                `updatedByUsername` TEXT,
+                `updatedOn` TEXT
+            )
+            """.trimIndent(),
+        )
+    }
+}
+
 /** All migrations to apply, in version order. */
 val MifosDatabaseMigrations: Array<Migration> = arrayOf(
     MIGRATION_1_2,
     MIGRATION_2_3,
+    MIGRATION_3_4,
 )

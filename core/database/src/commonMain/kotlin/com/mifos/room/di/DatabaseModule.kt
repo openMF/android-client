@@ -40,6 +40,9 @@ val DatabaseModule: Module = module {
     single { get<MifosDatabase>().bookkeeperDao }
     single { get<MifosDatabase>().draftDao }
     single { get<MifosDatabase>().fetchedAtDao }
+
+    // Per-feature Store5 cache DAOs (Phase C)
+    single { get<MifosDatabase>().noteCacheDao }
 }
 
 /**

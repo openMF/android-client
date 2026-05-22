@@ -60,6 +60,7 @@ import com.mifos.core.data.auth.impl.LoginRepositoryImpl
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.core.data.note.NoteRepository
 import com.mifos.core.data.note.impl.NoteRepositoryImpl
+import com.mifos.core.data.note.impl.provideNoteListStore
 import com.mifos.core.data.repository.OfflineDashboardRepository
 import com.mifos.core.data.pathtracking.PathTrackingRepository
 import com.mifos.core.data.pathtracking.impl.PathTrackingRepositoryImpl
@@ -75,6 +76,8 @@ import com.mifos.core.data.repository.SavingsAccountTransactionReceiptRepository
 import com.mifos.core.data.repository.SavingsAccountTransactionRepository
 import com.mifos.core.data.search.SearchRepository
 import com.mifos.core.data.search.impl.SearchRepositoryImpl
+import com.mifos.core.data.syncsurvey.SyncSurveysDialogRepository
+import com.mifos.core.data.syncsurvey.impl.SyncSurveysDialogRepositoryImpl
 import com.mifos.core.data.repository.ShareAccountRepository
 import com.mifos.core.data.repository.SignatureRepository
 import com.mifos.core.data.repository.SurveyListRepository
@@ -226,6 +229,7 @@ val RepositoryModule = module {
     singleOf(::SyncGroupsDialogRepositoryImp) bind SyncGroupsDialogRepository::class
     singleOf(::SyncLoanRepaymentTransactionRepositoryImp) bind SyncLoanRepaymentTransactionRepository::class
     singleOf(::SyncSavingsAccountTransactionRepositoryImp) bind SyncSavingsAccountTransactionRepository::class
+    singleOf(::SyncSurveysDialogRepositoryImpl) bind SyncSurveysDialogRepository::class
 
     // Others
     singleOf(::ActivateRepositoryImpl) bind ActivateRepository::class
@@ -241,7 +245,16 @@ val RepositoryModule = module {
     singleOf(::IndividualCollectionSheetDetailsRepositoryImp) bind IndividualCollectionSheetDetailsRepository::class
     singleOf(::NewIndividualCollectionSheetRepositoryImp) bind NewIndividualCollectionSheetRepository::class
     singleOf(::GenerateCollectionSheetRepositoryImp) bind GenerateCollectionSheetRepository::class
-    singleOf(::NoteRepositoryImpl) bind NoteRepository::class
+    // Note feature — Store5 list cache + offline-first repository (Phase C Wave 7)
+    single { provideNoteListStore(get(), get(), get()) }
+    single<NoteRepository> {
+        NoteRepositoryImpl(
+            noteApi = get(),
+            noteListStore = get(),
+            networkMonitor = get(),
+            fetchedAtRepository = get(),
+        )
+    }
     singleOf(::OfflineDashboardRepositoryImp) bind OfflineDashboardRepository::class
     singleOf(::PathTrackingRepositoryImpl) bind PathTrackingRepository::class
     singleOf(::ReportCategoryRepositoryImp) bind ReportCategoryRepository::class

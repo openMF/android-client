@@ -9,23 +9,21 @@
  */
 package com.mifos.feature.note.ui
 
-import com.mifos.core.data.store.ScreenState
-import com.mifos.core.model.objects.note.Note
-
 /**
- * MVI state for the Note list screen. The note-list read flow lives in
- * [screenState] (`ScreenState<List<Note>>`); refresh / delete-confirmation /
- * expanded-row UI lives in this top-level state.
+ * MVI state for the Note list screen.
  *
- * Note delete is a mutation — the VM exposes a separate `SubmitState<Unit>` for
- * it (see `NoteViewModel.deleteState`). This `NoteState` carries only the read
- * + per-row UI bits.
+ * The note-list read flow no longer lives on this state — it comes from
+ * `NoteViewModel.screenState` (`StateFlow<ScreenState<List<Note>>>`) driven by
+ * the Store5 `ScreenDataStream` per RULE-STORE5-FETCH-001.
+ *
+ * Delete is a mutation — `NoteViewModel.deleteState` exposes `SubmitState<Unit>`.
+ *
+ * This state carries only the per-screen UI bits (resource identity,
+ * delete-confirmation dialog visibility, expanded row id).
  */
 data class NoteState(
     val resourceId: Int = -1,
     val resourceType: String? = null,
-    val screenState: ScreenState<List<Note>> = ScreenState.Loading,
-    val isRefreshing: Boolean = false,
     val expandedNoteId: Long? = null,
     val showDeleteDialog: Boolean = false,
 )
@@ -46,8 +44,4 @@ sealed interface NoteAction {
     data object DismissDeleteDialog : NoteAction
     data class OnToggleExpanded(val id: Long?) : NoteAction
     data object DeleteNote : NoteAction
-
-    sealed interface Internal : NoteAction {
-        data object NotesLoaded : Internal
-    }
 }

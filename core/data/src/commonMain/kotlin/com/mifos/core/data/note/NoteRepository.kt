@@ -9,36 +9,40 @@
  */
 package com.mifos.core.data.note
 
+import com.mifos.core.data.note.store.NoteListKey
 import com.mifos.core.model.objects.note.CreateNoteInput
 import com.mifos.core.model.objects.note.Note
 import com.mifos.core.model.objects.note.UpdateNoteInput
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import template.core.base.store.screen.ScreenDataStream
 
 /**
  * Per-feature note repository (Phase C Wave 7 of store5-adoption).
  *
- * Modern suspend-only contract. All methods throw on HTTP failure or transport
- * error — callers wrap mutations in `SubmitHandler.submit { ... }` and wrap
- * reads in explicit try/catch (re-throwing `CancellationException`) to drive
- * `ScreenState<T>`. No legacy `DataState<*>` / `Flow<DataState<*>>`.
- *
- * Notes are not Store5-cached: they are resource-scoped lists (per client / group /
- * loan / savings account) that are CRUD-mutated frequently and have no useful
- * offline value once the user is editing. See RULE-STORE5-FETCH-001 — direct
- * suspend reads + try/catch → `ScreenState` is the documented exception.
+ * Offline-first per RULE-STORE5-FETCH-001:
+ * - **Reads** ([notesStream], [getNote]) flow through Store5 — Room is the SourceOfTruth,
+ *   Ktorfit is the Fetcher, `DecisionEngine` resolves cache-then-network + auto-refresh
+ *   on reconnect.
+ * - **Mutations** ([addNote], [updateNote], [deleteNote]) are suspend writes against the
+ *   server; the impl calls `store.fresh(key)` after success so the cache + subscribers
+ *   see the new state.
  */
 interface NoteRepository {
 
     /**
-     * Retrieve the list of notes for [resourceType] / [resourceId] in descending
-     * `createOn` order. Throws on HTTP failure or transport error.
+     * Reactive stream of notes for [keyFlow]. Re-streams on key change. Wraps
+     * the underlying `Store<NoteListKey, List<Note>>` via `asScreenStream` so
+     * the screen gets `Loading / Empty / Error / NoNetwork / Content` slots
+     * out-of-box plus auto-refresh on reconnect.
      */
-    suspend fun listNotes(
-        resourceType: String,
-        resourceId: Long,
-    ): List<Note>
+    fun notesStream(
+        keyFlow: Flow<NoteListKey>,
+        scope: CoroutineScope,
+    ): ScreenDataStream<List<Note>>
 
     /**
-     * Retrieve a single note. Throws on HTTP failure or transport error.
+     * Retrieve a single note (deep-link reload). Throws on failure.
      */
     suspend fun getNote(
         resourceType: String,
@@ -47,7 +51,8 @@ interface NoteRepository {
     ): Note
 
     /**
-     * Add a new note. Throws on HTTP failure or transport error.
+     * Add a new note. After success, invalidates the matching list cache so
+     * the new note appears in [notesStream]. Throws on failure.
      */
     suspend fun addNote(
         resourceType: String,
@@ -56,7 +61,7 @@ interface NoteRepository {
     )
 
     /**
-     * Update an existing note. Throws on HTTP failure or transport error.
+     * Update an existing note. After success, invalidates the matching list cache.
      */
     suspend fun updateNote(
         resourceType: String,
@@ -66,7 +71,7 @@ interface NoteRepository {
     )
 
     /**
-     * Delete a note. Throws on HTTP failure or transport error.
+     * Delete a note. After success, invalidates the matching list cache.
      */
     suspend fun deleteNote(
         resourceType: String,

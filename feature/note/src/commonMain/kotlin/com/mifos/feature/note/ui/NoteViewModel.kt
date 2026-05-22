@@ -13,32 +13,31 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.data.note.NoteRepository
-import com.mifos.core.data.store.DataFreshness
+import com.mifos.core.data.note.store.NoteListKey
 import com.mifos.core.data.store.ScreenState
 import com.mifos.core.data.store.SubmitState
 import com.mifos.core.data.store.submitHandler
+import com.mifos.core.model.objects.note.Note
 import com.mifos.core.ui.store.BaseViewModel
 import com.mifos.feature.note.navigation.NoteRoute
-import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 /**
  * Note list ViewModel.
  *
- * Read flow (`listNotes`) uses direct suspend + try/catch → `ScreenState<List<Note>>`
- * (no Store5 — see [NoteRepository] doc / RULE-STORE5-FETCH-001 exception for
- * resource-scoped CRUD lists). Re-throws `CancellationException` per
- * structured-concurrency contract (RULE-NO-RUN-CATCHING-001 doesn't permit
- * `runCatching` because it swallows cancellation).
+ * Reads flow through Store5 (`repository.notesStream(...) → ScreenDataStream<List<Note>>`)
+ * per RULE-STORE5-FETCH-001 — cache-then-network, auto-refresh on reconnect,
+ * `lastContent` preservation, captive-portal detection out-of-box.
  *
- * Delete uses [submitHandler] / [SubmitState] (Submitting → Submitted → Failed)
- * — same pattern as `feature/auth/LoginViewModel` and `feature/activate`.
+ * Delete uses `submitHandler<Unit>` (SubmitState lifecycle). After a successful
+ * delete the repository invalidates the Store5 cache via `store.fresh(key)`,
+ * which propagates back through `screenState` automatically — the VM does NOT
+ * need to manually trigger a reload.
  */
 class NoteViewModel(
     private val repository: NoteRepository,
@@ -47,6 +46,35 @@ class NoteViewModel(
     initialState = NoteState(),
 ) {
     private val route = savedStateHandle.toRoute<NoteRoute>()
+
+    /** Store5 key — drives cache-then-network reads for this resource. */
+    private val keyFlow = MutableStateFlow(
+        NoteListKey(
+            resourceType = route.resourceType.orEmpty(),
+            resourceId = route.resourceId.toLong(),
+        ),
+    )
+
+    /** Cold ScreenDataStream from Store5. */
+    private val notesStream = repository.notesStream(keyFlow, viewModelScope)
+
+    /**
+     * Screen-state for the Compose layer. Maps a Store5 `Content` with an empty
+     * list to `Empty` so `ScreenContent` renders the "no notes" slot.
+     */
+    val screenState: StateFlow<ScreenState<List<Note>>> = notesStream.state
+        .map { state ->
+            if (state is ScreenState.Content<List<Note>> && state.data.isEmpty()) {
+                ScreenState.Empty
+            } else {
+                state
+            }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = ScreenState.Loading,
+        )
 
     private val deleteSubmit = viewModelScope.submitHandler<Unit>()
 
@@ -63,50 +91,6 @@ class NoteViewModel(
                 resourceType = route.resourceType,
             )
         }
-        loadNotes(initial = true)
-
-        // After a successful delete, reload the list and reset the submit handler.
-        deleteSubmit.state
-            .onEach { submit ->
-                if (submit is SubmitState.Submitted) {
-                    loadNotes(initial = false)
-                    deleteSubmit.reset()
-                }
-            }
-            .launchIn(viewModelScope)
-    }
-
-    private fun loadNotes(initial: Boolean) {
-        val type = state.resourceType ?: return
-        viewModelScope.launch {
-            if (initial) {
-                mutableStateFlow.update { it.copy(screenState = ScreenState.Loading) }
-            }
-            try {
-                val notes = repository.listNotes(type, route.resourceId.toLong())
-                val screen = if (notes.isEmpty()) {
-                    ScreenState.Empty
-                } else {
-                    ScreenState.Content(data = notes, freshness = DataFreshness.FRESH)
-                }
-                mutableStateFlow.update {
-                    it.copy(
-                        screenState = screen,
-                        isRefreshing = false,
-                        expandedNoteId = null,
-                    )
-                }
-            } catch (ce: CancellationException) {
-                throw ce
-            } catch (t: Throwable) {
-                mutableStateFlow.update {
-                    it.copy(
-                        screenState = ScreenState.Error(t),
-                        isRefreshing = false,
-                    )
-                }
-            }
-        }
     }
 
     fun onDeleteConsumed() {
@@ -120,12 +104,8 @@ class NoteViewModel(
                 sendEvent(NoteEvent.NavigateBack)
             }
 
-            NoteAction.OnRetry -> loadNotes(initial = true)
-
-            NoteAction.OnRefresh -> {
-                mutableStateFlow.update { it.copy(isRefreshing = true) }
-                loadNotes(initial = false)
-            }
+            NoteAction.OnRetry -> notesStream.retry()
+            NoteAction.OnRefresh -> notesStream.refresh()
 
             NoteAction.OnClickEditScreen -> sendEvent(NoteEvent.NavigateEditNote)
             NoteAction.OnClickAddScreen -> sendEvent(NoteEvent.NavigateAddNote)
@@ -145,13 +125,15 @@ class NoteViewModel(
             NoteAction.DeleteNote -> {
                 val type = state.resourceType ?: return
                 val id = state.expandedNoteId ?: return
-                mutableStateFlow.update { it.copy(showDeleteDialog = false) }
+                mutableStateFlow.update {
+                    it.copy(showDeleteDialog = false, expandedNoteId = null)
+                }
                 deleteSubmit.submit {
                     repository.deleteNote(type, route.resourceId.toLong(), id)
+                    // Repository.deleteNote calls store.fresh(key) internally — the
+                    // screenState StateFlow will receive the updated list automatically.
                 }
             }
-
-            is NoteAction.Internal.NotesLoaded -> Unit
         }
     }
 }

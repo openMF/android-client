@@ -82,6 +82,7 @@ internal fun NoteScreen(
     viewModel: NoteViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+    val screenState by viewModel.screenState.collectAsStateWithLifecycle()
     val deleteState by viewModel.deleteState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -112,6 +113,7 @@ internal fun NoteScreen(
 
     NoteScreenContent(
         state = state,
+        screenState = screenState,
         snackbarHostState = snackbarHostState,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
         navController = navController,
@@ -132,12 +134,18 @@ internal fun NoteScreen(
 @Composable
 internal fun NoteScreenContent(
     state: NoteState,
+    screenState: ScreenState<List<Note>>,
     snackbarHostState: SnackbarHostState,
     onAction: (NoteAction) -> Unit,
     navController: NavController,
     modifier: Modifier = Modifier,
 ) {
     val pullRefreshState = rememberPullToRefreshState()
+    // Refresh indicator shows while Store5 is fetching the latest. `Loading` means
+    // initial-load (no cache); fresh content with a network refetch in flight is
+    // expressed by the `freshness == UPDATING` flag on `ScreenState.Content`.
+    val isRefreshing = screenState is ScreenState.Loading ||
+        (screenState is ScreenState.Content<*> && screenState.freshness == DataFreshness.UPDATING)
 
     MifosScaffold(
         snackbarHostState = snackbarHostState,
@@ -148,11 +156,11 @@ internal fun NoteScreenContent(
             PullToRefreshBox(
                 state = pullRefreshState,
                 modifier = Modifier.fillMaxSize(),
-                isRefreshing = state.isRefreshing,
+                isRefreshing = isRefreshing,
                 onRefresh = { onAction(NoteAction.OnRefresh) },
             ) {
                 ScreenContent(
-                    state = state.screenState,
+                    state = screenState,
                     onRetry = { onAction(NoteAction.OnRetry) },
                     modifier = Modifier.fillMaxSize(),
                 ) { notes, _ ->
@@ -267,9 +275,8 @@ private val demoNotes: List<Note> = listOf(
 @Composable
 private fun PreviewNoteScreenContent() {
     NoteScreenContent(
-        state = NoteState(
-            screenState = ScreenState.Content(data = demoNotes, freshness = DataFreshness.FRESH),
-        ),
+        state = NoteState(),
+        screenState = ScreenState.Content(data = demoNotes, freshness = DataFreshness.FRESH),
         snackbarHostState = remember { SnackbarHostState() },
         onAction = {},
         navController = rememberNavController(),
