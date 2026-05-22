@@ -28,6 +28,9 @@ android {
 
 kotlin {
     sourceSets {
+        commonMain {
+            kotlin.exclude("**/legacy/**")
+        }
         commonMain.dependencies {
             implementation(libs.koin.core)
             implementation(libs.kotlinx.serialization.json)

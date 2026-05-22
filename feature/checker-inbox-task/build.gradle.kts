@@ -18,6 +18,9 @@ android {
 
 kotlin {
     sourceSets{
+        commonMain {
+            kotlin.exclude("**/legacy/**")
+        }
         commonMain.dependencies {
             implementation(projects.core.domain)
 
