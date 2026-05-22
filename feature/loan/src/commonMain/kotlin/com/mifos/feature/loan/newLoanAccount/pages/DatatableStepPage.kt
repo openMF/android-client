@@ -103,20 +103,18 @@ fun DatatableStepPage(
         )
         Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
-        // Render each user-editable column. PK + audit columns filtered out;
+        // Render each user-editable column. PK + audit + FK columns filtered out;
         // headers with null `dataTableColumnName` are also skipped (defensive —
         // @SerialName now ensures it's populated for normal Fineract responses).
         table.columnHeaderData
-            .filter { header ->
-                header.columnPrimaryKey == false &&
-                    header.dataTableColumnName != null &&
-                    header.dataTableColumnName !in SYSTEM_COLUMNS
-            }
+            .filter { header -> header.isUserEditable() }
             .forEach { header ->
                 DatatableField(
                     header = header,
                     currentValue = values[header.dataTableColumnName],
                     onValueChange = { v ->
+                        // Submit payload uses the RAW columnName (incl. _cd_ suffix);
+                        // that's what Fineract expects on POST /loans.datatables[].data.
                         header.dataTableColumnName?.let { onValueChange(it, v) }
                     },
                 )
@@ -142,7 +140,55 @@ fun DatatableStepPage(
     }
 }
 
-private val SYSTEM_COLUMNS = setOf("created_at", "updated_at", "createdAt", "updatedAt")
+/**
+ * Columns Fineract auto-fills on insert — never user input.
+ *  - `created_at` / `updated_at` (+ camelCase): audit timestamps.
+ *  - `loan_id` / `client_id` / etc: foreign key to the parent entity (m_loan,
+ *    m_client, m_group, …). Visible in the API response because the schema is
+ *    flat, but the backend populates the FK from the parent on POST.
+ *
+ * Discovered at runtime — product 1's INSTITUCION_FINANCIERA datatable surfaces a
+ * `loan_id` column with `isColumnPrimaryKey: false`, so the PK filter alone is
+ * insufficient. Web-app strips these by name; we do the same.
+ */
+private val SYSTEM_COLUMNS = setOf(
+    "created_at", "updated_at", "createdAt", "updatedAt",
+    "loan_id", "client_id", "group_id", "savings_id", "share_id", "office_id",
+)
+
+private fun ColumnHeader.isUserEditable(): Boolean {
+    val name = dataTableColumnName ?: return false
+    return columnPrimaryKey == false && name !in SYSTEM_COLUMNS
+}
+
+/**
+ * Pick a human label for a column.
+ *
+ * Codelookup columns are stored as `{columnCode}_cd_{descriptiveName}`. Either
+ * half can be the more descriptive one depending on how the Fineract admin set
+ * the schema up — and the descriptive half is sometimes truncated by Fineract's
+ * own column-length limit. Heuristic: pick whichever side is LONGER.
+ *
+ * Examples (verified against product 1 + 7 samples):
+ *  - `STATE_cd_ESTADO`                                  code=5 suffix=6  → ESTADO
+ *  - `YesNo_cd_YA_CUENTA_CON_UN_NEGOCIO`                code=5 suffix=24 → YA_CUENTA_CON_UN_NEGOCIO
+ *  - `YesNo_cd_QUIERE_EMPRENDER_UN_NEGOCIO`             code=5 suffix=27 → QUIERE_EMPRENDER_UN_NEGOCIO
+ *  - `CREDITO_DE_ALGUNA_INSTITUCION_FINANCIERA_cd_CREDITO_DE_ALGUNA_I`
+ *                                                       code=40 suffix=19 → CREDITO_DE_ALGUNA_INSTITUCION_FINANCIERA
+ *  - `NOMBRE_RAZON_SOCIAL` (no `_cd_`)                  → NOMBRE_RAZON_SOCIAL
+ *
+ * History:
+ *  - v1 used substringBefore → STATE worked but `YesNo_cd_*` collapsed.
+ *  - v2 used substringAfter → YesNo split fine but truncated `CREDITO_…_I`.
+ *  - v3 (current) picks the longer of (code, suffix).
+ */
+private fun ColumnHeader.displayLabel(): String {
+    val name = dataTableColumnName ?: return ""
+    if ("_cd_" !in name) return name
+    val suffix = name.substringAfter("_cd_")
+    val code = columnCode.orEmpty()
+    return if (code.length > suffix.length) code else suffix
+}
 
 @Composable
 private fun DatatableField(
@@ -150,7 +196,7 @@ private fun DatatableField(
     currentValue: Any?,
     onValueChange: (Any) -> Unit,
 ) {
-    val label = header.dataTableColumnName ?: return
+    val label = header.displayLabel().ifBlank { return }
     when (header.columnDisplayType) {
         "STRING" -> TextFieldRow(
             value = currentValue as? String ?: "",

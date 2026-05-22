@@ -32,6 +32,7 @@ import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.network.model.CollateralItem
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.core.common.utils.ApiDateFormatter
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState.DialogState
 import com.mifos.room.entities.noncore.ColumnHeader
@@ -1167,9 +1168,14 @@ private fun buildDatatablePayloadMap(
     headers: List<ColumnHeader?>,
     rawValues: Map<String, Any>,
 ): Map<String, Any> {
+    // Fineract parses datatable date columns using `dateFormat` from the same map.
+    // The DatatableStepPage date widget renders via `DateHelper.getDateAsStringFromLong`
+    // which formats as `dd-MM-yyyy` (i.e. DateHelper.SHORT_MONTH). The two MUST match
+    // — using ApiDateFormatter.DATE_FORMAT ("dd MMMM yyyy") here was rejected by the
+    // server with "invalid value" for product 7's CONDICION.FECHA field.
     val payload = mutableMapOf<String, Any>(
-        "dateFormat" to ApiDateFormatter.DATE_FORMAT,
-        "locale" to ApiDateFormatter.LOCALE,
+        "dateFormat" to DateHelper.SHORT_MONTH,
+        "locale" to Constants.LOCALE_EN,
     )
     headers.filterNotNull().forEach { header ->
         if (header.columnPrimaryKey == true) return@forEach
@@ -1181,7 +1187,18 @@ private fun buildDatatablePayloadMap(
     return payload
 }
 
-private val SYSTEM_COLUMNS = setOf("created_at", "updated_at", "createdAt", "updatedAt")
+/**
+ * Columns Fineract auto-populates server-side on insert — never user input.
+ * Audit timestamps + foreign keys to the parent entity (m_loan auto-fills
+ * `loan_id`, m_client auto-fills `client_id`, etc). Kept in sync with the
+ * same set in DatatableStepPage.SYSTEM_COLUMNS. (Two definitions because
+ * the page is in a different module; consider extracting to core/database
+ * if a third consumer appears.)
+ */
+private val SYSTEM_COLUMNS = setOf(
+    "created_at", "updated_at", "createdAt", "updatedAt",
+    "loan_id", "client_id", "group_id", "savings_id", "share_id", "office_id",
+)
 
 private fun coerceDatatableValue(value: Any, displayType: String?): Any {
     if (value !is String) return value
