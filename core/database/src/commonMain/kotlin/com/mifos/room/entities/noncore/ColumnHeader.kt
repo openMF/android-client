@@ -36,9 +36,6 @@ data class ColumnHeader(
 
     val columnLength: Int? = null,
 
-    // GAP-DT-014 (runtime 2026-05-22): Fineract field is `columnName`. Without
-    // @SerialName, this stays null when LoanTemplate.dataTables deserializes,
-    // which made the dynamic stepper form blank (no labels, every filter rejected).
     @SerialName("columnName")
     val dataTableColumnName: String? = null,
 
@@ -47,8 +44,6 @@ data class ColumnHeader(
     @SerialName("isColumnNullable")
     val columnNullable: Boolean? = null,
 
-    // Critical for the filter `columnPrimaryKey == false`. Without @SerialName the
-    // field was always null → `null == false` is false → ALL columns filtered out.
     @SerialName("isColumnPrimaryKey")
     val columnPrimaryKey: Boolean? = null,
 
