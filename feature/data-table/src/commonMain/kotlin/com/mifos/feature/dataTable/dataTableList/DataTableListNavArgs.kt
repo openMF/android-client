@@ -9,11 +9,19 @@
  */
 package com.mifos.feature.dataTable.dataTableList
 
-import FormWidgetDTO
 import com.mifos.room.entities.noncore.DataTableEntity
 import kotlinx.serialization.Polymorphic
 import kotlinx.serialization.Serializable
 
+/**
+ * Navigation arguments for `DataTableListScreen`.
+ *
+ * The legacy `formWidget` parameter (a pre-built `List<List<FormWidgetDTO>>`) has
+ * been removed. The screen now derives form state directly from
+ * `DataTableEntity.columnHeaderData`, mirroring the Mifos WebApp's approach.
+ * This eliminates the `FormWidgetDTO` serialisation dependency which was never
+ * ported to the KMP codebase.
+ */
 @Serializable
 data class DataTableListNavArgs(
 
@@ -23,7 +31,4 @@ data class DataTableListNavArgs(
 
     @Polymorphic
     val payload: Any?,
-
-    val formWidget: MutableList<List<FormWidgetDTO>>,
-
 )

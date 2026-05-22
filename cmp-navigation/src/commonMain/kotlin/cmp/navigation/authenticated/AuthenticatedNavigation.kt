@@ -17,7 +17,9 @@ import com.mifos.feature.about.aboutDestination
 import com.mifos.feature.activate.activateDestination
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
 import com.mifos.feature.client.navigation.navigateClientDetailsScreen
+import com.mifos.core.common.utils.Constants
 import com.mifos.feature.dataTable.navigation.dataTableNavGraph
+import com.mifos.feature.dataTable.navigation.navigateDataTableList
 import com.mifos.feature.dataTable.navigation.navigateToDataTable
 import com.mifos.feature.document.navigation.documentListScreen
 import com.mifos.feature.document.navigation.navigateToDocumentListScreen
@@ -163,9 +165,15 @@ internal fun NavGraphBuilder.authenticatedGraph(
 
         addLoanAccountScreen(
             onBackPressed = navController::popBackStack,
-            dataTable = { _, _ ->
-//                navController.navigateDataTableList(dataTable, payload, Constants.CLIENT_LOAN)
-//                TODO()
+            // GAP-DT-001: wire dataTable callback to DataTableListScreen so
+            // product-specific datatables collected on the loan template are
+            // rendered as additional steps before the loan is created.
+            dataTable = { dataTables, payload ->
+                navController.navigateDataTableList(
+                    dataTableList = dataTables,
+                    payload = payload,
+                    requestType = Constants.CLIENT_LOAN,
+                )
             },
         )
 

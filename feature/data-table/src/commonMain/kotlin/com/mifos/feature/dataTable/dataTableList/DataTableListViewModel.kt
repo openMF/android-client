@@ -9,8 +9,6 @@
  */
 package com.mifos.feature.dataTable.dataTableList
 
-import FormSpinnerDTO
-import FormWidgetDTO
 import androidclient.feature.data_table.generated.resources.Res
 import androidclient.feature.data_table.generated.resources.feature_data_table_generic_failure_message
 import androidclient.feature.data_table.generated.resources.feature_data_table_loan_creation_success
@@ -28,6 +26,7 @@ import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.client.ClientPayloadEntity
+import com.mifos.room.entities.noncore.ColumnHeader
 import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.noncore.DataTablePayload
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,6 +35,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
@@ -43,6 +43,11 @@ import kotlinx.serialization.modules.polymorphic
 
 /**
  * Created by Aditya Gupta on 10/08/23.
+ *
+ * GAP-DT-005 rewrite (2026-05-22): removed the obsolete `FormWidgetDTO` /
+ * `FormWidgetModel` dependency. Form state is now held in a per-table
+ * `Map<columnName, Any>` keyed by table index, populated by stateful inputs
+ * in the screen, and serialised into `DataTablePayload` on save.
  */
 class DataTableListViewModel(
     private val repository: DataTableListRepository,
@@ -60,10 +65,6 @@ class DataTableListViewModel(
 
     private val json = Json {
         serializersModule = SerializersModule {
-            polymorphic(FormWidgetDTO::class) {
-                subclass(FormSpinnerDTO::class, FormSpinnerDTO.serializer())
-            }
-
             polymorphic(Any::class) {
                 subclass(LoansPayload::class, LoansPayload.serializer())
                 subclass(GroupLoanPayload::class, GroupLoanPayload.serializer())
@@ -83,39 +84,71 @@ class DataTableListViewModel(
     private val _dataTableList: MutableStateFlow<List<DataTableEntity>?> = MutableStateFlow(null)
     val dataTableList: StateFlow<List<DataTableEntity>?> = _dataTableList.asStateFlow()
 
+    /**
+     * Per-table form values, keyed by table index → (column name → value).
+     * Populated by [updateFieldValue] from stateful screen inputs (GAP-DT-006).
+     */
+    private val _formValues: MutableStateFlow<Map<Int, Map<String, Any>>> =
+        MutableStateFlow(emptyMap())
+    val formValues: StateFlow<Map<Int, Map<String, Any>>> = _formValues.asStateFlow()
+
     private var requestType: Int = 0
-    private var dataTablePayloadElements: ArrayList<DataTablePayload>? = null
+    private var dataTablePayloadElements: ArrayList<DataTablePayload> = ArrayList()
     private var clientLoanPayload: LoansPayload? = null
     private var groupLoanPayload: GroupLoanPayload? = null
     private var clientPayload: ClientPayloadEntity? = null
-    private var formWidgetsList: MutableList<List<FormWidgetDTO>> = ArrayList()
 
     fun initArgs(
         dataTables: List<DataTableEntity>,
         requestType: Int,
-        formWidgetsList: MutableList<List<FormWidgetDTO>>,
         payload: Any?,
     ) {
         _dataTableList.value = dataTables
         this.requestType = requestType
-        this.formWidgetsList = formWidgetsList
         when (requestType) {
             Constants.CLIENT_LOAN -> clientLoanPayload = payload as LoansPayload?
             Constants.GROUP_LOAN -> groupLoanPayload = payload as GroupLoanPayload?
             Constants.CREATE_CLIENT -> clientPayload = payload as ClientPayloadEntity?
         }
+        // Seed an empty form map per table so the screen can read collected values.
+        _formValues.value = dataTables.indices.associateWith { emptyMap() }
+        _dataTableListUiState.value = DataTableListUiState.Success()
     }
 
-    fun processDataTable() {
-        val dataTables = dataTableList.value ?: listOf()
-        for (i in dataTables.indices) {
-            val dataTablePayload = DataTablePayload(
-                registeredTableName = dataTables[i].registeredTableName,
-                data = addDataTableInput(widgets = formWidgetsList[i]),
-            )
-
-            dataTablePayloadElements?.add(dataTablePayload)
+    /**
+     * Update a single field value. Called by the screen on every input change
+     * (GAP-DT-006: lifted-state input).
+     */
+    fun updateFieldValue(tableIndex: Int, columnName: String, value: Any) {
+        _formValues.update { current ->
+            val tableMap = current[tableIndex].orEmpty().toMutableMap()
+            tableMap[columnName] = value
+            current + (tableIndex to tableMap)
         }
+    }
+
+    /**
+     * Collect each table's form values into a `DataTablePayload`, attach to the
+     * outgoing loan/client payload, and submit.
+     *
+     * GAP-DT-005: replaces the legacy `addDataTableInput(widgets: List<Any>)`
+     * that depended on `FormWidgetModel` / `SpinnerModel` classes.
+     */
+    fun processDataTable() {
+        val dataTables = dataTableList.value.orEmpty()
+        dataTablePayloadElements.clear()
+
+        for (i in dataTables.indices) {
+            val rawValues = _formValues.value[i].orEmpty()
+            val data = buildPayloadMap(dataTables[i].columnHeaderData, rawValues)
+            dataTablePayloadElements.add(
+                DataTablePayload(
+                    registeredTableName = dataTables[i].registeredTableName,
+                    data = data,
+                ),
+            )
+        }
+
         when (requestType) {
             Constants.CLIENT_LOAN -> {
                 clientLoanPayload?.dataTables = dataTablePayloadElements
@@ -130,6 +163,38 @@ class DataTableListViewModel(
             Constants.GROUP_LOAN -> {
                 createGroupLoanAccount(groupLoanPayload)
             }
+        }
+    }
+
+    /**
+     * Build the Fineract data-table payload map. Skips system columns
+     * (primary keys, e.g. `loan_id`) and applies type coercion based on
+     * `columnDisplayType`.
+     */
+    private fun buildPayloadMap(
+        headers: List<ColumnHeader>,
+        rawValues: Map<String, Any>,
+    ): Map<String, Any> {
+        val payload = mutableMapOf<String, Any>(
+            "dateFormat" to ApiDateFormatter.DATE_FORMAT,
+            "locale" to ApiDateFormatter.LOCALE,
+        )
+        headers
+            .filter { it.columnPrimaryKey == false } // GAP-DT-004: skip system PK columns (loan_id, etc.)
+            .forEach { header ->
+                val name = header.dataTableColumnName ?: return@forEach
+                val raw = rawValues[name] ?: return@forEach
+                payload[name] = coerce(raw, header.columnDisplayType)
+            }
+        return payload
+    }
+
+    private fun coerce(value: Any, displayType: String?): Any {
+        if (value !is String) return value
+        return when (displayType) {
+            DataTableColumnType.INTEGER -> value.toIntOrNull() ?: 0
+            DataTableColumnType.DECIMAL, DataTableColumnType.FLOAT -> value.toDoubleOrNull() ?: 0.0
+            else -> value
         }
     }
 
@@ -197,29 +262,5 @@ class DataTableListViewModel(
                     DataTableListUiState.ShowMessage(Res.string.feature_data_table_something_went_wrong)
             }
         }
-    }
-
-    fun addDataTableInput(widgets: List<Any>): Map<String, Any> {
-        val payload = mutableMapOf<String, Any>()
-        payload["dateFormat"] = ApiDateFormatter.DATE_FORMAT
-        payload["locale"] = ApiDateFormatter.LOCALE
-
-        for (widget in widgets) {
-            when (widget) {
-                is FormWidgetModel -> {
-                    payload[widget.propertyName] = when (widget.returnType) {
-                        BaseFormWidget.SCHEMA_KEY_INT -> widget.value.toIntOrNull() ?: 0
-                        BaseFormWidget.SCHEMA_KEY_DECIMAL -> widget.value.toDoubleOrNull() ?: 0.0
-                        else -> widget.value
-                    }
-                }
-
-                is SpinnerModel -> {
-                    payload[widget.propertyName] = widget.getSelectedId()
-                }
-            }
-        }
-
-        return payload
     }
 }

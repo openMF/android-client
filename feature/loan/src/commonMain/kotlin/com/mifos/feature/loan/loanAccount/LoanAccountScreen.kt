@@ -621,8 +621,22 @@ private fun LoanAccountContent(
                     linkAccountId = selectedLinkSavingsId,
                     interestRatePerPeriod = nominal.toDouble(),
                 )
-                if (loanTemplate.dataTables.isNotEmpty()) {
-                    dataTable(loanTemplate.dataTables, loadPayload)
+                // DEBUG: trace what came back from /loans/template — datatables variance per product:
+                //   product 1   → 5 valid       → should navigate
+                //   product 7   → 4 nulls + 5 valid → should navigate (only valid ones)
+                //   products 8,10 → all nulls    → should NOT navigate
+                //   products 2-6,9,15 → key missing → should NOT navigate
+                co.touchlab.kermit.Logger.d(
+                    tag = "DataTableGate",
+                    messageString = "submit: productId=$selectedLoanProductId " +
+                        "dataTables.size=${loanTemplate.dataTables.size} " +
+                        "names=${loanTemplate.dataTables.map { it?.registeredTableName }}",
+                )
+                // Filter null entries (Fineract returns `[null,null,...]` for some products — see loan_product_{8,10}.json).
+                // kotlinx-serialization tolerates them only because the type is now ArrayList<DataTableEntity?>.
+                val realDataTables = loanTemplate.dataTables.filterNotNull()
+                if (realDataTables.isNotEmpty()) {
+                    dataTable(ArrayList(realDataTables), loadPayload)
                 } else {
                     createLoanAccount(loadPayload)
                 }

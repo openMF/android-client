@@ -10,6 +10,7 @@
 package com.mifos.core.network.model
 
 import com.mifos.room.entities.noncore.DataTablePayload
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
@@ -43,6 +44,11 @@ data class LoansPayload(
     var loanOfficerId: Int? = null,
     var fundId: Int? = null,
     var linkAccountId: Int? = null,
+    // GAP-DT-008 (submit side): Fineract expects `"datatables"` (all-lowercase).
+    // Web-app confirms this — `create-loans-account.component.ts:251` posts
+    // `payload['datatables'] = datatables`. Without @SerialName the field would
+    // serialize as `"dataTables"` and the backend would still 403.
+    @SerialName("datatables")
     var dataTables: ArrayList<DataTablePayload>? = null,
     var externalId: String? = null,
 )

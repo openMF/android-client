@@ -74,14 +74,13 @@ fun DataTableListScreen(
 ) {
     val dataTables = viewModel.arg.dataTableList
     val requestType = viewModel.arg.requestType
-    val formWidgetsList = viewModel.arg.formWidget
     val payload = viewModel.arg.payload
     val uiState by viewModel.dataTableListUiState.collectAsStateWithLifecycle()
     val userStatus by viewModel.userStatus.collectAsStateWithLifecycle()
     val dataTableList by viewModel.dataTableList.collectAsStateWithLifecycle()
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.initArgs(dataTables, requestType, formWidgetsList, payload)
+        viewModel.initArgs(dataTables, requestType, payload)
     }
 
     DataTableListScreen(
@@ -90,6 +89,7 @@ fun DataTableListScreen(
         onBackPressed = onBackPressed,
         clientCreated = { client -> clientCreated(client, userStatus) },
         onSaveClicked = { viewModel.processDataTable() },
+        onFieldChanged = viewModel::updateFieldValue,
     )
 }
 
@@ -100,6 +100,7 @@ fun DataTableListScreen(
     onBackPressed: () -> Unit,
     clientCreated: (ClientPayloadEntity) -> Unit,
     onSaveClicked: () -> Unit,
+    onFieldChanged: (tableIndex: Int, columnName: String, value: Any) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
@@ -117,6 +118,7 @@ fun DataTableListScreen(
             DataTableListContent(
                 dataTableList = dataTableList,
                 onSaveClicked = onSaveClicked,
+                onFieldChanged = onFieldChanged,
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -136,14 +138,15 @@ fun DataTableListScreen(
                     uiState.client?.let { client ->
                         clientCreated(client)
                     } ?: run {
-                        val message = when {
-                            uiState.message != null -> stringResource(uiState.message)
-                            else -> stringResource(Res.string.feature_data_table_something_went_wrong)
+                        // Initial Success() emitted by initArgs has no message and no client —
+                        // it's the "ready to edit" signal, not a completion event.
+                        if (uiState.message != null) {
+                            val message = stringResource(uiState.message)
+                            LaunchedEffect(key1 = message) {
+                                snackBarHostState.showSnackbar(message)
+                            }
+                            onBackPressed()
                         }
-                        LaunchedEffect(key1 = message) {
-                            snackBarHostState.showSnackbar(message)
-                        }
-                        onBackPressed()
                     }
                 }
             }
@@ -155,6 +158,7 @@ fun DataTableListScreen(
 fun DataTableListContent(
     dataTableList: List<DataTableEntity>,
     onSaveClicked: () -> Unit,
+    onFieldChanged: (tableIndex: Int, columnName: String, value: Any) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
@@ -164,7 +168,7 @@ fun DataTableListContent(
             .fillMaxSize()
             .verticalScroll(state = scrollState),
     ) {
-        for (table in dataTableList) {
+        dataTableList.forEachIndexed { index, table ->
             Text(
                 text = table.registeredTableName ?: "",
                 fontWeight = FontWeight.Bold,
@@ -175,7 +179,12 @@ fun DataTableListContent(
 
             Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
-            TableColumnHeader(table = table)
+            TableColumnHeader(
+                table = table,
+                onFieldChanged = { columnName, value ->
+                    onFieldChanged(index, columnName, value)
+                },
+            )
         }
 
         Button(
@@ -197,131 +206,163 @@ fun DataTableListContent(
 @Composable
 fun TableColumnHeader(
     table: DataTableEntity,
+    onFieldChanged: (columnName: String, value: Any) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        table.columnHeaderData.filter { it.columnPrimaryKey != null }.forEach { columnHeader ->
-            when (columnHeader.columnDisplayType) {
-                BaseFormWidget.SCHEMA_KEY_STRING, BaseFormWidget.SCHEMA_KEY_TEXT -> {
-                    MifosOutlinedTextField(
-                        value = "",
-                        onValueChange = {},
-                        label = columnHeader.dataTableColumnName ?: "",
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.md))
-                }
-
-                BaseFormWidget.SCHEMA_KEY_INT, BaseFormWidget.SCHEMA_KEY_DECIMAL -> {
-                    MifosOutlinedTextField(
-                        value = "",
-                        onValueChange = {},
-                        label = columnHeader.dataTableColumnName ?: "",
-                        keyboardType = KeyboardType.Number,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = KptTheme.spacing.sm),
-                    )
-
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.md))
-                }
-
-                BaseFormWidget.SCHEMA_KEY_CODELOOKUP, BaseFormWidget.SCHEMA_KEY_CODEVALUE -> {
-                    var selectedValue by remember { mutableStateOf("") }
-                    val columnValueStrings = columnHeader.columnValues.map { it.value.orEmpty() }
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = KptTheme.spacing.sm),
-                    ) {
-                        MifosTextFieldDropdown(
-                            value = selectedValue,
-                            onValueChanged = { selectedValue = it },
-                            label = columnHeader.dataTableColumnName,
+        // GAP-DT-004: filter to user-editable columns. `columnPrimaryKey == false`
+        // skips Fineract system columns (e.g. loan_id, created_at, updated_at)
+        // and `null` placeholders. The legacy filter `!= null` mistakenly kept
+        // the primary-key column itself.
+        table.columnHeaderData
+            .filter { it.columnPrimaryKey == false }
+            .forEach { columnHeader ->
+                val name = columnHeader.dataTableColumnName ?: return@forEach
+                when (columnHeader.columnDisplayType) {
+                    DataTableColumnType.STRING, DataTableColumnType.TEXT -> {
+                        // GAP-DT-006: stateful input — lift value to ViewModel via onFieldChanged.
+                        var value by rememberSaveable(name) { mutableStateOf("") }
+                        MifosOutlinedTextField(
+                            value = value,
+                            onValueChange = {
+                                value = it
+                                onFieldChanged(name, it)
+                            },
+                            label = name,
                             modifier = Modifier.fillMaxWidth(),
-                            readOnly = true,
-                            options = columnValueStrings,
-                            onOptionSelected = { _, item -> selectedValue = item },
                         )
+
+                        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
                     }
 
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.md))
-                }
-
-                BaseFormWidget.SCHEMA_KEY_DATE -> {
-                    var showDatePicker by rememberSaveable { mutableStateOf(false) }
-                    var selectedDate by rememberSaveable {
-                        mutableLongStateOf(
-                            Clock.System.now().toEpochMilliseconds(),
+                    DataTableColumnType.INTEGER, DataTableColumnType.DECIMAL,
+                    DataTableColumnType.FLOAT,
+                    -> {
+                        var value by rememberSaveable(name) { mutableStateOf("") }
+                        MifosOutlinedTextField(
+                            value = value,
+                            onValueChange = {
+                                value = it
+                                onFieldChanged(name, it)
+                            },
+                            label = name,
+                            keyboardType = KeyboardType.Number,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = KptTheme.spacing.sm),
                         )
-                    }
-                    val datePickerState = rememberDatePickerState(
-                        initialSelectedDateMillis = selectedDate,
-                        selectableDates = object : SelectableDates {
-                            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                                return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
-                            }
-                        },
-                    )
 
-                    if (showDatePicker) {
-                        DatePickerDialog(
-                            onDismissRequest = {
-                                showDatePicker = false
-                            },
-                            confirmButton = {
-                                TextButton(
-                                    onClick = {
-                                        showDatePicker = false
-                                        datePickerState.selectedDateMillis?.let {
-                                            selectedDate = it
-                                        }
-                                    },
-                                ) { Text(stringResource(Res.string.feature_data_table_select_date)) }
-                            },
-                            dismissButton = {
-                                TextButton(
-                                    onClick = {
-                                        showDatePicker = false
-                                    },
-                                ) { Text(stringResource(Res.string.feature_data_table_dismiss)) }
-                            },
+                        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+                    }
+
+                    DataTableColumnType.CODELOOKUP, DataTableColumnType.CODEVALUE -> {
+                        var selectedValue by rememberSaveable(name) { mutableStateOf("") }
+                        val columnValueStrings = columnHeader.columnValues.map { it.value.orEmpty() }
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = KptTheme.spacing.sm),
                         ) {
-                            DatePicker(state = datePickerState)
+                            MifosTextFieldDropdown(
+                                value = selectedValue,
+                                onValueChanged = {
+                                    selectedValue = it
+                                    onFieldChanged(name, it)
+                                },
+                                label = name,
+                                modifier = Modifier.fillMaxWidth(),
+                                readOnly = true,
+                                options = columnValueStrings,
+                                onOptionSelected = { _, item ->
+                                    selectedValue = item
+                                    onFieldChanged(name, item)
+                                },
+                            )
                         }
+
+                        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
                     }
 
-                    MifosDatePickerTextField(
-                        value = DateHelper.getDateAsStringFromLong(selectedDate),
-                        label = columnHeader.dataTableColumnName ?: "",
-                        openDatePicker = {
-                            showDatePicker = true
-                        },
-                    )
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.md))
-                }
-
-                BaseFormWidget.SCHEMA_KEY_BOOL -> {
-                    var checked by remember { mutableStateOf(false) }
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(vertical = KptTheme.spacing.sm),
-                    ) {
-                        Text(
-                            text = columnHeader.dataTableColumnName ?: "",
-                            modifier = Modifier.weight(1f),
+                    DataTableColumnType.DATE, DataTableColumnType.DATETIME -> {
+                        var showDatePicker by rememberSaveable(name) { mutableStateOf(false) }
+                        var selectedDate by rememberSaveable(name) {
+                            mutableLongStateOf(
+                                Clock.System.now().toEpochMilliseconds(),
+                            )
+                        }
+                        val datePickerState = rememberDatePickerState(
+                            initialSelectedDateMillis = selectedDate,
+                            selectableDates = object : SelectableDates {
+                                override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                                    return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
+                                }
+                            },
                         )
 
-                        Switch(
-                            checked = checked,
-                            onCheckedChange = { checked = it },
+                        if (showDatePicker) {
+                            DatePickerDialog(
+                                onDismissRequest = {
+                                    showDatePicker = false
+                                },
+                                confirmButton = {
+                                    TextButton(
+                                        onClick = {
+                                            showDatePicker = false
+                                            datePickerState.selectedDateMillis?.let {
+                                                selectedDate = it
+                                                onFieldChanged(
+                                                    name,
+                                                    DateHelper.getDateAsStringFromLong(it),
+                                                )
+                                            }
+                                        },
+                                    ) { Text(stringResource(Res.string.feature_data_table_select_date)) }
+                                },
+                                dismissButton = {
+                                    TextButton(
+                                        onClick = {
+                                            showDatePicker = false
+                                        },
+                                    ) { Text(stringResource(Res.string.feature_data_table_dismiss)) }
+                                },
+                            ) {
+                                DatePicker(state = datePickerState)
+                            }
+                        }
+
+                        MifosDatePickerTextField(
+                            value = DateHelper.getDateAsStringFromLong(selectedDate),
+                            label = name,
+                            openDatePicker = {
+                                showDatePicker = true
+                            },
                         )
+                        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+                    }
+
+                    DataTableColumnType.BOOLEAN -> {
+                        var checked by rememberSaveable(name) { mutableStateOf(false) }
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(vertical = KptTheme.spacing.sm),
+                        ) {
+                            Text(
+                                text = name,
+                                modifier = Modifier.weight(1f),
+                            )
+
+                            Switch(
+                                checked = checked,
+                                onCheckedChange = {
+                                    checked = it
+                                    onFieldChanged(name, it)
+                                },
+                            )
+                        }
                     }
                 }
             }
-        }
     }
 }
 
@@ -334,77 +375,6 @@ fun DataTableListScreenPreview() {
         onBackPressed = { },
         clientCreated = { },
         onSaveClicked = { },
+        onFieldChanged = { _, _, _ -> },
     )
 }
-
-// private fun createFormWidgetList(): MutableList<List<FormWidget>> {
-//    return dataTables?.map { createForm(it) }?.toMutableList() ?: mutableListOf()
-// }
-//
-// private fun createForm(table: DataTable): List<FormWidget> {
-//    return table.columnHeaderData
-//        .filterNot { it.columnPrimaryKey == true }
-//        .map { createFormWidget(it) }
-// }
-//
-// private fun createFormWidget(columnHeader: ColumnHeader): FormWidget {
-//    return when (columnHeader.columnDisplayType) {
-//        FormWidget.SCHEMA_KEY_STRING, FormWidget.SCHEMA_KEY_TEXT -> FormEditText(
-//            activity,
-//            columnHeader.dataTableColumnName
-//        )
-//
-//        FormWidget.SCHEMA_KEY_INT -> FormNumericEditText(
-//            activity,
-//            columnHeader.dataTableColumnName
-//        ).apply { returnType = FormWidget.SCHEMA_KEY_INT }
-//
-//        FormWidget.SCHEMA_KEY_DECIMAL -> FormNumericEditText(
-//            activity,
-//            columnHeader.dataTableColumnName
-//        ).apply { returnType = FormWidget.SCHEMA_KEY_DECIMAL }
-//
-//        FormWidget.SCHEMA_KEY_CODELOOKUP, FormWidget.SCHEMA_KEY_CODEVALUE -> createFormSpinner(
-//            columnHeader
-//        )
-//
-//        FormWidget.SCHEMA_KEY_DATE -> FormEditText(
-//            activity,
-//            columnHeader.dataTableColumnName
-//        ).apply { setIsDateField(true, requireActivity().supportFragmentManager) }
-//
-//        FormWidget.SCHEMA_KEY_BOOL -> FormToggleButton(
-//            activity,
-//            columnHeader.dataTableColumnName
-//        )
-//
-//        else -> FormEditText(activity, columnHeader.dataTableColumnName)
-//    }
-// }
-//
-// private fun createFormSpinner(columnHeader: ColumnHeader): FormSpinner {
-//    val columnValueStrings = columnHeader.columnValues.mapNotNull { it.value }
-//    val columnValueIds = columnHeader.columnValues.mapNotNull { it.id }
-//    return FormSpinner(
-//        activity,
-//        columnHeader.dataTableColumnName,
-//        columnValueStrings,
-//        columnValueIds
-//    ).apply {
-//        returnType = FormWidget.SCHEMA_KEY_CODEVALUE
-//    }
-// }
-//
-// private fun showClientCreatedSuccessfully(client: Client) {
-//    requireActivity().supportFragmentManager.popBackStack()
-//    requireActivity().supportFragmentManager.popBackStack()
-//    Toast.makeText(
-//        activity, getString(R.string.client) +
-//                MifosResponseHandler.response, Toast.LENGTH_SHORT
-//    ).show()
-//    if (PrefManager.userStatus == Constants.USER_ONLINE) {
-//        val clientActivityIntent = Intent(activity, ClientActivity::class.kotlin)
-//        clientActivityIntent.putExtra(Constants.CLIENT_ID, client.clientId)
-//        startActivity(clientActivityIntent)
-//    }
-// }

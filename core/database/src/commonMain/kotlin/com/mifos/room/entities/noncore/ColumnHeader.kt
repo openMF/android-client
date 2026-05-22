@@ -11,6 +11,7 @@ package com.mifos.room.entities.noncore
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import template.core.base.database.Entity
 import template.core.base.database.PrimaryKey
@@ -35,12 +36,20 @@ data class ColumnHeader(
 
     val columnLength: Int? = null,
 
+    // GAP-DT-014 (runtime 2026-05-22): Fineract field is `columnName`. Without
+    // @SerialName, this stays null when LoanTemplate.dataTables deserializes,
+    // which made the dynamic stepper form blank (no labels, every filter rejected).
+    @SerialName("columnName")
     val dataTableColumnName: String? = null,
 
     val columnType: String? = null,
 
+    @SerialName("isColumnNullable")
     val columnNullable: Boolean? = null,
 
+    // Critical for the filter `columnPrimaryKey == false`. Without @SerialName the
+    // field was always null → `null == false` is false → ALL columns filtered out.
+    @SerialName("isColumnPrimaryKey")
     val columnPrimaryKey: Boolean? = null,
 
     val registeredTableName: String? = null,

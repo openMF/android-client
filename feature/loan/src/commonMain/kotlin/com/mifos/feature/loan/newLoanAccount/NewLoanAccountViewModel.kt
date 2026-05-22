@@ -31,8 +31,12 @@ import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.network.model.CollateralItem
 import com.mifos.core.network.model.LoansPayload
+import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState.DialogState
+import com.mifos.room.entities.noncore.ColumnHeader
+import com.mifos.room.entities.noncore.DataTableEntity
+import com.mifos.room.entities.noncore.DataTablePayload
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
@@ -246,6 +250,17 @@ internal class NewLoanAccountViewModel(
             }
 
             NewLoanAccountAction.SubmitLoanApplication -> submitLoanApplication()
+
+            // GAP-DT-013: inline datatable form input — merge into state.datatableValues
+            is NewLoanAccountAction.UpdateDatatableField -> {
+                mutableStateFlow.update { current ->
+                    val tableMap = current.datatableValues[action.tableIndex].orEmpty().toMutableMap()
+                    tableMap[action.columnName] = action.value
+                    current.copy(
+                        datatableValues = current.datatableValues + (action.tableIndex to tableMap),
+                    )
+                }
+            }
         }
     }
 
@@ -279,6 +294,33 @@ internal class NewLoanAccountViewModel(
                 transactionProcessingStrategyCode = state.loanTemplate?.transactionProcessingStrategyOptions[state.repaymentStrategyIndex]?.code,
                 externalId = state.externalId,
             )
+
+            // GAP-DT-013 (inline datatables): assemble per-product datatable payloads
+            // from state.datatableValues collected by the inline stepper pages.
+            // Filter nulls because Fineract returns `[null,null,...]` for some products
+            // (see loan_product_{7,8,10}.json samples). Empty list when product has no
+            // real datatables — backend accepts (or expects) empty/absent datatables.
+            val realDataTables = state.loanTemplate?.dataTables?.filterNotNull().orEmpty()
+            co.touchlab.kermit.Logger.d(
+                tag = "DataTableGate",
+                messageString = "submit: productId=${state.productId} " +
+                    "rawSize=${state.loanTemplate?.dataTables?.size ?: 0} " +
+                    "realSize=${realDataTables.size} " +
+                    "names=${realDataTables.map { it.registeredTableName }} " +
+                    "valuesFilled=${state.datatableValues.values.sumOf { it.size }}",
+            )
+            if (realDataTables.isNotEmpty()) {
+                val datatablePayloads = realDataTables.mapIndexed { idx, table ->
+                    DataTablePayload(
+                        registeredTableName = table.registeredTableName,
+                        data = buildDatatablePayloadMap(
+                            headers = table.columnHeaderData,
+                            rawValues = state.datatableValues[idx].orEmpty(),
+                        ),
+                    )
+                }
+                payload.dataTables = ArrayList(datatablePayloads)
+            }
 
             loanUseCase(payload).collect { dataState ->
                 when (dataState) {
@@ -1003,7 +1045,14 @@ constructor(
     val repaymentSchedulesSummary: Map<StringResource, String> = emptyMap(),
     val loanTemplate: LoanTemplate? = null,
     val currentStep: Int = 0,
-    val totalSteps: Int = 4,
+    /**
+     * GAP-DT-013: per-loan datatable values keyed by table-index → (columnName → value).
+     * Index aligns with `loanTemplate.dataTables.filterNotNull()` ordering. Populated
+     * by the inline stepper's DatatableStepPage instances; consumed by
+     * [submitLoanApplication] to build `LoansPayload.datatables`. Empty when the
+     * selected loan product has no real datatables.
+     */
+    val datatableValues: Map<Int, Map<String, Any>> = emptyMap(),
     val dialogState: DialogState? = null,
     val screenState: ScreenState? = null,
     val isOverLayLoadingActive: Boolean = false,
@@ -1090,12 +1139,57 @@ constructor(
     val isDetailsNextEnabled =
         loanProductSelected != -1 && submissionDate.isNotEmpty() && expectedDisbursementDate.isNotEmpty()
     val isCollateralBtnEnabled = collateralQuantity != 0 && collateralSelectedIndex != -1
+
+    /**
+     * GAP-DT-013: dynamic last-step index. Stepper has 5 fixed pages (Details, Terms,
+     * Charges, Schedule, Preview) plus one page per filtered datatable inserted between
+     * Schedule and Preview. Last index = 4 + N. `moveToNextStep` uses this as the
+     * "finish trigger" upper bound. For products with no datatables this stays at 4
+     * — identical to the pre-datatable behaviour.
+     */
+    val totalSteps: Int
+        get() = 4 + (loanTemplate?.dataTables?.filterNotNull()?.size ?: 0)
 }
 
 sealed interface NewLoanAccountEvent {
     data object NavigateBack : NewLoanAccountEvent
     data object Finish : NewLoanAccountEvent
     data class LoanCreationSuccess(val clientId: Int) : NewLoanAccountEvent
+}
+
+/**
+ * GAP-DT-013: build the Fineract datatable-payload `data` map for one table.
+ * Mirrors `DataTableListViewModel.buildPayloadMap` (kept in sync intentionally —
+ * both serve the same Fineract contract). Filters system columns (PK, created_at,
+ * updated_at) and applies type coercion based on `columnDisplayType`.
+ */
+private fun buildDatatablePayloadMap(
+    headers: List<ColumnHeader?>,
+    rawValues: Map<String, Any>,
+): Map<String, Any> {
+    val payload = mutableMapOf<String, Any>(
+        "dateFormat" to ApiDateFormatter.DATE_FORMAT,
+        "locale" to ApiDateFormatter.LOCALE,
+    )
+    headers.filterNotNull().forEach { header ->
+        if (header.columnPrimaryKey == true) return@forEach
+        val name = header.dataTableColumnName ?: return@forEach
+        if (name in SYSTEM_COLUMNS) return@forEach
+        val raw = rawValues[name] ?: return@forEach
+        payload[name] = coerceDatatableValue(raw, header.columnDisplayType)
+    }
+    return payload
+}
+
+private val SYSTEM_COLUMNS = setOf("created_at", "updated_at", "createdAt", "updatedAt")
+
+private fun coerceDatatableValue(value: Any, displayType: String?): Any {
+    if (value !is String) return value
+    return when (displayType) {
+        "INTEGER" -> value.toIntOrNull() ?: 0
+        "DECIMAL", "FLOAT" -> value.toDoubleOrNull() ?: 0.0
+        else -> value
+    }
 }
 
 sealed interface NewLoanAccountAction {
@@ -1162,6 +1256,18 @@ sealed interface NewLoanAccountAction {
     data class EditCharge(val index: Int) : NewLoanAccountAction
     data object RepaymentScheduler : NewLoanAccountAction
     data object SubmitLoanApplication : NewLoanAccountAction
+
+    /**
+     * GAP-DT-013: a field on one of the inline datatable steps changed.
+     * `tableIndex` is into `loanTemplate.dataTables.filterNotNull()`.
+     * `columnName` matches the JSON `columnName` (used verbatim in submit payload).
+     * `value` is the raw input — String, Boolean, or Int (for CODELOOKUP id).
+     */
+    data class UpdateDatatableField(
+        val tableIndex: Int,
+        val columnName: String,
+        val value: Any,
+    ) : NewLoanAccountAction
 }
 
 data class CreatedCollateral(

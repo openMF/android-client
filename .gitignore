@@ -99,3 +99,9 @@ mifosng-android/mifosng-android.iml
 *.hprof
 .kotlin/
 build-logic/convention/bin/
+
+# Claude Code session artifacts (per /implement directive)
+.claude/
+.mcp.json
+CLAUDE.md
+graphify-out/
