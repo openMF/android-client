@@ -10,8 +10,8 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.model.GenericResponse
+import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.room.loan.entity.LoanTransactionTemplate
 import kotlinx.coroutines.flow.Flow
 

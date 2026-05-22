@@ -9,7 +9,6 @@
  */
 package com.mifos.core.model.objects.nav
 
-
 /*
  * Created by Aditya Gupta on 22/7/23.
 */

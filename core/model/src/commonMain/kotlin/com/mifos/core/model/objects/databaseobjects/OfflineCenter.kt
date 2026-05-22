@@ -9,7 +9,6 @@
  */
 package com.mifos.core.model.objects.databaseobjects
 
-
 data class OfflineCenter(
     var staffId: Int = 0,
 

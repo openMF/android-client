@@ -9,10 +9,10 @@
  */
 package com.mifos.room.loan.dao
 
-import com.mifos.room.savings.entity.PaymentTypeOptionEntity
 import com.mifos.room.loan.entity.LoanRepaymentRequestEntity
-import com.mifos.room.loan.entity.LoanWithAssociationsEntity
 import com.mifos.room.loan.entity.LoanRepaymentTemplateEntity
+import com.mifos.room.loan.entity.LoanWithAssociationsEntity
+import com.mifos.room.savings.entity.PaymentTypeOptionEntity
 import kotlinx.coroutines.flow.Flow
 import template.core.base.database.Dao
 import template.core.base.database.Insert

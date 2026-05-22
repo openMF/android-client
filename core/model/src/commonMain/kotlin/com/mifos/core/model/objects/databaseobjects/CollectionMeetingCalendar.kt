@@ -9,7 +9,6 @@
  */
 package com.mifos.core.model.objects.databaseobjects
 
-
 data class CollectionMeetingCalendar(
     var calendarInstanceId: Int = 0,
 

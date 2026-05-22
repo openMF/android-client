@@ -127,10 +127,10 @@ import com.mifos.feature.client.utils.PhoneNumberUtil
 import com.mifos.feature.client.utils.rememberPlatformCameraLauncher
 import com.mifos.room.client.entity.AddressTemplate
 import com.mifos.room.client.entity.ClientPayloadEntity
+import com.mifos.room.client.entity.ClientsTemplateEntity
 import com.mifos.room.datatable.entity.DataTableEntity
 import com.mifos.room.office.entity.OfficeEntity
 import com.mifos.room.staff.entity.StaffEntity
-import com.mifos.room.client.entity.ClientsTemplateEntity
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher

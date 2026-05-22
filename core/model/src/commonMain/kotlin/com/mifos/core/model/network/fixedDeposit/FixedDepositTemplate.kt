@@ -9,6 +9,7 @@
  */
 package com.mifos.core.model.network.fixedDeposit
 
+import com.mifos.core.model.network.share.SavingsAccountOption
 import com.mifos.core.model.objects.account.saving.FieldOfficerOptions
 import com.mifos.core.model.objects.template.recurring.AccountChart
 import com.mifos.core.model.objects.template.recurring.Currency
@@ -20,7 +21,6 @@ import com.mifos.core.model.objects.template.recurring.interest.InterestCompound
 import com.mifos.core.model.objects.template.recurring.interest.InterestPostingPeriodTypeOption
 import com.mifos.core.model.objects.template.recurring.period.LockinPeriodFrequencyTypeOption
 import com.mifos.core.model.objects.template.recurring.period.PeriodFrequencyTypeOption
-import com.mifos.core.model.network.share.SavingsAccountOption
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

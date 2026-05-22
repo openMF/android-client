@@ -12,8 +12,8 @@ package com.mifos.core.data.searchrecord.local
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.model.objects.searchrecord.GenericSearchRecord
 import com.mifos.core.model.objects.searchrecord.RecordType
-import com.mifos.room.client.entity.ClientAddressEntity
 import com.mifos.room.client.dao.ClientDaoHelper
+import com.mifos.room.client.entity.ClientAddressEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map

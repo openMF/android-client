@@ -10,7 +10,6 @@
 package com.mifos.feature.searchrecord.ui
 
 import androidclient.feature.search_record.generated.resources.Res
-import androidclient.feature.search_record.generated.resources.search_record_address
 import androidclient.feature.search_record.generated.resources.search_record_address_line_1
 import androidclient.feature.search_record.generated.resources.search_record_address_line_2
 import androidclient.feature.search_record.generated.resources.search_record_address_line_3

@@ -9,7 +9,6 @@
  */
 package com.mifos.core.model.objects.databaseobjects
 
-
 data class MeetingCenter(
     var name: String? = null,
 

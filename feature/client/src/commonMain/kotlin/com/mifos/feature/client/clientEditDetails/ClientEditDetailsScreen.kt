@@ -107,9 +107,9 @@ import com.mifos.core.ui.components.MifosStatusDialog
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.client.utils.PhoneNumberUtil
 import com.mifos.room.client.entity.ClientPayloadEntity
+import com.mifos.room.client.entity.ClientsTemplateEntity
 import com.mifos.room.office.entity.OfficeEntity
 import com.mifos.room.staff.entity.StaffEntity
-import com.mifos.room.client.entity.ClientsTemplateEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate

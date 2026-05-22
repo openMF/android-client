@@ -12,8 +12,8 @@ package com.mifos.room.savings.dao
 import com.mifos.room.savings.entity.PaymentTypeOptionEntity
 import com.mifos.room.savings.entity.SavingsAccountTransactionEntity
 import com.mifos.room.savings.entity.SavingsAccountTransactionRequestEntity
-import com.mifos.room.savings.entity.SavingsAccountWithAssociationsEntity
 import com.mifos.room.savings.entity.SavingsAccountTransactionTemplateEntity
+import com.mifos.room.savings.entity.SavingsAccountWithAssociationsEntity
 import kotlinx.coroutines.flow.Flow
 import template.core.base.database.Dao
 import template.core.base.database.Insert

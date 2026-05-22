@@ -22,8 +22,8 @@ import com.attafitamim.krop.core.crop.ImageCropper
 import com.attafitamim.krop.core.crop.crop
 import com.attafitamim.krop.core.crop.imageCropper
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.infra.NetworkMonitor
+import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.domain.useCases.UploadClientImageUseCase
 import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.BaseViewModel

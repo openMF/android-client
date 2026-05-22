@@ -26,9 +26,9 @@ import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.room.client.entity.ClientEntity
 import com.mifos.room.client.entity.ClientPayloadEntity
+import com.mifos.room.client.entity.ClientsTemplateEntity
 import com.mifos.room.office.entity.OfficeEntity
 import com.mifos.room.staff.entity.StaffEntity
-import com.mifos.room.client.entity.ClientsTemplateEntity
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch

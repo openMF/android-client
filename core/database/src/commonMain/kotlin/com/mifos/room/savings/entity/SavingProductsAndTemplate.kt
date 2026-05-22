@@ -10,7 +10,6 @@
 package com.mifos.room.savings.entity
 
 import com.mifos.core.model.objects.organisations.ProductSavings
-import com.mifos.room.savings.entity.SavingProductsTemplate
 
 /**
  * Created by Rajan Maurya on 02/09/16.

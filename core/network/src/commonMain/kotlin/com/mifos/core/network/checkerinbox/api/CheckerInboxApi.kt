@@ -9,10 +9,10 @@
  */
 package com.mifos.core.network.checkerinbox.api
 
+import com.mifos.core.model.GenericResponse
 import com.mifos.core.model.objects.checkerinboxtask.CheckerInboxSearchTemplate
 import com.mifos.core.model.objects.checkerinboxtask.CheckerTask
 import com.mifos.core.model.objects.checkerinboxtask.RescheduleLoansTask
-import com.mifos.core.model.GenericResponse
 import com.mifos.core.network.APIEndPoint
 import de.jensklingenberg.ktorfit.http.DELETE
 import de.jensklingenberg.ktorfit.http.GET

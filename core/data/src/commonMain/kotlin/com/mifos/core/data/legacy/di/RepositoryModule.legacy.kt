@@ -7,7 +7,15 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
+@file:Suppress("ktlint:standard:no-empty-file")
+
 package com.mifos.core.data.legacy.di
+
+// Marker — gives ktlint a top-level declaration so the no-empty-file rule
+// doesn't fire. The actual binding bodies below are wrapped in a /* … */ block
+// because legacy/ is gradle-excluded; the file is documentation, not code.
+@Suppress("unused")
+private object RepositoryModuleLegacyReference
 
 // REFERENCE-ONLY. This file lives inside `core/data/.../legacy/` which is
 // gradle-excluded from compilation (kotlin.exclude("**/legacy/**")). It is

@@ -11,12 +11,12 @@ package com.mifos.core.data.activate.impl
 
 import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.data.activate.ActivateRepository
+import com.mifos.core.model.network.PostCentersCenterIdResponse
+import com.mifos.core.model.network.PostClientsClientIdResponse
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.network.center.api.CenterApi
 import com.mifos.core.network.client.api.ClientApi
 import com.mifos.core.network.group.api.GroupApi
-import com.mifos.core.model.network.PostCentersCenterIdResponse
-import com.mifos.core.model.network.PostClientsClientIdResponse
 
 class ActivateRepositoryImpl(
     private val clientApi: ClientApi,

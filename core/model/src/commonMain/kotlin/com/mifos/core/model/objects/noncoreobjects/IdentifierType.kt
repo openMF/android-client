@@ -9,7 +9,6 @@
  */
 package com.mifos.core.model.objects.noncoreobjects
 
-
 /**
  * Created by Rajan Maurya on 01/10/16.
  */

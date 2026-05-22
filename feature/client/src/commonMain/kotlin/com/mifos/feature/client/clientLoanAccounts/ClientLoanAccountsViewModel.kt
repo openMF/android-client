@@ -12,8 +12,8 @@ package com.mifos.feature.client.clientLoanAccounts
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.infra.NetworkMonitor
+import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.room.loan.entity.LoanAccountEntity
 import com.mifos.room.loan.entity.LoanStatusEntity

@@ -29,8 +29,8 @@ import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.room.client.entity.ClientsTemplateEntity
 import com.mifos.room.savings.entity.SavingProductOptionsEntity
-import com.mifos.room.staff.entity.StaffOptionsEntity
 import com.mifos.room.savings.entity.SavingProductsTemplate
+import com.mifos.room.staff.entity.StaffOptionsEntity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch

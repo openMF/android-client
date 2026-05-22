@@ -10,8 +10,6 @@
 package com.mifos.room.charge.entity
 
 import com.mifos.core.model.utils.IgnoredOnParcel
-import com.mifos.room.charge.entity.ChargeCalculationTypeEntity
-import com.mifos.room.charge.entity.ChargeTimeTypeEntity
 import kotlinx.serialization.Serializable
 
 @Serializable

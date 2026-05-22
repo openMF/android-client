@@ -20,8 +20,8 @@ import androidclient.feature.offline.generated.resources.feature_offline_nothing
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
 import com.mifos.core.data.infra.NetworkMonitor
+import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.savings.entity.PaymentTypeOptionEntity
 import com.mifos.room.savings.entity.SavingsAccountTransactionRequestEntity

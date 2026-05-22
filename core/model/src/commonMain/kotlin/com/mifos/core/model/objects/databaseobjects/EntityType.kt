@@ -9,7 +9,6 @@
  */
 package com.mifos.core.model.objects.databaseobjects
 
-
 data class EntityType(
     var code: String? = null,
 

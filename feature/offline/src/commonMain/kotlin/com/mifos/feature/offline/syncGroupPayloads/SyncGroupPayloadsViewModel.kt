@@ -16,8 +16,8 @@ import androidclient.feature.offline.generated.resources.feature_offline_error_g
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.data.repository.SyncGroupPayloadsRepository
 import com.mifos.core.data.infra.NetworkMonitor
+import com.mifos.core.data.repository.SyncGroupPayloadsRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.group.entity.GroupPayloadEntity
 import kotlinx.coroutines.flow.MutableStateFlow

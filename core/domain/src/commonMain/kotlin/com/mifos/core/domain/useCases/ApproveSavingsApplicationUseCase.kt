@@ -11,8 +11,8 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SavingsAccountApprovalRepository
-import com.mifos.core.model.objects.account.loan.SavingsApproval
 import com.mifos.core.model.GenericResponse
+import com.mifos.core.model.objects.account.loan.SavingsApproval
 import kotlinx.coroutines.flow.Flow
 
 /**

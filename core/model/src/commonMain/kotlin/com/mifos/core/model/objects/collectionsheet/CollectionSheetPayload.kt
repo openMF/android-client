@@ -11,9 +11,8 @@ package com.mifos.core.model.objects.collectionsheet
 
 import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.model.objects.collectionsheets.BulkSavingsDueTransaction
-import com.mifos.core.model.utils.IgnoredOnParcel
-import com.mifos.core.model.objects.collectionsheet.ClientsAttendance
 import com.mifos.core.model.objects.loan.BulkRepaymentTransactions
+import com.mifos.core.model.utils.IgnoredOnParcel
 import kotlinx.serialization.Serializable
 
 /**

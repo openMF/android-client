@@ -15,7 +15,6 @@ import com.mifos.core.model.objects.commonfiles.InterestType
 import com.mifos.core.model.objects.template.client.ChargeOptions
 import com.mifos.core.model.objects.template.saving.AccountOptions
 import com.mifos.core.model.utils.IgnoredOnParcel
-import com.mifos.room.savings.entity.PaymentTypeOptionEntity
 import kotlinx.serialization.Serializable
 
 /**

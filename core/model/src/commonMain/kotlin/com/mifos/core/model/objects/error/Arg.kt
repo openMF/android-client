@@ -9,7 +9,6 @@
  */
 package com.mifos.core.model.objects.error
 
-
 data class Arg(
     var value: String? = null,
 

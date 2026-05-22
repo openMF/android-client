@@ -22,7 +22,6 @@ import com.mifos.feature.dataTable.dataTableData.DataTableDataScreen
 import com.mifos.feature.dataTable.dataTableList.DataTableListNavArgs
 import com.mifos.feature.dataTable.dataTableList.DataTableListScreen
 import com.mifos.room.client.entity.ClientPayloadEntity
-import com.mifos.feature.dataTable.navigation.DataTableDataNavigationArg
 import com.mifos.room.datatable.entity.DataTableEntity
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json

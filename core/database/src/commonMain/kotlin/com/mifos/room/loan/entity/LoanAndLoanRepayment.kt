@@ -9,9 +9,6 @@
  */
 package com.mifos.room.loan.entity
 
-import com.mifos.room.loan.entity.LoanWithAssociationsEntity
-import com.mifos.room.loan.entity.LoanRepaymentTemplateEntity
-
 /**
  *
  * Created by Rajan Maurya on 08/08/16.

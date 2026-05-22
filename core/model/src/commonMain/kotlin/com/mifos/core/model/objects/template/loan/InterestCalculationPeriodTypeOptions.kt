@@ -9,7 +9,6 @@
  */
 package com.mifos.core.model.objects.template.loan
 
-
 /**
  * Created by Rajan Maurya on 16/07/16.
  */

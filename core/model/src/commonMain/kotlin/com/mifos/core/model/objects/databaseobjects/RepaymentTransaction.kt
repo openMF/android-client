@@ -9,7 +9,6 @@
  */
 package com.mifos.core.model.objects.databaseobjects
 
-
 data class RepaymentTransaction(
     var loan: Loan? = null,
 

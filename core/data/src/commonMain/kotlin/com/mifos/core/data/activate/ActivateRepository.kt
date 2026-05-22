@@ -9,9 +9,9 @@
  */
 package com.mifos.core.data.activate
 
-import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.model.network.PostCentersCenterIdResponse
 import com.mifos.core.model.network.PostClientsClientIdResponse
+import com.mifos.core.model.objects.clients.ActivatePayload
 
 interface ActivateRepository {
 

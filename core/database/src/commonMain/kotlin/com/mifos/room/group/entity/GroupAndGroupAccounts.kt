@@ -9,8 +9,6 @@
  */
 package com.mifos.room.group.entity
 
-import com.mifos.room.group.entity.GroupAccounts
-import com.mifos.room.group.entity.GroupEntity
 import kotlinx.serialization.Serializable
 
 /**

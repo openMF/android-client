@@ -9,7 +9,6 @@
  */
 package com.mifos.core.model.objects.account.saving
 
-
 // @Generated("org.jsonschema2pojo")
 data class ChargeTimeType(
     var id: Int? = null,

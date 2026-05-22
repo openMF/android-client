@@ -9,7 +9,6 @@
  */
 package com.mifos.room.savings.entity
 
-import com.mifos.room.savings.entity.PaymentTypeOptionEntity
 import kotlinx.serialization.Serializable
 import template.core.base.database.Entity
 import template.core.base.database.PrimaryKey

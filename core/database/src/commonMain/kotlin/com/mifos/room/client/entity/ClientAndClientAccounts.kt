@@ -9,9 +9,6 @@
  */
 package com.mifos.room.client.entity
 
-import com.mifos.room.client.entity.ClientAccounts
-import com.mifos.room.client.entity.ClientEntity
-
 /**
  * Model for Observable.zip. This Model used to combine the Client and ClientAccount in response
  * of RxAndroid.

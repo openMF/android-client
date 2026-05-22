@@ -9,7 +9,6 @@
  */
 package com.mifos.core.model.objects.account.loan
 
-
 /**
  * Created by nellyk on 2/21/2016.
  */

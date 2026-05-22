@@ -10,8 +10,8 @@
 package com.mifos.core.data.legacy.repositoryImp
 
 import com.mifos.core.data.repository.DataTableDataRepository
-import com.mifos.core.network.datamanager.DataManagerDataTable
 import com.mifos.core.model.network.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
+import com.mifos.core.network.datamanager.DataManagerDataTable
 import kotlinx.serialization.json.JsonArray
 
 /**

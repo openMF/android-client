@@ -9,9 +9,6 @@
  */
 package com.mifos.room.savings.entity
 
-import com.mifos.room.savings.entity.SavingsAccountWithAssociationsEntity
-import com.mifos.room.savings.entity.SavingsAccountTransactionTemplateEntity
-
 /**
  * Created by Rajan Maurya on 21/08/16.
  */

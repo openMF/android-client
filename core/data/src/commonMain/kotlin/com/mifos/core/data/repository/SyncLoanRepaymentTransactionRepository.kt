@@ -10,9 +10,9 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.room.savings.entity.PaymentTypeOptionEntity
 import com.mifos.room.loan.entity.LoanRepaymentRequestEntity
 import com.mifos.room.loan.entity.LoanRepaymentResponseEntity
+import com.mifos.room.savings.entity.PaymentTypeOptionEntity
 import kotlinx.coroutines.flow.Flow
 
 interface SyncLoanRepaymentTransactionRepository {

@@ -9,7 +9,6 @@
  */
 package com.mifos.room.client.entity
 
-import com.mifos.room.client.entity.OptionsEntity
 import kotlinx.serialization.Serializable
 
 @Serializable

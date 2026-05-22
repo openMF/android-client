@@ -106,15 +106,29 @@ internal fun ActivateScreen(
         ResultDialog.Success -> MifosAlertDialog(
             dialogTitle = stringResource(Res.string.feature_activate_dialog_title_success),
             dialogText = stringResource(state.successMessage),
-            onConfirmation = { resultDialog = null; viewModel.onSubmitConsumed(); onBackPressed() },
-            onDismissRequest = { resultDialog = null; viewModel.onSubmitConsumed(); onBackPressed() },
+            onConfirmation = {
+                resultDialog = null
+                viewModel.onSubmitConsumed()
+                onBackPressed()
+            },
+            onDismissRequest = {
+                resultDialog = null
+                viewModel.onSubmitConsumed()
+                onBackPressed()
+            },
         )
 
         ResultDialog.Failure -> MifosAlertDialog(
             dialogTitle = stringResource(Res.string.feature_activate_dialog_title_error),
             dialogText = stringResource(state.failureMessage),
-            onConfirmation = { resultDialog = null; viewModel.onSubmitConsumed() },
-            onDismissRequest = { resultDialog = null; viewModel.onSubmitConsumed() },
+            onConfirmation = {
+                resultDialog = null
+                viewModel.onSubmitConsumed()
+            },
+            onDismissRequest = {
+                resultDialog = null
+                viewModel.onSubmitConsumed()
+            },
         )
 
         null -> Unit

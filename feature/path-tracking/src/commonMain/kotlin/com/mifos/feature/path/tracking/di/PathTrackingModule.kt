@@ -16,4 +16,3 @@ import org.koin.dsl.module
 val PathTrackingModule = module {
     viewModelOf(::PathTrackingViewModel)
 }
-

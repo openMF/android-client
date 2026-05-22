@@ -10,12 +10,12 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.model.objects.account.share.ShareAccounts
 import com.mifos.core.model.network.ClientCloseTemplateResponse
 import com.mifos.core.model.network.CollateralItem
 import com.mifos.core.model.network.CollateralItemResult
 import com.mifos.core.model.network.SavingAccountOption
 import com.mifos.core.model.network.StaffOption
+import com.mifos.core.model.objects.account.share.ShareAccounts
 import com.mifos.room.client.entity.ClientAccounts
 import com.mifos.room.client.entity.ClientEntity
 import io.ktor.client.request.forms.MultiPartFormDataContent

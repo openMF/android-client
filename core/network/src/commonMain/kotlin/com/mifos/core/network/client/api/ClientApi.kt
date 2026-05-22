@@ -10,6 +10,15 @@
 package com.mifos.core.network.client.api
 
 import com.mifos.core.common.utils.Page
+import com.mifos.core.model.GenericResponse
+import com.mifos.core.model.network.ClientCloseTemplateResponse
+import com.mifos.core.model.network.CollateralItem
+import com.mifos.core.model.network.CollateralItemResult
+import com.mifos.core.model.network.GetClientsPageItemsResponse
+import com.mifos.core.model.network.PinpointLocationActionResponse
+import com.mifos.core.model.network.PostClientAddressRequest
+import com.mifos.core.model.network.PostClientAddressResponse
+import com.mifos.core.model.network.PostClientsClientIdResponse
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.model.objects.clients.AssignStaffRequest
 import com.mifos.core.model.objects.clients.ClientAddressEntity
@@ -22,19 +31,10 @@ import com.mifos.core.model.objects.clients.UpdateSavingsAccountRequest
 import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
-import com.mifos.core.model.GenericResponse
-import com.mifos.core.model.network.ClientCloseTemplateResponse
-import com.mifos.core.model.network.CollateralItem
-import com.mifos.core.model.network.CollateralItemResult
-import com.mifos.core.model.network.GetClientsPageItemsResponse
-import com.mifos.core.model.network.PinpointLocationActionResponse
-import com.mifos.core.model.network.PostClientAddressRequest
-import com.mifos.core.model.network.PostClientAddressResponse
-import com.mifos.core.model.network.PostClientsClientIdResponse
 import com.mifos.core.network.APIEndPoint
-import com.mifos.room.client.entity.ClientAccounts
 import com.mifos.room.client.entity.AddressConfiguration
 import com.mifos.room.client.entity.AddressTemplate
+import com.mifos.room.client.entity.ClientAccounts
 import com.mifos.room.client.entity.ClientEntity
 import com.mifos.room.client.entity.ClientPayloadEntity
 import com.mifos.room.client.entity.ClientsTemplateEntity

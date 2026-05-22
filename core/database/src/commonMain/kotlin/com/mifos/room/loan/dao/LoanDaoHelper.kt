@@ -9,20 +9,19 @@
  */
 package com.mifos.room.loan.dao
 
-import com.mifos.room.loan.dao.LoanDao
-import com.mifos.room.savings.entity.PaymentTypeOptionEntity
 import com.mifos.room.loan.entity.ActualDisbursementDateEntity
 import com.mifos.room.loan.entity.LoanRepaymentRequestEntity
 import com.mifos.room.loan.entity.LoanRepaymentResponseEntity
-import com.mifos.room.loan.entity.LoanWithAssociationsEntity
 import com.mifos.room.loan.entity.LoanRepaymentTemplateEntity
-import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
+import com.mifos.room.loan.entity.LoanWithAssociationsEntity
+import com.mifos.room.savings.entity.PaymentTypeOptionEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 class LoanDaoHelper(
@@ -155,7 +154,7 @@ class LoanDaoHelper(
      * @param loanId loan Id of the LoanRepayment
      * @return List<LoanRepaymentRequest>
      </LoanRepaymentRequest></LoanRepaymentRequest> */
-    // 
+    //
     fun deleteAndUpdateLoanRepayments(loanId: Int): Flow<List<LoanRepaymentRequestEntity>> {
         return flow {
             loanDao.deleteLoanRepaymentByLoanId(loanId)

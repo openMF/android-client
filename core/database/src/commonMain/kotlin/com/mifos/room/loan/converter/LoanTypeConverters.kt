@@ -20,12 +20,12 @@ import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.model.objects.account.loan.TermPeriodFrequencyType
 import com.mifos.core.model.objects.account.loan.Transaction
 import com.mifos.core.model.objects.account.loan.Type
-import com.mifos.room.savings.entity.PaymentTypeOptionEntity
 import com.mifos.room.loan.entity.ActualDisbursementDateEntity
 import com.mifos.room.loan.entity.LoanStatusEntity
 import com.mifos.room.loan.entity.LoanTimelineEntity
 import com.mifos.room.loan.entity.LoanTypeEntity
 import com.mifos.room.loan.entity.LoansAccountSummaryEntity
+import com.mifos.room.savings.entity.PaymentTypeOptionEntity
 import com.mifos.room.savings.entity.SavingAccountCurrencyEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json

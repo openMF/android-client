@@ -124,8 +124,8 @@ kotlinInject = "0.7.2"
 # brought build.gradle.kts files referencing these aliases without bringing the
 # matching catalog entries; field-officer's libs.versions.toml is consumer-local).
 aboutLibraries = "13.2.1"
-androidxHiltNavigationCompose = "1.2.0"
 androidxSecurityCrypto = "1.1.0-alpha06"
+appPackage = "com.mifos.mifosxdroid"
 bouncycastle = "1.78.1"
 sqliteWeb = "2.6.2"
 store = "5.1.0-alpha08"
@@ -350,7 +350,6 @@ kmp-product-flavors-plugin = { group = "io.github.mobilebytelabs.kmpflavors", na
 aboutlibraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "aboutLibraries" }
 aboutlibraries-compose-core = { module = "com.mikepenz:aboutlibraries-compose", version.ref = "aboutLibraries" }
 aboutlibraries-compose-m3 = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutLibraries" }
-androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
 androidx-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "androidxSecurityCrypto" }
 androidx-sqlite-web = { module = "androidx.sqlite:sqlite-web", version.ref = "sqliteWeb" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -475,6 +474,7 @@ review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "rev
 window-size = { group = "dev.chrisbanes.material3", name = "material3-window-size-class-multiplatform", version.ref = "windowsSizeClass" }
 
 # Animation Library
+compottie = { module = "io.github.alexzhirkevich:compottie", version.ref = "compottie" }
 compottie-lite = { module = "io.github.alexzhirkevich:compottie-lite", version.ref = "compottie" }
 compottie-resources = { module = "io.github.alexzhirkevich:compottie-resources", version.ref = "compottie" }
 
@@ -519,11 +519,11 @@ kotlinCocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = 
 
 # Hilt & Room Plugins
 room = { id = "androidx.room3", version.ref = "room" }
-mifos-android-application = { id = "mifos.android.application", version = "unspecified" }
-mifos-android-application-compose = { id = "mifos.android.application.compose", version = "unspecified" }
-mifos-android-application-flavors = { id = "mifos.android.application.flavors", version = "unspecified" }
-mifos-android-library = { id = "mifos.android.library", version = "unspecified" }
-mifos-android-library-compose = { id = "mifos.android.library.compose", version = "unspecified" }
+mifos-android-application = { id = "mifos.android.application" }
+mifos-android-application-compose = { id = "mifos.android.application.compose" }
+mifos-android-application-flavors = { id = "mifos.android.application.flavors" }
+mifos-android-library = { id = "mifos.android.library" }
+mifos-android-library-compose = { id = "mifos.android.library.compose" }
 
 # KMP & CMP Plugins
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
@@ -531,21 +531,21 @@ ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }
 wire = { id = "com.squareup.wire", version.ref = "wire" }
 baselineprofile = { id = "androidx.baselineprofile", version.ref = "androidxMacroBenchmark" }
 
-cmp-feature-convention = { id = "org.convention.cmp.feature", version = "unspecified" }
-kmp-koin-convention = { id = "org.convention.kmp.koin", version = "unspecified" }
-kmp-library-convention = { id = "org.convention.kmp.library", version = "unspecified" }
-mifos-android-koin = {id = "mifos.android.koin", version = "unspecified"}
-mifos-kmp-room = { id = "mifos.kmp.room", version = "unspecified" }
-kmp-core-base-library-convention = { id = "org.convention.kmp.core.base.library", version = "unspecified" }
+cmp-feature-convention = { id = "org.convention.cmp.feature" }
+kmp-koin-convention = { id = "org.convention.kmp.koin" }
+kmp-library-convention = { id = "org.convention.kmp.library" }
+mifos-android-koin = {id = "mifos.android.koin"}
+mifos-kmp-room = { id = "mifos.kmp.room" }
+kmp-core-base-library-convention = { id = "org.convention.kmp.core.base.library" }
 
 android-application-firebase = { id = "org.convention.android.application.firebase" }
 android-lint = { id = "org.convention.android.application.lint" }
 
 # Utility Plugins
 
-mifos-detekt-plugin = { id = "mifos.detekt.plugin", version = "unspecified" }
-mifos-git-hooks = { id = "mifos.git.hooks", version = "unspecified" }
-mifos-spotless-plugin = { id = "mifos.spotless.plugin", version = "unspecified" }
+mifos-detekt-plugin = { id = "mifos.detekt.plugin" }
+mifos-git-hooks = { id = "mifos.git.hooks" }
+mifos-spotless-plugin = { id = "mifos.spotless.plugin" }
 
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsPlugin" }
 firebase-perf = { id = "com.google.firebase.firebase-perf", version.ref = "firebasePerfPlugin" }
@@ -579,4 +579,4 @@ roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
 gms = { id = "com.google.gms.google-services", version.ref = "gmsPlugin" }
 
 # Plugins defined by this project
-mifos-android-lint = { id = "mifos.android.lint", version = "unspecified" }
+mifos-android-lint = { id = "mifos.android.lint" }

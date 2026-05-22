@@ -9,16 +9,16 @@
  */
 package com.mifos.core.network.savings.api
 
+import com.mifos.core.model.GenericResponse
 import com.mifos.core.model.objects.account.loan.SavingsApproval
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.model.objects.organisations.ProductSavings
 import com.mifos.core.model.objects.payloads.SavingsPayload
-import com.mifos.core.model.GenericResponse
 import com.mifos.core.network.APIEndPoint
-import com.mifos.room.savings.entity.SavingsAccountTransactionRequestEntity
-import com.mifos.room.savings.entity.SavingsAccountWithAssociationsEntity
 import com.mifos.room.savings.entity.SavingProductsTemplate
+import com.mifos.room.savings.entity.SavingsAccountTransactionRequestEntity
 import com.mifos.room.savings.entity.SavingsAccountTransactionTemplateEntity
+import com.mifos.room.savings.entity.SavingsAccountWithAssociationsEntity
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.POST

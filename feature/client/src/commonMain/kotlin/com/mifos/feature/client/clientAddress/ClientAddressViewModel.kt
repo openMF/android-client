@@ -16,10 +16,10 @@ import androidclient.feature.client.generated.resources.feature_client_unable_to
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.data.infra.NetworkMonitor
-import com.mifos.core.model.objects.clients.ClientAddressEntity
+import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.model.network.PostClientAddressRequest
+import com.mifos.core.model.objects.clients.ClientAddressEntity
 import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.room.client.entity.AddressTemplate

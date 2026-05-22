@@ -9,8 +9,8 @@
  */
 package com.mifos.room.center.entity
 
-import com.mifos.room.loan.entity.LoanTimelineEntity
 import com.mifos.room.client.entity.ClientStatusEntity
+import com.mifos.room.loan.entity.LoanTimelineEntity
 import template.core.base.database.Entity
 import template.core.base.database.ForeignKey
 import template.core.base.database.ForeignKeyAction

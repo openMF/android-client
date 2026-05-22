@@ -546,12 +546,127 @@ for file in "${SYNC_FILES[@]}"; do
     sync_file "$file" "$TEMP_BRANCH"
 done
 
+# Self-heal libs.versions.toml — pull missing build-logic aliases from upstream.
+# Matches the heal step in .github/workflows/sync-dirs.yaml so local CLI use of
+# this script produces the same self-healing behavior as the GitHub-Actions run.
+# Mirror of openMF/kmp-project-template PR #163 heal logic.
+heal_libs_versions_toml() {
+    local libs_toml="gradle/libs.versions.toml"
+    [ -f "$libs_toml" ] || return 0
+    [ -d "build-logic" ] || return 0
+
+    echo -e "\n${BLUE}${BOLD}Healing libs.versions.toml...${NC}"
+    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}\n"
+
+    local raw_refs
+    raw_refs=$(grep -rhoE '\blibs\.[a-zA-Z][a-zA-Z0-9._]*' \
+            --include='*.kt' --include='*.kts' \
+            . 2>/dev/null \
+        | sed -E 's/^libs\.//' \
+        | sort -u)
+
+    local method_re='^(findLibrary|findVersion|findBundle|findPlugin)([(.]|$)'
+
+    local upstream_toml
+    upstream_toml=$(git show "${TEMP_BRANCH}:${libs_toml}" 2>/dev/null || true)
+    if [ -z "$upstream_toml" ]; then
+        print_warning "Upstream has no ${libs_toml} — skipping heal."
+        return 0
+    fi
+
+    insert_into_section() {
+        local section_name="$1"
+        local line="$2"
+        local line_no
+        line_no=$(grep -n "^\[${section_name}\]" "$libs_toml" | head -1 | cut -d: -f1)
+        if [ -z "$line_no" ]; then
+            print_warning "No [${section_name}] section header — skipping insert of '$line'"
+            return 1
+        fi
+        { head -n "$line_no" "$libs_toml"; echo "$line"; tail -n +$((line_no + 1)) "$libs_toml"; } > "${libs_toml}.tmp"
+        mv "${libs_toml}.tmp" "$libs_toml"
+    }
+
+    local healed=0
+    local warnings=0
+    while IFS= read -r ref; do
+        [ -z "$ref" ] && continue
+        [[ "$ref" =~ $method_re ]] && continue
+        # Skip `versions.X.get` — `libs.versions.X.get()` is a method call.
+        if [[ "$ref" =~ ^versions\..*\.get$ ]]; then
+            ref="${ref%.get}"
+        fi
+
+        local section="libraries"
+        local lookup="$ref"
+        case "$ref" in
+            plugins.*)
+                section="plugins"
+                lookup="${ref#plugins.}"
+                ;;
+            versions.*)
+                section="versions"
+                lookup="${ref#versions.}"
+                [ "$lookup" = "toml" ] && continue
+                ;;
+            bundles.*)
+                section="bundles"
+                lookup="${ref#bundles.}"
+                ;;
+        esac
+        local key
+        key=$(echo "$lookup" | sed 's/\./-/g')
+
+        if grep -qE "^${key}[[:space:]]*=" "$libs_toml"; then
+            continue
+        fi
+
+        local upstream_line
+        upstream_line=$(echo "$upstream_toml" | grep -E "^${key}[[:space:]]*=" | head -1)
+        if [ -z "$upstream_line" ]; then
+            print_warning "Missing alias '$key' (for libs.$ref) not present in upstream catalog either — manual fix needed."
+            warnings=$((warnings + 1))
+            continue
+        fi
+
+        local ref_version
+        ref_version=$(echo "$upstream_line" | grep -oE 'version\.ref = "[^"]+"' | sed -E 's/version\.ref = "([^"]+)"/\1/' | head -1)
+        if [ -n "$ref_version" ] && ! grep -qE "^${ref_version}[[:space:]]*=" "$libs_toml"; then
+            local ver_line
+            ver_line=$(echo "$upstream_toml" | grep -E "^${ref_version}[[:space:]]*=" | head -1)
+            if [ -n "$ver_line" ]; then
+                if insert_into_section "versions" "$ver_line"; then
+                    echo -e "  ${GREEN}${CHECKMARK}${NC} Added version '${ref_version}' (referenced by '${key}') to [versions]"
+                    healed=$((healed + 1))
+                fi
+            fi
+        fi
+
+        if insert_into_section "$section" "$upstream_line"; then
+            echo -e "  ${GREEN}${CHECKMARK}${NC} Added '${key}' to [${section}] from upstream"
+            healed=$((healed + 1))
+        fi
+    done <<< "$raw_refs"
+
+    if [ $healed -gt 0 ]; then
+        echo -e "\n${GREEN}${BOLD}🩹 Healed ${healed} entries in ${libs_toml} — they will be included in the sync.${NC}"
+    elif [ $warnings -gt 0 ]; then
+        print_warning "${warnings} missing aliases could not be auto-healed (not in upstream either). Manual fix needed."
+    else
+        echo -e "  ${GREEN}${CHECKMARK}${NC} libs.versions.toml already in sync with build-logic — no heal needed."
+    fi
+}
+
 if [ "$DRY_RUN" = false ]; then
     # Restore root-level excluded files
     restore_root_files
 
     cleanup_temp_dirs
     rm -rf temp_files
+
+    # Self-heal libs.versions.toml BEFORE we drop the temp branch (we need it to
+    # access upstream's gradle/libs.versions.toml via `git show ${TEMP_BRANCH}:...`).
+    heal_libs_versions_toml
 
     # Cleanup temporary branch
     print_step "Cleaning up temporary branch..."

@@ -27,8 +27,9 @@ class SearchViewModel(
 
     override fun handleAction(action: SearchAction) {
         when (action) {
-            is SearchAction.UpdateSearchText -> mutableStateFlow.value =
-                state.copy(searchText = action.searchText)
+            is SearchAction.UpdateSearchText ->
+                mutableStateFlow.value =
+                    state.copy(searchText = action.searchText)
 
             is SearchAction.ClearSearchText -> {
                 searchJob?.cancel()

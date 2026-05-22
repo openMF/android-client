@@ -100,7 +100,8 @@ internal fun DocumentListScreen(
             else -> Unit
         }
         // Silence unused warning for sealed exhaustiveness on Submitting/Idle.
-        @Suppress("UNUSED_VARIABLE") val _ = s
+        @Suppress("UNUSED_VARIABLE")
+        val unused = s
     }
 
     LaunchedEffect(removeState) {
@@ -115,7 +116,8 @@ internal fun DocumentListScreen(
             }
             else -> Unit
         }
-        @Suppress("UNUSED_VARIABLE") val _ = s
+        @Suppress("UNUSED_VARIABLE")
+        val unused = s
     }
 
     DocumentListScreenContent(

@@ -9,15 +9,6 @@
  */
 package com.mifos.core.model.objects.recurringdeposit
 
-import com.mifos.core.model.objects.recurringdeposit.DepositPeriodFrequency
-import com.mifos.core.model.objects.recurringdeposit.DepositType
-import com.mifos.core.model.objects.recurringdeposit.InMultiplesOfDepositTermType
-import com.mifos.core.model.objects.recurringdeposit.MaxDepositTermType
-import com.mifos.core.model.objects.recurringdeposit.MinDepositTermType
-import com.mifos.core.model.objects.recurringdeposit.InterestCalculationDaysInYearType
-import com.mifos.core.model.objects.recurringdeposit.InterestCalculationType
-import com.mifos.core.model.objects.recurringdeposit.InterestCompoundingPeriodType
-import com.mifos.core.model.objects.recurringdeposit.InterestPostingPeriodType
 import kotlinx.serialization.Serializable
 
 @Serializable

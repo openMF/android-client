@@ -9,6 +9,8 @@
  */
 package com.mifos.core.network.loan.api
 
+import com.mifos.core.model.GenericResponse
+import com.mifos.core.model.network.LoansPayload
 import com.mifos.core.model.objects.account.loan.LoanApproval
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
@@ -19,20 +21,18 @@ import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleTempl
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRequest
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplate
 import com.mifos.core.model.objects.clients.Page
+import com.mifos.core.model.objects.loan.Loan
 import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
-import com.mifos.core.model.GenericResponse
-import com.mifos.core.model.network.LoansPayload
 import com.mifos.core.network.APIEndPoint
-import com.mifos.core.model.objects.loan.Loan
+import com.mifos.room.charge.entity.ChargesEntity
 import com.mifos.room.loan.entity.LoanRepaymentRequestEntity
 import com.mifos.room.loan.entity.LoanRepaymentResponseEntity
-import com.mifos.room.loan.entity.LoanWithAssociationsEntity
-import com.mifos.room.charge.entity.ChargesEntity
 import com.mifos.room.loan.entity.LoanRepaymentTemplateEntity
 import com.mifos.room.loan.entity.LoanTemplate
 import com.mifos.room.loan.entity.LoanTransactionTemplate
+import com.mifos.room.loan.entity.LoanWithAssociationsEntity
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.POST

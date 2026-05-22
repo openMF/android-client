@@ -9,7 +9,6 @@
  */
 package com.mifos.core.model.objects.account.saving
 
-
 data class ChargeCalculationType(
     var id: Int? = null,
 

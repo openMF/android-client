@@ -9,7 +9,6 @@
  */
 package com.mifos.core.model.objects.collectionsheet
 
-
 /**
  * Created by Tarun on 25-07-2017.
  */

@@ -25,8 +25,8 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.DataTableListRepository
 import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.network.LoansPayload
+import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.room.client.entity.ClientPayloadEntity
 import com.mifos.room.datatable.entity.DataTableEntity
 import com.mifos.room.datatable.entity.DataTablePayload

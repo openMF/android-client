@@ -18,10 +18,10 @@ import com.mifos.core.data.repository.SyncGroupsDialogRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.GetLoanAndLoanRepaymentUseCase
 import com.mifos.core.domain.useCases.GetSavingsAccountAndTemplateUseCase
-import com.mifos.room.loan.entity.LoanAccountEntity
-import com.mifos.room.savings.entity.SavingsAccountEntity
 import com.mifos.room.client.entity.ClientEntity
 import com.mifos.room.group.entity.GroupEntity
+import com.mifos.room.loan.entity.LoanAccountEntity
+import com.mifos.room.savings.entity.SavingsAccountEntity
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.flow.MutableStateFlow

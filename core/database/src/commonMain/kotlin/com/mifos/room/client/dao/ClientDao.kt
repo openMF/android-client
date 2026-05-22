@@ -9,21 +9,21 @@
  */
 package com.mifos.room.client.dao
 
-import com.mifos.room.loan.entity.LoanAccountEntity
-import com.mifos.room.savings.entity.SavingsAccountEntity
 import com.mifos.room.client.entity.ClientAddressEntity
 import com.mifos.room.client.entity.ClientEntity
 import com.mifos.room.client.entity.ClientIdentifierEntity
 import com.mifos.room.client.entity.ClientPayloadEntity
+import com.mifos.room.client.entity.ClientsTemplateEntity
+import com.mifos.room.client.entity.InterestTypeEntity
+import com.mifos.room.client.entity.OptionsEntity
 import com.mifos.room.datatable.entity.ColumnHeader
 import com.mifos.room.datatable.entity.ColumnValue
 import com.mifos.room.datatable.entity.DataTableEntity
 import com.mifos.room.datatable.entity.DataTablePayload
-import com.mifos.room.client.entity.ClientsTemplateEntity
-import com.mifos.room.client.entity.InterestTypeEntity
+import com.mifos.room.loan.entity.LoanAccountEntity
 import com.mifos.room.office.entity.OfficeOptionsEntity
-import com.mifos.room.client.entity.OptionsEntity
 import com.mifos.room.savings.entity.SavingProductOptionsEntity
+import com.mifos.room.savings.entity.SavingsAccountEntity
 import com.mifos.room.staff.entity.StaffOptionsEntity
 import kotlinx.coroutines.flow.Flow
 import template.core.base.database.Dao

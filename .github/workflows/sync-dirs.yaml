@@ -249,6 +249,126 @@ jobs:
 
           echo "Sync completed successfully!"
 
+      - name: Heal libs.versions.toml — pull missing build-logic aliases from upstream
+        shell: bash
+        run: |
+          set -uo pipefail
+          # Self-healing step (matches openMF/kmp-project-template PR #163).
+          # `build-logic/` (+ feature build.gradle.kts files) are sync'd from upstream,
+          # but `gradle/libs.versions.toml` is intentionally consumer-local (it carries
+          # project-specific package names + version overrides). When upstream adds
+          # new `libs.<X>` accessors with their matching catalog entries, only the
+          # build files get sync'd — the consumer catalog falls behind. This step
+          # detects that gap and pulls the missing alias entries (and their referenced
+          # version keys) directly from the upstream catalog.
+
+          LIBS_TOML="gradle/libs.versions.toml"
+          TEMP_BRANCH="${{ env.TEMP_BRANCH }}"
+
+          if [[ ! -f "$LIBS_TOML" ]]; then
+            echo "ℹ️  Consumer has no $LIBS_TOML — nothing to heal."
+            exit 0
+          fi
+
+          # Extract every libs.<ref> usage in build files (both build.gradle.kts and
+          # build-logic Kotlin source).
+          raw_refs=$(grep -rhoE '\blibs\.[a-zA-Z][a-zA-Z0-9._]*' \
+                  --include='*.kt' --include='*.kts' \
+                  . 2>/dev/null \
+              | sed -E 's/^libs\.//' \
+              | sort -u)
+
+          # Method-call accessors are not alias references — they take string args.
+          method_re='^(findLibrary|findVersion|findBundle|findPlugin)([(.]|$)'
+
+          # Cache upstream's catalog content once.
+          upstream_toml=$(git show "${TEMP_BRANCH}:${LIBS_TOML}" 2>/dev/null || true)
+          if [[ -z "$upstream_toml" ]]; then
+            echo "⚠️  Upstream has no ${LIBS_TOML} — skipping heal."
+            exit 0
+          fi
+
+          insert_into_section() {
+            local section_name="$1"
+            local line="$2"
+            local line_no
+            line_no=$(grep -n "^\[${section_name}\]" "$LIBS_TOML" | head -1 | cut -d: -f1)
+            if [[ -z "$line_no" ]]; then
+              echo "  ⚠️  No [$section_name] section header in $LIBS_TOML — skipping '$line'"
+              return 1
+            fi
+            { head -n "$line_no" "$LIBS_TOML"; echo "$line"; tail -n +$((line_no + 1)) "$LIBS_TOML"; } > "${LIBS_TOML}.tmp"
+            mv "${LIBS_TOML}.tmp" "$LIBS_TOML"
+          }
+
+          healed=0
+          warnings=0
+          while IFS= read -r ref; do
+            [[ -z "$ref" ]] && continue
+            [[ "$ref" =~ $method_re ]] && continue
+            # Skip `versions.X.get` — `libs.versions.X.get()` is a method call;
+            # the actual key is X.
+            if [[ "$ref" =~ ^versions\..*\.get$ ]]; then
+              ref="${ref%.get}"
+            fi
+
+            section="libraries"
+            lookup="$ref"
+            case "$ref" in
+              plugins.*)
+                section="plugins"
+                lookup="${ref#plugins.}"
+                ;;
+              versions.*)
+                section="versions"
+                lookup="${ref#versions.}"
+                [[ "$lookup" == "toml" ]] && continue
+                ;;
+              bundles.*)
+                section="bundles"
+                lookup="${ref#bundles.}"
+                ;;
+            esac
+            key=$(echo "$lookup" | sed 's/\./-/g')
+
+            if grep -qE "^${key}[[:space:]]*=" "$LIBS_TOML"; then
+              continue
+            fi
+
+            upstream_line=$(echo "$upstream_toml" | grep -E "^${key}[[:space:]]*=" | head -1)
+            if [[ -z "$upstream_line" ]]; then
+              echo "  ⚠️  Missing alias '$key' (for libs.$ref) not present in upstream catalog either — manual fix needed."
+              warnings=$((warnings + 1))
+              continue
+            fi
+
+            ref_version=$(echo "$upstream_line" | grep -oE 'version\.ref = "[^"]+"' | sed -E 's/version\.ref = "([^"]+)"/\1/' | head -1)
+            if [[ -n "$ref_version" ]] && ! grep -qE "^${ref_version}[[:space:]]*=" "$LIBS_TOML"; then
+              ver_line=$(echo "$upstream_toml" | grep -E "^${ref_version}[[:space:]]*=" | head -1)
+              if [[ -n "$ver_line" ]]; then
+                if insert_into_section "versions" "$ver_line"; then
+                  echo "  ✅ Added version '$ref_version' (referenced by '$key') to [versions]"
+                  healed=$((healed + 1))
+                fi
+              fi
+            fi
+
+            if insert_into_section "$section" "$upstream_line"; then
+              echo "  ✅ Added '$key' to [$section] from upstream"
+              healed=$((healed + 1))
+            fi
+          done <<< "$raw_refs"
+
+          echo
+          if [[ $healed -gt 0 ]]; then
+            echo "🩹 Healed $healed entries in $LIBS_TOML — they will be included in the sync PR."
+          elif [[ $warnings -gt 0 ]]; then
+            echo "⚠️  $warnings missing aliases could not be auto-healed (not in upstream either). Manual fix needed."
+            exit 1
+          else
+            echo "✅ libs.versions.toml already in sync with build-logic — no heal needed."
+          fi
+
       - name: Clean up temporary branch
         if: always()
         run: git branch -D "${{ env.TEMP_BRANCH }}" 2>/dev/null || true

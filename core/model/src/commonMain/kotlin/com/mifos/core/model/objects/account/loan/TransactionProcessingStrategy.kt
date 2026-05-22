@@ -9,7 +9,6 @@
  */
 package com.mifos.core.model.objects.account.loan
 
-
 data class TransactionProcessingStrategy(
     var id: Int? = null,
 

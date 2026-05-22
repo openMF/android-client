@@ -18,15 +18,15 @@ import androidx.navigation.toRoute
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.data.repository.RecurringAccountRepository
 import com.mifos.core.data.infra.NetworkMonitor
+import com.mifos.core.data.repository.RecurringAccountRepository
 import com.mifos.core.model.objects.payloads.ChargeItem
 import com.mifos.core.model.objects.payloads.RecurringDepositAccountPayload
+import com.mifos.core.model.objects.recurringdeposit.RecurringDepositAccountTemplate
 import com.mifos.core.model.objects.template.recurring.FieldOfficerOption
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.TextFieldsValidator
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountState.ScreenState
-import com.mifos.core.model.objects.recurringdeposit.RecurringDepositAccountTemplate
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch

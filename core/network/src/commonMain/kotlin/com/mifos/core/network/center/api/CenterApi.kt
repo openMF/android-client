@@ -9,8 +9,8 @@
  */
 package com.mifos.core.network.center.api
 
-import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.model.network.PostCentersCenterIdResponse
+import com.mifos.core.model.objects.clients.ActivatePayload
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.Path

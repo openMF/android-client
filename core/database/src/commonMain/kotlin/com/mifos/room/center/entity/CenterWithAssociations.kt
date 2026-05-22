@@ -10,8 +10,8 @@
 package com.mifos.room.center.entity
 
 import com.mifos.core.model.objects.collectionsheets.CollectionMeetingCalendar
-import com.mifos.core.model.utils.IgnoredOnParcel
 import com.mifos.core.model.objects.timeline.Timeline
+import com.mifos.core.model.utils.IgnoredOnParcel
 import com.mifos.room.client.entity.ClientStatusEntity
 import kotlinx.serialization.Serializable
 

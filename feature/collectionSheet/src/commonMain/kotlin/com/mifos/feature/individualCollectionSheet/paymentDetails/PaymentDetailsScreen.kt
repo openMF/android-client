@@ -52,12 +52,12 @@ import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
+import com.mifos.core.model.network.IndividualCollectionSheetPayload
 import com.mifos.core.model.objects.account.loan.PaymentTypeOptions
 import com.mifos.core.model.objects.collectionsheets.LoanAndClientName
-import com.mifos.core.model.network.IndividualCollectionSheetPayload
+import com.mifos.core.model.objects.loan.BulkRepaymentTransactions
 import com.mifos.core.ui.components.MifosUserImage
 import com.mifos.core.ui.util.DevicePreview
-import com.mifos.core.model.objects.loan.BulkRepaymentTransactions
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme

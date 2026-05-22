@@ -88,7 +88,6 @@ include(":core-base:ui")
 // Library Modules
 //include(":libs:country-code-picker")
 //include(":libs:pullrefresh")
-//include(":libs:mifos-passcode")
 
 include(":feature:about")
 include(":feature:activate")

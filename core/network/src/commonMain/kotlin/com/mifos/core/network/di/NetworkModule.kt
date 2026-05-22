@@ -15,7 +15,6 @@ import com.mifos.core.network.auth.api.AuthApi
 import com.mifos.core.network.center.api.CenterApi
 import com.mifos.core.network.charge.api.ChargeApi
 import com.mifos.core.network.checkerinbox.api.CheckerInboxApi
-import com.mifos.core.network.mifosclient.MifosApiClient
 import com.mifos.core.network.client.api.ClientApi
 import com.mifos.core.network.collectionsheet.api.CollectionSheetApi
 import com.mifos.core.network.datatable.api.DataTableApi
@@ -23,6 +22,7 @@ import com.mifos.core.network.document.api.DocumentApi
 import com.mifos.core.network.fixeddeposit.api.FixedDepositApi
 import com.mifos.core.network.group.api.GroupApi
 import com.mifos.core.network.loan.api.LoanApi
+import com.mifos.core.network.mifosclient.MifosApiClient
 import com.mifos.core.network.note.api.NoteApi
 import com.mifos.core.network.office.api.OfficeApi
 import com.mifos.core.network.pathtracking.api.PathTrackingApi
