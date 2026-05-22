@@ -21,14 +21,15 @@ import com.mifos.core.data.store.submitHandler
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
 import com.mifos.core.domain.useCases.UsernameValidationUseCase
-import com.mifos.core.model.objects.users.User
 import com.mifos.core.model.network.PostAuthenticationResponse
+import com.mifos.core.model.objects.users.User
 import com.mifos.core.ui.store.BaseViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
 
 class LoginViewModel(
     private val prefManager: UserPreferencesRepository,
@@ -116,3 +117,22 @@ class LoginViewModel(
         )
     }
 }
+
+// region MVI types
+
+data class LoginState(
+    val usernameError: StringResource? = null,
+    val passwordError: StringResource? = null,
+)
+
+sealed interface LoginEvent {
+    data object NavigateToPasscode : LoginEvent
+    data class ShowError(val message: StringResource) : LoginEvent
+}
+
+sealed interface LoginAction {
+    data class Submit(val username: String, val password: String) : LoginAction
+    data object DismissError : LoginAction
+}
+
+// endregion
