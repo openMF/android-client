@@ -24,6 +24,7 @@ fun NavGraphBuilder.clientLoanAccountsDestination(
     navController: NavController,
     navigateToViewAccount: (Int) -> Unit,
     navigateToMakeRepayment: (Int) -> Unit,
+    navigateToTransferFund: (Int) -> Unit,
     createAccount: (Int, String) -> Unit,
 ) {
     composable<ClientLoanAccountsRoute> {
@@ -32,6 +33,7 @@ fun NavGraphBuilder.clientLoanAccountsDestination(
             viewAccount = navigateToViewAccount,
             makeRepayment = navigateToMakeRepayment,
             navController = navController,
+            transferFund = navigateToTransferFund,
             createAccount = { clientId, accountNo -> createAccount(clientId, accountNo) },
         )
     }
