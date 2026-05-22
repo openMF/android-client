@@ -78,7 +78,6 @@ import com.mifos.feature.loan.newLoanAccount.pages.DetailsPage
 import com.mifos.feature.loan.newLoanAccount.pages.PreviewPage
 import com.mifos.feature.loan.newLoanAccount.pages.SchedulePage
 import com.mifos.feature.loan.newLoanAccount.pages.TermsPage
-import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
@@ -89,6 +88,7 @@ internal fun NewLoanAccountScreen(
     navController: NavController,
     onNavigateBack: () -> Unit,
     onFinish: () -> Unit,
+    onLoanCreated: (clientId: Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: NewLoanAccountViewModel = koinViewModel(),
 ) {
@@ -98,6 +98,7 @@ internal fun NewLoanAccountScreen(
         when (event) {
             NewLoanAccountEvent.NavigateBack -> onNavigateBack()
             NewLoanAccountEvent.Finish -> onFinish()
+            is NewLoanAccountEvent.LoanCreationSuccess -> onLoanCreated(event.clientId)
         }
     }
 
@@ -239,14 +240,7 @@ private fun NewLoanAccountDialogs(
 
         is NewLoanAccountState.DialogState.SuccessResponseStatus -> {
             LaunchedEffect(state.launchEffectKey) {
-                snackbarHostState.showSnackbar(
-                    message = state.dialogState.msg,
-                )
-
-                if (state.dialogState.successStatus) {
-                    delay(1000)
-                    onAction(NewLoanAccountAction.Finish)
-                }
+                snackbarHostState.showSnackbar(message = state.dialogState.msg)
             }
         }
 

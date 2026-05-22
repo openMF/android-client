@@ -34,6 +34,7 @@ import com.mifos.core.network.model.LoansPayload
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState.DialogState
 import com.mifos.room.entities.templates.loans.LoanTemplate
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
@@ -322,6 +323,8 @@ internal class NewLoanAccountViewModel(
                                 ),
                             )
                         }
+                        delay(1000)
+                        sendEvent(NewLoanAccountEvent.LoanCreationSuccess(state.clientId))
                     }
                 }
             }
@@ -1092,6 +1095,7 @@ constructor(
 sealed interface NewLoanAccountEvent {
     data object NavigateBack : NewLoanAccountEvent
     data object Finish : NewLoanAccountEvent
+    data class LoanCreationSuccess(val clientId: Int) : NewLoanAccountEvent
 }
 
 sealed interface NewLoanAccountAction {
