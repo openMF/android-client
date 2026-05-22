@@ -39,7 +39,7 @@ class ClientLoanAccountsViewModel(
             }
 
             is ClientLoanAccountsAction.MakeRepayment -> {
-                sendEvent(ClientLoanAccountsEvent.MakeRepayment(action.loanId))
+                action.loanId?.let { sendEvent(ClientLoanAccountsEvent.MakeRepayment(it)) }
             }
 
             ClientLoanAccountsAction.OnSearchClick -> {
@@ -68,11 +68,14 @@ class ClientLoanAccountsViewModel(
                 }
             }
 
-            is ClientLoanAccountsAction.ViewAccount -> sendEvent(
-                ClientLoanAccountsEvent.ViewAccount(
-                    action.loanId,
-                ),
-            )
+            is ClientLoanAccountsAction.ViewAccount -> action.loanId?.let { loanId ->
+                sendEvent(
+                    ClientLoanAccountsEvent.ViewAccount(
+                        loanId,
+                    ),
+                )
+            }
+
             is ClientLoanAccountsAction.HandleFilterClick -> handleFilterClick(action.status)
 
             is ClientLoanAccountsAction.ClearFilters -> clearFilters()
@@ -88,6 +91,16 @@ class ClientLoanAccountsViewModel(
                         ClientLoanAccountsEvent.AddAccount(
                             route.clientId,
                             client.accountNo ?: "",
+                        ),
+                    )
+                }
+            }
+
+            is ClientLoanAccountsAction.TransferFund -> {
+                action.loanId?.let { loanId ->
+                    sendEvent(
+                        ClientLoanAccountsEvent.TransferFund(
+                            loanId = loanId,
                         ),
                     )
                 }
@@ -116,15 +129,18 @@ class ClientLoanAccountsViewModel(
     private fun getLoanAccounts() {
         viewModelScope.launch {
             mutableStateFlow.update {
-                it.copy(isLoading = true)
+                it.copy(
+                    dialogState = ClientLoanAccountsState.DialogState.Loading,
+                )
             }
 
             try {
                 // Todo modify search accordingly
                 // currently only supporting searching by account no
-                val loanAccounts = repository.getClientAccounts(route.clientId)
-                    .loanAccounts
-                    .filter { it.accountNo?.contains(state.searchText.trim()) == true }
+                val loanAccounts =
+                    repository.getClientAccounts(route.clientId).loanAccounts.filter {
+                        it.accountNo?.contains(state.searchText.trim()) == true
+                    }
 
                 mutableStateFlow.update {
                     it.copy(
@@ -132,7 +148,6 @@ class ClientLoanAccountsViewModel(
                         unfilteredLoanAccounts = loanAccounts,
                         selectedStatus = emptySet(),
                         dialogState = null,
-                        isLoading = false,
                     )
                 }
             } catch (e: Exception) {
@@ -141,7 +156,6 @@ class ClientLoanAccountsViewModel(
                         dialogState = ClientLoanAccountsState.DialogState.Error(
                             e.message ?: "Unknown error",
                         ),
-                        isLoading = false,
                     )
                 }
             }
@@ -188,11 +202,9 @@ class ClientLoanAccountsViewModel(
             )
         }
     }
+
     private val LoanStatusEntity.isActuallyClosed: Boolean
-        get() = this.closed == true ||
-            this.closedObligationsMet == true ||
-            this.closedRescheduled == true ||
-            this.closedWrittenOff == true
+        get() = this.closed == true || this.closedObligationsMet == true || this.closedRescheduled == true || this.closedWrittenOff == true
 
     private val LoanStatusEntity.isPending: Boolean
         get() = this.pendingApproval == true
@@ -210,10 +222,10 @@ data class ClientLoanAccountsState(
     val selectedStatus: Set<LoanStatusFilter> = emptySet(),
     val isFilterDialogOpen: Boolean = false,
     val dialogState: DialogState? = null,
-    val isLoading: Boolean = false,
 ) {
     sealed interface DialogState {
         data class Error(val message: String) : DialogState
+        object Loading : DialogState
     }
 }
 
@@ -222,6 +234,9 @@ sealed interface ClientLoanAccountsEvent {
     data class AddAccount(val clientId: Int, val accountNo: String) : ClientLoanAccountsEvent
     data class MakeRepayment(val id: Int) : ClientLoanAccountsEvent
     data class ViewAccount(val id: Int) : ClientLoanAccountsEvent
+    data class TransferFund(
+        val loanId: Int,
+    ) : ClientLoanAccountsEvent
 }
 
 sealed interface ClientLoanAccountsAction {
@@ -231,13 +246,16 @@ sealed interface ClientLoanAccountsAction {
     data object NavigateBack : ClientLoanAccountsAction
     data object ToggleFilter : ClientLoanAccountsAction
     data object Refresh : ClientLoanAccountsAction
-    data class MakeRepayment(val loanId: Int) : ClientLoanAccountsAction
-    data class ViewAccount(val loanId: Int) : ClientLoanAccountsAction
+    data class MakeRepayment(val loanId: Int?) : ClientLoanAccountsAction
+    data class ViewAccount(val loanId: Int?) : ClientLoanAccountsAction
     data class UpdateSearchValue(val query: String) : ClientLoanAccountsAction
     data object OnSearchClick : ClientLoanAccountsAction
     data object CloseDialog : ClientLoanAccountsAction
     data class HandleFilterClick(val status: LoanStatusFilter) : ClientLoanAccountsAction
     data object ClearFilters : ClientLoanAccountsAction
+    data class TransferFund(
+        val loanId: Int?,
+    ) : ClientLoanAccountsAction
 }
 
 enum class LoanStatusFilter {

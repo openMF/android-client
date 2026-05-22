@@ -42,6 +42,7 @@ fun NavGraphBuilder.loanDestination(
     onDocumentsClicked: (Int, String) -> Unit,
     onNotesClicked: (Int, String?) -> Unit,
     onMoreInfoClicked: (String, Int) -> Unit,
+    onLoanCreated: (clientId: Int) -> Unit,
 ) {
     loanAccountSummary(
         onBackPressed = navController::popBackStack,
@@ -77,6 +78,7 @@ fun NavGraphBuilder.loanDestination(
     newLoanAccountDestination(
         onNavigateBack = navController::popBackStack,
         onFinish = navController::popBackStack,
+        onLoanCreated = onLoanCreated,
         navController = navController,
     )
 

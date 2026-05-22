@@ -85,7 +85,7 @@ internal fun LoanAccountProfileScreen(
     navigateToDocuments: (Int) -> Unit,
     navigateToReschedules: (Int) -> Unit,
     navigateToNotes: (Int) -> Unit,
-    navigateToTransferScreen: (loanId: Int, accountNumber: String, clientId: Int, currencyCode: String, officeId: Int) -> Unit,
+    navigateToTransferScreen: (loanId: Int) -> Unit,
     navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: LoanAccountProfileViewModel = koinViewModel(),
@@ -105,10 +105,6 @@ internal fun LoanAccountProfileScreen(
                         val account = state.loanAccount ?: return@EventsEffect
                         navigateToTransferScreen(
                             account.id,
-                            account.accountNo,
-                            account.clientId,
-                            account.currency.code ?: "N/A",
-                            account.clientOfficeId,
                         )
                     }
                 }
