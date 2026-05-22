@@ -13,8 +13,8 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.jetbrainsCompose)
-
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kover.convention)
 }
 
 kotlin {
