@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.document.ui
 
-import com.mifos.core.data.store.ScreenState
+import template.core.base.store.screen.ScreenState
 import com.mifos.core.model.objects.noncoreobjects.Document
 
 /**

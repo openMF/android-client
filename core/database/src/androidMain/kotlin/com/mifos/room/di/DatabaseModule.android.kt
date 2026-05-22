@@ -10,32 +10,23 @@
 package com.mifos.room.di
 
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.room.MifosDatabase
-import com.mifos.room.MifosDatabaseMigrations
+import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.module.Module
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import template.core.base.database.AppDatabaseFactory
-import kotlin.coroutines.CoroutineContext
 
-/**
- * Android `actual val platformModule` — provides the [MifosDatabase] singleton via
- * `AppDatabaseFactory(androidApplication())`. Migrations + entity declarations live
- * in the commonMain [MifosDatabase] file; this module is purely Android-specific
- * initialization (Context, driver, dispatcher).
- */
 actual val platformModule: Module = module {
     single<MifosDatabase> {
-        val ioContext: CoroutineContext = getKoin().get(named(MifosDispatchers.IO.name))
-
         AppDatabaseFactory(androidApplication())
-            .createDatabase(MifosDatabase::class.java, MifosDatabase.DATABASE_NAME)
+            .createDatabase<MifosDatabase>(
+                databaseName = MifosDatabase.DATABASE_NAME,
+            )
+            .fallbackToDestructiveMigration(dropAllTables = true)
             .fallbackToDestructiveMigrationOnDowngrade(false)
-            .addMigrations(*MifosDatabaseMigrations)
             .setDriver(BundledSQLiteDriver())
-            .setQueryCoroutineContext(ioContext)
+            .setQueryCoroutineContext(Dispatchers.IO)
             .build()
     }
 }

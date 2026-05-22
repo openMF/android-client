@@ -21,7 +21,7 @@ import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleTempl
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRequest
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplate
 import com.mifos.core.model.objects.clients.Page
-import com.mifos.core.model.objects.loan.Loan
+import com.mifos.room.loan.entity.Loan
 import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate

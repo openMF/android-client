@@ -14,7 +14,7 @@ import com.mifos.room.survey.entity.QuestionDatasEntity
 import com.mifos.room.survey.entity.ResponseDatasEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import template.core.base.database.TypeConverter
+import androidx.room3.TypeConverter
 
 /**
  * Created by Pronay Sarker on 13/02/2025 (2:53 AM)

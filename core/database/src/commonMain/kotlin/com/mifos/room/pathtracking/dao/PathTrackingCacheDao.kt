@@ -11,9 +11,9 @@ package com.mifos.room.pathtracking.dao
 
 import com.mifos.room.pathtracking.entity.PathTrackingCacheEntity
 import kotlinx.coroutines.flow.Flow
-import template.core.base.database.Dao
-import template.core.base.database.Query
-import template.core.base.database.Upsert
+import androidx.room3.Dao
+import androidx.room3.Query
+import androidx.room3.Upsert
 
 /**
  * DAO for the `path_tracking_cache` table — backs `PathTrackingListStore`'s
@@ -22,7 +22,7 @@ import template.core.base.database.Upsert
 @Dao
 interface PathTrackingCacheDao {
 
-    @Upsert
+    @Upsert(entity = PathTrackingCacheEntity::class)
     suspend fun upsertAll(entities: List<PathTrackingCacheEntity>)
 
     @Query("SELECT * FROM path_tracking_cache WHERE userId = :userId ORDER BY ordinal ASC")

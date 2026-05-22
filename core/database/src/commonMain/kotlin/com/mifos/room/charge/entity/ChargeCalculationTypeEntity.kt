@@ -10,13 +10,9 @@
 package com.mifos.room.charge.entity
 
 import kotlinx.serialization.Serializable
-import template.core.base.database.CollationSequence.UNSPECIFIED
-import template.core.base.database.ColumnInfo
-import template.core.base.database.ColumnInfoTypeAffinity.INHERIT_FIELD_NAME
-import template.core.base.database.ColumnInfoTypeAffinity.UNDEFINED
-import template.core.base.database.ColumnInfoTypeAffinity.VALUE_UNSPECIFIED
-import template.core.base.database.Entity
-import template.core.base.database.PrimaryKey
+import androidx.room3.ColumnInfo
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 
 @Serializable
 @Entity(
@@ -29,7 +25,7 @@ import template.core.base.database.PrimaryKey
 )
 data class ChargeCalculationTypeEntity(
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(index = true, name = INHERIT_FIELD_NAME, typeAffinity = UNDEFINED, collate = UNSPECIFIED, defaultValue = VALUE_UNSPECIFIED)
+    @ColumnInfo(index = true)
     val id: Int,
 
     val code: String? = null,

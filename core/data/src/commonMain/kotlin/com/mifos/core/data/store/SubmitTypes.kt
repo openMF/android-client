@@ -10,9 +10,9 @@
 package com.mifos.core.data.store
 
 import kotlinx.coroutines.CoroutineScope
+import template.core.base.store.submit.submitHandler as baseSubmitHandler
 
 typealias SubmitHandler<R> = template.core.base.store.submit.SubmitHandler<R>
 typealias SubmitState<R> = template.core.base.store.submit.SubmitState<R>
 
-fun <R> CoroutineScope.submitHandler(): SubmitHandler<R> =
-    template.core.base.store.submit.submitHandler()
+fun <R> CoroutineScope.submitHandler(): SubmitHandler<R> = baseSubmitHandler()

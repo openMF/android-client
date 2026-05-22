@@ -99,7 +99,7 @@ class NoteRepositoryImpl(
         // Consume the first terminal response so the store actually executes the fetch.
         noteListStore.stream(StoreReadRequest.fresh(key))
             .first { response ->
-                response is StoreReadResponse.Data<*> || response is StoreReadResponse.Error<*>
+                response is StoreReadResponse.Data<*> || response is StoreReadResponse.Error
             }
     }
 }

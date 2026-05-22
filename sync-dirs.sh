@@ -248,6 +248,73 @@ preserve_excluded_paths() {
     fi
 }
 
+# Returns 0 if path (relative to repo root) is under an excluded dir/file
+# for the given sync-root dir. Honors both 'dir' and 'file' exclusion types.
+is_under_excluded() {
+    local sync_root=$1   # e.g. "core-base"
+    local path=$2        # e.g. "core-base/database/src/main/AndroidManifest.xml"
+
+    if [ -n "${EXCLUSIONS[$sync_root]:-}" ]; then
+        local IFS=' '
+        read -ra EXCLUDE_ITEMS <<< "${EXCLUSIONS[$sync_root]}"
+        for item in "${EXCLUDE_ITEMS[@]}"; do
+            local IFS=':'
+            read -ra PARTS <<< "$item"
+            local exclude_path="$sync_root/${PARTS[0]}"
+            local exclude_type="${PARTS[1]}"
+            if [ "$exclude_type" = "dir" ]; then
+                # Match the dir itself OR anything under it
+                if [ "$path" = "$exclude_path" ] || [[ "$path" == "$exclude_path/"* ]]; then
+                    return 0
+                fi
+            elif [ "$exclude_type" = "file" ]; then
+                if [ "$path" = "$exclude_path" ]; then
+                    return 0
+                fi
+            fi
+        done
+    fi
+    return 1
+}
+
+# Mirror-sync: remove local files that no longer exist in upstream for this
+# sync root (respecting EXCLUSIONS). Without this step `git checkout treeish --
+# "$dir"` only overlays upstream content; stale local-only files linger forever.
+prune_stale_files() {
+    local dir=$1
+    local temp_branch=$2
+
+    local upstream_files local_files
+    upstream_files=$(git ls-tree -r --name-only "$temp_branch" -- "$dir" 2>/dev/null | sort -u)
+    if [ -z "$upstream_files" ]; then
+        # Dir doesn't exist in upstream at all — leave the local copy alone (the
+        # operator probably wants to be told, not silently wiped).
+        print_warning "Directory ${BOLD}$dir${NC} not present in upstream — skipping prune."
+        return 0
+    fi
+    local_files=$(find "$dir" -type f 2>/dev/null | sed 's|^\./||' | sort -u)
+
+    # Files present locally but absent upstream = stale.
+    local stale_files
+    stale_files=$(comm -23 <(printf '%s\n' "$local_files") <(printf '%s\n' "$upstream_files") || true)
+    [ -z "$stale_files" ] && return 0
+
+    local pruned=0
+    while IFS= read -r stale; do
+        [ -z "$stale" ] && continue
+        if is_under_excluded "$dir" "$stale"; then
+            continue
+        fi
+        echo -e "  ${YELLOW}- pruning stale file: ${BOLD}$stale${NC} (removed upstream)"
+        git rm -f -- "$stale" >/dev/null 2>&1 || rm -f -- "$stale"
+        pruned=$((pruned + 1))
+    done <<< "$stale_files"
+
+    if [ "$pruned" -gt 0 ]; then
+        print_step "Pruned ${BOLD}$pruned${NC} stale file(s) from ${BOLD}$dir${NC}"
+    fi
+}
+
 # Function to sync directory with exclusions
 sync_directory() {
     local dir=$1
@@ -285,6 +352,13 @@ sync_directory() {
                     done
                 fi
             fi
+
+            # Mirror-sync prune: delete local files that no longer exist upstream
+            # BEFORE we overlay upstream content. Without this `git checkout` only
+            # adds/overwrites — stale files linger silently and drift accumulates
+            # (e.g. core-base/database/src/commonMain/Room.kt left behind after
+            # the template removed its KMP-typealias shim).
+            prune_stale_files "$dir" "$temp_branch"
 
             # Checkout from upstream
             git checkout "$temp_branch" -- "$dir" || {

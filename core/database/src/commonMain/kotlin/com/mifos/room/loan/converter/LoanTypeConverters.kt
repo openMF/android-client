@@ -29,7 +29,7 @@ import com.mifos.room.savings.entity.PaymentTypeOptionEntity
 import com.mifos.room.savings.entity.SavingAccountCurrencyEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import template.core.base.database.TypeConverter
+import androidx.room3.TypeConverter
 
 /**
  * Created by Pronay Sarker on 24/01/2025 (3:07 PM)

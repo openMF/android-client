@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.document.ui
 
-import com.mifos.core.data.store.DataFreshness
-import com.mifos.core.data.store.ScreenState
+import template.core.base.store.screen.DataFreshness
+import template.core.base.store.screen.ScreenState
 import io.github.vinceglb.filekit.PlatformFile
 
 /**

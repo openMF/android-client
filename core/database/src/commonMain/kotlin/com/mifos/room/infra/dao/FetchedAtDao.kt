@@ -10,9 +10,9 @@
 package com.mifos.room.infra.dao
 
 import com.mifos.room.infra.entity.FetchedAtEntity
-import template.core.base.database.Dao
-import template.core.base.database.Query
-import template.core.base.database.Upsert
+import androidx.room3.Dao
+import androidx.room3.Query
+import androidx.room3.Upsert
 
 /**
  * DAO for the framework-owned `framework_fetched_at` table.
@@ -26,6 +26,6 @@ interface FetchedAtDao {
     @Query("SELECT lastFetchedMillis FROM framework_fetched_at WHERE storeKey = :storeKey")
     suspend fun read(storeKey: String): Long?
 
-    @Upsert
+    @Upsert(entity = FetchedAtEntity::class)
     suspend fun upsert(entity: FetchedAtEntity)
 }

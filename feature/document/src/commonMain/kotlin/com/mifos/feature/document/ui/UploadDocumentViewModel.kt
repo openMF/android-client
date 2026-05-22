@@ -11,7 +11,7 @@ package com.mifos.feature.document.ui
 
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.document.DocumentRepository
-import com.mifos.core.data.store.SubmitState
+import template.core.base.store.submit.SubmitState
 import com.mifos.core.data.store.submitHandler
 import com.mifos.core.ui.store.BaseViewModel
 import com.mifos.core.ui.util.multipartRequestBody

@@ -10,9 +10,9 @@
 package com.mifos.room.infra.dao
 
 import com.mifos.room.infra.entity.BookkeeperEntity
-import template.core.base.database.Dao
-import template.core.base.database.Query
-import template.core.base.database.Upsert
+import androidx.room3.Dao
+import androidx.room3.Query
+import androidx.room3.Upsert
 
 /**
  * DAO for [BookkeeperEntity]. Provides persistent sync-failure tracking
@@ -24,7 +24,7 @@ interface BookkeeperDao {
     @Query("SELECT lastFailedSync FROM store_bookkeeper WHERE `key` = :key")
     suspend fun getLastFailedSync(key: String): Long?
 
-    @Upsert
+    @Upsert(entity = BookkeeperEntity::class)
     suspend fun upsert(entity: BookkeeperEntity)
 
     @Query("DELETE FROM store_bookkeeper WHERE `key` = :key")

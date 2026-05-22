@@ -10,9 +10,12 @@
 package com.mifos.room.client.entity
 
 import com.mifos.room.datatable.entity.DataTableEntity
+import com.mifos.room.office.entity.OfficeOptionsEntity
+import com.mifos.room.savings.entity.SavingProductOptionsEntity
+import com.mifos.room.staff.entity.StaffOptionsEntity
 import kotlinx.serialization.Serializable
-import template.core.base.database.Entity
-import template.core.base.database.PrimaryKey
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 
 @Serializable
 @Entity(

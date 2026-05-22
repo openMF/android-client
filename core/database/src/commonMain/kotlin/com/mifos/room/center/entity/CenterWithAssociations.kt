@@ -13,6 +13,7 @@ import com.mifos.core.model.objects.collectionsheets.CollectionMeetingCalendar
 import com.mifos.core.model.objects.timeline.Timeline
 import com.mifos.core.model.utils.IgnoredOnParcel
 import com.mifos.room.client.entity.ClientStatusEntity
+import com.mifos.room.group.entity.GroupEntity
 import kotlinx.serialization.Serializable
 
 /**

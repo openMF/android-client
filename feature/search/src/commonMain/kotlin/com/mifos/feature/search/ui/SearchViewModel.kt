@@ -11,8 +11,8 @@ package com.mifos.feature.search.ui
 
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.search.SearchRepository
-import com.mifos.core.data.store.DataFreshness
-import com.mifos.core.data.store.ScreenState
+import template.core.base.store.screen.DataFreshness
+import template.core.base.store.screen.ScreenState
 import com.mifos.core.ui.store.BaseViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job

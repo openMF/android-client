@@ -10,6 +10,7 @@
 package com.mifos.room.charge.entity
 
 import com.mifos.core.model.utils.IgnoredOnParcel
+import com.mifos.room.savings.entity.SavingAccountCurrencyEntity
 import kotlinx.serialization.Serializable
 
 @Serializable

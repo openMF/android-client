@@ -14,17 +14,13 @@ import com.mifos.core.model.objects.account.saving.InterestCalculationType
 import com.mifos.core.model.objects.account.saving.InterestCompoundingPeriodType
 import com.mifos.core.model.objects.account.saving.InterestPostingPeriodType
 import com.mifos.core.model.objects.account.saving.LockinPeriodFrequencyType
+import com.mifos.room.charge.entity.SavingsCharge
 import com.mifos.room.loan.entity.LoanTimelineEntity
 import kotlinx.serialization.Serializable
-import template.core.base.database.CollationSequence.UNSPECIFIED
-import template.core.base.database.ColumnInfo
-import template.core.base.database.ColumnInfoTypeAffinity.INHERIT_FIELD_NAME
-import template.core.base.database.ColumnInfoTypeAffinity.UNDEFINED
-import template.core.base.database.ColumnInfoTypeAffinity.VALUE_UNSPECIFIED
-import template.core.base.database.Entity
-import template.core.base.database.ForeignKey
-import template.core.base.database.ForeignKeyAction
-import template.core.base.database.PrimaryKey
+import androidx.room3.ColumnInfo
+import androidx.room3.Entity
+import androidx.room3.ForeignKey
+import androidx.room3.PrimaryKey
 
 @Entity(
     tableName = "SavingsAccountWithAssociations",
@@ -37,16 +33,16 @@ import template.core.base.database.PrimaryKey
             entity = SavingsAccountStatusEntity::class,
             parentColumns = ["id"],
             childColumns = ["status"],
-            onDelete = ForeignKeyAction.CASCADE,
-            onUpdate = ForeignKeyAction.NO_ACTION,
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.NO_ACTION,
             deferred = false,
         ),
         ForeignKey(
             entity = SavingsAccountSummaryEntity::class,
             parentColumns = ["savingsId"],
             childColumns = ["summary"],
-            onDelete = ForeignKeyAction.CASCADE,
-            onUpdate = ForeignKeyAction.NO_ACTION,
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.NO_ACTION,
             deferred = false,
         ),
     ],
@@ -68,7 +64,7 @@ data class SavingsAccountWithAssociationsEntity(
 
     val fieldOfficerId: Int? = null,
 
-    @ColumnInfo(index = true, name = INHERIT_FIELD_NAME, typeAffinity = UNDEFINED, collate = UNSPECIFIED, defaultValue = VALUE_UNSPECIFIED)
+    @ColumnInfo(index = true)
     val status: SavingsAccountStatusEntity? = null,
 
     val timeline: LoanTimelineEntity? = null,
@@ -105,10 +101,10 @@ data class SavingsAccountWithAssociationsEntity(
 
     val overdraftLimit: Int? = null,
 
-    @ColumnInfo(index = true, name = INHERIT_FIELD_NAME, typeAffinity = UNDEFINED, collate = UNSPECIFIED, defaultValue = VALUE_UNSPECIFIED)
+    @ColumnInfo(index = true)
     val summary: SavingsAccountSummaryEntity? = null,
 
     val transactions: List<SavingsAccountTransactionEntity> = emptyList(),
 
-    val charges: List<Charge?> = emptyList(),
+    val charges: List<SavingsCharge?> = emptyList(),
 )

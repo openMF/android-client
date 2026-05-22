@@ -11,9 +11,9 @@ package com.mifos.room.note.dao
 
 import com.mifos.room.note.entity.NoteCacheEntity
 import kotlinx.coroutines.flow.Flow
-import template.core.base.database.Dao
-import template.core.base.database.Query
-import template.core.base.database.Upsert
+import androidx.room3.Dao
+import androidx.room3.Query
+import androidx.room3.Upsert
 
 /**
  * DAO for the `note_cache` table — backs the `NoteListStore` Store5 SourceOfTruth.
@@ -21,7 +21,7 @@ import template.core.base.database.Upsert
 @Dao
 interface NoteCacheDao {
 
-    @Upsert
+    @Upsert(entity = NoteCacheEntity::class)
     suspend fun upsertAll(entities: List<NoteCacheEntity>)
 
     @Query("SELECT * FROM note_cache WHERE resourceType = :resourceType AND resourceId = :resourceId ORDER BY createdOn DESC")

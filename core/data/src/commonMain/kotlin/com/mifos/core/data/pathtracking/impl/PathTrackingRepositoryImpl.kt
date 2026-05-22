@@ -69,7 +69,7 @@ class PathTrackingRepositoryImpl(
         val key = PathTrackingListKey(userId)
         pathTrackingListStore.stream(StoreReadRequest.fresh(key))
             .first { response ->
-                response is StoreReadResponse.Data<*> || response is StoreReadResponse.Error<*>
+                response is StoreReadResponse.Data<*> || response is StoreReadResponse.Error
             }
     }
 }

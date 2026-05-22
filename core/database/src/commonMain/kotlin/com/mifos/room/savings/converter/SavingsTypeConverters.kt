@@ -19,7 +19,7 @@ import com.mifos.room.savings.entity.SavingsTransactionDateEntity
 import com.mifos.room.savings.entity.SavingsTransactionTypeEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import template.core.base.database.TypeConverter
+import androidx.room3.TypeConverter
 
 // todo add missing converters
 class SavingsTypeConverters {

@@ -11,8 +11,8 @@ package com.mifos.room.client.entity
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import template.core.base.database.Entity
-import template.core.base.database.PrimaryKey
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 
 @Serializable
 @Entity(

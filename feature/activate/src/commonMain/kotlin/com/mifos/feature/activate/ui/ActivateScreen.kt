@@ -46,7 +46,7 @@ import com.mifos.core.model.utils.ApiDateFormatter
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.common.utils.formatDate
-import com.mifos.core.data.store.SubmitState
+import template.core.base.store.submit.SubmitState
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosScaffold

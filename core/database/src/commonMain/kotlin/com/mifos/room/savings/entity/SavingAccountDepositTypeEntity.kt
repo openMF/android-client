@@ -9,10 +9,13 @@
  */
 package com.mifos.room.savings.entity
 
-import com.mifos.core.network.APIEndPoint
 import kotlinx.serialization.Serializable
-import template.core.base.database.Entity
-import template.core.base.database.PrimaryKey
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
+
+private const val ENDPOINT_SAVINGS_ACCOUNTS = "savingsaccounts"
+private const val ENDPOINT_FIXED_DEPOSIT = "fixeddepositaccounts"
+private const val ENDPOINT_RECURRING_ACCOUNTS = "recurringdepositaccounts"
 
 @Entity(
     indices = [],
@@ -40,9 +43,9 @@ data class SavingAccountDepositTypeEntity(
         get() = ServerTypes.fromId(id)
 
     enum class ServerTypes(val id: Int, val code: String, val endpoint: String) {
-        SAVINGS(100, "depositAccountType.savingsDeposit", APIEndPoint.SAVINGS_ACCOUNTS),
-        FIXED(200, "depositAccountType.fixedDeposit", APIEndPoint.FIXED_DEPOSIT),
-        RECURRING(300, "depositAccountType.recurringDeposit", APIEndPoint.RECURRING_ACCOUNTS),
+        SAVINGS(100, "depositAccountType.savingsDeposit", ENDPOINT_SAVINGS_ACCOUNTS),
+        FIXED(200, "depositAccountType.fixedDeposit", ENDPOINT_FIXED_DEPOSIT),
+        RECURRING(300, "depositAccountType.recurringDeposit", ENDPOINT_RECURRING_ACCOUNTS),
         ;
 
         companion object {

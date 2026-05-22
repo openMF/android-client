@@ -49,7 +49,6 @@ import com.mifos.room.group.entity.GroupEntity
 import com.mifos.room.loan.entity.ActualDisbursementDateEntity
 import com.mifos.room.loan.entity.LoanStatusEntity
 import com.mifos.room.loan.entity.LoanTimelineEntity
-import com.mifos.room.loan.entity.LoanType
 import com.mifos.room.loan.entity.LoanTypeEntity
 import com.mifos.room.loan.entity.LoansAccountSummaryEntity
 import com.mifos.room.office.entity.OfficeOpeningDateEntity
@@ -71,7 +70,7 @@ import com.mifos.room.survey.entity.ResponseDatasEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
-import template.core.base.database.TypeConverter
+import androidx.room3.TypeConverter
 
 @Suppress("TooManyFunctions")
 class CustomTypeConverters {
@@ -536,16 +535,6 @@ class CustomTypeConverters {
 
     @TypeConverter
     fun toTransactionList(json: String?): List<Transaction>? {
-        return json?.let { Json.decodeFromString(it) }
-    }
-
-    @TypeConverter
-    fun fromType(type: LoanType?): String? {
-        return type?.let { Json.encodeToString(it) }
-    }
-
-    @TypeConverter
-    fun toType(json: String?): LoanType? {
         return json?.let { Json.decodeFromString(it) }
     }
 

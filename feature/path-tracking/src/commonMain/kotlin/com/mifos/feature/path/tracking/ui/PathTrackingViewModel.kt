@@ -12,8 +12,8 @@ package com.mifos.feature.path.tracking.ui
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.pathtracking.PathTrackingRepository
 import com.mifos.core.data.pathtracking.store.PathTrackingListKey
-import com.mifos.core.data.store.DataFreshness
-import com.mifos.core.data.store.ScreenState
+import template.core.base.store.screen.DataFreshness
+import template.core.base.store.screen.ScreenState
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.users.UserLocation
 import com.mifos.core.ui.store.BaseViewModel

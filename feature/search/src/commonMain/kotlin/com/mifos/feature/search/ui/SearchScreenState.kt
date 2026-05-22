@@ -18,7 +18,7 @@ import androidclient.feature.search.generated.resources.feature_search_filter_op
 import androidclient.feature.search.generated.resources.feature_search_filter_options_loans_value
 import androidclient.feature.search.generated.resources.feature_search_filter_options_savings_label
 import androidclient.feature.search.generated.resources.feature_search_filter_options_savings_value
-import com.mifos.core.data.store.ScreenState
+import template.core.base.store.screen.ScreenState
 import com.mifos.core.model.objects.SearchedEntity
 import org.jetbrains.compose.resources.StringResource
 

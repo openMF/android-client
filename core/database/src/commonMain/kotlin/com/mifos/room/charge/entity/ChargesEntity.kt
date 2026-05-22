@@ -9,9 +9,10 @@
  */
 package com.mifos.room.charge.entity
 
+import com.mifos.room.client.entity.ClientDateEntity
 import kotlinx.serialization.Serializable
-import template.core.base.database.Entity
-import template.core.base.database.PrimaryKey
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 
 /**
  * Created by nellyk on 2/15/2016.

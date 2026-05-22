@@ -13,7 +13,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.DataTableListRepository
 import com.mifos.room.loan.entity.LoansPayload
-import com.mifos.core.model.objects.loan.Loan
+import com.mifos.room.loan.entity.Loan
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.datamanager.DataManagerClient

@@ -12,8 +12,8 @@ package com.mifos.room.client.entity
 import com.mifos.core.model.objects.clients.Address
 import com.mifos.room.datatable.entity.DataTablePayload
 import kotlinx.serialization.Serializable
-import template.core.base.database.Entity
-import template.core.base.database.PrimaryKey
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 
 @Serializable
 @Entity(

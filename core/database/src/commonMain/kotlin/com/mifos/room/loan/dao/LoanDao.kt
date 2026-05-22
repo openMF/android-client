@@ -14,11 +14,11 @@ import com.mifos.room.loan.entity.LoanRepaymentTemplateEntity
 import com.mifos.room.loan.entity.LoanWithAssociationsEntity
 import com.mifos.room.savings.entity.PaymentTypeOptionEntity
 import kotlinx.coroutines.flow.Flow
-import template.core.base.database.Dao
-import template.core.base.database.Insert
-import template.core.base.database.OnConflictStrategy
-import template.core.base.database.Query
-import template.core.base.database.Update
+import androidx.room3.Dao
+import androidx.room3.Insert
+import androidx.room3.OnConflictStrategy
+import androidx.room3.Query
+import androidx.room3.Update
 
 @Dao
 interface LoanDao {

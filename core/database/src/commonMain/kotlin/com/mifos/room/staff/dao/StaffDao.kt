@@ -11,10 +11,10 @@ package com.mifos.room.staff.dao
 
 import com.mifos.room.staff.entity.StaffEntity
 import kotlinx.coroutines.flow.Flow
-import template.core.base.database.Dao
-import template.core.base.database.Insert
-import template.core.base.database.OnConflictStrategy
-import template.core.base.database.Query
+import androidx.room3.Dao
+import androidx.room3.Insert
+import androidx.room3.OnConflictStrategy
+import androidx.room3.Query
 
 /**
  * Created by Pronay Sarker on 14/02/2025 (1:54 AM)

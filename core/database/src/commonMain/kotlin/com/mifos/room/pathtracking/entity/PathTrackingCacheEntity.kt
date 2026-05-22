@@ -9,8 +9,8 @@
  */
 package com.mifos.room.pathtracking.entity
 
-import template.core.base.database.Entity
-import template.core.base.database.PrimaryKey
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 
 /**
  * Room cache row for a single path-tracking entry, keyed by `<userId>:<ordinal>`.

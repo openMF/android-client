@@ -10,24 +10,18 @@
 package com.mifos.room.di
 
 import com.mifos.room.MifosDatabase
-import com.mifos.room.MifosDatabaseMigrations
 import kotlinx.coroutines.Dispatchers
 import org.koin.core.module.Module
 import org.koin.dsl.module
 import template.core.base.database.AppDatabaseFactory
 
-/**
- * WasmJS `actual val platformModule` — provides the [MifosDatabase] singleton via
- * `AppDatabaseFactory()` with the default SQLite WASM driver and `Dispatchers.Default`
- * (Wasm has no separate IO threadpool). Migrations + entity declarations live in the
- * commonMain [MifosDatabase] file.
- */
 actual val platformModule: Module = module {
     single<MifosDatabase> {
         AppDatabaseFactory()
-            .createDatabase<MifosDatabase>(MifosDatabase.DATABASE_NAME)
-            .fallbackToDestructiveMigrationOnDowngrade(false)
-            .addMigrations(*MifosDatabaseMigrations)
+            .createDatabase<MifosDatabase>(
+                databaseName = MifosDatabase.DATABASE_NAME,
+            )
+            .fallbackToDestructiveMigration(dropAllTables = true)
             .setQueryCoroutineContext(Dispatchers.Default)
             .build()
     }

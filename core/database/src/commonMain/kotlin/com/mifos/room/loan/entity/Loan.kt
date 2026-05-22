@@ -9,6 +9,7 @@
  */
 package com.mifos.room.loan.entity
 
+import com.mifos.core.model.objects.account.loan.AmortizationType
 import com.mifos.core.model.objects.account.loan.Currency
 import com.mifos.core.model.objects.account.loan.InterestCalculationPeriodType
 import com.mifos.core.model.objects.account.loan.InterestRateFrequencyType

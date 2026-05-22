@@ -38,8 +38,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.data.store.DataFreshness
-import com.mifos.core.data.store.ScreenState
+import template.core.base.store.screen.DataFreshness
+import template.core.base.store.screen.ScreenState
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.PermissionBox
 import com.mifos.core.designsystem.component.getRequiredPermissionsForLocation

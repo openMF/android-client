@@ -15,14 +15,14 @@ import org.koin.core.qualifier.named
 /**
  * Base registry for Store DI qualifiers (Koin).
  *
- * Projects extend this in their core/data module to define
+ * Projects extend this in their `core/store` module to define
  * app-specific store qualifiers that prevent type erasure collisions
  * when multiple [org.mobilenativefoundation.store.store5.Store] instances
  * share the same erased type signature.
  *
  * Example:
  * ```
- * object ApplicationStoreRegistry : StoreRegistry() {
+ * object AppStoreRegistry : StoreRegistry() {
  *     val ExchangeRates = store("exchangeRates")
  *     val CoinMarkets = store("coinMarkets")
  * }

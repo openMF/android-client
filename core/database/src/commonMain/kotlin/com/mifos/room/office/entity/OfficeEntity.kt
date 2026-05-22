@@ -10,10 +10,9 @@
 package com.mifos.room.office.entity
 
 import kotlinx.serialization.Serializable
-import template.core.base.database.Entity
-import template.core.base.database.ForeignKey
-import template.core.base.database.ForeignKeyAction
-import template.core.base.database.PrimaryKey
+import androidx.room3.Entity
+import androidx.room3.ForeignKey
+import androidx.room3.PrimaryKey
 
 @Entity(
     tableName = "Office",
@@ -26,8 +25,8 @@ import template.core.base.database.PrimaryKey
             entity = OfficeOpeningDateEntity::class,
             parentColumns = ["officeId"],
             childColumns = ["id"],
-            onDelete = ForeignKeyAction.CASCADE,
-            onUpdate = ForeignKeyAction.NO_ACTION,
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.NO_ACTION,
             deferred = false,
         ),
     ],

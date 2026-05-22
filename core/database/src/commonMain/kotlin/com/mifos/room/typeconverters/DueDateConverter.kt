@@ -11,7 +11,7 @@ package com.mifos.room.typeconverters
 
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import template.core.base.database.TypeConverter
+import androidx.room3.TypeConverter
 
 class DueDateConverter {
     @TypeConverter

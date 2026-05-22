@@ -58,8 +58,8 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.data.store.DataFreshness
-import com.mifos.core.data.store.ScreenState
+import template.core.base.store.screen.DataFreshness
+import template.core.base.store.screen.ScreenState
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken

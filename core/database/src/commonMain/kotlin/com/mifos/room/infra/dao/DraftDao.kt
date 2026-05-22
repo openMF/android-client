@@ -11,10 +11,10 @@ package com.mifos.room.infra.dao
 
 import com.mifos.room.infra.entity.DraftEntity
 import kotlinx.coroutines.flow.Flow
-import template.core.base.database.Dao
-import template.core.base.database.Insert
-import template.core.base.database.OnConflictStrategy
-import template.core.base.database.Query
+import androidx.room3.Dao
+import androidx.room3.Insert
+import androidx.room3.OnConflictStrategy
+import androidx.room3.Query
 
 /**
  * DAO for the framework-owned `framework_submit_drafts` table.
@@ -26,7 +26,7 @@ import template.core.base.database.Query
 @Dao
 interface DraftDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(entity = DraftEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: DraftEntity): Long
 
     @Query("SELECT * FROM framework_submit_drafts WHERE id = :id")

@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.path.tracking.ui
 
-import com.mifos.core.data.store.ScreenState
+import template.core.base.store.screen.ScreenState
 import com.mifos.core.model.objects.users.UserLatLng
 import com.mifos.core.model.objects.users.UserLocation
 

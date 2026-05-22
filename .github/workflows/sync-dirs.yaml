@@ -123,6 +123,57 @@ jobs:
             return 1
           }
 
+          # Returns 0 if a given path (relative to repo root) is under the
+          # configured exclusion list for the given sync root.
+          is_under_excluded() {
+            local sync_root=$1
+            local path=$2
+            if [[ -v "EXCLUSIONS[$sync_root]" ]]; then
+              local excluded_paths
+              IFS=' ' read -ra excluded_paths <<< "${EXCLUSIONS[$sync_root]}"
+              for excluded in "${excluded_paths[@]}"; do
+                local full_excluded="$sync_root/$excluded"
+                if [[ "$path" == "$full_excluded" || "$path" == "$full_excluded/"* ]]; then
+                  return 0
+                fi
+              done
+            fi
+            return 1
+          }
+
+          # Mirror-sync: remove local files that no longer exist in upstream
+          # for the given sync root (honoring EXCLUSIONS). Without this step,
+          # `git checkout upstream -- "$dir"` only adds/overwrites — files
+          # deleted upstream linger locally as silent drift (root cause of
+          # the core-base/database Room 3 alpha05 shim drift).
+          prune_stale_files() {
+            local dir=$1
+            local upstream_files local_files
+            upstream_files=$(git ls-tree -r --name-only "${{ env.TEMP_BRANCH }}" -- "$dir" 2>/dev/null | sort -u)
+            if [[ -z "$upstream_files" ]]; then
+              echo "  ⚠️  $dir not present in upstream — skipping prune."
+              return 0
+            fi
+            local_files=$(find "$dir" -type f 2>/dev/null | sed 's|^\./||' | sort -u)
+            local stale_files
+            stale_files=$(comm -23 <(printf '%s\n' "$local_files") <(printf '%s\n' "$upstream_files") || true)
+            [[ -z "$stale_files" ]] && return 0
+
+            local pruned=0
+            while IFS= read -r stale; do
+              [[ -z "$stale" ]] && continue
+              if is_under_excluded "$dir" "$stale"; then
+                continue
+              fi
+              echo "  - pruning stale file: $stale (removed upstream)"
+              git rm -f -- "$stale" >/dev/null 2>&1 || rm -f -- "$stale"
+              pruned=$((pruned + 1))
+            done <<< "$stale_files"
+            if [[ $pruned -gt 0 ]]; then
+              echo "  ✅ Pruned $pruned stale file(s) from $dir"
+            fi
+          }
+
           # Function to preserve excluded paths
           preserve_excluded() {
             local dir=$1
@@ -208,6 +259,12 @@ jobs:
             # Preserve excluded paths before sync
             if [[ -d "$dir" ]]; then
               preserve_excluded "$dir"
+            fi
+
+            # Mirror-sync prune: delete local files that no longer exist
+            # upstream BEFORE we overlay upstream content.
+            if [[ -d "$dir" ]]; then
+              prune_stale_files "$dir"
             fi
 
             echo "Syncing $dir..."

@@ -44,10 +44,9 @@ actual suspend fun openPdfWithDefaultExternalApp(platformFile: PlatformFile) {
     try {
         val fileInCache = File(ensurePdfIsInCache(platformFile).path)
 
-        // Do no change authority value, if you don't know what you are doing.
         val uri = FileProvider.getUriForFile(
             context,
-            "${context.packageName}.fileprovider",
+            "${context.packageName}.provider",
             fileInCache,
         )
         val mimeType = getMimeTypeFromPlatformFile(platformFile.extension)

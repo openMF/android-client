@@ -14,7 +14,7 @@ import com.mifos.room.group.entity.GroupDateEntity
 import com.mifos.room.savings.entity.SavingAccountDepositTypeEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import template.core.base.database.TypeConverter
+import androidx.room3.TypeConverter
 
 class CenterTypeConverters {
 

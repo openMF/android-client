@@ -9,8 +9,8 @@
  */
 package com.mifos.room.infra.entity
 
-import template.core.base.database.Entity
-import template.core.base.database.PrimaryKey
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 
 /**
  * Tracks failed sync timestamps for [org.mobilenativefoundation.store.store5.MutableStore]

@@ -43,7 +43,9 @@ kotlin {
             api(projects.core.network)
             api(projects.core.database)
             api(projects.coreBase.common)
+            api(projects.coreBase.store)
             api(projects.core.store)
+            api(libs.cmp.network.monitor)
 
 
             implementation(libs.mifos.authenticator.passcode)
@@ -55,6 +57,7 @@ kotlin {
         androidMain.dependencies {
             api(libs.ktor.client.okhttp)
             api(libs.koin.android)
+            implementation(libs.androidx.tracing.ktx)
         }
         desktopMain.dependencies {
             api(libs.ktor.client.okhttp)

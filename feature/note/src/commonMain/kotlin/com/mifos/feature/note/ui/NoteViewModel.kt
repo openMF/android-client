@@ -14,8 +14,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.data.note.NoteRepository
 import com.mifos.core.data.note.store.NoteListKey
-import com.mifos.core.data.store.ScreenState
-import com.mifos.core.data.store.SubmitState
+import template.core.base.store.screen.ScreenState
+import template.core.base.store.submit.SubmitState
 import com.mifos.core.data.store.submitHandler
 import com.mifos.core.model.objects.note.Note
 import com.mifos.core.ui.store.BaseViewModel

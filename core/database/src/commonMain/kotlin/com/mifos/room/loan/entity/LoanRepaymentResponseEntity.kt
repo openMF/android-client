@@ -12,8 +12,8 @@ package com.mifos.room.loan.entity
 import com.mifos.core.model.objects.Changes
 import com.mifos.core.model.utils.IgnoredOnParcel
 import kotlinx.serialization.Serializable
-import template.core.base.database.Entity
-import template.core.base.database.PrimaryKey
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 
 @Serializable
 @Entity(

@@ -15,8 +15,8 @@ import androidclient.feature.note.generated.resources.feature_note_button_add
 import androidclient.feature.note.generated.resources.feature_note_edit_note_label
 import androidclient.feature.note.generated.resources.feature_note_update_note
 import androidclient.feature.note.generated.resources.feature_note_write_note_label
-import com.mifos.core.data.store.DataFreshness
-import com.mifos.core.data.store.ScreenState
+import template.core.base.store.screen.DataFreshness
+import template.core.base.store.screen.ScreenState
 import org.jetbrains.compose.resources.StringResource
 
 /**

@@ -16,7 +16,7 @@ import androidclient.feature.auth.generated.resources.feature_auth_error_usernam
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.mifos.core.data.auth.LoginRepository
-import com.mifos.core.data.store.SubmitState
+import template.core.base.store.submit.SubmitState
 import com.mifos.core.data.store.submitHandler
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
