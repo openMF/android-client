@@ -117,7 +117,19 @@ kotlinxHtml = "0.12.0"
 kotlin = "2.3.20"
 kover = "0.9.1"
 kmpProductFlavors = "2.4.2"
+kmptoolkit = "3.2.3"
 kotlinInject = "0.7.2"
+
+# Auxiliary deps used by core-base/* + cmp-android (post-T0.1 catch-up — sync-dirs
+# brought build.gradle.kts files referencing these aliases without bringing the
+# matching catalog entries; field-officer's libs.versions.toml is consumer-local).
+aboutLibraries = "13.2.1"
+androidxHiltNavigationCompose = "1.2.0"
+androidxSecurityCrypto = "1.1.0-alpha06"
+bouncycastle = "1.78.1"
+sqliteWeb = "2.6.2"
+store = "5.1.0-alpha08"
+turbine = "1.2.1"
 kotlinxCoroutines = "1.10.2"
 kotlinxDatetime = "0.7.1"
 kotlinxImmutable = "0.4.0"
@@ -333,6 +345,23 @@ room-gradlePlugin = { module = "androidx.room3:room3-gradle-plugin", version.ref
 androidx-room-gradle-plugin = { module = "androidx.room3:room3-gradle-plugin", version.ref = "room" }
 kover-gradlePlugin = { group = "org.jetbrains.kotlinx", name = "kover-gradle-plugin", version.ref = "kover" }
 kmp-product-flavors-plugin = { group = "io.github.mobilebytelabs.kmpflavors", name = "flavor-plugin", version.ref = "kmpProductFlavors" }
+
+# Post-T0.1 catch-up libraries — see [versions] above for the matching versions.
+aboutlibraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "aboutLibraries" }
+aboutlibraries-compose-core = { module = "com.mikepenz:aboutlibraries-compose", version.ref = "aboutLibraries" }
+aboutlibraries-compose-m3 = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutLibraries" }
+androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
+androidx-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "androidxSecurityCrypto" }
+androidx-sqlite-web = { module = "androidx.sqlite:sqlite-web", version.ref = "sqliteWeb" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+bouncycastle = { module = "org.bouncycastle:bcprov-jdk18on", version.ref = "bouncycastle" }
+cmp-network-monitor = { module = "io.github.mobilebytelabs:cmp-network-monitor", version.ref = "kmptoolkit" }
+cmp-network-monitor-compose = { module = "io.github.mobilebytelabs:cmp-network-monitor-compose", version.ref = "kmptoolkit" }
+junit = { group = "junit", name = "junit", version.ref = "junit4" }
+kermit-koin = { group = "co.touchlab", name = "kermit-koin", version.ref = "kermit" }
+store5 = { group = "org.mobilenativefoundation.store", name = "store5", version.ref = "store" }
+store5-cache = { group = "org.mobilenativefoundation.store", name = "cache5", version.ref = "store" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 
 
@@ -528,6 +557,14 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 kover-convention = { id = "org.convention.kover.plugin" }
+
+# Post-T0.1 catch-up plugin aliases — referenced by cmp-android/build.gradle.kts
+# (build.gradle.kts files are sync'd from template via sync-dirs but the
+# corresponding catalog entries weren't). Plugin IDs match what's registered in
+# build-logic/convention/build.gradle.kts.
+aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutLibraries" }
+android-application-convention = { id = "org.convention.android.application" }
+android-application-compose-convention = { id = "org.convention.android.application.compose" }
 kmp-product-flavors = { id = "io.github.mobilebytelabs.kmp-product-flavors", version.ref = "kmpProductFlavors" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
