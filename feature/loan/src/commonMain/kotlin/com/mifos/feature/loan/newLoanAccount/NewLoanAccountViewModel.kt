@@ -35,6 +35,7 @@ import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState.DialogState
+import com.mifos.feature.loan.newLoanAccount.pages.DatatableFieldValue
 import com.mifos.room.entities.noncore.ColumnHeader
 import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.noncore.DataTablePayload
@@ -1053,7 +1054,7 @@ constructor(
      * [submitLoanApplication] to build `LoansPayload.datatables`. Empty when the
      * selected loan product has no real datatables.
      */
-    val datatableValues: Map<Int, Map<String, Any>> = emptyMap(),
+    val datatableValues: Map<Int, Map<String, DatatableFieldValue>> = emptyMap(),
     val dialogState: DialogState? = null,
     val screenState: ScreenState? = null,
     val isOverLayLoadingActive: Boolean = false,
@@ -1159,14 +1160,15 @@ sealed interface NewLoanAccountEvent {
 }
 
 /**
- * GAP-DT-013: build the Fineract datatable-payload `data` map for one table.
+ * Build the Fineract datatable-payload `data` map for one table.
  * Mirrors `DataTableListViewModel.buildPayloadMap` (kept in sync intentionally —
  * both serve the same Fineract contract). Filters system columns (PK, created_at,
- * updated_at) and applies type coercion based on `columnDisplayType`.
+ * updated_at, FKs) and converts each typed [DatatableFieldValue] to the
+ * JSON-encodable primitive the API expects (with column-aware numeric coercion).
  */
 private fun buildDatatablePayloadMap(
     headers: List<ColumnHeader?>,
-    rawValues: Map<String, Any>,
+    rawValues: Map<String, DatatableFieldValue>,
 ): Map<String, Any> {
     // Fineract parses datatable date columns using `dateFormat` from the same map.
     // The DatatableStepPage date widget renders via `DateHelper.getDateAsStringFromLong`
@@ -1182,7 +1184,7 @@ private fun buildDatatablePayloadMap(
         val name = header.dataTableColumnName ?: return@forEach
         if (name in SYSTEM_COLUMNS) return@forEach
         val raw = rawValues[name] ?: return@forEach
-        payload[name] = coerceDatatableValue(raw, header.columnDisplayType)
+        payload[name] = header.encodePayloadValue(raw)
     }
     return payload
 }
@@ -1200,13 +1202,21 @@ private val SYSTEM_COLUMNS = setOf(
     "loan_id", "client_id", "group_id", "savings_id", "share_id", "office_id",
 )
 
-private fun coerceDatatableValue(value: Any, displayType: String?): Any {
-    if (value !is String) return value
-    return when (displayType) {
-        "INTEGER" -> value.toIntOrNull() ?: 0
-        "DECIMAL", "FLOAT" -> value.toDoubleOrNull() ?: 0.0
-        else -> value
+/**
+ * Convert a typed form value into the primitive shape Fineract expects for this
+ * column. Numeric coercion lives here (and only here) — the form layer stores all
+ * text inputs as [DatatableFieldValue.Text]; we parse to Int/Double per column
+ * display type at submit time. Unparseable input falls back to 0 / 0.0 (same
+ * behaviour as the prior `coerceDatatableValue` helper).
+ */
+private fun ColumnHeader.encodePayloadValue(value: DatatableFieldValue): Any = when (value) {
+    is DatatableFieldValue.Text -> when (columnDisplayType) {
+        "INTEGER" -> value.text.toIntOrNull() ?: 0
+        "DECIMAL", "FLOAT" -> value.text.toDoubleOrNull() ?: 0.0
+        else -> value.text
     }
+    is DatatableFieldValue.Bool -> value.checked
+    is DatatableFieldValue.Code -> value.id
 }
 
 sealed interface NewLoanAccountAction {
@@ -1278,12 +1288,12 @@ sealed interface NewLoanAccountAction {
      * GAP-DT-013: a field on one of the inline datatable steps changed.
      * `tableIndex` is into `loanTemplate.dataTables.filterNotNull()`.
      * `columnName` matches the JSON `columnName` (used verbatim in submit payload).
-     * `value` is the raw input — String, Boolean, or Int (for CODELOOKUP id).
+     * `value` carries the typed input via [DatatableFieldValue] — Text / Bool / Code.
      */
     data class UpdateDatatableField(
         val tableIndex: Int,
         val columnName: String,
-        val value: Any,
+        val value: DatatableFieldValue,
     ) : NewLoanAccountAction
 }
 

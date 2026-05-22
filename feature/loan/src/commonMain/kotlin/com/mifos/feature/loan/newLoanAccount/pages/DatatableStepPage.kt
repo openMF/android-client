@@ -75,13 +75,13 @@ import kotlin.time.Clock
  *
  * @param table       the datatable schema for this step
  * @param values      current values keyed by column name (lifted to ViewModel)
- * @param onValueChange `(columnName, value) -> Unit` — value is String / Boolean / Int
+ * @param onValueChange emits a typed [DatatableFieldValue] per user edit
  */
 @Composable
 fun DatatableStepPage(
     table: DataTableEntity,
-    values: Map<String, Any>,
-    onValueChange: (columnName: String, value: Any) -> Unit,
+    values: Map<String, DatatableFieldValue>,
+    onValueChange: (columnName: String, value: DatatableFieldValue) -> Unit,
     onAction: (NewLoanAccountAction) -> Unit,
     isLastStep: Boolean,
     modifier: Modifier = Modifier,
@@ -162,38 +162,39 @@ private fun ColumnHeader.displayLabel(): String {
 @Composable
 private fun DatatableField(
     header: ColumnHeader,
-    currentValue: Any?,
-    onValueChange: (Any) -> Unit,
+    currentValue: DatatableFieldValue?,
+    onValueChange: (DatatableFieldValue) -> Unit,
 ) {
     val label = header.displayLabel().ifBlank { return }
+
     when (header.columnDisplayType) {
         "STRING" -> TextFieldRow(
-            value = currentValue as? String ?: "",
-            onValueChange = onValueChange,
+            value = (currentValue as? DatatableFieldValue.Text)?.text.orEmpty(),
+            onValueChange = { onValueChange(DatatableFieldValue.Text(it)) },
             label = label,
             keyboardType = KeyboardType.Text,
             singleLine = true,
         )
 
         "TEXT" -> TextFieldRow(
-            value = currentValue as? String ?: "",
-            onValueChange = onValueChange,
+            value = (currentValue as? DatatableFieldValue.Text)?.text.orEmpty(),
+            onValueChange = { onValueChange(DatatableFieldValue.Text(it)) },
             label = label,
             keyboardType = KeyboardType.Text,
             singleLine = false,
         )
 
         "INTEGER" -> TextFieldRow(
-            value = currentValue as? String ?: "",
-            onValueChange = onValueChange,
+            value = (currentValue as? DatatableFieldValue.Text)?.text.orEmpty(),
+            onValueChange = { onValueChange(DatatableFieldValue.Text(it)) },
             label = label,
             keyboardType = KeyboardType.Number,
             singleLine = true,
         )
 
         "DECIMAL", "FLOAT" -> TextFieldRow(
-            value = currentValue as? String ?: "",
-            onValueChange = onValueChange,
+            value = (currentValue as? DatatableFieldValue.Text)?.text.orEmpty(),
+            onValueChange = { onValueChange(DatatableFieldValue.Text(it)) },
             label = label,
             keyboardType = KeyboardType.Decimal,
             singleLine = true,
@@ -201,14 +202,14 @@ private fun DatatableField(
 
         "DATE" -> DateFieldRow(
             label = label,
-            currentValue = currentValue as? String,
-            onDateSelected = onValueChange,
+            currentValue = (currentValue as? DatatableFieldValue.Text)?.text,
+            onDateSelected = { onValueChange(DatatableFieldValue.Text(it)) },
         )
 
         "BOOLEAN" -> BooleanFieldRow(
             label = label,
-            currentValue = currentValue as? Boolean ?: false,
-            onValueChange = onValueChange,
+            currentValue = (currentValue as? DatatableFieldValue.Bool)?.checked ?: false,
+            onValueChange = { onValueChange(DatatableFieldValue.Bool(it)) },
         )
 
         "CODELOOKUP", "CODEVALUE" -> DropdownFieldRow(
@@ -216,8 +217,8 @@ private fun DatatableField(
             header = header,
             // Stored value is the code id (Int). The rendered text is the display string
             // looked up from header.columnValues.
-            currentId = currentValue as? Int,
-            onIdSelected = onValueChange,
+            currentId = (currentValue as? DatatableFieldValue.Code)?.id,
+            onIdSelected = { onValueChange(DatatableFieldValue.Code(it)) },
         )
 
         // DATETIME and unknown types: silently skip. Any unknown
@@ -229,14 +230,14 @@ private fun DatatableField(
 @Composable
 private fun TextFieldRow(
     value: String,
-    onValueChange: (Any) -> Unit,
+    onValueChange: (String) -> Unit,
     label: String,
     keyboardType: KeyboardType,
     singleLine: Boolean,
 ) {
     MifosOutlinedTextField(
         value = value,
-        onValueChange = { onValueChange(it) },
+        onValueChange = onValueChange,
         label = label,
         keyboardType = keyboardType,
         singleLine = singleLine,
@@ -251,7 +252,7 @@ private fun TextFieldRow(
 private fun DateFieldRow(
     label: String,
     currentValue: String?,
-    onDateSelected: (Any) -> Unit,
+    onDateSelected: (String) -> Unit,
 ) {
     var showDatePicker by rememberSaveable(label) { mutableStateOf(false) }
     var selectedMillis by rememberSaveable(label) {
@@ -291,7 +292,7 @@ private fun DateFieldRow(
 private fun BooleanFieldRow(
     label: String,
     currentValue: Boolean,
-    onValueChange: (Any) -> Unit,
+    onValueChange: (Boolean) -> Unit,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -302,7 +303,7 @@ private fun BooleanFieldRow(
         Text(text = label, modifier = Modifier.weight(1f))
         Switch(
             checked = currentValue,
-            onCheckedChange = { onValueChange(it) },
+            onCheckedChange = onValueChange,
         )
     }
 }
@@ -312,7 +313,7 @@ private fun DropdownFieldRow(
     label: String,
     header: ColumnHeader,
     currentId: Int?,
-    onIdSelected: (Any) -> Unit,
+    onIdSelected: (Int) -> Unit,
 ) {
     val options = header.columnValues.mapNotNull { it.value }
     val ids = header.columnValues.map { it.id }
