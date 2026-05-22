@@ -12,10 +12,10 @@ package com.mifos.feature.searchrecord.ui
 import androidclient.feature.search_record.generated.resources.Res
 import androidclient.feature.search_record.generated.resources.search_record_address
 import androidclient.feature.search_record.generated.resources.search_record_identifiers
-import template.core.base.store.screen.ScreenState
 import com.mifos.core.model.objects.searchrecord.GenericSearchRecord
 import com.mifos.core.model.objects.searchrecord.RecordType
 import org.jetbrains.compose.resources.StringResource
+import template.core.base.store.screen.ScreenState
 
 data class SearchRecordState(
     val recordType: RecordType = RecordType.ADDRESS,

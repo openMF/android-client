@@ -56,12 +56,12 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.network.IndividualCollectionSheetPayload
 import com.mifos.core.model.objects.account.loan.PaymentTypeOptions
-import com.mifos.room.collectionsheet.entity.ClientCollectionSheet
-import com.mifos.room.collectionsheet.entity.IndividualCollectionSheet
 import com.mifos.core.model.objects.collectionsheets.LoanAndClientName
 import com.mifos.core.model.objects.loan.BulkRepaymentTransactions
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.DevicePreview
+import com.mifos.room.collectionsheet.entity.ClientCollectionSheet
+import com.mifos.room.collectionsheet.entity.IndividualCollectionSheet
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource

@@ -10,13 +10,12 @@
 package com.mifos.feature.checker.inbox.task.di
 
 import com.mifos.feature.checker.inbox.task.checkerInbox.CheckerInboxViewModel
-import com.mifos.feature.checker.inbox.task.checkerInboxDialog.CheckerInboxDialogViewmodel
 import com.mifos.feature.checker.inbox.task.checkerInboxTasks.CheckerInboxTasksViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
+// CheckerInboxDialogViewmodel quarantined until W21 (checker-inbox-task wave) — uses DataManagerCheckerInbox.
 val CheckerInboxTaskModule = module {
     viewModelOf(::CheckerInboxViewModel)
     viewModelOf(::CheckerInboxTasksViewModel)
-    viewModelOf(::CheckerInboxDialogViewmodel)
 }

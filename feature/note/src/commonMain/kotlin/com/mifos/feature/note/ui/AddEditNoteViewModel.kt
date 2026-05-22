@@ -13,9 +13,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.data.note.NoteRepository
-import template.core.base.store.screen.DataFreshness
-import template.core.base.store.screen.ScreenState
-import template.core.base.store.submit.SubmitState
 import com.mifos.core.data.store.submitHandler
 import com.mifos.core.model.objects.note.CreateNoteInput
 import com.mifos.core.model.objects.note.UpdateNoteInput
@@ -27,6 +24,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import template.core.base.store.screen.DataFreshness
+import template.core.base.store.screen.ScreenState
+import template.core.base.store.submit.SubmitState
 
 /**
  * Add/Edit Note ViewModel.

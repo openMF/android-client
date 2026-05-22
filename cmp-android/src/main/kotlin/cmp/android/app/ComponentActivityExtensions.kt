@@ -20,6 +20,7 @@ import androidx.core.util.Consumer
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.mifos.core.datastore.model.DarkThemeConfig
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -27,7 +28,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
-import org.mifos.core.model.user.DarkThemeConfig
 
 @ColorInt
 private val SCRIM_COLOR: Int = Color.TRANSPARENT

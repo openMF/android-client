@@ -14,7 +14,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.navigation
 import com.mifos.feature.about.aboutDestination
-import com.mifos.feature.activate.activateDestination
+import com.mifos.feature.activate.navigation.activateDestination
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
 import com.mifos.feature.client.navigation.navigateClientDetailsScreen
 import com.mifos.feature.dataTable.navigation.dataTableNavGraph
@@ -101,7 +101,7 @@ internal fun NavGraphBuilder.authenticatedGraph(
 
         checkerInboxTaskNavGraph(navController)
 
-        documentListScreen(onBackPressed = navController::popBackStack)
+        documentListScreen(onBackPressed = { navController.popBackStack() })
 
         dataTableNavGraph(
             navController = navController,
@@ -114,14 +114,14 @@ internal fun NavGraphBuilder.authenticatedGraph(
             },
         )
 
-        aboutDestination(onBackPressed = navController::popBackStack)
+        aboutDestination(onBackPressed = { navController.popBackStack() })
 
         offlineNavGraph(navController = navController)
 
-        activateDestination(onBackPressed = navController::popBackStack)
+        activateDestination(onBackPressed = { navController.popBackStack() })
 
         settingsScreen(
-            navigateBack = navController::popBackStack,
+            navigateBack = { navController.popBackStack() },
             navigateToLoginScreen = {},
             // Change passcode: `allowBiometricAuth = false` suppresses the
             // biometric button so the user must re-enter the existing passcode
@@ -147,28 +147,28 @@ internal fun NavGraphBuilder.authenticatedGraph(
         )
 
         serverConfigGraph(
-            navigateBack = navController::popBackStack,
+            navigateBack = { navController.popBackStack() },
         )
 
         individualCollectionSheetNavGraph(
             navController = navController,
-            onBackPressed = navController::popBackStack,
+            onBackPressed = { navController.popBackStack() },
         )
 
-        pathTrackingRoute(navController::popBackStack)
+        pathTrackingRoute({ navController.popBackStack() })
 
         reportNavGraph(navController = navController)
 
         groupLoanScreen { navController.popBackStack() }
 
         addLoanAccountScreen(
-            onBackPressed = navController::popBackStack,
+            onBackPressed = { navController.popBackStack() },
             dataTable = { _, _ ->
 //                navController.navigateDataTableList(dataTable, payload, Constants.CLIENT_LOAN)
 //                TODO()
             },
         )
 
-        generateCollectionSheetScreen(navController::popBackStack)
+        generateCollectionSheetScreen({ navController.popBackStack() })
     }
 }

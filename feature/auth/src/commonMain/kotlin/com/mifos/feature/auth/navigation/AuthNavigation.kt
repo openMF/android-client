@@ -14,6 +14,14 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.mifos.feature.auth.ui.LoginScreen
+import kotlinx.serialization.Serializable
+
+@Serializable
+data object LoginRoute
+
+fun NavController.navigateToLogin(navOptions: NavOptions? = null) {
+    this.navigate(LoginRoute, navOptions)
+}
 
 fun NavGraphBuilder.authNavGraph(
     navigatePasscode: () -> Unit,
@@ -25,8 +33,4 @@ fun NavGraphBuilder.authNavGraph(
             onClickToUpdateServerConfig = updateServerConfig,
         )
     }
-}
-
-fun NavController.navigateToLogin(navOptions: NavOptions? = null) {
-    this.navigate(LoginRoute, navOptions)
 }

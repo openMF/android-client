@@ -34,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import template.core.base.store.submit.SubmitState
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.DesignToken
@@ -47,6 +46,7 @@ import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
+import template.core.base.store.submit.SubmitState
 import template.core.base.ui.submit.MutationScreenContent
 
 @Composable

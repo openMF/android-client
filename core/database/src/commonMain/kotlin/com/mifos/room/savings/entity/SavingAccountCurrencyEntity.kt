@@ -9,10 +9,10 @@
  */
 package com.mifos.room.savings.entity
 
-import kotlinx.serialization.Serializable
 import androidx.room3.ColumnInfo
 import androidx.room3.Entity
 import androidx.room3.PrimaryKey
+import kotlinx.serialization.Serializable
 
 @Entity(
     indices = [],

@@ -9,10 +9,10 @@
  */
 package com.mifos.feature.savings.navigation
 
-import com.mifos.room.savings.entity.SavingsSummaryData
-import com.mifos.room.savings.entity.SavingsTransactionData
 import com.mifos.room.savings.entity.SavingAccountDepositTypeEntity
 import com.mifos.room.savings.entity.SavingsAccountWithAssociationsEntity
+import com.mifos.room.savings.entity.SavingsSummaryData
+import com.mifos.room.savings.entity.SavingsTransactionData
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 

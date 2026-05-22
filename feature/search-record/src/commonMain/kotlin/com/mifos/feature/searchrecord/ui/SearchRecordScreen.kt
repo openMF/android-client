@@ -58,8 +58,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.Constants
-import template.core.base.store.screen.DataFreshness
-import template.core.base.store.screen.ScreenState
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
@@ -75,6 +73,8 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
+import template.core.base.store.screen.DataFreshness
+import template.core.base.store.screen.ScreenState
 import template.core.base.ui.screen.ScreenContent
 
 @Composable

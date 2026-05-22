@@ -64,12 +64,12 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
-import com.mifos.room.collectionsheet.entity.CenterDetail
 import com.mifos.core.model.objects.collectionsheet.CollectionSheetPayload
 import com.mifos.core.model.objects.collectionsheet.ProductiveCollectionSheetPayload
 import com.mifos.core.model.objects.collectionsheets.CollectionSheetRequestPayload
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.center.entity.CenterEntity
+import com.mifos.room.collectionsheet.entity.CenterDetail
 import com.mifos.room.collectionsheet.entity.CollectionSheetResponse
 import com.mifos.room.group.entity.GroupEntity
 import com.mifos.room.office.entity.OfficeEntity

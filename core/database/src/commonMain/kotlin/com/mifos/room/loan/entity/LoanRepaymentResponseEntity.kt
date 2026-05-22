@@ -9,11 +9,11 @@
  */
 package com.mifos.room.loan.entity
 
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 import com.mifos.core.model.objects.Changes
 import com.mifos.core.model.utils.IgnoredOnParcel
 import kotlinx.serialization.Serializable
-import androidx.room3.Entity
-import androidx.room3.PrimaryKey
 
 @Serializable
 @Entity(

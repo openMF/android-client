@@ -9,12 +9,12 @@
  */
 package com.mifos.room.loan.entity
 
-import com.mifos.room.savings.entity.PaymentTypeOptionEntity
-import com.mifos.room.savings.entity.SavingAccountCurrencyEntity
-import kotlinx.serialization.Serializable
 import androidx.room3.ColumnInfo
 import androidx.room3.Entity
 import androidx.room3.PrimaryKey
+import com.mifos.room.savings.entity.PaymentTypeOptionEntity
+import com.mifos.room.savings.entity.SavingAccountCurrencyEntity
+import kotlinx.serialization.Serializable
 
 @Serializable
 @Entity(

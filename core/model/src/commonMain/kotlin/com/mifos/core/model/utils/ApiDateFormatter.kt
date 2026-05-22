@@ -9,7 +9,6 @@
  */
 package com.mifos.core.model.utils
 
-import com.mifos.core.model.utils.DateConstants
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone

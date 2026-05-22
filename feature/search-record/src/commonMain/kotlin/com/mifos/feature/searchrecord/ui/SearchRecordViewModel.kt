@@ -13,8 +13,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.data.searchrecord.SearchRecordRepository
-import template.core.base.store.screen.DataFreshness
-import template.core.base.store.screen.ScreenState
 import com.mifos.core.model.objects.searchrecord.RecordType
 import com.mifos.core.ui.store.BaseViewModel
 import com.mifos.feature.searchrecord.navigation.SearchRecordRoute
@@ -27,6 +25,8 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import template.core.base.store.screen.DataFreshness
+import template.core.base.store.screen.ScreenState
 
 class SearchRecordViewModel(
     savedStateHandle: SavedStateHandle,

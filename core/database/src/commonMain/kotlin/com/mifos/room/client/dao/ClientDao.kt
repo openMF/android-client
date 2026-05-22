@@ -9,6 +9,11 @@
  */
 package com.mifos.room.client.dao
 
+import androidx.room3.Dao
+import androidx.room3.Insert
+import androidx.room3.OnConflictStrategy
+import androidx.room3.Query
+import androidx.room3.Update
 import com.mifos.room.client.entity.ClientAddressEntity
 import com.mifos.room.client.entity.ClientEntity
 import com.mifos.room.client.entity.ClientIdentifierEntity
@@ -26,11 +31,6 @@ import com.mifos.room.savings.entity.SavingProductOptionsEntity
 import com.mifos.room.savings.entity.SavingsAccountEntity
 import com.mifos.room.staff.entity.StaffOptionsEntity
 import kotlinx.coroutines.flow.Flow
-import androidx.room3.Dao
-import androidx.room3.Insert
-import androidx.room3.OnConflictStrategy
-import androidx.room3.Query
-import androidx.room3.Update
 
 @Dao
 interface ClientDao {

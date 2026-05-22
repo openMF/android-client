@@ -9,11 +9,11 @@
  */
 package com.mifos.room.client.converter
 
+import androidx.room3.TypeConverter
 import com.mifos.core.model.objects.account.loan.Currency
 import com.mifos.room.loan.entity.LoanAccountEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import androidx.room3.TypeConverter
 
 class ClientTypeConverters {
     @TypeConverter

@@ -13,13 +13,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.data.activate.ActivateRepository
-import template.core.base.store.submit.SubmitState
 import com.mifos.core.data.store.submitHandler
 import com.mifos.core.ui.store.BaseViewModel
 import com.mifos.feature.activate.navigation.ActivateRoute
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import template.core.base.store.submit.SubmitState
 
 class ActivateViewModel(
     private val activateRepository: ActivateRepository,

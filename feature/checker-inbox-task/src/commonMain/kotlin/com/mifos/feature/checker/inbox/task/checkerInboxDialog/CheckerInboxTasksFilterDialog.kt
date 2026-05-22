@@ -44,7 +44,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -56,7 +55,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.DateHelper.format
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -69,7 +67,6 @@ import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
@@ -86,19 +83,13 @@ internal fun CheckerInboxTasksFilterDialog(
     action: String?,
     entity: String?,
     resourceId: String?,
-    viewModel: CheckerInboxDialogViewmodel = koinViewModel(),
 ) {
-    val searchTemplate by viewModel.searchTemplate.collectAsStateWithLifecycle()
-    LaunchedEffect(key1 = true) {
-        viewModel.loadSearchTemplate()
-    }
+    // SearchTemplate VM quarantined until W21 (checker-inbox-task wave). Filter shows all-only until then.
     val actionList: MutableList<String> = mutableListOf()
     actionList.add(stringResource(Res.string.feature_checker_inbox_task_all))
-    searchTemplate?.actionNames?.let { actionList.addAll(it) }
 
     val entityList: MutableList<String> = mutableListOf()
     entityList.add(stringResource(Res.string.feature_checker_inbox_task_all))
-    searchTemplate?.entityNames?.let { entityList.addAll(it) }
 
     CheckerInboxTasksFilterDialog(
         closeDialog = closeDialog,

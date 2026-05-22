@@ -9,9 +9,9 @@
  */
 package com.mifos.feature.document.ui
 
+import io.github.vinceglb.filekit.PlatformFile
 import template.core.base.store.screen.DataFreshness
 import template.core.base.store.screen.ScreenState
-import io.github.vinceglb.filekit.PlatformFile
 
 /**
  * MVI state for the upload/update dialog. The submission lifecycle

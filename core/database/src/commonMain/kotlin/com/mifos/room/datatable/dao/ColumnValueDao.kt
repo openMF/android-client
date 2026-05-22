@@ -9,13 +9,13 @@
  */
 package com.mifos.room.datatable.dao
 
-import com.mifos.room.datatable.entity.ColumnValue
 import androidx.room3.Dao
 import androidx.room3.Delete
 import androidx.room3.Insert
 import androidx.room3.OnConflictStrategy
 import androidx.room3.Query
 import androidx.room3.Update
+import com.mifos.room.datatable.entity.ColumnValue
 
 @Dao
 interface ColumnValueDao {

@@ -27,8 +27,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import template.core.base.store.screen.DataFreshness
-import template.core.base.store.screen.ScreenState
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.model.objects.SearchedEntity
@@ -43,6 +41,8 @@ import com.mifos.feature.search.components.SearchResultsList
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
+import template.core.base.store.screen.DataFreshness
+import template.core.base.store.screen.ScreenState
 import template.core.base.ui.screen.ScreenContent
 
 @Composable

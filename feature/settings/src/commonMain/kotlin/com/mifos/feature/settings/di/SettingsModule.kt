@@ -10,19 +10,14 @@
 package com.mifos.feature.settings.di
 
 import com.mifos.feature.settings.settings.SettingsViewModel
-import com.mifos.feature.settings.syncSurvey.SyncSurveysDialogRepository
-import com.mifos.feature.settings.syncSurvey.SyncSurveysDialogRepositoryImp
-import com.mifos.feature.settings.syncSurvey.SyncSurveysDialogViewModel
 import com.mifos.feature.settings.updateServer.UpdateServerConfigViewModel
-import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
-import org.koin.dsl.bind
 import org.koin.dsl.module
+
+// SyncSurveysDialogViewModel + SyncSurveysDialogRepositoryImp are quarantined until W20 (survey wave).
+// SyncSurveysDialogRepositoryImp references DataManagerSurveys (deleted); restored via Store5 pattern at W20.
 
 val SettingsModule = module {
     viewModelOf(::SettingsViewModel)
-    viewModelOf(::SyncSurveysDialogViewModel)
     viewModelOf(::UpdateServerConfigViewModel)
-
-    singleOf(::SyncSurveysDialogRepositoryImp) bind SyncSurveysDialogRepository::class
 }

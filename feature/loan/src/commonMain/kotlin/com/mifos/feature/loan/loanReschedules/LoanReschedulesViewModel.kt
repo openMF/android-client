@@ -16,13 +16,13 @@ import androidclient.feature.loan.generated.resources.feature_loan_reschedule_fe
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.model.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanReschedulesRepository
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRejectionRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleResponse
 import com.mifos.core.model.objects.account.loan.reschedules.RescheduleStatus
+import com.mifos.core.model.utils.ApiDateFormatter
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest

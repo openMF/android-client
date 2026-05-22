@@ -9,10 +9,10 @@
  */
 package com.mifos.room.infra.dao
 
-import com.mifos.room.infra.entity.BookkeeperEntity
 import androidx.room3.Dao
 import androidx.room3.Query
 import androidx.room3.Upsert
+import com.mifos.room.infra.entity.BookkeeperEntity
 
 /**
  * DAO for [BookkeeperEntity]. Provides persistent sync-failure tracking

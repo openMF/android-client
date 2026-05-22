@@ -10,7 +10,6 @@
 package com.mifos.core.model.objects.recurringdeposit
 
 import com.mifos.core.model.objects.template.recurring.Timeline
-
 import kotlinx.serialization.Serializable
 
 @Serializable

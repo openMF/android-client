@@ -38,8 +38,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import template.core.base.store.screen.DataFreshness
-import template.core.base.store.screen.ScreenState
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.PermissionBox
 import com.mifos.core.designsystem.component.getRequiredPermissionsForLocation
@@ -60,6 +58,8 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
+import template.core.base.store.screen.DataFreshness
+import template.core.base.store.screen.ScreenState
 import template.core.base.ui.screen.ScreenContent
 
 /**

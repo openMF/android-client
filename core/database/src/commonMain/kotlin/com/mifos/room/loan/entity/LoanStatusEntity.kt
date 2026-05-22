@@ -9,9 +9,9 @@
  */
 package com.mifos.room.loan.entity
 
-import kotlinx.serialization.Serializable
 import androidx.room3.Entity
 import androidx.room3.PrimaryKey
+import kotlinx.serialization.Serializable
 
 @Entity(
     tableName = "LoanStatus",

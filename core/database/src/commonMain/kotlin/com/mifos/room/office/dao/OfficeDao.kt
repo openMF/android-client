@@ -9,12 +9,12 @@
  */
 package com.mifos.room.office.dao
 
-import com.mifos.room.office.entity.OfficeEntity
-import kotlinx.coroutines.flow.Flow
 import androidx.room3.Dao
 import androidx.room3.Insert
 import androidx.room3.OnConflictStrategy
 import androidx.room3.Query
+import com.mifos.room.office.entity.OfficeEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface OfficeDao {

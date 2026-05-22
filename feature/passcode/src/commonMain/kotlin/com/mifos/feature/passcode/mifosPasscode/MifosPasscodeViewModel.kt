@@ -22,7 +22,7 @@ import org.mifos.authenticator.biometrics.platformAuthenticator.PlatformAuthenti
 import org.mifos.authenticator.passcode.PasscodeManager
 import org.mifos.authenticator.passcode.PasscodeResult
 import org.mifos.authenticator.passcode.PasscodeStep
-import template.core.base.ui.BaseViewModel
+import template.core.base.ui.viewmodel.BaseViewModel
 
 /**
  * ViewModel for [MifosPasscode].

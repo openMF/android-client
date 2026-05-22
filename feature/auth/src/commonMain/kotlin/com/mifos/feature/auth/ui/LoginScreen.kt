@@ -54,9 +54,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import template.core.base.store.screen.DataFreshness
-import template.core.base.store.screen.ScreenState
-import template.core.base.store.submit.SubmitState
 import com.mifos.core.designsystem.component.MifosAndroidClientIcon
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.icon.MifosIcons
@@ -68,6 +65,9 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
+import template.core.base.store.screen.DataFreshness
+import template.core.base.store.screen.ScreenState
+import template.core.base.store.submit.SubmitState
 import template.core.base.ui.submit.MutationScreenContent
 
 @Composable

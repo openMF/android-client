@@ -12,8 +12,6 @@ package com.mifos.feature.path.tracking.ui
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.pathtracking.PathTrackingRepository
 import com.mifos.core.data.pathtracking.store.PathTrackingListKey
-import template.core.base.store.screen.DataFreshness
-import template.core.base.store.screen.ScreenState
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.users.UserLocation
 import com.mifos.core.ui.store.BaseViewModel
@@ -25,6 +23,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import template.core.base.store.screen.DataFreshness
+import template.core.base.store.screen.ScreenState
 
 /**
  * Path-tracking list ViewModel.

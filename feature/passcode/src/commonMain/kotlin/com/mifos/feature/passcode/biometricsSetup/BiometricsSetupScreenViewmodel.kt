@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.mifos.authenticator.biometrics.platformAuthenticator.PlatformAuthenticationProvider
 import org.mifos.authenticator.biometrics.platformAuthenticator.RegistrationResult
-import template.core.base.ui.BaseViewModel
+import template.core.base.ui.viewmodel.BaseViewModel
 
 private const val DEFAULT_USER_ID = "default_user"
 private const val DEFAULT_USER_EMAIL = "default@mifos.org"

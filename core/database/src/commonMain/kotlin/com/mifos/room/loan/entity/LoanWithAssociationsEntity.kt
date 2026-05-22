@@ -9,6 +9,10 @@
  */
 package com.mifos.room.loan.entity
 
+import androidx.room3.ColumnInfo
+import androidx.room3.Entity
+import androidx.room3.ForeignKey
+import androidx.room3.PrimaryKey
 import com.mifos.core.model.objects.account.loan.AmortizationType
 import com.mifos.core.model.objects.account.loan.InterestCalculationPeriodType
 import com.mifos.core.model.objects.account.loan.InterestRateFrequencyType
@@ -20,10 +24,6 @@ import com.mifos.core.model.objects.account.loan.Transaction
 import com.mifos.core.model.utils.IgnoredOnParcel
 import com.mifos.room.savings.entity.SavingAccountCurrencyEntity
 import kotlinx.serialization.Serializable
-import androidx.room3.ColumnInfo
-import androidx.room3.Entity
-import androidx.room3.ForeignKey
-import androidx.room3.PrimaryKey
 
 // @TypeConverters(
 //    AmortizationTypeConverter::class,

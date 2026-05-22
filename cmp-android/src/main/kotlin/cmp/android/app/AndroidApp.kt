@@ -19,26 +19,22 @@ import coil3.SingletonImageLoader
 import coil3.disk.DiskCache
 import coil3.disk.directory
 import coil3.request.CachePolicy
+import com.mifos.core.common.enums.MifosAppLanguage
+import com.mifos.core.datastore.UserPreferencesRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import org.mifos.core.data.user.UserDataRepository
 import template.core.base.ui.util.getDefaultImageLoader
 
 /**
- * Android application class.
- * This class is used to initialize Koin modules for dependency injection in the Android application.
- * It sets up the Koin framework, providing the necessary dependencies for the app.
- *
- * @constructor Create empty Android app
- * @see Application
+ * Android application class. Initializes Koin and restores the user's saved language preference.
  */
 class AndroidApp : Application(), SingletonImageLoader.Factory, KoinComponent {
 
-    private val userDataRepository: UserDataRepository by inject()
+    private val userDataRepository: UserPreferencesRepository by inject()
 
     override fun onCreate() {
         super.onCreate()
@@ -46,33 +42,21 @@ class AndroidApp : Application(), SingletonImageLoader.Factory, KoinComponent {
             androidContext(this@AndroidApp)
             androidLogger()
         }
-
-        // Restore the user's saved language preference to AppCompatDelegate.
-        // This ensures the app always launches with the user's chosen language,
-        // regardless of system settings or device language.
         restoreSavedLanguage()
     }
 
-    /**
-     * Restores the user's saved language preference from the repository to AppCompatDelegate.
-     *
-     * This runs BEFORE any Activities are created, ensuring the app launches with the
-     * correct language. The app's saved preference always takes precedence.
-     */
     private fun restoreSavedLanguage() {
         runBlocking {
-            val userData = userDataRepository.userData.first()
-            val savedLanguage = userData.appLanguage
+            val userData = userDataRepository.userInfo.first()
+            val savedLanguage = userData.language
+            val localeName = if (savedLanguage == MifosAppLanguage.SYSTEM_LANGUAGE) null else savedLanguage.code
 
-            // Convert the saved LanguageConfig to LocaleListCompat
-            val desiredLocales = if (savedLanguage.localeName != null) {
-                LocaleListCompat.forLanguageTags(savedLanguage.localeName)
+            val desiredLocales = if (localeName != null) {
+                LocaleListCompat.forLanguageTags(localeName)
             } else {
-                // System default
                 LocaleListCompat.getEmptyLocaleList()
             }
 
-            // Only update if the current locale differs from saved preference
             val currentLocales = AppCompatDelegate.getApplicationLocales()
             if (currentLocales != desiredLocales) {
                 AppCompatDelegate.setApplicationLocales(desiredLocales)

@@ -21,11 +21,11 @@ import androidx.core.os.LocaleListCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmp.shared.SharedApp
+import com.mifos.core.data.infra.NetworkMonitor
+import com.mifos.core.datastore.UserPreferencesRepository
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.dialogs.init
 import org.koin.android.ext.android.inject
-import org.mifos.core.data.infra.NetworkMonitor
-import org.mifos.core.data.user.UserDataRepository
 import template.core.base.analytics.AnalyticsHelper
 import template.core.base.analytics.lifecycleTracker
 import template.core.base.platform.update.AppUpdateManager
@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var appUpdateManager: AppUpdateManager
 
-    private val userPreferencesRepository: UserDataRepository by inject()
+    private val userPreferencesRepository: UserPreferencesRepository by inject()
 
     private val networkMonitor: NetworkMonitor by inject()
 
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         appUpdateManager = AppUpdateManagerImpl(this)
 
-        val darkThemeConfigFlow = userPreferencesRepository.observeDarkThemeConfig
+        val darkThemeConfigFlow = userPreferencesRepository.appTheme
 
         setupEdgeToEdge(darkThemeConfigFlow)
 

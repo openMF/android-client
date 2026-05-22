@@ -18,9 +18,9 @@ import androidclient.feature.search.generated.resources.feature_search_filter_op
 import androidclient.feature.search.generated.resources.feature_search_filter_options_loans_value
 import androidclient.feature.search.generated.resources.feature_search_filter_options_savings_label
 import androidclient.feature.search.generated.resources.feature_search_filter_options_savings_value
-import template.core.base.store.screen.ScreenState
 import com.mifos.core.model.objects.SearchedEntity
 import org.jetbrains.compose.resources.StringResource
+import template.core.base.store.screen.ScreenState
 
 data class SearchScreenState(
     val searchText: String = "",

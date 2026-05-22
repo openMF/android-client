@@ -13,9 +13,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.data.document.DocumentRepository
-import template.core.base.store.screen.DataFreshness
-import template.core.base.store.screen.ScreenState
-import template.core.base.store.submit.SubmitState
 import com.mifos.core.data.store.submitHandler
 import com.mifos.core.ui.store.BaseViewModel
 import com.mifos.feature.document.navigation.DocumentListRoute
@@ -27,6 +24,9 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import template.core.base.store.screen.DataFreshness
+import template.core.base.store.screen.ScreenState
+import template.core.base.store.submit.SubmitState
 
 /**
  * Document list ViewModel.

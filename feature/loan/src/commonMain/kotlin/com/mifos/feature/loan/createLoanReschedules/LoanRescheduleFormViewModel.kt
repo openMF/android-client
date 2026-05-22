@@ -15,11 +15,11 @@ import androidclient.feature.loan.generated.resources.feature_loan_reschedule_ok
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.model.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanReschedulesRepository
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRequest
 import com.mifos.core.model.objects.account.loan.reschedules.RescheduleReasonOption
+import com.mifos.core.model.utils.ApiDateFormatter
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch

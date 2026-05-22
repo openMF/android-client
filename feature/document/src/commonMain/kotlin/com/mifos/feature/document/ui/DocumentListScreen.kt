@@ -52,9 +52,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import template.core.base.store.screen.DataFreshness
-import template.core.base.store.screen.ScreenState
-import template.core.base.store.submit.SubmitState
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
@@ -67,6 +64,9 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import template.core.base.designsystem.theme.KptTheme
+import template.core.base.store.screen.DataFreshness
+import template.core.base.store.screen.ScreenState
+import template.core.base.store.submit.SubmitState
 import template.core.base.ui.screen.ScreenContent
 
 @Composable
@@ -99,9 +99,6 @@ internal fun DocumentListScreen(
             }
             else -> Unit
         }
-        // Silence unused warning for sealed exhaustiveness on Submitting/Idle.
-        @Suppress("UNUSED_VARIABLE")
-        val unused = s
     }
 
     LaunchedEffect(removeState) {
@@ -116,8 +113,6 @@ internal fun DocumentListScreen(
             }
             else -> Unit
         }
-        @Suppress("UNUSED_VARIABLE")
-        val unused = s
     }
 
     DocumentListScreenContent(

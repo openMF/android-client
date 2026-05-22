@@ -16,7 +16,6 @@ import androidclient.feature.auth.generated.resources.feature_auth_error_usernam
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.mifos.core.data.auth.LoginRepository
-import template.core.base.store.submit.SubmitState
 import com.mifos.core.data.store.submitHandler
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
@@ -28,8 +27,10 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
+import template.core.base.store.submit.SubmitState
 
 class LoginViewModel(
     private val prefManager: UserPreferencesRepository,

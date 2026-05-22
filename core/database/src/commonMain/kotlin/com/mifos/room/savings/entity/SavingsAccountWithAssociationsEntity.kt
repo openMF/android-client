@@ -9,6 +9,10 @@
  */
 package com.mifos.room.savings.entity
 
+import androidx.room3.ColumnInfo
+import androidx.room3.Entity
+import androidx.room3.ForeignKey
+import androidx.room3.PrimaryKey
 import com.mifos.core.model.objects.account.saving.InterestCalculationDaysInYearType
 import com.mifos.core.model.objects.account.saving.InterestCalculationType
 import com.mifos.core.model.objects.account.saving.InterestCompoundingPeriodType
@@ -17,10 +21,6 @@ import com.mifos.core.model.objects.account.saving.LockinPeriodFrequencyType
 import com.mifos.room.charge.entity.SavingsCharge
 import com.mifos.room.loan.entity.LoanTimelineEntity
 import kotlinx.serialization.Serializable
-import androidx.room3.ColumnInfo
-import androidx.room3.Entity
-import androidx.room3.ForeignKey
-import androidx.room3.PrimaryKey
 
 @Entity(
     tableName = "SavingsAccountWithAssociations",

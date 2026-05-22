@@ -12,14 +12,14 @@ package com.mifos.core.network.collectionsheet.api
 import com.mifos.core.model.GenericResponse
 import com.mifos.core.model.network.IndividualCollectionSheetPayload
 import com.mifos.core.model.network.RequestCollectionSheetPayload
-import com.mifos.room.collectionsheet.entity.CenterDetail
 import com.mifos.core.model.objects.collectionsheet.CollectionSheetPayload
-import com.mifos.room.collectionsheet.entity.IndividualCollectionSheet
 import com.mifos.core.model.objects.collectionsheet.ProductiveCollectionSheetPayload
 import com.mifos.core.model.objects.collectionsheets.CollectionSheetRequestPayload
 import com.mifos.core.network.APIEndPoint
 import com.mifos.room.center.entity.CenterWithAssociations
+import com.mifos.room.collectionsheet.entity.CenterDetail
 import com.mifos.room.collectionsheet.entity.CollectionSheetResponse
+import com.mifos.room.collectionsheet.entity.IndividualCollectionSheet
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.POST

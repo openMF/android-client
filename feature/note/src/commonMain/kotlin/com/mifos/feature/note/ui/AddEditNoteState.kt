@@ -15,9 +15,9 @@ import androidclient.feature.note.generated.resources.feature_note_button_add
 import androidclient.feature.note.generated.resources.feature_note_edit_note_label
 import androidclient.feature.note.generated.resources.feature_note_update_note
 import androidclient.feature.note.generated.resources.feature_note_write_note_label
+import org.jetbrains.compose.resources.StringResource
 import template.core.base.store.screen.DataFreshness
 import template.core.base.store.screen.ScreenState
-import org.jetbrains.compose.resources.StringResource
 
 /**
  * MVI state for the Add/Edit Note screen.

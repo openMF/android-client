@@ -73,7 +73,7 @@ import com.mifos.core.model.objects.searchrecord.GenericSearchRecord
 import com.mifos.core.model.objects.searchrecord.RecordType
 import com.mifos.core.ui.RootTransitionProviders
 import com.mifos.core.ui.util.EventsEffect
-import com.mifos.feature.activate.navigateToActivateRoute
+import com.mifos.feature.activate.navigation.navigateToActivateRoute
 import com.mifos.feature.center.navigation.centerNavGraph
 import com.mifos.feature.center.navigation.navigateCenterDetailsScreenRoute
 import com.mifos.feature.center.navigation.navigateCreateCenterScreenRoute

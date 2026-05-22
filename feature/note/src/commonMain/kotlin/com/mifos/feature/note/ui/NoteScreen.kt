@@ -49,9 +49,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.mifos.core.common.utils.DateHelper
-import template.core.base.store.screen.DataFreshness
-import template.core.base.store.screen.ScreenState
-import template.core.base.store.submit.SubmitState
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
@@ -70,6 +67,9 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
+import template.core.base.store.screen.DataFreshness
+import template.core.base.store.screen.ScreenState
+import template.core.base.store.submit.SubmitState
 import template.core.base.ui.screen.ScreenContent
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime

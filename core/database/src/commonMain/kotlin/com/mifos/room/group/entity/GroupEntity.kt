@@ -9,13 +9,13 @@
  */
 package com.mifos.room.group.entity
 
-import com.mifos.core.model.objects.timeline.Timeline
-import com.mifos.room.client.entity.ClientStatusEntity
-import kotlinx.serialization.Serializable
 import androidx.room3.ColumnInfo
 import androidx.room3.Entity
 import androidx.room3.ForeignKey
 import androidx.room3.PrimaryKey
+import com.mifos.core.model.objects.timeline.Timeline
+import com.mifos.room.client.entity.ClientStatusEntity
+import kotlinx.serialization.Serializable
 
 @Entity(
     tableName = "GroupTable",

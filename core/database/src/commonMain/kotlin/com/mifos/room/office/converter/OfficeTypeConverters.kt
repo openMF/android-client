@@ -9,9 +9,9 @@
  */
 package com.mifos.room.office.converter
 
+import androidx.room3.TypeConverter
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import androidx.room3.TypeConverter
 
 class OfficeTypeConverters {
     @TypeConverter

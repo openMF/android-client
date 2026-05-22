@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.document.ui
 
-import template.core.base.store.screen.ScreenState
 import com.mifos.core.model.objects.noncoreobjects.Document
+import template.core.base.store.screen.ScreenState
 
 /**
  * MVI state for the documents list screen. The documents-list read flow lives

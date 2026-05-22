@@ -9,6 +9,7 @@
  */
 package com.mifos.room.savings.converter
 
+import androidx.room3.TypeConverter
 import com.mifos.core.model.objects.account.saving.InterestCalculationDaysInYearType
 import com.mifos.core.model.objects.account.saving.InterestCalculationType
 import com.mifos.core.model.objects.account.saving.InterestCompoundingPeriodType
@@ -19,7 +20,6 @@ import com.mifos.room.savings.entity.SavingsTransactionDateEntity
 import com.mifos.room.savings.entity.SavingsTransactionTypeEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import androidx.room3.TypeConverter
 
 // todo add missing converters
 class SavingsTypeConverters {

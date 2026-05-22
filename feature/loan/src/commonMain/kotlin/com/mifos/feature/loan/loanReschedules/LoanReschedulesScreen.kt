@@ -64,7 +64,6 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
-import com.mifos.core.model.utils.ApiDateFormatter
 import com.mifos.core.designsystem.component.MifosDialogBox
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTableRow
@@ -72,6 +71,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleResponse
+import com.mifos.core.model.utils.ApiDateFormatter
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.components.MifosStatusDialog

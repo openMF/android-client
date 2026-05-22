@@ -9,12 +9,12 @@
  */
 package com.mifos.room.datatable.entity
 
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 import com.mifos.core.common.utils.MapDeserializer
 import com.mifos.core.model.utils.RawValue
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
-import androidx.room3.Entity
-import androidx.room3.PrimaryKey
 
 @Serializable
 @Entity(

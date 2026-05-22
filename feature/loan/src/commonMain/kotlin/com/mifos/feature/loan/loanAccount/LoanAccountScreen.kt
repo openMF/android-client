@@ -82,11 +82,11 @@ import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
-import com.mifos.room.loan.entity.LoansPayload
 import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.datatable.entity.DataTableEntity
 import com.mifos.room.loan.entity.LoanTemplate
+import com.mifos.room.loan.entity.LoansPayload
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview

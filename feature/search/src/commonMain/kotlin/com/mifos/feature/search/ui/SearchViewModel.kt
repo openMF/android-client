@@ -11,13 +11,13 @@ package com.mifos.feature.search.ui
 
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.search.SearchRepository
-import template.core.base.store.screen.DataFreshness
-import template.core.base.store.screen.ScreenState
 import com.mifos.core.ui.store.BaseViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
+import template.core.base.store.screen.DataFreshness
+import template.core.base.store.screen.ScreenState
 
 class SearchViewModel(
     private val searchRepository: SearchRepository,

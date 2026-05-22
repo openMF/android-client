@@ -17,7 +17,6 @@ import androidclient.feature.savings.generated.resources.step_terms_decimal_plac
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.model.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.infra.NetworkMonitor
@@ -26,6 +25,7 @@ import com.mifos.core.domain.useCases.GetClientTemplateUseCase
 import com.mifos.core.domain.useCases.GetSavingsProductTemplateUseCase
 import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.model.objects.payloads.SavingsPayload
+import com.mifos.core.model.utils.ApiDateFormatter
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.room.client.entity.ClientsTemplateEntity
 import com.mifos.room.savings.entity.SavingProductOptionsEntity

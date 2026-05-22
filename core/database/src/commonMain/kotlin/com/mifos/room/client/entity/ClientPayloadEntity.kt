@@ -9,11 +9,11 @@
  */
 package com.mifos.room.client.entity
 
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 import com.mifos.core.model.objects.clients.Address
 import com.mifos.room.datatable.entity.DataTablePayload
 import kotlinx.serialization.Serializable
-import androidx.room3.Entity
-import androidx.room3.PrimaryKey
 
 @Serializable
 @Entity(

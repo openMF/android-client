@@ -9,9 +9,9 @@
  */
 package com.mifos.feature.path.tracking.ui
 
-import template.core.base.store.screen.ScreenState
 import com.mifos.core.model.objects.users.UserLatLng
 import com.mifos.core.model.objects.users.UserLocation
+import template.core.base.store.screen.ScreenState
 
 /**
  * MVI state for the "Track my path" screen. The path-tracking list read flow

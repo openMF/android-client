@@ -46,9 +46,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import template.core.base.store.screen.DataFreshness
-import template.core.base.store.screen.ScreenState
-import template.core.base.store.submit.SubmitState
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.icon.MifosIcons
@@ -59,6 +56,9 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import template.core.base.designsystem.theme.KptTheme
+import template.core.base.store.screen.DataFreshness
+import template.core.base.store.screen.ScreenState
+import template.core.base.store.submit.SubmitState
 import template.core.base.ui.submit.MutationScreenContent
 
 /**

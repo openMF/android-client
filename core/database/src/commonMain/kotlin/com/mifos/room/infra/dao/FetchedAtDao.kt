@@ -9,10 +9,10 @@
  */
 package com.mifos.room.infra.dao
 
-import com.mifos.room.infra.entity.FetchedAtEntity
 import androidx.room3.Dao
 import androidx.room3.Query
 import androidx.room3.Upsert
+import com.mifos.room.infra.entity.FetchedAtEntity
 
 /**
  * DAO for the framework-owned `framework_fetched_at` table.

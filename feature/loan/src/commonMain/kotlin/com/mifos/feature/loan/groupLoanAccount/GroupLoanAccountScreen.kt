@@ -74,7 +74,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.model.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
@@ -84,6 +83,7 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
+import com.mifos.core.model.utils.ApiDateFormatter
 import com.mifos.core.ui.components.MifosProgressIndicator
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource

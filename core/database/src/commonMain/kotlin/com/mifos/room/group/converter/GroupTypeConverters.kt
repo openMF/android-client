@@ -9,11 +9,11 @@
  */
 package com.mifos.room.group.converter
 
+import androidx.room3.TypeConverter
 import com.mifos.core.model.objects.timeline.Timeline
 import com.mifos.room.group.entity.GroupDateEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import androidx.room3.TypeConverter
 
 /**
  * Created by Pronay Sarker on 17/02/2025 (7:45 AM)

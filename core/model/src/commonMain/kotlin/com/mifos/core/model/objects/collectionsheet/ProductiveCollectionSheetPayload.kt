@@ -9,8 +9,8 @@
  */
 package com.mifos.core.model.objects.collectionsheet
 
-import com.mifos.core.model.utils.ApiDateFormatter
 import com.mifos.core.model.objects.loan.BulkRepaymentTransactions
+import com.mifos.core.model.utils.ApiDateFormatter
 import kotlinx.serialization.Serializable
 
 /**

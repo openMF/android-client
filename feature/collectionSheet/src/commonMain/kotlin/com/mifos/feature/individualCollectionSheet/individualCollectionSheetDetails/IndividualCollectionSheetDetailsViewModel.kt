@@ -18,9 +18,9 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.SaveIndividualCollectionSheetUseCase
 import com.mifos.core.model.network.IndividualCollectionSheetPayload
+import com.mifos.core.model.objects.collectionsheets.LoanAndClientName
 import com.mifos.room.collectionsheet.entity.ClientCollectionSheet
 import com.mifos.room.collectionsheet.entity.IndividualCollectionSheet
-import com.mifos.core.model.objects.collectionsheets.LoanAndClientName
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

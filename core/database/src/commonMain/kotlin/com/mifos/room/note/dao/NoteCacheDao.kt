@@ -9,11 +9,11 @@
  */
 package com.mifos.room.note.dao
 
-import com.mifos.room.note.entity.NoteCacheEntity
-import kotlinx.coroutines.flow.Flow
 import androidx.room3.Dao
 import androidx.room3.Query
 import androidx.room3.Upsert
+import com.mifos.room.note.entity.NoteCacheEntity
+import kotlinx.coroutines.flow.Flow
 
 /**
  * DAO for the `note_cache` table — backs the `NoteListStore` Store5 SourceOfTruth.

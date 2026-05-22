@@ -9,11 +9,11 @@
  */
 package com.mifos.room.center.entity
 
-import com.mifos.room.client.entity.ClientStatusEntity
-import com.mifos.room.loan.entity.LoanTimelineEntity
 import androidx.room3.Entity
 import androidx.room3.ForeignKey
 import androidx.room3.PrimaryKey
+import com.mifos.room.client.entity.ClientStatusEntity
+import com.mifos.room.loan.entity.LoanTimelineEntity
 
 @Entity(
     tableName = "Center",

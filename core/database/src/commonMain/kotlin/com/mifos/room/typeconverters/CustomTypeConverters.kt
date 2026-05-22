@@ -9,6 +9,7 @@
  */
 package com.mifos.room.typeconverters
 
+import androidx.room3.TypeConverter
 import com.mifos.core.model.objects.Changes
 import com.mifos.core.model.objects.account.loan.AmortizationType
 import com.mifos.core.model.objects.account.loan.Currency
@@ -70,7 +71,6 @@ import com.mifos.room.survey.entity.ResponseDatasEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
-import androidx.room3.TypeConverter
 
 @Suppress("TooManyFunctions")
 class CustomTypeConverters {

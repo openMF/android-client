@@ -79,7 +79,7 @@ internal object BiometricSetupScreenCurrentInfo : NavigationEventInfo()
 fun BiometricSetupScreen(
     onBiometricsRegistrationSuccess: () -> Unit,
     onSkipBiometricSetup: () -> Unit,
-    viewModel: BiometricSetupScreenViewmodel = koinViewModel(),
+    viewModel: BiometricSetupScreenViewmodel = koinViewModel<BiometricSetupScreenViewmodel>(),
 ) {
     val navEventState = rememberNavigationEventState(
         currentInfo = BiometricSetupScreenCurrentInfo,

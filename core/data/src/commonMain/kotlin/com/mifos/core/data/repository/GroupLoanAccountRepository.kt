@@ -10,9 +10,9 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.room.loan.entity.Loan
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
+import com.mifos.room.loan.entity.Loan
 import kotlinx.coroutines.flow.Flow
 
 /**

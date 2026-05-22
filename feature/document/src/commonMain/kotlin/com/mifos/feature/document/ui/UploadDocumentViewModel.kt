@@ -11,7 +11,6 @@ package com.mifos.feature.document.ui
 
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.document.DocumentRepository
-import template.core.base.store.submit.SubmitState
 import com.mifos.core.data.store.submitHandler
 import com.mifos.core.ui.store.BaseViewModel
 import com.mifos.core.ui.util.multipartRequestBody
@@ -29,6 +28,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import template.core.base.store.submit.SubmitState
 
 /**
  * Upload / update dialog ViewModel.
