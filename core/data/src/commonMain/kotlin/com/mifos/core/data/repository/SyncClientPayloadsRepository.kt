@@ -10,7 +10,7 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.room.entities.client.ClientPayloadEntity
+import com.mifos.room.client.entity.ClientPayloadEntity
 import kotlinx.coroutines.flow.Flow
 
 interface SyncClientPayloadsRepository {

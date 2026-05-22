@@ -10,7 +10,7 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.room.entities.client.ChargesEntity
+import com.mifos.room.charge.entity.ChargesEntity
 import kotlinx.coroutines.flow.Flow
 
 /**

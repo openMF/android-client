@@ -13,11 +13,8 @@ import com.mifos.core.model.objects.template.recurring.AttributeName
 import com.mifos.core.model.objects.template.recurring.ConditionType
 import com.mifos.core.model.objects.template.recurring.EntityType
 import com.mifos.core.model.utils.IgnoredOnParcel
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
-@Parcelize
 @Serializable
 data class Incentive(
     val amount: Double? = null,
@@ -27,4 +24,4 @@ data class Incentive(
     @IgnoredOnParcel val conditionType: ConditionType? = null,
     @IgnoredOnParcel val entityType: EntityType? = null,
     @IgnoredOnParcel val incentiveType: IncentiveType? = null,
-) : Parcelable
+)

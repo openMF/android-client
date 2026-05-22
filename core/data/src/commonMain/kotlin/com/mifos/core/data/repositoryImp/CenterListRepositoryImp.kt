@@ -18,8 +18,8 @@ import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.pagingSource.CenterListPagingSource
 import com.mifos.core.data.repository.CenterListRepository
 import com.mifos.core.network.datamanager.DataManagerCenter
-import com.mifos.room.entities.group.CenterEntity
-import com.mifos.room.entities.group.CenterWithAssociations
+import com.mifos.room.center.entity.CenterEntity
+import com.mifos.room.center.entity.CenterWithAssociations
 import kotlinx.coroutines.flow.Flow
 
 /**

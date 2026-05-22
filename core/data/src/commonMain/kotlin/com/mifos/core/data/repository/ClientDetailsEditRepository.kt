@@ -9,7 +9,7 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.room.entities.client.ClientPayloadEntity
+import com.mifos.room.client.entity.ClientPayloadEntity
 
 interface ClientDetailsEditRepository {
     suspend fun updateClient(clientId: Int, clientPayload: ClientPayloadEntity): Int?

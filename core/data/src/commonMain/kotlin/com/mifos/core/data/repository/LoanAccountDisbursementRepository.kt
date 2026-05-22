@@ -11,8 +11,8 @@ package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
-import com.mifos.core.network.GenericResponse
-import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
+import com.mifos.core.model.GenericResponse
+import com.mifos.room.loan.entity.LoanTransactionTemplate
 import kotlinx.coroutines.flow.Flow
 
 /**

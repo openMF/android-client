@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.loan.loanCharge
 
-import com.mifos.room.entities.client.ChargesEntity
+import com.mifos.room.charge.entity.ChargesEntity
 import org.jetbrains.compose.resources.StringResource
 
 sealed class LoanChargeUiState {

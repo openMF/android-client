@@ -20,8 +20,8 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SurveyListRepository
 import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.room.entities.survey.QuestionDatasEntity
-import com.mifos.room.entities.survey.SurveyEntity
+import com.mifos.room.survey.entity.QuestionDatasEntity
+import com.mifos.room.survey.entity.SurveyEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first

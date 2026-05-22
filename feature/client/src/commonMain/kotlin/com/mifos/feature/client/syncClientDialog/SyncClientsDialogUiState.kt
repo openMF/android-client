@@ -10,7 +10,7 @@
 package com.mifos.feature.client.syncClientDialog
 
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.client.entity.ClientEntity
 import org.jetbrains.compose.resources.StringResource
 
 /**

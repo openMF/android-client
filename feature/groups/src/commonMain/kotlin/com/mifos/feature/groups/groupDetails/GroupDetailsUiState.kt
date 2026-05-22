@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.groups.groupDetails
 
-import com.mifos.room.entities.group.GroupEntity
+import com.mifos.room.group.entity.GroupEntity
 import org.jetbrains.compose.resources.StringResource
 
 /**

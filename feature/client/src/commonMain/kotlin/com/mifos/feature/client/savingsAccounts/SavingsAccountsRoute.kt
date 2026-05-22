@@ -12,7 +12,7 @@ package com.mifos.feature.client.savingsAccounts
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
+import com.mifos.room.savings.entity.SavingAccountDepositTypeEntity
 import kotlinx.serialization.Serializable
 
 @Serializable

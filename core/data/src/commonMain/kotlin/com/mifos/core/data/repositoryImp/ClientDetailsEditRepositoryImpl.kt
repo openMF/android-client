@@ -11,7 +11,7 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.ClientDetailsEditRepository
 import com.mifos.core.network.datamanager.DataManagerClient
-import com.mifos.room.entities.client.ClientPayloadEntity
+import com.mifos.room.client.entity.ClientPayloadEntity
 
 class ClientDetailsEditRepositoryImpl(
     private val dataManagerClient: DataManagerClient,

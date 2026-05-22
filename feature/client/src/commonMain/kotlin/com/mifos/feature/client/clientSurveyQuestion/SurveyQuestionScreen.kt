@@ -60,7 +60,7 @@ import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.client.clientSurveySubmit.SurveySubmitScreen
 import com.mifos.feature.client.clientSurveySubmit.SurveySubmitUiState
 import com.mifos.feature.client.clientSurveySubmit.SurveySubmitViewModel
-import com.mifos.room.entities.survey.SurveyEntity
+import com.mifos.room.survey.entity.SurveyEntity
 import kotlinx.coroutines.launch
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json

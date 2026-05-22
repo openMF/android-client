@@ -10,11 +10,8 @@
 package com.mifos.core.model.objects.collectionsheets
 
 import com.mifos.core.model.objects.template.loan.Currency
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
-@Parcelize
 @Serializable
 data class LoanCollectionSheet(
     val accountId: String? = null,
@@ -28,4 +25,4 @@ data class LoanCollectionSheet(
     val totalDue: Double = 0.0,
     val chargesDue: Double = 0.0,
     val productShortName: String? = null,
-) : Parcelable
+)

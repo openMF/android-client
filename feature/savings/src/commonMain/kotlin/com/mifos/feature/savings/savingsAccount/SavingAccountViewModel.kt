@@ -22,8 +22,8 @@ import com.mifos.core.domain.useCases.GetGroupSavingsAccountTemplateByProductUse
 import com.mifos.core.domain.useCases.LoadSavingsAccountsAndTemplateUseCase
 import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.feature.savings.navigation.SavingsAccountRoute
-import com.mifos.room.entities.client.Savings
-import com.mifos.room.entities.templates.savings.SavingProductsTemplate
+import com.mifos.core.model.objects.savings.Savings
+import com.mifos.room.savings.entity.SavingProductsTemplate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

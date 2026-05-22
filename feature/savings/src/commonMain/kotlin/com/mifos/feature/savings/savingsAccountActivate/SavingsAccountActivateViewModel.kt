@@ -15,7 +15,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.ActivateSavingsUseCase
-import com.mifos.core.network.GenericResponse
+import com.mifos.core.model.GenericResponse
 import com.mifos.feature.savings.navigation.SavingsAccountActivate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -12,8 +12,8 @@ package com.mifos.core.data.repository
 import androidx.paging.PagingData
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.Page
-import com.mifos.room.entities.group.CenterEntity
-import com.mifos.room.entities.group.CenterWithAssociations
+import com.mifos.room.center.entity.CenterEntity
+import com.mifos.room.center.entity.CenterWithAssociations
 import kotlinx.coroutines.flow.Flow
 
 /**

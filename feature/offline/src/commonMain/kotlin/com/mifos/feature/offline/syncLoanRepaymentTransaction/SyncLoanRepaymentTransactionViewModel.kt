@@ -20,8 +20,8 @@ import com.mifos.core.common.utils.FileUtils
 import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
 import com.mifos.core.data.infra.NetworkMonitor
 import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.room.entities.PaymentTypeOptionEntity
-import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
+import com.mifos.room.savings.entity.PaymentTypeOptionEntity
+import com.mifos.room.loan.entity.LoanRepaymentRequestEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

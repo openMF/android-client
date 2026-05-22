@@ -14,7 +14,7 @@ import com.mifos.core.common.utils.Page
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.GroupsListRepository
 import com.mifos.core.network.datamanager.DataManagerGroups
-import com.mifos.room.entities.group.GroupEntity
+import com.mifos.room.group.entity.GroupEntity
 import kotlinx.coroutines.flow.Flow
 
 class GroupsListRepositoryImpl(

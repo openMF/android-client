@@ -9,12 +9,12 @@
  */
 package com.mifos.core.network.note.api
 
-import com.mifos.core.network.dto.note.CreateNoteResponseDto
-import com.mifos.core.network.dto.note.DeleteNoteResponseDto
-import com.mifos.core.network.dto.note.NoteDto
-import com.mifos.core.network.dto.note.NoteRequestDto
-import com.mifos.core.network.dto.note.UpdateNoteResponseDto
-import com.mifos.room.basemodel.APIEndPoint
+import com.mifos.core.network.note.dto.CreateNoteResponseDto
+import com.mifos.core.network.note.dto.DeleteNoteResponseDto
+import com.mifos.core.network.note.dto.NoteDto
+import com.mifos.core.network.note.dto.NoteRequestDto
+import com.mifos.core.network.note.dto.UpdateNoteResponseDto
+import com.mifos.core.network.APIEndPoint
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.DELETE
 import de.jensklingenberg.ktorfit.http.GET

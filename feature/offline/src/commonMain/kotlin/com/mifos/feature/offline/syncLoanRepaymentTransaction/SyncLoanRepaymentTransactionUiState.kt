@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.offline.syncLoanRepaymentTransaction
 
-import com.mifos.room.entities.PaymentTypeOptionEntity
-import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
+import com.mifos.room.savings.entity.PaymentTypeOptionEntity
+import com.mifos.room.loan.entity.LoanRepaymentRequestEntity
 import org.jetbrains.compose.resources.StringResource
 
 /**

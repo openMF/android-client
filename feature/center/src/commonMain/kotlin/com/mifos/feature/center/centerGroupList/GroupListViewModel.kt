@@ -17,8 +17,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.data.repository.GroupListRepository
 import com.mifos.feature.center.navigation.CenterGroupListRoute
-import com.mifos.room.entities.group.CenterWithAssociations
-import com.mifos.room.entities.group.GroupWithAssociations
+import com.mifos.room.center.entity.CenterWithAssociations
+import com.mifos.room.group.entity.GroupWithAssociations
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch

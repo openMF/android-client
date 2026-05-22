@@ -16,7 +16,7 @@ import com.mifos.core.common.utils.FileUtils
 import com.mifos.core.data.repository.SyncClientPayloadsRepository
 import com.mifos.core.data.infra.NetworkMonitor
 import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.room.entities.client.ClientPayloadEntity
+import com.mifos.room.client.entity.ClientPayloadEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

@@ -15,7 +15,7 @@ import com.mifos.core.data.repository.CenterDetailsRepository
 import com.mifos.core.model.objects.groups.CenterInfo
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.network.datamanager.DataManagerRunReport
-import com.mifos.room.entities.group.CenterWithAssociations
+import com.mifos.room.center.entity.CenterWithAssociations
 import kotlinx.coroutines.flow.Flow
 
 /**

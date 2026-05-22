@@ -10,7 +10,7 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.room.entities.noncore.DataTableEntity
+import com.mifos.room.datatable.entity.DataTableEntity
 import kotlinx.coroutines.flow.Flow
 
 /**

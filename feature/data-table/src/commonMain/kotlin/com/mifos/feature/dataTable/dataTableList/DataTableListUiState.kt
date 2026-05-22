@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.dataTable.dataTableList
 
-import com.mifos.room.entities.client.ClientPayloadEntity
+import com.mifos.room.client.entity.ClientPayloadEntity
 import org.jetbrains.compose.resources.StringResource
 
 /**

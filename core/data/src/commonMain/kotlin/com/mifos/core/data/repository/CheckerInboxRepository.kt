@@ -12,7 +12,7 @@ package com.mifos.core.data.repository
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.checkerinboxtask.CheckerInboxSearchTemplate
 import com.mifos.core.model.objects.checkerinboxtask.CheckerTask
-import com.mifos.core.network.GenericResponse
+import com.mifos.core.model.GenericResponse
 import kotlinx.coroutines.flow.Flow
 
 interface CheckerInboxRepository {

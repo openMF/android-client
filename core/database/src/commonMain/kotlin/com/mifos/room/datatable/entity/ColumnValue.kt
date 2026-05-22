@@ -1,0 +1,31 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
+ */
+package com.mifos.room.datatable.entity
+
+import kotlinx.serialization.Serializable
+import template.core.base.database.Entity
+import template.core.base.database.PrimaryKey
+
+@Serializable
+@Entity(
+    indices = [],
+    inheritSuperIndices = false,
+    primaryKeys = [],
+    foreignKeys = [],
+    ignoredColumns = [],
+    tableName = "ColumnValue",
+)
+data class ColumnValue(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int? = null,
+    val value: String? = null,
+    val score: Int? = null,
+    val registeredTableName: String? = null,
+)

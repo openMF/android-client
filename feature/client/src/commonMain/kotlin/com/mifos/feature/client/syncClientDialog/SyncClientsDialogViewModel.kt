@@ -19,11 +19,11 @@ import com.mifos.core.data.repository.SyncClientsDialogRepository
 import com.mifos.core.data.infra.NetworkMonitor
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.room.entities.accounts.loans.LoanAccountEntity
-import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
-import com.mifos.room.entities.client.ClientEntity
-import com.mifos.room.entities.zipmodels.LoanAndLoanRepayment
-import com.mifos.room.entities.zipmodels.SavingsAccountAndTransactionTemplate
+import com.mifos.room.loan.entity.LoanAccountEntity
+import com.mifos.room.savings.entity.SavingsAccountEntity
+import com.mifos.room.client.entity.ClientEntity
+import com.mifos.room.loan.entity.LoanAndLoanRepayment
+import com.mifos.room.savings.entity.SavingsAccountAndTransactionTemplate
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -266,7 +266,7 @@ class SyncClientsDialogViewModel(
      *
      * @param client
      */
-    fun syncClient(client: com.mifos.room.entities.client.ClientEntity) {
+    fun syncClient(client: com.mifos.room.client.entity.ClientEntity) {
         val updatedClient = client.copy(
             groupId = mClientList[mClientSyncIndex].id,
             sync = true,

@@ -10,8 +10,8 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.network.model.fixedDeposit.FixedDepositPayload
-import com.mifos.core.network.model.fixedDeposit.FixedDepositTemplate
+import com.mifos.core.model.network.fixedDeposit.FixedDepositPayload
+import com.mifos.core.model.network.fixedDeposit.FixedDepositTemplate
 import kotlinx.coroutines.flow.Flow
 
 interface FixedDepositRepository {

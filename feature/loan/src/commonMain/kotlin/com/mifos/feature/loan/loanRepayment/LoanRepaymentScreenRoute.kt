@@ -12,7 +12,7 @@ package com.mifos.feature.loan.loanRepayment
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.room.loan.entity.LoanWithAssociationsEntity
 import kotlinx.serialization.Serializable
 
 @Serializable

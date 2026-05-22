@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.savings.savingsAccount
 
-import com.mifos.room.entities.client.Savings
-import com.mifos.room.entities.zipmodels.SavingProductsAndTemplate
+import com.mifos.core.model.objects.savings.Savings
+import com.mifos.room.savings.entity.SavingProductsAndTemplate
 import org.jetbrains.compose.resources.StringResource
 
 /**

@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.loan.loanApproval
 
-import com.mifos.core.network.GenericResponse
+import com.mifos.core.model.GenericResponse
 
 sealed class LoanAccountApprovalUiState {
 

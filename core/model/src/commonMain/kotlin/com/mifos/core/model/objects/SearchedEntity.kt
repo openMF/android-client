@@ -10,14 +10,11 @@
 package com.mifos.core.model.objects
 
 import com.mifos.core.model.objects.commonfiles.InterestType
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Created by ishankhanna on 14/02/14.
  */
-@Parcelize
 @Serializable
 data class SearchedEntity(
 
@@ -35,7 +32,7 @@ data class SearchedEntity(
 
     var entityStatus: InterestType? = null,
 
-) : Parcelable {
+) {
     val description: String
         get() = "#$entityId - $entityName"
 }

@@ -19,7 +19,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SyncGroupPayloadsRepository
 import com.mifos.core.data.infra.NetworkMonitor
 import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.room.entities.group.GroupPayloadEntity
+import com.mifos.room.group.entity.GroupPayloadEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

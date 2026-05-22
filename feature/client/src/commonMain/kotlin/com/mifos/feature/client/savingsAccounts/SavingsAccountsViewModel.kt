@@ -14,8 +14,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
-import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
+import com.mifos.room.savings.entity.SavingAccountDepositTypeEntity
+import com.mifos.room.savings.entity.SavingsAccountEntity
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 

@@ -17,7 +17,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SurveySubmitRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.surveys.Scorecard
-import com.mifos.room.entities.survey.SurveyEntity
+import com.mifos.room.survey.entity.SurveyEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

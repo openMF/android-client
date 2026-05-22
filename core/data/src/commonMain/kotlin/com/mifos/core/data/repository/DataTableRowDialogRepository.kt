@@ -9,7 +9,7 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.network.GenericResponse
+import com.mifos.core.model.GenericResponse
 
 /**
  * Created by Aditya Gupta on 13/08/23.

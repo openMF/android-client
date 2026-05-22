@@ -19,10 +19,10 @@ import androidx.navigation.toRoute
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.data.infra.NetworkMonitor
 import com.mifos.core.model.objects.clients.ClientAddressEntity
-import com.mifos.core.network.model.PostClientAddressRequest
+import com.mifos.core.model.network.PostClientAddressRequest
 import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.room.entities.client.AddressTemplate
+import com.mifos.room.client.entity.AddressTemplate
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString

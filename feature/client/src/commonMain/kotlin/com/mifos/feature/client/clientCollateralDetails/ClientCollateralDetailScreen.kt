@@ -28,7 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.designsystem.theme.MifosTypography
-import com.mifos.core.network.model.CollateralItemResult
+import com.mifos.core.model.network.CollateralItemResult
 import com.mifos.core.ui.components.MifosActionsCollateralDataListingComponent
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosEmptyCard

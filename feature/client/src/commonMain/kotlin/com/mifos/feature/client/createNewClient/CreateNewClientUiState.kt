@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.client.createNewClient
 
-import com.mifos.room.entities.client.AddressTemplate
-import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
+import com.mifos.room.client.entity.AddressTemplate
+import com.mifos.room.client.entity.ClientsTemplateEntity
 import org.jetbrains.compose.resources.StringResource
 
 /**

@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SavingsAccountRepository
-import com.mifos.room.entities.templates.savings.SavingProductsTemplate
+import com.mifos.room.savings.entity.SavingProductsTemplate
 import kotlinx.coroutines.flow.Flow
 
 /**

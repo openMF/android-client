@@ -15,8 +15,8 @@ import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.network.center.api.CenterApi
 import com.mifos.core.network.client.api.ClientApi
 import com.mifos.core.network.group.api.GroupApi
-import com.mifos.core.network.model.PostCentersCenterIdResponse
-import com.mifos.core.network.model.PostClientsClientIdResponse
+import com.mifos.core.model.network.PostCentersCenterIdResponse
+import com.mifos.core.model.network.PostClientsClientIdResponse
 
 class ActivateRepositoryImpl(
     private val clientApi: ClientApi,

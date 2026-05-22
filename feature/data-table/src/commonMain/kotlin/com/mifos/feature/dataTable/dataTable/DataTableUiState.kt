@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.dataTable.dataTable
 
-import com.mifos.room.entities.noncore.DataTableEntity
+import com.mifos.room.datatable.entity.DataTableEntity
 import org.jetbrains.compose.resources.StringResource
 
 /**

@@ -10,10 +10,7 @@
 package com.mifos.core.model.objects.account.loan
 
 import com.mifos.core.model.utils.DateConstants
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 
-@Parcelize
 data class LoanDisbursement(
     var actualDisbursementDate: String? = null,
 
@@ -26,4 +23,4 @@ data class LoanDisbursement(
     var locale: String? = DateConstants.LOCALE,
 
     var dateFormat: String? = DateConstants.DATE_FORMAT,
-) : Parcelable
+)

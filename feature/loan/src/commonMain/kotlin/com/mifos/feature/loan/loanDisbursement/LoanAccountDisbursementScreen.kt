@@ -59,10 +59,10 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
-import com.mifos.core.network.GenericResponse
+import com.mifos.core.model.GenericResponse
 import com.mifos.core.ui.components.MifosProgressIndicator
-import com.mifos.room.entities.PaymentTypeOptionEntity
-import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
+import com.mifos.room.savings.entity.PaymentTypeOptionEntity
+import com.mifos.room.loan.entity.LoanTransactionTemplate
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview

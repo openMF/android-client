@@ -10,7 +10,7 @@
 package com.mifos.feature.center.syncCentersDialog
 
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.mifos.room.entities.group.CenterEntity
+import com.mifos.room.center.entity.CenterEntity
 import org.jetbrains.compose.resources.StringResource
 
 sealed class SyncCentersDialogUiState {

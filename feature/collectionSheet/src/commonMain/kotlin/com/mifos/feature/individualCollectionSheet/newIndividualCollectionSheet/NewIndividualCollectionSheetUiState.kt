@@ -9,9 +9,9 @@
  */
 package com.mifos.feature.individualCollectionSheet.newIndividualCollectionSheet
 
-import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
-import com.mifos.room.entities.organisation.OfficeEntity
-import com.mifos.room.entities.organisation.StaffEntity
+import com.mifos.core.model.objects.collectionsheet.IndividualCollectionSheet
+import com.mifos.room.office.entity.OfficeEntity
+import com.mifos.room.staff.entity.StaffEntity
 
 data class NewIndividualCollectionSheetUiState(
 

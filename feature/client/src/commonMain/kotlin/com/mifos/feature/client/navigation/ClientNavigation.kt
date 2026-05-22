@@ -108,9 +108,9 @@ import com.mifos.feature.savings.navigation.navigateToSavingsAccountApproval
 import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
 import com.mifos.feature.savings.navigation.savingsDestination
 import com.mifos.feature.savings.savingsAccountv2.navigateToSavingsAccountRoute
-import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
-import com.mifos.room.entities.noncore.DataTableEntity
-import com.mifos.room.entities.survey.SurveyEntity
+import com.mifos.room.savings.entity.SavingAccountDepositTypeEntity
+import com.mifos.room.datatable.entity.DataTableEntity
+import com.mifos.room.survey.entity.SurveyEntity
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlin.reflect.KFunction4

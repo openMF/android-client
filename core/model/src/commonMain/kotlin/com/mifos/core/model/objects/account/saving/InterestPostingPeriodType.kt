@@ -9,11 +9,8 @@
  */
 package com.mifos.core.model.objects.account.saving
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
-@Parcelize
 @Serializable
 data class InterestPostingPeriodType(
     var id: Int? = null,
@@ -21,4 +18,4 @@ data class InterestPostingPeriodType(
     var code: String? = null,
 
     var value: String? = null,
-) : Parcelable
+)

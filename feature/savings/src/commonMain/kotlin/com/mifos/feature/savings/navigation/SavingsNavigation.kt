@@ -21,8 +21,8 @@ import com.mifos.feature.savings.savingsAccountApproval.SavingsAccountApprovalSc
 import com.mifos.feature.savings.savingsAccountSummary.SavingsAccountSummaryScreen
 import com.mifos.feature.savings.savingsAccountTransaction.SavingsAccountTransactionScreen
 import com.mifos.feature.savings.savingsAccountv2.savingsAccountDestination
-import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
-import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
+import com.mifos.room.savings.entity.SavingAccountDepositTypeEntity
+import com.mifos.room.savings.entity.SavingsAccountWithAssociationsEntity
 import kotlinx.serialization.Serializable
 
 fun NavGraphBuilder.savingsDestination(

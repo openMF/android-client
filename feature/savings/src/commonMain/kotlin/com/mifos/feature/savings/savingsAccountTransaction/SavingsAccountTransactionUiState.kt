@@ -10,7 +10,7 @@
 package com.mifos.feature.savings.savingsAccountTransaction
 
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
-import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
+import com.mifos.room.savings.entity.SavingsAccountTransactionTemplateEntity
 
 /**
  * Created by Aditya Gupta on 13/08/23.

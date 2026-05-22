@@ -22,7 +22,7 @@ import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
 import com.mifos.core.domain.useCases.UsernameValidationUseCase
 import com.mifos.core.model.objects.users.User
-import com.mifos.core.network.model.PostAuthenticationResponse
+import com.mifos.core.model.network.PostAuthenticationResponse
 import com.mifos.core.ui.store.BaseViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

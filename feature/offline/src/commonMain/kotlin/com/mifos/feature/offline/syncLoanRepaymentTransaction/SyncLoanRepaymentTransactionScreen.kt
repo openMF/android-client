@@ -55,8 +55,8 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.feature.offline.syncSavingsAccountTransaction.getPaymentTypeName
-import com.mifos.room.entities.PaymentTypeOptionEntity
-import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
+import com.mifos.room.savings.entity.PaymentTypeOptionEntity
+import com.mifos.room.loan.entity.LoanRepaymentRequestEntity
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview

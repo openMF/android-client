@@ -78,8 +78,8 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosProgressIndicator
-import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
-import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
+import com.mifos.room.savings.entity.SavingsAccountTransactionRequestEntity
+import com.mifos.room.savings.entity.SavingsAccountTransactionTemplateEntity
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource

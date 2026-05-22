@@ -10,7 +10,7 @@
 package com.mifos.feature.client
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.network.GenericResponse
+import com.mifos.core.model.GenericResponse
 import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

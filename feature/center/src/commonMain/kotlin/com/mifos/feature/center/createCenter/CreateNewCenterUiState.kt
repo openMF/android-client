@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.center.createCenter
 
-import com.mifos.room.entities.organisation.OfficeEntity
+import com.mifos.room.office.entity.OfficeEntity
 import org.jetbrains.compose.resources.StringResource
 
 sealed class CreateNewCenterUiState {

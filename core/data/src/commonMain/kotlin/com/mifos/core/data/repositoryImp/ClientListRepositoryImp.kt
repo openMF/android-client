@@ -18,7 +18,7 @@ import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.pagingSource.ClientListPagingSource
 import com.mifos.core.data.repository.ClientListRepository
 import com.mifos.core.network.datamanager.DataManagerClient
-import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.client.entity.ClientEntity
 import kotlinx.coroutines.flow.Flow
 
 /**

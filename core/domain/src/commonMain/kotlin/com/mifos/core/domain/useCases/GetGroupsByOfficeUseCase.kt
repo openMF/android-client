@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.GenerateCollectionSheetRepository
-import com.mifos.room.entities.group.GroupEntity
+import com.mifos.room.group.entity.GroupEntity
 import kotlinx.coroutines.flow.Flow
 
 class GetGroupsByOfficeUseCase(

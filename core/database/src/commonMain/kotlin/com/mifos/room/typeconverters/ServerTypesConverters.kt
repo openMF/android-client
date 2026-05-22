@@ -9,7 +9,7 @@
  */
 package com.mifos.room.typeconverters
 
-import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity.ServerTypes
+import com.mifos.room.savings.entity.SavingAccountDepositTypeEntity.ServerTypes
 import template.core.base.database.TypeConverter
 
 class ServerTypesConverters {

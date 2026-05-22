@@ -10,8 +10,8 @@
 package com.mifos.core.data.mappers.client.note
 
 import com.mifos.core.model.objects.note.Note
-import com.mifos.core.network.dto.note.NoteDto
-import com.mifos.room.entities.noncore.NoteEntity
+import com.mifos.core.network.note.dto.NoteDto
+import com.mifos.room.note.entity.NoteEntity
 
 fun NoteDto.toEntity(): NoteEntity = NoteEntity(
     id = id,

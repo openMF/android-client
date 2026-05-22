@@ -19,7 +19,7 @@ import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.DeleteDataTableEntryUseCase
 import com.mifos.core.domain.useCases.GetDataTableInfoUseCase
-import com.mifos.room.entities.navigation.DataTableDataNavigationArg
+import com.mifos.feature.dataTable.navigation.DataTableDataNavigationArg
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

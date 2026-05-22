@@ -10,7 +10,7 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
+import com.mifos.room.savings.entity.SavingsAccountWithAssociationsEntity
 import kotlinx.coroutines.flow.Flow
 
 /**

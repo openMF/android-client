@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Mifos Initiative
+ * Copyright 2026 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -10,29 +10,35 @@
 plugins {
     alias(libs.plugins.kmp.library.convention)
     alias(libs.plugins.ktorfit)
-    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
 }
 
 android {
     namespace = "com.mifos.core.network"
-
+    defaultConfig {
+        consumerProguardFiles("consumer-rules.pro")
+    }
     testOptions {
         unitTests {
+            isReturnDefaultValues = true
             isIncludeAndroidResources = true
         }
     }
-
-    buildFeatures {
-        buildConfig = true
-    }
 }
 
-kotlin{
-    sourceSets{
+kotlin {
+    sourceSets {
         commonMain.dependencies {
+            api(projects.core.common)
+            api(projects.core.model)
+            api(projects.core.database)
+            api(projects.coreBase.network)
+
+            implementation(projects.core.datastore)
+
             implementation(libs.kotlinx.serialization.json)
+
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.json)
             implementation(libs.ktor.client.logging)
@@ -40,23 +46,19 @@ kotlin{
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.client.auth)
             implementation(libs.ktor.serialization.kotlinx.json)
+
             implementation(libs.ktorfit.lib)
+
             implementation(libs.squareup.okio)
-            api(projects.core.model)
-            api(projects.core.datastore)
-            api(projects.core.database)
-            api(projects.core.common)
-            api(libs.kotlinx.datetime)
         }
+
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.koin.android)
         }
+
         nativeMain.dependencies {
             implementation(libs.ktor.client.darwin)
-        }
-        desktopMain.dependencies {
-            implementation(libs.ktor.client.okhttp)
         }
     }
 }
@@ -64,10 +66,10 @@ kotlin{
 dependencies {
     add("kspCommonMainMetadata", libs.ktorfit.ksp)
     add("kspAndroid", libs.ktorfit.ksp)
-//    add("kspJs", libs.ktorfit.ksp)
-//    add("kspWasmJs", libs.ktorfit.ksp)
+    add("kspJs", libs.ktorfit.ksp)
+    add("kspWasmJs", libs.ktorfit.ksp)
     add("kspDesktop", libs.ktorfit.ksp)
-//    add("kspIosX64", libs.ktorfit.ksp)
+    add("kspIosX64", libs.ktorfit.ksp)
     add("kspIosArm64", libs.ktorfit.ksp)
     add("kspIosSimulatorArm64", libs.ktorfit.ksp)
 }

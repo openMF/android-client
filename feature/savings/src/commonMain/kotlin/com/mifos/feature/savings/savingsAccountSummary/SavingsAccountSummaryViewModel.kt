@@ -18,8 +18,8 @@ import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SavingsAccountSummaryRepository
-import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
-import com.mifos.room.entities.accounts.savings.SavingsSummaryData
+import com.mifos.room.savings.entity.SavingsAccountWithAssociationsEntity
+import com.mifos.core.model.objects.savings.SavingsSummaryData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

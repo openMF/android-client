@@ -9,10 +9,7 @@
  */
 package com.mifos.core.model.objects.databaseobjects
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 
-@Parcelize
 data class CollectionMeetingCalendar(
     var calendarInstanceId: Int = 0,
 
@@ -35,4 +32,4 @@ data class CollectionMeetingCalendar(
     var recurrence: String? = null,
 
     var startDate: List<Int> = ArrayList(),
-) : Parcelable
+)

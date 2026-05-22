@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.GroupDetailsRepository
-import com.mifos.room.entities.zipmodels.GroupAndGroupAccounts
+import com.mifos.room.group.entity.GroupAndGroupAccounts
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 

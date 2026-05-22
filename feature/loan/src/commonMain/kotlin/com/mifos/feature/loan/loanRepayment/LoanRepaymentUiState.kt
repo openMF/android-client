@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.loan.loanRepayment
 
-import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
-import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
+import com.mifos.room.loan.entity.LoanRepaymentResponseEntity
+import com.mifos.room.loan.entity.LoanRepaymentTemplateEntity
 import org.jetbrains.compose.resources.StringResource
 
 sealed class LoanRepaymentUiState {

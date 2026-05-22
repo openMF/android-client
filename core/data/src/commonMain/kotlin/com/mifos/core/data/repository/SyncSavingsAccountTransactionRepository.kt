@@ -11,8 +11,8 @@ package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
-import com.mifos.room.entities.PaymentTypeOptionEntity
-import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
+import com.mifos.room.savings.entity.PaymentTypeOptionEntity
+import com.mifos.room.savings.entity.SavingsAccountTransactionRequestEntity
 import kotlinx.coroutines.flow.Flow
 
 /**

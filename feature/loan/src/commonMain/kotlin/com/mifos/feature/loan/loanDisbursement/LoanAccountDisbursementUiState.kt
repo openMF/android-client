@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.loan.loanDisbursement
 
-import com.mifos.core.network.GenericResponse
-import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
+import com.mifos.core.model.GenericResponse
+import com.mifos.room.loan.entity.LoanTransactionTemplate
 
 sealed class LoanAccountDisbursementUiState {
 

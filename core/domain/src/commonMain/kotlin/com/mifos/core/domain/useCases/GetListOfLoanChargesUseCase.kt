@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanChargeRepository
-import com.mifos.room.entities.client.ChargesEntity
+import com.mifos.room.charge.entity.ChargesEntity
 import kotlinx.coroutines.flow.Flow
 
 class GetListOfLoanChargesUseCase(

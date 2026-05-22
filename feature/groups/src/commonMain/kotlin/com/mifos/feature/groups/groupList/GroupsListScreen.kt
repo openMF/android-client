@@ -76,7 +76,7 @@ import com.mifos.core.ui.components.MifosPagingAppendProgress
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.groups.syncGroupDialog.SyncGroupDialogScreen
-import com.mifos.room.entities.group.GroupEntity
+import com.mifos.room.group.entity.GroupEntity
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme

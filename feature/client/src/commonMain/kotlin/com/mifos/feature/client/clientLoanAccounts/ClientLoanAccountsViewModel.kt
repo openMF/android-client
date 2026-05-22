@@ -15,8 +15,8 @@ import androidx.navigation.toRoute
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.infra.NetworkMonitor
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.room.entities.accounts.loans.LoanAccountEntity
-import com.mifos.room.entities.accounts.loans.LoanStatusEntity
+import com.mifos.room.loan.entity.LoanAccountEntity
+import com.mifos.room.loan.entity.LoanStatusEntity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch

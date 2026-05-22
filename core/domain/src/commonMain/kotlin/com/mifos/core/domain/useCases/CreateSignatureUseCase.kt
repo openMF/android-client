@@ -12,7 +12,7 @@ package com.mifos.core.domain.useCases
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.SignatureRepository
-import com.mifos.core.network.GenericResponse
+import com.mifos.core.model.GenericResponse
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

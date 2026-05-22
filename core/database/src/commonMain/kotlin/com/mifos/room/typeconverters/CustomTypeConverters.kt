@@ -26,48 +26,48 @@ import com.mifos.core.model.objects.account.saving.InterestCompoundingPeriodType
 import com.mifos.core.model.objects.account.saving.InterestPostingPeriodType
 import com.mifos.core.model.objects.account.saving.LockinPeriodFrequencyType
 import com.mifos.core.model.objects.clients.Address
-import com.mifos.room.entities.PaymentTypeOptionEntity
-import com.mifos.room.entities.Timeline
-import com.mifos.room.entities.accounts.loans.ActualDisbursementDateEntity
-import com.mifos.room.entities.accounts.loans.LoanStatusEntity
-import com.mifos.room.entities.accounts.loans.LoanTimelineEntity
-import com.mifos.room.entities.accounts.loans.LoanTypeEntity
-import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
-import com.mifos.room.entities.accounts.savings.Charge
-import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
-import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
-import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity.ServerTypes
-import com.mifos.room.entities.accounts.savings.SavingsAccountStatusEntity
-import com.mifos.room.entities.accounts.savings.SavingsAccountSummaryEntity
-import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionEntity
-import com.mifos.room.entities.accounts.savings.SavingsTransactionDateEntity
-import com.mifos.room.entities.accounts.savings.SavingsTransactionTypeEntity
-import com.mifos.room.entities.client.ChargeCalculationTypeEntity
-import com.mifos.room.entities.client.ChargeTimeTypeEntity
-import com.mifos.room.entities.client.ClientChargeCurrencyEntity
-import com.mifos.room.entities.client.ClientClassificationEntity
-import com.mifos.room.entities.client.ClientDateEntity
-import com.mifos.room.entities.client.ClientGenderEntity
-import com.mifos.room.entities.client.ClientStatusEntity
-import com.mifos.room.entities.client.ClientTypeEntity
-import com.mifos.room.entities.group.CenterDateEntity
-import com.mifos.room.entities.group.CenterEntity
-import com.mifos.room.entities.group.GroupDateEntity
-import com.mifos.room.entities.group.GroupEntity
-import com.mifos.room.entities.noncore.ColumnHeader
-import com.mifos.room.entities.noncore.ColumnValue
-import com.mifos.room.entities.noncore.DataTableEntity
-import com.mifos.room.entities.noncore.DataTablePayload
-import com.mifos.room.entities.organisation.OfficeOpeningDateEntity
-import com.mifos.room.entities.survey.ComponentDatasEntity
-import com.mifos.room.entities.survey.QuestionDatasEntity
-import com.mifos.room.entities.survey.ResponseDatasEntity
-import com.mifos.room.entities.templates.clients.InterestTypeEntity
-import com.mifos.room.entities.templates.clients.OfficeOptionsEntity
-import com.mifos.room.entities.templates.clients.OptionsEntity
-import com.mifos.room.entities.templates.clients.SavingProductOptionsEntity
-import com.mifos.room.entities.templates.clients.StaffOptionsEntity
-import com.mifos.room.entities.templates.loans.LoanType
+import com.mifos.room.savings.entity.PaymentTypeOptionEntity
+import com.mifos.core.model.objects.timeline.Timeline
+import com.mifos.room.loan.entity.ActualDisbursementDateEntity
+import com.mifos.room.loan.entity.LoanStatusEntity
+import com.mifos.room.loan.entity.LoanTimelineEntity
+import com.mifos.room.loan.entity.LoanTypeEntity
+import com.mifos.room.loan.entity.LoansAccountSummaryEntity
+import com.mifos.room.charge.entity.SavingsCharge
+import com.mifos.room.savings.entity.SavingAccountCurrencyEntity
+import com.mifos.room.savings.entity.SavingAccountDepositTypeEntity
+import com.mifos.room.savings.entity.SavingAccountDepositTypeEntity.ServerTypes
+import com.mifos.room.savings.entity.SavingsAccountStatusEntity
+import com.mifos.room.savings.entity.SavingsAccountSummaryEntity
+import com.mifos.room.savings.entity.SavingsAccountTransactionEntity
+import com.mifos.room.savings.entity.SavingsTransactionDateEntity
+import com.mifos.room.savings.entity.SavingsTransactionTypeEntity
+import com.mifos.room.charge.entity.ChargeCalculationTypeEntity
+import com.mifos.room.charge.entity.ChargeTimeTypeEntity
+import com.mifos.room.charge.entity.ClientChargeCurrencyEntity
+import com.mifos.room.client.entity.ClientClassificationEntity
+import com.mifos.room.client.entity.ClientDateEntity
+import com.mifos.room.client.entity.ClientGenderEntity
+import com.mifos.room.client.entity.ClientStatusEntity
+import com.mifos.room.client.entity.ClientTypeEntity
+import com.mifos.room.center.entity.CenterDateEntity
+import com.mifos.room.center.entity.CenterEntity
+import com.mifos.room.group.entity.GroupDateEntity
+import com.mifos.room.group.entity.GroupEntity
+import com.mifos.room.datatable.entity.ColumnHeader
+import com.mifos.room.datatable.entity.ColumnValue
+import com.mifos.room.datatable.entity.DataTableEntity
+import com.mifos.room.datatable.entity.DataTablePayload
+import com.mifos.room.office.entity.OfficeOpeningDateEntity
+import com.mifos.room.survey.entity.ComponentDatasEntity
+import com.mifos.room.survey.entity.QuestionDatasEntity
+import com.mifos.room.survey.entity.ResponseDatasEntity
+import com.mifos.room.client.entity.InterestTypeEntity
+import com.mifos.room.office.entity.OfficeOptionsEntity
+import com.mifos.room.client.entity.OptionsEntity
+import com.mifos.room.savings.entity.SavingProductOptionsEntity
+import com.mifos.room.staff.entity.StaffOptionsEntity
+import com.mifos.room.loan.entity.LoanType
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
@@ -400,12 +400,12 @@ class CustomTypeConverters {
     }
 
     @TypeConverter
-    fun fromListOfCharges(list: List<Charge?>?): String? {
+    fun fromListOfCharges(list: List<SavingsCharge?>?): String? {
         return list?.let { Json.encodeToString(it) }
     }
 
     @TypeConverter
-    fun toListOfCharges(json: String?): List<Charge?>? {
+    fun toListOfCharges(json: String?): List<SavingsCharge?>? {
         return json?.let { Json.decodeFromString(it) }
     }
 

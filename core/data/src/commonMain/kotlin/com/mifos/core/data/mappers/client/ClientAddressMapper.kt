@@ -11,7 +11,7 @@ package com.mifos.core.data.mappers.client
 
 import com.mifos.core.model.objects.clients.ClientAddressEntity
 import com.mifos.core.network.data.AbstractMapper
-import com.mifos.room.entities.client.ClientAddressEntity as RoomAddressEntity
+import com.mifos.room.client.entity.ClientAddressEntity as RoomAddressEntity
 
 object ClientAddressMapper : AbstractMapper<ClientAddressEntity, RoomAddressEntity>() {
 

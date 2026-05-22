@@ -65,12 +65,12 @@ import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
-import com.mifos.core.network.model.RequestCollectionSheetPayload
+import com.mifos.core.model.network.RequestCollectionSheetPayload
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.DevicePreview
-import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
-import com.mifos.room.entities.organisation.OfficeEntity
-import com.mifos.room.entities.organisation.StaffEntity
+import com.mifos.core.model.objects.collectionsheet.IndividualCollectionSheet
+import com.mifos.room.office.entity.OfficeEntity
+import com.mifos.room.staff.entity.StaffEntity
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme

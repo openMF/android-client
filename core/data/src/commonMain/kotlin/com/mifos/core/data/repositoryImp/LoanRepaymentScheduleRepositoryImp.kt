@@ -13,7 +13,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.LoanRepaymentScheduleRepository
 import com.mifos.core.network.DataManager
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.room.loan.entity.LoanWithAssociationsEntity
 import kotlinx.coroutines.flow.Flow
 
 /**

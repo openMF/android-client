@@ -11,11 +11,8 @@ package com.mifos.core.model.objects.template.recurring.charge
 
 import com.mifos.core.model.objects.template.recurring.Currency
 import com.mifos.core.model.utils.IgnoredOnParcel
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
-@Parcelize
 @Serializable
 data class ChargeOption(
     val active: Boolean? = null,
@@ -33,4 +30,4 @@ data class ChargeOption(
     val penalty: Boolean? = null,
     val restartFrequency: Int? = null,
     val restartFrequencyEnum: Int? = null,
-) : Parcelable
+)

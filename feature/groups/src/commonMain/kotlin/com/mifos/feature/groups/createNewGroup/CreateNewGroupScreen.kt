@@ -78,8 +78,8 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosProgressIndicator
-import com.mifos.room.entities.group.GroupPayloadEntity
-import com.mifos.room.entities.organisation.OfficeEntity
+import com.mifos.room.group.entity.GroupPayloadEntity
+import com.mifos.room.office.entity.OfficeEntity
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview

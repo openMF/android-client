@@ -17,7 +17,7 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.CreateNewCenterRepository
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
-import com.mifos.room.entities.center.CenterPayloadEntity
+import com.mifos.room.center.entity.CenterPayloadEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

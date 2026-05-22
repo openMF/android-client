@@ -10,7 +10,7 @@
 package com.mifos.feature.center.centerDetails
 
 import com.mifos.core.model.objects.groups.CenterInfo
-import com.mifos.room.entities.group.CenterWithAssociations
+import com.mifos.room.center.entity.CenterWithAssociations
 import org.jetbrains.compose.resources.StringResource
 
 sealed class CenterDetailsUiState {

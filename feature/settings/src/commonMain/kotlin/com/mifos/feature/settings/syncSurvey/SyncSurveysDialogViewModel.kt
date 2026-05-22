@@ -13,9 +13,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.mifos.core.data.infra.NetworkMonitor
-import com.mifos.room.entities.survey.QuestionDatasEntity
-import com.mifos.room.entities.survey.ResponseDatasEntity
-import com.mifos.room.entities.survey.SurveyEntity
+import com.mifos.room.survey.entity.QuestionDatasEntity
+import com.mifos.room.survey.entity.ResponseDatasEntity
+import com.mifos.room.survey.entity.SurveyEntity
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.flow.MutableStateFlow

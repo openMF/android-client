@@ -68,7 +68,7 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.feature.dataTable.dataTableRowDialog.DataTableRowDialogScreen
-import com.mifos.room.entities.noncore.DataTableEntity
+import com.mifos.room.datatable.entity.DataTableEntity
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray

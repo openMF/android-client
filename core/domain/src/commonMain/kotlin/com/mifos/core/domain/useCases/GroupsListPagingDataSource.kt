@@ -12,7 +12,7 @@ package com.mifos.core.domain.useCases
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.mifos.core.data.repository.GroupsListRepository
-import com.mifos.room.entities.group.GroupEntity
+import com.mifos.room.group.entity.GroupEntity
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.ServerResponseException
 import kotlinx.io.IOException

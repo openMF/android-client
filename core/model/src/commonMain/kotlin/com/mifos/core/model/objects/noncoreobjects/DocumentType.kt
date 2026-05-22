@@ -9,15 +9,12 @@
  */
 package com.mifos.core.model.objects.noncoreobjects
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Created by ishankhanna on 03/07/14.
  */
 @Serializable
-@Parcelize
 data class DocumentType(
     var id: Int? = null,
 
@@ -30,4 +27,4 @@ data class DocumentType(
     var description: String? = null,
 
     var position: Int? = null,
-) : Parcelable
+)

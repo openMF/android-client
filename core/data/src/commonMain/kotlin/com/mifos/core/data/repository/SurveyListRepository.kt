@@ -10,9 +10,9 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.room.entities.survey.QuestionDatasEntity
-import com.mifos.room.entities.survey.ResponseDatasEntity
-import com.mifos.room.entities.survey.SurveyEntity
+import com.mifos.room.survey.entity.QuestionDatasEntity
+import com.mifos.room.survey.entity.ResponseDatasEntity
+import com.mifos.room.survey.entity.SurveyEntity
 import kotlinx.coroutines.flow.Flow
 
 /**

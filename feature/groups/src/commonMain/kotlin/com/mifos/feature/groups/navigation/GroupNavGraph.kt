@@ -18,7 +18,7 @@ import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.feature.groups.createNewGroup.CreateNewGroupScreen
 import com.mifos.feature.groups.groupDetails.GroupDetailsScreen
 import com.mifos.feature.groups.groupList.GroupsListRoute
-import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
+import com.mifos.room.savings.entity.SavingAccountDepositTypeEntity
 import kotlinx.serialization.Serializable
 
 @Serializable

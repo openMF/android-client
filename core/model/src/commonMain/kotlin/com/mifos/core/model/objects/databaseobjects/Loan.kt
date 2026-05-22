@@ -9,11 +9,8 @@
  */
 package com.mifos.core.model.objects.databaseobjects
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
-@Parcelize
 @Serializable
 data class Loan(
     var disbursementAmount: Double = 0.0,
@@ -45,4 +42,4 @@ data class Loan(
     var client: Client? = null,
 
     var isPaymentChanged: String? = null,
-) : Parcelable
+)

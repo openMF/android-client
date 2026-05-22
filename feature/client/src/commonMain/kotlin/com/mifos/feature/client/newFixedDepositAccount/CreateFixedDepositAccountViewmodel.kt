@@ -22,8 +22,8 @@ import com.mifos.core.data.repository.FixedDepositRepository
 import com.mifos.core.data.infra.NetworkMonitor
 import com.mifos.core.model.objects.payloads.ChargeItem
 import com.mifos.core.model.objects.template.recurring.FieldOfficerOption
-import com.mifos.core.network.model.fixedDeposit.FixedDepositPayload
-import com.mifos.core.network.model.fixedDeposit.FixedDepositTemplate
+import com.mifos.core.model.network.fixedDeposit.FixedDepositPayload
+import com.mifos.core.model.network.fixedDeposit.FixedDepositTemplate
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.TextFieldsValidator
 import com.mifos.feature.client.fixedDepositAccount.FixedDepositAccountRoute

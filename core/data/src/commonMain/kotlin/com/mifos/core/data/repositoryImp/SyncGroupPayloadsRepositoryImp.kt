@@ -14,7 +14,7 @@ import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.SyncGroupPayloadsRepository
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.core.network.datamanager.DataManagerGroups
-import com.mifos.room.entities.group.GroupPayloadEntity
+import com.mifos.room.group.entity.GroupPayloadEntity
 import kotlinx.coroutines.flow.Flow
 
 class SyncGroupPayloadsRepositoryImp(

@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.savings.savingsAccountSummary
 
-import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
+import com.mifos.room.savings.entity.SavingsAccountWithAssociationsEntity
 import org.jetbrains.compose.resources.StringResource
 
 /**

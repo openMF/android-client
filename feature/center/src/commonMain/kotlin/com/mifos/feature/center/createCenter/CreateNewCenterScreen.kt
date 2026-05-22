@@ -66,8 +66,8 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosProgressIndicator
-import com.mifos.room.entities.center.CenterPayloadEntity
-import com.mifos.room.entities.organisation.OfficeEntity
+import com.mifos.room.center.entity.CenterPayloadEntity
+import com.mifos.room.office.entity.OfficeEntity
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview

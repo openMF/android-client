@@ -9,15 +9,12 @@
  */
 package com.mifos.core.model.objects.runreport.client
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
  * Created by Tarun on 03-08-17.
  */
-@Parcelize
 @Serializable
 data class ClientReportTypeItem(
     @SerialName("parameter_id")
@@ -43,4 +40,4 @@ data class ClientReportTypeItem(
 
     @SerialName("report_type")
     var reportType: String? = null,
-) : Parcelable
+)

@@ -27,10 +27,10 @@ import com.mifos.core.domain.useCases.GetSavingsProductTemplateUseCase
 import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
-import com.mifos.room.entities.templates.clients.SavingProductOptionsEntity
-import com.mifos.room.entities.templates.clients.StaffOptionsEntity
-import com.mifos.room.entities.templates.savings.SavingProductsTemplate
+import com.mifos.room.client.entity.ClientsTemplateEntity
+import com.mifos.room.savings.entity.SavingProductOptionsEntity
+import com.mifos.room.staff.entity.StaffOptionsEntity
+import com.mifos.room.savings.entity.SavingProductsTemplate
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch

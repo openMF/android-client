@@ -79,9 +79,9 @@ import com.mifos.core.model.objects.organisations.ProductSavings
 import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosProgressIndicator
-import com.mifos.room.entities.client.Savings
-import com.mifos.room.entities.templates.savings.SavingProductsTemplate
-import com.mifos.room.entities.zipmodels.SavingProductsAndTemplate
+import com.mifos.core.model.objects.savings.Savings
+import com.mifos.room.savings.entity.SavingProductsTemplate
+import com.mifos.room.savings.entity.SavingProductsAndTemplate
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter

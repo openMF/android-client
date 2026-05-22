@@ -15,7 +15,7 @@ import com.mifos.core.model.objects.clients.ChargeCreationResponse
 import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.model.objects.template.client.ChargeTemplate
-import com.mifos.room.entities.client.ChargesEntity
+import com.mifos.room.charge.entity.ChargesEntity
 import kotlinx.coroutines.flow.Flow
 
 /**

@@ -12,7 +12,7 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.DocumentCreateUpdateRepository
-import com.mifos.core.network.GenericResponse
+import com.mifos.core.model.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerDocument
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import kotlinx.coroutines.flow.Flow

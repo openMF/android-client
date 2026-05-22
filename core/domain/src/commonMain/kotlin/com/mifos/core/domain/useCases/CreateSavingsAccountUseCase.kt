@@ -12,7 +12,7 @@ package com.mifos.core.domain.useCases
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.core.model.objects.payloads.SavingsPayload
-import com.mifos.room.entities.client.Savings
+import com.mifos.core.model.objects.savings.Savings
 import kotlinx.coroutines.flow.Flow
 
 /**

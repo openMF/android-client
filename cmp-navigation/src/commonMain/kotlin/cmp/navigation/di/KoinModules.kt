@@ -16,7 +16,6 @@ import com.mifos.core.common.network.di.DispatchersModule
 import com.mifos.core.data.di.RepositoryModule
 import com.mifos.core.datastore.di.PreferencesModule
 import com.mifos.core.domain.di.UseCaseModule
-import com.mifos.core.network.di.DataManagerModule
 import com.mifos.core.network.di.NetworkModule
 import com.mifos.core.store.di.appStoreModule
 import com.mifos.feature.activate.di.ActivateModule
@@ -62,10 +61,7 @@ object KoinModules {
     }
 
     private val networkModules = module {
-        includes(
-            DataManagerModule,
-            NetworkModule,
-        )
+        includes(NetworkModule)
     }
     private val sharedModule = module {
         viewModelOf(::AppViewModel)

@@ -13,7 +13,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.LoanChargeRepository
 import com.mifos.core.network.DataManager
-import com.mifos.room.entities.client.ChargesEntity
+import com.mifos.room.charge.entity.ChargesEntity
 import kotlinx.coroutines.flow.Flow
 
 /**

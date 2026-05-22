@@ -10,9 +10,9 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.room.entities.accounts.GroupAccounts
-import com.mifos.room.entities.group.GroupEntity
-import com.mifos.room.entities.group.GroupWithAssociations
+import com.mifos.room.group.entity.GroupAccounts
+import com.mifos.room.group.entity.GroupEntity
+import com.mifos.room.group.entity.GroupWithAssociations
 import kotlinx.coroutines.flow.Flow
 
 /**

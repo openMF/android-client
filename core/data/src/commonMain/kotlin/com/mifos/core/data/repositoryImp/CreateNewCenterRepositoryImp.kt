@@ -11,7 +11,7 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.data.repository.CreateNewCenterRepository
 import com.mifos.core.network.datamanager.DataManagerCenter
-import com.mifos.room.entities.center.CenterPayloadEntity
+import com.mifos.room.center.entity.CenterPayloadEntity
 
 /**
  * Created by Aditya Gupta on 10/08/23.

@@ -9,16 +9,13 @@
  */
 package com.mifos.core.model.objects.runreport
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Created by Tarun on 03-08-17.
  */
-@Parcelize
 @Serializable
 data class FullParameterListResponse(
     var columnHeaders: List<ColumnHeader>,
     var data: List<DataRow>,
-) : Parcelable
+)

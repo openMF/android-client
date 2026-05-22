@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SyncGroupsDialogRepository
-import com.mifos.room.entities.zipmodels.LoanAndLoanRepayment
+import com.mifos.room.loan.entity.LoanAndLoanRepayment
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 

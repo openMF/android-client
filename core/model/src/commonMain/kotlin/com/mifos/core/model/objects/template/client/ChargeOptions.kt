@@ -9,8 +9,6 @@
  */
 package com.mifos.core.model.objects.template.client
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
@@ -18,7 +16,6 @@ import kotlinx.serialization.Serializable
  */
 
 @Serializable
-@Parcelize
 data class ChargeOptions(
     val id: Int? = null,
     val name: String? = null,
@@ -31,4 +28,4 @@ data class ChargeOptions(
     val chargeCalculationType: ChargeCalculationType? = null,
     val chargePaymentMode: ChargePaymentMode? = null,
     val incomeOrLiabilityAccount: IncomeOrLiabilityAccount? = null,
-) : Parcelable
+)

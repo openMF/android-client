@@ -25,11 +25,11 @@ import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.ui.util.ImageUtil.compressImage
 import com.mifos.core.ui.util.multipartRequestBody
-import com.mifos.room.entities.client.AddressTemplate
-import com.mifos.room.entities.client.ClientPayloadEntity
-import com.mifos.room.entities.organisation.OfficeEntity
-import com.mifos.room.entities.organisation.StaffEntity
-import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
+import com.mifos.room.client.entity.AddressTemplate
+import com.mifos.room.client.entity.ClientPayloadEntity
+import com.mifos.room.office.entity.OfficeEntity
+import com.mifos.room.staff.entity.StaffEntity
+import com.mifos.room.client.entity.ClientsTemplateEntity
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.extension
 import io.github.vinceglb.filekit.name

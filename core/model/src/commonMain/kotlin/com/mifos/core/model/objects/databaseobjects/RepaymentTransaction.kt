@@ -9,12 +9,9 @@
  */
 package com.mifos.core.model.objects.databaseobjects
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 
-@Parcelize
 data class RepaymentTransaction(
     var loan: Loan? = null,
 
     var transactionAmount: Double = 0.0,
-) : Parcelable
+)

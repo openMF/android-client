@@ -10,7 +10,7 @@
 package com.mifos.core.network.search.api
 
 import com.mifos.core.model.objects.SearchedEntity
-import com.mifos.room.basemodel.APIEndPoint
+import com.mifos.core.network.APIEndPoint
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.Query
 

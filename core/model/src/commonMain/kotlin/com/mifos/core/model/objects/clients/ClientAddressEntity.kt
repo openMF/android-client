@@ -9,11 +9,8 @@
  */
 package com.mifos.core.model.objects.clients
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
-@Parcelize
 @Serializable
 data class ClientAddressEntity(
     val clientID: Int = -1,
@@ -39,4 +36,4 @@ data class ClientAddressEntity(
     val createdOn: String = "",
     val updatedBy: String = "",
     val updatedOn: String = "",
-) : Parcelable
+)

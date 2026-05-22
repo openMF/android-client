@@ -10,8 +10,8 @@
 package com.mifos.core.network.pathtracking.api
 
 import com.mifos.core.model.objects.users.UserLocation
-import com.mifos.core.network.GenericResponse
-import com.mifos.room.basemodel.APIEndPoint
+import com.mifos.core.model.GenericResponse
+import com.mifos.core.network.APIEndPoint
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.POST

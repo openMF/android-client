@@ -9,11 +9,8 @@
  */
 package com.mifos.core.model.objects.account.loan
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
-@Parcelize
 @Serializable
 data class Type(
     var id: Int? = null,
@@ -51,4 +48,4 @@ data class Type(
     var chargePayment: Boolean? = null,
 
     var refund: Boolean? = null,
-) : Parcelable
+)

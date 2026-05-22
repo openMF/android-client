@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SavingsAccountActivateRepository
-import com.mifos.core.network.GenericResponse
+import com.mifos.core.model.GenericResponse
 import kotlinx.coroutines.flow.Flow
 
 /**

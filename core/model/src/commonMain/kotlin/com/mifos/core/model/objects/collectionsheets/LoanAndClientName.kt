@@ -9,17 +9,14 @@
  */
 package com.mifos.core.model.objects.collectionsheets
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Created by Tarun on 17-07-2017.
  */
-@Parcelize
 @Serializable
 class LoanAndClientName(
     val loan: LoanCollectionSheet?,
     val clientName: String?,
     val id: Int,
-) : Parcelable
+)

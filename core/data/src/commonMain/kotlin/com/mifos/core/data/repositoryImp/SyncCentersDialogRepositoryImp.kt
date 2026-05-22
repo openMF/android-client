@@ -17,18 +17,18 @@ import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerSavings
-import com.mifos.room.entities.accounts.CenterAccounts
-import com.mifos.room.entities.accounts.ClientAccounts
-import com.mifos.room.entities.accounts.GroupAccounts
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
-import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
-import com.mifos.room.entities.client.ClientEntity
-import com.mifos.room.entities.group.CenterEntity
-import com.mifos.room.entities.group.CenterWithAssociations
-import com.mifos.room.entities.group.GroupEntity
-import com.mifos.room.entities.group.GroupWithAssociations
-import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
-import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
+import com.mifos.room.center.entity.CenterAccounts
+import com.mifos.room.client.entity.ClientAccounts
+import com.mifos.room.group.entity.GroupAccounts
+import com.mifos.room.loan.entity.LoanWithAssociationsEntity
+import com.mifos.room.savings.entity.SavingsAccountWithAssociationsEntity
+import com.mifos.room.client.entity.ClientEntity
+import com.mifos.room.center.entity.CenterEntity
+import com.mifos.room.center.entity.CenterWithAssociations
+import com.mifos.room.group.entity.GroupEntity
+import com.mifos.room.group.entity.GroupWithAssociations
+import com.mifos.room.loan.entity.LoanRepaymentTemplateEntity
+import com.mifos.room.savings.entity.SavingsAccountTransactionTemplateEntity
 import kotlinx.coroutines.flow.Flow
 
 /**

@@ -9,14 +9,11 @@
  */
 package com.mifos.core.model.objects.collectionsheets
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Created by ishankhanna on 16/07/14.
  */
-@Parcelize
 @Serializable
 data class EntityType(
     var id: Int? = null,
@@ -24,4 +21,4 @@ data class EntityType(
     var code: String? = null,
 
     var value: String? = null,
-) : Parcelable
+)

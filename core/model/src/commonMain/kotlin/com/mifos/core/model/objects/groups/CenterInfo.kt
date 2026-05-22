@@ -9,15 +9,12 @@
  */
 package com.mifos.core.model.objects.groups
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Created by Rajan Maurya on 05/02/17.
  */
 @Serializable
-@Parcelize
 data class CenterInfo(
     var activeClients: Int? = null,
 
@@ -38,4 +35,4 @@ data class CenterInfo(
     var overdueClientLoans: Int? = null,
 
     var overdueGroupLoans: Int? = null,
-) : Parcelable
+)

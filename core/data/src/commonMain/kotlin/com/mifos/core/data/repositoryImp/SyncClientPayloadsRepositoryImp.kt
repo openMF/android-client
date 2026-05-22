@@ -13,7 +13,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.SyncClientPayloadsRepository
 import com.mifos.core.network.datamanager.DataManagerClient
-import com.mifos.room.entities.client.ClientPayloadEntity
+import com.mifos.room.client.entity.ClientPayloadEntity
 import kotlinx.coroutines.flow.Flow
 
 class SyncClientPayloadsRepositoryImp(

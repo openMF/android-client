@@ -16,9 +16,9 @@ import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerLoan
-import com.mifos.core.network.model.LoansPayload
-import com.mifos.room.entities.accounts.loans.Loan
-import com.mifos.room.entities.client.ClientPayloadEntity
+import com.mifos.core.model.network.LoansPayload
+import com.mifos.core.model.objects.loan.Loan
+import com.mifos.room.client.entity.ClientPayloadEntity
 import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 

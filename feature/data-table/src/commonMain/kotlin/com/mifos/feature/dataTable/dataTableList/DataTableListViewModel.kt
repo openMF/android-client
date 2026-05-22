@@ -26,10 +26,10 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.DataTableListRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
-import com.mifos.core.network.model.LoansPayload
-import com.mifos.room.entities.client.ClientPayloadEntity
-import com.mifos.room.entities.noncore.DataTableEntity
-import com.mifos.room.entities.noncore.DataTablePayload
+import com.mifos.core.model.network.LoansPayload
+import com.mifos.room.client.entity.ClientPayloadEntity
+import com.mifos.room.datatable.entity.DataTableEntity
+import com.mifos.room.datatable.entity.DataTablePayload
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

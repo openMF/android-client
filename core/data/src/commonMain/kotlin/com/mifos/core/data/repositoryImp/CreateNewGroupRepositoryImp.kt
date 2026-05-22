@@ -15,8 +15,8 @@ import com.mifos.core.data.repository.CreateNewGroupRepository
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.core.network.datamanager.DataManagerOffices
-import com.mifos.room.entities.group.GroupPayloadEntity
-import com.mifos.room.entities.organisation.OfficeEntity
+import com.mifos.room.group.entity.GroupPayloadEntity
+import com.mifos.room.office.entity.OfficeEntity
 import kotlinx.coroutines.flow.Flow
 
 /**

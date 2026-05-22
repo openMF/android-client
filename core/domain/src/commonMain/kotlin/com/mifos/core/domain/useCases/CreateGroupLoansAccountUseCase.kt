@@ -12,7 +12,7 @@ package com.mifos.core.domain.useCases
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.GroupLoanAccountRepository
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
-import com.mifos.room.entities.accounts.loans.Loan
+import com.mifos.core.model.objects.loan.Loan
 import kotlinx.coroutines.flow.Flow
 
 class CreateGroupLoansAccountUseCase(

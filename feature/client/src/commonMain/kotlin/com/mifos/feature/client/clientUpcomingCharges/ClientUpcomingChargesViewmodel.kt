@@ -18,7 +18,7 @@ import androidx.paging.PagingData
 import com.mifos.core.data.repository.ChargeRepository
 import com.mifos.core.data.infra.NetworkMonitor
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.room.entities.client.ChargesEntity
+import com.mifos.room.charge.entity.ChargesEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update

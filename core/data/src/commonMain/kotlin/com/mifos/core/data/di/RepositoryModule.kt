@@ -64,6 +64,7 @@ import com.mifos.core.data.note.impl.provideNoteListStore
 import com.mifos.core.data.repository.OfflineDashboardRepository
 import com.mifos.core.data.pathtracking.PathTrackingRepository
 import com.mifos.core.data.pathtracking.impl.PathTrackingRepositoryImpl
+import com.mifos.core.data.pathtracking.impl.providePathTrackingListStore
 import com.mifos.core.data.repository.PinPointClientRepository
 import com.mifos.core.data.repository.RecurringAccountRepository
 import com.mifos.core.data.repository.ReportCategoryRepository
@@ -256,7 +257,16 @@ val RepositoryModule = module {
         )
     }
     singleOf(::OfflineDashboardRepositoryImp) bind OfflineDashboardRepository::class
-    singleOf(::PathTrackingRepositoryImpl) bind PathTrackingRepository::class
+    // Path-tracking feature — Store5 list cache + offline-first repository (Phase C Wave 11)
+    single { providePathTrackingListStore(get(), get(), get()) }
+    single<PathTrackingRepository> {
+        PathTrackingRepositoryImpl(
+            pathTrackingApi = get(),
+            pathTrackingListStore = get(),
+            networkMonitor = get(),
+            fetchedAtRepository = get(),
+        )
+    }
     singleOf(::ReportCategoryRepositoryImp) bind ReportCategoryRepository::class
     singleOf(::ReportDetailRepositoryImp) bind ReportDetailRepository::class
     singleOf(::SignatureRepositoryImp) bind SignatureRepository::class

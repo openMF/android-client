@@ -12,7 +12,7 @@ package com.mifos.core.data.pagingSource
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.mifos.core.network.datamanager.DataManagerCenter
-import com.mifos.room.entities.group.CenterEntity
+import com.mifos.room.center.entity.CenterEntity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 

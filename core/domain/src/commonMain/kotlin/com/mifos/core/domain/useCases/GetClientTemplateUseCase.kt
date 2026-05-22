@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.CreateNewClientRepository
-import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
+import com.mifos.room.client.entity.ClientsTemplateEntity
 import kotlinx.coroutines.flow.Flow
 
 class GetClientTemplateUseCase(

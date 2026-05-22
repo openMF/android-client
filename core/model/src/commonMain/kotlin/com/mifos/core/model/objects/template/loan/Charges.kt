@@ -9,14 +9,11 @@
  */
 package com.mifos.core.model.objects.template.loan
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Created by mayankjindal on 02/10/16.
  */
-@Parcelize
 @Serializable
 data class Charges(
     var chargeId: Int? = null,
@@ -50,4 +47,4 @@ data class Charges(
     var waived: Boolean? = null,
 
     var chargePayable: Boolean? = null,
-) : Parcelable
+)

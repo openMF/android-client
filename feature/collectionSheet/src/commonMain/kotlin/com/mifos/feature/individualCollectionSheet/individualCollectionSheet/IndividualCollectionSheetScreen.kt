@@ -28,7 +28,7 @@ import com.mifos.core.designsystem.utility.TabContent
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.individualCollectionSheet.newIndividualCollectionSheet.NewIndividualCollectionSheetScreen
 import com.mifos.feature.individualCollectionSheet.savedIndividualCollectionSheet.SavedIndividualCollectionSheetCompose
-import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
+import com.mifos.core.model.objects.collectionsheet.IndividualCollectionSheet
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

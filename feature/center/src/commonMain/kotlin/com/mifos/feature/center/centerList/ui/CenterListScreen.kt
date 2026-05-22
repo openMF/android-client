@@ -68,7 +68,7 @@ import com.mifos.core.ui.components.MifosPagingAppendProgress
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.center.syncCentersDialog.SyncCenterDialogScreen
-import com.mifos.room.entities.group.CenterEntity
+import com.mifos.room.center.entity.CenterEntity
 import kotlinx.coroutines.flow.flowOf
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview

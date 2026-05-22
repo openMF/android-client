@@ -21,11 +21,11 @@ import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.ShareAccountRepository
 import com.mifos.core.data.infra.NetworkMonitor
 import com.mifos.core.model.objects.payloads.ChargeItem
-import com.mifos.core.network.model.share.ChargeOptions
-import com.mifos.core.network.model.share.FrequencyTypeOption
-import com.mifos.core.network.model.share.ProductOption
-import com.mifos.core.network.model.share.SavingsAccountOption
-import com.mifos.core.network.model.share.ShareAccountPayload
+import com.mifos.core.model.network.share.ChargeOptions
+import com.mifos.core.model.network.share.FrequencyTypeOption
+import com.mifos.core.model.network.share.ProductOption
+import com.mifos.core.model.network.share.SavingsAccountOption
+import com.mifos.core.model.network.share.ShareAccountPayload
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.core.ui.util.TextFieldsValidator
 import kotlinx.coroutines.flow.first

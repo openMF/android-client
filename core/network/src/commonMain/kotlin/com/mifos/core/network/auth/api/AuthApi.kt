@@ -9,8 +9,8 @@
  */
 package com.mifos.core.network.auth.api
 
-import com.mifos.core.network.model.PostAuthenticationRequest
-import com.mifos.core.network.model.PostAuthenticationResponse
+import com.mifos.core.model.network.PostAuthenticationRequest
+import com.mifos.core.model.network.PostAuthenticationResponse
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.POST
 

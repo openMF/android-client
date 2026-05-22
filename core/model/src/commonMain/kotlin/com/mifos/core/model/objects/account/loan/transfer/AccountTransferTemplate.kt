@@ -10,14 +10,11 @@
 package com.mifos.core.model.objects.account.loan.transfer
 
 import com.mifos.core.model.objects.template.loan.Currency
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Data class representing the template for account transfers
  */
-@Parcelize
 @Serializable
 data class AccountTransferTemplate(
     val fromOfficeOptions: List<OfficeOption> = emptyList(),
@@ -29,4 +26,4 @@ data class AccountTransferTemplate(
     val toAccountTypeOptions: List<AccountTypeOption> = emptyList(),
     val toAccountOptions: List<AccountOption> = emptyList(),
     val currencyOptions: List<Currency> = emptyList(),
-) : Parcelable
+)

@@ -9,9 +9,9 @@
  */
 package com.mifos.room.typeconverters
 
-import com.mifos.room.entities.accounts.savings.Charge
-import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionEntity
-import com.mifos.room.entities.group.CenterEntity
+import com.mifos.room.charge.entity.SavingsCharge
+import com.mifos.room.savings.entity.SavingsAccountTransactionEntity
+import com.mifos.room.center.entity.CenterEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import template.core.base.database.TypeConverter
@@ -54,12 +54,12 @@ class ListTypeConverters {
     }
 
     @TypeConverter
-    fun fromListOfCharges(list: List<Charge?>?): String? {
+    fun fromListOfCharges(list: List<SavingsCharge?>?): String? {
         return list?.let { Json.encodeToString(it) }
     }
 
     @TypeConverter
-    fun toListOfCharges(json: String?): List<Charge?>? {
+    fun toListOfCharges(json: String?): List<SavingsCharge?>? {
         return json?.let { Json.decodeFromString(it) }
     }
 }

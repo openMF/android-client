@@ -9,12 +9,9 @@
  */
 package com.mifos.core.model.objects.account.share
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 @Serializable
-@Parcelize
 data class ShareAccountsStatus(
     val id: Int? = null,
 
@@ -31,4 +28,4 @@ data class ShareAccountsStatus(
     val active: Boolean? = null,
 
     val closed: Boolean? = null,
-) : Parcelable
+)

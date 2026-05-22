@@ -14,15 +14,15 @@ import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.GenerateCollectionSheetRepository
 import com.mifos.core.model.objects.collectionsheets.CollectionSheetRequestPayload
 import com.mifos.core.network.DataManager
-import com.mifos.core.network.GenericResponse
+import com.mifos.core.model.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerCollectionSheet
-import com.mifos.room.entities.collectionsheet.CenterDetail
-import com.mifos.room.entities.collectionsheet.CollectionSheetPayload
-import com.mifos.room.entities.collectionsheet.CollectionSheetResponse
-import com.mifos.room.entities.collectionsheet.ProductiveCollectionSheetPayload
-import com.mifos.room.entities.group.CenterEntity
-import com.mifos.room.entities.group.CenterWithAssociations
-import com.mifos.room.entities.group.GroupEntity
+import com.mifos.core.model.objects.collectionsheet.CenterDetail
+import com.mifos.core.model.objects.collectionsheet.CollectionSheetPayload
+import com.mifos.room.collectionsheet.entity.CollectionSheetResponse
+import com.mifos.core.model.objects.collectionsheet.ProductiveCollectionSheetPayload
+import com.mifos.room.center.entity.CenterEntity
+import com.mifos.room.center.entity.CenterWithAssociations
+import com.mifos.room.group.entity.GroupEntity
 import kotlinx.coroutines.flow.Flow
 
 /**

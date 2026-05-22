@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.center.centerGroupList
 
-import com.mifos.room.entities.group.CenterWithAssociations
+import com.mifos.room.center.entity.CenterWithAssociations
 import org.jetbrains.compose.resources.StringResource
 
 sealed class GroupListUiState {

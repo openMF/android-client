@@ -84,7 +84,7 @@ import com.mifos.core.ui.util.pdf.PageSize
 import com.mifos.core.ui.util.pdf.rememberPdfGenerator
 import com.mifos.feature.loan.loanRepaymentSchedule.pdf.RepaymentScheduleHtmlGenerator
 import com.mifos.feature.loan.loanRepaymentSchedule.pdf.RepaymentSchedulePdfStrings
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.room.loan.entity.LoanWithAssociationsEntity
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource

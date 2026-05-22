@@ -10,7 +10,7 @@
 package com.mifos.feature.client.clientList
 
 import androidx.paging.PagingData
-import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.client.entity.ClientEntity
 import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.StringResource
 

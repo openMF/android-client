@@ -9,14 +9,11 @@
  */
 package com.mifos.core.model.objects.clients
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Created by Rajan Maurya on 09/02/17.
  */
-@Parcelize
 @Serializable
 data class ActivatePayload(
     var activationDate: String? = null,
@@ -24,4 +21,4 @@ data class ActivatePayload(
     var dateFormat: String? = null,
 
     var locale: String? = null,
-) : Parcelable
+)

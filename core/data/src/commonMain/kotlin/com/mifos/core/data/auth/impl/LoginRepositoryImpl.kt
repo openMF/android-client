@@ -11,8 +11,8 @@ package com.mifos.core.data.auth.impl
 
 import com.mifos.core.data.auth.LoginRepository
 import com.mifos.core.network.auth.api.AuthApi
-import com.mifos.core.network.model.PostAuthenticationRequest
-import com.mifos.core.network.model.PostAuthenticationResponse
+import com.mifos.core.model.network.PostAuthenticationRequest
+import com.mifos.core.model.network.PostAuthenticationResponse
 
 class LoginRepositoryImpl(
     private val authApi: AuthApi,

@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.loan.navigation
 
-import com.mifos.room.entities.accounts.loans.LoanApprovalData
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.core.model.objects.loan.LoanApprovalData
+import com.mifos.room.loan.entity.LoanWithAssociationsEntity
 import kotlinx.serialization.json.Json
 
 // TODO : Migrate it to type safe while implementing this screen

@@ -17,9 +17,9 @@ import com.mifos.core.data.infra.NetworkMonitor
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.client.clientGeneral.ClientProfileGeneralEvent.OnActionClick
-import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
-import com.mifos.room.entities.client.ClientEntity
-import com.mifos.room.entities.zipmodels.ClientAndClientAccounts
+import com.mifos.room.savings.entity.SavingAccountDepositTypeEntity
+import com.mifos.room.client.entity.ClientEntity
+import com.mifos.room.client.entity.ClientAndClientAccounts
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 

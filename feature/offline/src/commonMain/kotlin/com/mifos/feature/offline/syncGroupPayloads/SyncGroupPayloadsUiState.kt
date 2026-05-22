@@ -14,7 +14,7 @@ import androidclient.feature.offline.generated.resources.feature_offline_all_gro
 import androidclient.feature.offline.generated.resources.feature_offline_ic_assignment_turned_in_black_24dp
 import androidclient.feature.offline.generated.resources.feature_offline_no_group_payload_to_sync
 import com.mifos.core.common.utils.ApiDateFormatter
-import com.mifos.room.entities.group.GroupPayloadEntity
+import com.mifos.room.group.entity.GroupPayloadEntity
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 

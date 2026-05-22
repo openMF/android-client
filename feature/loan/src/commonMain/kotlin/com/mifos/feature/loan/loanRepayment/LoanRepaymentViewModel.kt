@@ -22,7 +22,7 @@ import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.core.data.repository.LoanRepaymentRepository
-import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
+import com.mifos.room.loan.entity.LoanRepaymentRequestEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

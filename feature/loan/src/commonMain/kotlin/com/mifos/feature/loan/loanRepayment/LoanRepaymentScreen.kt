@@ -86,10 +86,10 @@ import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosTwoButtonRow
-import com.mifos.room.entities.PaymentTypeOptionEntity
-import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
-import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
-import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
+import com.mifos.room.savings.entity.PaymentTypeOptionEntity
+import com.mifos.room.loan.entity.LoanRepaymentRequestEntity
+import com.mifos.room.loan.entity.LoanRepaymentResponseEntity
+import com.mifos.room.loan.entity.LoanRepaymentTemplateEntity
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter

@@ -106,10 +106,10 @@ import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosStatusDialog
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.client.utils.PhoneNumberUtil
-import com.mifos.room.entities.client.ClientPayloadEntity
-import com.mifos.room.entities.organisation.OfficeEntity
-import com.mifos.room.entities.organisation.StaffEntity
-import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
+import com.mifos.room.client.entity.ClientPayloadEntity
+import com.mifos.room.office.entity.OfficeEntity
+import com.mifos.room.staff.entity.StaffEntity
+import com.mifos.room.client.entity.ClientsTemplateEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate

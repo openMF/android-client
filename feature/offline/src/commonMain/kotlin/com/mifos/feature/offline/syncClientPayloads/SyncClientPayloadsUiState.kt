@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.offline.syncClientPayloads
 
-import com.mifos.room.entities.client.ClientPayloadEntity
+import com.mifos.room.client.entity.ClientPayloadEntity
 
 /**
  * Created by Aditya Gupta on 16/08/23.

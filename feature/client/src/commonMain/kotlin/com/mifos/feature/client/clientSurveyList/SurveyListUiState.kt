@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.client.clientSurveyList
 
-import com.mifos.room.entities.survey.SurveyEntity
+import com.mifos.room.survey.entity.SurveyEntity
 import org.jetbrains.compose.resources.StringResource
 
 /**

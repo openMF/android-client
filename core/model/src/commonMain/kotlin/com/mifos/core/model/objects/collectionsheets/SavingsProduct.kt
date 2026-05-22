@@ -9,13 +9,10 @@
  */
 package com.mifos.core.model.objects.collectionsheets
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 
 /**
  * Created by Tarun on 31-07-17.
  */
-@Parcelize
 data class SavingsProduct(
     var isAllowOverdraft: Boolean = false,
 
@@ -30,4 +27,4 @@ data class SavingsProduct(
     var isWithHoldTax: Boolean = false,
 
     var isWithdrawalFeeForTransfers: Boolean = false,
-) : Parcelable
+)

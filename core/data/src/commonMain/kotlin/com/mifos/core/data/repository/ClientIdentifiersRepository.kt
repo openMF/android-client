@@ -13,7 +13,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
-import com.mifos.core.network.GenericResponse
+import com.mifos.core.model.GenericResponse
 import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 

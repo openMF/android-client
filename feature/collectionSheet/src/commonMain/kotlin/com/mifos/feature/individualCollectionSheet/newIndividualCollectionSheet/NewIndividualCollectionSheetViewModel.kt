@@ -15,7 +15,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.core.domain.useCases.GetIndividualCollectionSheetUseCase
 import com.mifos.core.domain.useCases.GetStaffInOfficeUseCase
-import com.mifos.core.network.model.RequestCollectionSheetPayload
+import com.mifos.core.model.network.RequestCollectionSheetPayload
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch

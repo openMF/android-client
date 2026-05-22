@@ -63,10 +63,10 @@ import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.util.TextUtil
 import com.mifos.feature.loan.loanAccountProfile.components.LoanAccountProfileActionItem
 import com.mifos.feature.loan.loanAccountProfile.components.loanProfileActionItems
-import com.mifos.room.entities.accounts.loans.LoanStatusEntity
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
-import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
-import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
+import com.mifos.room.loan.entity.LoanStatusEntity
+import com.mifos.room.loan.entity.LoanWithAssociationsEntity
+import com.mifos.room.loan.entity.LoansAccountSummaryEntity
+import com.mifos.room.savings.entity.SavingAccountCurrencyEntity
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter

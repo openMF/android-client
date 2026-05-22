@@ -13,9 +13,9 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.LoanRepaymentRepository
 import com.mifos.core.network.datamanager.DataManagerLoan
-import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
-import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
-import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
+import com.mifos.room.loan.entity.LoanRepaymentRequestEntity
+import com.mifos.room.loan.entity.LoanRepaymentResponseEntity
+import com.mifos.room.loan.entity.LoanRepaymentTemplateEntity
 import kotlinx.coroutines.flow.Flow
 
 /**

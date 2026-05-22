@@ -9,7 +9,7 @@
  */
 package com.mifos.core.data.auth
 
-import com.mifos.core.network.model.PostAuthenticationResponse
+import com.mifos.core.model.network.PostAuthenticationResponse
 
 interface LoginRepository {
 

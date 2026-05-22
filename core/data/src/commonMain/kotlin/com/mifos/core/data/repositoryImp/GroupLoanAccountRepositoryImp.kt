@@ -15,7 +15,7 @@ import com.mifos.core.data.repository.GroupLoanAccountRepository
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.DataManager
-import com.mifos.room.entities.accounts.loans.Loan
+import com.mifos.core.model.objects.loan.Loan
 import kotlinx.coroutines.flow.Flow
 
 /**

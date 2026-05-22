@@ -9,36 +9,42 @@
  */
 package com.mifos.core.data.pathtracking
 
+import com.mifos.core.data.pathtracking.store.PathTrackingListKey
 import com.mifos.core.model.objects.users.UserLocation
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import template.core.base.store.screen.ScreenDataStream
 
 /**
- * Per-feature path-tracking repository (Phase C Wave 8 of store5-adoption).
+ * Per-feature path-tracking repository (Phase C Wave 11 of store5-adoption).
  *
- * Modern suspend-only contract. All methods throw on HTTP failure or transport
- * error — callers wrap mutations in `SubmitHandler.submit { ... }` and wrap
- * reads in explicit try/catch (re-throwing `CancellationException`) to drive
- * `ScreenState<T>`. No legacy `DataState<*>` / `Flow<DataState<*>>`.
- *
- * Path-tracking entries are **not** Store5-cached: they are user-scoped lists
- * fetched on-demand when the officer opens the "Track my path" screen, with a
- * pull-to-refresh affordance for explicit refetches. There is no useful offline
- * value to memoizing the list, and the staff-path-tracking POST is a per-second
- * geolocation appender — a Store5 read pipeline on top would only add latency.
- * See RULE-STORE5-FETCH-001 — direct suspend reads + try/catch → `ScreenState`
- * is the documented exception. Same call site shape as `NoteRepository`
- * (Wave 7).
+ * Offline-first per RULE-STORE5-FETCH-001:
+ * - **Reads** ([pathTrackingStream]) flow through Store5 — Room is the SourceOfTruth,
+ *   Ktorfit is the Fetcher, `DecisionEngine` resolves cache-then-network +
+ *   auto-refresh on reconnect. A field officer's tracked-path history is
+ *   offline-viewable after the first online fetch.
+ * - **Mutations** ([addUserPathTracking]) are suspend writes against the server;
+ *   the impl invalidates the matching list cache after success so the new entry
+ *   appears in [pathTrackingStream] without a manual reload.
  */
 interface PathTrackingRepository {
 
     /**
-     * Retrieve the saved track entries for the staff member with id [userId].
-     * Throws on HTTP failure or transport error.
+     * Reactive stream of the tracked-path list for [keyFlow]. Re-streams on key
+     * change. Wraps the underlying `Store<PathTrackingListKey, List<UserLocation>>`
+     * via `asScreenStream` so the screen gets `Loading / Empty / Error /
+     * NoNetwork / Content` slots out-of-box plus auto-refresh on reconnect.
      */
-    suspend fun getUserPathTracking(userId: Int): List<UserLocation>
+    fun pathTrackingStream(
+        keyFlow: Flow<PathTrackingListKey>,
+        scope: CoroutineScope,
+    ): ScreenDataStream<List<UserLocation>>
 
     /**
-     * Append a new track entry for the staff member with id [userId]. Throws on
-     * HTTP failure or transport error.
+     * Append a new tracked-path entry for the staff member with id [userId].
+     * After success, invalidates the matching list cache so the new entry
+     * appears in [pathTrackingStream]. Throws on HTTP failure or transport
+     * error.
      */
     suspend fun addUserPathTracking(
         userId: Int,

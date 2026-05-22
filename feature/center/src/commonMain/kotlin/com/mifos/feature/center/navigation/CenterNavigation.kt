@@ -18,7 +18,7 @@ import com.mifos.feature.center.centerDetails.CenterDetailsScreen
 import com.mifos.feature.center.centerGroupList.GroupListScreen
 import com.mifos.feature.center.centerList.ui.CenterListScreen
 import com.mifos.feature.center.createCenter.CreateNewCenterScreen
-import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.client.entity.ClientEntity
 import kotlinx.serialization.Serializable
 
 @Serializable

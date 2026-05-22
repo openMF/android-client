@@ -43,6 +43,7 @@ val DatabaseModule: Module = module {
 
     // Per-feature Store5 cache DAOs (Phase C)
     single { get<MifosDatabase>().noteCacheDao }
+    single { get<MifosDatabase>().pathTrackingCacheDao }
 }
 
 /**

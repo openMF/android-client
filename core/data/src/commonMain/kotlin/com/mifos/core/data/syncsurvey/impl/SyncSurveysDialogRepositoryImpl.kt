@@ -11,9 +11,9 @@ package com.mifos.core.data.syncsurvey.impl
 
 import com.mifos.core.data.syncsurvey.SyncSurveysDialogRepository
 import com.mifos.core.network.datamanager.DataManagerSurveys
-import com.mifos.room.entities.survey.QuestionDatasEntity
-import com.mifos.room.entities.survey.ResponseDatasEntity
-import com.mifos.room.entities.survey.SurveyEntity
+import com.mifos.room.survey.entity.QuestionDatasEntity
+import com.mifos.room.survey.entity.ResponseDatasEntity
+import com.mifos.room.survey.entity.SurveyEntity
 import kotlinx.coroutines.flow.Flow
 
 /**

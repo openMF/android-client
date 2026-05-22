@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.offline.syncSavingsAccountTransaction
 
-import com.mifos.room.entities.PaymentTypeOptionEntity
-import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
+import com.mifos.room.savings.entity.PaymentTypeOptionEntity
+import com.mifos.room.savings.entity.SavingsAccountTransactionRequestEntity
 import org.jetbrains.compose.resources.StringResource
 
 /**

@@ -57,8 +57,8 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.ui.components.MifosProgressIndicator
-import com.mifos.room.entities.client.ClientPayloadEntity
-import com.mifos.room.entities.noncore.DataTableEntity
+import com.mifos.room.client.entity.ClientPayloadEntity
+import com.mifos.room.datatable.entity.DataTableEntity
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel

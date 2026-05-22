@@ -11,7 +11,7 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.GroupListRepository
-import com.mifos.room.entities.group.CenterWithAssociations
+import com.mifos.room.center.entity.CenterWithAssociations
 import kotlinx.coroutines.flow.Flow
 
 class GetGroupsByCenterUseCase(private val repository: GroupListRepository) {

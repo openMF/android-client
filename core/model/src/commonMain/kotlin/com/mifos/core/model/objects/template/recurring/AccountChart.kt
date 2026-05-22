@@ -12,11 +12,8 @@ package com.mifos.core.model.objects.template.recurring
 import com.mifos.core.model.objects.template.recurring.incentive.IncentiveTypeOption
 import com.mifos.core.model.objects.template.recurring.period.PeriodType
 import com.mifos.core.model.utils.IgnoredOnParcel
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
-@Parcelize
 @Serializable
 data class AccountChart(
     @IgnoredOnParcel val attributeNameOptions: List<AttributeNameOption>? = null,
@@ -33,4 +30,4 @@ data class AccountChart(
     val name: String? = null,
     val description: String? = null,
     @IgnoredOnParcel val periodTypes: List<PeriodType>? = null,
-) : Parcelable
+)

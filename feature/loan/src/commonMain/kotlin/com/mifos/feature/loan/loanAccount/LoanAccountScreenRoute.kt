@@ -12,8 +12,8 @@ package com.mifos.feature.loan.loanAccount
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.mifos.core.network.model.LoansPayload
-import com.mifos.room.entities.noncore.DataTableEntity
+import com.mifos.core.model.network.LoansPayload
+import com.mifos.room.datatable.entity.DataTableEntity
 import kotlinx.serialization.Serializable
 
 @Serializable

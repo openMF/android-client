@@ -15,8 +15,8 @@ import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.core.model.objects.organisations.ProductSavings
 import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.core.network.datamanager.DataManagerSavings
-import com.mifos.room.entities.client.Savings
-import com.mifos.room.entities.templates.savings.SavingProductsTemplate
+import com.mifos.core.model.objects.savings.Savings
+import com.mifos.room.savings.entity.SavingProductsTemplate
 import kotlinx.coroutines.flow.Flow
 
 /**

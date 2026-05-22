@@ -11,7 +11,7 @@ package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.noncoreobjects.Document
-import com.mifos.core.network.GenericResponse
+import com.mifos.core.model.GenericResponse
 import io.ktor.client.statement.HttpResponse
 import kotlinx.coroutines.flow.Flow
 

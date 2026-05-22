@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.offline.syncCenterPayloads
 
-import com.mifos.room.entities.center.CenterPayloadEntity
+import com.mifos.room.center.entity.CenterPayloadEntity
 
 /**
  * Created by Aditya Gupta on 16/08/23.

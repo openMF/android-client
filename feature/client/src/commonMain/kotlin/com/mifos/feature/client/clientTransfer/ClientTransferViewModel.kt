@@ -19,7 +19,7 @@ import com.mifos.core.data.repository.CreateNewGroupRepository
 import com.mifos.core.data.infra.NetworkMonitor
 import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.room.entities.organisation.OfficeEntity
+import com.mifos.room.office.entity.OfficeEntity
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.time.Clock

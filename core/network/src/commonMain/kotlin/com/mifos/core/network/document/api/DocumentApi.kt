@@ -9,9 +9,9 @@
  */
 package com.mifos.core.network.document.api
 
+import com.mifos.core.model.GenericResponse
 import com.mifos.core.model.objects.noncoreobjects.Document
-import com.mifos.core.network.GenericResponse
-import com.mifos.room.basemodel.APIEndPoint
+import com.mifos.core.network.APIEndPoint
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.DELETE
 import de.jensklingenberg.ktorfit.http.GET
@@ -23,35 +23,15 @@ import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.statement.HttpResponse
 
 /**
- * Fineract `{entityType}/{entityId}/documents` endpoints. Per-feature API surface
- * (Phase C Wave 9 of store5-adoption). Modern suspend-only contract — `getDocuments`
- * and `downloadDocument` return `List<Document>` / `HttpResponse` directly instead
- * of `Flow<...>` (legacy `DocumentService` shape).
+ * Fineract `{entityType}/{entityId}/documents` domain endpoints.
  *
- * Errors throw (`HttpException` / transport exceptions); callers handle via
- * `SubmitHandler.submit { ... }` for mutations or explicit try/catch wrapped to
- * `ScreenState<T>` for reads. No `runCatching` per RULE-NO-RUN-CATCHING-001.
- *
- * Upload / update endpoints take a pre-built `MultiPartFormDataContent` (the
- * canonical Ktor multipart shape used by the legacy `DocumentService`) so the
- * existing `core.ui.util.multipartRequestBody` builder continues to work
- * unchanged across platforms — no platform-specific `@Multipart`/`@Part`
- * actuals required.
- *
- * The legacy `DocumentService` is retained for `core.network.BaseApiManager`
- * + the still-Phase-D `core.network.datamanager.DataManagerDocument` (consumed
- * by `core.data.repositoryImp.SignatureRepositoryImp`). It will be removed in
- * Wave 10 when `SignatureRepository` migrates.
+ * Upload / update endpoints take a pre-built `MultiPartFormDataContent` so
+ * `core.ui.util.multipartRequestBody` works unchanged across platforms — no
+ * platform-specific `@Multipart` / `@Part` actuals required.
  */
 interface DocumentApi {
 
-    /**
-     * Retrieve the list of documents attached to [entityType] / [entityId].
-     * Throws on HTTP failure or transport error.
-     *
-     * @param entityType  Resource type — `clients`, `loans`, `savingsaccounts`, `groups`, etc.
-     * @param entityId    Resource id.
-     */
+    /** List documents attached to [entityType] / [entityId]. */
     @GET("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS)
     suspend fun getDocuments(
         @Path("entityType") entityType: String,
@@ -59,12 +39,10 @@ interface DocumentApi {
     ): List<Document>
 
     /**
-     * Create (upload) a new document attached to [entityType] / [entityId]. The
-     * multipart body MUST carry the canonical Fineract form fields:
-     * `file` (binary), `name`, and optional `description`. Use
-     * `core.ui.util.multipartRequestBody(...)` to build the body.
-     *
-     * Throws on HTTP failure or transport error.
+     * Upload a new document attached to [entityType] / [entityId]. The multipart
+     * body must carry the canonical Fineract form fields: `file` (binary), `name`,
+     * and optional `description`. Use `core.ui.util.multipartRequestBody(...)`
+     * to build the body.
      */
     @POST("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS)
     suspend fun createDocument(
@@ -73,11 +51,7 @@ interface DocumentApi {
         @Body request: MultiPartFormDataContent,
     ): GenericResponse
 
-    /**
-     * Update an existing document attached to [entityType] / [entityId]. Same
-     * multipart shape as [createDocument]. Throws on HTTP failure or transport
-     * error.
-     */
+    /** Update an existing document. Same multipart shape as [createDocument]. */
     @PUT("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS + "/{documentId}")
     suspend fun updateDocument(
         @Path("entityType") entityType: String,
@@ -87,10 +61,9 @@ interface DocumentApi {
     ): GenericResponse
 
     /**
-     * Download the binary attachment associated with a document. Returns the raw
-     * Ktor `HttpResponse` so callers can stream / persist the body themselves
-     * (per-platform file write happens outside the API surface). Throws on HTTP
-     * failure or transport error.
+     * Download the binary attachment for a document. Returns the raw
+     * `HttpResponse` so callers can stream the body themselves; per-platform
+     * file persistence happens outside the Api surface.
      */
     @Headers("Accept: text/plain, application/json, */*")
     @GET("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS + "/{documentId}/attachment")
@@ -100,10 +73,7 @@ interface DocumentApi {
         @Path("documentId") documentId: Int,
     ): HttpResponse
 
-    /**
-     * Remove a document attached to [entityType] / [entityId]. Throws on HTTP
-     * failure or transport error.
-     */
+    /** Remove a document attached to [entityType] / [entityId]. */
     @DELETE("{entityType}/{entityId}/" + APIEndPoint.DOCUMENTS + "/{documentId}")
     suspend fun removeDocument(
         @Path("entityType") entityType: String,

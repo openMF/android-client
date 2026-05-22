@@ -12,7 +12,7 @@ package com.mifos.core.data.pagingSource
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.mifos.core.network.datamanager.DataManagerCharge
-import com.mifos.room.entities.client.ChargesEntity
+import com.mifos.room.charge.entity.ChargesEntity
 import kotlinx.coroutines.flow.first
 
 class ClientChargesPagingSource(

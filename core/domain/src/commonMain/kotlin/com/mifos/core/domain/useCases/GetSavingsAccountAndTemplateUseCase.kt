@@ -12,7 +12,7 @@ package com.mifos.core.domain.useCases
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SyncGroupsDialogRepository
-import com.mifos.room.entities.zipmodels.SavingsAccountAndTransactionTemplate
+import com.mifos.room.savings.entity.SavingsAccountAndTransactionTemplate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 

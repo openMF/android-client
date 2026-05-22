@@ -20,9 +20,9 @@ import com.mifos.core.domain.useCases.UploadClientImageUseCase
 import com.mifos.core.ui.util.ImageUtil.compressImage
 import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.core.ui.util.multipartRequestBody
-import com.mifos.room.entities.accounts.loans.LoanAccountEntity
-import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
-import com.mifos.room.entities.client.ClientEntity
+import com.mifos.room.loan.entity.LoanAccountEntity
+import com.mifos.room.savings.entity.SavingsAccountEntity
+import com.mifos.room.client.entity.ClientEntity
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.extension
 import io.github.vinceglb.filekit.name

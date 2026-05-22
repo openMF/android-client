@@ -11,14 +11,14 @@ package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.clients.ClientAddressEntity
-import com.mifos.core.network.model.PostClientAddressRequest
-import com.mifos.core.network.model.PostClientAddressResponse
-import com.mifos.room.entities.client.AddressConfiguration
-import com.mifos.room.entities.client.AddressTemplate
-import com.mifos.room.entities.client.ClientPayloadEntity
-import com.mifos.room.entities.organisation.OfficeEntity
-import com.mifos.room.entities.organisation.StaffEntity
-import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
+import com.mifos.core.model.network.PostClientAddressRequest
+import com.mifos.core.model.network.PostClientAddressResponse
+import com.mifos.room.client.entity.AddressConfiguration
+import com.mifos.room.client.entity.AddressTemplate
+import com.mifos.room.client.entity.ClientPayloadEntity
+import com.mifos.room.office.entity.OfficeEntity
+import com.mifos.room.staff.entity.StaffEntity
+import com.mifos.room.client.entity.ClientsTemplateEntity
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import kotlinx.coroutines.flow.Flow
 
