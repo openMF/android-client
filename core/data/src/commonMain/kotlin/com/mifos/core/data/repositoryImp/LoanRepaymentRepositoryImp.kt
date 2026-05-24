@@ -50,9 +50,8 @@ class LoanRepaymentRepositoryImp(
         }
     }
 
-    override fun getDatabaseLoanRepaymentByLoanId(loanId: Int): Flow<DataState<LoanRepaymentRequestEntity?>> =
-        networkMonitor.withNetworkCheck(
-            dataManagerLoan.getDatabaseLoanRepaymentByLoanId(loanId)
-                .asDataStateFlow(),
-        ).flowOn(dispatcher.io)
+    override fun getDatabaseLoanRepaymentByLoanId(loanId: Int): Flow<DataState<LoanRepaymentRequestEntity?>> {
+        return dataManagerLoan.getDatabaseLoanRepaymentByLoanId(loanId)
+            .asDataStateFlow()
+    }
 }

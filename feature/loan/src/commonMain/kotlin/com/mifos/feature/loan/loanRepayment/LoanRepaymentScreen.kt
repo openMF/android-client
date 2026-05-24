@@ -20,6 +20,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_no_penalties_
 import androidclient.feature.loan.generated.resources.feature_loan_no_penalties_message
 import androidclient.feature.loan.generated.resources.feature_loan_note
 import androidclient.feature.loan.generated.resources.feature_loan_outstanding_balance
+import androidclient.feature.loan.generated.resources.feature_loan_payment_type
 import androidclient.feature.loan.generated.resources.feature_loan_penalties_short
 import androidclient.feature.loan.generated.resources.feature_loan_principal
 import androidclient.feature.loan.generated.resources.feature_loan_receipt
@@ -33,7 +34,6 @@ import androidclient.feature.loan.generated.resources.feature_loan_table_header_
 import androidclient.feature.loan.generated.resources.feature_loan_table_header_interest
 import androidclient.feature.loan.generated.resources.feature_loan_waive_penalties
 import androidclient.feature.loan.generated.resources.loan_new_loan_external_id
-import androidclient.feature.loan.generated.resources.loan_officer
 import androidclient.feature.loan.generated.resources.next
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -48,6 +48,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
@@ -75,6 +76,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 @Composable
 internal fun LoanRepaymentScreen(
@@ -126,6 +128,7 @@ fun LoanRepaymentDialog(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 fun LoanRepaymentContent(
     navController: NavController,
@@ -241,7 +244,7 @@ fun LoanRepaymentContent(
                 },
                 options = state.loanRepaymentTemplate?.paymentTypeOptions?.map { it.name }
                     ?: emptyList(),
-                label = stringResource(Res.string.loan_officer),
+                label = stringResource(Res.string.feature_loan_payment_type),
             )
 
             ShowPaymentDetails(
