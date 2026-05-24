@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.loan.LoanAccountApprovalRepository
+import com.mifos.core.model.objects.account.loan.LoanApproval
 import com.mifos.room.entities.accounts.loans.LoanApprovalData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -38,7 +39,7 @@ class LoanAccountApprovalViewModel(
     var loanId = loanAccountData.loanID
     var loanWithAssociations = loanAccountData.loanWithAssociations
 
-    fun approveLoan(loanApproval: com.mifos.core.model.objects.account.loan.LoanApproval?) {
+    fun approveLoan(loanApproval: LoanApproval?) {
         viewModelScope.launch {
             repository.approveLoan(loanId, loanApproval).collect { dataState ->
                 when (dataState) {

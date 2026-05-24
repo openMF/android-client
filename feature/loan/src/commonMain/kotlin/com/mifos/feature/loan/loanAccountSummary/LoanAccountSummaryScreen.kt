@@ -91,6 +91,9 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanAccountSummary
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanStatus
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect
@@ -114,7 +117,7 @@ internal fun LoanAccountSummaryScreenRoute(
     onChargesClicked: (loanId: Int) -> Unit,
     approveLoan: (loadId: Int, loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
     disburseLoan: (loanId: Int) -> Unit,
-    onRepaymentClick: (loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
+    onRepaymentClick: (loanWithAssociations: LoanWithAssociations) -> Unit,
     navController: NavController,
     viewModel: LoanAccountSummaryViewModel = koinViewModel(),
 ) {
@@ -146,7 +149,7 @@ internal fun LoanAccountSummaryScreenRoute(
             }
 
             is LoanAccountSummaryEvent.NavigateToApproveLoan -> {
-                approveLoan(event.loanId, event.loanWithAssociations)
+                approveLoan(event.loanId)
             }
 
             is LoanAccountSummaryEvent.NavigateToDisburseLoan -> {
@@ -684,7 +687,7 @@ private fun LoanStatusEntity.isButtonActive(): Boolean {
 
 private class LoanAccountSummaryPreviewProvider :
     PreviewParameterProvider<LoanAccountSummaryState> {
-    private val demoSummary = LoanAccountSummaryEntity(
+    private val demoSummary = LoanAccountSummary(
         loanId = 12345,
         principalDisbursed = 10000.0,
         principalPaid = 4000.0,
@@ -728,9 +731,9 @@ private class LoanAccountSummaryPreviewProvider :
                 dialogState = LoanAccountSummaryState.DialogState.Error("Could not fetch summary"),
             ),
             LoanAccountSummaryState(
-                loanWithAssociations = LoanWithAssociationsEntity(
+                loanWithAssociations = LoanWithAssociations(
                     accountNo = "90927493938",
-                    status = LoanStatusEntity(
+                    status = LoanStatus(
                         closedObligationsMet = true,
                     ),
                     clientName = "Pronay sarker",
@@ -741,9 +744,9 @@ private class LoanAccountSummaryPreviewProvider :
                 dialogState = null,
             ),
             LoanAccountSummaryState(
-                loanWithAssociations = LoanWithAssociationsEntity(
+                loanWithAssociations = LoanWithAssociations(
                     accountNo = "12345678901",
-                    status = LoanStatusEntity(
+                    status = LoanStatus(
                         active = true,
                     ),
                     clientName = "John Doe",

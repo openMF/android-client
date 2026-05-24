@@ -27,6 +27,8 @@ import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.AmountTransferRepository
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.repository.loan.LoanAccountSummaryRepository
+import com.mifos.core.data.repository.LoanAccountSummaryRepository
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.model.objects.account.loan.transfer.AccountOption
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRequest
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferResponse
@@ -36,7 +38,6 @@ import com.mifos.core.model.objects.account.loan.transfer.ClientOption
 import com.mifos.core.model.objects.account.loan.transfer.OfficeOption
 import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -525,7 +526,7 @@ sealed interface AmountTransferAction {
 
     sealed interface Internal : AmountTransferAction {
         data class ReceiveLoanAccountDetailsResult(
-            val loanAccountDetailsResult: DataState<LoanWithAssociationsEntity?>,
+            val loanAccountDetailsResult: DataState<LoanWithAssociations?>,
         ) : Internal
 
         data class ReceiveInitialTemplateResult(

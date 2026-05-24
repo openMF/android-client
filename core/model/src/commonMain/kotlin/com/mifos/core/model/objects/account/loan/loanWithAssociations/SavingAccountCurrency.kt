@@ -7,16 +7,15 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.entity.loan.loanWithAssociations
+package com.mifos.core.model.objects.account.loan.loanWithAssociations
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
-import kotlinx.serialization.Serializable
-
-@Parcelize
-@Serializable
-data class LoanType(
-    val id: Int? = null,
+data class SavingAccountCurrency(
+    val id: Int = 0,
     val code: String? = null,
-    val value: String? = null,
-) : Parcelable
+    val name: String? = null,
+    val decimalPlaces: Int? = null,
+    val inMultiplesOf: Int? = null,
+    val displaySymbol: String? = null,
+    val nameCode: String? = null,
+    val displayLabel: String? = null,
+)

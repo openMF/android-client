@@ -22,6 +22,7 @@ import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.dto.loan.LoanWithAssociationsDto
 import com.mifos.core.network.dto.loans.CreateGuarantorResponseDto
 import com.mifos.core.network.dto.loans.GuarantorRequestDto
 import com.mifos.core.network.dto.loans.LoanChargeOffRequestDto
@@ -60,7 +61,7 @@ import kotlinx.coroutines.flow.Flow
  */
 interface LoanService {
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=all&exclude=guarantors,futureSchedule")
-    suspend fun getLoanByIdWithAllAssociations(@Path("loanId") loanId: Int): LoanWithAssociationsEntity
+    suspend fun getLoanByIdWithAllAssociations(@Path("loanId") loanId: Int): LoanWithAssociationsDto
 
     @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template?command=repayment")
     suspend fun getLoanRepaymentTemplate(@Path("loanId") loanId: Int): LoanRepaymentTemplateEntity
@@ -97,10 +98,10 @@ interface LoanService {
     ): RejectLoanResponseDto
 
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=repaymentSchedule")
-    fun getLoanRepaymentSchedule(@Path("loanId") loanId: Int): Flow<LoanWithAssociationsEntity>
+    fun getLoanRepaymentSchedule(@Path("loanId") loanId: Int): Flow<LoanWithAssociationsDto>
 
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=transactions")
-    fun getLoanWithTransactions(@Path("loanId") loanId: Int): Flow<LoanWithAssociationsEntity>
+    fun getLoanWithTransactions(@Path("loanId") loanId: Int): Flow<LoanWithAssociationsDto>
 
     @GET(APIEndPoint.LOANS + "/{loanId}/guarantors/template")
     suspend fun getGuarantorTemplate(@Path("loanId") loanId: Int): GuarantorTemplateDto

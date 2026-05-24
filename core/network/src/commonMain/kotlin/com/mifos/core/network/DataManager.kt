@@ -15,10 +15,10 @@ import com.mifos.core.model.objects.databaseobjects.OfflineCenter
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
+import com.mifos.core.network.dto.loan.LoanWithAssociationsDto
 import com.mifos.core.network.model.CollectionSheetPayload
 import com.mifos.core.network.model.Payload
 import com.mifos.room.entities.accounts.loans.Loan
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.client.ChargesEntity
 import com.mifos.room.entities.group.CenterEntity
 import com.mifos.room.entities.group.CenterWithAssociations
@@ -119,7 +119,7 @@ class DataManager : KoinComponent {
     /**
      * Loans API
      */
-    fun getLoanTransactions(loan: Int): Flow<LoanWithAssociationsEntity> {
+    fun getLoanTransactions(loan: Int): Flow<LoanWithAssociationsDto> {
         return mBaseApiManager.loanService.getLoanWithTransactions(loan)
     }
 
@@ -134,7 +134,7 @@ class DataManager : KoinComponent {
         return mBaseApiManager.loanService.createGroupLoansAccount(loansPayload)
     }
 
-    fun getLoanRepaySchedule(loanId: Int): Flow<LoanWithAssociationsEntity> {
+    fun getLoanRepaySchedule(loanId: Int): Flow<LoanWithAssociationsDto> {
         return mBaseApiManager.loanService.getLoanRepaymentSchedule(loanId)
     }
 

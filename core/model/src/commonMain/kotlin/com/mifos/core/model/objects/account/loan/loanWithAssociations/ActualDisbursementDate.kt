@@ -7,17 +7,11 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.entity.loan.loanWithAssociations
+package com.mifos.core.model.objects.account.loan.loanWithAssociations
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
-import kotlinx.serialization.Serializable
-
-@Parcelize
-@Serializable
 data class ActualDisbursementDate(
     val loanId: Int? = null,
     val year: Int? = null,
     val month: Int? = null,
     val date: Int? = null,
-) : Parcelable
+)

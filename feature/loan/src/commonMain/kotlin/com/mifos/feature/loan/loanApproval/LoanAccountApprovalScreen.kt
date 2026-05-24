@@ -57,9 +57,9 @@ import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.model.objects.account.loan.LoanApproval
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.ui.components.MifosProgressIndicator
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -90,7 +90,7 @@ internal fun LoanAccountApprovalScreen(
 @Composable
 internal fun LoanAccountApprovalScreen(
     uiState: LoanAccountApprovalUiState,
-    loanWithAssociations: LoanWithAssociationsEntity?,
+    loanWithAssociations: LoanWithAssociations?,
     navigateBack: () -> Unit,
     onLoanApprove: (loanApproval: LoanApproval) -> Unit,
 ) {
@@ -156,7 +156,7 @@ internal fun LoanAccountApprovalScreen(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
 @Composable
 private fun LoanAccountApprovalContent(
-    loanWithAssociations: LoanWithAssociationsEntity?,
+    loanWithAssociations: LoanWithAssociations?,
     onLoanApprove: (loanApproval: LoanApproval) -> Unit,
 ) {
     var approvedAmount by rememberSaveable {
@@ -375,7 +375,7 @@ private fun PreviewLoanAccountApprovalScreen(
 ) {
     LoanAccountApprovalScreen(
         uiState = loanAccountApprovalUiState,
-        loanWithAssociations = LoanWithAssociationsEntity(),
+        loanWithAssociations = LoanWithAssociations(),
         navigateBack = { },
     ) {
     }

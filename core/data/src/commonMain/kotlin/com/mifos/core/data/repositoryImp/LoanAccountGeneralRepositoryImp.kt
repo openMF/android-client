@@ -11,16 +11,14 @@ package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
-import com.mifos.core.data.mappers.loan.LoanAccountGeneralMapper
 import com.mifos.core.data.repository.LoanAccountGeneralRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.data.util.withNetworkCheck
-import com.mifos.core.model.entity.loan.loanWithAssociations.LoanWithAssociations
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.network.datamanager.DataManagerLoan
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 
 class LoanAccountGeneralRepositoryImp(
     private val dataManagerLoan: DataManagerLoan,
@@ -31,7 +29,6 @@ class LoanAccountGeneralRepositoryImp(
     override fun getLoanById(loanId: Int): Flow<DataState<LoanWithAssociations?>> {
         return networkMonitor.withNetworkCheck(
             dataManagerLoan.getLoanById(loanId)
-                .map { loan -> loan?.let(LoanAccountGeneralMapper::mapFromEntity) }
                 .asDataStateFlow(),
         ).flowOn(ioDispatcher)
     }

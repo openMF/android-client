@@ -11,9 +11,6 @@ package com.mifos.feature.loan.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
-import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.loan.amountTransfer.amountTransferScreen
 import com.mifos.feature.loan.amountTransfer.navigateToTransferScreen
@@ -32,7 +29,8 @@ import com.mifos.feature.loan.loanAccountAction.reloadLoanAccountActionScreen
 import com.mifos.feature.loan.loanAccountProfile.loanProfileAccountDestination
 import com.mifos.feature.loan.loanAccountProfile.reloadLoanAccountProfileScreen
 import com.mifos.feature.loan.loanAccountSummary.loanAccountSummary
-import com.mifos.feature.loan.loanApproval.LoanAccountApprovalScreen
+import com.mifos.feature.loan.loanApproval.loanApprovalDestination
+import com.mifos.feature.loan.loanApproval.navigateToLoanApprovalScreen
 import com.mifos.feature.loan.loanCharge.loanChargeScreen
 import com.mifos.feature.loan.loanCharge.navigateToLoanChargesScreen
 import com.mifos.feature.loan.loanChargeOff.loanChargeOffScreen
@@ -69,7 +67,7 @@ fun NavGraphBuilder.loanDestination(
         onDocumentsClicked = { onDocumentsClicked(it, Constants.ENTITY_TYPE_LOANS) },
         onChargesClicked = navController::navigateToLoanChargesScreen,
         approveLoan = navController::navigateToLoanApprovalScreen,
-        disburseLoan = navController::navigateToLoanDisburseScreen,
+        disburseLoan = navController::navigateToLoanDisbursementScreen,
         onRepaymentClick = navController::navigateToLoanRepaymentScreen,
         navController = navController,
     )

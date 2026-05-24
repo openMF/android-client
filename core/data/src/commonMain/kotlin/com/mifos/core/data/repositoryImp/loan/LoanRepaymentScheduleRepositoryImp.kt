@@ -7,10 +7,11 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.data.repositoryImp.loan
+package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.data.repository.loan.LoanRepaymentScheduleRepository
 import com.mifos.core.network.DataManager
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
@@ -23,7 +24,8 @@ class LoanRepaymentScheduleRepositoryImp(
     private val dataManager: DataManager,
 ) : LoanRepaymentScheduleRepository {
 
-    override fun getLoanRepaySchedule(loanId: Int): Flow<DataState<LoanWithAssociationsEntity>> {
-        return dataManager.getLoanRepaySchedule(loanId).asDataStateFlow()
+    override fun getLoanRepaySchedule(loanId: Int): Flow<DataState<LoanWithAssociations>> {
+        return dataManager.getLoanRepaySchedule(loanId).map { it.toDomain() }
+            .asDataStateFlow()
     }
 }

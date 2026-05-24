@@ -42,11 +42,11 @@ class LoanTransactionsViewModel(
 
                 is DataState.Success -> {
                     val loanWithAssociations = state.data
-                    val currencyCode = loanWithAssociations.currency.code
-                    val maxDigits = loanWithAssociations.currency.decimalPlaces
+                    val currencyCode = loanWithAssociations.currency?.code
+                    val maxDigits = loanWithAssociations.currency?.decimalPlaces
 
                     val transactionsData =
-                        loanWithAssociations.transactions.mapIndexed { index, transaction ->
+                        loanWithAssociations.transactions?.mapIndexed { index, transaction ->
 
                             LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData(
                                 number = (index + 1).toString(),
@@ -99,9 +99,11 @@ class LoanTransactionsViewModel(
 
                     _loanTransactionsUiState.value =
                         LoanTransactionsUiState.ShowLoanTransaction(
-                            transactionsTableData = LoanTransactionsUiState.LoanTransactionsTableData(
-                                transactions = transactionsData,
-                            ),
+                            transactionsTableData = transactionsData?.let {
+                                LoanTransactionsUiState.LoanTransactionsTableData(
+                                    transactions = it,
+                                )
+                            },
                         )
                 }
             }

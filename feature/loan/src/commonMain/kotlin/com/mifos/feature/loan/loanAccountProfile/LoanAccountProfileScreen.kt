@@ -55,6 +55,10 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanAccountSummary
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanStatus
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.SavingAccountCurrency
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
@@ -64,10 +68,6 @@ import com.mifos.core.ui.util.TextUtil
 import com.mifos.feature.loan.loanAccountProfile.components.LoanAccountProfileActionItem
 import com.mifos.feature.loan.loanAccountProfile.components.loanProfileActionItems
 import com.mifos.feature.loan.utils.getLoanStatus
-import com.mifos.room.entities.accounts.loans.LoanStatusEntity
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
-import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
-import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -79,8 +79,8 @@ import template.core.base.designsystem.theme.KptTheme
 internal fun LoanAccountProfileScreen(
     navController: NavController,
     onNavigateBack: () -> Unit,
-    approveLoan: (Int, LoanWithAssociationsEntity) -> Unit,
-    onRepaymentClick: (LoanWithAssociationsEntity) -> Unit,
+    approveLoan: (Int) -> Unit,
+    onRepaymentClick: (LoanWithAssociations) -> Unit,
     navigateToGeneral: (Int) -> Unit,
     navigateToRepaymentSchedule: (Int) -> Unit,
     navigateToTransactions: (Int) -> Unit,
@@ -231,7 +231,7 @@ private fun LoanAccountContent(
 
 @Composable
 private fun LoanAccountTopCard(
-    loanAccount: LoanWithAssociationsEntity,
+    loanAccount: LoanWithAssociations,
     onClick: () -> Unit,
     onArrowClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -393,21 +393,21 @@ private class LoanAccountPreviewProvider : PreviewParameterProvider<LoanAccountS
     override val values: Sequence<LoanAccountState>
         get() = sequenceOf(
             LoanAccountState(
-                loanAccount = LoanWithAssociationsEntity(
+                loanAccount = LoanWithAssociations(
                     id = 1,
                     accountNo = "000000018",
                     clientName = "MARIA",
                     loanProductName = "PERSONAL",
                     totalOverpaid = 0.0,
-                    currency = SavingAccountCurrencyEntity(
+                    currency = SavingAccountCurrency(
                         code = "USD",
                         decimalPlaces = 2,
                     ),
-                    summary = LoansAccountSummaryEntity(
+                    summary = LoanAccountSummary(
                         totalOutstanding = 1500.00,
                         totalOverdue = 0.00,
                     ),
-                    status = LoanStatusEntity(
+                    status = LoanStatus(
                         active = true,
                         pendingApproval = false,
                         overpaid = false,

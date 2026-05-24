@@ -12,6 +12,7 @@ package com.mifos.core.network.datamanager
 import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRejectionRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRequest
@@ -37,11 +38,12 @@ import com.mifos.core.network.dto.loans.template.GuarantorTemplateDto
 import com.mifos.core.network.dto.loans.template.LoanChargeOffTemplateDto
 import com.mifos.core.network.dto.loans.template.LoanDisburseTemplateDto
 import com.mifos.core.network.dto.loans.template.LoanOfficerOptionsTemplateDto
+import com.mifos.core.network.mappers.loan.LoanAccountMapper
+import com.mifos.core.network.mappers.loan.toDomain
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
@@ -51,6 +53,7 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
@@ -81,14 +84,14 @@ class DataManagerLoan(
      * @return LoanWithAssociation
      */
     @OptIn(ExperimentalCoroutinesApi::class)
-    fun getLoanById(loanId: Int): Flow<LoanWithAssociationsEntity?> {
+    fun getLoanById(loanId: Int): Flow<LoanWithAssociations?> {
         return prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
                 false -> flow {
                     emit(
                         mBaseApiManager.loanService.getLoanByIdWithAllAssociations(
                             loanId,
-                        ),
+                        ).toDomain(),
                     )
                 }
 
@@ -96,7 +99,7 @@ class DataManagerLoan(
                     /**
                      * offline Mode, Return LoanWithAssociation from LoanDaoHelper.
                      */
-                    loanDaoHelper.getLoanById(loanId)
+                    loanDaoHelper.getLoanById(loanId).map { entity -> entity?.let(LoanAccountMapper::mapFromEntity) }
             }
         }
     }
@@ -110,11 +113,15 @@ class DataManagerLoan(
      * @param loanId Loan Id
      * @return LoanWithAssociations
      */
-    fun syncLoanById(loanId: Int): Flow<LoanWithAssociationsEntity> {
+    fun syncLoanById(loanId: Int): Flow<LoanWithAssociations> {
         return flow {
             val loanWithAssociations =
-                mBaseApiManager.loanService.getLoanByIdWithAllAssociations(loanId)
-            loanDaoHelper.saveLoanById(loanWithAssociations)
+                mBaseApiManager.loanService.getLoanByIdWithAllAssociations(loanId).toDomain()
+
+            val loanWithAssociationsEntity = LoanAccountMapper.mapToEntity(loanWithAssociations)
+
+            loanDaoHelper.saveLoanById(loanWithAssociationsEntity).collect()
+
             emit(loanWithAssociations)
         }
     }

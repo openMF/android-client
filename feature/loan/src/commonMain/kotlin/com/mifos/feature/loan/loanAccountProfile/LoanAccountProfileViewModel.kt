@@ -87,7 +87,7 @@ internal class LoanAccountProfileViewModel(
                         mutableStateFlow.update {
                             it.copy(
                                 loanAccount = loan,
-                                dialogState = null,
+                                dialogState = null,,
                                 nextActionButtonRes = calculateNextActionResource(currentStatus),
                             )
                         }
