@@ -118,18 +118,6 @@ data class LoanTemplate(
     @IgnoredOnParcel
     val productOptions: List<ProductOptions> = emptyList(),
 
-    // GAP-DT-008 (discovered at runtime 2026-05-22):
-    //   1. Fineract returns this as `"datatables"` (all-lowercase) — need @SerialName.
-    //   2. Element nullability: for some products (e.g. 7, 8, 10) Fineract returns
-    //      `[null, null, ...]` or mixes nulls with real entries. The element type must
-    //      therefore be DataTableEntity? — without it, kotlinx-serialization throws on
-    //      the first null and the WHOLE template deserialization fails. Confirmed by
-    //      curl on the live API across 11 product samples:
-    //        product 1     → 5 valid
-    //        products 2-6,9,15 → key absent
-    //        product 7     → 4 nulls + 5 valid (mixed)
-    //        products 8,10 → all nulls
-    //   Filter `.filterNotNull()` at every read site before checking `.isNotEmpty()`.
     @SerialName("datatables")
     val dataTables: ArrayList<DataTableEntity?> = ArrayList(),
 

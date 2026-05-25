@@ -138,8 +138,6 @@ fun DataTableListScreen(
                     uiState.client?.let { client ->
                         clientCreated(client)
                     } ?: run {
-                        // Initial Success() emitted by initArgs has no message and no client —
-                        // it's the "ready to edit" signal, not a completion event.
                         if (uiState.message != null) {
                             val message = stringResource(uiState.message)
                             LaunchedEffect(key1 = message) {

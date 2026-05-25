@@ -77,6 +77,7 @@ import kotlin.time.Clock
  * @param values      current values keyed by column name (lifted to ViewModel)
  * @param onValueChange emits a typed [DatatableFieldValue] per user edit
  */
+
 @Composable
 fun DatatableStepPage(
     table: DataTableEntity,
@@ -221,8 +222,6 @@ private fun DatatableField(
             onIdSelected = { onValueChange(DatatableFieldValue.Code(it)) },
         )
 
-        // DATETIME and unknown types: silently skip. Any unknown
-        // type would just render an empty hole.
         else -> Unit
     }
 }

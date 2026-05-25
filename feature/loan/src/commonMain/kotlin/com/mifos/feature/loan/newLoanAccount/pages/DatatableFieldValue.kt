@@ -9,6 +9,8 @@
  */
 package com.mifos.feature.loan.newLoanAccount.pages
 
+import com.mifos.room.entities.noncore.ColumnHeader
+
 /**
  * Type-safe value for a single editable cell of a datatable form step.
  *
@@ -24,22 +26,11 @@ package com.mifos.feature.loan.newLoanAccount.pages
  *   - [Code] → CODELOOKUP, CODEVALUE
  *             (carries the picked code id, not the display string — Fineract
  *              expects ids in `datatables[].data` on POST)
- *
- * [asPayloadValue] is the one boundary where the type-safe form values cross
- * into the `Map<String, Any>` shape that `DataTablePayload.data` requires.
  */
 sealed interface DatatableFieldValue {
-    fun asPayloadValue(): Any
 
-    data class Text(val text: String) : DatatableFieldValue {
-        override fun asPayloadValue(): Any = text
-    }
+    data class Text(val text: String) : DatatableFieldValue
+    data class Bool(val checked: Boolean) : DatatableFieldValue
 
-    data class Bool(val checked: Boolean) : DatatableFieldValue {
-        override fun asPayloadValue(): Any = checked
-    }
-
-    data class Code(val id: Int) : DatatableFieldValue {
-        override fun asPayloadValue(): Any = id
-    }
+    data class Code(val id: Int) : DatatableFieldValue
 }

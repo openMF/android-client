@@ -131,22 +131,6 @@ fun NavController.navigateDataTableData(
     navigate(DataTableScreens.DataTableDataScreen.argument(arg))
 }
 
-/**
- * Navigate to the data-table list screen.
- *
- * Per GAP-DT-002: the legacy `formWidget` parameter (`List<List<FormWidgetDTO>>`)
- * has been removed. The screen now derives form state directly from
- * `dataTableList[i].columnHeaderData`, eliminating the `FormWidgetDTO`
- * serialisation dependency.
- */
-/**
- * Json instance for nav-arg (de)serialization. The `payload: Any?` field on
- * [DataTableListNavArgs] is `@Polymorphic`, so kotlinx-serialization needs every
- * concrete payload subtype registered here. Crash without this:
- *   "Serializer for subclass 'LoansPayload' is not found in the polymorphic scope of 'Any'"
- * (GAP-DT-011, discovered at runtime 2026-05-22 — encoder side; matches the
- * decoder-side module already in DataTableListViewModel).
- */
 private val navArgJson = Json {
     serializersModule = SerializersModule {
         polymorphic(Any::class) {

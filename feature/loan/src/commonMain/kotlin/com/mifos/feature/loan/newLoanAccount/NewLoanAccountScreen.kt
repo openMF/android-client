@@ -130,10 +130,6 @@ private fun NewLoanAccountScaffold(
     onAction: (NewLoanAccountAction) -> Unit,
     snackbarHostState: SnackbarHostState,
 ) {
-    // GAP-DT-013: dynamic step list. Datatable steps (one per filtered datatable)
-    // are inserted between Schedule and Preview. Their count and names come from
-    // `state.loanTemplate.dataTables.filterNotNull()` — empty list ⇒ no extra steps,
-    // stepper behaves identically to the pre-datatable version.
     val realDataTables = state.loanTemplate?.dataTables?.filterNotNull().orEmpty()
     val steps = buildList {
         add(

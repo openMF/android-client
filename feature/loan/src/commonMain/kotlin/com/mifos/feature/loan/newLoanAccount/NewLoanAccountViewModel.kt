@@ -19,6 +19,7 @@ import androidclient.feature.loan.generated.resources.total_installments
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
@@ -269,15 +270,19 @@ internal class NewLoanAccountViewModel(
     private fun submitLoanApplication() {
         viewModelScope.launch {
             val payload = LoansPayload(
-                loanOfficerId = if (state.loanOfficerIndex == -1) null else state.loanTemplate?.loanOfficerOptions[state.loanOfficerIndex]?.id,
+                loanOfficerId =
+                    if (state.loanOfficerIndex == -1) null
+                    else state.loanTemplate?.loanOfficerOptions[state.loanOfficerIndex]?.id,
                 principal = state.principalAmount.toDouble(),
                 clientId = state.clientId,
                 allowPartialPeriodInterestCalculation = state.isCheckedInterestPartialPeriod,
                 amortizationType = state.loanTemplate?.amortizationTypeOptions[state.nominalAmortizationIndex]?.id,
                 dateFormat = DateHelper.SHORT_MONTH,
-                interestCalculationPeriodType = state.loanTemplate?.interestCalculationPeriodTypeOptions[state.interestCalculationPeriodIndex]?.id,
+                interestCalculationPeriodType = state.loanTemplate
+                    ?.interestCalculationPeriodTypeOptions[state.interestCalculationPeriodIndex]?.id,
                 interestRatePerPeriod = state.nominalInterestRate.toDouble(),
-                interestType = state.loanTemplate?.interestTypeOptions[state.nominalInterestMethodIndex]?.id,
+                interestType = state.loanTemplate
+                    ?.interestTypeOptions[state.nominalInterestMethodIndex]?.id,
                 loanTermFrequency = state.noOfRepayments * state.repaidEvery,
                 loanTermFrequencyType = state.loanTemplate?.termFrequencyTypeOptions[state.termFrequencyIndex]?.id,
                 loanType = "individual",
@@ -285,32 +290,39 @@ internal class NewLoanAccountViewModel(
                 numberOfRepayments = state.noOfRepayments,
                 productId = state.productId,
                 repaymentEvery = state.repaidEvery,
-                repaymentFrequencyDayOfWeekType = if (state.selectedDayIndex == -1) null else state.loanTemplate?.repaymentFrequencyDaysOfWeekTypeOptions[state.selectedDayIndex]?.id,
-                repaymentFrequencyNthDayType = if (state.selectedOnIndex == -1) null else state.loanTemplate?.repaymentFrequencyNthDayTypeOptions[state.selectedOnIndex]?.id,
+                repaymentFrequencyDayOfWeekType =
+                    if (state.selectedDayIndex == -1) null
+                    else state.loanTemplate?.repaymentFrequencyDaysOfWeekTypeOptions[state.selectedDayIndex]?.id,
+                repaymentFrequencyNthDayType =
+                    if (state.selectedOnIndex == -1) null
+                    else state.loanTemplate?.repaymentFrequencyNthDayTypeOptions[state.selectedOnIndex]?.id,
                 repaymentFrequencyType = state.loanTemplate?.termFrequencyTypeOptions[state.termFrequencyIndex]?.id,
                 expectedDisbursementDate = state.expectedDisbursementDate,
                 submittedOnDate = state.submissionDate,
-                loanPurposeId = if (state.loanPurposeIndex == -1) null else state.loanTemplate?.loanPurposeOptions[state.loanPurposeIndex]?.id,
-                fundId = if (state.fundIndex == -1) null else state.loanTemplate?.fundOptions[state.fundIndex]?.id,
-                linkAccountId = if (state.linkSavingsIndex == -1) null else state.loanTemplate?.accountLinkingOptions[state.linkSavingsIndex]?.id,
-                transactionProcessingStrategyCode = state.loanTemplate?.transactionProcessingStrategyOptions[state.repaymentStrategyIndex]?.code,
+                loanPurposeId =
+                    if (state.loanPurposeIndex == -1) null
+                    else state.loanTemplate?.loanPurposeOptions[state.loanPurposeIndex]?.id,
+                fundId =
+                    if (state.fundIndex == -1) null
+                    else state.loanTemplate?.fundOptions[state.fundIndex]?.id,
+                linkAccountId =
+                    if (state.linkSavingsIndex == -1) null
+                    else state.loanTemplate?.accountLinkingOptions[state.linkSavingsIndex]?.id,
+                transactionProcessingStrategyCode = state.loanTemplate
+                    ?.transactionProcessingStrategyOptions[state.repaymentStrategyIndex]?.code,
                 externalId = state.externalId,
             )
-
-            // GAP-DT-013 (inline datatables): assemble per-product datatable payloads
-            // from state.datatableValues collected by the inline stepper pages.
-            // Filter nulls because Fineract returns `[null,null,...]` for some products
-            // (see loan_product_{7,8,10}.json samples). Empty list when product has no
-            // real datatables — backend accepts (or expects) empty/absent datatables.
             val realDataTables = state.loanTemplate?.dataTables?.filterNotNull().orEmpty()
-            co.touchlab.kermit.Logger.d(
+
+            Logger.d(
                 tag = "DataTableGate",
-                messageString = "submit: productId=${state.productId} " +
+                messageString =
+                    "submit: productId=${state.productId} " +
                     "rawSize=${state.loanTemplate?.dataTables?.size ?: 0} " +
-                    "realSize=${realDataTables.size} " +
-                    "names=${realDataTables.map { it.registeredTableName }} " +
+                    "realSize=${realDataTables.size} " + "names=${realDataTables.map { it.registeredTableName }} " +
                     "valuesFilled=${state.datatableValues.values.sumOf { it.size }}",
             )
+
             if (realDataTables.isNotEmpty()) {
                 val datatablePayloads = realDataTables.mapIndexed { idx, table ->
                     DataTablePayload(
@@ -861,7 +873,7 @@ internal class NewLoanAccountViewModel(
         }
     }
 
-    fun loadLoanAccountTemplate(productId: Int) = viewModelScope.launch {
+    private fun loadLoanAccountTemplate(productId: Int) = viewModelScope.launch {
         mutableStateFlow.update {
             it.copy(productId = productId)
         }
@@ -905,7 +917,6 @@ internal class NewLoanAccountViewModel(
     }
 
     private suspend fun repaymentScheduler() {
-        // Build LoansPayload from current form state to calculate schedule preview
         val payload = buildLoansPayloadForSchedulePreview()
 
         calculateLoanScheduleUseCase(payload).collect { dataState ->
@@ -1035,9 +1046,8 @@ internal class NewLoanAccountViewModel(
     }
 }
 
-data class NewLoanAccountState
 @OptIn(ExperimentalTime::class)
-constructor(
+data class NewLoanAccountState (
     val launchEffectKey: Int? = null,
     val accountNo: String = "",
     val clientId: Int,
@@ -1048,11 +1058,8 @@ constructor(
     val loanTemplate: LoanTemplate? = null,
     val currentStep: Int = 0,
     /**
-     * GAP-DT-013: per-loan datatable values keyed by table-index → (columnName → value).
-     * Index aligns with `loanTemplate.dataTables.filterNotNull()` ordering. Populated
-     * by the inline stepper's DatatableStepPage instances; consumed by
-     * [submitLoanApplication] to build `LoansPayload.datatables`. Empty when the
-     * selected loan product has no real datatables.
+     * - Per-loan datatable values keyed by table-index → (columnName → value).
+     * - Populated by the inline stepper's DatatableStepPage instances.
      */
     val datatableValues: Map<Int, Map<String, DatatableFieldValue>> = emptyMap(),
     val dialogState: DialogState? = null,
@@ -1102,8 +1109,8 @@ constructor(
     val showChargesDatePick: Boolean = false,
     val chargeAmount: String = "",
 
-    /** these are use in dropDown field for change the value,
-     * it is not actual value for the field
+    /**
+     * These are used in dropDown field for changing the value,
      */
     val loanProductSelected: Int = -1,
     val chooseChargeIndex: Int = -1,
@@ -1142,13 +1149,6 @@ constructor(
         loanProductSelected != -1 && submissionDate.isNotEmpty() && expectedDisbursementDate.isNotEmpty()
     val isCollateralBtnEnabled = collateralQuantity != 0 && collateralSelectedIndex != -1
 
-    /**
-     * GAP-DT-013: dynamic last-step index. Stepper has 5 fixed pages (Details, Terms,
-     * Charges, Schedule, Preview) plus one page per filtered datatable inserted between
-     * Schedule and Preview. Last index = 4 + N. `moveToNextStep` uses this as the
-     * "finish trigger" upper bound. For products with no datatables this stays at 4
-     * — identical to the pre-datatable behaviour.
-     */
     val totalSteps: Int
         get() = 4 + (loanTemplate?.dataTables?.filterNotNull()?.size ?: 0)
 }

@@ -125,8 +125,6 @@ fun NavGraphBuilder.clientNavGraph(
     moreClientInfo: (Int) -> Unit,
     onMoreInfoClicked: (String, Int) -> Unit,
     activateClient: (Int) -> Unit,
-    // GAP-DT-002: signature mirrors the updated `NavController.navigateDataTableList`
-    // (formWidget param removed — form state is now derived from the entity).
     hasDatatables: KFunction3<List<DataTableEntity>, Any?, Int, Unit>,
     onNavigateToSearch: (String) -> Unit,
 ) {

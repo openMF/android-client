@@ -18,6 +18,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
+import co.touchlab.kermit.Logger.Companion.i
 import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
@@ -43,11 +44,6 @@ import kotlinx.serialization.modules.polymorphic
 
 /**
  * Created by Aditya Gupta on 10/08/23.
- *
- * GAP-DT-005 rewrite (2026-05-22): removed the obsolete `FormWidgetDTO` /
- * `FormWidgetModel` dependency. Form state is now held in a per-table
- * `Map<columnName, Any>` keyed by table index, populated by stateful inputs
- * in the screen, and serialised into `DataTablePayload` on save.
  */
 class DataTableListViewModel(
     private val repository: DataTableListRepository,
@@ -84,10 +80,7 @@ class DataTableListViewModel(
     private val _dataTableList: MutableStateFlow<List<DataTableEntity>?> = MutableStateFlow(null)
     val dataTableList: StateFlow<List<DataTableEntity>?> = _dataTableList.asStateFlow()
 
-    /**
-     * Per-table form values, keyed by table index → (column name → value).
-     * Populated by [updateFieldValue] from stateful screen inputs (GAP-DT-006).
-     */
+
     private val _formValues: MutableStateFlow<Map<Int, Map<String, Any>>> =
         MutableStateFlow(emptyMap())
     val formValues: StateFlow<Map<Int, Map<String, Any>>> = _formValues.asStateFlow()
@@ -115,10 +108,7 @@ class DataTableListViewModel(
         _dataTableListUiState.value = DataTableListUiState.Success()
     }
 
-    /**
-     * Update a single field value. Called by the screen on every input change
-     * (GAP-DT-006: lifted-state input).
-     */
+
     fun updateFieldValue(tableIndex: Int, columnName: String, value: Any) {
         _formValues.update { current ->
             val tableMap = current[tableIndex].orEmpty().toMutableMap()
@@ -127,23 +117,17 @@ class DataTableListViewModel(
         }
     }
 
-    /**
-     * Collect each table's form values into a `DataTablePayload`, attach to the
-     * outgoing loan/client payload, and submit.
-     *
-     * GAP-DT-005: replaces the legacy `addDataTableInput(widgets: List<Any>)`
-     * that depended on `FormWidgetModel` / `SpinnerModel` classes.
-     */
+
     fun processDataTable() {
         val dataTables = dataTableList.value.orEmpty()
         dataTablePayloadElements.clear()
 
-        for (i in dataTables.indices) {
-            val rawValues = _formValues.value[i].orEmpty()
-            val data = buildPayloadMap(dataTables[i].columnHeaderData, rawValues)
+        dataTables.indices.forEach { index->
+            val rawValues = _formValues.value[index].orEmpty()
+            val data = buildPayloadMap(dataTables[index].columnHeaderData, rawValues)
             dataTablePayloadElements.add(
                 DataTablePayload(
-                    registeredTableName = dataTables[i].registeredTableName,
+                    registeredTableName = dataTables[index].registeredTableName,
                     data = data,
                 ),
             )
@@ -166,11 +150,6 @@ class DataTableListViewModel(
         }
     }
 
-    /**
-     * Build the Fineract data-table payload map. Skips system columns
-     * (primary keys, e.g. `loan_id`) and applies type coercion based on
-     * `columnDisplayType`.
-     */
     private fun buildPayloadMap(
         headers: List<ColumnHeader>,
         rawValues: Map<String, Any>,
@@ -180,7 +159,7 @@ class DataTableListViewModel(
             "locale" to ApiDateFormatter.LOCALE,
         )
         headers
-            .filter { it.columnPrimaryKey == false } // GAP-DT-004: skip system PK columns (loan_id, etc.)
+            .filter { it.columnPrimaryKey == false }
             .forEach { header ->
                 val name = header.dataTableColumnName ?: return@forEach
                 val raw = rawValues[name] ?: return@forEach

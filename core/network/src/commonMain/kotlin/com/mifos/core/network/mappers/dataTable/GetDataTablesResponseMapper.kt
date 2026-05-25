@@ -33,7 +33,6 @@ object GetDataTablesResponseMapper : AbstractMapper<GetDataTablesResponse, DataT
                     columnLength = it.columnLength?.toInt(),
                     columnNullable = it.isColumnNullable,
                     columnPrimaryKey = it.isColumnPrimaryKey,
-                    // GAP-DT-003: propagate columnName so the form widget label renders.
                     dataTableColumnName = it.columnName,
                 )
             },
