@@ -20,6 +20,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import co.touchlab.kermit.Logger
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
@@ -32,13 +33,10 @@ import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.network.model.CollateralItem
 import com.mifos.core.network.model.LoansPayload
-import com.mifos.core.common.utils.ApiDateFormatter
-import com.mifos.core.common.utils.Constants
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState.DialogState
 import com.mifos.feature.loan.newLoanAccount.pages.DatatableFieldValue
 import com.mifos.room.entities.noncore.ColumnHeader
-import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.noncore.DataTablePayload
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import kotlinx.coroutines.delay
@@ -271,8 +269,11 @@ internal class NewLoanAccountViewModel(
         viewModelScope.launch {
             val payload = LoansPayload(
                 loanOfficerId =
-                    if (state.loanOfficerIndex == -1) null
-                    else state.loanTemplate?.loanOfficerOptions[state.loanOfficerIndex]?.id,
+                if (state.loanOfficerIndex == -1) {
+                    null
+                } else {
+                    state.loanTemplate?.loanOfficerOptions[state.loanOfficerIndex]?.id
+                },
                 principal = state.principalAmount.toDouble(),
                 clientId = state.clientId,
                 allowPartialPeriodInterestCalculation = state.isCheckedInterestPartialPeriod,
@@ -291,23 +292,38 @@ internal class NewLoanAccountViewModel(
                 productId = state.productId,
                 repaymentEvery = state.repaidEvery,
                 repaymentFrequencyDayOfWeekType =
-                    if (state.selectedDayIndex == -1) null
-                    else state.loanTemplate?.repaymentFrequencyDaysOfWeekTypeOptions[state.selectedDayIndex]?.id,
+                if (state.selectedDayIndex == -1) {
+                    null
+                } else {
+                    state.loanTemplate?.repaymentFrequencyDaysOfWeekTypeOptions[state.selectedDayIndex]?.id
+                },
                 repaymentFrequencyNthDayType =
-                    if (state.selectedOnIndex == -1) null
-                    else state.loanTemplate?.repaymentFrequencyNthDayTypeOptions[state.selectedOnIndex]?.id,
+                if (state.selectedOnIndex == -1) {
+                    null
+                } else {
+                    state.loanTemplate?.repaymentFrequencyNthDayTypeOptions[state.selectedOnIndex]?.id
+                },
                 repaymentFrequencyType = state.loanTemplate?.termFrequencyTypeOptions[state.termFrequencyIndex]?.id,
                 expectedDisbursementDate = state.expectedDisbursementDate,
                 submittedOnDate = state.submissionDate,
                 loanPurposeId =
-                    if (state.loanPurposeIndex == -1) null
-                    else state.loanTemplate?.loanPurposeOptions[state.loanPurposeIndex]?.id,
+                if (state.loanPurposeIndex == -1) {
+                    null
+                } else {
+                    state.loanTemplate?.loanPurposeOptions[state.loanPurposeIndex]?.id
+                },
                 fundId =
-                    if (state.fundIndex == -1) null
-                    else state.loanTemplate?.fundOptions[state.fundIndex]?.id,
+                if (state.fundIndex == -1) {
+                    null
+                } else {
+                    state.loanTemplate?.fundOptions[state.fundIndex]?.id
+                },
                 linkAccountId =
-                    if (state.linkSavingsIndex == -1) null
-                    else state.loanTemplate?.accountLinkingOptions[state.linkSavingsIndex]?.id,
+                if (state.linkSavingsIndex == -1) {
+                    null
+                } else {
+                    state.loanTemplate?.accountLinkingOptions[state.linkSavingsIndex]?.id
+                },
                 transactionProcessingStrategyCode = state.loanTemplate
                     ?.transactionProcessingStrategyOptions[state.repaymentStrategyIndex]?.code,
                 externalId = state.externalId,
@@ -317,7 +333,7 @@ internal class NewLoanAccountViewModel(
             Logger.d(
                 tag = "DataTableGate",
                 messageString =
-                    "submit: productId=${state.productId} " +
+                "submit: productId=${state.productId} " +
                     "rawSize=${state.loanTemplate?.dataTables?.size ?: 0} " +
                     "realSize=${realDataTables.size} " + "names=${realDataTables.map { it.registeredTableName }} " +
                     "valuesFilled=${state.datatableValues.values.sumOf { it.size }}",
@@ -1047,7 +1063,7 @@ internal class NewLoanAccountViewModel(
 }
 
 @OptIn(ExperimentalTime::class)
-data class NewLoanAccountState (
+data class NewLoanAccountState(
     val launchEffectKey: Int? = null,
     val accountNo: String = "",
     val clientId: Int,

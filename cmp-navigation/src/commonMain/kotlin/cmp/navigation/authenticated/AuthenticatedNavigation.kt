@@ -13,11 +13,11 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.navigation
+import com.mifos.core.common.utils.Constants
 import com.mifos.feature.about.aboutDestination
 import com.mifos.feature.activate.activateDestination
 import com.mifos.feature.checker.inbox.task.navigation.checkerInboxTaskNavGraph
 import com.mifos.feature.client.navigation.navigateClientDetailsScreen
-import com.mifos.core.common.utils.Constants
 import com.mifos.feature.dataTable.navigation.dataTableNavGraph
 import com.mifos.feature.dataTable.navigation.navigateDataTableList
 import com.mifos.feature.dataTable.navigation.navigateToDataTable

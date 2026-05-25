@@ -9,8 +9,6 @@
  */
 package com.mifos.feature.loan.newLoanAccount.pages
 
-import com.mifos.room.entities.noncore.ColumnHeader
-
 /**
  * Type-safe value for a single editable cell of a datatable form step.
  *

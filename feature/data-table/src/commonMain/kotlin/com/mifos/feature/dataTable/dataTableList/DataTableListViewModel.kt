@@ -18,7 +18,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import co.touchlab.kermit.Logger.Companion.i
 import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DataState
@@ -80,7 +79,6 @@ class DataTableListViewModel(
     private val _dataTableList: MutableStateFlow<List<DataTableEntity>?> = MutableStateFlow(null)
     val dataTableList: StateFlow<List<DataTableEntity>?> = _dataTableList.asStateFlow()
 
-
     private val _formValues: MutableStateFlow<Map<Int, Map<String, Any>>> =
         MutableStateFlow(emptyMap())
     val formValues: StateFlow<Map<Int, Map<String, Any>>> = _formValues.asStateFlow()
@@ -108,7 +106,6 @@ class DataTableListViewModel(
         _dataTableListUiState.value = DataTableListUiState.Success()
     }
 
-
     fun updateFieldValue(tableIndex: Int, columnName: String, value: Any) {
         _formValues.update { current ->
             val tableMap = current[tableIndex].orEmpty().toMutableMap()
@@ -117,12 +114,11 @@ class DataTableListViewModel(
         }
     }
 
-
     fun processDataTable() {
         val dataTables = dataTableList.value.orEmpty()
         dataTablePayloadElements.clear()
 
-        dataTables.indices.forEach { index->
+        dataTables.indices.forEach { index ->
             val rawValues = _formValues.value[index].orEmpty()
             val data = buildPayloadMap(dataTables[index].columnHeaderData, rawValues)
             dataTablePayloadElements.add(
