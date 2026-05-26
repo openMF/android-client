@@ -142,8 +142,8 @@ fun DataTableListScreen(
                             val message = stringResource(uiState.message)
                             LaunchedEffect(key1 = message) {
                                 snackBarHostState.showSnackbar(message)
+                                onBackPressed()
                             }
-                            onBackPressed()
                         }
                     }
                 }
@@ -254,8 +254,9 @@ fun TableColumnHeader(
                     }
 
                     DataTableColumnType.CODELOOKUP, DataTableColumnType.CODEVALUE -> {
+                        val columnValues = columnHeader.columnValues
+                        val columnValueStrings = columnValues.map { it.value.orEmpty() }
                         var selectedValue by rememberSaveable(name) { mutableStateOf("") }
-                        val columnValueStrings = columnHeader.columnValues.map { it.value.orEmpty() }
 
                         Box(
                             modifier = Modifier
@@ -264,17 +265,15 @@ fun TableColumnHeader(
                         ) {
                             MifosTextFieldDropdown(
                                 value = selectedValue,
-                                onValueChanged = {
-                                    selectedValue = it
-                                    onFieldChanged(name, it)
-                                },
+                                onValueChanged = { selectedValue = it },
                                 label = name,
                                 modifier = Modifier.fillMaxWidth(),
                                 readOnly = true,
                                 options = columnValueStrings,
-                                onOptionSelected = { _, item ->
+                                onOptionSelected = { index, item ->
                                     selectedValue = item
-                                    onFieldChanged(name, item)
+                                    val selectedId = columnValues[index].id
+                                    onFieldChanged(name, selectedId ?: item)
                                 },
                             )
                         }

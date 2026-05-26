@@ -272,20 +272,20 @@ internal class NewLoanAccountViewModel(
                 if (state.loanOfficerIndex == -1) {
                     null
                 } else {
-                    state.loanTemplate?.loanOfficerOptions[state.loanOfficerIndex]?.id
+                    state.loanTemplate?.loanOfficerOptions?.getOrNull(state.loanOfficerIndex)?.id
                 },
                 principal = state.principalAmount.toDouble(),
                 clientId = state.clientId,
                 allowPartialPeriodInterestCalculation = state.isCheckedInterestPartialPeriod,
-                amortizationType = state.loanTemplate?.amortizationTypeOptions[state.nominalAmortizationIndex]?.id,
+                amortizationType = state.loanTemplate?.amortizationTypeOptions?.getOrNull(state.nominalAmortizationIndex)?.id,
                 dateFormat = DateHelper.SHORT_MONTH,
                 interestCalculationPeriodType = state.loanTemplate
-                    ?.interestCalculationPeriodTypeOptions[state.interestCalculationPeriodIndex]?.id,
+                    ?.interestCalculationPeriodTypeOptions?.getOrNull(state.interestCalculationPeriodIndex)?.id,
                 interestRatePerPeriod = state.nominalInterestRate.toDouble(),
                 interestType = state.loanTemplate
-                    ?.interestTypeOptions[state.nominalInterestMethodIndex]?.id,
+                    ?.interestTypeOptions?.getOrNull(state.nominalInterestMethodIndex)?.id,
                 loanTermFrequency = state.noOfRepayments * state.repaidEvery,
-                loanTermFrequencyType = state.loanTemplate?.termFrequencyTypeOptions[state.termFrequencyIndex]?.id,
+                loanTermFrequencyType = state.loanTemplate?.termFrequencyTypeOptions?.getOrNull(state.termFrequencyIndex)?.id,
                 loanType = "individual",
                 locale = "en",
                 numberOfRepayments = state.noOfRepayments,
@@ -295,37 +295,37 @@ internal class NewLoanAccountViewModel(
                 if (state.selectedDayIndex == -1) {
                     null
                 } else {
-                    state.loanTemplate?.repaymentFrequencyDaysOfWeekTypeOptions[state.selectedDayIndex]?.id
+                    state.loanTemplate?.repaymentFrequencyDaysOfWeekTypeOptions?.getOrNull(state.selectedDayIndex)?.id
                 },
                 repaymentFrequencyNthDayType =
                 if (state.selectedOnIndex == -1) {
                     null
                 } else {
-                    state.loanTemplate?.repaymentFrequencyNthDayTypeOptions[state.selectedOnIndex]?.id
+                    state.loanTemplate?.repaymentFrequencyNthDayTypeOptions?.getOrNull(state.selectedOnIndex)?.id
                 },
-                repaymentFrequencyType = state.loanTemplate?.termFrequencyTypeOptions[state.termFrequencyIndex]?.id,
+                repaymentFrequencyType = state.loanTemplate?.termFrequencyTypeOptions?.getOrNull(state.termFrequencyIndex)?.id,
                 expectedDisbursementDate = state.expectedDisbursementDate,
                 submittedOnDate = state.submissionDate,
                 loanPurposeId =
                 if (state.loanPurposeIndex == -1) {
                     null
                 } else {
-                    state.loanTemplate?.loanPurposeOptions[state.loanPurposeIndex]?.id
+                    state.loanTemplate?.loanPurposeOptions?.getOrNull(state.loanPurposeIndex)?.id
                 },
                 fundId =
                 if (state.fundIndex == -1) {
                     null
                 } else {
-                    state.loanTemplate?.fundOptions[state.fundIndex]?.id
+                    state.loanTemplate?.fundOptions?.getOrNull(state.fundIndex)?.id
                 },
                 linkAccountId =
                 if (state.linkSavingsIndex == -1) {
                     null
                 } else {
-                    state.loanTemplate?.accountLinkingOptions[state.linkSavingsIndex]?.id
+                    state.loanTemplate?.accountLinkingOptions?.getOrNull(state.linkSavingsIndex)?.id
                 },
                 transactionProcessingStrategyCode = state.loanTemplate
-                    ?.transactionProcessingStrategyOptions[state.repaymentStrategyIndex]?.code,
+                    ?.transactionProcessingStrategyOptions?.getOrNull(state.repaymentStrategyIndex)?.code,
                 externalId = state.externalId,
             )
             val realDataTables = state.loanTemplate?.dataTables?.filterNotNull().orEmpty()

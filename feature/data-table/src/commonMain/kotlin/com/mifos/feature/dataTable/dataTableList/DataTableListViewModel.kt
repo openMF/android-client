@@ -159,16 +159,18 @@ class DataTableListViewModel(
             .forEach { header ->
                 val name = header.dataTableColumnName ?: return@forEach
                 val raw = rawValues[name] ?: return@forEach
-                payload[name] = coerce(raw, header.columnDisplayType)
+                val coerced = coerce(raw, header.columnDisplayType) ?: return@forEach
+                payload[name] = coerced
             }
         return payload
     }
 
-    private fun coerce(value: Any, displayType: String?): Any {
+    private fun coerce(value: Any, displayType: String?): Any? {
         if (value !is String) return value
+        if (value.isBlank()) return null
         return when (displayType) {
-            DataTableColumnType.INTEGER -> value.toIntOrNull() ?: 0
-            DataTableColumnType.DECIMAL, DataTableColumnType.FLOAT -> value.toDoubleOrNull() ?: 0.0
+            DataTableColumnType.INTEGER -> value.toIntOrNull()
+            DataTableColumnType.DECIMAL, DataTableColumnType.FLOAT -> value.toDoubleOrNull()
             else -> value
         }
     }
