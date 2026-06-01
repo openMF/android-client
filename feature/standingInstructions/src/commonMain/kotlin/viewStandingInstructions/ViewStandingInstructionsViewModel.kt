@@ -1,0 +1,4 @@
+package viewStandingInstructions
+
+class ViewStandingInstructionsViewModel {
+}
