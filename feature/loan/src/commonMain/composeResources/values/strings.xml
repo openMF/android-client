@@ -475,4 +475,9 @@
     <string name="feature_loan_reschedule_fetch_failed">Failed to load reschedule history.</string>
     <string name="feature_loan_reschedule_approve_failed">Failed to approve reschedule.</string>
     <string name="feature_loan_reschedule_delete_failed">Failed to delete reschedule.</string>
+
+    <!-- Undo Loan Approval -->
+    <string name="feature_loan_undo_approval_note">Note</string>
+
+
 </resources>

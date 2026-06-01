@@ -11,6 +11,7 @@ package com.mifos.core.network.services
 
 import com.mifos.core.model.objects.account.loan.LoanApproval
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
+import com.mifos.core.model.objects.account.loan.LoanUndoApprovalRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRejectionRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRequest
@@ -195,5 +196,11 @@ interface LoanService {
     suspend fun rejectLoanReschedule(
         @Path("scheduleId") scheduleId: Int,
         @Body request: LoanRescheduleRejectionRequest,
+    ): HttpResponse
+
+    @POST(APIEndPoint.LOANS + "/{loanId}?command=undoApproval")
+    suspend fun undoLoanApproval(
+        @Path("loanId") loanId: Int,
+        @Body noteRequest: LoanUndoApprovalRequest,
     ): HttpResponse
 }
