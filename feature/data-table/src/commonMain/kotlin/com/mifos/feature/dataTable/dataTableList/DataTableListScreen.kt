@@ -207,7 +207,6 @@ fun TableColumnHeader(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-
         table.columnHeaderData
             .filter { it.columnPrimaryKey == false }
             .forEach { columnHeader ->
