@@ -16,7 +16,9 @@ package com.mifos.feature.loan.newLoanAccount.pages
 
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.back
+import androidclient.feature.loan.generated.resources.feature_loan_cancel
 import androidclient.feature.loan.generated.resources.feature_loan_charge_submit
+import androidclient.feature.loan.generated.resources.feature_loan_dialog_action_ok
 import androidclient.feature.loan.generated.resources.next
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -271,10 +273,12 @@ private fun DateFieldRow(
                         selectedMillis = millis
                         onDateSelected(DateHelper.getDateAsStringFromLong(millis))
                     }
-                }) { Text("OK") }
+                }) { Text(stringResource(Res.string.feature_loan_dialog_action_ok)) }
             },
             dismissButton = {
-                TextButton(onClick = { showDatePicker = false }) { Text("Cancel") }
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text(stringResource(Res.string.feature_loan_cancel))
+                }
             },
         ) {
             DatePicker(state = datePickerState)
@@ -282,7 +286,7 @@ private fun DateFieldRow(
     }
 
     MifosDatePickerTextField(
-        value = currentValue ?: DateHelper.getDateAsStringFromLong(selectedMillis),
+        value = currentValue ?: "",
         label = label,
         openDatePicker = { showDatePicker = true },
     )
@@ -316,13 +320,12 @@ private fun DropdownFieldRow(
     currentId: Int?,
     onIdSelected: (Int) -> Unit,
 ) {
-    val options = header.columnValues.mapNotNull { it.value }
-    val ids = header.columnValues.map { it.id }
-    val currentDisplay = remember(currentId, options, ids) {
-        currentId?.let { id ->
-            val pos = ids.indexOf(id)
-            if (pos >= 0) options.getOrNull(pos) else null
-        }.orEmpty()
+    val filteredPairs = remember(header) {
+        header.columnValues.mapNotNull { cv -> cv.value?.let { v -> cv.id to v } }
+    }
+    val options = filteredPairs.map { it.second }
+    val currentDisplay = remember(currentId, filteredPairs) {
+        currentId?.let { id -> filteredPairs.firstOrNull { it.first == id }?.second }.orEmpty()
     }
 
     Box(
@@ -338,7 +341,7 @@ private fun DropdownFieldRow(
             readOnly = true,
             options = options,
             onOptionSelected = { index, _ ->
-                ids.getOrNull(index)?.let { onIdSelected(it) }
+                filteredPairs.getOrNull(index)?.first?.let { onIdSelected(it) }
             },
         )
     }

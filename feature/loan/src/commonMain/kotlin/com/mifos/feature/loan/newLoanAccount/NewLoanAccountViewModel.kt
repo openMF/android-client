@@ -252,7 +252,6 @@ internal class NewLoanAccountViewModel(
 
             NewLoanAccountAction.SubmitLoanApplication -> submitLoanApplication()
 
-            // GAP-DT-013: inline datatable form input — merge into state.datatableValues
             is NewLoanAccountAction.UpdateDatatableField -> {
                 mutableStateFlow.update { current ->
                     val tableMap = current.datatableValues[action.tableIndex].orEmpty().toMutableMap()
@@ -1200,7 +1199,8 @@ private fun buildDatatablePayloadMap(
         val name = header.dataTableColumnName ?: return@forEach
         if (name in SYSTEM_COLUMNS) return@forEach
         val raw = rawValues[name] ?: return@forEach
-        payload[name] = header.encodePayloadValue(raw)
+        val encoded = header.encodePayloadValue(raw) ?: return@forEach
+        payload[name] = encoded
     }
     return payload
 }
@@ -1222,13 +1222,13 @@ private val SYSTEM_COLUMNS = setOf(
  * Convert a typed form value into the primitive shape Fineract expects for this
  * column. Numeric coercion lives here (and only here) — the form layer stores all
  * text inputs as [DatatableFieldValue.Text]; we parse to Int/Double per column
- * display type at submit time. Unparseable input falls back to 0 / 0.0 (same
- * behaviour as the prior `coerceDatatableValue` helper).
+ * display type at submit time. Empty or unparseable numeric input returns null
+ * so the caller omits the field rather than serializing it as 0 / 0.0.
  */
-private fun ColumnHeader.encodePayloadValue(value: DatatableFieldValue): Any = when (value) {
+private fun ColumnHeader.encodePayloadValue(value: DatatableFieldValue): Any? = when (value) {
     is DatatableFieldValue.Text -> when (columnDisplayType) {
-        "INTEGER" -> value.text.toIntOrNull() ?: 0
-        "DECIMAL", "FLOAT" -> value.text.toDoubleOrNull() ?: 0.0
+        "INTEGER" -> value.text.toIntOrNull()
+        "DECIMAL", "FLOAT" -> value.text.toDoubleOrNull()
         else -> value.text
     }
     is DatatableFieldValue.Bool -> value.checked

@@ -30,7 +30,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -208,17 +207,13 @@ fun TableColumnHeader(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        // GAP-DT-004: filter to user-editable columns. `columnPrimaryKey == false`
-        // skips Fineract system columns (e.g. loan_id, created_at, updated_at)
-        // and `null` placeholders. The legacy filter `!= null` mistakenly kept
-        // the primary-key column itself.
+
         table.columnHeaderData
             .filter { it.columnPrimaryKey == false }
             .forEach { columnHeader ->
                 val name = columnHeader.dataTableColumnName ?: return@forEach
                 when (columnHeader.columnDisplayType) {
                     DataTableColumnType.STRING, DataTableColumnType.TEXT -> {
-                        // GAP-DT-006: stateful input — lift value to ViewModel via onFieldChanged.
                         var value by rememberSaveable(name) { mutableStateOf("") }
                         MifosOutlinedTextField(
                             value = value,
@@ -290,11 +285,6 @@ fun TableColumnHeader(
                         }
                         val datePickerState = rememberDatePickerState(
                             initialSelectedDateMillis = selectedDate,
-                            selectableDates = object : SelectableDates {
-                                override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                                    return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
-                                }
-                            },
                         )
 
                         if (showDatePicker) {
