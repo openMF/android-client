@@ -1,3 +1,12 @@
+/*
+ * Copyright 2026 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
+ */
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.common.utils.Page
@@ -6,16 +15,27 @@ import com.mifos.core.network.dto.standingInstruction.StandingInstructionDto
 import kotlinx.coroutines.flow.Flow
 
 class DataManagerStandingInstructions(
-    private val mBaseApiManager: BaseApiManager
+    private val mBaseApiManager: BaseApiManager,
 ) {
     fun retrieveListStandingInstructions(
+        clientId: Long,
+        clientName: String,
         fromAccountType: Int,
         fromAccountId: Long,
-    ) : Flow<Page<StandingInstructionDto>> {
-
+        limit: Int,
+        offset: Int,
+        locale: String = "en",
+        dateFormat: String = "dd MMMM yyyy",
+    ): Flow<Page<StandingInstructionDto>> {
         return mBaseApiManager.standingInstructionService.getStandingInstructions(
+            clientId = clientId,
+            clientName = clientName,
             fromAccountType = fromAccountType,
-            fromAccountId = fromAccountId
+            fromAccountId = fromAccountId,
+            locale = locale,
+            dateFormat = dateFormat,
+            limit = limit,
+            offset = offset,
         )
     }
 }

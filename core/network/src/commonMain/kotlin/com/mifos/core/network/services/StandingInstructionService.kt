@@ -1,3 +1,12 @@
+/*
+ * Copyright 2026 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
+ */
 package com.mifos.core.network.services
 
 import com.mifos.core.common.utils.Page
@@ -19,7 +28,13 @@ interface StandingInstructionService {
      */
     @GET(APIEndPoint.STANDING_INSTRUCTIONS)
     fun getStandingInstructions(
-        @Query("fromAccountType") fromAccountType: Int,
+        @Query("clientId") clientId: Long,
+        @Query("clientName") clientName: String,
         @Query("fromAccountId") fromAccountId: Long,
+        @Query("fromAccountType") fromAccountType: Int,
+        @Query("locale") locale: String = "en",
+        @Query("dateFormat") dateFormat: String = "dd MMMM yyyy",
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int,
     ): Flow<Page<StandingInstructionDto>>
 }

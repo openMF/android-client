@@ -21,7 +21,7 @@ import template.core.base.database.PrimaryKey
     inheritSuperIndices = false,
     primaryKeys = [],
     ignoredColumns = [],
-    foreignKeys = []
+    foreignKeys = [],
 )
 @Serializable
 @Parcelize

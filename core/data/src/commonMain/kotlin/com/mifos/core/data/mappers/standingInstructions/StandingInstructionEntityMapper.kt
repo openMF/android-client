@@ -1,3 +1,12 @@
+/*
+ * Copyright 2026 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
+ */
 package com.mifos.core.data.mappers.standingInstructions
 
 import com.mifos.core.model.objects.standingInstructions.StandingInstruction
@@ -20,9 +29,9 @@ fun StandingInstructionDto.toEntity(): StandingInstructionEntity {
             StandingInstructionAccountEntity(
                 it.id,
                 it.accountNo,
-                it.productName
+                it.productName,
             )
-        }
+        },
     )
 }
 
@@ -34,14 +43,14 @@ fun StandingInstructionEntity.toDomain(): StandingInstruction {
         fromClient = this.fromClient?.toDomain(),
         toClient = this.toClient?.toDomain(),
         fromAccount = this.fromAccount?.toDomain(),
-        toAccount = this.toAccount?.toDomain()
+        toAccount = this.toAccount?.toDomain(),
     )
 }
 
 fun StandingInstructionClientEntity.toDomain(): StandingInstructionClient {
     return StandingInstructionClient(
         id = this.id,
-        displayName = this.displayName
+        displayName = this.displayName,
     )
 }
 
@@ -49,6 +58,6 @@ fun StandingInstructionAccountEntity.toDomain(): StandingInstructionAccount {
     return StandingInstructionAccount(
         id = this.id,
         accountNo = this.accountNo,
-        productName = this.productName
+        productName = this.productName,
     )
 }
