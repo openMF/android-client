@@ -13,7 +13,7 @@ plugins {
 }
 
 android {
-    namespace = "com.mifos.feature.standing_instructions"
+    namespace = "com.mifos.feature.standing_instruction"
 }
 
 kotlin {

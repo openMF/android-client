@@ -33,6 +33,7 @@ import androidclient.feature.savings.generated.resources.feature_savings_total_w
 import androidclient.feature.savings.generated.resources.feature_savings_transaction_id
 import androidclient.feature.savings.generated.resources.feature_savings_transaction_type
 import androidclient.feature.savings.generated.resources.feature_savings_transactions
+import androidclient.feature.savings.generated.resources.feature_savings_view_standing_instructions
 import androidclient.feature.savings.generated.resources.feature_savings_withdrawal
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -108,6 +109,7 @@ internal fun SavingsAccountSummaryScreen(
     onWithdrawButtonClicked: (savings: SavingsAccountWithAssociationsEntity, type: SavingAccountDepositTypeEntity?) -> Unit,
     approveSavings: (type: SavingAccountDepositTypeEntity?, accountNumber: Int) -> Unit,
     activateSavings: (type: SavingAccountDepositTypeEntity?, accountNumber: Int) -> Unit,
+    onViewStandingInstructions: (clientId: Long, clientName: String, accountId: Long, accountType: Int) -> Unit,
     viewmodel: SavingsAccountSummaryViewModel = koinViewModel(),
 ) {
     val uiState by viewmodel.savingsAccountSummaryUiState.collectAsStateWithLifecycle()
@@ -139,6 +141,17 @@ internal fun SavingsAccountSummaryScreen(
         activateSavings = {
             activateSavings.invoke(savingsAccountType, accountId)
         },
+        onViewStandingInstructions = {
+            val currentState = uiState
+            if (currentState is SavingsAccountSummaryUiState.ShowSavingAccount) {
+                onViewStandingInstructions.invoke(
+                    currentState.savingsAccountWithAssociations.clientId?.toLong() ?: 0L,
+                    currentState.savingsAccountWithAssociations.clientName ?: "",
+                    accountId.toLong(),
+                    1,
+                )
+            }
+        },
     )
 }
 
@@ -148,6 +161,7 @@ internal fun SavingsAccountSummaryScreen(
     navigateBack: () -> Unit,
     onRetry: () -> Unit,
     loadMoreSavingsAccountInfo: () -> Unit,
+    onViewStandingInstructions: () -> Unit,
     loadDocuments: () -> Unit,
     onDepositButtonClicked: (savings: SavingsAccountWithAssociationsEntity) -> Unit,
     onWithdrawButtonClicked: (savings: SavingsAccountWithAssociationsEntity) -> Unit,
@@ -186,6 +200,13 @@ internal fun SavingsAccountSummaryScreen(
                         onClick = {
                             showDropdown = false
                             loadDocuments.invoke()
+                        },
+                    )
+                    MifosMenuDropDownItem(
+                        option = stringResource(Res.string.feature_savings_view_standing_instructions),
+                        onClick = {
+                            showDropdown = false
+                            onViewStandingInstructions.invoke()
                         },
                     )
                 }
@@ -676,6 +697,7 @@ private fun PreviewSavingsAccountSummaryScreen(
         onDepositButtonClicked = { _ -> },
         onWithdrawButtonClicked = { _ -> },
         approveSavings = { },
+        onViewStandingInstructions = {},
     ) {
     }
 }

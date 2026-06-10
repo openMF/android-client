@@ -7,12 +7,12 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.objects.standingInstructions
+package com.mifos.feature.standingInstructions.di
 
-import kotlinx.serialization.Serializable
+import com.mifos.feature.standingInstructions.viewStandingInstructions.ViewStandingInstructionsViewModel
+import org.koin.core.module.dsl.viewModelOf
+import org.koin.dsl.module
 
-@Serializable
-data class StandingInstructionClient(
-    val id: Int? = null,
-    val displayName: String? = null,
-)
+val StandingInstructionsModule = module {
+    viewModelOf(::ViewStandingInstructionsViewModel)
+}

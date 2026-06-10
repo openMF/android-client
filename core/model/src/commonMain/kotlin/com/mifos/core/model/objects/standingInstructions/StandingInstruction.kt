@@ -9,6 +9,9 @@
  */
 package com.mifos.core.model.objects.standingInstructions
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class StandingInstruction(
     val id: Int,
     val amount: Double? = null,

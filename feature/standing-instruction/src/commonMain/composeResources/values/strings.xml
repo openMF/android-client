@@ -17,5 +17,6 @@
     <string name="feature_standing_instructions_table_header_beneficiary">Beneficiary</string>
     <string name="feature_standing_instructions_table_header_validity">Validity</string>
     <string name="feature_standing_instructions_standing_instructions">Standing Instructions</string>
+    <string name="feature_standing_instructions_no_standing_instructions_found_message">No Standing Instructions Found</string>
 
 </resources>

@@ -12,6 +12,7 @@ package com.mifos.feature.standingInstructions.viewStandingInstructions
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.mifos.feature.standingInstruction.viewStandingInstructions.ViewStandingInstructionsScreen
 import kotlinx.serialization.Serializable
 
 @Serializable

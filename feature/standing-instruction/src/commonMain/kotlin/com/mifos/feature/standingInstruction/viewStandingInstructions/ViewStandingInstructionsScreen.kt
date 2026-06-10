@@ -7,17 +7,18 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.feature.standingInstructions.viewStandingInstructions
+package com.mifos.feature.standingInstruction.viewStandingInstructions
 
-import androidclient.feature.standinginstructions.generated.resources.Res
-import androidclient.feature.standinginstructions.generated.resources.feature_standing_instructions_standing_instructions
-import androidclient.feature.standinginstructions.generated.resources.feature_standing_instructions_table_header_amount
-import androidclient.feature.standinginstructions.generated.resources.feature_standing_instructions_table_header_beneficiary
-import androidclient.feature.standinginstructions.generated.resources.feature_standing_instructions_table_header_client
-import androidclient.feature.standinginstructions.generated.resources.feature_standing_instructions_table_header_client_id
-import androidclient.feature.standinginstructions.generated.resources.feature_standing_instructions_table_header_from_account
-import androidclient.feature.standinginstructions.generated.resources.feature_standing_instructions_table_header_to_account
-import androidclient.feature.standinginstructions.generated.resources.feature_standing_instructions_table_header_validity
+import androidclient.feature.standing_instruction.generated.resources.Res
+import androidclient.feature.standing_instruction.generated.resources.feature_standing_instructions_no_standing_instructions_found_message
+import androidclient.feature.standing_instruction.generated.resources.feature_standing_instructions_standing_instructions
+import androidclient.feature.standing_instruction.generated.resources.feature_standing_instructions_table_header_amount
+import androidclient.feature.standing_instruction.generated.resources.feature_standing_instructions_table_header_beneficiary
+import androidclient.feature.standing_instruction.generated.resources.feature_standing_instructions_table_header_client
+import androidclient.feature.standing_instruction.generated.resources.feature_standing_instructions_table_header_client_id
+import androidclient.feature.standing_instruction.generated.resources.feature_standing_instructions_table_header_from_account
+import androidclient.feature.standing_instruction.generated.resources.feature_standing_instructions_table_header_to_account
+import androidclient.feature.standing_instruction.generated.resources.feature_standing_instructions_table_header_validity
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,7 +48,14 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTableRow
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.feature.standingInstructions.viewStandingInstructions.StandingInstructionRowData
+import com.mifos.feature.standingInstructions.viewStandingInstructions.StandingInstructionTableData
+import com.mifos.feature.standingInstructions.viewStandingInstructions.ViewStandingInstructionsAction
+import com.mifos.feature.standingInstructions.viewStandingInstructions.ViewStandingInstructionsEvent
+import com.mifos.feature.standingInstructions.viewStandingInstructions.ViewStandingInstructionsState
+import com.mifos.feature.standingInstructions.viewStandingInstructions.ViewStandingInstructionsViewModel
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -163,23 +171,31 @@ private fun ViewStandingInstructionsData(
             .padding(vertical = DesignToken.padding.large),
         horizontalAlignment = Alignment.Start,
     ) {
-        stickyHeader {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(scrollState),
-            ) {
-                StandingInstructionTableHeader(columnWidths)
+        if (tableData.rows.isNotEmpty()) {
+            stickyHeader {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(scrollState),
+                ) {
+                    StandingInstructionTableHeader(columnWidths)
+                }
             }
-        }
-
-        items(tableData.rows) { row ->
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(scrollState),
-            ) {
-                StandingInstructionRow(row, columnWidths)
+            items(tableData.rows) { row ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(scrollState),
+                ) {
+                    StandingInstructionRow(row, columnWidths)
+                }
+            }
+        } else {
+            item {
+                MifosEmptyCard(
+                    msg = stringResource(Res.string.feature_standing_instructions_no_standing_instructions_found_message),
+                    title = stringResource(Res.string.feature_standing_instructions_no_standing_instructions_found_message),
+                )
             }
         }
     }

@@ -9,7 +9,7 @@
  */
 package com.mifos.core.network.services
 
-import com.mifos.core.common.utils.Page
+import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.network.dto.standingInstruction.StandingInstructionDto
 import com.mifos.room.basemodel.APIEndPoint
 import de.jensklingenberg.ktorfit.http.GET
