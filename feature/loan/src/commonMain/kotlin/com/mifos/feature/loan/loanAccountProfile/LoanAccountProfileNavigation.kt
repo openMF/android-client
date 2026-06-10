@@ -31,7 +31,7 @@ fun NavGraphBuilder.loanProfileAccountDestination(
     navigateToNotes: (Int) -> Unit,
     approveLoan: (Int, LoanWithAssociationsEntity) -> Unit,
     onRepaymentClick: (LoanWithAssociationsEntity) -> Unit,
-    navigateToTransferScreen: (loanId: Int, accountNumber: String, clientId: Int, currencyCode: String, officeId: Int) -> Unit,
+    navigateToTransferScreen: (loanId: Int) -> Unit,
     onCreditBalanceRefundClick: (LoanWithAssociationsEntity) -> Unit,
 ) {
     composable<LoanAccountRoute> {
