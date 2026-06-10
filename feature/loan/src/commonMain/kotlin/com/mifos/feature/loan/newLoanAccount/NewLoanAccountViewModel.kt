@@ -1295,12 +1295,6 @@ sealed interface NewLoanAccountAction {
     data object RepaymentScheduler : NewLoanAccountAction
     data object SubmitLoanApplication : NewLoanAccountAction
 
-    /**
-     * GAP-DT-013: a field on one of the inline datatable steps changed.
-     * `tableIndex` is into `loanTemplate.dataTables.filterNotNull()`.
-     * `columnName` matches the JSON `columnName` (used verbatim in submit payload).
-     * `value` carries the typed input via [DatatableFieldValue] — Text / Bool / Code.
-     */
     data class UpdateDatatableField(
         val tableIndex: Int,
         val columnName: String,
