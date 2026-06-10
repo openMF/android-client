@@ -250,7 +250,6 @@ class DataManagerLoan(
     suspend fun getLoanRefundDetails(loanId: Int): LoanRefundDetailsEntity? {
         return when (prefManager.userInfo.first().userStatus) {
             false -> {
-                // Online mode: fetch from API and cache
                 val loan = mBaseApiManager.loanService.getLoanByIdWithAllAssociations(loanId)
                 val template = mBaseApiManager.loanService
                     .getLoanTransactionTemplate(loanId, APIEndPoint.CREDIT_BALANCE_REFUND)
@@ -259,11 +258,10 @@ class DataManagerLoan(
                 val formattedDate = DateHelper.getDateAsString(template.date)
 
                 loan.toLoanRefundDetailsEntity(formattedDate).also {
-                    loanDaoHelper.saveLoanRefundDetails(it) // Cache for offline
+                    loanDaoHelper.saveLoanRefundDetails(it)
                 }
             }
             true -> {
-                // Offline mode: read from cache
                 loanDaoHelper.getLoanRefundDetails(loanId).first()
             }
         }

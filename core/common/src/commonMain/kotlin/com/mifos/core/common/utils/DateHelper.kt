@@ -256,18 +256,6 @@ object DateHelper {
     }
 
     /**
-     * Input timestamp in milliseconds and returns date as "dd MMMM yyyy"
-     * Example: 1741430400000 -> "08 March 2025"
-     */
-    @OptIn(ExperimentalTime::class)
-    fun getDateMonthYearStringFromLong(timeInMillis: Long): String {
-        val dateTime = Instant.fromEpochMilliseconds(timeInMillis)
-            .toLocalDateTime(TimeZone.currentSystemDefault())
-
-        return getDateMonthYearString(listOf(dateTime.day, dateTime.month.number, dateTime.year))
-    }
-
-    /**
      * Handles the specific format "yyyy-MM-dd HH:mm:ss.SSSSSS"
      * For example "2024-09-19 05:41:18.558995"
      * Possible outputs depending on current date:

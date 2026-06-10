@@ -17,5 +17,6 @@ import kotlinx.coroutines.flow.Flow
  * Created by Aditya Gupta on 08/08/23.
  */
 interface LoanAccountSummaryRepository {
+
     fun getLoanById(loanId: Int): Flow<DataState<LoanWithAssociationsEntity?>>
 }
