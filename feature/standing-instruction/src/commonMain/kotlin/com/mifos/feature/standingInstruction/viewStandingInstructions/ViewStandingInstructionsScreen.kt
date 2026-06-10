@@ -28,6 +28,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -46,6 +48,7 @@ import com.mifos.core.designsystem.component.MifosBasicDialog
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTableRow
+import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosEmptyCard
@@ -98,6 +101,14 @@ internal fun ViewStandingInstructionsContent(
         title = stringResource(Res.string.feature_standing_instructions_standing_instructions),
         snackbarHostState = snackbarHostState,
         onBackPressed = { onAction(ViewStandingInstructionsAction.OnNavigateBack) },
+        actions = {
+            IconButton(onClick = { onAction(ViewStandingInstructionsAction.Retry) }) {
+                Icon(
+                    imageVector = MifosIcons.Refresh,
+                    contentDescription = null,
+                )
+            }
+        },
     ) {
         Box(modifier = Modifier.padding(it)) {
             when (state.dataState) {
