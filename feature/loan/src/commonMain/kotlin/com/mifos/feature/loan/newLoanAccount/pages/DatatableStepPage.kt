@@ -111,8 +111,6 @@ fun DatatableStepPage(
                     header = header,
                     currentValue = values[header.dataTableColumnName],
                     onValueChange = { v ->
-                        // Submit payload uses the RAW columnName (incl. _cd_ suffix);
-                        // that's what Fineract expects on POST /loans.datatables[].data.
                         header.dataTableColumnName?.let { onValueChange(it, v) }
                     },
                 )
@@ -220,8 +218,6 @@ private fun DatatableField(
         "CODELOOKUP", "CODEVALUE" -> DropdownFieldRow(
             label = label,
             header = header,
-            // Stored value is the code id (Int). The rendered text is the display string
-            // looked up from header.columnValues.
             currentId = (currentValue as? DatatableFieldValue.Code)?.id,
             onIdSelected = { onValueChange(DatatableFieldValue.Code(it)) },
         )

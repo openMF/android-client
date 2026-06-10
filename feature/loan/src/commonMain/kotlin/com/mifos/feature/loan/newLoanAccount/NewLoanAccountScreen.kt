@@ -168,8 +168,6 @@ private fun NewLoanAccountScaffold(
                             )
                         },
                         onAction = onAction,
-                        // Always false in current layout (Preview always follows
-                        // datatables). Kept for future ordering flexibility.
                         isLastStep = false,
                     )
                 },

@@ -1185,11 +1185,6 @@ private fun buildDatatablePayloadMap(
     headers: List<ColumnHeader?>,
     rawValues: Map<String, DatatableFieldValue>,
 ): Map<String, Any> {
-    // Fineract parses datatable date columns using `dateFormat` from the same map.
-    // The DatatableStepPage date widget renders via `DateHelper.getDateAsStringFromLong`
-    // which formats as `dd-MM-yyyy` (i.e. DateHelper.SHORT_MONTH). The two MUST match
-    // — using ApiDateFormatter.DATE_FORMAT ("dd MMMM yyyy") here was rejected by the
-    // server with "invalid value" for product 7's CONDICION.FECHA field.
     val payload = mutableMapOf<String, Any>(
         "dateFormat" to DateHelper.SHORT_MONTH,
         "locale" to Constants.LOCALE_EN,

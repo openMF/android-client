@@ -101,7 +101,6 @@ class DataTableListViewModel(
             Constants.GROUP_LOAN -> groupLoanPayload = payload as GroupLoanPayload?
             Constants.CREATE_CLIENT -> clientPayload = payload as ClientPayloadEntity?
         }
-        // Seed an empty form map per table so the screen can read collected values.
         _formValues.value = dataTables.indices.associateWith { emptyMap() }
         _dataTableListUiState.value = DataTableListUiState.Success()
     }

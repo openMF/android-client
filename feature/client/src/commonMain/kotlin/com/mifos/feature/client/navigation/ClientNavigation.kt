@@ -520,7 +520,6 @@ fun NavGraphBuilder.clientSurveyQuestionRoute(
 fun NavGraphBuilder.createClientRoute(
     onBackPressed: () -> Unit,
     navigateToClientDetails: (Int) -> Unit,
-    // GAP-DT-002: KFunction3 (was KFunction4) — no pre-built FormWidgetDTO list.
     hasDatatables: KFunction3<List<DataTableEntity>, Any?, Int, Unit>,
 ) {
     composable(

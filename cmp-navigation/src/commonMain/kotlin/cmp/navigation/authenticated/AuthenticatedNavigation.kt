@@ -165,9 +165,6 @@ internal fun NavGraphBuilder.authenticatedGraph(
 
         addLoanAccountScreen(
             onBackPressed = navController::popBackStack,
-            // GAP-DT-001: wire dataTable callback to DataTableListScreen so
-            // product-specific datatables collected on the loan template are
-            // rendered as additional steps before the loan is created.
             dataTable = { dataTables, payload ->
                 navController.navigateDataTableList(
                     dataTableList = dataTables,
