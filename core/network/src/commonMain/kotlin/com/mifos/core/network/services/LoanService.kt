@@ -78,7 +78,7 @@ interface LoanService {
     suspend fun submitCreditBalanceRefund(
         @Path("loanId") loanId: Int,
         @Body request: CreditBalanceRefundRequestDto?,
-    ): LoanRepaymentResponseEntity
+    ): HttpResponse
 
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=repaymentSchedule")
     fun getLoanRepaymentSchedule(@Path("loanId") loanId: Int): Flow<LoanWithAssociationsEntity>

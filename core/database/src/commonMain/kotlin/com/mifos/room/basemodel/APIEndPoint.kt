@@ -44,5 +44,6 @@ object APIEndPoint {
 
     const val FIXED_DEPOSIT = "fixeddepositaccounts"
     const val ACCOUNT_TRANSFERS = "accounttransfers"
+    const val CREDIT_BALANCE_REFUND = "creditBalanceRefund"
     const val RESCHEDULE_LOANS = "rescheduleloans"
 }

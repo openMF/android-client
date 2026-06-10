@@ -27,6 +27,7 @@ import com.mifos.room.dao.SurveyDao
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.ActualDisbursementDateEntity
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
+import com.mifos.room.entities.accounts.loans.LoanRefundDetailsEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
@@ -148,6 +149,7 @@ import com.mifos.room.typeconverters.CustomTypeConverters
         SavingProductOptionsEntity::class,
         StaffOptionsEntity::class,
         LoanRepaymentTemplateEntity::class,
+        LoanRefundDetailsEntity::class,
         // zip models package
         PaymentTypeOptionEntity::class,
     ],

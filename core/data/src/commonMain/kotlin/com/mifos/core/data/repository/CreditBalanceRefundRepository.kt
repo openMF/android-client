@@ -10,9 +10,9 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.model.objects.account.loan.LoanRefundDetails
-import com.mifos.core.model.objects.loan.CreditBalanceRefundInput
-import kotlinx.coroutines.flow.Flow
+import com.mifos.core.model.objects.account.loan.creditBalanceRefund.CreditBalanceRefundInput
+import com.mifos.core.model.objects.account.loan.creditBalanceRefund.CreditBalanceRefundResponse
+import com.mifos.core.model.objects.account.loan.creditBalanceRefund.LoanRefundDetails
 
 /**
  * Repository interface for Credit Balance Refund operations.
@@ -27,7 +27,7 @@ interface CreditBalanceRefundRepository {
      * @param loanId The ID of the loan account
      * @return Flow of DataState wrapping the loan details
      */
-    fun getLoanById(loanId: Int): Flow<DataState<LoanRefundDetails?>>
+    suspend fun getLoanById(loanId: Int): DataState<LoanRefundDetails?>
 
     /**
      * Submits a credit balance refund transaction for a loan account.
@@ -40,5 +40,5 @@ interface CreditBalanceRefundRepository {
     suspend fun submitRefund(
         loanId: Int,
         input: CreditBalanceRefundInput,
-    ): DataState<Unit>
+    ): DataState<CreditBalanceRefundResponse>
 }

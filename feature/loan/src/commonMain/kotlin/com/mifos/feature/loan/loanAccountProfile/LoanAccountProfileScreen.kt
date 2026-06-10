@@ -99,7 +99,6 @@ internal fun LoanAccountProfileScreen(
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    // Refresh data when screen resumes (e.g., after returning from credit balance refund)
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {

@@ -9,10 +9,12 @@
  */
 package com.mifos.core.data.mappers.loan
 
-import com.mifos.core.model.objects.account.loan.LoanRefundDetails
-import com.mifos.core.model.objects.loan.CreditBalanceRefundInput
+import com.mifos.core.model.objects.account.loan.creditBalanceRefund.CreditBalanceRefundInput
+import com.mifos.core.model.objects.account.loan.creditBalanceRefund.CreditBalanceRefundResponse
+import com.mifos.core.model.objects.account.loan.creditBalanceRefund.LoanRefundDetails
 import com.mifos.core.network.dto.loan.CreditBalanceRefundRequestDto
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.core.network.dto.loan.CreditBalanceRefundResponseDto
+import com.mifos.room.entities.accounts.loans.LoanRefundDetailsEntity
 
 /**
  * Maps domain input model to network DTO for credit balance refund requests.
@@ -27,13 +29,25 @@ fun CreditBalanceRefundInput.toDto(): CreditBalanceRefundRequestDto = CreditBala
 )
 
 /**
- * Maps database entity to domain model for credit balance refund.
+ * Maps Room entity to domain model.
+ * Used in repository when reading from database (offline or online).
  */
-fun LoanWithAssociationsEntity.toRefundDetails(): LoanRefundDetails = LoanRefundDetails(
-    id = id,
+fun LoanRefundDetailsEntity.toDomain(): LoanRefundDetails = LoanRefundDetails(
+    id = loanId,
     accountNo = accountNo,
     clientName = clientName,
     totalOverpaid = totalOverpaid,
-    currencyCode = currency.code,
-    decimalPlaces = currency.decimalPlaces,
+    transactionDate = defaultTransactionDate,
+    currencyCode = currencyCode,
+    decimalPlaces = decimalPlaces,
 )
+
+/**
+ * Maps network DTO response to domain model.
+ */
+fun CreditBalanceRefundResponseDto.toDomain(): CreditBalanceRefundResponse {
+    return CreditBalanceRefundResponse(
+        clientId = clientId,
+        transactionId = resourceId,
+    )
+}

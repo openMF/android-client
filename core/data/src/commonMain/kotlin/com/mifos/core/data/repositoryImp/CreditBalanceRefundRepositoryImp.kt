@@ -10,19 +10,16 @@
 package com.mifos.core.data.repositoryImp
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
+import com.mifos.core.data.mappers.loan.toDomain
 import com.mifos.core.data.mappers.loan.toDto
-import com.mifos.core.data.mappers.loan.toRefundDetails
 import com.mifos.core.data.repository.CreditBalanceRefundRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.data.util.runAsDataState
 import com.mifos.core.data.util.withNetworkCheck
-import com.mifos.core.model.objects.account.loan.LoanRefundDetails
-import com.mifos.core.model.objects.loan.CreditBalanceRefundInput
+import com.mifos.core.model.objects.account.loan.creditBalanceRefund.CreditBalanceRefundInput
+import com.mifos.core.model.objects.account.loan.creditBalanceRefund.CreditBalanceRefundResponse
+import com.mifos.core.model.objects.account.loan.creditBalanceRefund.LoanRefundDetails
 import com.mifos.core.network.datamanager.DataManagerLoan
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 import template.core.base.common.manager.DispatcherManager
 
 /**
@@ -43,12 +40,11 @@ class CreditBalanceRefundRepositoryImp(
      * Uses [withNetworkCheck] to ensure network availability before fetching.
      * Maps the entity to domain model [LoanRefundDetails].
      */
-    override fun getLoanById(loanId: Int): Flow<DataState<LoanRefundDetails?>> {
-        return networkMonitor.withNetworkCheck(
-            dataManagerLoan.getLoanById(loanId)
-                .map { it.toRefundDetails() }
-                .asDataStateFlow(),
-        ).flowOn(dispatcher.io)
+    override suspend fun getLoanById(loanId: Int): DataState<LoanRefundDetails?> {
+        return runAsDataState(networkMonitor, dispatcher.io) {
+            val entity = dataManagerLoan.getLoanRefundDetails(loanId)
+            entity?.toDomain()
+        }
     }
 
     /**
@@ -64,9 +60,10 @@ class CreditBalanceRefundRepositoryImp(
     override suspend fun submitRefund(
         loanId: Int,
         input: CreditBalanceRefundInput,
-    ): DataState<Unit> {
+    ): DataState<CreditBalanceRefundResponse> {
         return runAsDataState(networkMonitor, dispatcher.io) {
-            dataManagerLoan.submitCreditBalanceRefund(loanId, input.toDto())
+            val responseDto = dataManagerLoan.submitCreditBalanceRefund(loanId, input.toDto())
+            responseDto.toDomain()
         }
     }
 }

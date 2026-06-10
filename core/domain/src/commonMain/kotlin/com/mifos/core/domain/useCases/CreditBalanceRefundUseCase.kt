@@ -11,9 +11,9 @@ package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.CreditBalanceRefundRepository
-import com.mifos.core.model.objects.account.loan.LoanRefundDetails
-import com.mifos.core.model.objects.loan.CreditBalanceRefundInput
-import kotlinx.coroutines.flow.Flow
+import com.mifos.core.model.objects.account.loan.creditBalanceRefund.CreditBalanceRefundInput
+import com.mifos.core.model.objects.account.loan.creditBalanceRefund.CreditBalanceRefundResponse
+import com.mifos.core.model.objects.account.loan.creditBalanceRefund.LoanRefundDetails
 
 /**
  * Use case for credit balance refund operations.
@@ -28,7 +28,7 @@ class CreditBalanceRefundUseCase(
      * @param loanId The ID of the loan account
      * @return Flow of DataState wrapping the loan refund details
      */
-    fun getLoanRefundDetails(loanId: Int): Flow<DataState<LoanRefundDetails?>> {
+    suspend fun getLoanRefundDetails(loanId: Int): DataState<LoanRefundDetails?> {
         return repository.getLoanById(loanId)
     }
 
@@ -39,7 +39,7 @@ class CreditBalanceRefundUseCase(
      * @param input The refund input containing transaction details
      * @return DataState wrapping Unit on success or error
      */
-    suspend fun submitRefund(loanId: Int, input: CreditBalanceRefundInput): DataState<Unit> {
+    suspend fun submitRefund(loanId: Int, input: CreditBalanceRefundInput): DataState<CreditBalanceRefundResponse> {
         return repository.submitRefund(loanId, input)
     }
 }

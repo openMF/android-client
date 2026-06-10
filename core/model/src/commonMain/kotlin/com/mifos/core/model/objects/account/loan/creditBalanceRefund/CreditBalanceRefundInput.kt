@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Mifos Initiative
+ * Copyright 2026 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -7,10 +7,7 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.objects.loan
-
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
+package com.mifos.core.model.objects.account.loan.creditBalanceRefund
 
 /**
  * Domain model for credit balance refund input.
@@ -23,7 +20,6 @@ import com.mifos.core.model.utils.Parcelize
  * @property externalId Optional external reference identifier
  * @property note Optional note for the transaction
  */
-@Parcelize
 data class CreditBalanceRefundInput(
     val transactionDate: String,
     val transactionAmount: Double,
@@ -31,4 +27,4 @@ data class CreditBalanceRefundInput(
     val locale: String,
     val externalId: String? = null,
     val note: String? = null,
-) : Parcelable
+)

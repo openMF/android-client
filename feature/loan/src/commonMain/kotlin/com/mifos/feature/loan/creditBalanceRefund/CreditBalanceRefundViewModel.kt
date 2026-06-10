@@ -18,7 +18,7 @@ import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.util.NetworkUnavailableException
 import com.mifos.core.domain.useCases.CreditBalanceRefundUseCase
-import com.mifos.core.model.objects.loan.CreditBalanceRefundInput
+import com.mifos.core.model.objects.account.loan.creditBalanceRefund.CreditBalanceRefundInput
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -32,7 +32,6 @@ class CreditBalanceRefundViewModel(
 
     private val route = savedStateHandle.toRoute<CreditBalanceRefundScreenRoute>()
 
-    /** Cached refund input for retry operations */
     private var lastSubmitInput: CreditBalanceRefundInput? = null
 
     init {
@@ -47,55 +46,55 @@ class CreditBalanceRefundViewModel(
      */
     private fun observeLoanDetails() {
         viewModelScope.launch {
-            useCase.getLoanRefundDetails(route.loanId).collect { loanResult ->
-                mutableStateFlow.update { currentState ->
-                    var newState = currentState
-                    when (loanResult) {
-                        is DataState.Loading -> {
-                            if (newState.clientName == null && newState.dialogState !is CreditBalanceRefundState.DialogState.Success) {
-                                newState = newState.copy(dialogState = CreditBalanceRefundState.DialogState.Loading)
-                            }
-                        }
-                        is DataState.Success -> {
-                            val loan = loanResult.data
-                            if (loan == null) {
-                                newState = newState.copy(
-                                    dialogState = CreditBalanceRefundState.DialogState.Error(
-                                        messageRes = Res.string.feature_loan_profile_error_details_not_found,
-                                    ),
-                                )
-                            } else {
-                                newState = newState.copy(
-                                    networkAvailable = true,
-                                    dialogState = newState.dialogState as? CreditBalanceRefundState.DialogState.Success,
-                                    clientName = loan.clientName,
-                                    loanAccountNumber = loan.accountNo,
-                                    overpaidAmount = loan.totalOverpaid,
-                                    currencyCode = loan.currencyCode,
-                                    decimalPlaces = loan.decimalPlaces,
-                                )
-                            }
-                        }
-                        is DataState.Error -> {
-                            val isNetworkError = loanResult.exception is NetworkUnavailableException
+            if (state.clientName == null && state.dialogState !is CreditBalanceRefundState.DialogState.Success) {
+                mutableStateFlow.update { it.copy(dialogState = CreditBalanceRefundState.DialogState.Loading) }
+            }
 
-                            newState = if (isNetworkError) {
-                                newState.copy(
-                                    networkAvailable = false,
-                                    dialogState = CreditBalanceRefundState.DialogState.Error(
-                                        messageRes = Res.string.feature_error_network_not_available,
-                                    ),
-                                )
-                            } else {
-                                newState.copy(
-                                    dialogState = CreditBalanceRefundState.DialogState.Error(
-                                        message = loanResult.message,
-                                    ),
-                                )
-                            }
+            when (val result = useCase.getLoanRefundDetails(route.loanId)) {
+                is DataState.Loading -> Unit
+                is DataState.Success -> {
+                    val loan = result.data
+                    if (loan == null) {
+                        mutableStateFlow.update {
+                            it.copy(
+                                dialogState = CreditBalanceRefundState.DialogState.Error(
+                                    messageRes = Res.string.feature_loan_profile_error_details_not_found,
+                                ),
+                            )
+                        }
+                    } else {
+                        mutableStateFlow.update {
+                            it.copy(
+                                networkAvailable = true,
+                                dialogState = it.dialogState as? CreditBalanceRefundState.DialogState.Success,
+                                clientName = loan.clientName,
+                                loanAccountNumber = loan.accountNo,
+                                overpaidAmount = loan.totalOverpaid,
+                                transactionDate = loan.transactionDate,
+                                currencyCode = loan.currencyCode,
+                                decimalPlaces = loan.decimalPlaces,
+                            )
                         }
                     }
-                    newState
+                }
+                is DataState.Error -> {
+                    val isNetworkError = result.exception is NetworkUnavailableException
+                    mutableStateFlow.update {
+                        if (isNetworkError) {
+                            it.copy(
+                                networkAvailable = false,
+                                dialogState = CreditBalanceRefundState.DialogState.Error(
+                                    messageRes = Res.string.feature_error_network_not_available,
+                                ),
+                            )
+                        } else {
+                            it.copy(
+                                dialogState = CreditBalanceRefundState.DialogState.Error(
+                                    message = result.message,
+                                ),
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -134,10 +133,11 @@ class CreditBalanceRefundViewModel(
             when (val result = useCase.submitRefund(route.loanId, input)) {
                 is DataState.Loading -> Unit
                 is DataState.Success -> {
+                    val response = result.data
                     mutableStateFlow.update {
                         it.copy(
                             dialogState = CreditBalanceRefundState.DialogState.Success(
-                                transactionId = "Success",
+                                transactionId = response.transactionId.toString(),
                             ),
                         )
                     }
@@ -160,4 +160,60 @@ class CreditBalanceRefundViewModel(
             }
         }
     }
+}
+
+/**
+ * The single source of truth for the Credit Balance Refund UI.
+ * All display data lives here; [dialogState] drives overlay dialogs (loading/error/success).
+ * The refund form is always present in the composable hierarchy — overlays appear on top of it.
+ */
+data class CreditBalanceRefundState(
+    val dialogState: DialogState? = null,
+    val loanId: Int = 0,
+    val clientName: String? = null,
+    val loanAccountNumber: String = "",
+    val overpaidAmount: Double = 0.0,
+    val transactionDate: String = "",
+    val currencyCode: String? = null,
+    val decimalPlaces: Int? = null,
+    val networkAvailable: Boolean = true,
+) {
+    /**
+     * Represents the current overlay state shown on top of the refund form.
+     * Null means no overlay — the form is interactive.
+     */
+    sealed interface DialogState {
+        data object Loading : DialogState
+
+        /** An error occurred. [message] comes from API, [messageRes] comes from local string resources. */
+        data class Error(
+            val message: String? = null,
+            val messageRes: org.jetbrains.compose.resources.StringResource? = null,
+        ) : DialogState
+
+        data class Success(val transactionId: String) : DialogState
+    }
+}
+
+/**
+ * All user intentions and system-triggered actions that the ViewModel can handle.
+ * The screen calls [CreditBalanceRefundViewModel.trySendAction] to dispatch these.
+ */
+sealed interface CreditBalanceRefundAction {
+    data object NavigateBack : CreditBalanceRefundAction
+
+    data object OnRetry : CreditBalanceRefundAction
+
+    data object OnDismissDialog : CreditBalanceRefundAction
+
+    data class OnSubmitRefund(val input: CreditBalanceRefundInput) : CreditBalanceRefundAction
+}
+
+/**
+ * One-shot navigation events emitted by the ViewModel.
+ * The Screen collects these and navigates without persisting state.
+ */
+sealed interface CreditBalanceRefundEvent {
+    data object NavigateBack : CreditBalanceRefundEvent
+    data object NavigateBackWithRefresh : CreditBalanceRefundEvent
 }

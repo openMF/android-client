@@ -40,16 +40,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -65,9 +60,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.common.utils.CurrencyFormatter
-import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosBottomSheet
-import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
@@ -75,14 +68,13 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
-import com.mifos.core.model.objects.loan.CreditBalanceRefundInput
+import com.mifos.core.model.objects.account.loan.creditBalanceRefund.CreditBalanceRefundInput
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
-import kotlin.time.Clock
 
 /**
  * Main screen composable for Credit Balance Refund feature.
@@ -129,6 +121,7 @@ internal fun CreditBalanceRefundScreen(
                         clientName = state.clientName,
                         loanAccountNumber = state.loanAccountNumber,
                         overpaidAmount = state.overpaidAmount,
+                        transactionDate = state.transactionDate,
                         currencyCode = state.currencyCode,
                         decimalPlaces = state.decimalPlaces,
                         onSubmit = { request ->
@@ -187,18 +180,16 @@ private fun CreditBalanceRefundContent(
     clientName: String?,
     loanAccountNumber: String,
     overpaidAmount: Double,
+    transactionDate: String,
     currencyCode: String?,
     decimalPlaces: Int?,
     onSubmit: (CreditBalanceRefundInput) -> Unit,
     onCancel: () -> Unit,
 ) {
-    var transactionDateMillis by rememberSaveable { mutableStateOf<Long?>(null) }
-    var transactionDateStr by rememberSaveable { mutableStateOf("") }
     var transactionAmount by rememberSaveable { mutableStateOf(if (overpaidAmount > 0) overpaidAmount.toString() else "") }
     var externalId by rememberSaveable { mutableStateOf("") }
     var note by rememberSaveable { mutableStateOf("") }
 
-    var showDatePickerDialog by rememberSaveable { mutableStateOf(false) }
     val formattedOverpaidAmount = if (currencyCode != null) {
         CurrencyFormatter.format(overpaidAmount, currencyCode, decimalPlaces)
     } else {
@@ -222,19 +213,7 @@ private fun CreditBalanceRefundContent(
         }
     }
 
-    val isFormValid = transactionDateStr.isNotBlank() && amountErrorRes == null
-
-    val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = transactionDateMillis ?: Clock.System.now()
-            .toEpochMilliseconds(),
-        selectableDates = object : SelectableDates {
-            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                val dateStr = DateHelper.getDateMonthYearStringFromLong(utcTimeMillis)
-                val todayStr = DateHelper.getDateMonthYearStringFromLong(Clock.System.now().toEpochMilliseconds())
-                return dateStr == todayStr
-            }
-        },
-    )
+    val isFormValid = transactionDate.isNotBlank() && amountErrorRes == null
 
     Column(
         modifier = Modifier
@@ -271,32 +250,13 @@ private fun CreditBalanceRefundContent(
 
         Spacer(modifier = Modifier.height(KptTheme.spacing.lg))
 
-        MifosDatePickerTextField(
-            value = transactionDateStr,
+        MifosOutlinedTextField(
+            value = transactionDate,
             label = stringResource(Res.string.feature_loan_credit_balance_refund_transaction_date) + " *",
-            openDatePicker = { showDatePickerDialog = true },
+            readOnly = true,
+            enabled = false,
+            onValueChange = { },
         )
-
-        if (showDatePickerDialog) {
-            DatePickerDialog(
-                onDismissRequest = { showDatePickerDialog = false },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            datePickerState.selectedDateMillis?.let {
-                                transactionDateStr = DateHelper.getDateMonthYearStringFromLong(it)
-                            }
-                            showDatePickerDialog = false
-                        },
-                    ) { Text(stringResource(Res.string.feature_loan_credit_balance_refund_ok)) }
-                },
-                dismissButton = {
-                    TextButton(onClick = { showDatePickerDialog = false }) {
-                        Text(stringResource(Res.string.feature_loan_credit_balance_refund_cancel))
-                    }
-                },
-            ) { DatePicker(state = datePickerState) }
-        }
 
         Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
@@ -337,7 +297,7 @@ private fun CreditBalanceRefundContent(
             onSecondBtnClick = {
                 onSubmit(
                     CreditBalanceRefundInput(
-                        transactionDate = transactionDateStr,
+                        transactionDate = transactionDate,
                         transactionAmount = transactionAmount.toDoubleOrNull() ?: 0.0,
                         dateFormat = "dd MMMM yyyy",
                         locale = "en",

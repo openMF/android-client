@@ -7,13 +7,14 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.objects.account.loan
+package com.mifos.core.model.objects.account.loan.creditBalanceRefund
 
 data class LoanRefundDetails(
     val id: Int,
     val accountNo: String,
     val clientName: String?,
     val totalOverpaid: Double,
+    val transactionDate: String,
     val currencyCode: String?,
     val decimalPlaces: Int?,
 )
