@@ -14,7 +14,6 @@ import androidclient.feature.data_table.generated.resources.feature_data_table_a
 import androidclient.feature.data_table.generated.resources.feature_data_table_dismiss
 import androidclient.feature.data_table.generated.resources.feature_data_table_save
 import androidclient.feature.data_table.generated.resources.feature_data_table_select_date
-import androidclient.feature.data_table.generated.resources.feature_data_table_something_went_wrong
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -58,6 +57,7 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.noncore.DataTableEntity
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -71,39 +71,36 @@ fun DataTableListScreen(
     clientCreated: (ClientPayloadEntity, Boolean) -> Unit,
     viewModel: DataTableListViewModel = koinViewModel(),
 ) {
-    val dataTables = viewModel.arg.dataTableList
-    val requestType = viewModel.arg.requestType
-    val payload = viewModel.arg.payload
-    val uiState by viewModel.dataTableListUiState.collectAsStateWithLifecycle()
-    val userStatus by viewModel.userStatus.collectAsStateWithLifecycle()
-    val dataTableList by viewModel.dataTableList.collectAsStateWithLifecycle()
+    val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+    val snackBarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.initArgs(dataTables, requestType, payload)
+        viewModel.eventFlow.collect { event ->
+            when (event) {
+                DataTableListEvent.NavigateBack -> onBackPressed()
+                is DataTableListEvent.ClientCreated -> clientCreated(event.client, state.userStatus)
+                is DataTableListEvent.ShowMessage ->
+                    snackBarHostState.showSnackbar(getString(event.message))
+            }
+        }
     }
 
     DataTableListScreen(
-        uiState = uiState,
-        dataTableList = dataTableList ?: listOf(),
+        state = state,
+        snackBarHostState = snackBarHostState,
         onBackPressed = onBackPressed,
-        clientCreated = { client -> clientCreated(client, userStatus) },
-        onSaveClicked = { viewModel.processDataTable() },
-        onFieldChanged = viewModel::updateFieldValue,
+        onAction = viewModel::trySendAction,
     )
 }
 
 @Composable
 fun DataTableListScreen(
-    uiState: DataTableListUiState,
-    dataTableList: List<DataTableEntity>,
+    state: DataTableListState,
+    snackBarHostState: SnackbarHostState,
     onBackPressed: () -> Unit,
-    clientCreated: (ClientPayloadEntity) -> Unit,
-    onSaveClicked: () -> Unit,
-    onFieldChanged: (tableIndex: Int, columnName: String, value: Any) -> Unit,
+    onAction: (DataTableListAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val snackBarHostState = remember { SnackbarHostState() }
-
     MifosScaffold(
         title = stringResource(Res.string.feature_data_table_associated_datatables),
         onBackPressed = onBackPressed,
@@ -115,37 +112,16 @@ fun DataTableListScreen(
                 .fillMaxSize(),
         ) {
             DataTableListContent(
-                dataTableList = dataTableList,
-                onSaveClicked = onSaveClicked,
-                onFieldChanged = onFieldChanged,
+                dataTableList = state.dataTableList,
+                onSaveClicked = { onAction(DataTableListAction.OnSaveClicked) },
+                onFieldChanged = { tableIndex, columnName, value ->
+                    onAction(DataTableListAction.OnFieldChanged(tableIndex, columnName, value))
+                },
                 modifier = Modifier.fillMaxWidth(),
             )
 
-            when (uiState) {
-                is DataTableListUiState.ShowMessage -> {
-                    val message = when {
-                        uiState.message != null -> stringResource(uiState.message)
-                        else -> stringResource(Res.string.feature_data_table_something_went_wrong)
-                    }
-                    LaunchedEffect(message) {
-                        snackBarHostState.showSnackbar(message = message)
-                    }
-                }
-
-                is DataTableListUiState.Loading -> MifosProgressIndicator()
-                is DataTableListUiState.Success -> {
-                    uiState.client?.let { client ->
-                        clientCreated(client)
-                    } ?: run {
-                        if (uiState.message != null) {
-                            val message = stringResource(uiState.message)
-                            LaunchedEffect(key1 = message) {
-                                snackBarHostState.showSnackbar(message)
-                                onBackPressed()
-                            }
-                        }
-                    }
-                }
+            if (state.screenState == DataTableListState.ScreenState.Loading) {
+                MifosProgressIndicator()
             }
         }
     }
@@ -356,11 +332,9 @@ fun TableColumnHeader(
 @Composable
 fun DataTableListScreenPreview() {
     DataTableListScreen(
-        uiState = DataTableListUiState.Success(),
-        dataTableList = listOf(),
+        state = DataTableListState(),
+        snackBarHostState = remember { SnackbarHostState() },
         onBackPressed = { },
-        clientCreated = { },
-        onSaveClicked = { },
-        onFieldChanged = { _, _, _ -> },
+        onAction = { },
     )
 }
