@@ -43,6 +43,7 @@ import androidclient.core.ui.generated.resources.core_ui_quantity
 import androidclient.core.ui.generated.resources.core_ui_status
 import androidclient.core.ui.generated.resources.core_ui_total_collateral_value
 import androidclient.core.ui.generated.resources.core_ui_total_value
+import androidclient.core.ui.generated.resources.core_ui_transfer_fund
 import androidclient.core.ui.generated.resources.core_ui_type
 import androidclient.core.ui.generated.resources.core_ui_upload_again
 import androidclient.core.ui.generated.resources.core_ui_view_account
@@ -826,6 +827,8 @@ sealed class Actions(open val icon: ImageVector, open val text: StringResource) 
         Actions(icon, Res.string.core_ui_edit)
     data class Delete(override val icon: ImageVector = MifosIcons.DeleteDocument) :
         Actions(icon, Res.string.core_ui_delete)
+    data class TransferFund(override val icon: ImageVector) :
+        Actions(icon, Res.string.core_ui_transfer_fund)
 }
 
 @Composable

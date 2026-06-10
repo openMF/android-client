@@ -90,7 +90,7 @@ internal fun LoanAccountProfileScreen(
     navigateToDocuments: (Int) -> Unit,
     navigateToReschedules: (Int) -> Unit,
     navigateToNotes: (Int) -> Unit,
-    navigateToTransferScreen: (loanId: Int, accountNumber: String, clientId: Int, currencyCode: String, officeId: Int) -> Unit,
+    navigateToTransferScreen: (loanId: Int) -> Unit,
     onCreditBalanceRefundClick: (LoanWithAssociationsEntity) -> Unit,
     navController: NavController,
     modifier: Modifier = Modifier,
@@ -125,10 +125,6 @@ internal fun LoanAccountProfileScreen(
                         val account = state.loanAccount ?: return@EventsEffect
                         navigateToTransferScreen(
                             account.id,
-                            account.accountNo,
-                            account.clientId,
-                            account.currency.code ?: "N/A",
-                            account.clientOfficeId,
                         )
                     }
                     LoanProfileAction.CreditBalanceRefund -> onCreditBalanceRefundClick(account)
@@ -294,7 +290,7 @@ private fun LoanAccountTopCard(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "${loanAccount.loanProductName.uppercase().orEmpty()} ${loanAccount.accountNo}".trim(),
+                        text = "${loanAccount.loanProductName?.uppercase().orEmpty()} ${loanAccount.accountNo}".trim(),
                         style = MifosTypography.titleMediumEmphasized,
                         color = KptTheme.colorScheme.onPrimary,
                     )
