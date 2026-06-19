@@ -12,6 +12,8 @@ package com.mifos.core.network.datamanager
 import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.dto.standingInstruction.StandingInstructionDto
+import com.mifos.core.network.dto.standingInstruction.StandingInstructionUpdateResponseDto
+import com.mifos.core.network.dto.standingInstruction.UpdateStandingInstructionDto
 import kotlinx.coroutines.flow.Flow
 
 class DataManagerStandingInstructions(
@@ -36,6 +38,24 @@ class DataManagerStandingInstructions(
             dateFormat = dateFormat,
             limit = limit,
             offset = offset,
+        )
+    }
+
+    suspend fun updateStandingInstruction(
+        standingInstructionId: Long,
+        updateStandingInstructionDto: UpdateStandingInstructionDto,
+    ): StandingInstructionUpdateResponseDto {
+        return mBaseApiManager.standingInstructionService.updateStandingInstruction(
+            standingInstructionId = standingInstructionId,
+            updateStandingInstructionDto = updateStandingInstructionDto,
+        )
+    }
+
+    suspend fun deleteStandingInstruction(
+        standingInstructionId: Long,
+    ): StandingInstructionUpdateResponseDto {
+        return mBaseApiManager.standingInstructionService.deleteStandingInstruction(
+            standingInstructionId = standingInstructionId,
         )
     }
 }

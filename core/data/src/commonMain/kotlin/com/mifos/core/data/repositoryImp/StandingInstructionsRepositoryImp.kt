@@ -13,10 +13,13 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.Page
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.mappers.standingInstructions.toDomain
+import com.mifos.core.data.mappers.standingInstructions.toDto
 import com.mifos.core.data.repository.StandingInstructionsRepository
 import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.data.util.runAsDataState
 import com.mifos.core.data.util.withNetworkCheck
 import com.mifos.core.model.objects.standingInstructions.StandingInstruction
+import com.mifos.core.model.objects.standingInstructions.StandingInstructionUpdate
 import com.mifos.core.network.datamanager.DataManagerStandingInstructions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -55,5 +58,33 @@ class StandingInstructionsRepositoryImp(
                 }
                 .asDataStateFlow(),
         ).flowOn(dispatcher.io)
+    }
+
+    override suspend fun updateStandingInstruction(
+        standingInstructionId: Long,
+        update: StandingInstructionUpdate,
+    ): DataState<Unit> {
+        return runAsDataState(
+            networkMonitor,
+            dispatcher.io,
+        ) {
+            dataManagerStandingInstructions.updateStandingInstruction(
+                standingInstructionId,
+                update.toDto(),
+            )
+        }
+    }
+
+    override suspend fun deleteStandingInstruction(
+        standingInstructionId: Long,
+    ): DataState<Unit> {
+        return runAsDataState(
+            networkMonitor,
+            dispatcher.io,
+        ) {
+            dataManagerStandingInstructions.deleteStandingInstruction(
+                standingInstructionId,
+            )
+        }
     }
 }

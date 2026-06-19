@@ -12,8 +12,12 @@ package com.mifos.core.data.repository
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.Page
 import com.mifos.core.model.objects.standingInstructions.StandingInstruction
+import com.mifos.core.model.objects.standingInstructions.StandingInstructionUpdate
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Created by Shlok Sharma(techsavvy185) on 19/06/2026.
+ */
 interface StandingInstructionsRepository {
     fun getStandingInstructionList(
         clientId: Long,
@@ -23,4 +27,13 @@ interface StandingInstructionsRepository {
         limit: Int,
         offset: Int,
     ): Flow<DataState<Page<StandingInstruction>>>
+
+    suspend fun updateStandingInstruction(
+        standingInstructionId: Long,
+        update: StandingInstructionUpdate,
+    ): DataState<Unit>
+
+    suspend fun deleteStandingInstruction(
+        standingInstructionId: Long,
+    ): DataState<Unit>
 }

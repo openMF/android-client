@@ -12,9 +12,11 @@ package com.mifos.core.data.mappers.standingInstructions
 import com.mifos.core.model.objects.standingInstructions.StandingInstruction
 import com.mifos.core.model.objects.standingInstructions.StandingInstructionAccount
 import com.mifos.core.model.objects.standingInstructions.StandingInstructionClient
+import com.mifos.core.model.objects.standingInstructions.StandingInstructionUpdate
 import com.mifos.core.network.dto.standingInstruction.ClientDto
 import com.mifos.core.network.dto.standingInstruction.StandingInstructionAccountDto
 import com.mifos.core.network.dto.standingInstruction.StandingInstructionDto
+import com.mifos.core.network.dto.standingInstruction.UpdateStandingInstructionDto
 
 fun StandingInstructionDto.toDomain(): StandingInstruction {
     return StandingInstruction(
@@ -40,5 +42,14 @@ fun StandingInstructionAccountDto.toDomain(): StandingInstructionAccount {
         id = this.id,
         accountNo = this.accountNo,
         productName = this.productName,
+    )
+}
+
+fun StandingInstructionUpdate.toDto(): UpdateStandingInstructionDto {
+    return UpdateStandingInstructionDto(
+        amount = this.amount,
+        validFrom = this.validFrom,
+        locale = this.locale,
+        dateFormat = this.dateFormat,
     )
 }

@@ -38,7 +38,7 @@ import com.mifos.feature.savings.di.SavingsModule
 import com.mifos.feature.search.di.SearchModule
 import com.mifos.feature.searchrecord.di.SearchRecordModule
 import com.mifos.feature.settings.di.SettingsModule
-import com.mifos.feature.standingInstructions.di.StandingInstructionsModule
+import com.mifos.feature.standingInstruction.di.StandingInstructionsModule
 import com.mifos.room.di.DaoModule
 import com.mifos.room.di.HelperModule
 import com.mifos.room.di.PlatformSpecificDatabaseModule

@@ -12,12 +12,14 @@ package com.mifos.feature.standingInstructions.viewStandingInstructions
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DataState.Loading
 import com.mifos.core.common.utils.DataState.Success
 import com.mifos.core.common.utils.Page
 import com.mifos.core.data.repository.StandingInstructionsRepository
 import com.mifos.core.model.objects.standingInstructions.StandingInstruction
+import com.mifos.core.model.objects.standingInstructions.StandingInstructionUpdate
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -57,6 +59,145 @@ class ViewStandingInstructionsViewModel(
                 mutableStateFlow.update {
                     it.copy(dialogState = null)
                 }
+            }
+
+            is ViewStandingInstructionsAction.OnRowClick -> {
+                mutableStateFlow.update {
+                    it.copy(dialogState = ViewStandingInstructionsState.DialogState.Options(action.rowData))
+                }
+            }
+
+            is ViewStandingInstructionsAction.OnDeleteClick -> {
+                mutableStateFlow.update {
+                    it.copy(dialogState = ViewStandingInstructionsState.DialogState.ConfirmDelete(action.rowData))
+                }
+            }
+
+            is ViewStandingInstructionsAction.OnEditClick -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = ViewStandingInstructionsState.DialogState.Edit(
+                            rowData = action.rowData,
+                            amount = action.rowData.amount,
+                            validFrom = action.rowData.validity,
+                            beneficiary = action.rowData.beneficiary,
+                            fromAccount = action.rowData.fromAccount,
+                            toAccount = action.rowData.toAccount,
+                        ),
+                    )
+                }
+            }
+
+            is ViewStandingInstructionsAction.OnEditFieldChanged -> {
+                val currentEdit = state.dialogState as? ViewStandingInstructionsState.DialogState.Edit
+                if (currentEdit != null) {
+                    mutableStateFlow.update {
+                        val updatedEdit = when (action.field) {
+                            EditField.AMOUNT -> {
+                                val amountError = if (action.value.toDoubleOrNull() == null || action.value.toDouble() <= 0) {
+                                    "Invalid amount"
+                                } else {
+                                    null
+                                }
+                                currentEdit.copy(amount = action.value, amountError = amountError)
+                            }
+                            EditField.VALID_FROM -> currentEdit.copy(validFrom = action.value)
+                            EditField.BENEFICIARY -> currentEdit.copy(beneficiary = action.value)
+                            EditField.FROM_ACCOUNT -> currentEdit.copy(fromAccount = action.value)
+                            EditField.TO_ACCOUNT -> currentEdit.copy(toAccount = action.value)
+                        }
+                        it.copy(dialogState = updatedEdit)
+                    }
+                }
+            }
+
+            is ViewStandingInstructionsAction.OnToggleDatePicker -> {
+                val currentEdit = state.dialogState as? ViewStandingInstructionsState.DialogState.Edit
+                if (currentEdit != null) {
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = currentEdit.copy(
+                                isDatePickerShown = action.show,
+                            ),
+                        )
+                    }
+                }
+            }
+
+            is ViewStandingInstructionsAction.OnConfirmDelete -> {
+                deleteStandingInstruction(action.instructionId)
+            }
+
+            is ViewStandingInstructionsAction.OnConfirmEdit -> {
+                updateStandingInstruction(action.instructionId, action.amount, action.validFrom)
+            }
+
+            ViewStandingInstructionsAction.OnDismissDialog -> {
+                mutableStateFlow.update {
+                    it.copy(dialogState = null)
+                }
+            }
+        }
+    }
+
+    private fun deleteStandingInstruction(instructionId: Long) {
+        mutableStateFlow.update {
+            it.copy(dialogState = ViewStandingInstructionsState.DialogState.Loading)
+        }
+        viewModelScope.launch {
+            val result = repository.deleteStandingInstruction(instructionId)
+            when (result) {
+                is DataState.Error -> {
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ViewStandingInstructionsState.DialogState.Error(
+                                title = "Error deleting instruction",
+                                message = result.message,
+                            ),
+                        )
+                    }
+                }
+                is DataState.Success -> {
+                    mutableStateFlow.update {
+                        it.copy(dialogState = null)
+                    }
+                    loadStandingInstructions()
+                }
+                DataState.Loading -> Unit
+            }
+        }
+    }
+
+    private fun updateStandingInstruction(instructionId: Long, amount: String, validFrom: String) {
+        mutableStateFlow.update {
+            it.copy(dialogState = ViewStandingInstructionsState.DialogState.Loading)
+        }
+        viewModelScope.launch {
+            val update = StandingInstructionUpdate(
+                amount = amount,
+                validFrom = validFrom,
+                dateFormat = ApiDateFormatter.DATE_FORMAT,
+                locale = ApiDateFormatter.LOCALE,
+            )
+            val result = repository.updateStandingInstruction(instructionId, update)
+            when (result) {
+                is DataState.Error -> {
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ViewStandingInstructionsState.DialogState.Error(
+                                title = "Error updating instruction",
+                                message = result.message,
+                            ),
+                        )
+                    }
+                }
+                is DataState.Success -> {
+                    mutableStateFlow.update {
+                        it.copy(dialogState = null)
+                    }
+                    loadStandingInstructions()
+                }
+                DataState.Loading -> Unit
             }
         }
     }
@@ -126,9 +267,6 @@ class ViewStandingInstructionsViewModel(
     }
 }
 
-/**
- * Represents the state of the standing instructions screen.
- */
 data class ViewStandingInstructionsState(
     val fromAccountId: Long,
     val fromAccountType: Int,
@@ -140,6 +278,19 @@ data class ViewStandingInstructionsState(
 ) {
     sealed interface DialogState {
         data class Error(val title: String, val message: String) : DialogState
+        data class Options(val rowData: StandingInstructionRowData) : DialogState
+        data class ConfirmDelete(val rowData: StandingInstructionRowData) : DialogState
+        data class Edit(
+            val rowData: StandingInstructionRowData,
+            val amount: String,
+            val validFrom: String,
+            val beneficiary: String,
+            val fromAccount: String,
+            val toAccount: String,
+            val amountError: String? = null,
+            val isDatePickerShown: Boolean = false,
+        ) : DialogState
+        data object Loading : DialogState
     }
 }
 
@@ -157,18 +308,35 @@ data class StandingInstructionRowData(
     val validity: String,
 )
 
-/**
- * One-time events emitted by the ViewModel.
- */
 sealed interface ViewStandingInstructionsEvent {
     data object NavigateBack : ViewStandingInstructionsEvent
 }
 
-/**
- * Actions that can be sent to the ViewModel.
- */
+enum class EditField {
+    AMOUNT,
+    VALID_FROM,
+    BENEFICIARY,
+    FROM_ACCOUNT,
+    TO_ACCOUNT,
+}
+
 sealed interface ViewStandingInstructionsAction {
     data object OnNavigateBack : ViewStandingInstructionsAction
     data object Retry : ViewStandingInstructionsAction
     data object DismissErrorDialog : ViewStandingInstructionsAction
+    data class OnRowClick(val rowData: StandingInstructionRowData) : ViewStandingInstructionsAction
+    data class OnDeleteClick(val rowData: StandingInstructionRowData) : ViewStandingInstructionsAction
+    data class OnEditClick(val rowData: StandingInstructionRowData) : ViewStandingInstructionsAction
+    data class OnEditFieldChanged(val field: EditField, val value: String) : ViewStandingInstructionsAction
+    data class OnToggleDatePicker(val show: Boolean) : ViewStandingInstructionsAction
+    data class OnConfirmDelete(val instructionId: Long) : ViewStandingInstructionsAction
+    data class OnConfirmEdit(
+        val instructionId: Long,
+        val amount: String,
+        val validFrom: String,
+        val beneficiary: String,
+        val fromAccount: String,
+        val toAccount: String,
+    ) : ViewStandingInstructionsAction
+    data object OnDismissDialog : ViewStandingInstructionsAction
 }

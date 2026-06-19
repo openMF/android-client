@@ -7,12 +7,11 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.feature.standingInstruction.di
+package com.mifos.core.model.objects.standingInstructions
 
-import com.mifos.feature.standingInstructions.viewStandingInstructions.ViewStandingInstructionsViewModel
-import org.koin.core.module.dsl.viewModelOf
-import org.koin.dsl.module
-
-val StandingInstructionsModule = module {
-    viewModelOf(::ViewStandingInstructionsViewModel)
-}
+data class StandingInstructionUpdate(
+    val amount: String? = null,
+    val validFrom: String? = null,
+    val locale: String? = null,
+    val dateFormat: String? = null,
+)
