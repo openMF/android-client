@@ -21,6 +21,7 @@ data class ViewStandingInstructionsScreenRoute(
     val clientName: String,
     val fromAccountId: Long,
     val fromAccountType: Int,
+    val currencyCode: String,
 )
 
 fun NavController.navigateToViewStandingInstructionsScreen(
@@ -28,6 +29,7 @@ fun NavController.navigateToViewStandingInstructionsScreen(
     clientName: String,
     fromAccountId: Long,
     fromAccountType: Int,
+    currencyCode: String,
 ) {
     navigate(
         ViewStandingInstructionsScreenRoute(
@@ -35,6 +37,7 @@ fun NavController.navigateToViewStandingInstructionsScreen(
             clientName = clientName,
             fromAccountId = fromAccountId,
             fromAccountType = fromAccountType,
+            currencyCode = currencyCode,
         ),
     )
 }

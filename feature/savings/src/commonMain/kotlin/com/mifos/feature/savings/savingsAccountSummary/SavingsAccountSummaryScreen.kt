@@ -109,7 +109,7 @@ internal fun SavingsAccountSummaryScreen(
     onWithdrawButtonClicked: (savings: SavingsAccountWithAssociationsEntity, type: SavingAccountDepositTypeEntity?) -> Unit,
     approveSavings: (type: SavingAccountDepositTypeEntity?, accountNumber: Int) -> Unit,
     activateSavings: (type: SavingAccountDepositTypeEntity?, accountNumber: Int) -> Unit,
-    onViewStandingInstructions: (clientId: Long, clientName: String, accountId: Long, accountType: Int) -> Unit,
+    onViewStandingInstructions: (clientId: Long, clientName: String, accountId: Long, accountType: Int, currencyCode: String) -> Unit,
     viewmodel: SavingsAccountSummaryViewModel = koinViewModel(),
 ) {
     val uiState by viewmodel.savingsAccountSummaryUiState.collectAsStateWithLifecycle()
@@ -149,6 +149,7 @@ internal fun SavingsAccountSummaryScreen(
                     currentState.savingsAccountWithAssociations.clientName ?: "",
                     accountId.toLong(),
                     1,
+                    currentState.savingsAccountWithAssociations.currency?.code ?: "",
                 )
             }
         },

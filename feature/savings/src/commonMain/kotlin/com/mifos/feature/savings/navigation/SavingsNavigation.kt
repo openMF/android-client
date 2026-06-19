@@ -31,7 +31,7 @@ fun NavGraphBuilder.savingsDestination(
     onFinish: () -> Unit,
     loadMoreSavingsAccountInfo: (String, Int) -> Unit,
     loadDocuments: (Int, String) -> Unit,
-    onViewStandingInstructions: (clientId: Long, clientName: String, accountId: Long, accountType: Int) -> Unit,
+    onViewStandingInstructions: (clientId: Long, clientName: String, accountId: Long, accountType: Int, currencyCode: String) -> Unit,
 ) {
     savingsSummaryScreen(
         onBackPressed = navController::popBackStack,
@@ -110,7 +110,7 @@ fun NavGraphBuilder.savingsSummaryScreen(
     onWithdrawButtonClicked: (SavingsAccountWithAssociationsEntity, SavingAccountDepositTypeEntity?) -> Unit,
     approveSavings: (savingsAccountType: SavingAccountDepositTypeEntity?, savingsAccountNumber: Int) -> Unit,
     activateSavings: (savingsAccountType: SavingAccountDepositTypeEntity?, savingsAccountNumber: Int) -> Unit,
-    onViewStandingInstructions: (clientId: Long, clientName: String, accountId: Long, accountType: Int) -> Unit,
+    onViewStandingInstructions: (clientId: Long, clientName: String, accountId: Long, accountType: Int, currencyCode: String) -> Unit,
 ) {
     composable(
         route = SavingsScreens.SavingsAccountSummary.route,

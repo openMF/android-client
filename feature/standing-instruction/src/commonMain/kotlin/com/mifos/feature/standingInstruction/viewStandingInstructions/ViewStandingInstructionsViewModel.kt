@@ -13,6 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.ApiDateFormatter
+import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DataState.Loading
 import com.mifos.core.common.utils.DataState.Success
@@ -35,6 +36,7 @@ class ViewStandingInstructionsViewModel(
             fromAccountType = route.fromAccountType,
             clientId = route.clientId,
             clientName = route.clientName,
+            currencyCode = route.currencyCode,
         )
     },
 ) {
@@ -259,7 +261,15 @@ class ViewStandingInstructionsViewModel(
                 fromAccount = instruction.fromAccount?.accountNo ?: "--",
                 beneficiary = instruction.toClient?.displayName ?: "--",
                 toAccount = instruction.toAccount?.accountNo ?: "--",
-                amount = instruction.amount?.toString() ?: "--",
+                amount = if (state.currencyCode.isNotEmpty()) {
+                    CurrencyFormatter.format(
+                        balance = instruction.amount,
+                        currencyCode = state.currencyCode,
+                        maximumFractionDigits = 2,
+                    )
+                } else {
+                    instruction.amount?.toString() ?: "--"
+                },
                 validity = instruction.validFrom ?: "-- ",
             )
         }
@@ -272,6 +282,7 @@ data class ViewStandingInstructionsState(
     val fromAccountType: Int,
     val clientId: Long,
     val clientName: String,
+    val currencyCode: String,
     val dataState: DataState<Page<StandingInstruction>> = Loading,
     val tableData: StandingInstructionTableData? = null,
     val dialogState: DialogState? = null,
