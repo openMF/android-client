@@ -150,7 +150,7 @@ import com.mifos.room.typeconverters.CustomTypeConverters
         PaymentTypeOptionEntity::class,
     ],
     version = MifosDatabase.VERSION,
-    exportSchema = false,
+    exportSchema = true,
     autoMigrations = [],
 )
 @TypeConverters(
