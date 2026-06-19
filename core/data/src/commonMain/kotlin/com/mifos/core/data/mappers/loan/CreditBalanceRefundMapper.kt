@@ -16,9 +16,6 @@ import com.mifos.core.network.dto.loan.CreditBalanceRefundRequestDto
 import com.mifos.core.network.dto.loan.CreditBalanceRefundResponseDto
 import com.mifos.room.entities.accounts.loans.LoanRefundDetailsEntity
 
-/**
- * Maps domain input model to network DTO for credit balance refund requests.
- */
 fun CreditBalanceRefundInput.toDto(): CreditBalanceRefundRequestDto = CreditBalanceRefundRequestDto(
     transactionDate = transactionDate,
     transactionAmount = transactionAmount,
@@ -28,10 +25,6 @@ fun CreditBalanceRefundInput.toDto(): CreditBalanceRefundRequestDto = CreditBala
     note = note,
 )
 
-/**
- * Maps Room entity to domain model.
- * Used in repository when reading from database (offline or online).
- */
 fun LoanRefundDetailsEntity.toDomain(): LoanRefundDetails = LoanRefundDetails(
     id = loanId,
     accountNo = accountNo,
@@ -42,9 +35,6 @@ fun LoanRefundDetailsEntity.toDomain(): LoanRefundDetails = LoanRefundDetails(
     decimalPlaces = decimalPlaces,
 )
 
-/**
- * Maps network DTO response to domain model.
- */
 fun CreditBalanceRefundResponseDto.toDomain(): CreditBalanceRefundResponse {
     return CreditBalanceRefundResponse(
         clientId = clientId,

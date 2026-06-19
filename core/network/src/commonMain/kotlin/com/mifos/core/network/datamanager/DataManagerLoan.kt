@@ -242,14 +242,16 @@ class DataManagerLoan(
     /**
      * Fetches loan refund details for the credit balance refund form.
      * In online mode: fetches from API and caches in database.
+     * If network fails in online mode, falls back to database cache.
      * In offline mode: reads from database cache.
      *
      * @param loanId Loan id
      * @return LoanRefundDetailsEntity with refund form data
      */
     suspend fun getLoanRefundDetails(loanId: Int): LoanRefundDetailsEntity? {
-        return when (prefManager.userInfo.first().userStatus) {
-            false -> {
+        val userStatus = prefManager.userInfo.first().userStatus
+        return if (!userStatus) {
+            try {
                 val loan = mBaseApiManager.loanService.getLoanByIdWithAllAssociations(loanId)
                 val template = mBaseApiManager.loanService
                     .getLoanTransactionTemplate(loanId, APIEndPoint.CREDIT_BALANCE_REFUND)
@@ -260,11 +262,21 @@ class DataManagerLoan(
                 loan.toLoanRefundDetailsEntity(formattedDate).also {
                     loanDaoHelper.saveLoanRefundDetails(it)
                 }
-            }
-            true -> {
+            } catch (e: Exception) {
                 loanDaoHelper.getLoanRefundDetails(loanId).first()
             }
+        } else {
+            loanDaoHelper.getLoanRefundDetails(loanId).first()
         }
+    }
+
+    /**
+     * This method deletes the LoanRefundDetails from Database according to Loan Id.
+     *
+     * @param loanId Loan Id of the LoanRefundDetails to delete
+     */
+    suspend fun deleteLoanRefundDetails(loanId: Int) {
+        loanDaoHelper.deleteLoanRefundDetails(loanId)
     }
 
     /**

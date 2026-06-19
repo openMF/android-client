@@ -15,30 +15,13 @@ import com.mifos.core.model.objects.account.loan.creditBalanceRefund.CreditBalan
 import com.mifos.core.model.objects.account.loan.creditBalanceRefund.CreditBalanceRefundResponse
 import com.mifos.core.model.objects.account.loan.creditBalanceRefund.LoanRefundDetails
 
-/**
- * Use case for credit balance refund operations.
- * Provides methods to fetch loan details and submit refund transactions.
- */
 class CreditBalanceRefundUseCase(
     private val repository: CreditBalanceRefundRepository,
 ) {
-    /**
-     * Fetches loan details needed for the refund form.
-     *
-     * @param loanId The ID of the loan account
-     * @return Flow of DataState wrapping the loan refund details
-     */
     suspend fun getLoanRefundDetails(loanId: Int): DataState<LoanRefundDetails?> {
         return repository.getLoanById(loanId)
     }
 
-    /**
-     * Submits a credit balance refund transaction.
-     *
-     * @param loanId The ID of the loan account
-     * @param input The refund input containing transaction details
-     * @return DataState wrapping Unit on success or error
-     */
     suspend fun submitRefund(loanId: Int, input: CreditBalanceRefundInput): DataState<CreditBalanceRefundResponse> {
         return repository.submitRefund(loanId, input)
     }

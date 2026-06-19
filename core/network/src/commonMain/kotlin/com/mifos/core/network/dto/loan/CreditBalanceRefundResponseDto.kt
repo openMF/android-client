@@ -11,15 +11,6 @@ package com.mifos.core.network.dto.loan
 
 import kotlinx.serialization.Serializable
 
-/**
- * Data Transfer Object for credit balance refund API response.
- * Maps the JSON response from the Fineract API.
- *
- * @property resourceId The transaction ID created by the refund operation (required)
- * @property officeId Office identifier
- * @property clientId Client identifier
- * @property changes Map of changes made by the transaction
- */
 @Serializable
 data class CreditBalanceRefundResponseDto(
     val resourceId: Int? = null,

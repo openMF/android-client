@@ -111,7 +111,7 @@ interface LoanService {
      * 1. repayment
      * 2. disburse
      * 3. waiver
-     * 4. refundByCash
+     * 4. refundbycash
      * 5. foreclosure
      *
      * @param loanId Loan Id

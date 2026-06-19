@@ -76,11 +76,6 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
 
-/**
- * Main screen composable for Credit Balance Refund feature.
- * Observes the ViewModel state and dynamically renders overlays (loading/errors)
- * on top of the refund form.
- */
 @Composable
 internal fun CreditBalanceRefundScreen(
     navigateBack: () -> Unit,

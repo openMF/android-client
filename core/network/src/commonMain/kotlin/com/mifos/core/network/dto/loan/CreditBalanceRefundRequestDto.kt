@@ -11,19 +11,6 @@ package com.mifos.core.network.dto.loan
 
 import kotlinx.serialization.Serializable
 
-/**
- * Data Transfer Object for credit balance refund request.
- * Used in the network layer to serialize refund transaction requests to the API.
- *
- * API Endpoint: POST /loans/{loanId}/transactions?command=creditBalanceRefund
- *
- * @property transactionDate Date in format "dd MMMM yyyy" (e.g., "15 January 2024")
- * @property transactionAmount Numeric refund amount
- * @property dateFormat Date format specification for API (Mandatory for Fineract)
- * @property locale Locale specification for API (Mandatory for Fineract)
- * @property externalId Optional external reference identifier
- * @property note Optional note for the transaction
- */
 @Serializable
 data class CreditBalanceRefundRequestDto(
     val transactionDate: String,

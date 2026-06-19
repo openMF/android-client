@@ -221,7 +221,7 @@ class LoanDaoHelper(
      * @param details LoanRefundDetailsEntity for saving in Database
      * @return LoanRefundDetailsEntity
      */
-    suspend fun saveLoaRefundDetails(
+    suspend fun saveLoanRefundDetails(
         details: LoanRefundDetailsEntity,
     ): LoanRefundDetailsEntity {
         loanDao.insertLoanRefundDetails(details)
@@ -241,5 +241,12 @@ class LoanDaoHelper(
         }
     }
 
-    fun saveLoanRefundDetails(it: LoanRefundDetailsEntity) {}
+    /**
+     * This method deletes the LoanRefundDetails from Database according to Loan Id.
+     *
+     * @param loanId Loan Id of the LoanRefundDetails to delete
+     */
+    suspend fun deleteLoanRefundDetails(loanId: Int) {
+        loanDao.deleteLoanRefundDetails(loanId)
+    }
 }

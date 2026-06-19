@@ -9,7 +9,6 @@
  */
 package com.mifos.room.entities.accounts.loans
 
-import kotlinx.serialization.Serializable
 import template.core.base.database.CollationSequence.UNSPECIFIED
 import template.core.base.database.ColumnInfo
 import template.core.base.database.ColumnInfoTypeAffinity.INHERIT_FIELD_NAME
@@ -18,7 +17,6 @@ import template.core.base.database.ColumnInfoTypeAffinity.VALUE_UNSPECIFIED
 import template.core.base.database.Entity
 import template.core.base.database.PrimaryKey
 
-@Serializable
 @Entity(
     indices = [],
     inheritSuperIndices = false,
@@ -39,10 +37,6 @@ data class LoanRefundDetailsEntity(
     val defaultTransactionDate: String,
 )
 
-/**
- * Maps API loan entity to Room entity for offline caching.
- * Used in DataManagerLoan when fetching data online.
- */
 fun LoanWithAssociationsEntity.toLoanRefundDetailsEntity(
     defaultTransactionDate: String,
 ): LoanRefundDetailsEntity = LoanRefundDetailsEntity(
