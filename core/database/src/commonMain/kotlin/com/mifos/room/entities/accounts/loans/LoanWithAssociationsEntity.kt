@@ -186,4 +186,22 @@ data class LoanWithAssociationsEntity(
     val isNPA: Boolean = false,
 
     val overpaidOnDate: List<Int>? = null,
+
+    val isEqualAmortization: Boolean = false,
+
+    val allowPartialPeriodInterestCalculation: Boolean = false,
+
+    val interestRecognitionOnDisbursementDate: Boolean = false,
+
+    val enableDownPayment: Boolean = false,
+
+    val enableIncomeCapitalization: Boolean = false,
+
+    val enableBuyDownFee: Boolean = false,
+
+    val enableInstallmentLevelDelinquency: Boolean = false,
+
+    val isInterestRecalculationEnabled: Boolean = false,
+
+    val chargedOff: Boolean = false,
 ) : Parcelable

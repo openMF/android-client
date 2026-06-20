@@ -29,6 +29,7 @@ fun NavGraphBuilder.loanProfileAccountDestination(
     navigateToDocuments: (Int) -> Unit,
     navigateToReschedules: (Int) -> Unit,
     navigateToNotes: (Int) -> Unit,
+    navigateToLoanAction: (Int) -> Unit,
     navigateToDashboard: (Int) -> Unit,
     approveLoan: (Int, LoanWithAssociationsEntity) -> Unit,
     onRepaymentClick: (LoanWithAssociationsEntity) -> Unit,
@@ -48,6 +49,7 @@ fun NavGraphBuilder.loanProfileAccountDestination(
             approveLoan = approveLoan,
             onRepaymentClick = onRepaymentClick,
             navigateToTransferScreen = navigateToTransferScreen,
+            navigateToLoanAction = navigateToLoanAction,
         )
     }
 }

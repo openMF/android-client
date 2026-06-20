@@ -24,6 +24,8 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.ui.util.BaseViewModel
+import com.mifos.feature.loan.loanAccountProfile.LoanAccountEvent.NavigateToDetail
+import com.mifos.feature.loan.loanAccountProfile.LoanAccountState.DialogState.Error
 import com.mifos.feature.loan.loanAccountProfile.components.LoanAccountProfileActionItem
 import com.mifos.feature.loan.utils.LoanStatus
 import com.mifos.feature.loan.utils.getLoanStatus
@@ -121,12 +123,13 @@ internal class LoanAccountProfileViewModel(
                 loadLoanAccountDetails(route.loanId)
             } else {
                 mutableStateFlow.update {
-                    it.copy(dialogState = LoanAccountState.DialogState.Error(Res.string.feature_loan_profile_error_details_not_found))
+                    it.copy(dialogState = Error(Res.string.feature_loan_profile_error_details_not_found))
                 }
             }
             LoanAccountAction.OnNextActionClick -> handleNextAction()
-            is LoanAccountAction.OnDetailItemClick -> sendEvent(LoanAccountEvent.NavigateToDetail(action.item))
+            is LoanAccountAction.OnDetailItemClick -> sendEvent(NavigateToDetail(action.item))
             LoanAccountAction.OnAccountClick -> sendEvent(LoanAccountEvent.NavigateToAccountDetails)
+            LoanAccountAction.OnArrowClick -> sendEvent(LoanAccountEvent.NavigateToLoanAction)
         }
     }
 
@@ -165,6 +168,7 @@ sealed interface LoanAccountEvent {
     data class NavigateToAction(val action: LoanProfileAction) : LoanAccountEvent
     data class NavigateToDetail(val detailItem: LoanAccountProfileActionItem) : LoanAccountEvent
     data object NavigateToAccountDetails : LoanAccountEvent
+    data object NavigateToLoanAction : LoanAccountEvent
 }
 
 sealed interface LoanAccountAction {
@@ -173,4 +177,5 @@ sealed interface LoanAccountAction {
     data object OnNextActionClick : LoanAccountAction
     data class OnDetailItemClick(val item: LoanAccountProfileActionItem) : LoanAccountAction
     data object OnAccountClick : LoanAccountAction
+    data object OnArrowClick : LoanAccountAction
 }
