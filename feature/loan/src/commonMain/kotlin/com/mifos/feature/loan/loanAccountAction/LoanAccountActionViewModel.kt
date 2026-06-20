@@ -172,7 +172,11 @@ internal class LoanAccountActionsViewModel(
                     generatedActions.add(LoanAccountActionItem.PrepayLoan)
                 }
 
-                generatedActions.add(LoanAccountActionItem.ChargeOff)
+                if (flags.chargedOff) {
+                    generatedActions.add(LoanAccountActionItem.UndoChargeOff)
+                } else {
+                    generatedActions.add(LoanAccountActionItem.ChargeOff)
+                }
 
                 if (flags.loanReAged) {
                     generatedActions.add(LoanAccountActionItem.UndoReAge)
@@ -186,8 +190,6 @@ internal class LoanAccountActionsViewModel(
                     generatedActions.add(LoanAccountActionItem.ReAmortize)
                 }
 
-                generatedActions.add(LoanAccountActionItem.Payments)
-
                 generatedActions.add(LoanAccountActionItem.WaiveInterest)
                 generatedActions.add(LoanAccountActionItem.Reschedule)
                 generatedActions.add(LoanAccountActionItem.WriteOff)
@@ -199,6 +201,8 @@ internal class LoanAccountActionsViewModel(
                 generatedActions.add(LoanAccountActionItem.RecoverFromGuarantor)
                 generatedActions.add(LoanAccountActionItem.SellLoan)
                 generatedActions.add(LoanAccountActionItem.ContractTermination)
+
+                generatedActions.add(LoanAccountActionItem.Payments)
 
                 if (flags.enableBuyDownFee) {
                     generatedActions.add(LoanAccountActionItem.BuyDownFee)
