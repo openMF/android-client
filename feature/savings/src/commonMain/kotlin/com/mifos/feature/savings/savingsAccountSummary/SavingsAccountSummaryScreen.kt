@@ -71,6 +71,7 @@ import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosCard
 import com.mifos.core.designsystem.component.MifosMenuDropDownItem
@@ -148,7 +149,7 @@ internal fun SavingsAccountSummaryScreen(
                     currentState.savingsAccountWithAssociations.clientId?.toLong() ?: 0L,
                     currentState.savingsAccountWithAssociations.clientName ?: "",
                     accountId.toLong(),
-                    1,
+                    Constants.SAVINGS_ACCOUNT_VAL,
                     currentState.savingsAccountWithAssociations.currency?.code ?: "",
                 )
             }
