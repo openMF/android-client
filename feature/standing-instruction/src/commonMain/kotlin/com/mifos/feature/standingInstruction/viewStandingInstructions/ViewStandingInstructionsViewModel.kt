@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.feature.standingInstructions.viewStandingInstructions
+package com.mifos.feature.standingInstruction.viewStandingInstructions
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -22,6 +22,7 @@ import com.mifos.core.data.repository.StandingInstructionsRepository
 import com.mifos.core.model.objects.standingInstructions.StandingInstruction
 import com.mifos.core.model.objects.standingInstructions.StandingInstructionUpdate
 import com.mifos.core.ui.util.BaseViewModel
+import com.mifos.feature.standingInstructions.viewStandingInstructions.ViewStandingInstructionsScreenRoute
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -270,7 +271,7 @@ class ViewStandingInstructionsViewModel(
                 } else {
                     instruction.amount?.toString() ?: "--"
                 },
-                validity = instruction.validFrom ?: "-- ",
+                validity = instruction.validFrom ?: "--",
             )
         }
         return StandingInstructionTableData(rows = rows)

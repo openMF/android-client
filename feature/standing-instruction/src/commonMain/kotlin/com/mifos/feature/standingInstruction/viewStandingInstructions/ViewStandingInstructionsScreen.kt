@@ -79,13 +79,6 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosProgressIndicator
-import com.mifos.feature.standingInstructions.viewStandingInstructions.EditField
-import com.mifos.feature.standingInstructions.viewStandingInstructions.StandingInstructionRowData
-import com.mifos.feature.standingInstructions.viewStandingInstructions.StandingInstructionTableData
-import com.mifos.feature.standingInstructions.viewStandingInstructions.ViewStandingInstructionsAction
-import com.mifos.feature.standingInstructions.viewStandingInstructions.ViewStandingInstructionsEvent
-import com.mifos.feature.standingInstructions.viewStandingInstructions.ViewStandingInstructionsState
-import com.mifos.feature.standingInstructions.viewStandingInstructions.ViewStandingInstructionsViewModel
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.Clock

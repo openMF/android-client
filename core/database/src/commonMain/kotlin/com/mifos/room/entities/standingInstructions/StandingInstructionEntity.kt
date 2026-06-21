@@ -9,9 +9,6 @@
  */
 package com.mifos.room.entities.standingInstructions
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
-import kotlinx.serialization.Serializable
 import template.core.base.database.Entity
 import template.core.base.database.PrimaryKey
 
@@ -23,8 +20,6 @@ import template.core.base.database.PrimaryKey
     ignoredColumns = [],
     foreignKeys = [],
 )
-@Serializable
-@Parcelize
 data class StandingInstructionEntity(
     @PrimaryKey(autoGenerate = false)
     val id: Int,
@@ -40,4 +35,4 @@ data class StandingInstructionEntity(
     val fromAccount: StandingInstructionAccountEntity? = null,
 
     val toAccount: StandingInstructionAccountEntity? = null,
-) : Parcelable
+)

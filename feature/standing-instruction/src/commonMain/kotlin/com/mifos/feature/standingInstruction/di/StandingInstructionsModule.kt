@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.standingInstruction.di
 
-import com.mifos.feature.standingInstructions.viewStandingInstructions.ViewStandingInstructionsViewModel
+import com.mifos.feature.standingInstruction.viewStandingInstructions.ViewStandingInstructionsViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
