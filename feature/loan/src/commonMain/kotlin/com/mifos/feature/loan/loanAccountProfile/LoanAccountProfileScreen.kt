@@ -10,7 +10,6 @@
 package com.mifos.feature.loan.loanAccountProfile
 
 import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_credit_balance_refund
 import androidclient.feature.loan.generated.resources.feature_loan_profile_account
 import androidclient.feature.loan.generated.resources.feature_loan_profile_action_repayment
 import androidclient.feature.loan.generated.resources.feature_loan_profile_error_details_not_found
@@ -91,7 +90,6 @@ internal fun LoanAccountProfileScreen(
     navigateToReschedules: (Int) -> Unit,
     navigateToNotes: (Int) -> Unit,
     navigateToTransferScreen: (loanId: Int) -> Unit,
-    onCreditBalanceRefundClick: (LoanWithAssociationsEntity) -> Unit,
     navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: LoanAccountProfileViewModel = koinViewModel(),
@@ -126,7 +124,6 @@ internal fun LoanAccountProfileScreen(
                             account.id,
                         )
                     }
-                    LoanProfileAction.CreditBalanceRefund -> onCreditBalanceRefundClick(account)
                 }
             }
             is LoanAccountEvent.NavigateToDetail -> {
@@ -205,21 +202,6 @@ private fun LoanAccountContent(
                 style = MifosTypography.labelMediumEmphasized,
                 color = KptTheme.colorScheme.onPrimary,
             )
-        }
-
-        if (loanAccount.status.overpaid == true) {
-            Spacer(Modifier.height(KptTheme.spacing.sm))
-
-            MifosButton(
-                onClick = { onAction(LoanAccountAction.OnCreditBalanceRefundClick) },
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Text(
-                    text = stringResource(Res.string.feature_loan_credit_balance_refund),
-                    style = MifosTypography.labelMediumEmphasized,
-                    color = KptTheme.colorScheme.onPrimary,
-                )
-            }
         }
 
         Spacer(Modifier.height(KptTheme.spacing.lg))
