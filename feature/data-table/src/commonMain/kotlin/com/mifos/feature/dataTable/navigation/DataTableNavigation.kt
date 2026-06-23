@@ -16,20 +16,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.model.objects.payloads.GroupLoanPayload
-import com.mifos.core.network.model.LoansPayload
 import com.mifos.feature.dataTable.dataTable.DataTableScreen
 import com.mifos.feature.dataTable.dataTableData.DataTableDataScreen
 import com.mifos.feature.dataTable.dataTableList.DataTableListNavArgs
 import com.mifos.feature.dataTable.dataTableList.DataTableListScreen
+import com.mifos.feature.dataTable.dataTableList.FormWidgetDTO
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.navigation.DataTableDataNavigationArg
 import com.mifos.room.entities.noncore.DataTableEntity
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.polymorphic
-import kotlinx.serialization.modules.subclass
 
 @Serializable
 data object DataTableNavGraph
@@ -131,24 +127,12 @@ fun NavController.navigateDataTableData(
     navigate(DataTableScreens.DataTableDataScreen.argument(arg))
 }
 
-private val navArgJson = Json {
-    serializersModule = SerializersModule {
-        polymorphic(Any::class) {
-            subclass(LoansPayload::class, LoansPayload.serializer())
-            subclass(GroupLoanPayload::class, GroupLoanPayload.serializer())
-            subclass(ClientPayloadEntity::class, ClientPayloadEntity.serializer())
-        }
-    }
-}
-
 fun NavController.navigateDataTableList(
     dataTableList: List<DataTableEntity>,
     payload: Any?,
     requestType: Int,
+    formWidget: MutableList<List<FormWidgetDTO>>,
 ) {
-    val arg = navArgJson.encodeToString(
-        DataTableListNavArgs.serializer(),
-        DataTableListNavArgs(dataTableList, requestType, payload),
-    )
+    val arg = Json.encodeToString(DataTableListNavArgs.serializer(), DataTableListNavArgs(dataTableList, requestType, payload, formWidget))
     navigate(DataTableScreens.DataTableListScreen.argument(arg))
 }

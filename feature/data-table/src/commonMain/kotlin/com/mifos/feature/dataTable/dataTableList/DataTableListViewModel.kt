@@ -15,6 +15,7 @@ import androidclient.feature.data_table.generated.resources.feature_data_table_l
 import androidclient.feature.data_table.generated.resources.feature_data_table_something_went_wrong
 import androidclient.feature.data_table.generated.resources.feature_data_table_waiting_for_checker_approval
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.ApiDateFormatter
@@ -24,18 +25,19 @@ import com.mifos.core.data.repository.DataTableListRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.network.model.LoansPayload
-import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.room.entities.client.ClientPayloadEntity
-import com.mifos.room.entities.noncore.ColumnHeader
 import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.noncore.DataTablePayload
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
-import org.jetbrains.compose.resources.StringResource
 
 /**
  * Created by Aditya Gupta on 10/08/23.
@@ -44,12 +46,22 @@ class DataTableListViewModel(
     private val repository: DataTableListRepository,
     private val prefManager: UserPreferencesRepository,
     savedStateHandle: SavedStateHandle,
-) : BaseViewModel<DataTableListState, DataTableListEvent, DataTableListAction>(
-    initialState = DataTableListState(),
-) {
+) : ViewModel() {
+
+    val userStatus: StateFlow<Boolean> = prefManager.userInfo
+        .map { it.userStatus }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = false,
+        )
 
     private val json = Json {
         serializersModule = SerializersModule {
+            polymorphic(FormWidgetDTO::class) {
+                subclass(FormSpinnerDTO::class, FormSpinnerDTO.serializer())
+            }
+
             polymorphic(Any::class) {
                 subclass(LoansPayload::class, LoansPayload.serializer())
                 subclass(GroupLoanPayload::class, GroupLoanPayload.serializer())
@@ -62,68 +74,46 @@ class DataTableListViewModel(
         savedStateHandle.getStateFlow(key = Constants.DATA_TABLE_LIST_NAV_DATA, initialValue = "")
     val arg: DataTableListNavArgs = json.decodeFromString<DataTableListNavArgs>(args.value)
 
-    private val requestType: Int = arg.requestType
-    private var dataTablePayloadElements: ArrayList<DataTablePayload> = ArrayList()
+    private val _dataTableListUiState: MutableStateFlow<DataTableListUiState> =
+        MutableStateFlow(DataTableListUiState.Loading)
+    val dataTableListUiState: StateFlow<DataTableListUiState> = _dataTableListUiState.asStateFlow()
+
+    private val _dataTableList: MutableStateFlow<List<DataTableEntity>?> = MutableStateFlow(null)
+    val dataTableList: StateFlow<List<DataTableEntity>?> = _dataTableList.asStateFlow()
+
+    private var requestType: Int = 0
+    private var dataTablePayloadElements: ArrayList<DataTablePayload>? = null
     private var clientLoanPayload: LoansPayload? = null
     private var groupLoanPayload: GroupLoanPayload? = null
     private var clientPayload: ClientPayloadEntity? = null
+    private var formWidgetsList: MutableList<List<FormWidgetDTO>> = ArrayList()
 
-    init {
+    fun initArgs(
+        dataTables: List<DataTableEntity>,
+        requestType: Int,
+        formWidgetsList: MutableList<List<FormWidgetDTO>>,
+        payload: Any?,
+    ) {
+        _dataTableList.value = dataTables
+        this.requestType = requestType
+        this.formWidgetsList = formWidgetsList
         when (requestType) {
-            Constants.CLIENT_LOAN -> clientLoanPayload = arg.payload as LoansPayload?
-            Constants.GROUP_LOAN -> groupLoanPayload = arg.payload as GroupLoanPayload?
-            Constants.CREATE_CLIENT -> clientPayload = arg.payload as ClientPayloadEntity?
-        }
-        mutableStateFlow.update {
-            it.copy(
-                dataTableList = arg.dataTableList,
-                formValues = arg.dataTableList.indices.associateWith { emptyMap() },
-            )
-        }
-        viewModelScope.launch {
-            prefManager.userInfo
-                .map { it.userStatus }
-                .collect { status ->
-                    mutableStateFlow.update { it.copy(userStatus = status) }
-                }
+            Constants.CLIENT_LOAN -> clientLoanPayload = payload as LoansPayload?
+            Constants.GROUP_LOAN -> groupLoanPayload = payload as GroupLoanPayload?
+            Constants.CREATE_CLIENT -> clientPayload = payload as ClientPayloadEntity?
         }
     }
 
-    override fun handleAction(action: DataTableListAction) {
-        when (action) {
-            is DataTableListAction.OnFieldChanged -> updateFieldValue(
-                action.tableIndex,
-                action.columnName,
-                action.value,
+    fun processDataTable() {
+        val dataTables = dataTableList.value ?: listOf()
+        for (i in dataTables.indices) {
+            val dataTablePayload = DataTablePayload(
+                registeredTableName = dataTables[i].registeredTableName,
+                data = addDataTableInput(widgets = formWidgetsList[i]),
             )
 
-            DataTableListAction.OnSaveClicked -> processDataTable()
+            dataTablePayloadElements?.add(dataTablePayload)
         }
-    }
-
-    private fun updateFieldValue(tableIndex: Int, columnName: String, value: Any) {
-        mutableStateFlow.update { current ->
-            val tableMap = current.formValues[tableIndex].orEmpty().toMutableMap()
-            tableMap[columnName] = value
-            current.copy(formValues = current.formValues + (tableIndex to tableMap))
-        }
-    }
-
-    private fun processDataTable() {
-        val dataTables = state.dataTableList
-        dataTablePayloadElements.clear()
-
-        dataTables.indices.forEach { index ->
-            val rawValues = state.formValues[index].orEmpty()
-            val data = buildPayloadMap(dataTables[index].columnHeaderData, rawValues)
-            dataTablePayloadElements.add(
-                DataTablePayload(
-                    registeredTableName = dataTables[index].registeredTableName,
-                    data = data,
-                ),
-            )
-        }
-
         when (requestType) {
             Constants.CLIENT_LOAN -> {
                 clientLoanPayload?.dataTables = dataTablePayloadElements
@@ -141,65 +131,22 @@ class DataTableListViewModel(
         }
     }
 
-    private fun buildPayloadMap(
-        headers: List<ColumnHeader>,
-        rawValues: Map<String, Any>,
-    ): Map<String, Any> {
-        val payload = mutableMapOf<String, Any>(
-            "dateFormat" to ApiDateFormatter.DATE_FORMAT,
-            "locale" to ApiDateFormatter.LOCALE,
-        )
-        headers
-            .filter { it.columnPrimaryKey == false }
-            .forEach { header ->
-                val name = header.dataTableColumnName ?: return@forEach
-                val raw = rawValues[name] ?: return@forEach
-                val coerced = coerce(raw, header.columnDisplayType) ?: return@forEach
-                payload[name] = coerced
-            }
-        return payload
-    }
-
-    private fun coerce(value: Any, displayType: String?): Any? {
-        if (value !is String) return value
-        if (value.isBlank()) return null
-        return when (displayType) {
-            DataTableColumnType.INTEGER -> value.toIntOrNull()
-            DataTableColumnType.DECIMAL, DataTableColumnType.FLOAT -> value.toDoubleOrNull()
-            else -> value
-        }
-    }
-
     private fun createLoanAccount(loansPayload: LoansPayload?) {
         viewModelScope.launch {
             repository.createLoansAccount(loansPayload)
                 .collect { dataState ->
                     when (dataState) {
-                        is DataState.Error -> {
-                            mutableStateFlow.update {
-                                it.copy(screenState = DataTableListState.ScreenState.Content)
-                            }
-                            sendEvent(
-                                DataTableListEvent.ShowMessage(
-                                    Res.string.feature_data_table_generic_failure_message,
-                                ),
-                            )
-                        }
+                        is DataState.Error ->
+                            _dataTableListUiState.value =
+                                DataTableListUiState.ShowMessage(Res.string.feature_data_table_generic_failure_message)
 
                         DataState.Loading ->
-                            mutableStateFlow.update {
-                                it.copy(screenState = DataTableListState.ScreenState.Loading)
-                            }
+                            _dataTableListUiState.value =
+                                DataTableListUiState.Loading
 
                         is DataState.Success -> {
-                            mutableStateFlow.update {
-                                it.copy(screenState = DataTableListState.ScreenState.Content)
-                            }
-                            sendEvent(
-                                DataTableListEvent.ShowMessage(
-                                    Res.string.feature_data_table_loan_creation_success,
-                                ),
-                            )
+                            _dataTableListUiState.value =
+                                DataTableListUiState.ShowMessage(Res.string.feature_data_table_loan_creation_success)
                         }
                     }
                 }
@@ -211,31 +158,17 @@ class DataTableListViewModel(
             repository.createGroupLoansAccount(loansPayload)
                 .collect { dataState ->
                     when (dataState) {
-                        is DataState.Error -> {
-                            mutableStateFlow.update {
-                                it.copy(screenState = DataTableListState.ScreenState.Content)
-                            }
-                            sendEvent(
-                                DataTableListEvent.ShowMessage(
-                                    Res.string.feature_data_table_generic_failure_message,
-                                ),
-                            )
-                        }
+                        is DataState.Error ->
+                            _dataTableListUiState.value =
+                                DataTableListUiState.ShowMessage(Res.string.feature_data_table_generic_failure_message)
 
                         DataState.Loading ->
-                            mutableStateFlow.update {
-                                it.copy(screenState = DataTableListState.ScreenState.Loading)
-                            }
+                            _dataTableListUiState.value =
+                                DataTableListUiState.Loading
 
                         is DataState.Success -> {
-                            mutableStateFlow.update {
-                                it.copy(screenState = DataTableListState.ScreenState.Content)
-                            }
-                            sendEvent(
-                                DataTableListEvent.ShowMessage(
-                                    Res.string.feature_data_table_loan_creation_success,
-                                ),
-                            )
+                            _dataTableListUiState.value =
+                                DataTableListUiState.ShowMessage(Res.string.feature_data_table_loan_creation_success)
                         }
                     }
                 }
@@ -244,64 +177,47 @@ class DataTableListViewModel(
 
     private fun createClient(clientPayload: ClientPayloadEntity) {
         viewModelScope.launch {
-            mutableStateFlow.update {
-                it.copy(screenState = DataTableListState.ScreenState.Loading)
-            }
+            _dataTableListUiState.value = DataTableListUiState.Loading
 
             try {
                 val clientId = repository.createClient(clientPayload)
-                mutableStateFlow.update {
-                    it.copy(screenState = DataTableListState.ScreenState.Content)
-                }
 
                 if (clientId != null) {
-                    sendEvent(DataTableListEvent.ClientCreated(clientPayload))
+                    _dataTableListUiState.value =
+                        DataTableListUiState.Success(client = clientPayload)
                 } else {
-                    sendEvent(
-                        DataTableListEvent.ShowMessage(
-                            Res.string.feature_data_table_waiting_for_checker_approval,
-                        ),
-                    )
-                    sendEvent(DataTableListEvent.NavigateBack)
+                    _dataTableListUiState.value =
+                        DataTableListUiState.Success(Res.string.feature_data_table_waiting_for_checker_approval)
                 }
             } catch (e: Exception) {
                 Logger.e("ExceptionCaught", e)
-                mutableStateFlow.update {
-                    it.copy(screenState = DataTableListState.ScreenState.Content)
-                }
-                sendEvent(
-                    DataTableListEvent.ShowMessage(
-                        Res.string.feature_data_table_something_went_wrong,
-                    ),
-                )
+                _dataTableListUiState.value =
+                    DataTableListUiState.ShowMessage(Res.string.feature_data_table_something_went_wrong)
             }
         }
     }
-}
 
-data class DataTableListState(
-    val dataTableList: List<DataTableEntity> = emptyList(),
-    val formValues: Map<Int, Map<String, Any>> = emptyMap(),
-    val userStatus: Boolean = false,
-    val screenState: ScreenState = ScreenState.Content,
-) {
-    sealed interface ScreenState {
-        data object Loading : ScreenState
-        data object Content : ScreenState
+    fun addDataTableInput(widgets: List<Any>): Map<String, Any> {
+        val payload = mutableMapOf<String, Any>()
+        payload["dateFormat"] = ApiDateFormatter.DATE_FORMAT
+        payload["locale"] = ApiDateFormatter.LOCALE
+
+        for (widget in widgets) {
+            when (widget) {
+                is FormWidgetModel -> {
+                    payload[widget.propertyName] = when (widget.returnType) {
+                        BaseFormWidget.SCHEMA_KEY_INT -> widget.value.toIntOrNull() ?: 0
+                        BaseFormWidget.SCHEMA_KEY_DECIMAL -> widget.value.toDoubleOrNull() ?: 0.0
+                        else -> widget.value
+                    }
+                }
+
+                is SpinnerModel -> {
+                    payload[widget.propertyName] = widget.getSelectedId()
+                }
+            }
+        }
+
+        return payload
     }
-}
-
-sealed interface DataTableListEvent {
-    data object NavigateBack : DataTableListEvent
-    data class ClientCreated(val client: ClientPayloadEntity) : DataTableListEvent
-    data class ShowMessage(val message: StringResource) : DataTableListEvent
-}
-
-sealed interface DataTableListAction {
-    data object OnSaveClicked : DataTableListAction
-    data class OnFieldChanged(
-        val tableIndex: Int,
-        val columnName: String,
-        val value: Any,
-    ) : DataTableListAction
 }

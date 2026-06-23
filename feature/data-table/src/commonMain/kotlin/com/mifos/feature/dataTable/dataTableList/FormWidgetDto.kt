@@ -7,8 +7,8 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-import com.mifos.feature.dataTable.dataTableList.FormSpinnerCompose
-import com.mifos.feature.dataTable.dataTableList.FormWidget
+package com.mifos.feature.dataTable.dataTableList
+
 import kotlinx.serialization.Serializable
 
 @Serializable

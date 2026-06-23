@@ -33,7 +33,6 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -50,6 +49,7 @@ import androidx.compose.ui.unit.sp
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
 import com.mifos.core.designsystem.component.MifosOutlinedTextField
+import com.mifos.core.designsystem.component.MifosTextButton
 import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountAction
@@ -171,7 +171,7 @@ private fun DatatableField(
     val label = header.displayLabel().ifBlank { return }
 
     when (header.columnDisplayType) {
-        "STRING" -> TextFieldRow(
+        "STRING" -> DatatableTextFieldRow(
             value = (currentValue as? DatatableFieldValue.Text)?.text.orEmpty(),
             onValueChange = { onValueChange(DatatableFieldValue.Text(it)) },
             label = label,
@@ -179,7 +179,7 @@ private fun DatatableField(
             singleLine = true,
         )
 
-        "TEXT" -> TextFieldRow(
+        "TEXT" -> DatatableTextFieldRow(
             value = (currentValue as? DatatableFieldValue.Text)?.text.orEmpty(),
             onValueChange = { onValueChange(DatatableFieldValue.Text(it)) },
             label = label,
@@ -187,7 +187,7 @@ private fun DatatableField(
             singleLine = false,
         )
 
-        "INTEGER" -> TextFieldRow(
+        "INTEGER" -> DatatableTextFieldRow(
             value = (currentValue as? DatatableFieldValue.Text)?.text.orEmpty(),
             onValueChange = { onValueChange(DatatableFieldValue.Text(it)) },
             label = label,
@@ -195,7 +195,7 @@ private fun DatatableField(
             singleLine = true,
         )
 
-        "DECIMAL", "FLOAT" -> TextFieldRow(
+        "DECIMAL", "FLOAT" -> DatatableTextFieldRow(
             value = (currentValue as? DatatableFieldValue.Text)?.text.orEmpty(),
             onValueChange = { onValueChange(DatatableFieldValue.Text(it)) },
             label = label,
@@ -227,7 +227,7 @@ private fun DatatableField(
 }
 
 @Composable
-private fun TextFieldRow(
+private fun DatatableTextFieldRow(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
@@ -263,16 +263,22 @@ private fun DateFieldRow(
         DatePickerDialog(
             onDismissRequest = { showDatePicker = false },
             confirmButton = {
-                TextButton(onClick = {
-                    showDatePicker = false
-                    datePickerState.selectedDateMillis?.let { millis ->
-                        selectedMillis = millis
-                        onDateSelected(DateHelper.getDateAsStringFromLong(millis))
-                    }
-                }) { Text(stringResource(Res.string.feature_loan_dialog_action_ok)) }
+                MifosTextButton(
+                    onClick = {
+                        showDatePicker = false
+                        datePickerState.selectedDateMillis?.let { millis ->
+                            selectedMillis = millis
+                            onDateSelected(DateHelper.getDateAsStringFromLong(millis))
+                        }
+                    },
+                ) {
+                    Text(stringResource(Res.string.feature_loan_dialog_action_ok))
+                }
             },
             dismissButton = {
-                TextButton(onClick = { showDatePicker = false }) {
+                MifosTextButton(
+                    onClick = { showDatePicker = false },
+                ) {
                     Text(stringResource(Res.string.feature_loan_cancel))
                 }
             },

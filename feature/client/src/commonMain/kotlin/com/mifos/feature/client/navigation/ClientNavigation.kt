@@ -87,6 +87,7 @@ import com.mifos.feature.client.savingsAccounts.navigateToClientSavingsAccountsR
 import com.mifos.feature.client.savingsAccounts.savingsAccountsDestination
 import com.mifos.feature.client.shareAccounts.navigateToShareAccountsScreen
 import com.mifos.feature.client.shareAccounts.shareAccountsDestination
+import com.mifos.feature.dataTable.dataTableList.FormWidgetDTO
 import com.mifos.feature.dataTable.navigation.dataTableRoute
 import com.mifos.feature.dataTable.navigation.navigateDataTableData
 import com.mifos.feature.dataTable.navigation.navigateToDataTable
@@ -115,7 +116,7 @@ import com.mifos.room.entities.noncore.DataTableEntity
 import com.mifos.room.entities.survey.SurveyEntity
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import kotlin.reflect.KFunction3
+import kotlin.reflect.KFunction4
 
 @Serializable
 data object ClientNavGraph
@@ -125,7 +126,7 @@ fun NavGraphBuilder.clientNavGraph(
     moreClientInfo: (Int) -> Unit,
     onMoreInfoClicked: (String, Int) -> Unit,
     activateClient: (Int) -> Unit,
-    hasDatatables: KFunction3<List<DataTableEntity>, Any?, Int, Unit>,
+    hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidgetDTO>>, Unit>,
     onNavigateToSearch: (String) -> Unit,
 ) {
     navigation<ClientNavGraph>(
@@ -520,7 +521,7 @@ fun NavGraphBuilder.clientSurveyQuestionRoute(
 fun NavGraphBuilder.createClientRoute(
     onBackPressed: () -> Unit,
     navigateToClientDetails: (Int) -> Unit,
-    hasDatatables: KFunction3<List<DataTableEntity>, Any?, Int, Unit>,
+    hasDatatables: KFunction4<List<DataTableEntity>, Any?, Int, MutableList<List<FormWidgetDTO>>, Unit>,
 ) {
     composable(
         route = ClientScreens.CreateClientScreen.route,
@@ -529,7 +530,7 @@ fun NavGraphBuilder.createClientRoute(
             navigateBack = onBackPressed,
             navigateToClientDetails = navigateToClientDetails,
             hasDatatables = { datatables, clientPayload ->
-                hasDatatables(datatables, clientPayload, Constants.CREATE_CLIENT)
+                hasDatatables(datatables, clientPayload, Constants.CREATE_CLIENT, mutableListOf())
             },
         )
     }

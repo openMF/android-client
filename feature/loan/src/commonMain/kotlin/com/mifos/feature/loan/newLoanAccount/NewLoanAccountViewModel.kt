@@ -19,7 +19,6 @@ import androidclient.feature.loan.generated.resources.total_installments
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
@@ -327,16 +326,8 @@ internal class NewLoanAccountViewModel(
                     ?.transactionProcessingStrategyOptions?.getOrNull(state.repaymentStrategyIndex)?.code,
                 externalId = state.externalId,
             )
-            val realDataTables = state.loanTemplate?.dataTables?.filterNotNull().orEmpty()
 
-            Logger.d(
-                tag = "DataTableGate",
-                messageString =
-                "submit: productId=${state.productId} " +
-                    "rawSize=${state.loanTemplate?.dataTables?.size ?: 0} " +
-                    "realSize=${realDataTables.size} " + "names=${realDataTables.map { it.registeredTableName }} " +
-                    "valuesFilled=${state.datatableValues.values.sumOf { it.size }}",
-            )
+            val realDataTables = state.loanTemplate?.dataTables?.filterNotNull().orEmpty()
 
             if (realDataTables.isNotEmpty()) {
                 val datatablePayloads = realDataTables.mapIndexed { idx, table ->
@@ -993,10 +984,6 @@ internal class NewLoanAccountViewModel(
         }
     }
 
-    /**
-     * Build LoansPayload from current form state for schedule preview calculation.
-     * Uses the same data that will be sent when submitting the loan application.
-     */
     private fun buildLoansPayloadForSchedulePreview(): LoansPayload {
         return LoansPayload(
             loanOfficerId = if (state.loanOfficerIndex == -1) {
@@ -1072,10 +1059,7 @@ data class NewLoanAccountState(
     val repaymentSchedulesSummary: Map<StringResource, String> = emptyMap(),
     val loanTemplate: LoanTemplate? = null,
     val currentStep: Int = 0,
-    /**
-     * - Per-loan datatable values keyed by table-index → (columnName → value).
-     * - Populated by the inline stepper's DatatableStepPage instances.
-     */
+
     val datatableValues: Map<Int, Map<String, DatatableFieldValue>> = emptyMap(),
     val dialogState: DialogState? = null,
     val screenState: ScreenState? = null,
@@ -1124,9 +1108,6 @@ data class NewLoanAccountState(
     val showChargesDatePick: Boolean = false,
     val chargeAmount: String = "",
 
-    /**
-     * These are used in dropDown field for changing the value,
-     */
     val loanProductSelected: Int = -1,
     val chooseChargeIndex: Int = -1,
     val collateralSelectedIndex: Int = -1,
@@ -1189,10 +1170,12 @@ private fun buildDatatablePayloadMap(
         "dateFormat" to DateHelper.SHORT_MONTH,
         "locale" to Constants.LOCALE_EN,
     )
-    headers.filterNotNull().forEach { header ->
+    headers.filterNotNull().filter {
+        !SYSTEM_COLUMNS.contains(it.dataTableColumnName)
+    }.forEach { header ->
         if (header.columnPrimaryKey == true) return@forEach
+
         val name = header.dataTableColumnName ?: return@forEach
-        if (name in SYSTEM_COLUMNS) return@forEach
         val raw = rawValues[name] ?: return@forEach
         val encoded = header.encodePayloadValue(raw) ?: return@forEach
         payload[name] = encoded
