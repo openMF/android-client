@@ -482,4 +482,5 @@
     <string name="feature_loan_closed_written_off">Closed (Written Off)</string>
     <string name="feature_loan_closed_rescheduled">Closed (Rescheduled)</string>
     <string name="feature_loan_rejected">Rejected</string>
+    <string name="feature_loan_unknown">Unknown</string>">
 </resources>

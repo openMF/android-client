@@ -18,6 +18,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_closed_resche
 import androidclient.feature.loan.generated.resources.feature_loan_closed_written_off
 import androidclient.feature.loan.generated.resources.feature_loan_pending_approval
 import androidclient.feature.loan.generated.resources.feature_loan_rejected
+import androidclient.feature.loan.generated.resources.feature_loan_unknown
 import androidclient.feature.loan.generated.resources.feature_loan_withdrawn_by_applicant
 import androidx.compose.ui.graphics.Color
 import com.mifos.core.designsystem.theme.AppColors
@@ -64,11 +65,16 @@ enum class LoanStatus(
         Res.string.feature_loan_rejected,
         AppColors.loanRejectedStatus,
     ),
+    UNKNOWN(
+        Res.string.feature_loan_unknown,
+        AppColors.loanUnknownStatus,
+    ),
 }
 
 fun LoanStatusEntity.getLoanStatus(): LoanStatus {
     return when {
         this.code == "loanStatusType.withdrawn.by.client" -> LoanStatus.WITHDRAWN_BY_APPLICANT
+        this.code == "loanStatusType.rejected" -> LoanStatus.REJECTED
         this.overpaid == true -> LoanStatus.CLOSED_OVERPAID
         this.closedWrittenOff == true -> LoanStatus.CLOSED_WRITTEN_OFF
         this.closedRescheduled == true -> LoanStatus.CLOSED_RESCHEDULED
@@ -76,6 +82,6 @@ fun LoanStatusEntity.getLoanStatus(): LoanStatus {
         this.active == true -> LoanStatus.ACTIVE
         this.waitingForDisbursal == true -> LoanStatus.APPROVED
         this.pendingApproval == true -> LoanStatus.PENDING_APPROVAL
-        else -> LoanStatus.REJECTED
+        else -> LoanStatus.UNKNOWN
     }
 }
