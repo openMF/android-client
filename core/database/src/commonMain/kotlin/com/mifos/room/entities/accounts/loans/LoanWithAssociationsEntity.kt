@@ -184,4 +184,6 @@ data class LoanWithAssociationsEntity(
     val inArrears: Boolean = false,
 
     val isNPA: Boolean = false,
+
+    val overpaidOnDate: List<Int>? = null,
 ) : Parcelable

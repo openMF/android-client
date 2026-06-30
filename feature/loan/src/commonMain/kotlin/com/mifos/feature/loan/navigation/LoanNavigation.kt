@@ -14,6 +14,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.loan.amountTransfer.amountTransferScreen
 import com.mifos.feature.loan.amountTransfer.navigateToTransferScreen
@@ -23,6 +24,8 @@ import com.mifos.feature.loan.loanAccountSummary.loanAccountSummary
 import com.mifos.feature.loan.loanApproval.LoanAccountApprovalScreen
 import com.mifos.feature.loan.loanCharge.loanChargeScreen
 import com.mifos.feature.loan.loanCharge.navigateToLoanChargesScreen
+import com.mifos.feature.loan.loanDashboard.loanDashboardScreen
+import com.mifos.feature.loan.loanDashboard.navigateToLoanDashboardScreen
 import com.mifos.feature.loan.loanDisbursement.loanDisbursementScreen
 import com.mifos.feature.loan.loanDisbursement.navigateToLoanDisbursementScreen
 import com.mifos.feature.loan.loanRepayment.loanRepaymentScreen
@@ -74,6 +77,10 @@ fun NavGraphBuilder.loanDestination(
     loanRepaymentScreen {
         navController.popBackStack()
     }
+    loanDashboardScreen(
+        onNavigateBack = navController::popBackStack,
+        navigateToTransactions = navController::navigateToLoanTransactionScreen,
+    )
     newLoanAccountDestination(
         onNavigateBack = navController::popBackStack,
         onFinish = navController::popBackStack,
@@ -95,6 +102,7 @@ fun NavGraphBuilder.loanDestination(
         navigateToDocuments = { loanId ->
             onDocumentsClicked(loanId, Constants.ENTITY_TYPE_LOANS)
         },
+        navigateToDashboard = navController::navigateToLoanDashboardScreen,
         navigateToTransferScreen = navController::navigateToTransferScreen,
         navigateToReschedules = navController::navigateToLoanReschedulesScreen,
     )

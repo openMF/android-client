@@ -88,13 +88,13 @@ import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect
+import com.mifos.feature.loan.utils.getLoanStatus
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
@@ -270,12 +270,7 @@ private fun LoanAccountSummaryContent(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    val statusDescription = when {
-                        loanWithAssociations.status.active == true -> "Active"
-                        loanWithAssociations.status.pendingApproval == true -> "Pending Approval"
-                        loanWithAssociations.status.waitingForDisbursal == true -> "Waiting for Disbursal"
-                        else -> "Closed"
-                    }
+                    val statusDescription = stringResource(loanWithAssociations.status.getLoanStatus().label)
                     Canvas(
                         modifier = Modifier
                             .size(DesignToken.sizes.iconMedium)
@@ -284,23 +279,7 @@ private fun LoanAccountSummaryContent(
                             },
                         onDraw = {
                             drawCircle(
-                                color = when {
-                                    loanWithAssociations.status.active == true -> {
-                                        AppColors.loanIndicatorActive
-                                    }
-
-                                    loanWithAssociations.status.pendingApproval == true -> {
-                                        AppColors.loanIndicatorPending
-                                    }
-
-                                    loanWithAssociations.status.waitingForDisbursal == true -> {
-                                        AppColors.loanIndicatorWaitingForDisbursal
-                                    }
-
-                                    else -> {
-                                        AppColors.loanIndicatorOther
-                                    }
-                                },
+                                color = loanWithAssociations.status.getLoanStatus().color,
                             )
                         },
                     )
