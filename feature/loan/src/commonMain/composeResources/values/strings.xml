@@ -164,10 +164,6 @@
     <string name="feature_loan_profile_item_notes_subtitle">Additional internal comments</string>
     <string name="feature_loan_profile_item_standing_instructions_title">Standing Instructions</string>
     <string name="feature_loan_profile_item_standing_instructions_subtitle">Automated payment settings</string>
-    <string name="feature_loan_profile_status_active">Active</string>
-    <string name="feature_loan_profile_status_pending">Pending</string>
-    <string name="feature_loan_profile_status_overpaid">Overpaid</string>
-    <string name="feature_loan_profile_status_unknown">Unknown</string>
     <string name="feature_loan_profile_action_approve">Approve Account</string>
     <string name="feature_loan_profile_action_repayment">Make Repayment</string>
     <string name="feature_loan_profile_action_transfer">Transfer Funds</string>
@@ -563,4 +559,16 @@
     <string name="feature_loan_reschedule_fetch_failed">Failed to load reschedule history.</string>
     <string name="feature_loan_reschedule_approve_failed">Failed to approve reschedule.</string>
     <string name="feature_loan_reschedule_delete_failed">Failed to delete reschedule.</string>
+
+
+    <string name="feature_loan_pending_approval">Pending Approval</string>
+    <string name="feature_loan_approved">Approved</string>
+    <string name="feature_loan_withdrawn_by_applicant">Withdrawn by Applicant</string>
+    <string name="feature_loan_active">Active</string>
+    <string name="feature_loan_closed_overpaid">Closed (Overpaid)</string>
+    <string name="feature_loan_closed_obligations_met">Closed (Obligations Met)</string>
+    <string name="feature_loan_closed_written_off">Closed (Written Off)</string>
+    <string name="feature_loan_closed_rescheduled">Closed (Rescheduled)</string>
+    <string name="feature_loan_rejected">Rejected</string>
+    <string name="feature_loan_unknown">Unknown</string>">
 </resources>
