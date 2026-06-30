@@ -86,6 +86,7 @@ internal fun LoanAccountProfileScreen(
     navigateToReschedules: (Int) -> Unit,
     navigateToNotes: (Int) -> Unit,
     navigateToTransferScreen: (loanId: Int) -> Unit,
+    navigateToDashboard: (Int) -> Unit,
     navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: LoanAccountProfileViewModel = koinViewModel(),
@@ -122,6 +123,7 @@ internal fun LoanAccountProfileScreen(
                     LoanAccountProfileActionItem.Charges -> navigateToCharges(loanId)
                     LoanAccountProfileActionItem.Documents -> navigateToDocuments(loanId)
                     LoanAccountProfileActionItem.Reschedules -> navigateToReschedules(loanId)
+                    LoanAccountProfileActionItem.Dashboard -> navigateToDashboard(loanId)
                     LoanAccountProfileActionItem.Notes -> navigateToNotes(loanId)
                     else -> {}
                 }
