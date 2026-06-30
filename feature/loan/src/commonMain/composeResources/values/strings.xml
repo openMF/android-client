@@ -475,4 +475,17 @@
     <string name="feature_loan_reschedule_fetch_failed">Failed to load reschedule history.</string>
     <string name="feature_loan_reschedule_approve_failed">Failed to approve reschedule.</string>
     <string name="feature_loan_reschedule_delete_failed">Failed to delete reschedule.</string>
+
+    <string name="feature_loan_show_payment_details">Show Payment Details</string>
+    <string name="feature_loan_waive_penalties">Waive Penalties</string>
+    <string name="feature_loan_account">Account</string>
+    <string name="feature_loan_cheque">Cheque</string>
+    <string name="feature_loan_routing_code">Routing Code</string>
+    <string name="feature_loan_receipt">Receipt</string>
+    <string name="feature_loan_bank">Bank</string>
+    <string name="feature_loan_note">Note</string>
+    <string name="feature_loan_no_penalties_found">No Penalties found</string>
+    <string name="feature_loan_no_penalties_message">There are currently no penalty charges available for repayment.</string>
+    <string name="feature_loan_select_all_penalties">Select All</string>
+
 </resources>
