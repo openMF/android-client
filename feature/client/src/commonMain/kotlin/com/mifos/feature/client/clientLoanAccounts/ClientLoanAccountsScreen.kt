@@ -75,6 +75,7 @@ import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosSearchBar
 import com.mifos.core.ui.util.EventsEffect
+import com.mifos.feature.loan.utils.getLoanStatus
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -252,7 +253,7 @@ private fun LoanAccountItem(
 
         type = loan.loanType?.value ?: notAvailable,
 
-        status = loan.status?.value ?: notAvailable,
+        status = loan.status?.let { stringResource(it.getLoanStatus().label) } ?: notAvailable,
 
         menuList = buildLoanActions(loan),
 
