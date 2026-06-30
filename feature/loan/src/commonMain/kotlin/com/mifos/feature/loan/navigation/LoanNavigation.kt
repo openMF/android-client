@@ -25,6 +25,7 @@ import com.mifos.feature.loan.loanCharge.loanChargeScreen
 import com.mifos.feature.loan.loanCharge.navigateToLoanChargesScreen
 import com.mifos.feature.loan.loanDisbursement.loanDisbursementScreen
 import com.mifos.feature.loan.loanDisbursement.navigateToLoanDisbursementScreen
+import com.mifos.feature.loan.loanForeclosure.loanForeclosureScreen
 import com.mifos.feature.loan.loanRepayment.loanRepaymentScreen
 import com.mifos.feature.loan.loanRepayment.navigateToLoanRepaymentScreen
 import com.mifos.feature.loan.loanRepaymentSchedule.loanRepaymentSchedule
@@ -110,6 +111,10 @@ fun NavGraphBuilder.loanDestination(
     )
 
     loanRescheduleFormScreen(
+        navController = navController,
+        onBackPressed = navController::popBackStack,
+    )
+    loanForeclosureScreen(
         navController = navController,
         onBackPressed = navController::popBackStack,
     )
