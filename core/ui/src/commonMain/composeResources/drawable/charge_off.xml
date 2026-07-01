@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2026 Mifos Initiative
+
+    This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+    If a copy of the MPL was not distributed with this file,
+    You can obtain one at https://mozilla.org/MPL/2.0/.
+
+    See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+  <path
+      android:pathData="M330,840 L120,630v-300l210,-210h300l210,210v300L630,840L330,840ZM366,650 L480,536 594,650 650,594 536,480 650,366 594,310 480,424 366,310 310,366 424,480 310,594 366,650ZM364,760h232l164,-164v-232L596,200L364,200L200,364v232l164,164ZM480,480Z"
+      android:fillColor="#999999"/>
+</vector>

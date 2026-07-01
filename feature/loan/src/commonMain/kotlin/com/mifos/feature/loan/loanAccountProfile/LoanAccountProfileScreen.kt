@@ -17,6 +17,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_profile_label
 import androidclient.feature.loan.generated.resources.feature_loan_profile_label_balance
 import androidclient.feature.loan.generated.resources.feature_loan_profile_label_client_name_placeholder
 import androidclient.feature.loan.generated.resources.feature_loan_profile_label_overpaid_by
+import androidclient.feature.loan.generated.resources.feature_loan_profile_open_actions
 import androidclient.feature.loan.generated.resources.feature_loan_profile_section_account_overview
 import androidclient.feature.loan.generated.resources.feature_loan_profile_section_actions_details
 import androidx.compose.foundation.background
@@ -85,6 +86,7 @@ internal fun LoanAccountProfileScreen(
     navigateToDocuments: (Int) -> Unit,
     navigateToReschedules: (Int) -> Unit,
     navigateToNotes: (Int) -> Unit,
+    navigateToLoanAction: (Int) -> Unit,
     navigateToTransferScreen: (loanId: Int) -> Unit,
     navigateToDashboard: (Int) -> Unit,
     navController: NavController,
@@ -130,6 +132,10 @@ internal fun LoanAccountProfileScreen(
             }
 
             LoanAccountEvent.NavigateToAccountDetails -> {}
+            LoanAccountEvent.NavigateToLoanAction -> {
+                val loanId = state.loanAccount?.id ?: -1
+                navigateToLoanAction(loanId)
+            }
         }
     }
 
@@ -178,6 +184,7 @@ private fun LoanAccountContent(
         LoanAccountTopCard(
             loanAccount = loanAccount,
             onClick = { onAction(LoanAccountAction.OnAccountClick) },
+            onArrowClick = { onAction(LoanAccountAction.OnArrowClick) },
         )
 
         Spacer(Modifier.height(KptTheme.spacing.md))
@@ -228,6 +235,7 @@ private fun LoanAccountContent(
 private fun LoanAccountTopCard(
     loanAccount: LoanWithAssociationsEntity,
     onClick: () -> Unit,
+    onArrowClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val currencyCode = loanAccount.currency?.code
@@ -280,8 +288,9 @@ private fun LoanAccountTopCard(
 
                 Icon(
                     imageVector = MifosIcons.ChevronRight,
-                    contentDescription = null,
-                    modifier = Modifier.size(DesignToken.sizes.iconSmall),
+                    contentDescription = stringResource(Res.string.feature_loan_profile_open_actions),
+                    modifier = Modifier.size(DesignToken.sizes.iconSmall)
+                        .clickable { onArrowClick() },
                     tint = KptTheme.colorScheme.onPrimary.copy(alpha = 0.6f),
                 )
             }

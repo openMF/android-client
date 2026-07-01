@@ -396,7 +396,7 @@ private fun LoanStatusBadge(
             AppColors.loanPendingStatus
 
         LoanStatus.OVERPAID ->
-            AppColors.loanOverpaidStatus
+            AppColors.loanClosedOverpaidStatus
 
         LoanStatus.CLOSED_WRITTEN_OFF ->
             AppColors.loanClosedWrittenOffStatus
