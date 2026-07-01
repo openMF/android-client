@@ -87,7 +87,13 @@ data class LoanWithAssociationsEntity(
 
     val accountNo: String = "",
 
-    @ColumnInfo(index = true, name = INHERIT_FIELD_NAME, typeAffinity = UNDEFINED, collate = UNSPECIFIED, defaultValue = VALUE_UNSPECIFIED)
+    @ColumnInfo(
+        index = true,
+        name = INHERIT_FIELD_NAME,
+        typeAffinity = UNDEFINED,
+        collate = UNSPECIFIED,
+        defaultValue = VALUE_UNSPECIFIED,
+    )
     val status: LoanStatusEntity = LoanStatusEntity(),
 
     val clientId: Int = 0,
@@ -157,10 +163,22 @@ data class LoanWithAssociationsEntity(
 
     val syncDisbursementWithMeeting: Boolean = false,
 
-    @ColumnInfo(index = true, name = INHERIT_FIELD_NAME, typeAffinity = UNDEFINED, collate = UNSPECIFIED, defaultValue = VALUE_UNSPECIFIED)
+    @ColumnInfo(
+        index = true,
+        name = INHERIT_FIELD_NAME,
+        typeAffinity = UNDEFINED,
+        collate = UNSPECIFIED,
+        defaultValue = VALUE_UNSPECIFIED,
+    )
     val timeline: LoanTimelineEntity = LoanTimelineEntity(),
 
-    @ColumnInfo(index = true, name = INHERIT_FIELD_NAME, typeAffinity = UNDEFINED, collate = UNSPECIFIED, defaultValue = VALUE_UNSPECIFIED)
+    @ColumnInfo(
+        index = true,
+        name = INHERIT_FIELD_NAME,
+        typeAffinity = UNDEFINED,
+        collate = UNSPECIFIED,
+        defaultValue = VALUE_UNSPECIFIED,
+    )
     val summary: LoansAccountSummaryEntity = LoansAccountSummaryEntity(),
 
     @IgnoredOnParcel
@@ -186,22 +204,84 @@ data class LoanWithAssociationsEntity(
     val isNPA: Boolean = false,
 
     val overpaidOnDate: List<Int>? = null,
-
+    @ColumnInfo(
+        name = INHERIT_FIELD_NAME,
+        typeAffinity = UNDEFINED,
+        index = false,
+        collate = UNSPECIFIED,
+        defaultValue = "0",
+    )
     val isEqualAmortization: Boolean = false,
 
+    @ColumnInfo(
+        name = INHERIT_FIELD_NAME,
+        typeAffinity = UNDEFINED,
+        index = false,
+        collate = UNSPECIFIED,
+        defaultValue = "0",
+    )
     val allowPartialPeriodInterestCalculation: Boolean = false,
 
+    @ColumnInfo(
+        name = INHERIT_FIELD_NAME,
+        typeAffinity = UNDEFINED,
+        index = false,
+        collate = UNSPECIFIED,
+        defaultValue = "0",
+    )
     val interestRecognitionOnDisbursementDate: Boolean = false,
 
+    @ColumnInfo(
+        name = INHERIT_FIELD_NAME,
+        typeAffinity = UNDEFINED,
+        index = false,
+        collate = UNSPECIFIED,
+        defaultValue = "0",
+    )
     val enableDownPayment: Boolean = false,
 
+    @ColumnInfo(
+        name = INHERIT_FIELD_NAME,
+        typeAffinity = UNDEFINED,
+        index = false,
+        collate = UNSPECIFIED,
+        defaultValue = "0",
+    )
     val enableIncomeCapitalization: Boolean = false,
 
+    @ColumnInfo(
+        name = INHERIT_FIELD_NAME,
+        typeAffinity = UNDEFINED,
+        index = false,
+        collate = UNSPECIFIED,
+        defaultValue = "0",
+    )
     val enableBuyDownFee: Boolean = false,
 
+    @ColumnInfo(
+        name = INHERIT_FIELD_NAME,
+        typeAffinity = UNDEFINED,
+        index = false,
+        collate = UNSPECIFIED,
+        defaultValue = "0",
+    )
     val enableInstallmentLevelDelinquency: Boolean = false,
 
+    @ColumnInfo(
+        name = INHERIT_FIELD_NAME,
+        typeAffinity = UNDEFINED,
+        index = false,
+        collate = UNSPECIFIED,
+        defaultValue = "0",
+    )
     val isInterestRecalculationEnabled: Boolean = false,
 
+    @ColumnInfo(
+        name = INHERIT_FIELD_NAME,
+        typeAffinity = UNDEFINED,
+        index = false,
+        collate = UNSPECIFIED,
+        defaultValue = "0",
+    )
     val chargedOff: Boolean = false,
 ) : Parcelable
