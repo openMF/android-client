@@ -113,7 +113,7 @@ private fun LoanAccountActionContent(
                         items(
                             items = state.viewState.actions,
                             key = {
-                                it.title
+                                it.id
                             },
                         ) { item ->
                             MifosRowCard(

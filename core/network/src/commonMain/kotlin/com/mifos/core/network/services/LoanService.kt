@@ -23,6 +23,9 @@ import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.dto.loans.LoanChargeOffRequestDto
+import com.mifos.core.network.dto.loans.LoanChargeOffResponseDto
+import com.mifos.core.network.dto.loans.LoanChargeOffTemplateDto
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.loans.Loan
@@ -72,6 +75,17 @@ interface LoanService {
         @Path("loanId") loanId: Int,
         @Body loanRepaymentRequest: LoanRepaymentRequestEntity?,
     ): LoanRepaymentResponseEntity
+
+    @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template?command=charge-off")
+    suspend fun getChargeOffTemplate(
+        @Path("loanId") loanId: Int,
+    ): LoanChargeOffTemplateDto
+
+    @POST(APIEndPoint.LOANS + "/{loanId}/transactions?command=charge-off")
+    suspend fun chargeOff(
+        @Path("loanId") loanId: Int,
+        @Body loanChargeOffRequest: LoanChargeOffRequestDto,
+    ): LoanChargeOffResponseDto
 
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=repaymentSchedule")
     fun getLoanRepaymentSchedule(@Path("loanId") loanId: Int): Flow<LoanWithAssociationsEntity>

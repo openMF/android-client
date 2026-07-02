@@ -91,7 +91,7 @@ private fun LoanPaymentsActionContent(
 
         items(
             items = state.actions,
-            key = { it.title },
+            key = { it.id },
         ) { item ->
             MifosRowCard(
                 title = stringResource(item.title),

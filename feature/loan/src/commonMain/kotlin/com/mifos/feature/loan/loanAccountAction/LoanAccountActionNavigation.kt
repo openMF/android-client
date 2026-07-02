@@ -23,6 +23,7 @@ fun NavGraphBuilder.loanAccountActionDestination(
     navController: NavController,
     onNavigateBack: () -> Unit,
     navigateToPaymentsActionScreen: () -> Unit,
+    navigateToChargeOff: (loanId: Int) -> Unit,
     // add other actions navigation lambda parameters here
 ) {
     composable<LoanAccountActionRoute> {
@@ -39,7 +40,7 @@ fun NavGraphBuilder.loanAccountActionDestination(
                     LoanAccountActionItem.BuyDownFee -> {}
                     LoanAccountActionItem.CapitalizedIncome -> {}
                     LoanAccountActionItem.ChangeLoanOfficer -> {}
-                    LoanAccountActionItem.ChargeOff -> {}
+                    LoanAccountActionItem.ChargeOff -> navigateToChargeOff(loanId)
                     LoanAccountActionItem.Close -> {}
                     LoanAccountActionItem.CloseAsRescheduled -> {}
                     LoanAccountActionItem.ContractTermination -> {}
@@ -88,4 +89,13 @@ fun NavController.navigateToLoanAccountActionScreen(loanId: Int) {
     this.navigate(
         LoanAccountActionRoute(loanId = loanId),
     )
+}
+
+fun NavController.reloadLoanAccountActionScreen(loanId: Int) {
+    navigate(LoanAccountActionRoute(loanId)) {
+        popUpTo(LoanAccountActionRoute(loanId)) {
+            inclusive = true
+        }
+        launchSingleTop = true
+    }
 }

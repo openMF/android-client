@@ -77,6 +77,7 @@ import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun LoanAccountProfileScreen(
+    navController: NavController,
     onNavigateBack: () -> Unit,
     approveLoan: (Int, LoanWithAssociationsEntity) -> Unit,
     onRepaymentClick: (LoanWithAssociationsEntity) -> Unit,
@@ -89,7 +90,6 @@ internal fun LoanAccountProfileScreen(
     navigateToLoanAction: (Int) -> Unit,
     navigateToTransferScreen: (loanId: Int) -> Unit,
     navigateToDashboard: (Int) -> Unit,
-    navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: LoanAccountProfileViewModel = koinViewModel(),
 ) {

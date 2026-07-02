@@ -23,6 +23,9 @@ import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRespons
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplate
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.dto.loans.LoanChargeOffRequestDto
+import com.mifos.core.network.dto.loans.LoanChargeOffResponseDto
+import com.mifos.core.network.dto.loans.LoanChargeOffTemplateDto
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
@@ -110,6 +113,17 @@ class DataManagerLoan(
 
     fun getLoansAccountTemplate(clientId: Int, productId: Int): Flow<LoanTemplate> {
         return mBaseApiManager.loanService.getLoansAccountTemplate(clientId, productId)
+    }
+
+    suspend fun getChargeOffTemplate(loanId: Int): LoanChargeOffTemplateDto {
+        return mBaseApiManager.loanService.getChargeOffTemplate(loanId)
+    }
+
+    suspend fun chargeOff(
+        loanId: Int,
+        loanChargeOffRequestDto: LoanChargeOffRequestDto,
+    ): LoanChargeOffResponseDto {
+        return mBaseApiManager.loanService.chargeOff(loanId, loanChargeOffRequestDto)
     }
 
     fun createLoansAccount(loansPayload: LoansPayload?): Flow<HttpResponse> {
@@ -372,7 +386,9 @@ class DataManagerLoan(
                 throw IllegalStateException(errorMessage)
             }
 
-            Json { ignoreUnknownKeys = true }.decodeFromString<RepaymentSchedule>(response.bodyAsText())
+            Json {
+                ignoreUnknownKeys = true
+            }.decodeFromString<RepaymentSchedule>(response.bodyAsText())
         }
     }
 
@@ -390,7 +406,9 @@ class DataManagerLoan(
             val errorMessage = extractErrorMessage(response)
             throw IllegalStateException(errorMessage)
         }
-        return Json { ignoreUnknownKeys = true }.decodeFromString<GenericResponse>(response.bodyAsText())
+        return Json {
+            ignoreUnknownKeys = true
+        }.decodeFromString<GenericResponse>(response.bodyAsText())
     }
 
     suspend fun approveLoanReschedule(scheduleId: Int, request: LoanRescheduleApprovalRequest) {

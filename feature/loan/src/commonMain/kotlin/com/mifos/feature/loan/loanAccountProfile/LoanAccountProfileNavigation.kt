@@ -37,8 +37,8 @@ fun NavGraphBuilder.loanProfileAccountDestination(
 ) {
     composable<LoanAccountRoute> {
         LoanAccountProfileScreen(
-            onNavigateBack = onNavigateBack,
             navController = navController,
+            onNavigateBack = onNavigateBack,
             navigateToRepaymentSchedule = navigateToRepaymentSchedule,
             navigateToTransactions = navigateToTransactions,
             navigateToCharges = navigateToCharges,
