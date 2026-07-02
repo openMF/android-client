@@ -23,11 +23,14 @@ import com.mifos.feature.loan.loanAccountAction.loanAccountActionDestination
 import com.mifos.feature.loan.loanAccountAction.navigateToLoanAccountActionScreen
 import com.mifos.feature.loan.loanAccountAction.payments.loanPaymentsActionDestination
 import com.mifos.feature.loan.loanAccountAction.payments.navigateToLoanPaymentsAction
+import com.mifos.feature.loan.loanAccountAction.reloadLoanAccountActionScreen
 import com.mifos.feature.loan.loanAccountProfile.loanProfileAccountDestination
 import com.mifos.feature.loan.loanAccountSummary.loanAccountSummary
 import com.mifos.feature.loan.loanApproval.LoanAccountApprovalScreen
 import com.mifos.feature.loan.loanCharge.loanChargeScreen
 import com.mifos.feature.loan.loanCharge.navigateToLoanChargesScreen
+import com.mifos.feature.loan.loanChargeOff.loanChargeOffScreen
+import com.mifos.feature.loan.loanChargeOff.navigateToLoanChargeOffScreen
 import com.mifos.feature.loan.loanDashboard.loanDashboardScreen
 import com.mifos.feature.loan.loanDashboard.navigateToLoanDashboardScreen
 import com.mifos.feature.loan.loanDisbursement.loanDisbursementScreen
@@ -85,6 +88,10 @@ fun NavGraphBuilder.loanDestination(
         onNavigateBack = navController::popBackStack,
         navigateToTransactions = navController::navigateToLoanTransactionScreen,
     )
+    loanChargeOffScreen(
+        onNavigateBack = navController::navigateUp,
+        onChargeOffSuccess = navController::reloadLoanAccountActionScreen,
+    )
     newLoanAccountDestination(
         onNavigateBack = navController::popBackStack,
         onFinish = navController::popBackStack,
@@ -116,6 +123,7 @@ fun NavGraphBuilder.loanDestination(
         navController = navController,
         onNavigateBack = navController::popBackStack,
         navigateToPaymentsActionScreen = navController::navigateToLoanPaymentsAction,
+        navigateToChargeOff = navController::navigateToLoanChargeOffScreen,
     )
 
     loanPaymentsActionDestination(

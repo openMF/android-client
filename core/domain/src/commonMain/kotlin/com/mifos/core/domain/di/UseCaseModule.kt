@@ -89,6 +89,8 @@ import com.mifos.core.domain.useCases.ValidateServerEndPointUseCase
 import com.mifos.core.domain.useCases.ValidateServerPortUseCase
 import com.mifos.core.domain.useCases.ValidateServerProtocolUseCase
 import com.mifos.core.domain.useCases.ValidateServerTenantUseCase
+import com.mifos.core.domain.useCases.loanChargeOff.GetLoanChargeOffTemplateUseCase
+import com.mifos.core.domain.useCases.loanChargeOff.LoanChargeOffUseCase
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
@@ -173,4 +175,6 @@ val UseCaseModule = module {
     factoryOf(::DeleteNoteUseCase)
     factoryOf(::CreateSignatureUseCase)
     factoryOf(::UpdateSignatureUseCase)
+    factoryOf(::GetLoanChargeOffTemplateUseCase)
+    factoryOf(::LoanChargeOffUseCase)
 }
