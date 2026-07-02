@@ -22,6 +22,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_charge_off_re
 import androidclient.feature.loan.generated.resources.feature_loan_charge_off_submit
 import androidclient.feature.loan.generated.resources.feature_loan_charge_off_transaction_date
 import androidclient.feature.loan.generated.resources.ok
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -54,6 +55,7 @@ import com.mifos.core.designsystem.component.MifosTextFieldDropdown
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosAlertDialog
 import com.mifos.core.ui.components.MifosProgressIndicator
+import com.mifos.core.ui.components.MifosProgressIndicatorOverlay
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
@@ -138,7 +140,7 @@ private fun LoanChargeOffForm(
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 val currentMillis = Clock.System.now().toEpochMilliseconds()
                 val startOfTodayUtc = currentMillis - (currentMillis % 86_400_000L)
-                return utcTimeMillis >= startOfTodayUtc
+                return utcTimeMillis <= startOfTodayUtc
             }
         },
     )
@@ -176,61 +178,67 @@ private fun LoanChargeOffForm(
     } else {
         emptyList()
     }
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(scrollState)
-            .padding(KptTheme.spacing.md),
+    Box(
+        modifier = Modifier.fillMaxSize(),
     ) {
-        MifosTextFieldDropdown(
-            value = state.selectedReason?.name ?: "",
-            onValueChanged = { },
-            label = stringResource(Res.string.feature_loan_charge_off_reason) + "*",
-            readOnly = true,
-            onOptionSelected = { index, _ -> onAction(LoanChargeOffAction.ReasonSelected(index)) },
-            options = reasonOptions.map { it.name },
-            errorMessage = if (state.isReasonError) {
-                stringResource(Res.string.feature_loan_charge_off_please_select_reason)
-            } else if (reasonOptions.isEmpty()) {
-                stringResource(Res.string.feature_loan_charge_off_no_reasons_available)
-            } else {
-                null
-            },
-        )
-
-        MifosDatePickerTextField(
-            value = state.transactionDateText,
-            label = stringResource(Res.string.feature_loan_charge_off_transaction_date) + "*",
-            openDatePicker = { onAction(LoanChargeOffAction.ShowDatePicker) },
-        )
-
-        Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
-
-        MifosOutlinedTextField(
-            value = state.externalId,
-            onValueChange = { onAction(LoanChargeOffAction.ExternalIdChanged(it)) },
-            label = stringResource(Res.string.feature_loan_charge_off_external_id),
-            keyboardType = KeyboardType.Text,
-        )
-
-        MifosOutlinedTextField(
-            value = state.note,
-            onValueChange = { onAction(LoanChargeOffAction.NoteChanged(it)) },
-            label = stringResource(Res.string.feature_loan_charge_off_note),
-            maxLines = 4,
-            singleLine = false,
-            keyboardType = KeyboardType.Text,
-        )
-
-        Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
-
-        MifosButton(
-            onClick = { onAction(LoanChargeOffAction.Submit) },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = !state.isSubmitting && state.selectedReason != null,
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(scrollState)
+                .padding(KptTheme.spacing.md),
         ) {
-            Text(stringResource(Res.string.feature_loan_charge_off_submit))
+            MifosTextFieldDropdown(
+                value = state.selectedReason?.name ?: "",
+                onValueChanged = { },
+                label = stringResource(Res.string.feature_loan_charge_off_reason) + "*",
+                readOnly = true,
+                onOptionSelected = { index, _ -> onAction(LoanChargeOffAction.ReasonSelected(index)) },
+                options = reasonOptions.map { it.name },
+                errorMessage = if (state.isReasonError) {
+                    stringResource(Res.string.feature_loan_charge_off_please_select_reason)
+                } else if (reasonOptions.isEmpty()) {
+                    stringResource(Res.string.feature_loan_charge_off_no_reasons_available)
+                } else {
+                    null
+                },
+            )
+
+            MifosDatePickerTextField(
+                value = state.transactionDateText,
+                label = stringResource(Res.string.feature_loan_charge_off_transaction_date) + "*",
+                openDatePicker = { onAction(LoanChargeOffAction.ShowDatePicker) },
+            )
+
+            Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
+
+            MifosOutlinedTextField(
+                value = state.externalId,
+                onValueChange = { onAction(LoanChargeOffAction.ExternalIdChanged(it)) },
+                label = stringResource(Res.string.feature_loan_charge_off_external_id),
+                keyboardType = KeyboardType.Text,
+            )
+
+            MifosOutlinedTextField(
+                value = state.note,
+                onValueChange = { onAction(LoanChargeOffAction.NoteChanged(it)) },
+                label = stringResource(Res.string.feature_loan_charge_off_note),
+                maxLines = 4,
+                singleLine = false,
+                keyboardType = KeyboardType.Text,
+            )
+
+            Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
+
+            MifosButton(
+                onClick = { onAction(LoanChargeOffAction.Submit) },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !state.isSubmitting && state.selectedReason != null,
+            ) {
+                Text(stringResource(Res.string.feature_loan_charge_off_submit))
+            }
+        }
+        if (state.isSubmitting) {
+            MifosProgressIndicatorOverlay()
         }
     }
 }
