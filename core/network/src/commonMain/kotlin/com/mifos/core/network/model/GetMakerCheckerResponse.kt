@@ -64,7 +64,7 @@ data class GetMakerCheckerResponse(
 
     val loanAccountNo: String? = null,
 
-    val loanId: Long? = null,
+    val loanId: Int? = null,
 
     @Contextual
     val madeOnDate: LocalDateTime? = null,

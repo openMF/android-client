@@ -117,20 +117,16 @@ internal fun LoanAccountProfileScreen(
                 val loanId = state.loanAccount?.id ?: -1
 
                 when (event.detailItem) {
-                    LoanAccountProfileActionItem.RepaymentSchedule -> navigateToRepaymentSchedule(
-                        loanId,
-                    )
-
+                    LoanAccountProfileActionItem.RepaymentSchedule -> navigateToRepaymentSchedule(loanId)
                     LoanAccountProfileActionItem.Transactions -> navigateToTransactions(loanId)
                     LoanAccountProfileActionItem.Charges -> navigateToCharges(loanId)
                     LoanAccountProfileActionItem.Documents -> navigateToDocuments(loanId)
                     LoanAccountProfileActionItem.Reschedules -> navigateToReschedules(loanId)
                     LoanAccountProfileActionItem.Dashboard -> navigateToDashboard(loanId)
                     LoanAccountProfileActionItem.Notes -> navigateToNotes(loanId)
-                    else -> {}
+                    else -> { }
                 }
             }
-
             LoanAccountEvent.NavigateToAccountDetails -> {}
             LoanAccountEvent.NavigateToLoanAction -> {
                 val loanId = state.loanAccount?.id ?: -1
@@ -385,7 +381,6 @@ private fun LoanAccountDialogs(
                 onRetry = onRetry,
             )
         }
-
         null -> Unit
     }
 }

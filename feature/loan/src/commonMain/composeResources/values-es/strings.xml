@@ -147,8 +147,6 @@
     <string name="feature_loan_profile_item_transactions_subtitle">Historial completo de pagos</string>
     <string name="feature_loan_profile_item_charges_title">Cargos</string>
     <string name="feature_loan_profile_item_charges_subtitle">Comisiones y cargos aplicables</string>
-    <string name="feature_loan_profile_item_originators_title">Originadores</string>
-    <string name="feature_loan_profile_item_originators_subtitle">Gestionar originadores del Crédito</string>
     <string name="feature_loan_profile_item_collateral_title">Detalles de Garantía del Crédito</string>
     <string name="feature_loan_profile_item_collateral_subtitle">Activos dados en garantía</string>
     <string name="feature_loan_profile_item_term_variations_title">Variaciones de Plazo</string>

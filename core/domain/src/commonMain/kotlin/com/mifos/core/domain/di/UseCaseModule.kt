@@ -89,6 +89,8 @@ import com.mifos.core.domain.useCases.ValidateServerEndPointUseCase
 import com.mifos.core.domain.useCases.ValidateServerPortUseCase
 import com.mifos.core.domain.useCases.ValidateServerProtocolUseCase
 import com.mifos.core.domain.useCases.ValidateServerTenantUseCase
+import com.mifos.core.domain.useCases.createGuarantor.CreateGuarantorUseCase
+import com.mifos.core.domain.useCases.createGuarantor.GetGuarantorTemplateUseCase
 import com.mifos.core.domain.useCases.loanChargeOff.GetLoanChargeOffTemplateUseCase
 import com.mifos.core.domain.useCases.loanChargeOff.LoanChargeOffUseCase
 import org.koin.core.module.dsl.factoryOf
@@ -104,6 +106,7 @@ val UseCaseModule = module {
     factoryOf(::ApproveCheckerUseCase)
     factoryOf(::ApproveSavingsApplicationUseCase)
     factoryOf(::CreateChargesUseCase)
+    factoryOf(::CreateGuarantorUseCase)
     factoryOf(::CreateClientIdentifierUseCase)
     factoryOf(::CalculateLoanScheduleUseCase)
     factoryOf(::CreateGroupLoansAccountUseCase)
@@ -136,6 +139,7 @@ val UseCaseModule = module {
     factoryOf(::GetDocumentsListUseCase)
     factoryOf(::GetGroupLoansAccountTemplateUseCase)
     factoryOf(::GetGroupSavingsAccountTemplateByProductUseCase)
+    factoryOf(::GetGuarantorTemplateUseCase)
     factoryOf(::GetGroupsByCenterUseCase)
     factoryOf(::GetGroupsByOfficeUseCase)
     factoryOf(::GetIndividualCollectionSheetUseCase)
