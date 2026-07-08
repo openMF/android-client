@@ -15,8 +15,8 @@ import com.mifos.core.data.mappers.loan.toDto
 import com.mifos.core.data.repository.LoanCreateGuarantorRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.data.util.runAsDataState
+import com.mifos.core.model.objects.account.loan.guarantor.CreateGuarantor
 import com.mifos.core.model.objects.account.loan.guarantor.CreateGuarantorInput
-import com.mifos.core.model.objects.account.loan.guarantor.CreatedGuarantor
 import com.mifos.core.model.objects.account.loan.guarantor.GuarantorAccountTemplate
 import com.mifos.core.model.objects.account.loan.guarantor.GuarantorTemplate
 import com.mifos.core.network.datamanager.DataManagerLoan
@@ -40,7 +40,7 @@ class LoanCreateGuarantorRepositoryImp(
     override suspend fun createGuarantor(
         loanId: Int,
         createGuarantorInput: CreateGuarantorInput,
-    ): DataState<CreatedGuarantor> {
+    ): DataState<CreateGuarantor> {
         return runAsDataState(
             networkMonitor,
             ioDispatcher,

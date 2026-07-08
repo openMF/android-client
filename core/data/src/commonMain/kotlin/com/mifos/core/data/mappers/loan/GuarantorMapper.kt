@@ -9,13 +9,13 @@
  */
 package com.mifos.core.data.mappers.loan
 
+import com.mifos.core.model.objects.account.loan.guarantor.CreateGuarantor
 import com.mifos.core.model.objects.account.loan.guarantor.CreateGuarantorInput
-import com.mifos.core.model.objects.account.loan.guarantor.CreateGuarantorResponseDto
-import com.mifos.core.model.objects.account.loan.guarantor.CreatedGuarantor
 import com.mifos.core.model.objects.account.loan.guarantor.GuarantorAccountTemplate
 import com.mifos.core.model.objects.account.loan.guarantor.GuarantorRelationshipOption
 import com.mifos.core.model.objects.account.loan.guarantor.GuarantorTemplate
 import com.mifos.core.model.objects.account.loan.guarantor.GuarantorType
+import com.mifos.core.network.dto.loans.CreateGuarantorResponseDto
 import com.mifos.core.network.dto.loans.GuarantorAccountTemplateDto
 import com.mifos.core.network.dto.loans.GuarantorRelationshipOptionDto
 import com.mifos.core.network.dto.loans.GuarantorRequestDto
@@ -33,8 +33,8 @@ fun GuarantorRelationshipOptionDto.toDomain(): GuarantorRelationshipOption =
         name = name,
     )
 
-fun CreateGuarantorResponseDto.toDomain(): CreatedGuarantor =
-    CreatedGuarantor(
+fun CreateGuarantorResponseDto.toDomain(): CreateGuarantor =
+    CreateGuarantor(
         resourceId = resourceId,
         loanId = loanId,
         officeId = officeId,

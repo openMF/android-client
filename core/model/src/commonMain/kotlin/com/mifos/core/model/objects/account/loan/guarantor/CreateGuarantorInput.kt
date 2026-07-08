@@ -15,7 +15,7 @@ data class CreateGuarantorInput(
     val clientRelationshipTypeId: Long,
     val dateFormat: String = "dd-MM-yyyy",
     val entityId: Int? = null,
-    val guarantorTypeId: Long,
+    val guarantorTypeId: Long?,
     val locale: String = DateConstants.LOCALE,
     val firstname: String? = null,
     val lastname: String? = null,

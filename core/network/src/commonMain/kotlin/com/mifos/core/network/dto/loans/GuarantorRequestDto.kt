@@ -16,7 +16,7 @@ data class GuarantorRequestDto(
     val clientRelationshipTypeId: Long,
     val dateFormat: String,
     val entityId: Int?,
-    val guarantorTypeId: Long,
+    val guarantorTypeId: Long?,
     val locale: String,
 
     val firstname: String?,

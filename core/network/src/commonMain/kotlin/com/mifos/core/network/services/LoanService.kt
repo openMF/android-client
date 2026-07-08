@@ -11,7 +11,6 @@ package com.mifos.core.network.services
 
 import com.mifos.core.model.objects.account.loan.LoanApproval
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
-import com.mifos.core.model.objects.account.loan.guarantor.CreateGuarantorResponseDto
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRejectionRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRequest
@@ -24,6 +23,7 @@ import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.dto.loans.CreateGuarantorResponseDto
 import com.mifos.core.network.dto.loans.GuarantorAccountTemplateDto
 import com.mifos.core.network.dto.loans.GuarantorRequestDto
 import com.mifos.core.network.dto.loans.GuarantorTemplateDto

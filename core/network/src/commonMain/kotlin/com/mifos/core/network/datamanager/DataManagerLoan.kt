@@ -13,7 +13,6 @@ import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
-import com.mifos.core.model.objects.account.loan.guarantor.CreateGuarantorResponseDto
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRejectionRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRequest
@@ -24,6 +23,7 @@ import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRespons
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplate
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.dto.loans.CreateGuarantorResponseDto
 import com.mifos.core.network.dto.loans.GuarantorAccountTemplateDto
 import com.mifos.core.network.dto.loans.GuarantorRequestDto
 import com.mifos.core.network.dto.loans.GuarantorTemplateDto

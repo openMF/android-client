@@ -9,7 +9,7 @@
  */
 package com.mifos.core.model.objects.account.loan.guarantor
 
-data class CreatedGuarantor(
+data class CreateGuarantor(
     val officeId: Long,
     val loanId: Long,
     val resourceId: Long,

@@ -11,8 +11,8 @@ package com.mifos.core.domain.useCases.createGuarantor
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanCreateGuarantorRepository
+import com.mifos.core.model.objects.account.loan.guarantor.CreateGuarantor
 import com.mifos.core.model.objects.account.loan.guarantor.CreateGuarantorInput
-import com.mifos.core.model.objects.account.loan.guarantor.CreatedGuarantor
 
 class CreateGuarantorUseCase(
     private val repository: LoanCreateGuarantorRepository,
@@ -20,5 +20,5 @@ class CreateGuarantorUseCase(
     suspend operator fun invoke(
         loanId: Int,
         createGuarantorInput: CreateGuarantorInput,
-    ): DataState<CreatedGuarantor> = repository.createGuarantor(loanId, createGuarantorInput)
+    ): DataState<CreateGuarantor> = repository.createGuarantor(loanId, createGuarantorInput)
 }

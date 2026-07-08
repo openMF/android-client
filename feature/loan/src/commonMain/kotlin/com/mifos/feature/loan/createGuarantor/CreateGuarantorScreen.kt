@@ -80,11 +80,12 @@ internal fun CreateGuarantorScreenRoute(
     LaunchedEffect(Unit) {
         viewModel.eventFlow.collect { effect ->
             when (effect) {
-                is CreateGuarantorEffect.ShowMessage -> {
+                is CreateGuarantorEvent.ShowMessage -> {
                     val resolvedMessage = getString(effect.message)
                     snackbarHostState.showSnackbar(resolvedMessage)
                 }
-                CreateGuarantorEffect.NavigateBack -> navigateBack()
+
+                CreateGuarantorEvent.NavigateBack -> navigateBack()
             }
         }
     }
@@ -112,7 +113,6 @@ internal fun CreateGuarantorScreenRoute(
                     state = uiState,
                     modifier = Modifier.padding(paddingValues),
                     onAction = viewModel::trySendAction,
-                    navigateBack = navigateBack,
                 )
             }
         }
@@ -122,20 +122,11 @@ internal fun CreateGuarantorScreenRoute(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CreateGuarantorContent(
-    state: CreateGuarantorState,
     modifier: Modifier = Modifier,
+    state: CreateGuarantorState,
     onAction: (CreateGuarantorAction) -> Unit,
-    navigateBack: () -> Unit,
 ) {
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
-
-    // Derive submit enablement logic natively in the UI
-    val isRelationshipSelected = state.selectedRelationshipIndex != -1
-    val canSubmit = isRelationshipSelected && if (state.existingClient) {
-        state.selectedClientId != null
-    } else {
-        state.firstName.isNotBlank() && state.lastName.isNotBlank()
-    }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -207,7 +198,8 @@ private fun CreateGuarantorContent(
                 )
                 Spacer(Modifier.height(DesignToken.padding.medium))
                 MifosDatePickerTextField(
-                    value = state.dateOfBirthMillis?.let(DateHelper::getDateAsStringFromLong).orEmpty(),
+                    value = state.dateOfBirthMillis?.let(DateHelper::getDateAsStringFromLong)
+                        .orEmpty(),
                     label = stringResource(Res.string.feature_loan_create_guarantor_date_of_birth),
                     openDatePicker = { showDatePicker = true },
                 )
@@ -254,10 +246,10 @@ private fun CreateGuarantorContent(
             MifosTwoButtonRow(
                 firstBtnText = stringResource(Res.string.feature_loan_cancel),
                 secondBtnText = stringResource(Res.string.feature_loan_submit),
-                onFirstBtnClick = { if (!state.submitInProgress) navigateBack() },
+                onFirstBtnClick = { if (!state.submitInProgress) onAction(CreateGuarantorAction.NavigateBack) },
                 onSecondBtnClick = { onAction(CreateGuarantorAction.Submit) },
                 isButtonIconVisible = false,
-                isSecondButtonEnabled = canSubmit && !state.submitInProgress,
+                isSecondButtonEnabled = state.canSubmit && !state.submitInProgress,
                 modifier = Modifier.fillMaxWidth(),
             )
 
@@ -265,37 +257,58 @@ private fun CreateGuarantorContent(
         }
 
         if (showDatePicker) {
-            val datePickerState = rememberDatePickerState(
-                initialSelectedDateMillis = state.dateOfBirthMillis,
-                selectableDates = object : SelectableDates {
-                    override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                        return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
-                    }
+            CreateGuarantorDatePickerDialog(
+                initialDateMillis = state.dateOfBirthMillis,
+                onConfirm = { dateMillis ->
+                    onAction(CreateGuarantorAction.UpdateDateOfBirth(dateMillis))
                 },
+                onDismiss = { showDatePicker = false },
             )
-            DatePickerDialog(
-                onDismissRequest = { showDatePicker = false },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            onAction(CreateGuarantorAction.UpdateDateOfBirth(datePickerState.selectedDateMillis))
-                            showDatePicker = false
-                        },
-                    ) {
-                        Text(stringResource(Res.string.feature_loan_select_date))
-                    }
-                },
-                dismissButton = {
-                    TextButton(onClick = { showDatePicker = false }) {
-                        Text(stringResource(Res.string.feature_loan_cancel))
-                    }
-                },
-            ) {
-                DatePicker(state = datePickerState)
-            }
         }
         if (state.submitInProgress || state.fetchingGuarantorAccountTemplate) {
             MifosProgressIndicatorOverlay()
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun CreateGuarantorDatePickerDialog(
+    initialDateMillis: Long?,
+    onConfirm: (Long?) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = initialDateMillis,
+        selectableDates = object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return utcTimeMillis <= Clock.System.now().toEpochMilliseconds()
+            }
+        },
+    )
+
+    DatePickerDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirm(datePickerState.selectedDateMillis)
+                    onDismiss()
+                },
+            ) {
+                Text(stringResource(Res.string.feature_loan_select_date))
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismiss,
+            ) {
+                Text(stringResource(Res.string.feature_loan_cancel))
+            }
+        },
+    ) {
+        DatePicker(
+            state = datePickerState,
+        )
     }
 }

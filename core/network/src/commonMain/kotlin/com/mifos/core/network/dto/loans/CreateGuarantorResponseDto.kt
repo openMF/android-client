@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.objects.account.loan.guarantor
+package com.mifos.core.network.dto.loans
 
 import kotlinx.serialization.Serializable
 

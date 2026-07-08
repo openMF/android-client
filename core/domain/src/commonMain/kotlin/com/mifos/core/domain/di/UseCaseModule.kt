@@ -90,6 +90,7 @@ import com.mifos.core.domain.useCases.ValidateServerPortUseCase
 import com.mifos.core.domain.useCases.ValidateServerProtocolUseCase
 import com.mifos.core.domain.useCases.ValidateServerTenantUseCase
 import com.mifos.core.domain.useCases.createGuarantor.CreateGuarantorUseCase
+import com.mifos.core.domain.useCases.createGuarantor.GetGuarantorAccountTemplateUseCase
 import com.mifos.core.domain.useCases.createGuarantor.GetGuarantorTemplateUseCase
 import com.mifos.core.domain.useCases.loanChargeOff.GetLoanChargeOffTemplateUseCase
 import com.mifos.core.domain.useCases.loanChargeOff.LoanChargeOffUseCase
@@ -107,6 +108,7 @@ val UseCaseModule = module {
     factoryOf(::ApproveSavingsApplicationUseCase)
     factoryOf(::CreateChargesUseCase)
     factoryOf(::CreateGuarantorUseCase)
+    factoryOf(::GetGuarantorAccountTemplateUseCase)
     factoryOf(::CreateClientIdentifierUseCase)
     factoryOf(::CalculateLoanScheduleUseCase)
     factoryOf(::CreateGroupLoansAccountUseCase)

@@ -26,8 +26,8 @@ import com.mifos.core.data.repository.SearchRepository
 import com.mifos.core.domain.useCases.createGuarantor.CreateGuarantorUseCase
 import com.mifos.core.domain.useCases.createGuarantor.GetGuarantorAccountTemplateUseCase
 import com.mifos.core.domain.useCases.createGuarantor.GetGuarantorTemplateUseCase
+import com.mifos.core.model.objects.account.loan.guarantor.CreateGuarantor
 import com.mifos.core.model.objects.account.loan.guarantor.CreateGuarantorInput
-import com.mifos.core.model.objects.account.loan.guarantor.CreatedGuarantor
 import com.mifos.core.model.objects.account.loan.guarantor.GuarantorAccountTemplate
 import com.mifos.core.model.objects.account.loan.guarantor.GuarantorRelationshipOption
 import com.mifos.core.model.objects.account.loan.guarantor.GuarantorTemplate
@@ -47,7 +47,7 @@ internal class CreateGuarantorViewModel(
     private val createGuarantorUseCase: CreateGuarantorUseCase,
     private val getGuarantorAccountTemplateUseCase: GetGuarantorAccountTemplateUseCase,
     private val searchRepository: SearchRepository,
-) : BaseViewModel<CreateGuarantorState, CreateGuarantorEffect, CreateGuarantorAction>(
+) : BaseViewModel<CreateGuarantorState, CreateGuarantorEvent, CreateGuarantorAction>(
     initialState = CreateGuarantorState(
         loanId = savedStateHandle.toRoute<CreateGuarantorRoute>().loanId,
     ),
@@ -167,6 +167,8 @@ internal class CreateGuarantorViewModel(
             )
 
             is CreateGuarantorAction.Internal.ReceiveSubmitResult -> handleSubmitResult(action.result)
+
+            CreateGuarantorAction.NavigateBack -> sendEvent(CreateGuarantorEvent.NavigateBack)
         }
     }
 
@@ -236,7 +238,7 @@ internal class CreateGuarantorViewModel(
             is DataState.Error -> {
                 mutableStateFlow.update { it.copy(fetchingGuarantorAccountTemplate = false) }
                 sendEvent(
-                    CreateGuarantorEffect.ShowMessage(Res.string.feature_loan_get_guarantor_account_template_failure),
+                    CreateGuarantorEvent.ShowMessage(Res.string.feature_loan_get_guarantor_account_template_failure),
                 )
             }
 
@@ -271,7 +273,7 @@ internal class CreateGuarantorViewModel(
         val request = CreateGuarantorInput(
             clientRelationshipTypeId = relationshipId,
             entityId = state.selectedClientId,
-            guarantorTypeId = guarantorTypeId,
+            guarantorTypeId = if (state.existingClient) guarantorTypeId else null,
             firstname = state.firstName.takeIf { !state.existingClient },
             lastname = state.lastName.takeIf { !state.existingClient },
             dateOfBirth = state.dateOfBirthMillis?.let(DateHelper::getDateAsStringFromLong),
@@ -327,9 +329,9 @@ internal class CreateGuarantorViewModel(
         }
 
         val guarantorTypeId = state.guarantorTypeId
-        if (computedRelationshipId == null || guarantorTypeId == null) {
+        if (computedRelationshipId == null || (guarantorTypeId == null && state.existingClient)) {
             sendEvent(
-                CreateGuarantorEffect.ShowMessage(
+                CreateGuarantorEvent.ShowMessage(
                     Res.string.feature_loan_create_guarantor_missing_configuration,
                 ),
             )
@@ -349,14 +351,14 @@ internal class CreateGuarantorViewModel(
                     )
                 }
                 sendEvent(
-                    CreateGuarantorEffect.ShowMessage(Res.string.feature_loan_create_guarantor_submit_success),
+                    CreateGuarantorEvent.ShowMessage(Res.string.feature_loan_create_guarantor_submit_success),
                 )
-                sendEvent(CreateGuarantorEffect.NavigateBack)
+                sendEvent(CreateGuarantorEvent.NavigateBack)
             }
 
             is DataState.Error -> {
                 mutableStateFlow.update { it.copy(submitInProgress = false) }
-                sendEvent(CreateGuarantorEffect.ShowMessage(Res.string.feature_loan_create_guarantor_submit_failure))
+                sendEvent(CreateGuarantorEvent.ShowMessage(Res.string.feature_loan_create_guarantor_submit_failure))
             }
 
             DataState.Loading -> Unit
@@ -389,7 +391,7 @@ internal class CreateGuarantorViewModel(
                 }
                 is DataState.Error -> {
                     mutableStateFlow.update { it.copy(searchedClientOptions = emptyList()) }
-                    sendEvent(CreateGuarantorEffect.ShowMessage(Res.string.feature_loan_load_clients_failure))
+                    sendEvent(CreateGuarantorEvent.ShowMessage(Res.string.feature_loan_load_clients_failure))
                 }
                 DataState.Loading -> Unit
             }
@@ -442,16 +444,24 @@ data class CreateGuarantorState(
         val id: Int,
         val name: String,
     )
+
+    val canSubmit = selectedRelationshipIndex != -1 && if (existingClient) {
+        selectedClientId != null
+    } else {
+        firstName.isNotBlank() && lastName.isNotBlank()
+    }
 }
 
-internal sealed interface CreateGuarantorEffect {
-    data class ShowMessage(val message: StringResource) : CreateGuarantorEffect
-    data object NavigateBack : CreateGuarantorEffect
+internal sealed interface CreateGuarantorEvent {
+    data class ShowMessage(val message: StringResource) : CreateGuarantorEvent
+    data object NavigateBack : CreateGuarantorEvent
 }
 
 internal sealed interface CreateGuarantorAction {
     data object Load : CreateGuarantorAction
     data object Retry : CreateGuarantorAction
+    data object NavigateBack : CreateGuarantorAction
+
     data class ToggleExistingClient(val checked: Boolean) : CreateGuarantorAction
     data class SelectClient(val id: Int, val label: String) : CreateGuarantorAction
     data class UpdateClientQuery(val value: String) : CreateGuarantorAction
@@ -477,7 +487,7 @@ internal sealed interface CreateGuarantorAction {
         ) : Internal
 
         data class ReceiveSubmitResult(
-            val result: DataState<CreatedGuarantor>,
+            val result: DataState<CreateGuarantor>,
         ) : Internal
     }
 }
