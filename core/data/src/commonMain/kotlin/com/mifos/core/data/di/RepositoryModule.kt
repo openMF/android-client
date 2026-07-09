@@ -47,6 +47,7 @@ import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.core.data.repository.LoanChargeFormRepository
 import com.mifos.core.data.repository.LoanChargeOffRepository
 import com.mifos.core.data.repository.LoanChargeRepository
+import com.mifos.core.data.repository.LoanCreateGuarantorRepository
 import com.mifos.core.data.repository.LoanRepaymentRepository
 import com.mifos.core.data.repository.LoanRepaymentScheduleRepository
 import com.mifos.core.data.repository.LoanReschedulesRepository
@@ -117,6 +118,7 @@ import com.mifos.core.data.repositoryImp.LoanAccountSummaryRepositoryImp
 import com.mifos.core.data.repositoryImp.LoanChargeFormRepositoryImp
 import com.mifos.core.data.repositoryImp.LoanChargeOffRepositoryImpl
 import com.mifos.core.data.repositoryImp.LoanChargeRepositoryImp
+import com.mifos.core.data.repositoryImp.LoanCreateGuarantorRepositoryImp
 import com.mifos.core.data.repositoryImp.LoanRepaymentRepositoryImp
 import com.mifos.core.data.repositoryImp.LoanRepaymentScheduleRepositoryImp
 import com.mifos.core.data.repositoryImp.LoanReschedulesRepositoryImpl
@@ -200,6 +202,7 @@ val RepositoryModule = module {
     singleOf(::LoanTransactionsRepositoryImp) bind LoanTransactionsRepository::class
     singleOf(::LoanReschedulesRepositoryImpl) bind LoanReschedulesRepository::class
     singleOf(::LoanChargeOffRepositoryImpl) bind LoanChargeOffRepository::class
+    singleOf(::LoanCreateGuarantorRepositoryImp) bind LoanCreateGuarantorRepository::class
 
     // Account Transfer
     singleOf(::AmountTransferRepositoryImp) bind AmountTransferRepository::class

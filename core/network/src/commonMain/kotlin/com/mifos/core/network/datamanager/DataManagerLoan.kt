@@ -23,6 +23,10 @@ import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRespons
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplate
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.dto.loans.CreateGuarantorResponseDto
+import com.mifos.core.network.dto.loans.GuarantorAccountTemplateDto
+import com.mifos.core.network.dto.loans.GuarantorRequestDto
+import com.mifos.core.network.dto.loans.GuarantorTemplateDto
 import com.mifos.core.network.dto.loans.LoanChargeOffRequestDto
 import com.mifos.core.network.dto.loans.LoanChargeOffResponseDto
 import com.mifos.core.network.dto.loans.LoanChargeOffTemplateDto
@@ -113,6 +117,27 @@ class DataManagerLoan(
 
     fun getLoansAccountTemplate(clientId: Int, productId: Int): Flow<LoanTemplate> {
         return mBaseApiManager.loanService.getLoansAccountTemplate(clientId, productId)
+    }
+
+    suspend fun getGuarantorTemplate(loanId: Int): GuarantorTemplateDto {
+        return mBaseApiManager.loanService.getGuarantorTemplate(loanId)
+    }
+
+    suspend fun createGuarantor(
+        loanId: Int,
+        request: GuarantorRequestDto,
+    ): CreateGuarantorResponseDto {
+        return mBaseApiManager.loanService.createGuarantor(loanId, request)
+    }
+
+    suspend fun getGuarantorAccountTemplate(
+        loanId: Int,
+        clientId: Int,
+    ): GuarantorAccountTemplateDto {
+        return mBaseApiManager.loanService.getGuarantorAccountTemplate(
+            loanId = loanId,
+            clientId = clientId,
+        )
     }
 
     suspend fun getChargeOffTemplate(loanId: Int): LoanChargeOffTemplateDto {

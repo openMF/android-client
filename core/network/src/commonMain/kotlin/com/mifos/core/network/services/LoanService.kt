@@ -23,6 +23,10 @@ import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.dto.loans.CreateGuarantorResponseDto
+import com.mifos.core.network.dto.loans.GuarantorAccountTemplateDto
+import com.mifos.core.network.dto.loans.GuarantorRequestDto
+import com.mifos.core.network.dto.loans.GuarantorTemplateDto
 import com.mifos.core.network.dto.loans.LoanChargeOffRequestDto
 import com.mifos.core.network.dto.loans.LoanChargeOffResponseDto
 import com.mifos.core.network.dto.loans.LoanChargeOffTemplateDto
@@ -92,6 +96,21 @@ interface LoanService {
 
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=transactions")
     fun getLoanWithTransactions(@Path("loanId") loanId: Int): Flow<LoanWithAssociationsEntity>
+
+    @GET(APIEndPoint.LOANS + "/{loanId}/guarantors/template")
+    suspend fun getGuarantorTemplate(@Path("loanId") loanId: Int): GuarantorTemplateDto
+
+    @POST(APIEndPoint.LOANS + "/{loanId}/guarantors")
+    suspend fun createGuarantor(
+        @Path("loanId") loanId: Int,
+        @Body request: GuarantorRequestDto,
+    ): CreateGuarantorResponseDto
+
+    @GET(APIEndPoint.LOANS + "/{loanId}/guarantors/accounts/template")
+    suspend fun getGuarantorAccountTemplate(
+        @Path("loanId") loanId: Int,
+        @Query("clientId") clientId: Int,
+    ): GuarantorAccountTemplateDto
 
     @GET(APIEndPoint.CREATE_LOANS_PRODUCTS)
     fun getAllLoans(): Flow<List<LoanProducts>>

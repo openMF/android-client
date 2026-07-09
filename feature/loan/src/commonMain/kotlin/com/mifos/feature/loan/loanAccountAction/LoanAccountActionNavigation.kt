@@ -24,7 +24,7 @@ fun NavGraphBuilder.loanAccountActionDestination(
     onNavigateBack: () -> Unit,
     navigateToPaymentsActionScreen: () -> Unit,
     navigateToChargeOff: (loanId: Int) -> Unit,
-    // add other actions navigation lambda parameters here
+    navigateToCreateGuarantor: (loanId: Int) -> Unit,
 ) {
     composable<LoanAccountActionRoute> {
         LoanAccountActionScreen(
@@ -44,7 +44,7 @@ fun NavGraphBuilder.loanAccountActionDestination(
                     LoanAccountActionItem.Close -> {}
                     LoanAccountActionItem.CloseAsRescheduled -> {}
                     LoanAccountActionItem.ContractTermination -> {}
-                    LoanAccountActionItem.CreateGuarantors -> {}
+                    LoanAccountActionItem.CreateGuarantors -> navigateToCreateGuarantor(loanId)
                     LoanAccountActionItem.CreditBalanceRefund -> {}
                     LoanAccountActionItem.Delete -> {}
                     LoanAccountActionItem.Disburse -> {}

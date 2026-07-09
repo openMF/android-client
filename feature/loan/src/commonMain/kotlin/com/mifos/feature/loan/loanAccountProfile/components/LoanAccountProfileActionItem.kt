@@ -17,7 +17,6 @@ import androidclient.core.ui.generated.resources.dashboard
 import androidclient.core.ui.generated.resources.design_services
 import androidclient.core.ui.generated.resources.documents
 import androidclient.core.ui.generated.resources.notes
-import androidclient.core.ui.generated.resources.originators
 import androidclient.core.ui.generated.resources.repayment_schedule
 import androidclient.core.ui.generated.resources.reschedules
 import androidclient.core.ui.generated.resources.term_variations
@@ -36,8 +35,6 @@ import androidclient.feature.loan.generated.resources.feature_loan_profile_item_
 import androidclient.feature.loan.generated.resources.feature_loan_profile_item_general_title
 import androidclient.feature.loan.generated.resources.feature_loan_profile_item_notes_subtitle
 import androidclient.feature.loan.generated.resources.feature_loan_profile_item_notes_title
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_originators_subtitle
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_originators_title
 import androidclient.feature.loan.generated.resources.feature_loan_profile_item_repayment_schedule_subtitle
 import androidclient.feature.loan.generated.resources.feature_loan_profile_item_repayment_schedule_title
 import androidclient.feature.loan.generated.resources.feature_loan_profile_item_reschedules_subtitle
@@ -90,11 +87,6 @@ sealed class LoanAccountProfileActionItem(
         subTitle = LoanRes.string.feature_loan_profile_item_charges_subtitle,
         icon = UiRes.drawable.charges,
     )
-    data object Originators : LoanAccountProfileActionItem(
-        title = LoanRes.string.feature_loan_profile_item_originators_title,
-        subTitle = LoanRes.string.feature_loan_profile_item_originators_subtitle,
-        icon = UiRes.drawable.originators,
-    )
     data object Collateral : LoanAccountProfileActionItem(
         title = LoanRes.string.feature_loan_profile_item_collateral_title,
         subTitle = LoanRes.string.feature_loan_profile_item_collateral_subtitle,
@@ -134,7 +126,6 @@ internal val loanProfileActionItems: ImmutableList<LoanAccountProfileActionItem>
     LoanAccountProfileActionItem.RepaymentSchedule,
     LoanAccountProfileActionItem.Transactions,
     LoanAccountProfileActionItem.Charges,
-    LoanAccountProfileActionItem.Originators,
     LoanAccountProfileActionItem.Collateral,
     LoanAccountProfileActionItem.TermVariations,
     LoanAccountProfileActionItem.Reschedules,
