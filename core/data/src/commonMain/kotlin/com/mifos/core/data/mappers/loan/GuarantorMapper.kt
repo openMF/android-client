@@ -25,6 +25,7 @@ import com.mifos.core.network.dto.loans.GuarantorTypeDto
 fun GuarantorTemplateDto.toDomain(): GuarantorTemplate =
     GuarantorTemplate(
         allowedClientRelationshipTypes = allowedClientRelationshipTypes.map { it.toDomain() },
+        guarantorTypeOptions = guarantorTypeOptions.map { it.toDomain() },
     )
 
 fun GuarantorRelationshipOptionDto.toDomain(): GuarantorRelationshipOption =
@@ -49,7 +50,7 @@ fun CreateGuarantorInput.toDto(): GuarantorRequestDto {
         locale = locale,
         firstname = firstname,
         lastname = lastname,
-        dateOfBirth = dateOfBirth,
+        dob = dob,
         addressLine1 = addressLine1,
         addressLine2 = addressLine2,
         city = city,

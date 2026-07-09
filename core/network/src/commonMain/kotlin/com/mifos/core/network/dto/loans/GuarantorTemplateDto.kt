@@ -13,6 +13,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GuarantorTemplateDto(
     val allowedClientRelationshipTypes: List<GuarantorRelationshipOptionDto> = emptyList(),
+    val guarantorTypeOptions: List<GuarantorTypeDto>,
+
 )
 
 @Serializable

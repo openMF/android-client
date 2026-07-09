@@ -11,6 +11,7 @@ package com.mifos.core.model.objects.account.loan.guarantor
 
 data class GuarantorTemplate(
     val allowedClientRelationshipTypes: List<GuarantorRelationshipOption>,
+    val guarantorTypeOptions: List<GuarantorType>,
 )
 
 data class GuarantorRelationshipOption(

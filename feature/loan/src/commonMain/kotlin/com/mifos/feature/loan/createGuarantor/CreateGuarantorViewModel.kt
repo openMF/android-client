@@ -71,6 +71,7 @@ internal class CreateGuarantorViewModel(
                         existingClient = action.checked,
                         clientSearchQuery = "",
                         selectedClientId = null,
+                        existingGuarantorTypeId = null,
                         searchedClientOptions = emptyList(),
                         clientError = null,
                         relationshipError = null,
@@ -199,6 +200,9 @@ internal class CreateGuarantorViewModel(
                     it.copy(
                         viewState = CreateGuarantorState.ViewState.Success,
                         guarantorRelationshipOptions = result.data.allowedClientRelationshipTypes,
+                        externalGuarantorTypeId = result.data.guarantorTypeOptions.firstOrNull { guarantorType ->
+                            guarantorType.code == "guarantor.external"
+                        }?.id,
                     )
                 }
             }
@@ -229,7 +233,7 @@ internal class CreateGuarantorViewModel(
                 val template = result.data
                 mutableStateFlow.update {
                     it.copy(
-                        guarantorTypeId = template.guarantorType.id,
+                        existingGuarantorTypeId = template.guarantorType.id,
                         fetchingGuarantorAccountTemplate = false,
                     )
                 }
@@ -258,7 +262,8 @@ internal class CreateGuarantorViewModel(
 
         // Safe extraction since validateInput enforces these are non-null
         val relationshipId = computedRelationshipId ?: return
-        val guarantorTypeId = state.guarantorTypeId ?: return
+        val guarantorTypeId =
+            state.existingGuarantorTypeId ?: state.externalGuarantorTypeId ?: return
 
         mutableStateFlow.update {
             it.copy(
@@ -273,10 +278,10 @@ internal class CreateGuarantorViewModel(
         val request = CreateGuarantorInput(
             clientRelationshipTypeId = relationshipId,
             entityId = state.selectedClientId,
-            guarantorTypeId = if (state.existingClient) guarantorTypeId else null,
+            guarantorTypeId = guarantorTypeId,
             firstname = state.firstName.takeIf { !state.existingClient },
             lastname = state.lastName.takeIf { !state.existingClient },
-            dateOfBirth = state.dateOfBirthMillis?.let(DateHelper::getDateAsStringFromLong),
+            dob = state.dateOfBirthMillis?.let(DateHelper::getDateAsStringFromLong),
             addressLine1 = state.addressLine1.takeIf { it.isNotBlank() },
             addressLine2 = state.addressLine2.takeIf { it.isNotBlank() },
             city = state.city.takeIf { it.isNotBlank() },
@@ -328,8 +333,7 @@ internal class CreateGuarantorViewModel(
             return false
         }
 
-        val guarantorTypeId = state.guarantorTypeId
-        if (computedRelationshipId == null || (guarantorTypeId == null && state.existingClient)) {
+        if ((state.existingGuarantorTypeId == null && state.existingClient) || state.externalGuarantorTypeId == null) {
             sendEvent(
                 CreateGuarantorEvent.ShowMessage(
                     Res.string.feature_loan_create_guarantor_missing_configuration,
@@ -389,10 +393,12 @@ internal class CreateGuarantorViewModel(
                     }
                     mutableStateFlow.update { it.copy(searchedClientOptions = clients) }
                 }
+
                 is DataState.Error -> {
                     mutableStateFlow.update { it.copy(searchedClientOptions = emptyList()) }
                     sendEvent(CreateGuarantorEvent.ShowMessage(Res.string.feature_loan_load_clients_failure))
                 }
+
                 DataState.Loading -> Unit
             }
         }
@@ -423,7 +429,8 @@ data class CreateGuarantorState(
     val mobile: String = "",
     val residencePhone: String = "",
 
-    val guarantorTypeId: Long? = null,
+    val existingGuarantorTypeId: Long? = null,
+    val externalGuarantorTypeId: Long? = null,
 
     val clientError: StringResource? = null,
     val relationshipError: StringResource? = null,
