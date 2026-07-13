@@ -9,37 +9,24 @@
  */
 package com.mifos.feature.loan.loanTransaction
 
-sealed class LoanTransactionsUiState {
-
-    data object ShowProgressBar : LoanTransactionsUiState()
-
-    data class ShowFetchingError(val message: String) : LoanTransactionsUiState()
-
-    data class ShowLoanTransaction(
-        val transactionsTableData: LoanTransactionsTableData? = null,
-        val selectedRow: LoanTransactionsTableData.TransactionRowData? = null,
-        val isBottomSheetOpen: Boolean = false,
-    ) : LoanTransactionsUiState()
-
-    data class LoanTransactionsTableData(
-        val transactions: List<TransactionRowData>,
-    ) {
-        data class TransactionRowData(
-            val number: String,
-            val id: String,
-            val office: String,
-            val externalId: String,
-            val transactionDate: String,
-            val transactionType: TransactionType,
-            val amount: String,
-            val principal: String,
-            val interest: String,
-            val fees: String,
-            val penalties: String,
-            val loanBalance: String,
-            val manuallyReversed: Boolean = false,
-        )
-    }
+data class LoanTransactionsTableData(
+    val transactions: List<TransactionRowData>,
+) {
+    data class TransactionRowData(
+        val number: String,
+        val id: String,
+        val office: String,
+        val externalId: String,
+        val transactionDate: String,
+        val transactionType: TransactionType,
+        val amount: String,
+        val principal: String,
+        val interest: String,
+        val fees: String,
+        val penalties: String,
+        val loanBalance: String,
+        val manuallyReversed: Boolean = false,
+    )
 }
 
 enum class TransactionType(val value: String) {
