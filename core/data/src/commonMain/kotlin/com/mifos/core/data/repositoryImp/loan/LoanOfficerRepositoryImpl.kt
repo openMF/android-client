@@ -32,7 +32,6 @@ class LoanOfficerRepositoryImpl(
             networkMonitor,
             ioDispatcher,
         ) {
-            // .toDomain() now maps the wrapper DTO straight to a List<LoanOfficerOption>
             dataManagerLoan.getLoanOfficerTemplate(loanId).toDomain()
         }
     }
