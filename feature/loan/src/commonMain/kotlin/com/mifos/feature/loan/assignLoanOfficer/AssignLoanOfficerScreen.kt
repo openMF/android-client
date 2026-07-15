@@ -70,40 +70,41 @@ internal fun AssignLoanOfficerScreen(
         }
     }
 
-    MifosScaffold(
-        title = stringResource(Res.string.feature_loan_assign_officer_title),
-        onBackPressed = { viewModel.trySendAction(AssignLoanOfficerAction.NavigateBack) },
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-        ) {
-            when (uiState.viewState) {
-                AssignLoanOfficerState.ViewState.Loading -> MifosProgressIndicator()
-
-                is AssignLoanOfficerState.ViewState.Error -> {
-                    MifosSweetError(
-                        message = stringResource((uiState.viewState as AssignLoanOfficerState.ViewState.Error).message),
-                        isRetryEnabled = true,
-                        onclick = { viewModel.trySendAction(AssignLoanOfficerAction.Retry) },
-                    )
-                }
-
-                is AssignLoanOfficerState.ViewState.Success -> {
-                    AssignLoanOfficerForm(
-                        state = uiState,
-                        onAction = remember(viewModel) { viewModel::trySendAction },
-                    )
-                }
-            }
-        }
-    }
+    AssignLoanOfficerContent(
+        state = uiState,
+        onAction = remember(viewModel) { viewModel::trySendAction },
+    )
 
     AssignLoanOfficerDialog(
         dialogMessage = uiState.dialogMessage,
         onDismissDialog = { viewModel.trySendAction(AssignLoanOfficerAction.DismissDialog) },
     )
+}
+
+@Composable
+private fun AssignLoanOfficerContent(
+    state: AssignLoanOfficerState,
+    onAction: (AssignLoanOfficerAction) -> Unit,
+) {
+    MifosScaffold(
+        title = stringResource(Res.string.feature_loan_assign_officer_title),
+        onBackPressed = { onAction(AssignLoanOfficerAction.NavigateBack) },
+    ) { paddingValues ->
+        Column(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
+            when (state.viewState) {
+                AssignLoanOfficerState.ViewState.Loading -> MifosProgressIndicator()
+                is AssignLoanOfficerState.ViewState.Error -> MifosSweetError(
+                    message = stringResource(state.viewState.message),
+                    isRetryEnabled = true,
+                    onclick = { onAction(AssignLoanOfficerAction.Retry) },
+                )
+                is AssignLoanOfficerState.ViewState.Success -> AssignLoanOfficerForm(
+                    state = state,
+                    onAction = onAction,
+                )
+            }
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -151,7 +152,8 @@ private fun AssignLoanOfficerForm(
         }
     }
 
-    val officers = (state.viewState as? AssignLoanOfficerState.ViewState.Success)?.officers ?: emptyList()
+    val officers =
+        (state.viewState as? AssignLoanOfficerState.ViewState.Success)?.officers ?: emptyList()
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -170,7 +172,7 @@ private fun AssignLoanOfficerForm(
                 onOptionSelected = { index, _ ->
                     onAction(AssignLoanOfficerAction.SelectOfficer(index))
                 },
-                options = officers.map { it.displayName ?: "${it.firstname} ${it.lastname}" },
+                options = officers.map { it.displayName ?: "" },
                 errorMessage = state.officerError?.let { stringResource(it) },
             )
 
