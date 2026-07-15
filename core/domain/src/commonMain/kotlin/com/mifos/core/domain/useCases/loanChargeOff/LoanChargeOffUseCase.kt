@@ -10,7 +10,7 @@
 package com.mifos.core.domain.useCases.loanChargeOff
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.data.repository.LoanChargeOffRepository
+import com.mifos.core.data.repository.loan.LoanChargeOffRepository
 import com.mifos.core.model.objects.account.loan.LoanChargeOffInput
 
 class LoanChargeOffUseCase(

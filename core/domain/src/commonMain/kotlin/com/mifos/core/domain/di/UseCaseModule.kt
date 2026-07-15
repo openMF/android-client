@@ -89,6 +89,8 @@ import com.mifos.core.domain.useCases.ValidateServerEndPointUseCase
 import com.mifos.core.domain.useCases.ValidateServerPortUseCase
 import com.mifos.core.domain.useCases.ValidateServerProtocolUseCase
 import com.mifos.core.domain.useCases.ValidateServerTenantUseCase
+import com.mifos.core.domain.useCases.assignLoanOfficer.AssignLoanOfficerUseCase
+import com.mifos.core.domain.useCases.assignLoanOfficer.GetLoanOfficerOptionsUseCase
 import com.mifos.core.domain.useCases.createGuarantor.CreateGuarantorUseCase
 import com.mifos.core.domain.useCases.createGuarantor.GetGuarantorAccountTemplateUseCase
 import com.mifos.core.domain.useCases.createGuarantor.GetGuarantorTemplateUseCase
@@ -183,4 +185,6 @@ val UseCaseModule = module {
     factoryOf(::UpdateSignatureUseCase)
     factoryOf(::GetLoanChargeOffTemplateUseCase)
     factoryOf(::LoanChargeOffUseCase)
+    factoryOf(::GetLoanOfficerOptionsUseCase)
+    factoryOf(::AssignLoanOfficerUseCase)
 }

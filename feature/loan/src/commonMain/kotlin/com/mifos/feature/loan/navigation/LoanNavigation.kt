@@ -18,6 +18,8 @@ import androidx.navigation.navigation
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.loan.amountTransfer.amountTransferScreen
 import com.mifos.feature.loan.amountTransfer.navigateToTransferScreen
+import com.mifos.feature.loan.assignLoanOfficer.assignLoanOfficerScreen
+import com.mifos.feature.loan.assignLoanOfficer.navigateToAssignLoanOfficerScreen
 import com.mifos.feature.loan.createGuarantor.createGuarantorScreen
 import com.mifos.feature.loan.createGuarantor.navigateToCreateGuarantorScreen
 import com.mifos.feature.loan.createLoanReschedules.loanRescheduleFormScreen
@@ -98,6 +100,10 @@ fun NavGraphBuilder.loanDestination(
         onNavigateBack = navController::navigateUp,
         onChargeOffSuccess = navController::reloadLoanAccountActionScreen,
     )
+    assignLoanOfficerScreen(
+        navigateBack = navController::navigateUp,
+        onAssignLoanOfficerSuccess = navController::reloadLoanAccountActionScreen,
+    )
     newLoanAccountDestination(
         onNavigateBack = navController::popBackStack,
         onFinish = navController::popBackStack,
@@ -131,6 +137,7 @@ fun NavGraphBuilder.loanDestination(
         navigateToPaymentsActionScreen = navController::navigateToLoanPaymentsAction,
         navigateToChargeOff = navController::navigateToLoanChargeOffScreen,
         navigateToCreateGuarantor = navController::navigateToCreateGuarantorScreen,
+        navigateToAssignLoanOfficerScreen = navController::navigateToAssignLoanOfficerScreen,
     )
 
     loanPaymentsActionDestination(

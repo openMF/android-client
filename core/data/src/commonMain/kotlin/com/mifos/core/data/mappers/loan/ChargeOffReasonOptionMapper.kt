@@ -10,7 +10,7 @@
 package com.mifos.core.data.mappers.loan
 
 import com.mifos.core.model.objects.account.loan.ChargeOffReasonOption
-import com.mifos.core.network.dto.loans.ChargeOffReasonOptionDto
+import com.mifos.core.network.dto.loans.template.ChargeOffReasonOptionDto
 
 fun ChargeOffReasonOptionDto.toModel(): ChargeOffReasonOption = ChargeOffReasonOption(
     id = id,

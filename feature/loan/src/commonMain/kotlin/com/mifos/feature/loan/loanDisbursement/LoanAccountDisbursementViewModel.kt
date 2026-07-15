@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.data.repository.LoanAccountDisbursementRepository
+import com.mifos.core.data.repository.loan.LoanAccountDisbursementRepository
 import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.room.basemodel.APIEndPoint
 import kotlinx.coroutines.flow.MutableStateFlow

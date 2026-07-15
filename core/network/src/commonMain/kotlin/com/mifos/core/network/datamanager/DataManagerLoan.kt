@@ -24,12 +24,15 @@ import com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplat
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.dto.loans.CreateGuarantorResponseDto
-import com.mifos.core.network.dto.loans.GuarantorAccountTemplateDto
 import com.mifos.core.network.dto.loans.GuarantorRequestDto
-import com.mifos.core.network.dto.loans.GuarantorTemplateDto
 import com.mifos.core.network.dto.loans.LoanChargeOffRequestDto
 import com.mifos.core.network.dto.loans.LoanChargeOffResponseDto
-import com.mifos.core.network.dto.loans.LoanChargeOffTemplateDto
+import com.mifos.core.network.dto.loans.assignLoanOfficer.AssignLoanOfficerRequestDto
+import com.mifos.core.network.dto.loans.assignLoanOfficer.AssignLoanOfficerResponseDto
+import com.mifos.core.network.dto.loans.template.GuarantorAccountTemplateDto
+import com.mifos.core.network.dto.loans.template.GuarantorTemplateDto
+import com.mifos.core.network.dto.loans.template.LoanChargeOffTemplateDto
+import com.mifos.core.network.dto.loans.template.LoanOfficerOptionsTemplateDto
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
@@ -454,5 +457,16 @@ class DataManagerLoan(
         if (!response.status.isSuccess()) {
             throw IllegalStateException(extractErrorMessage(response))
         }
+    }
+
+    suspend fun getLoanOfficerTemplate(loanId: Int): LoanOfficerOptionsTemplateDto {
+        return mBaseApiManager.loanService.getLoanOfficerTemplate(loanId)
+    }
+
+    suspend fun assignLoanOfficer(
+        loanId: Int,
+        request: AssignLoanOfficerRequestDto,
+    ): AssignLoanOfficerResponseDto {
+        return mBaseApiManager.loanService.assignLoanOfficer(loanId = loanId, request = request)
     }
 }

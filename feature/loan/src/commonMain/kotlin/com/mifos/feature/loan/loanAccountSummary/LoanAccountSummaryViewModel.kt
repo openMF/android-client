@@ -17,7 +17,7 @@ import androidx.navigation.toRoute
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.data.repository.LoanAccountSummaryRepository
+import com.mifos.core.data.repository.loan.LoanAccountSummaryRepository
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity

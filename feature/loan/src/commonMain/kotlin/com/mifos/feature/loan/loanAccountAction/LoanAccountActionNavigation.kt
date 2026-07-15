@@ -12,6 +12,7 @@ package com.mifos.feature.loan.loanAccountAction
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.mifos.feature.loan.assignLoanOfficer.navigateToAssignLoanOfficerScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -25,6 +26,7 @@ fun NavGraphBuilder.loanAccountActionDestination(
     navigateToPaymentsActionScreen: () -> Unit,
     navigateToChargeOff: (loanId: Int) -> Unit,
     navigateToCreateGuarantor: (loanId: Int) -> Unit,
+    navigateToAssignLoanOfficerScreen: (loanId: Int) -> Unit,
 ) {
     composable<LoanAccountActionRoute> {
         LoanAccountActionScreen(
@@ -36,7 +38,7 @@ fun NavGraphBuilder.loanAccountActionDestination(
                     LoanAccountActionItem.AddInterestPause -> {}
                     LoanAccountActionItem.AddLoanCharge -> {}
                     LoanAccountActionItem.Approve -> {}
-                    LoanAccountActionItem.AssignLoanOfficer -> {}
+                    LoanAccountActionItem.AssignLoanOfficer -> navigateToAssignLoanOfficerScreen(loanId)
                     LoanAccountActionItem.BuyDownFee -> {}
                     LoanAccountActionItem.CapitalizedIncome -> {}
                     LoanAccountActionItem.ChangeLoanOfficer -> {}

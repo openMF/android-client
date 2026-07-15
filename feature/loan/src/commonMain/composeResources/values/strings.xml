@@ -716,4 +716,12 @@
     <string name="feature_loan_get_guarantor_account_template_failure">Failed to load guarantor account details. Please try again.</string>
     <string name="feature_loan_load_clients_failure">Failed to search clients. Please try again.</string>
     <string name="feature_loan_create_guarantor_missing_configuration">Missing required guarantor configuration. Please try again.</string>
+
+
+    <string name="feature_loan_assign_officer_title">Assign Loan Officer</string>
+    <string name="feature_loan_assign_officer_select_officer">Select Loan Officer</string>
+    <string name="feature_loan_assign_officer_assignment_date">Assignment Date</string>
+    <string name="feature_loan_assign_officer_success">Successfully assigned loan officer</string>
+    <string name="feature_loan_assign_officer_failure">Failed to assign loan officer</string>
+    <string name="feature_loan_assign_officer_failed_to_load">Failed to load loan officers</string>
 </resources>
