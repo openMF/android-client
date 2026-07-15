@@ -17,7 +17,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.data.repository.LoanReschedulesRepository
+import com.mifos.core.data.repository.loan.LoanReschedulesRepository
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRequest
 import com.mifos.core.model.objects.account.loan.reschedules.RescheduleReasonOption
 import com.mifos.core.ui.util.BaseViewModel

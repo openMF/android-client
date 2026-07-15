@@ -20,8 +20,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.data.repository.LoanAccountSummaryRepository
-import com.mifos.core.data.repository.LoanRepaymentRepository
+import com.mifos.core.data.repository.loan.LoanAccountSummaryRepository
+import com.mifos.core.data.repository.loan.LoanRepaymentRepository
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

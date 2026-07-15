@@ -16,11 +16,11 @@ import com.mifos.core.model.objects.account.loan.guarantor.GuarantorRelationship
 import com.mifos.core.model.objects.account.loan.guarantor.GuarantorTemplate
 import com.mifos.core.model.objects.account.loan.guarantor.GuarantorType
 import com.mifos.core.network.dto.loans.CreateGuarantorResponseDto
-import com.mifos.core.network.dto.loans.GuarantorAccountTemplateDto
-import com.mifos.core.network.dto.loans.GuarantorRelationshipOptionDto
 import com.mifos.core.network.dto.loans.GuarantorRequestDto
-import com.mifos.core.network.dto.loans.GuarantorTemplateDto
-import com.mifos.core.network.dto.loans.GuarantorTypeDto
+import com.mifos.core.network.dto.loans.template.GuarantorAccountTemplateDto
+import com.mifos.core.network.dto.loans.template.GuarantorRelationshipOptionDto
+import com.mifos.core.network.dto.loans.template.GuarantorTemplateDto
+import com.mifos.core.network.dto.loans.template.GuarantorTypeDto
 
 fun GuarantorTemplateDto.toDomain(): GuarantorTemplate =
     GuarantorTemplate(

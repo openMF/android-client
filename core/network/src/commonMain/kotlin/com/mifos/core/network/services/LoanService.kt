@@ -24,12 +24,15 @@ import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.dto.loans.CreateGuarantorResponseDto
-import com.mifos.core.network.dto.loans.GuarantorAccountTemplateDto
 import com.mifos.core.network.dto.loans.GuarantorRequestDto
-import com.mifos.core.network.dto.loans.GuarantorTemplateDto
 import com.mifos.core.network.dto.loans.LoanChargeOffRequestDto
 import com.mifos.core.network.dto.loans.LoanChargeOffResponseDto
-import com.mifos.core.network.dto.loans.LoanChargeOffTemplateDto
+import com.mifos.core.network.dto.loans.assignLoanOfficer.AssignLoanOfficerRequestDto
+import com.mifos.core.network.dto.loans.assignLoanOfficer.AssignLoanOfficerResponseDto
+import com.mifos.core.network.dto.loans.template.GuarantorAccountTemplateDto
+import com.mifos.core.network.dto.loans.template.GuarantorTemplateDto
+import com.mifos.core.network.dto.loans.template.LoanChargeOffTemplateDto
+import com.mifos.core.network.dto.loans.template.LoanOfficerOptionsTemplateDto
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.loans.Loan
@@ -229,4 +232,19 @@ interface LoanService {
         @Path("scheduleId") scheduleId: Int,
         @Body request: LoanRescheduleRejectionRequest,
     ): HttpResponse
+
+    @GET(APIEndPoint.LOANS + "/{loanId}")
+    suspend fun getLoanOfficerTemplate(
+        @Path("loanId") loanId: Int,
+        @Query("fields") fields: String = "id,loanOfficerId,loanOfficerOptions",
+        @Query("staffInSelectedOfficeOnly") staffInSelectedOfficeOnly: Boolean = true,
+        @Query("template") template: Boolean = true,
+    ): LoanOfficerOptionsTemplateDto
+
+    @POST(APIEndPoint.LOANS + "/{loanId}")
+    suspend fun assignLoanOfficer(
+        @Path("loanId") loanId: Int,
+        @Query("command") command: String = "assignLoanOfficer",
+        @Body request: AssignLoanOfficerRequestDto,
+    ): AssignLoanOfficerResponseDto
 }
