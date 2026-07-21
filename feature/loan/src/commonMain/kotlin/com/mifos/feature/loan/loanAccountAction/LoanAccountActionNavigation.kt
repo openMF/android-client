@@ -27,6 +27,7 @@ fun NavGraphBuilder.loanAccountActionDestination(
     navigateToChargeOff: (loanId: Int) -> Unit,
     navigateToCreateGuarantor: (loanId: Int) -> Unit,
     navigateToAssignLoanOfficerScreen: (loanId: Int) -> Unit,
+    navigateToDisburse: (loanId: Int) -> Unit,
 ) {
     composable<LoanAccountActionRoute> {
         LoanAccountActionScreen(
@@ -49,7 +50,7 @@ fun NavGraphBuilder.loanAccountActionDestination(
                     LoanAccountActionItem.CreateGuarantors -> navigateToCreateGuarantor(loanId)
                     LoanAccountActionItem.CreditBalanceRefund -> {}
                     LoanAccountActionItem.Delete -> {}
-                    LoanAccountActionItem.Disburse -> {}
+                    LoanAccountActionItem.Disburse -> navigateToDisburse(loanId)
                     LoanAccountActionItem.DisburseToSavings -> {}
                     LoanAccountActionItem.EditRepaymentSchedule -> {}
                     LoanAccountActionItem.Foreclosure -> {}

@@ -11,7 +11,6 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRejectionRequest
@@ -29,9 +28,12 @@ import com.mifos.core.network.dto.loans.LoanChargeOffRequestDto
 import com.mifos.core.network.dto.loans.LoanChargeOffResponseDto
 import com.mifos.core.network.dto.loans.assignLoanOfficer.AssignLoanOfficerRequestDto
 import com.mifos.core.network.dto.loans.assignLoanOfficer.AssignLoanOfficerResponseDto
+import com.mifos.core.network.dto.loans.disburse.LoanDisburseRequestDto
+import com.mifos.core.network.dto.loans.disburse.LoanDisburseResponseDto
 import com.mifos.core.network.dto.loans.template.GuarantorAccountTemplateDto
 import com.mifos.core.network.dto.loans.template.GuarantorTemplateDto
 import com.mifos.core.network.dto.loans.template.LoanChargeOffTemplateDto
+import com.mifos.core.network.dto.loans.template.LoanDisburseTemplateDto
 import com.mifos.core.network.dto.loans.template.LoanOfficerOptionsTemplateDto
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.PaymentTypeOptionEntity
@@ -338,13 +340,6 @@ class DataManagerLoan(
         return mBaseApiManager.loanService.getLoanTransactionTemplate(loanId, command)
     }
 
-    fun disburseLoan(
-        loanId: Int,
-        loanDisbursement: LoanDisbursement?,
-    ): Flow<GenericResponse> {
-        return mBaseApiManager.loanService.disburseLoan(loanId, loanDisbursement)
-    }
-
     /**
      * Account Transfer Methods
      */
@@ -468,5 +463,16 @@ class DataManagerLoan(
         request: AssignLoanOfficerRequestDto,
     ): AssignLoanOfficerResponseDto {
         return mBaseApiManager.loanService.assignLoanOfficer(loanId = loanId, request = request)
+    }
+
+    suspend fun getDisburseTemplate(loanId: Int): LoanDisburseTemplateDto {
+        return mBaseApiManager.loanService.getDisburseTemplate(loanId)
+    }
+
+    suspend fun disburse(
+        loanId: Int,
+        loanDisburseRequestDto: LoanDisburseRequestDto,
+    ): LoanDisburseResponseDto {
+        return mBaseApiManager.loanService.disburse(loanId, loanDisburseRequestDto)
     }
 }

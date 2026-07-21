@@ -71,13 +71,13 @@ import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
 import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
 import com.mifos.core.data.repository.UserVerificationRepository
 import com.mifos.core.data.repository.loan.LoanAccountApprovalRepository
-import com.mifos.core.data.repository.loan.LoanAccountDisbursementRepository
 import com.mifos.core.data.repository.loan.LoanAccountRepository
 import com.mifos.core.data.repository.loan.LoanAccountSummaryRepository
 import com.mifos.core.data.repository.loan.LoanChargeFormRepository
 import com.mifos.core.data.repository.loan.LoanChargeOffRepository
 import com.mifos.core.data.repository.loan.LoanChargeRepository
 import com.mifos.core.data.repository.loan.LoanCreateGuarantorRepository
+import com.mifos.core.data.repository.loan.LoanDisburseRepository
 import com.mifos.core.data.repository.loan.LoanOfficerRepository
 import com.mifos.core.data.repository.loan.LoanRepaymentRepository
 import com.mifos.core.data.repository.loan.LoanRepaymentScheduleRepository
@@ -144,13 +144,13 @@ import com.mifos.core.data.repositoryImp.SyncLoanRepaymentTransactionRepositoryI
 import com.mifos.core.data.repositoryImp.SyncSavingsAccountTransactionRepositoryImp
 import com.mifos.core.data.repositoryImp.UserVerificationRepositoryImpl
 import com.mifos.core.data.repositoryImp.loan.LoanAccountApprovalRepositoryImp
-import com.mifos.core.data.repositoryImp.loan.LoanAccountDisbursementRepositoryImp
 import com.mifos.core.data.repositoryImp.loan.LoanAccountRepositoryImp
 import com.mifos.core.data.repositoryImp.loan.LoanAccountSummaryRepositoryImp
 import com.mifos.core.data.repositoryImp.loan.LoanChargeFormRepositoryImp
 import com.mifos.core.data.repositoryImp.loan.LoanChargeOffRepositoryImpl
 import com.mifos.core.data.repositoryImp.loan.LoanChargeRepositoryImp
 import com.mifos.core.data.repositoryImp.loan.LoanCreateGuarantorRepositoryImp
+import com.mifos.core.data.repositoryImp.loan.LoanDisburseRepositoryImpl
 import com.mifos.core.data.repositoryImp.loan.LoanOfficerRepositoryImpl
 import com.mifos.core.data.repositoryImp.loan.LoanRepaymentRepositoryImp
 import com.mifos.core.data.repositoryImp.loan.LoanRepaymentScheduleRepositoryImp
@@ -195,7 +195,6 @@ val RepositoryModule = module {
     // Loan
     singleOf(::LoanAccountRepositoryImp) bind LoanAccountRepository::class
     singleOf(::LoanAccountApprovalRepositoryImp) bind LoanAccountApprovalRepository::class
-    singleOf(::LoanAccountDisbursementRepositoryImp) bind LoanAccountDisbursementRepository::class
     singleOf(::LoanAccountSummaryRepositoryImp) bind LoanAccountSummaryRepository::class
     singleOf(::LoanChargeFormRepositoryImp) bind LoanChargeFormRepository::class
     singleOf(::LoanChargeRepositoryImp) bind LoanChargeRepository::class
@@ -204,6 +203,7 @@ val RepositoryModule = module {
     singleOf(::LoanTransactionsRepositoryImp) bind LoanTransactionsRepository::class
     singleOf(::LoanReschedulesRepositoryImpl) bind LoanReschedulesRepository::class
     singleOf(::LoanChargeOffRepositoryImpl) bind LoanChargeOffRepository::class
+    singleOf(::LoanDisburseRepositoryImpl) bind LoanDisburseRepository::class
     singleOf(::LoanCreateGuarantorRepositoryImp) bind LoanCreateGuarantorRepository::class
     singleOf(::LoanOfficerRepositoryImpl) bind LoanOfficerRepository::class
 
