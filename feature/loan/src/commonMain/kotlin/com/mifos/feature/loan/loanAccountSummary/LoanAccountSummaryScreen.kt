@@ -18,7 +18,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_balance
 import androidclient.feature.loan.generated.resources.feature_loan_closed
 import androidclient.feature.loan.generated.resources.feature_loan_copy
 import androidclient.feature.loan.generated.resources.feature_loan_date
-import androidclient.feature.loan.generated.resources.feature_loan_disburse_loan
+import androidclient.feature.loan.generated.resources.feature_loan_disburse
 import androidclient.feature.loan.generated.resources.feature_loan_disbursed_date
 import androidclient.feature.loan.generated.resources.feature_loan_documents
 import androidclient.feature.loan.generated.resources.feature_loan_info
@@ -421,7 +421,7 @@ private fun LoanAccountSummaryContent(
         val buttonText = when (primaryAction) {
             LoanPrimaryAction.MAKE_REPAYMENT -> stringResource(Res.string.feature_loan_make_Repayment)
             LoanPrimaryAction.APPROVE_LOAN -> stringResource(Res.string.feature_loan_approve_loan)
-            LoanPrimaryAction.DISBURSE_LOAN -> stringResource(Res.string.feature_loan_disburse_loan)
+            LoanPrimaryAction.DISBURSE_LOAN -> stringResource(Res.string.feature_loan_disburse)
             LoanPrimaryAction.OVERPAID -> stringResource(Res.string.feature_loan_transfer_funds)
             LoanPrimaryAction.CLOSED -> stringResource(Res.string.feature_loan_closed)
         }

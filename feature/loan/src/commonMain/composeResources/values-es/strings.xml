@@ -86,15 +86,6 @@
     <string name="feature_loan_approval_amount_can_not_be_empty">El monto de aprobación no puede estar vacío</string>
     <string name="feature_loan_error_invalid_amount">Monto inválido</string>
 
-    <string name="feature_loan_disburse_loan">Desembolsar Crédito</string>
-    <string name="feature_loan_loan_disburse_successfully">Crédito desembolsado exitosamente</string>
-    <string name="feature_loan_approval_disbursement_date">Fecha de Desembolso de Aprobación</string>
-    <string name="feature_loan_loan_amount_disbursed">Monto del Crédito Desembolsado</string>
-    <string name="feature_loan_payment_type">Tipo de Pago</string>
-    <string name="feature_loan_disbursement_note">Nota de Desembolso</string>
-    <string name="feature_loan_error_network_not_available">Red no disponible</string>
-    <string name="feature_loan_error_amount_can_not_be_empty">El monto no puede estar vacío</string>
-
     <string name="feature_loan_loan_account_summary">Resumen de Cuenta de Crédito</string>
     <string name="feature_loan_transactions">Transacciones</string>
     <string name="feature_loan_repayment_schedule">Calendario de Pagos del Crédito</string>

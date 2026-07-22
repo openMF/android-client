@@ -21,11 +21,11 @@ import androidclient.feature.loan.generated.resources.feature_loan_disburse_cheq
 import androidclient.feature.loan.generated.resources.feature_loan_disburse_date
 import androidclient.feature.loan.generated.resources.feature_loan_disburse_external_id
 import androidclient.feature.loan.generated.resources.feature_loan_disburse_note
-import androidclient.feature.loan.generated.resources.feature_loan_disburse_payment_type
 import androidclient.feature.loan.generated.resources.feature_loan_disburse_receipt_number
 import androidclient.feature.loan.generated.resources.feature_loan_disburse_routing_code
 import androidclient.feature.loan.generated.resources.feature_loan_disburse_show_payment_details
 import androidclient.feature.loan.generated.resources.feature_loan_disburse_transaction_amount
+import androidclient.feature.loan.generated.resources.feature_loan_payment_type
 import androidclient.feature.loan.generated.resources.feature_loan_submit
 import androidclient.feature.loan.generated.resources.ok
 import androidx.compose.animation.AnimatedVisibility
@@ -247,7 +247,7 @@ private fun LoanDisburseForm(
             MifosTextFieldDropdown(
                 value = state.selectedPaymentType?.name ?: "",
                 onValueChanged = { },
-                label = stringResource(Res.string.feature_loan_disburse_payment_type),
+                label = stringResource(Res.string.feature_loan_payment_type),
                 readOnly = true,
                 onOptionSelected = { index, _ ->
                     onAction(

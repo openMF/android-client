@@ -87,7 +87,9 @@
     <string name="feature_loan_error_not_connected_internet">Not connected to internet</string>
     <string name="feature_loan_approval_amount_can_not_be_empty">Loan approval amount can not be empty</string>
     <string name="feature_loan_error_invalid_amount">Invalid amount</string>
-
+    <string name="feature_loan_error_fetching_repayment_schedule">Error fetching repayment schedule</string>
+    <string name="feature_loan_loan_amount_disbursed">Loan Amount Disbursed</string>
+    <string name="feature_loan_payment_type">Payment Type</string>
     <string name="feature_loan_loan_account_summary">Loan Account Summary</string>
     <string name="feature_loan_transactions">Transactions</string>
     <string name="feature_loan_repayment_schedule">Loan Repayment Schedule</string>
@@ -720,7 +722,6 @@
     <string name="feature_loan_disburse_transaction_amount">Transaction Amount</string>
     <string name="feature_loan_disburse_available_amount">Available Disbursement Amount</string>
     <string name="feature_loan_disburse_external_id">External ID (Optional)</string>
-    <string name="feature_loan_disburse_payment_type">Payment Type</string>
     <string name="feature_loan_disburse_payment_details">Payment Details</string>
     <string name="feature_loan_disburse_show_payment_details">Show Payment Details</string>
     <string name="feature_loan_disburse_account_number">Account #</string>
