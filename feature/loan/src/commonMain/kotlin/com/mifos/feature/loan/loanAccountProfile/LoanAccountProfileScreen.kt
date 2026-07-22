@@ -237,10 +237,12 @@ private fun LoanAccountTopCard(
     val currencyCode = loanAccount.currency?.code
     val decimalPlaces = loanAccount.currency?.decimalPlaces
 
-    val balance =
-        CurrencyFormatter.format(loanAccount.summary.totalOutstanding, currencyCode, decimalPlaces)
-    val arrears =
-        CurrencyFormatter.format(loanAccount.summary.totalOverdue, currencyCode, decimalPlaces)
+    val balance = loanAccount.summary.totalOutstanding?.let {
+        CurrencyFormatter.format(it, currencyCode, decimalPlaces)
+    } ?: "—"
+    val arrears = loanAccount.summary.totalOverdue?.let {
+        CurrencyFormatter.format(it, currencyCode, decimalPlaces)
+    } ?: "—"
     val overpaid = CurrencyFormatter.format(loanAccount.totalOverpaid, currencyCode, decimalPlaces)
 
     MifosCard(

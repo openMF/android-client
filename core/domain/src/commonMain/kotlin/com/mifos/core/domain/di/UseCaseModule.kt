@@ -96,6 +96,8 @@ import com.mifos.core.domain.useCases.createGuarantor.GetGuarantorAccountTemplat
 import com.mifos.core.domain.useCases.createGuarantor.GetGuarantorTemplateUseCase
 import com.mifos.core.domain.useCases.loanChargeOff.GetLoanChargeOffTemplateUseCase
 import com.mifos.core.domain.useCases.loanChargeOff.LoanChargeOffUseCase
+import com.mifos.core.domain.useCases.loanDisburse.GetLoanDisburseTemplateUseCase
+import com.mifos.core.domain.useCases.loanDisburse.LoanDisburseUseCase
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
@@ -185,6 +187,8 @@ val UseCaseModule = module {
     factoryOf(::UpdateSignatureUseCase)
     factoryOf(::GetLoanChargeOffTemplateUseCase)
     factoryOf(::LoanChargeOffUseCase)
+    factoryOf(::GetLoanDisburseTemplateUseCase)
+    factoryOf(::LoanDisburseUseCase)
     factoryOf(::GetLoanOfficerOptionsUseCase)
     factoryOf(::AssignLoanOfficerUseCase)
 }

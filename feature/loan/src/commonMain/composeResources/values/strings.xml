@@ -87,17 +87,9 @@
     <string name="feature_loan_error_not_connected_internet">Not connected to internet</string>
     <string name="feature_loan_approval_amount_can_not_be_empty">Loan approval amount can not be empty</string>
     <string name="feature_loan_error_invalid_amount">Invalid amount</string>
-
-    <string name="feature_loan_disburse_loan">Disburse Loan</string>
-    <string name="feature_loan_loan_disburse_successfully">Loan disburse successfully</string>
-    <string name="feature_loan_approval_disbursement_date">Approval Disbursement Date</string>
+    <string name="feature_loan_error_fetching_repayment_schedule">Error fetching repayment schedule</string>
     <string name="feature_loan_loan_amount_disbursed">Loan Amount Disbursed</string>
     <string name="feature_loan_payment_type">Payment Type</string>
-    <string name="feature_loan_disbursement_note">Disbursement Note</string>
-    <string name="feature_loan_error_network_not_available">Network not available</string>
-    <string name="feature_loan_error_amount_can_not_be_empty">Amount can not be empty</string>
-    <string name="feature_loan_error_fetching_repayment_schedule">Error fetching repayment schedule</string>
-
     <string name="feature_loan_loan_account_summary">Loan Account Summary</string>
     <string name="feature_loan_transactions">Transactions</string>
     <string name="feature_loan_repayment_schedule">Loan Repayment Schedule</string>
@@ -724,4 +716,22 @@
     <string name="feature_loan_assign_officer_success">Successfully assigned loan officer</string>
     <string name="feature_loan_assign_officer_failure">Failed to assign loan officer</string>
     <string name="feature_loan_assign_officer_failed_to_load">Failed to load loan officers</string>
+
+    <string name="feature_loan_disburse">Disburse Loan</string>
+    <string name="feature_loan_disburse_date">Disburse On Date</string>
+    <string name="feature_loan_disburse_transaction_amount">Transaction Amount</string>
+    <string name="feature_loan_disburse_available_amount">Available Disbursement Amount</string>
+    <string name="feature_loan_disburse_external_id">External ID (Optional)</string>
+    <string name="feature_loan_disburse_payment_details">Payment Details</string>
+    <string name="feature_loan_disburse_show_payment_details">Show Payment Details</string>
+    <string name="feature_loan_disburse_account_number">Account #</string>
+    <string name="feature_loan_disburse_cheque_number">Cheque #</string>
+    <string name="feature_loan_disburse_routing_code">Routing Code</string>
+    <string name="feature_loan_disburse_receipt_number">Receipt #</string>
+    <string name="feature_loan_disburse_bank_number">Bank #</string>
+    <string name="feature_loan_disburse_success">Loan disbursed successfully</string>
+    <string name="feature_loan_disburse_failed">Failed to disburse loan</string>
+    <string name="feature_loan_disburse_failed_to_load_template">Failed to load disburse template</string>
+    <string name="feature_loan_disburse_amount_greater_than_zero">Amount must be greater than 0</string>
+    <string name="feature_loan_disburse_note">Note (Optional)</string>
 </resources>

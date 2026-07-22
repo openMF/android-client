@@ -10,7 +10,6 @@
 package com.mifos.core.network.services
 
 import com.mifos.core.model.objects.account.loan.LoanApproval
-import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRejectionRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRequest
@@ -29,9 +28,12 @@ import com.mifos.core.network.dto.loans.LoanChargeOffRequestDto
 import com.mifos.core.network.dto.loans.LoanChargeOffResponseDto
 import com.mifos.core.network.dto.loans.assignLoanOfficer.AssignLoanOfficerRequestDto
 import com.mifos.core.network.dto.loans.assignLoanOfficer.AssignLoanOfficerResponseDto
+import com.mifos.core.network.dto.loans.disburse.LoanDisburseRequestDto
+import com.mifos.core.network.dto.loans.disburse.LoanDisburseResponseDto
 import com.mifos.core.network.dto.loans.template.GuarantorAccountTemplateDto
 import com.mifos.core.network.dto.loans.template.GuarantorTemplateDto
 import com.mifos.core.network.dto.loans.template.LoanChargeOffTemplateDto
+import com.mifos.core.network.dto.loans.template.LoanDisburseTemplateDto
 import com.mifos.core.network.dto.loans.template.LoanOfficerOptionsTemplateDto
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.basemodel.APIEndPoint
@@ -67,14 +69,6 @@ interface LoanService {
     fun approveLoanApplication(
         @Path("loanId") loanId: Int,
         @Body loanApproval: LoanApproval?,
-    ): Flow<GenericResponse>
-
-    //  Mandatory Fields
-    //  String actualDisbursementDate
-    @POST(APIEndPoint.LOANS + "/{loanId}/?command=disburse")
-    fun disburseLoan(
-        @Path("loanId") loanId: Int,
-        @Body loanDisbursement: LoanDisbursement?,
     ): Flow<GenericResponse>
 
     @POST(APIEndPoint.LOANS + "/{loanId}/transactions?command=repayment")
@@ -247,4 +241,15 @@ interface LoanService {
         @Query("command") command: String = "assignLoanOfficer",
         @Body request: AssignLoanOfficerRequestDto,
     ): AssignLoanOfficerResponseDto
+
+    @GET(APIEndPoint.LOANS + "/{loanId}/transactions/template?command=disburse")
+    suspend fun getDisburseTemplate(
+        @Path("loanId") loanId: Int,
+    ): LoanDisburseTemplateDto
+
+    @POST(APIEndPoint.LOANS + "/{loanId}?command=disburse")
+    suspend fun disburse(
+        @Path("loanId") loanId: Int,
+        @Body loanDisburseRequest: LoanDisburseRequestDto,
+    ): LoanDisburseResponseDto
 }
