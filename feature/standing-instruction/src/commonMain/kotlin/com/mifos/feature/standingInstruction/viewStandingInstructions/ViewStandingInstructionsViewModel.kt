@@ -17,6 +17,7 @@ import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DataState.Loading
 import com.mifos.core.common.utils.DataState.Success
+import com.mifos.core.common.utils.DateFormatPattern
 import com.mifos.core.common.utils.Page
 import com.mifos.core.data.repository.StandingInstructionsRepository
 import com.mifos.core.model.objects.standingInstructions.StandingInstruction
@@ -179,7 +180,7 @@ class ViewStandingInstructionsViewModel(
             val update = StandingInstructionUpdate(
                 amount = amount,
                 validFrom = validFrom,
-                dateFormat = ApiDateFormatter.DATE_FORMAT,
+                dateFormat = DateFormatPattern.ISO.pattern,
                 locale = ApiDateFormatter.LOCALE,
             )
             val result = repository.updateStandingInstruction(instructionId, update)
@@ -274,6 +275,7 @@ class ViewStandingInstructionsViewModel(
                 validity = instruction.validFrom ?: "--",
             )
         }
+
         return StandingInstructionTableData(rows = rows)
     }
 }

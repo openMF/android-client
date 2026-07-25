@@ -65,6 +65,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.common.utils.DateFormatPattern
 import com.mifos.core.designsystem.component.BasicDialogState
 import com.mifos.core.designsystem.component.MifosBasicDialog
 import com.mifos.core.designsystem.component.MifosDatePickerTextField
@@ -221,7 +222,7 @@ internal fun ViewStandingInstructionsDialogs(
                                         onClick = {
                                             onAction(ViewStandingInstructionsAction.OnToggleDatePicker(false))
                                             datePickerState.selectedDateMillis?.let {
-                                                val formattedDate = ApiDateFormatter.formatForApi(it)
+                                                val formattedDate = ApiDateFormatter.formatForApi(it, DateFormatPattern.ISO)
                                                 onAction(ViewStandingInstructionsAction.OnEditFieldChanged(EditField.VALID_FROM, formattedDate))
                                             }
                                         },
