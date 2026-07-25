@@ -9,6 +9,7 @@
  */
 package com.mifos.room
 
+import androidx.room.AutoMigration
 import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
@@ -152,8 +153,8 @@ import com.mifos.room.typeconverters.CustomTypeConverters
         PaymentTypeOptionEntity::class,
     ],
     version = MifosDatabase.VERSION,
-    exportSchema = false,
-    autoMigrations = [],
+    exportSchema = true,
+    autoMigrations = [AutoMigration(from = 1, to = 2)],
 )
 @TypeConverters(
     CustomTypeConverters::class,
@@ -172,7 +173,7 @@ actual abstract class MifosDatabase : RoomDatabase() {
     actual abstract val surveyDao: SurveyDao
 
     companion object {
-        const val VERSION = 1
+        const val VERSION = 2
     }
 }
 

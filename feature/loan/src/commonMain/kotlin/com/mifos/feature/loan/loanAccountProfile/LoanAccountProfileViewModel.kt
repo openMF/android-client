@@ -17,21 +17,16 @@ import androidclient.feature.loan.generated.resources.feature_loan_profile_actio
 import androidclient.feature.loan.generated.resources.feature_loan_profile_error_details_not_found
 import androidclient.feature.loan.generated.resources.feature_loan_profile_error_network_not_available
 import androidclient.feature.loan.generated.resources.feature_loan_profile_failed_to_load_loan
-import androidclient.feature.loan.generated.resources.feature_loan_profile_status_active
-import androidclient.feature.loan.generated.resources.feature_loan_profile_status_overpaid
-import androidclient.feature.loan.generated.resources.feature_loan_profile_status_pending
-import androidclient.feature.loan.generated.resources.feature_loan_profile_status_unknown
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountSummaryRepository
 import com.mifos.core.data.util.NetworkMonitor
-import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.loan.loanAccountProfile.components.LoanAccountProfileActionItem
-import com.mifos.room.entities.accounts.loans.LoanStatusEntity
+import com.mifos.feature.loan.utils.LoanStatus
+import com.mifos.feature.loan.utils.getLoanStatus
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.update
@@ -85,13 +80,12 @@ internal class LoanAccountProfileViewModel(
                             }
                             return@collect
                         }
-                        val currentStatus = loan.status.toProfileStatus()
+                        val currentStatus = loan.status.getLoanStatus()
 
                         mutableStateFlow.update {
                             it.copy(
                                 loanAccount = loan,
                                 dialogState = null,
-                                statusUiModel = calculateStatusUi(currentStatus),
                                 nextActionButtonRes = calculateNextActionResource(currentStatus),
                             )
                         }
@@ -111,21 +105,12 @@ internal class LoanAccountProfileViewModel(
         }
     }
 
-    private fun calculateNextActionResource(status: LoanProfileStatus): StringResource {
+    private fun calculateNextActionResource(status: LoanStatus): StringResource {
         return when (status) {
-            LoanProfileStatus.PENDING -> Res.string.feature_loan_profile_action_approve
-            LoanProfileStatus.OVERPAID -> Res.string.feature_loan_profile_action_transfer
-            LoanProfileStatus.ACTIVE -> Res.string.feature_loan_profile_action_repayment
-            LoanProfileStatus.UNKNOWN -> Res.string.feature_loan_profile_action_view
-        }
-    }
-
-    private fun calculateStatusUi(status: LoanProfileStatus): LoanStatusUiModel {
-        return when (status) {
-            LoanProfileStatus.ACTIVE -> LoanStatusUiModel(Res.string.feature_loan_profile_status_active, AppColors.loanActiveStatus)
-            LoanProfileStatus.PENDING -> LoanStatusUiModel(Res.string.feature_loan_profile_status_pending, AppColors.loanPendingStatus)
-            LoanProfileStatus.OVERPAID -> LoanStatusUiModel(Res.string.feature_loan_profile_status_overpaid, AppColors.loanOverpaidStatus)
-            LoanProfileStatus.UNKNOWN -> LoanStatusUiModel(Res.string.feature_loan_profile_status_unknown, AppColors.loanUnknownStatus)
+            LoanStatus.PENDING_APPROVAL -> Res.string.feature_loan_profile_action_approve
+            LoanStatus.CLOSED_OVERPAID -> Res.string.feature_loan_profile_action_transfer
+            LoanStatus.ACTIVE -> Res.string.feature_loan_profile_action_repayment
+            else -> Res.string.feature_loan_profile_action_view
         }
     }
 
@@ -148,37 +133,19 @@ internal class LoanAccountProfileViewModel(
     private fun handleNextAction() {
         val account = mutableStateFlow.value.loanAccount ?: return
 
-        when (account.status.toProfileStatus()) {
-            LoanProfileStatus.PENDING -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Approve))
-            LoanProfileStatus.OVERPAID -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Transfer))
-            LoanProfileStatus.ACTIVE -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Repayment))
-            LoanProfileStatus.UNKNOWN -> sendEvent(LoanAccountEvent.NavigateToAccountDetails)
+        when (account.status.getLoanStatus()) {
+            LoanStatus.PENDING_APPROVAL -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Approve))
+            LoanStatus.CLOSED_OVERPAID -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Transfer))
+            LoanStatus.ACTIVE -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Repayment))
+            else -> sendEvent(LoanAccountEvent.NavigateToAccountDetails)
         }
     }
-
-    private fun LoanStatusEntity?.toProfileStatus(): LoanProfileStatus {
-        if (this == null) return LoanProfileStatus.UNKNOWN
-        return when {
-            this.pendingApproval == true -> LoanProfileStatus.PENDING
-            this.overpaid == true -> LoanProfileStatus.OVERPAID
-            this.active == true -> LoanProfileStatus.ACTIVE
-            else -> LoanProfileStatus.UNKNOWN
-        }
-    }
-}
-
-enum class LoanProfileStatus {
-    ACTIVE,
-    PENDING,
-    OVERPAID,
-    UNKNOWN,
 }
 
 data class LoanAccountState(
     val loanAccount: LoanWithAssociationsEntity? = null,
     val dialogState: DialogState? = null,
     val networkConnection: Boolean = false,
-    val statusUiModel: LoanStatusUiModel? = null,
     val nextActionButtonRes: StringResource = Res.string.feature_loan_profile_action_view,
 ) {
     sealed interface DialogState {
@@ -186,11 +153,6 @@ data class LoanAccountState(
         data object Loading : DialogState
     }
 }
-
-data class LoanStatusUiModel(
-    val labelRes: StringResource,
-    val color: Color,
-)
 
 sealed interface LoanProfileAction {
     data object Approve : LoanProfileAction

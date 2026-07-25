@@ -81,4 +81,6 @@ data class LoanTimelineEntity(
     val closedOnDate: List<Int>? = null,
 
     val expectedMaturityDate: List<Int>? = null,
+
+    val withdrawnOnDate: List<Int>? = null,
 ) : Parcelable
