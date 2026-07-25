@@ -47,6 +47,7 @@ import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoneyOff
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Paid
 import androidx.compose.material.icons.filled.Payments
@@ -265,6 +266,7 @@ object MifosIcons {
     val Camera = Icons.Outlined.Camera
 
     val Export = Icons.Default.IosShare
+    val chargeOff = Icons.Default.MoneyOff
     val DonutLarge = Icons.Outlined.DonutLarge
     val Schedule = Icons.Outlined.Schedule
     val Adjust = Icons.Default.Adjust

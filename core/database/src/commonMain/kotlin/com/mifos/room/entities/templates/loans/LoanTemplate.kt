@@ -23,7 +23,7 @@ import com.mifos.core.model.objects.template.loan.InterestRateFrequencyTypeOptio
 import com.mifos.core.model.objects.template.loan.InterestType
 import com.mifos.core.model.objects.template.loan.InterestTypeOptions
 import com.mifos.core.model.objects.template.loan.LoanCollateralOptions
-import com.mifos.core.model.objects.template.loan.LoanOfficerOptions
+import com.mifos.core.model.objects.template.loan.LoanOfficerOption
 import com.mifos.core.model.objects.template.loan.LoanPurposeOptions
 import com.mifos.core.model.objects.template.loan.Product
 import com.mifos.core.model.objects.template.loan.ProductOptions
@@ -120,7 +120,7 @@ data class LoanTemplate(
     val dataTables: ArrayList<DataTableEntity> = ArrayList(),
 
     @IgnoredOnParcel
-    val loanOfficerOptions: List<LoanOfficerOptions> = emptyList(),
+    val loanOfficerOptions: List<LoanOfficerOption> = emptyList(),
 
     @IgnoredOnParcel
     val loanPurposeOptions: List<LoanPurposeOptions> = emptyList(),

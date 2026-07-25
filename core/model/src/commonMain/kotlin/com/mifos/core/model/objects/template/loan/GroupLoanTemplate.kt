@@ -73,7 +73,7 @@ data class GroupLoanTemplate(
 
     var productOptions: List<ProductOptions>? = null,
 
-    var loanOfficerOptions: List<LoanOfficerOptions>? = null,
+    var loanOfficerOptions: List<LoanOfficerOption>? = null,
 
     var loanPurposeOptions: List<LoanPurposeOptions>? = null,
 

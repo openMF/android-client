@@ -17,6 +17,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_profile_label
 import androidclient.feature.loan.generated.resources.feature_loan_profile_label_balance
 import androidclient.feature.loan.generated.resources.feature_loan_profile_label_client_name_placeholder
 import androidclient.feature.loan.generated.resources.feature_loan_profile_label_overpaid_by
+import androidclient.feature.loan.generated.resources.feature_loan_profile_open_actions
 import androidclient.feature.loan.generated.resources.feature_loan_profile_section_account_overview
 import androidclient.feature.loan.generated.resources.feature_loan_profile_section_actions_details
 import androidx.compose.foundation.background
@@ -76,6 +77,7 @@ import template.core.base.designsystem.theme.KptTheme
 
 @Composable
 internal fun LoanAccountProfileScreen(
+    navController: NavController,
     onNavigateBack: () -> Unit,
     approveLoan: (Int, LoanWithAssociationsEntity) -> Unit,
     onRepaymentClick: (LoanWithAssociationsEntity) -> Unit,
@@ -85,9 +87,9 @@ internal fun LoanAccountProfileScreen(
     navigateToDocuments: (Int) -> Unit,
     navigateToReschedules: (Int) -> Unit,
     navigateToNotes: (Int) -> Unit,
+    navigateToLoanAction: (Int) -> Unit,
     navigateToTransferScreen: (loanId: Int) -> Unit,
     navigateToDashboard: (Int) -> Unit,
-    navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: LoanAccountProfileViewModel = koinViewModel(),
 ) {
@@ -115,21 +117,21 @@ internal fun LoanAccountProfileScreen(
                 val loanId = state.loanAccount?.id ?: -1
 
                 when (event.detailItem) {
-                    LoanAccountProfileActionItem.RepaymentSchedule -> navigateToRepaymentSchedule(
-                        loanId,
-                    )
-
+                    LoanAccountProfileActionItem.RepaymentSchedule -> navigateToRepaymentSchedule(loanId)
                     LoanAccountProfileActionItem.Transactions -> navigateToTransactions(loanId)
                     LoanAccountProfileActionItem.Charges -> navigateToCharges(loanId)
                     LoanAccountProfileActionItem.Documents -> navigateToDocuments(loanId)
                     LoanAccountProfileActionItem.Reschedules -> navigateToReschedules(loanId)
                     LoanAccountProfileActionItem.Dashboard -> navigateToDashboard(loanId)
                     LoanAccountProfileActionItem.Notes -> navigateToNotes(loanId)
-                    else -> {}
+                    else -> { }
                 }
             }
-
             LoanAccountEvent.NavigateToAccountDetails -> {}
+            LoanAccountEvent.NavigateToLoanAction -> {
+                val loanId = state.loanAccount?.id ?: -1
+                navigateToLoanAction(loanId)
+            }
         }
     }
 
@@ -178,6 +180,7 @@ private fun LoanAccountContent(
         LoanAccountTopCard(
             loanAccount = loanAccount,
             onClick = { onAction(LoanAccountAction.OnAccountClick) },
+            onArrowClick = { onAction(LoanAccountAction.OnArrowClick) },
         )
 
         Spacer(Modifier.height(KptTheme.spacing.md))
@@ -228,15 +231,18 @@ private fun LoanAccountContent(
 private fun LoanAccountTopCard(
     loanAccount: LoanWithAssociationsEntity,
     onClick: () -> Unit,
+    onArrowClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val currencyCode = loanAccount.currency?.code
     val decimalPlaces = loanAccount.currency?.decimalPlaces
 
-    val balance =
-        CurrencyFormatter.format(loanAccount.summary.totalOutstanding, currencyCode, decimalPlaces)
-    val arrears =
-        CurrencyFormatter.format(loanAccount.summary.totalOverdue, currencyCode, decimalPlaces)
+    val balance = loanAccount.summary.totalOutstanding?.let {
+        CurrencyFormatter.format(it, currencyCode, decimalPlaces)
+    } ?: "—"
+    val arrears = loanAccount.summary.totalOverdue?.let {
+        CurrencyFormatter.format(it, currencyCode, decimalPlaces)
+    } ?: "—"
     val overpaid = CurrencyFormatter.format(loanAccount.totalOverpaid, currencyCode, decimalPlaces)
 
     MifosCard(
@@ -280,8 +286,9 @@ private fun LoanAccountTopCard(
 
                 Icon(
                     imageVector = MifosIcons.ChevronRight,
-                    contentDescription = null,
-                    modifier = Modifier.size(DesignToken.sizes.iconSmall),
+                    contentDescription = stringResource(Res.string.feature_loan_profile_open_actions),
+                    modifier = Modifier.size(DesignToken.sizes.iconSmall)
+                        .clickable { onArrowClick() },
                     tint = KptTheme.colorScheme.onPrimary.copy(alpha = 0.6f),
                 )
             }
@@ -376,7 +383,6 @@ private fun LoanAccountDialogs(
                 onRetry = onRetry,
             )
         }
-
         null -> Unit
     }
 }
