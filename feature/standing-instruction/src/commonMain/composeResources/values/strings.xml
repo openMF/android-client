@@ -20,7 +20,7 @@
     <string name="feature_standing_instructions_no_standing_instructions_found_message">No Standing Instructions Found</string>
     <string name="feature_standing_instructions_edit_instruction">Edit Standing Instruction</string>
     <string name="feature_standing_instructions_delete_instruction">Delete Standing Instruction</string>
-    <string name="feature_standing_instructions_delete_confirm_message">Are you sure you want to delete this standing instruction?</string>
+    <string name="feature_standing_instructions_delete_confirm_message">Are you sure you want to delete this Standing Instruction?</string>
     <string name="feature_standing_instructions_amount">Amount</string>
     <string name="feature_standing_instructions_valid_from">Valid From</string>
     <string name="feature_standing_instructions_cancel">Cancel</string>
