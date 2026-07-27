@@ -86,15 +86,6 @@
     <string name="feature_loan_approval_amount_can_not_be_empty">El monto de aprobación no puede estar vacío</string>
     <string name="feature_loan_error_invalid_amount">Monto inválido</string>
 
-    <string name="feature_loan_disburse_loan">Desembolsar Crédito</string>
-    <string name="feature_loan_loan_disburse_successfully">Crédito desembolsado exitosamente</string>
-    <string name="feature_loan_approval_disbursement_date">Fecha de Desembolso de Aprobación</string>
-    <string name="feature_loan_loan_amount_disbursed">Monto del Crédito Desembolsado</string>
-    <string name="feature_loan_payment_type">Tipo de Pago</string>
-    <string name="feature_loan_disbursement_note">Nota de Desembolso</string>
-    <string name="feature_loan_error_network_not_available">Red no disponible</string>
-    <string name="feature_loan_error_amount_can_not_be_empty">El monto no puede estar vacío</string>
-
     <string name="feature_loan_loan_account_summary">Resumen de Cuenta de Crédito</string>
     <string name="feature_loan_transactions">Transacciones</string>
     <string name="feature_loan_repayment_schedule">Calendario de Pagos del Crédito</string>
@@ -147,8 +138,6 @@
     <string name="feature_loan_profile_item_transactions_subtitle">Historial completo de pagos</string>
     <string name="feature_loan_profile_item_charges_title">Cargos</string>
     <string name="feature_loan_profile_item_charges_subtitle">Comisiones y cargos aplicables</string>
-    <string name="feature_loan_profile_item_originators_title">Originadores</string>
-    <string name="feature_loan_profile_item_originators_subtitle">Gestionar originadores del Crédito</string>
     <string name="feature_loan_profile_item_collateral_title">Detalles de Garantía del Crédito</string>
     <string name="feature_loan_profile_item_collateral_subtitle">Activos dados en garantía</string>
     <string name="feature_loan_profile_item_term_variations_title">Variaciones de Plazo</string>

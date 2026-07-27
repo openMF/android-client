@@ -51,4 +51,16 @@ data class Type(
     var chargePayment: Boolean? = null,
 
     var refund: Boolean? = null,
+
+    var reAge: Boolean? = null,
+    var reAmortize: Boolean? = null,
+    var merchantIssuedRefund: Boolean? = null,
+    var payoutRefund: Boolean? = null,
+    var goodwillCredit: Boolean? = null,
+    var interestPaymentWaiver: Boolean? = null,
+    var creditBalanceRefund: Boolean? = null,
+    var contractTermination: Boolean? = null,
+    var chargeoff: Boolean? = null,
+    var buyDownFee: Boolean? = null,
+    var capitalizedIncome: Boolean? = null,
 ) : Parcelable

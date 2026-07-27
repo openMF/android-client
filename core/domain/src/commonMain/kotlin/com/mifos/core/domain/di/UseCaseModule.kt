@@ -89,6 +89,15 @@ import com.mifos.core.domain.useCases.ValidateServerEndPointUseCase
 import com.mifos.core.domain.useCases.ValidateServerPortUseCase
 import com.mifos.core.domain.useCases.ValidateServerProtocolUseCase
 import com.mifos.core.domain.useCases.ValidateServerTenantUseCase
+import com.mifos.core.domain.useCases.assignLoanOfficer.AssignLoanOfficerUseCase
+import com.mifos.core.domain.useCases.assignLoanOfficer.GetLoanOfficerOptionsUseCase
+import com.mifos.core.domain.useCases.createGuarantor.CreateGuarantorUseCase
+import com.mifos.core.domain.useCases.createGuarantor.GetGuarantorAccountTemplateUseCase
+import com.mifos.core.domain.useCases.createGuarantor.GetGuarantorTemplateUseCase
+import com.mifos.core.domain.useCases.loanChargeOff.GetLoanChargeOffTemplateUseCase
+import com.mifos.core.domain.useCases.loanChargeOff.LoanChargeOffUseCase
+import com.mifos.core.domain.useCases.loanDisburse.GetLoanDisburseTemplateUseCase
+import com.mifos.core.domain.useCases.loanDisburse.LoanDisburseUseCase
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
@@ -102,6 +111,8 @@ val UseCaseModule = module {
     factoryOf(::ApproveCheckerUseCase)
     factoryOf(::ApproveSavingsApplicationUseCase)
     factoryOf(::CreateChargesUseCase)
+    factoryOf(::CreateGuarantorUseCase)
+    factoryOf(::GetGuarantorAccountTemplateUseCase)
     factoryOf(::CreateClientIdentifierUseCase)
     factoryOf(::CalculateLoanScheduleUseCase)
     factoryOf(::CreateGroupLoansAccountUseCase)
@@ -134,6 +145,7 @@ val UseCaseModule = module {
     factoryOf(::GetDocumentsListUseCase)
     factoryOf(::GetGroupLoansAccountTemplateUseCase)
     factoryOf(::GetGroupSavingsAccountTemplateByProductUseCase)
+    factoryOf(::GetGuarantorTemplateUseCase)
     factoryOf(::GetGroupsByCenterUseCase)
     factoryOf(::GetGroupsByOfficeUseCase)
     factoryOf(::GetIndividualCollectionSheetUseCase)
@@ -173,4 +185,10 @@ val UseCaseModule = module {
     factoryOf(::DeleteNoteUseCase)
     factoryOf(::CreateSignatureUseCase)
     factoryOf(::UpdateSignatureUseCase)
+    factoryOf(::GetLoanChargeOffTemplateUseCase)
+    factoryOf(::LoanChargeOffUseCase)
+    factoryOf(::GetLoanDisburseTemplateUseCase)
+    factoryOf(::LoanDisburseUseCase)
+    factoryOf(::GetLoanOfficerOptionsUseCase)
+    factoryOf(::AssignLoanOfficerUseCase)
 }
