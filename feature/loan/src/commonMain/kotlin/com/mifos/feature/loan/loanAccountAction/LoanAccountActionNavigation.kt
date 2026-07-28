@@ -25,6 +25,7 @@ fun NavGraphBuilder.loanAccountActionDestination(
     onNavigateBack: () -> Unit,
     navigateToPaymentsActionScreen: () -> Unit,
     navigateToChargeOff: (loanId: Int) -> Unit,
+    navigateToReject: (loanId: Int) -> Unit,
     navigateToCreateGuarantor: (loanId: Int) -> Unit,
     navigateToAssignLoanOfficerScreen: (loanId: Int) -> Unit,
     navigateToDisburse: (loanId: Int) -> Unit,
@@ -67,7 +68,7 @@ fun NavGraphBuilder.loanAccountActionDestination(
                     LoanAccountActionItem.ReAmortize -> {}
                     LoanAccountActionItem.RecoverFromGuarantor -> {}
                     LoanAccountActionItem.RecoveryPayment -> {}
-                    LoanAccountActionItem.Reject -> {}
+                    LoanAccountActionItem.Reject -> navigateToReject(loanId)
                     LoanAccountActionItem.Reschedule -> {}
                     LoanAccountActionItem.SellLoan -> {}
                     LoanAccountActionItem.TransferFunds -> {}

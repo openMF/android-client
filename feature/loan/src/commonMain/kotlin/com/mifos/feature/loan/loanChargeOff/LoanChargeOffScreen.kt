@@ -16,11 +16,11 @@ import androidclient.feature.loan.generated.resources.cancel
 import androidclient.feature.loan.generated.resources.feature_loan_charge_off
 import androidclient.feature.loan.generated.resources.feature_loan_charge_off_external_id
 import androidclient.feature.loan.generated.resources.feature_loan_charge_off_no_reasons_available
-import androidclient.feature.loan.generated.resources.feature_loan_charge_off_note
 import androidclient.feature.loan.generated.resources.feature_loan_charge_off_please_select_reason
 import androidclient.feature.loan.generated.resources.feature_loan_charge_off_reason
 import androidclient.feature.loan.generated.resources.feature_loan_charge_off_submit
 import androidclient.feature.loan.generated.resources.feature_loan_charge_off_transaction_date
+import androidclient.feature.loan.generated.resources.feature_loan_note_optional
 import androidclient.feature.loan.generated.resources.ok
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -221,7 +221,7 @@ private fun LoanChargeOffForm(
             MifosOutlinedTextField(
                 value = state.note,
                 onValueChange = { onAction(LoanChargeOffAction.NoteChanged(it)) },
-                label = stringResource(Res.string.feature_loan_charge_off_note),
+                label = stringResource(Res.string.feature_loan_note_optional),
                 maxLines = 4,
                 singleLine = false,
                 keyboardType = KeyboardType.Text,

@@ -61,3 +61,12 @@ fun NavController.navigateToLoanAccountProfileScreen(loanId: Int) {
         ),
     )
 }
+
+fun NavController.reloadLoanAccountProfileScreen(loanId: Int) {
+    navigate(LoanAccountRoute(loanId)) {
+        popUpTo(LoanAccountRoute(loanId)) {
+            inclusive = true
+        }
+        launchSingleTop = true
+    }
+}

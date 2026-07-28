@@ -26,6 +26,8 @@ import com.mifos.core.network.dto.loans.CreateGuarantorResponseDto
 import com.mifos.core.network.dto.loans.GuarantorRequestDto
 import com.mifos.core.network.dto.loans.LoanChargeOffRequestDto
 import com.mifos.core.network.dto.loans.LoanChargeOffResponseDto
+import com.mifos.core.network.dto.loans.RejectLoanRequestDto
+import com.mifos.core.network.dto.loans.RejectLoanResponseDto
 import com.mifos.core.network.dto.loans.assignLoanOfficer.AssignLoanOfficerRequestDto
 import com.mifos.core.network.dto.loans.assignLoanOfficer.AssignLoanOfficerResponseDto
 import com.mifos.core.network.dto.loans.disburse.LoanDisburseRequestDto
@@ -87,6 +89,12 @@ interface LoanService {
         @Path("loanId") loanId: Int,
         @Body loanChargeOffRequest: LoanChargeOffRequestDto,
     ): LoanChargeOffResponseDto
+
+    @POST(APIEndPoint.LOANS + "/{loanId}?command=reject")
+    suspend fun rejectLoan(
+        @Path("loanId") loanId: Int,
+        @Body request: RejectLoanRequestDto,
+    ): RejectLoanResponseDto
 
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=repaymentSchedule")
     fun getLoanRepaymentSchedule(@Path("loanId") loanId: Int): Flow<LoanWithAssociationsEntity>
