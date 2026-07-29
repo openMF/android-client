@@ -24,6 +24,7 @@ import com.mifos.feature.loan.loanCharge.LoanChargeViewModel
 import com.mifos.feature.loan.loanChargeOff.LoanChargeOffViewModel
 import com.mifos.feature.loan.loanDashboard.LoanDashboardViewModel
 import com.mifos.feature.loan.loanDisburse.LoanDisburseViewModel
+import com.mifos.feature.loan.loanReject.LoanRejectViewModel
 import com.mifos.feature.loan.loanRepayment.LoanRepaymentViewModel
 import com.mifos.feature.loan.loanRepaymentSchedule.LoanRepaymentScheduleViewModel
 import com.mifos.feature.loan.loanReschedules.LoanReschedulesViewModel
@@ -39,6 +40,7 @@ val LoanModule = module {
     viewModelOf(::LoanAccountApprovalViewModel)
     viewModelOf(::LoanChargeViewModel)
     viewModelOf(::LoanChargeOffViewModel)
+    viewModelOf(::LoanRejectViewModel)
     viewModelOf(::LoanRepaymentViewModel)
     viewModelOf(::LoanRepaymentScheduleViewModel)
     viewModelOf(::LoanTransactionsViewModel)

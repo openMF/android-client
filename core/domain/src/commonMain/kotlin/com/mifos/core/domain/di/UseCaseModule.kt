@@ -98,6 +98,7 @@ import com.mifos.core.domain.useCases.loanChargeOff.GetLoanChargeOffTemplateUseC
 import com.mifos.core.domain.useCases.loanChargeOff.LoanChargeOffUseCase
 import com.mifos.core.domain.useCases.loanDisburse.GetLoanDisburseTemplateUseCase
 import com.mifos.core.domain.useCases.loanDisburse.LoanDisburseUseCase
+import com.mifos.core.domain.useCases.loanReject.RejectLoanUseCase
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
@@ -189,6 +190,7 @@ val UseCaseModule = module {
     factoryOf(::LoanChargeOffUseCase)
     factoryOf(::GetLoanDisburseTemplateUseCase)
     factoryOf(::LoanDisburseUseCase)
+    factoryOf(::RejectLoanUseCase)
     factoryOf(::GetLoanOfficerOptionsUseCase)
     factoryOf(::AssignLoanOfficerUseCase)
 }

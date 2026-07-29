@@ -28,6 +28,7 @@ import com.mifos.feature.loan.loanAccountAction.payments.loanPaymentsActionDesti
 import com.mifos.feature.loan.loanAccountAction.payments.navigateToLoanPaymentsAction
 import com.mifos.feature.loan.loanAccountAction.reloadLoanAccountActionScreen
 import com.mifos.feature.loan.loanAccountProfile.loanProfileAccountDestination
+import com.mifos.feature.loan.loanAccountProfile.reloadLoanAccountProfileScreen
 import com.mifos.feature.loan.loanAccountSummary.loanAccountSummary
 import com.mifos.feature.loan.loanApproval.LoanAccountApprovalScreen
 import com.mifos.feature.loan.loanCharge.loanChargeScreen
@@ -38,6 +39,8 @@ import com.mifos.feature.loan.loanDashboard.loanDashboardScreen
 import com.mifos.feature.loan.loanDashboard.navigateToLoanDashboardScreen
 import com.mifos.feature.loan.loanDisburse.loanDisburseScreen
 import com.mifos.feature.loan.loanDisburse.navigateToLoanDisburseScreen
+import com.mifos.feature.loan.loanReject.loanRejectScreen
+import com.mifos.feature.loan.loanReject.navigateToLoanRejectScreen
 import com.mifos.feature.loan.loanRepayment.loanRepaymentScreen
 import com.mifos.feature.loan.loanRepayment.navigateToLoanRepaymentScreen
 import com.mifos.feature.loan.loanRepaymentSchedule.loanRepaymentSchedule
@@ -96,6 +99,10 @@ fun NavGraphBuilder.loanDestination(
         onNavigateBack = navController::navigateUp,
         onChargeOffSuccess = navController::reloadLoanAccountActionScreen,
     )
+    loanRejectScreen(
+        onNavigateBack = navController::navigateUp,
+        onRejectSuccess = navController::reloadLoanAccountProfileScreen,
+    )
     assignLoanOfficerScreen(
         navigateBack = navController::navigateUp,
         onAssignLoanOfficerSuccess = navController::reloadLoanAccountActionScreen,
@@ -132,6 +139,7 @@ fun NavGraphBuilder.loanDestination(
         onNavigateBack = navController::popBackStack,
         navigateToPaymentsActionScreen = navController::navigateToLoanPaymentsAction,
         navigateToChargeOff = navController::navigateToLoanChargeOffScreen,
+        navigateToReject = navController::navigateToLoanRejectScreen,
         navigateToCreateGuarantor = navController::navigateToCreateGuarantorScreen,
         navigateToAssignLoanOfficerScreen = navController::navigateToAssignLoanOfficerScreen,
         navigateToDisburse = navController::navigateToLoanDisburseScreen,

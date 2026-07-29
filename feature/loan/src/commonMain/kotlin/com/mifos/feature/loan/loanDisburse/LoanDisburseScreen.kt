@@ -20,11 +20,11 @@ import androidclient.feature.loan.generated.resources.feature_loan_disburse_bank
 import androidclient.feature.loan.generated.resources.feature_loan_disburse_cheque_number
 import androidclient.feature.loan.generated.resources.feature_loan_disburse_date
 import androidclient.feature.loan.generated.resources.feature_loan_disburse_external_id
-import androidclient.feature.loan.generated.resources.feature_loan_disburse_note
 import androidclient.feature.loan.generated.resources.feature_loan_disburse_receipt_number
 import androidclient.feature.loan.generated.resources.feature_loan_disburse_routing_code
 import androidclient.feature.loan.generated.resources.feature_loan_disburse_show_payment_details
 import androidclient.feature.loan.generated.resources.feature_loan_disburse_transaction_amount
+import androidclient.feature.loan.generated.resources.feature_loan_note_optional
 import androidclient.feature.loan.generated.resources.feature_loan_payment_type
 import androidclient.feature.loan.generated.resources.feature_loan_submit
 import androidclient.feature.loan.generated.resources.ok
@@ -278,7 +278,7 @@ private fun LoanDisburseForm(
             MifosOutlinedTextField(
                 value = state.note,
                 onValueChange = { onAction(LoanDisburseAction.NoteChanged(it)) },
-                label = stringResource(Res.string.feature_loan_disburse_note),
+                label = stringResource(Res.string.feature_loan_note_optional),
                 keyboardType = KeyboardType.Text,
             )
 
