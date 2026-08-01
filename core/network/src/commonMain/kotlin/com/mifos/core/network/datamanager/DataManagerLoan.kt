@@ -26,6 +26,8 @@ import com.mifos.core.network.dto.loans.CreateGuarantorResponseDto
 import com.mifos.core.network.dto.loans.GuarantorRequestDto
 import com.mifos.core.network.dto.loans.LoanChargeOffRequestDto
 import com.mifos.core.network.dto.loans.LoanChargeOffResponseDto
+import com.mifos.core.network.dto.loans.RejectLoanRequestDto
+import com.mifos.core.network.dto.loans.RejectLoanResponseDto
 import com.mifos.core.network.dto.loans.assignLoanOfficer.AssignLoanOfficerRequestDto
 import com.mifos.core.network.dto.loans.assignLoanOfficer.AssignLoanOfficerResponseDto
 import com.mifos.core.network.dto.loans.disburse.LoanDisburseRequestDto
@@ -154,6 +156,13 @@ class DataManagerLoan(
         loanChargeOffRequestDto: LoanChargeOffRequestDto,
     ): LoanChargeOffResponseDto {
         return mBaseApiManager.loanService.chargeOff(loanId, loanChargeOffRequestDto)
+    }
+
+    suspend fun rejectLoan(
+        loanId: Int,
+        request: RejectLoanRequestDto,
+    ): RejectLoanResponseDto {
+        return mBaseApiManager.loanService.rejectLoan(loanId, request)
     }
 
     fun createLoansAccount(loansPayload: LoansPayload?): Flow<HttpResponse> {

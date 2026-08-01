@@ -12,7 +12,7 @@
     <string name="feature_loan_application">Loan Application</string>
     <string name="feature_loan_account_created_successfully">Loan account created successfully</string>
     <string name="feature_error_network_not_available">Network is not Available</string>
-
+    <string name="feature_loan_note_optional">Note (Optional)</string>
 
     <string name="feature_loan_product">Loan Product</string>
     <string name="feature_loan_purpose">Loan Purpose</string>
@@ -151,6 +151,11 @@
     <string name="feature_loan_profile_item_documents_title">Loan Documents</string>
     <string name="feature_loan_profile_item_documents_subtitle">Contracts and attachments</string>
     <string name="feature_loan_profile_item_notes_title">Notes</string>
+    <string name="feature_loan_reject">Reject Loan</string>
+    <string name="feature_loan_reject_date">Rejection Date</string>
+    <string name="feature_loan_reject_submit">Submit Rejection</string>
+    <string name="feature_loan_reject_failed">Failed to reject loan</string>
+    <string name="feature_loan_reject_success">Loan rejected successfully</string>
     <string name="feature_loan_profile_item_notes_subtitle">Additional internal comments</string>
     <string name="feature_loan_profile_item_standing_instructions_title">Standing Instructions</string>
     <string name="feature_loan_profile_item_standing_instructions_subtitle">Automated payment settings</string>
@@ -159,7 +164,6 @@
     <string name="feature_loan_charge_off_transaction_date">Transaction Date</string>
     <string name="feature_loan_charge_off_reason">Charge Off Reason</string>
     <string name="feature_loan_charge_off_external_id">External ID (Optional)</string>
-    <string name="feature_loan_charge_off_note">Note (Optional)</string>
     <string name="feature_loan_charge_off_submit">Submit Charge-Off</string>
     <string name="feature_loan_charge_off_failed">Failed to charge off loan</string>
     <string name="feature_loan_charge_off_success">Successfully charged off loan</string>
@@ -733,5 +737,4 @@
     <string name="feature_loan_disburse_failed">Failed to disburse loan</string>
     <string name="feature_loan_disburse_failed_to_load_template">Failed to load disburse template</string>
     <string name="feature_loan_disburse_amount_greater_than_zero">Amount must be greater than 0</string>
-    <string name="feature_loan_disburse_note">Note (Optional)</string>
 </resources>
