@@ -11,12 +11,10 @@ package com.mifos.core.data.repositoryImp.loan
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
-import com.mifos.core.data.repository.LoanAccountSummaryRepository
-import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.data.repository.loan.LoanAccountSummaryRepository
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.network.datamanager.DataManagerLoan
 import kotlinx.coroutines.flow.Flow
-import template.core.base.common.asDataStateFlow
 
 /**
  * Created by Aditya Gupta on 08/08/23.

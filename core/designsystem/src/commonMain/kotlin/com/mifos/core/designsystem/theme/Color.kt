@@ -252,7 +252,13 @@ object AppColors {
 
     val loanActiveStatus = Color(0xFF5CB85C)
     val loanPendingStatus = Color(0xFFFFA500)
-    val loanOverpaidStatus = Color(0xFF800080)
+    val loanApprovedStatus = Color(0xFF00BFFF)
+    val loanWithdrawnByApplicantStatus = Color(0xFF795548)
+    val loanClosedOverpaidStatus = Color(0xFF800080)
+    val loanClosedObligationsMetStatus = Color(0xFF4CAF50)
+    val loanClosedWrittenOffStatus = Color(0xFFF44336)
+    val loanClosedRescheduled = Color(0xFF2196F3)
+    val loanRejectedStatus = Color(0xFFE53935)
     val loanUnknownStatus = Color(0xFF9E9E9E)
 
     val loanGeneralSummaryPrincipalIndicator = Color(0xFF2196F3)

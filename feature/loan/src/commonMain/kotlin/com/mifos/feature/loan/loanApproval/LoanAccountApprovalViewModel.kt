@@ -17,11 +17,11 @@ import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.loan.LoanAccountApprovalRepository
 import com.mifos.core.model.objects.account.loan.LoanApproval
-import com.mifos.room.entities.accounts.loans.LoanApprovalData
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
+import androidx.navigation.toRoute
 import org.jetbrains.compose.resources.getString
 
 class LoanAccountApprovalViewModel(
@@ -29,15 +29,13 @@ class LoanAccountApprovalViewModel(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    private val arg = savedStateHandle.getStateFlow(key = "arg", initialValue = "")
-    private val loanAccountData: LoanApprovalData = Json.decodeFromString<LoanApprovalData>(arg.value)
+    val loanId = savedStateHandle.toRoute<LoanApprovalRoute>().loanId
 
     private val _loanAccountApprovalUiState =
         MutableStateFlow<LoanAccountApprovalUiState>(LoanAccountApprovalUiState.Initial)
     val loanAccountApprovalUiState: StateFlow<LoanAccountApprovalUiState> get() = _loanAccountApprovalUiState
 
-    var loanId = loanAccountData.loanID
-    var loanWithAssociations = loanAccountData.loanWithAssociations
+    val loanWithAssociations: LoanWithAssociations? = null
 
     fun approveLoan(loanApproval: LoanApproval?) {
         viewModelScope.launch {

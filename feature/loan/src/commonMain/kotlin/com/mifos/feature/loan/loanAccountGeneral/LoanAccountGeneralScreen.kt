@@ -265,7 +265,7 @@ private fun LoanSummaryTable(
                 KptTheme.colorScheme.primary,
                 0.3f,
             ),
-            edgeOffset = DesignToken.padding.medium,
+            edgeOffset = KptTheme.spacing.md,
             cornerShape = DesignToken.shapes.topMedium,
         )
 
@@ -295,7 +295,7 @@ private fun LoanSummaryTable(
                 },
                 widths = colWidths,
                 backgroundColor = KptTheme.colorScheme.surface,
-                edgeOffset = DesignToken.padding.medium,
+                edgeOffset = KptTheme.spacing.md,
             )
         }
 
@@ -324,7 +324,7 @@ private fun LoanSummaryTable(
             },
             widths = colWidths,
             backgroundColor = lerp(KptTheme.colorScheme.surface, KptTheme.colorScheme.primary, 0.15f),
-            edgeOffset = DesignToken.padding.medium,
+            edgeOffset = KptTheme.spacing.md,
             cornerShape = DesignToken.shapes.bottomMedium,
             showBottomBorder = false,
         )

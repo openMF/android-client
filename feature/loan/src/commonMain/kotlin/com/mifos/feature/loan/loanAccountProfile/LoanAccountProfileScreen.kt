@@ -103,12 +103,12 @@ internal fun LoanAccountProfileScreen(
                 val account = state.loanAccount ?: return@EventsEffect
 
                 when (event.action) {
-                    LoanProfileAction.Approve -> approveLoan(account.id, account)
+                    LoanProfileAction.Approve -> approveLoan(account.id ?: 0)
                     LoanProfileAction.Repayment -> onRepaymentClick(account)
                     LoanProfileAction.Transfer -> {
                         val account = state.loanAccount ?: return@EventsEffect
                         navigateToTransferScreen(
-                            account.id,
+                            account.id ?: 0,
                         )
                     }
                 }
@@ -239,10 +239,10 @@ private fun LoanAccountTopCard(
     val currencyCode = loanAccount.currency?.code
     val decimalPlaces = loanAccount.currency?.decimalPlaces
 
-    val balance = loanAccount.summary.totalOutstanding?.let {
+    val balance = loanAccount.summary?.totalOutstanding?.let {
         CurrencyFormatter.format(it, currencyCode, decimalPlaces)
     } ?: "—"
-    val arrears = loanAccount.summary.totalOverdue?.let {
+    val arrears = loanAccount.summary?.totalOverdue?.let {
         CurrencyFormatter.format(it, currencyCode, decimalPlaces)
     } ?: "—"
     val overpaid = CurrencyFormatter.format(loanAccount.totalOverpaid, currencyCode, decimalPlaces)

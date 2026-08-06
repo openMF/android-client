@@ -129,6 +129,13 @@ data class LoanWithAssociationsEntity(
 
     val approvedPrincipal: Double = 0.0,
 
+    @ColumnInfo(
+        name = INHERIT_FIELD_NAME,
+        typeAffinity = UNDEFINED,
+        index = false,
+        collate = UNSPECIFIED,
+        defaultValue = "0.0",
+    )
     val proposedPrincipal: Double = 0.0,
 
     val termFrequency: Int = 0,

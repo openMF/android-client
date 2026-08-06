@@ -160,10 +160,10 @@ private fun LoanAccountApprovalContent(
     onLoanApprove: (loanApproval: LoanApproval) -> Unit,
 ) {
     var approvedAmount by rememberSaveable {
-        mutableStateOf(loanWithAssociations?.approvedPrincipal.toString())
+        mutableStateOf(loanWithAssociations?.approvedPrincipal?.toString() ?: "")
     }
     var transactionAmount by rememberSaveable {
-        mutableStateOf(loanWithAssociations?.approvedPrincipal.toString())
+        mutableStateOf(loanWithAssociations?.approvedPrincipal?.toString() ?: "")
     }
     var note by rememberSaveable {
         mutableStateOf("")
@@ -200,8 +200,7 @@ private fun LoanAccountApprovalContent(
     )
     var disbursementDate by rememberSaveable {
         mutableStateOf(
-            loanWithAssociations
-                ?.timeline!!.expectedDisbursementDate?.let {
+            loanWithAssociations?.timeline?.expectedDisbursementDate?.let {
                 DateHelper.getDateAsString(
                     it,
                 )

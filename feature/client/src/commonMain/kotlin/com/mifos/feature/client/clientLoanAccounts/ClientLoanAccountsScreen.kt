@@ -75,7 +75,7 @@ import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosSearchBar
 import com.mifos.core.ui.util.EventsEffect
-import com.mifos.feature.loan.utils.getLoanStatus
+import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -253,7 +253,7 @@ private fun LoanAccountItem(
 
         type = loan.loanType?.value ?: notAvailable,
 
-        status = loan.status?.let { stringResource(it.getLoanStatus().label) } ?: notAvailable,
+        status = loan.status?.let { stringResource(it.toUiLoanStatus().label) } ?: notAvailable,
 
         menuList = buildLoanActions(loan),
 
@@ -499,5 +499,22 @@ private fun FilterBottomSheet(
                 }
             }
         }
+    }
+}
+
+
+private fun LoanStatusEntity?.toUiLoanStatus(): com.mifos.feature.loan.utils.UiLoanStatus {
+    if (this == null) return com.mifos.feature.loan.utils.UiLoanStatus.UNKNOWN
+    return when {
+        this.code == "loanStatusType.withdrawn.by.client" -> com.mifos.feature.loan.utils.UiLoanStatus.WITHDRAWN_BY_APPLICANT
+        this.code == "loanStatusType.rejected" -> com.mifos.feature.loan.utils.UiLoanStatus.REJECTED
+        this.overpaid == true -> com.mifos.feature.loan.utils.UiLoanStatus.CLOSED_OVERPAID
+        this.closedWrittenOff == true -> com.mifos.feature.loan.utils.UiLoanStatus.CLOSED_WRITTEN_OFF
+        this.closedRescheduled == true -> com.mifos.feature.loan.utils.UiLoanStatus.CLOSED_RESCHEDULED
+        this.closedObligationsMet == true -> com.mifos.feature.loan.utils.UiLoanStatus.CLOSED_OBLIGATIONS_MET
+        this.active == true -> com.mifos.feature.loan.utils.UiLoanStatus.ACTIVE
+        this.waitingForDisbursal == true -> com.mifos.feature.loan.utils.UiLoanStatus.APPROVED
+        this.pendingApproval == true -> com.mifos.feature.loan.utils.UiLoanStatus.PENDING_APPROVAL
+        else -> com.mifos.feature.loan.utils.UiLoanStatus.UNKNOWN
     }
 }

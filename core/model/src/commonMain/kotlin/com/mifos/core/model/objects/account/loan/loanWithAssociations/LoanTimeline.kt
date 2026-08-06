@@ -27,4 +27,5 @@ data class LoanTimeline(
     val disbursedByLastname: String? = null,
     val closedOnDate: List<Int>? = null,
     val expectedMaturityDate: List<Int>? = null,
+    val withdrawnOnDate: List<Int>? = null,
 )

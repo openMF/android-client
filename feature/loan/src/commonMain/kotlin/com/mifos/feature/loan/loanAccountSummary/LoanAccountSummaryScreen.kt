@@ -38,6 +38,8 @@ import androidclient.feature.loan.generated.resources.feature_loan_outstanding_b
 import androidclient.feature.loan.generated.resources.feature_loan_repayment_schedule
 import androidclient.feature.loan.generated.resources.feature_loan_staff
 import androidclient.feature.loan.generated.resources.feature_loan_summary
+import com.mifos.feature.loan.utils.UiLoanStatus as UiLoanStatus
+import com.mifos.feature.loan.utils.getLoanStatus
 import androidclient.feature.loan.generated.resources.feature_loan_total_loan
 import androidclient.feature.loan.generated.resources.feature_loan_transactions
 import androidclient.feature.loan.generated.resources.feature_loan_transfer_funds
@@ -97,9 +99,6 @@ import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAs
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect
-import com.mifos.room.entities.accounts.loans.LoanAccountSummaryEntity
-import com.mifos.room.entities.accounts.loans.LoanStatusEntity
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
@@ -115,7 +114,7 @@ internal fun LoanAccountSummaryScreenRoute(
     onRepaymentScheduleClicked: (loanId: Int) -> Unit,
     onDocumentsClicked: (loanId: Int) -> Unit,
     onChargesClicked: (loanId: Int) -> Unit,
-    approveLoan: (loadId: Int, loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
+    approveLoan: (loadId: Int) -> Unit,
     disburseLoan: (loanId: Int) -> Unit,
     onRepaymentClick: (loanWithAssociations: LoanWithAssociations) -> Unit,
     navController: NavController,
@@ -263,7 +262,7 @@ private fun LoanAccountSummaryContent(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    text = loanWithAssociations.clientName,
+                    text = loanWithAssociations.clientName ?: "",
                     style = KptTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                 )
@@ -281,13 +280,13 @@ private fun LoanAccountSummaryContent(
                             },
                         onDraw = {
                             drawCircle(
-                                color = loanWithAssociations.status.getLoanStatus().color,
+                                color = loanWithAssociations.status?.getLoanStatus()?.color ?: UiLoanStatus.UNKNOWN.color,
                             )
                         },
                     )
                     Spacer(modifier = Modifier.width(DesignToken.spacing.mediumSmall))
                     Text(
-                        text = loanWithAssociations.loanProductName,
+                        text = loanWithAssociations.loanProductName ?: "",
                         style = MifosTypography.bodyLarge,
                         color = KptTheme.colorScheme.onSurface,
                     )
@@ -298,14 +297,14 @@ private fun LoanAccountSummaryContent(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = stringResource(Res.string.feature_loan_loan_id) + loanWithAssociations.accountNo,
+                        text = stringResource(Res.string.feature_loan_loan_id) + (loanWithAssociations.accountNo ?: ""),
                         color = KptTheme.colorScheme.onSurfaceVariant,
                         style = MifosTypography.bodyMedium,
                     )
                     Spacer(modifier = Modifier.width(KptTheme.spacing.xs))
                     IconButton(
                         onClick = {
-                            clipboardManager.setText(AnnotatedString(loanWithAssociations.accountNo))
+                            clipboardManager.setText(AnnotatedString(loanWithAssociations.accountNo ?: ""))
                             onAction(LoanAccountSummaryAction.OnLoanIdCopied)
                         },
                         modifier = Modifier.size(DesignToken.sizes.iconSmall),
@@ -411,7 +410,7 @@ private fun LoanAccountSummaryContent(
                     )
                     LoanSummaryFarApartTextItem(
                         title = stringResource(Res.string.feature_loan_staff),
-                        value = loanWithAssociations.loanOfficerName,
+                        value = loanWithAssociations.loanOfficerName ?: "",
                     )
                 }
             }
@@ -419,7 +418,7 @@ private fun LoanAccountSummaryContent(
 
         LoanSummaryDataTable(state = state)
 
-        val primaryAction = loanWithAssociations.status.getPrimaryAction()
+        val primaryAction = loanWithAssociations.status?.getPrimaryAction() ?: LoanPrimaryAction.CLOSED
         val buttonText = when (primaryAction) {
             LoanPrimaryAction.MAKE_REPAYMENT -> stringResource(Res.string.feature_loan_make_Repayment)
             LoanPrimaryAction.APPROVE_LOAN -> stringResource(Res.string.feature_loan_approve_loan)
@@ -681,7 +680,8 @@ private fun LoanSummaryDropdown(
     }
 }
 
-private fun LoanStatusEntity.isButtonActive(): Boolean {
+private fun LoanStatus?.isButtonActive(): Boolean {
+    if (this == null) return false
     return active == true || pendingApproval == true || waitingForDisbursal == true || overpaid == true
 }
 

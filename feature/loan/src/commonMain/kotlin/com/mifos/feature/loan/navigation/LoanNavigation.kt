@@ -50,7 +50,6 @@ import com.mifos.feature.loan.loanReschedules.navigateToLoanReschedulesScreen
 import com.mifos.feature.loan.loanTransaction.loanTransactionScreen
 import com.mifos.feature.loan.loanTransaction.navigateToLoanTransactionScreen
 import com.mifos.feature.loan.newLoanAccount.newLoanAccountDestination
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 
 fun NavGraphBuilder.loanDestination(
     navController: NavController,
@@ -67,7 +66,7 @@ fun NavGraphBuilder.loanDestination(
         onDocumentsClicked = { onDocumentsClicked(it, Constants.ENTITY_TYPE_LOANS) },
         onChargesClicked = navController::navigateToLoanChargesScreen,
         approveLoan = navController::navigateToLoanApprovalScreen,
-        disburseLoan = navController::navigateToLoanDisbursementScreen,
+        disburseLoan = navController::navigateToLoanDisburseScreen,
         onRepaymentClick = navController::navigateToLoanRepaymentScreen,
         navController = navController,
     )
@@ -76,7 +75,7 @@ fun NavGraphBuilder.loanDestination(
         navigateBack = navController::popBackStack,
     )
 
-    loanApprovalScreen {
+    loanApprovalDestination {
         navController.popBackStack()
     }
     loanRepaymentSchedule {
@@ -94,6 +93,10 @@ fun NavGraphBuilder.loanDestination(
     loanDashboardScreen(
         onNavigateBack = navController::popBackStack,
         navigateToTransactions = navController::navigateToLoanTransactionScreen,
+        navigateToRejectLoan = navController::navigateToLoanRejectScreen,
+        navigateToApproveLoan = navController::navigateToLoanApprovalScreen,
+        navigateToDisburseLoan = navController::navigateToLoanDisburseScreen,
+        navigateToMakeRepayment = navController::navigateToLoanRepaymentScreen,
     )
     loanChargeOffScreen(
         onNavigateBack = navController::navigateUp,
@@ -147,6 +150,8 @@ fun NavGraphBuilder.loanDestination(
         navigateToCreateGuarantor = navController::navigateToCreateGuarantorScreen,
         navigateToAssignLoanOfficerScreen = navController::navigateToAssignLoanOfficerScreen,
         navigateToDisburse = navController::navigateToLoanDisburseScreen,
+        navigateToApproveLoan = navController::navigateToLoanApprovalScreen,
+        navigateToAddLoanCharge = navController::navigateToLoanChargesScreen,
     )
 
     loanPaymentsActionDestination(
@@ -171,14 +176,6 @@ fun NavGraphBuilder.loanDestination(
     loanRescheduleFormScreen(
         navController = navController,
         onBackPressed = navController::popBackStack,
-        onDetailItemClick = { item, loanId ->
-        onDetailItemClick = { loanId, item ->
-            when (item) {
-                LoanAccountProfileActionItem.General ->
-                    navController.navigateToLoanAccountGeneralScreen(loanId = loanId)
-                else -> Unit
-            }
-        },
     )
 
     loanAccountGeneralDestination(
@@ -189,26 +186,4 @@ fun NavGraphBuilder.loanDestination(
         onNavigateBack = navController::navigateUp,
         onDisburseSuccess = navController::reloadLoanAccountActionScreen,
     )
-}
-
-fun NavGraphBuilder.loanApprovalScreen(
-    onBackPressed: () -> Unit,
-) {
-    composable(
-        route = LoanScreens.LoanApprovalScreen.route,
-        arguments = listOf(
-            navArgument(name = "arg", builder = { type = NavType.StringType }),
-        ),
-    ) {
-        LoanAccountApprovalScreen(
-            navigateBack = onBackPressed,
-        )
-    }
-}
-
-fun NavController.navigateToLoanApprovalScreen(
-    loanId: Int,
-    loanWithAssociations: LoanWithAssociationsEntity,
-) {
-    navigate(LoanScreens.LoanApprovalScreen.argument(loanId, loanWithAssociations))
 }

@@ -56,7 +56,7 @@ import com.mifos.core.data.repository.loan.LoanAccountSummaryRepository
 import com.mifos.core.model.objects.account.loan.Transaction
 import com.mifos.core.model.objects.account.loan.Type
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -112,9 +112,9 @@ internal class LoanDashboardViewModel(
         }.launchIn(viewModelScope)
     }
 
-    private fun populateLoanDashboardState(loanDetails: LoanWithAssociationsEntity) {
-        val currencyCode = loanDetails.currency.code
-        val maxDigits = loanDetails.currency.decimalPlaces
+    private fun populateLoanDashboardState(loanDetails: LoanWithAssociations) {
+        val currencyCode = loanDetails.currency?.code
+        val maxDigits = loanDetails.currency?.decimalPlaces
 
         val loanStatus = getLoanStatus(loanDetails)
 
@@ -128,7 +128,7 @@ internal class LoanDashboardViewModel(
             getNextRepaymentInfo(loanStatus, loanDetails, currencyCode, maxDigits)
 
         val recentTransactions = getRecentTransactions(
-            transactions = loanDetails.transactions,
+            transactions = loanDetails.transactions ?: emptyList(),
             currencyCode = currencyCode,
             maxDigits = maxDigits,
         )
@@ -159,9 +159,9 @@ internal class LoanDashboardViewModel(
     }
 
     private fun getPeriodsGraphValues(
-        loanDetails: LoanWithAssociationsEntity,
+        loanDetails: LoanWithAssociations,
     ): List<PeriodGraphValue> =
-        loanDetails.repaymentSchedule.periods
+        loanDetails.repaymentSchedule?.periods
             ?.drop(1)
             ?.map {
                 PeriodGraphValue(
@@ -170,16 +170,16 @@ internal class LoanDashboardViewModel(
                 )
             } ?: emptyList()
 
-    private fun getLoanStatus(loanDetails: LoanWithAssociationsEntity): LoanStatus =
+    private fun getLoanStatus(loanDetails: LoanWithAssociations): LoanStatus =
         when {
-            loanDetails.status.overpaid == true -> LoanStatus.OVERPAID
-            loanDetails.status.closedWrittenOff == true -> LoanStatus.CLOSED_WRITTEN_OFF
-            loanDetails.status.closedRescheduled == true -> LoanStatus.CLOSED_RESCHEDULED
-            loanDetails.status.closedObligationsMet == true -> LoanStatus.CLOSED_OBLIGATIONS_MET
-            loanDetails.status.active == true -> LoanStatus.ACTIVE
-            loanDetails.status.waitingForDisbursal == true -> LoanStatus.WAITING_FOR_DISBURSAL
-            loanDetails.status.code == "loanStatusType.withdrawn.by.client" -> LoanStatus.WITHDRAWN_BY_APPLICANT
-            loanDetails.status.pendingApproval == true -> LoanStatus.PENDING_APPROVAL
+            loanDetails.status?.overpaid == true -> LoanStatus.OVERPAID
+            loanDetails.status?.closedWrittenOff == true -> LoanStatus.CLOSED_WRITTEN_OFF
+            loanDetails.status?.closedRescheduled == true -> LoanStatus.CLOSED_RESCHEDULED
+            loanDetails.status?.closedObligationsMet == true -> LoanStatus.CLOSED_OBLIGATIONS_MET
+            loanDetails.status?.active == true -> LoanStatus.ACTIVE
+            loanDetails.status?.waitingForDisbursal == true -> LoanStatus.WAITING_FOR_DISBURSAL
+            loanDetails.status?.code == "loanStatusType.withdrawn.by.client" -> LoanStatus.WITHDRAWN_BY_APPLICANT
+            loanDetails.status?.pendingApproval == true -> LoanStatus.PENDING_APPROVAL
             else -> LoanStatus.REJECTED
         }
 
@@ -209,33 +209,33 @@ internal class LoanDashboardViewModel(
 
     private fun getHeroValue(
         status: LoanStatus,
-        loanDetails: LoanWithAssociationsEntity,
+        loanDetails: LoanWithAssociations,
     ) = when (status) {
         LoanStatus.PENDING_APPROVAL, LoanStatus.REJECTED, LoanStatus.WITHDRAWN_BY_APPLICANT ->
-            loanDetails.principal
+            loanDetails.principal ?: 0.0
 
         LoanStatus.WAITING_FOR_DISBURSAL ->
-            loanDetails.approvedPrincipal
+            loanDetails.approvedPrincipal ?: 0.0
 
         LoanStatus.ACTIVE ->
-            loanDetails.summary.totalOutstanding
+            loanDetails.summary?.totalOutstanding ?: 0.0
 
         LoanStatus.OVERPAID ->
-            loanDetails.totalOverpaid
+            loanDetails.totalOverpaid ?: 0.0
 
         LoanStatus.CLOSED_OBLIGATIONS_MET ->
-            loanDetails.summary.totalRepayment
+            loanDetails.summary?.totalRepayment ?: 0.0
 
         LoanStatus.CLOSED_WRITTEN_OFF ->
-            loanDetails.summary.totalWrittenOff
+            loanDetails.summary?.totalWrittenOff ?: 0.0
 
         LoanStatus.CLOSED_RESCHEDULED ->
-            loanDetails.summary.principalOutstanding
+            loanDetails.summary?.principalOutstanding ?: 0.0
     }
 
     private fun getNextRepaymentInfo(
         loanStatus: LoanStatus,
-        loanDetails: LoanWithAssociationsEntity,
+        loanDetails: LoanWithAssociations,
         currencyCode: String?,
         maxDigits: Int?,
     ): Pair<String, String> {
@@ -245,7 +245,7 @@ internal class LoanDashboardViewModel(
             return Pair("", "")
         }
 
-        val nextPeriod = loanDetails.repaymentSchedule.periods
+        val nextPeriod = loanDetails.repaymentSchedule?.periods
             ?.firstOrNull { it.complete == false }
 
         val dueDate = nextPeriod?.dueDate?.let { DateHelper.getDateAsString(it) }
@@ -304,15 +304,15 @@ internal class LoanDashboardViewModel(
     }
 
     private fun getRepaymentProgressData(
-        loanDetails: LoanWithAssociationsEntity,
+        loanDetails: LoanWithAssociations,
         currencyCode: String?,
         maxDigits: Int?,
     ): RepaymentProgressData {
         val summary = loanDetails.summary
 
-        val totalRepayment = summary.totalRepayment ?: 0.0
-        val totalExpected = summary.totalExpectedRepayment ?: 0.0
-        val totalOutstanding = summary.totalOutstanding ?: 0.0
+        val totalRepayment = summary?.totalRepayment ?: 0.0
+        val totalExpected = summary?.totalExpectedRepayment ?: 0.0
+        val totalOutstanding = summary?.totalOutstanding ?: 0.0
 
         val rawPercent = if (totalExpected > 0) (totalRepayment / totalExpected) else 0.0
         val percentFloat = rawPercent.coerceIn(0.0, 1.0).toFloat()
@@ -350,38 +350,38 @@ internal class LoanDashboardViewModel(
 
     private fun getTimelineSteps(
         status: LoanStatus,
-        loanDetails: LoanWithAssociationsEntity,
+        loanDetails: LoanWithAssociations,
     ): List<TimelineStep> {
         val steps = mutableListOf<TimelineStep>()
         val timeline = loanDetails.timeline
 
-        val submittedDate = timeline.submittedOnDate?.let {
+        val submittedDate = timeline?.submittedOnDate?.let {
             DateHelper.getDateAsString(it)
         } ?: ""
-        val approvedDate = timeline.approvedOnDate?.let {
+        val approvedDate = timeline?.approvedOnDate?.let {
             DateHelper.getDateAsString(it)
         } ?: ""
-        val disbursedDate = timeline.actualDisbursementDate
+        val disbursedDate = timeline?.actualDisbursementDate
             ?.filterNotNull()
             ?.let { DateHelper.getDateAsString(it) }
             ?: ""
-        val expectedDisbursementDate = timeline.expectedDisbursementDate?.let {
+        val expectedDisbursementDate = timeline?.expectedDisbursementDate?.let {
             DateHelper.getDateAsString(it)
         } ?: ""
-        val expectedMaturityDate = timeline.expectedMaturityDate?.let {
+        val expectedMaturityDate = timeline?.expectedMaturityDate?.let {
             DateHelper.getDateAsString(it)
         } ?: ""
-        val closedDate = timeline.closedOnDate?.let {
+        val closedDate = timeline?.closedOnDate?.let {
             DateHelper.getDateAsString(it)
         } ?: ""
         val overpaidDate = loanDetails.overpaidOnDate?.let {
             DateHelper.getDateAsString(it)
         } ?: ""
-        val withdrawnDate = timeline.withdrawnOnDate?.let {
+        val withdrawnDate = timeline?.withdrawnOnDate?.let {
             DateHelper.getDateAsString(it)
         } ?: ""
 
-        if (timeline.submittedOnDate != null) {
+        if (timeline?.submittedOnDate != null) {
             steps.add(
                 TimelineStep(
                     title = Res.string.feature_loan_timeline_submitted_date,
@@ -403,7 +403,7 @@ internal class LoanDashboardViewModel(
         }
 
         if (status == LoanStatus.WITHDRAWN_BY_APPLICANT) {
-            if (timeline.approvedOnDate != null) {
+            if (timeline?.approvedOnDate != null) {
                 steps.add(
                     TimelineStep(
                         title = Res.string.feature_loan_timeline_approved_date,
