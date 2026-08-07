@@ -240,6 +240,11 @@
     <string name="feature_loan_payment_success_transaction_label">Transaction ID: %1$s</string>
     <string name="feature_loan_payment_success_title">Payment Successful</string>
 
+    <string name="feature_loan_from_date">From Date*</string>
+    <string name="feature_loan_to_date">To Date*</string>
+    <string name="feature_loan_generate_report">Generate</string>
+    <string name="feature_loan_invalid_date_range">To Date cannot be earlier than From Date</string>
+
     <string name="feature_loan_general_section_performance_history">Performance History</string>
     <string name="feature_loan_general_section_loan_summary">Loan Summary</string>
     <string name="feature_loan_general_section_loan_details">Loan Details</string>

@@ -11,8 +11,14 @@ package com.mifos.feature.loan.loanTransaction
 
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_break_down
+import androidclient.feature.loan.generated.resources.feature_loan_cancel
+import androidclient.feature.loan.generated.resources.feature_loan_export_to_pdf
+import androidclient.feature.loan.generated.resources.feature_loan_from_date
+import androidclient.feature.loan.generated.resources.feature_loan_generate_report
+import androidclient.feature.loan.generated.resources.feature_loan_invalid_date_range
 import androidclient.feature.loan.generated.resources.feature_loan_loan_transactions
 import androidclient.feature.loan.generated.resources.feature_loan_no_transactions
+import androidclient.feature.loan.generated.resources.feature_loan_select
 import androidclient.feature.loan.generated.resources.feature_loan_table_header_amount
 import androidclient.feature.loan.generated.resources.feature_loan_table_header_external_id
 import androidclient.feature.loan.generated.resources.feature_loan_table_header_fees
@@ -25,6 +31,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_table_header_
 import androidclient.feature.loan.generated.resources.feature_loan_table_header_transaction_date
 import androidclient.feature.loan.generated.resources.feature_loan_table_header_transaction_id
 import androidclient.feature.loan.generated.resources.feature_loan_table_header_transaction_type
+import androidclient.feature.loan.generated.resources.feature_loan_to_date
 import androidclient.feature.loan.generated.resources.feature_loan_transaction_action_undo
 import androidclient.feature.loan.generated.resources.feature_loan_transaction_action_view_details
 import androidclient.feature.loan.generated.resources.feature_loan_transaction_action_view_journal_entries
@@ -32,22 +39,30 @@ import androidclient.feature.loan.generated.resources.feature_loan_transaction_a
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -58,9 +73,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.designsystem.component.MifosBottomSheet
+import com.mifos.core.designsystem.component.MifosButton
+import com.mifos.core.designsystem.component.MifosCustomDialog
+import com.mifos.core.designsystem.component.MifosDatePickerTextField
+import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTableRow
@@ -70,53 +88,40 @@ import com.mifos.core.model.objects.account.loan.Transaction
 import com.mifos.core.model.objects.account.loan.Type
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.components.MifosProgressIndicator
-import kotlinx.coroutines.launch
+import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 @Composable
 internal fun LoanTransactionsScreen(
     navigateBack: () -> Unit,
     viewModel: LoanTransactionsViewModel = koinViewModel(),
 ) {
-    val uiState by viewModel.loanTransactionsUiState.collectAsStateWithLifecycle()
+    val state by viewModel.stateFlow.collectAsStateWithLifecycle()
 
-    LaunchedEffect(key1 = Unit) {
-        viewModel.loadLoanTransaction()
+    EventsEffect(viewModel.eventFlow) { event ->
+        when (event) {
+            LoanTransactionsEvent.NavigateBack -> navigateBack()
+        }
     }
 
-    LoanTransactionsScreen(
-        uiState = uiState,
-        navigateBack = navigateBack,
-        onRetry = {
-            viewModel.viewModelScope.launch {
-                viewModel.loadLoanTransaction()
-            }
-        },
-        onDismissBottomSheet = { viewModel.dismissBottomSheet() },
-        onTransactionActionClick = { action, id ->
-            viewModel.onActionSelected(
-                action,
-                id,
-            )
-        },
-        onRowAction = { row -> viewModel.onRowAction(row) },
+    LoanTransactionsScreenContent(
+        state = state,
+        onAction = remember(viewModel) { viewModel::trySendAction },
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun LoanTransactionsScreen(
-    uiState: LoanTransactionsUiState,
-    navigateBack: () -> Unit,
-    onRetry: () -> Unit,
-    onDismissBottomSheet: () -> Unit,
-    onTransactionActionClick: (TransactionAction, Int) -> Unit,
-    onRowAction: (LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData) -> Unit = {},
+internal fun LoanTransactionsScreenContent(
+    state: LoanTransactionsState,
+    onAction: (LoanTransactionsAction) -> Unit,
 ) {
     val snackbarHostState = remember {
         SnackbarHostState()
@@ -125,48 +130,230 @@ internal fun LoanTransactionsScreen(
     MifosScaffold(
         snackbarHostState = snackbarHostState,
         title = stringResource(Res.string.feature_loan_loan_transactions),
-        onBackPressed = navigateBack,
-    ) {
+        onBackPressed = { onAction(LoanTransactionsAction.NavigateBack) },
+        actions = {
+            IconButton(
+                onClick = { onAction(LoanTransactionsAction.ExportClicked) },
+                enabled = state.viewState is LoanTransactionsState.ViewState.Success,
+            ) {
+                Icon(
+                    imageVector = MifosIcons.FileUpload,
+                    contentDescription = stringResource(Res.string.feature_loan_export_to_pdf),
+                )
+            }
+        },
+    ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it),
+                .padding(paddingValues),
         ) {
-            when (uiState) {
-                is LoanTransactionsUiState.ShowFetchingError -> {
+            when (val viewState = state.viewState) {
+                is LoanTransactionsState.ViewState.Error -> {
                     MifosSweetError(
-                        message = uiState.message,
-                        onclick = onRetry,
+                        message = viewState.message,
+                        onclick = { onAction(LoanTransactionsAction.OnRetry) },
                     )
                 }
 
-                is LoanTransactionsUiState.ShowLoanTransaction -> {
-                    if (uiState.transactionsTableData == null || uiState.transactionsTableData.transactions.isEmpty()) {
+                is LoanTransactionsState.ViewState.Success -> {
+                    if (viewState.transactionsTableData.transactions.isEmpty()) {
                         MifosEmptyUi(text = stringResource(Res.string.feature_loan_no_transactions))
                     } else {
                         LoanTransactionsTableContent(
-                            tableData = uiState.transactionsTableData,
-                            onRowAction = onRowAction,
+                            tableData = viewState.transactionsTableData,
+                            onAction = onAction,
                         )
                     }
 
-                    if (uiState.isBottomSheetOpen) {
+                    if (state.isBottomSheetOpen) {
                         TransactionActionsBottomSheet(
-                            transactionType = uiState.selectedRow?.transactionType
+                            transactionType = state.selectedRow?.transactionType
                                 ?: TransactionType.UNKNOWN,
-                            manuallyReversed = uiState.selectedRow?.manuallyReversed ?: false,
-                            onDismissRequest = onDismissBottomSheet,
+                            manuallyReversed = state.selectedRow?.manuallyReversed ?: false,
+                            onDismissRequest = { onAction(LoanTransactionsAction.DismissBottomSheet) },
                             onAction = { action ->
-                                uiState.selectedRow?.id?.let { id ->
-                                    onTransactionActionClick(action, id.toInt())
+                                state.selectedRow?.id?.let { id ->
+                                    onAction(LoanTransactionsAction.TransactionActionSelected(action, id.toInt()))
                                 }
                             },
                         )
                     }
                 }
 
-                LoanTransactionsUiState.ShowProgressBar -> {
+                LoanTransactionsState.ViewState.Loading -> {
                     MifosProgressIndicator()
+                }
+            }
+        }
+    }
+
+    if (state.exportDialogState.isVisible) {
+        ExportTransactionsDialog(
+            state = state.exportDialogState,
+            onAction = onAction,
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalTime::class)
+@Composable
+internal fun ExportTransactionsDialog(
+    state: ExportDialogState,
+    onAction: (LoanTransactionsAction) -> Unit,
+) {
+    val nowMillis = remember { Clock.System.now().toEpochMilliseconds() }
+    val minToDate = state.fromDate
+
+    val pastOnlySelectable = remember(nowMillis) {
+        object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return utcTimeMillis <= nowMillis
+            }
+        }
+    }
+
+    val toDateSelectable = remember(nowMillis, minToDate) {
+        object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return utcTimeMillis <= nowMillis &&
+                    (minToDate == null || utcTimeMillis >= minToDate)
+            }
+        }
+    }
+
+    val fromDatePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = state.fromDate ?: nowMillis,
+        selectableDates = pastOnlySelectable,
+    )
+
+    val toDatePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = state.toDate ?: nowMillis,
+        selectableDates = toDateSelectable,
+    )
+
+    if (state.showFromDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = { onAction(LoanTransactionsAction.DismissFromDatePicker) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onAction(LoanTransactionsAction.DismissFromDatePicker)
+                        fromDatePickerState.selectedDateMillis?.let {
+                            onAction(LoanTransactionsAction.FromDateSelected(it))
+                        }
+                    },
+                ) { Text(stringResource(Res.string.feature_loan_select)) }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { onAction(LoanTransactionsAction.DismissFromDatePicker) },
+                ) { Text(stringResource(Res.string.feature_loan_cancel)) }
+            },
+        ) {
+            DatePicker(state = fromDatePickerState)
+        }
+    }
+
+    if (state.showToDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = { onAction(LoanTransactionsAction.DismissToDatePicker) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onAction(LoanTransactionsAction.DismissToDatePicker)
+                        toDatePickerState.selectedDateMillis?.let {
+                            onAction(LoanTransactionsAction.ToDateSelected(it))
+                        }
+                    },
+                ) { Text(stringResource(Res.string.feature_loan_select)) }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { onAction(LoanTransactionsAction.DismissToDatePicker) },
+                ) { Text(stringResource(Res.string.feature_loan_cancel)) }
+            },
+        ) {
+            DatePicker(state = toDatePickerState)
+        }
+    }
+
+    MifosCustomDialog(
+        onDismiss = { onAction(LoanTransactionsAction.DismissExportDialog) },
+    ) {
+        Surface(
+            shape = KptTheme.shapes.medium,
+            color = KptTheme.colorScheme.surface,
+            modifier = Modifier.fillMaxWidth(0.95f),
+        ) {
+            Column(modifier = Modifier.padding(KptTheme.spacing.lg)) {
+                Text(
+                    text = stringResource(Res.string.feature_loan_export_to_pdf),
+                    style = KptTheme.typography.titleLarge,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+
+                Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+
+                MifosDatePickerTextField(
+                    value = state.fromDate?.let {
+                        DateHelper.getDateAsStringFromLong(it)
+                    }.orEmpty(),
+                    label = stringResource(Res.string.feature_loan_from_date),
+                    openDatePicker = {
+                        onAction(LoanTransactionsAction.OpenFromDatePicker)
+                    },
+                )
+
+                Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+
+                MifosDatePickerTextField(
+                    value = state.toDate?.let {
+                        DateHelper.getDateAsStringFromLong(it)
+                    }.orEmpty(),
+                    label = stringResource(Res.string.feature_loan_to_date),
+                    errorMessage = if (state.isInvalidDateRange) {
+                        stringResource(Res.string.feature_loan_invalid_date_range)
+                    } else {
+                        null
+                    },
+                    openDatePicker = {
+                        onAction(LoanTransactionsAction.OpenToDatePicker)
+                    },
+                )
+
+                Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    MifosOutlinedButton(
+                        onClick = { onAction(LoanTransactionsAction.DismissExportDialog) },
+                        modifier = Modifier.weight(1f),
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.feature_loan_cancel),
+                            style = KptTheme.typography.labelLarge,
+                            maxLines = 1,
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(KptTheme.spacing.md))
+
+                    MifosButton(
+                        onClick = {
+                            onAction(LoanTransactionsAction.GenerateReportClicked)
+                        },
+                        enabled = state.isValidDateRange,
+                        modifier = Modifier.weight(1f),
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.feature_loan_generate_report),
+                            style = KptTheme.typography.labelLarge,
+                            maxLines = 1,
+                        )
+                    }
                 }
             }
         }
@@ -175,8 +362,8 @@ internal fun LoanTransactionsScreen(
 
 @Composable
 private fun LoanTransactionsTableContent(
-    tableData: LoanTransactionsUiState.LoanTransactionsTableData,
-    onRowAction: (LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData) -> Unit = {},
+    tableData: LoanTransactionsState.LoanTransactionsTableData,
+    onAction: (LoanTransactionsAction) -> Unit,
 ) {
     val scrollState = rememberScrollState()
     val smallWidth = DesignToken.sizes.tableCellWidthSmall
@@ -344,7 +531,7 @@ private fun LoanTransactionsTableContent(
                     TransactionRow(
                         row = row,
                         widths = columnWidths,
-                        onRowAction = onRowAction,
+                        onAction = onAction,
                     )
                 }
             }
@@ -354,9 +541,9 @@ private fun LoanTransactionsTableContent(
 
 @Composable
 private fun TransactionRow(
-    row: LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData,
+    row: LoanTransactionsState.TransactionRowData,
     widths: List<Dp>,
-    onRowAction: (LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData) -> Unit = {},
+    onAction: (LoanTransactionsAction) -> Unit,
 ) {
     val textValues = listOf(
         row.number,
@@ -417,7 +604,7 @@ private fun TransactionRow(
         cells = cells,
         widths = widths,
         backgroundColor = Color.Transparent,
-        onClick = { onRowAction(row) },
+        onClick = { onAction(LoanTransactionsAction.RowSelected(row)) },
         edgeOffset = DesignToken.padding.medium,
     )
 }
@@ -499,7 +686,7 @@ private fun TransactionActionsBottomSheet(
     )
 }
 
-private class LoanTransactionsPreviewProvider : PreviewParameterProvider<LoanTransactionsUiState> {
+private class LoanTransactionsPreviewProvider : PreviewParameterProvider<LoanTransactionsState> {
     val transaction =
         Transaction(
             id = 23,
@@ -515,28 +702,30 @@ private class LoanTransactionsPreviewProvider : PreviewParameterProvider<LoanTra
             ),
         )
 
-    override val values: Sequence<LoanTransactionsUiState>
+    override val values: Sequence<LoanTransactionsState>
         get() = sequenceOf(
-            LoanTransactionsUiState.ShowFetchingError(""),
-            LoanTransactionsUiState.ShowProgressBar,
-            LoanTransactionsUiState.ShowLoanTransaction(
-                transactionsTableData = LoanTransactionsUiState.LoanTransactionsTableData(
-                    transactions = List(10) { index ->
-                        LoanTransactionsUiState.LoanTransactionsTableData.TransactionRowData(
-                            number = (index + 1).toString(),
-                            id = transaction.id?.toString() ?: "-",
-                            office = transaction.officeName ?: "-",
-                            externalId = "-",
-                            transactionDate = DateHelper.getDateAsString(transaction.date),
-                            transactionType = TransactionType.DISBURSEMENT,
-                            amount = transaction.amount?.toString() ?: "-",
-                            principal = transaction.principalPortion?.toString() ?: "-",
-                            interest = transaction.interestPortion?.toString() ?: "-",
-                            fees = transaction.feeChargesPortion?.toString() ?: "-",
-                            penalties = transaction.penaltyChargesPortion?.toString() ?: "-",
-                            loanBalance = "-",
-                        )
-                    },
+            LoanTransactionsState(viewState = LoanTransactionsState.ViewState.Error("")),
+            LoanTransactionsState(viewState = LoanTransactionsState.ViewState.Loading),
+            LoanTransactionsState(
+                viewState = LoanTransactionsState.ViewState.Success(
+                    transactionsTableData = LoanTransactionsState.LoanTransactionsTableData(
+                        transactions = List(10) { index ->
+                            LoanTransactionsState.TransactionRowData(
+                                number = (index + 1).toString(),
+                                id = transaction.id?.toString() ?: "-",
+                                office = transaction.officeName ?: "-",
+                                externalId = "-",
+                                transactionDate = DateHelper.getDateAsString(transaction.date),
+                                transactionType = TransactionType.DISBURSEMENT,
+                                amount = transaction.amount?.toString() ?: "-",
+                                principal = transaction.principalPortion?.toString() ?: "-",
+                                interest = transaction.interestPortion?.toString() ?: "-",
+                                fees = transaction.feeChargesPortion?.toString() ?: "-",
+                                penalties = transaction.penaltyChargesPortion?.toString() ?: "-",
+                                loanBalance = "-",
+                            )
+                        },
+                    ),
                 ),
             ),
         )
@@ -545,13 +734,10 @@ private class LoanTransactionsPreviewProvider : PreviewParameterProvider<LoanTra
 @Composable
 @Preview
 private fun PreviewLoanTransactions(
-    @PreviewParameter(LoanTransactionsPreviewProvider::class) loanTransactionsUiState: LoanTransactionsUiState,
+    @PreviewParameter(LoanTransactionsPreviewProvider::class) state: LoanTransactionsState,
 ) {
-    LoanTransactionsScreen(
-        uiState = loanTransactionsUiState,
-        navigateBack = {},
-        onRetry = {},
-        onDismissBottomSheet = {},
-        onTransactionActionClick = { _, _ -> },
+    LoanTransactionsScreenContent(
+        state = state,
+        onAction = {},
     )
 }
