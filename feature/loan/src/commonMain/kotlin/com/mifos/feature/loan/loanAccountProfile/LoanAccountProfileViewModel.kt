@@ -23,13 +23,13 @@ import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.loan.LoanAccountSummaryRepository
 import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.loan.loanAccountProfile.LoanAccountEvent.NavigateToDetail
 import com.mifos.feature.loan.loanAccountProfile.LoanAccountState.DialogState.Error
 import com.mifos.feature.loan.loanAccountProfile.components.LoanAccountProfileActionItem
 import com.mifos.feature.loan.utils.UiLoanStatus
 import com.mifos.feature.loan.utils.getLoanStatus
-import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch

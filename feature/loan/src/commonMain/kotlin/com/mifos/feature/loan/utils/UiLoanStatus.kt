@@ -23,7 +23,6 @@ import androidclient.feature.loan.generated.resources.feature_loan_withdrawn_by_
 import androidx.compose.ui.graphics.Color
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanStatus
-
 import org.jetbrains.compose.resources.StringResource
 
 enum class UiLoanStatus(
@@ -87,4 +86,3 @@ fun LoanStatus?.getLoanStatus(): UiLoanStatus {
         else -> UiLoanStatus.UNKNOWN
     }
 }
-

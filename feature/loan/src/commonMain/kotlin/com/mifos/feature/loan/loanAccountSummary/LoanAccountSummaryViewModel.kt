@@ -21,8 +21,6 @@ import com.mifos.core.data.repository.loan.LoanAccountSummaryRepository
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanStatus
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.ui.util.BaseViewModel
-
-
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString

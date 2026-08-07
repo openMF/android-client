@@ -57,7 +57,6 @@ import androidclient.feature.loan.generated.resources.feature_loan_transaction_d
 import androidclient.feature.loan.generated.resources.feature_loan_transaction_repayment
 import androidclient.feature.loan.generated.resources.feature_loan_view_all
 import androidclient.feature.loan.generated.resources.feature_loan_written_off_amount
-import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanStatus as DomainLoanStatus
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -111,10 +110,10 @@ import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect
-import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -122,6 +121,7 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanStatus as DomainLoanStatus
 
 @Composable
 internal fun LoanDashboardScreen(

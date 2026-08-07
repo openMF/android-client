@@ -27,7 +27,6 @@ import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.AmountTransferRepository
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.repository.loan.LoanAccountSummaryRepository
-
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.model.objects.account.loan.transfer.AccountOption
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRequest

@@ -19,13 +19,13 @@ import com.mifos.feature.loan.assignLoanOfficer.navigateToAssignLoanOfficerScree
 import com.mifos.feature.loan.createGuarantor.createGuarantorScreen
 import com.mifos.feature.loan.createGuarantor.navigateToCreateGuarantorScreen
 import com.mifos.feature.loan.createLoanReschedules.loanRescheduleFormScreen
-import com.mifos.feature.loan.loanAccountGeneral.loanAccountGeneralDestination
-import com.mifos.feature.loan.loanAccountGeneral.navigateToLoanAccountGeneralScreen
 import com.mifos.feature.loan.loanAccountAction.loanAccountActionDestination
 import com.mifos.feature.loan.loanAccountAction.navigateToLoanAccountActionScreen
 import com.mifos.feature.loan.loanAccountAction.payments.loanPaymentsActionDestination
 import com.mifos.feature.loan.loanAccountAction.payments.navigateToLoanPaymentsAction
 import com.mifos.feature.loan.loanAccountAction.reloadLoanAccountActionScreen
+import com.mifos.feature.loan.loanAccountGeneral.loanAccountGeneralDestination
+import com.mifos.feature.loan.loanAccountGeneral.navigateToLoanAccountGeneralScreen
 import com.mifos.feature.loan.loanAccountProfile.loanProfileAccountDestination
 import com.mifos.feature.loan.loanAccountProfile.reloadLoanAccountProfileScreen
 import com.mifos.feature.loan.loanAccountSummary.loanAccountSummary

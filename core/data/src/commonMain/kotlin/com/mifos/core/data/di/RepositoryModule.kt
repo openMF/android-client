@@ -40,8 +40,8 @@ import com.mifos.core.data.repository.GroupListRepository
 import com.mifos.core.data.repository.GroupLoanAccountRepository
 import com.mifos.core.data.repository.GroupsListRepository
 import com.mifos.core.data.repository.IndividualCollectionSheetDetailsRepository
-import com.mifos.core.data.repository.LoanRejectRepository
 import com.mifos.core.data.repository.LoanAccountGeneralRepository
+import com.mifos.core.data.repository.LoanRejectRepository
 import com.mifos.core.data.repository.LoginRepository
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.core.data.repository.NoteRepository

@@ -75,8 +75,8 @@ import com.mifos.core.ui.components.MifosEmptyCard
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosSearchBar
 import com.mifos.core.ui.util.EventsEffect
-import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
+import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
@@ -501,7 +501,6 @@ private fun FilterBottomSheet(
         }
     }
 }
-
 
 private fun LoanStatusEntity?.toUiLoanStatus(): com.mifos.feature.loan.utils.UiLoanStatus {
     if (this == null) return com.mifos.feature.loan.utils.UiLoanStatus.UNKNOWN

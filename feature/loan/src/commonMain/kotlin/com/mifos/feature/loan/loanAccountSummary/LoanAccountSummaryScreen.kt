@@ -38,8 +38,6 @@ import androidclient.feature.loan.generated.resources.feature_loan_outstanding_b
 import androidclient.feature.loan.generated.resources.feature_loan_repayment_schedule
 import androidclient.feature.loan.generated.resources.feature_loan_staff
 import androidclient.feature.loan.generated.resources.feature_loan_summary
-import com.mifos.feature.loan.utils.UiLoanStatus as UiLoanStatus
-import com.mifos.feature.loan.utils.getLoanStatus
 import androidclient.feature.loan.generated.resources.feature_loan_total_loan
 import androidclient.feature.loan.generated.resources.feature_loan_transactions
 import androidclient.feature.loan.generated.resources.feature_loan_transfer_funds
@@ -99,12 +97,14 @@ import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAs
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect
+import com.mifos.feature.loan.utils.getLoanStatus
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
+import com.mifos.feature.loan.utils.UiLoanStatus as UiLoanStatus
 
 @Composable
 internal fun LoanAccountSummaryScreenRoute(

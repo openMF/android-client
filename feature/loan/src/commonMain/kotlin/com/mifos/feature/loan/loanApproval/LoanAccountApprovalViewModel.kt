@@ -14,6 +14,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_unknown_error
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.loan.LoanAccountApprovalRepository
 import com.mifos.core.model.objects.account.loan.LoanApproval
@@ -21,7 +22,6 @@ import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAs
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import androidx.navigation.toRoute
 import org.jetbrains.compose.resources.getString
 
 class LoanAccountApprovalViewModel(
