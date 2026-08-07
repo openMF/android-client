@@ -11,9 +11,7 @@ package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
-import kotlinx.coroutines.flow.Flow
-
 interface LoanAccountGeneralRepository {
 
-    fun getLoanById(loanId: Int): Flow<DataState<LoanWithAssociations?>>
+    suspend fun getLoanById(loanId: Int): DataState<LoanWithAssociations?>
 }

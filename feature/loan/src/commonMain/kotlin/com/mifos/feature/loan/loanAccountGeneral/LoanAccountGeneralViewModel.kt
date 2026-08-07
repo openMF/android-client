@@ -63,45 +63,41 @@ internal class LoanAccountGeneralViewModel(
     private fun loadLoanById() {
         loadJob?.cancel()
         loadJob = viewModelScope.launch {
-            repository.getLoanById(loanId).collect { dataState ->
-                when (dataState) {
-                    is DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(dialogState = LoanAccountGeneralState.DialogState.Loading)
-                        }
-                    }
-
-                    is DataState.Success -> {
-                        val loan = dataState.data
-                        if (loan != null) {
-                            try {
-                                fillGeneralState(loan)
-                            } catch (e: Exception) {
-                                mutableStateFlow.update {
-                                    it.copy(dialogState = LoanAccountGeneralState.DialogState.Error(e.message.toString()))
-                                }
-                            }
-                        } else {
+            mutableStateFlow.update {
+                it.copy(dialogState = LoanAccountGeneralState.DialogState.Loading)
+            }
+            when (val dataState = repository.getLoanById(loanId)) {
+                is DataState.Loading -> Unit
+                is DataState.Success -> {
+                    val loan = dataState.data
+                    if (loan != null) {
+                        try {
+                            fillGeneralState(loan)
+                        } catch (e: Exception) {
                             mutableStateFlow.update {
-                                it.copy(dialogState = LoanAccountGeneralState.DialogState.Error(getString(Res.string.feature_loan_profile_error_details_not_found)))
+                                it.copy(dialogState = LoanAccountGeneralState.DialogState.Error(e.message.toString()))
                             }
                         }
-                    }
-
-                    is DataState.Error -> {
-                        val isNetworkError = dataState.exception is NetworkUnavailableException
+                    } else {
                         mutableStateFlow.update {
-                            it.copy(
-                                networkConnection = !isNetworkError,
-                                dialogState = LoanAccountGeneralState.DialogState.Error(
-                                    if (isNetworkError) {
-                                        getString(Res.string.feature_loan_profile_error_network_not_available)
-                                    } else {
-                                        dataState.message
-                                    },
-                                ),
-                            )
+                            it.copy(dialogState = LoanAccountGeneralState.DialogState.Error(getString(Res.string.feature_loan_profile_error_details_not_found)))
                         }
+                    }
+                }
+
+                is DataState.Error -> {
+                    val isNetworkError = dataState.exception is NetworkUnavailableException
+                    mutableStateFlow.update {
+                        it.copy(
+                            networkConnection = !isNetworkError,
+                            dialogState = LoanAccountGeneralState.DialogState.Error(
+                                if (isNetworkError) {
+                                    getString(Res.string.feature_loan_profile_error_network_not_available)
+                                } else {
+                                    dataState.message
+                                },
+                            ),
+                        )
                     }
                 }
             }
