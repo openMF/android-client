@@ -10,10 +10,10 @@
 package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.DataState
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.room.entities.accounts.CenterAccounts
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.accounts.GroupAccounts
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.group.CenterEntity
@@ -31,7 +31,7 @@ interface SyncCentersDialogRepository {
 
     fun syncCenterAccounts(centerId: Int): Flow<DataState<CenterAccounts>>
 
-    fun syncLoanById(loanId: Int): Flow<DataState<LoanWithAssociationsEntity>>
+    fun syncLoanById(loanId: Int): Flow<DataState<LoanWithAssociations>>
 
     fun syncLoanRepaymentTemplate(loanId: Int): Flow<DataState<LoanRepaymentTemplateEntity>>
 

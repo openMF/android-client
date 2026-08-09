@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "ecad0596ed00653fe83104adad1c9540",
+    "identityHash": "466ba88048f83d75ab5fa462625c5257",
     "entities": [
       {
         "tableName": "ActualDisbursementDateEntity",
@@ -397,7 +397,7 @@
       },
       {
         "tableName": "LoanWithAssociations",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `accountNo` TEXT NOT NULL, `status` TEXT NOT NULL, `clientId` INTEGER NOT NULL, `clientName` TEXT NOT NULL, `clientOfficeId` INTEGER NOT NULL, `loanProductId` INTEGER NOT NULL, `loanProductName` TEXT NOT NULL, `loanProductDescription` TEXT NOT NULL, `fundId` INTEGER NOT NULL, `fundName` TEXT NOT NULL, `loanPurposeId` INTEGER NOT NULL, `loanPurposeName` TEXT NOT NULL, `loanOfficerId` INTEGER NOT NULL, `loanOfficerName` TEXT NOT NULL, `loanType` TEXT NOT NULL, `currency` TEXT NOT NULL, `principal` REAL NOT NULL, `approvedPrincipal` REAL NOT NULL, `termFrequency` INTEGER NOT NULL, `termPeriodFrequencyType` TEXT NOT NULL, `numberOfRepayments` INTEGER NOT NULL, `repaymentEvery` INTEGER NOT NULL, `repaymentFrequencyType` TEXT NOT NULL, `interestRatePerPeriod` REAL NOT NULL, `interestRateFrequencyType` TEXT NOT NULL, `annualInterestRate` REAL NOT NULL, `amortizationType` TEXT NOT NULL, `interestType` TEXT NOT NULL, `interestCalculationPeriodType` TEXT NOT NULL, `transactionProcessingStrategyId` INTEGER NOT NULL, `transactionProcessingStrategyName` TEXT NOT NULL, `syncDisbursementWithMeeting` INTEGER NOT NULL, `timeline` TEXT NOT NULL, `summary` TEXT NOT NULL, `repaymentSchedule` TEXT NOT NULL, `transactions` TEXT NOT NULL, `feeChargesAtDisbursementCharged` REAL NOT NULL, `totalOverpaid` REAL NOT NULL, `loanCounter` INTEGER NOT NULL, `loanProductCounter` INTEGER NOT NULL, `multiDisburseLoan` INTEGER NOT NULL, `canDisburse` INTEGER NOT NULL, `inArrears` INTEGER NOT NULL, `isNPA` INTEGER NOT NULL, `overpaidOnDate` TEXT, `isEqualAmortization` INTEGER NOT NULL DEFAULT 0, `allowPartialPeriodInterestCalculation` INTEGER NOT NULL DEFAULT 0, `interestRecognitionOnDisbursementDate` INTEGER NOT NULL DEFAULT 0, `enableDownPayment` INTEGER NOT NULL DEFAULT 0, `enableIncomeCapitalization` INTEGER NOT NULL DEFAULT 0, `enableBuyDownFee` INTEGER NOT NULL DEFAULT 0, `enableInstallmentLevelDelinquency` INTEGER NOT NULL DEFAULT 0, `isInterestRecalculationEnabled` INTEGER NOT NULL DEFAULT 0, `chargedOff` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`status`) REFERENCES `LoanStatus`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`timeline`) REFERENCES `Timeline`(`loanId`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`summary`) REFERENCES `LoansAccountSummary`(`loanId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `accountNo` TEXT NOT NULL, `status` TEXT NOT NULL, `clientId` INTEGER NOT NULL, `clientName` TEXT NOT NULL, `clientOfficeId` INTEGER NOT NULL, `loanProductId` INTEGER NOT NULL, `loanProductName` TEXT NOT NULL, `loanProductDescription` TEXT NOT NULL, `fundId` INTEGER NOT NULL, `fundName` TEXT NOT NULL, `loanPurposeId` INTEGER NOT NULL, `loanPurposeName` TEXT NOT NULL, `loanOfficerId` INTEGER NOT NULL, `loanOfficerName` TEXT NOT NULL, `loanType` TEXT NOT NULL, `currency` TEXT NOT NULL, `principal` REAL NOT NULL, `approvedPrincipal` REAL NOT NULL, `proposedPrincipal` REAL NOT NULL DEFAULT 0.0, `termFrequency` INTEGER NOT NULL, `termPeriodFrequencyType` TEXT NOT NULL, `numberOfRepayments` INTEGER NOT NULL, `repaymentEvery` INTEGER NOT NULL, `repaymentFrequencyType` TEXT NOT NULL, `interestRatePerPeriod` REAL NOT NULL, `interestRateFrequencyType` TEXT NOT NULL, `annualInterestRate` REAL NOT NULL, `amortizationType` TEXT NOT NULL, `interestType` TEXT NOT NULL, `interestCalculationPeriodType` TEXT NOT NULL, `transactionProcessingStrategyId` INTEGER NOT NULL, `transactionProcessingStrategyName` TEXT NOT NULL, `syncDisbursementWithMeeting` INTEGER NOT NULL, `timeline` TEXT NOT NULL, `summary` TEXT NOT NULL, `repaymentSchedule` TEXT NOT NULL, `transactions` TEXT NOT NULL, `feeChargesAtDisbursementCharged` REAL NOT NULL, `totalOverpaid` REAL NOT NULL, `loanCounter` INTEGER NOT NULL, `loanProductCounter` INTEGER NOT NULL, `multiDisburseLoan` INTEGER NOT NULL, `canDisburse` INTEGER NOT NULL, `inArrears` INTEGER NOT NULL, `isNPA` INTEGER NOT NULL, `overpaidOnDate` TEXT, `isEqualAmortization` INTEGER NOT NULL DEFAULT 0, `allowPartialPeriodInterestCalculation` INTEGER NOT NULL DEFAULT 0, `interestRecognitionOnDisbursementDate` INTEGER NOT NULL DEFAULT 0, `enableDownPayment` INTEGER NOT NULL DEFAULT 0, `enableIncomeCapitalization` INTEGER NOT NULL DEFAULT 0, `enableBuyDownFee` INTEGER NOT NULL DEFAULT 0, `enableInstallmentLevelDelinquency` INTEGER NOT NULL DEFAULT 0, `isInterestRecalculationEnabled` INTEGER NOT NULL DEFAULT 0, `chargedOff` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`status`) REFERENCES `LoanStatus`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`timeline`) REFERENCES `Timeline`(`loanId`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`summary`) REFERENCES `LoansAccountSummary`(`loanId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -512,6 +512,13 @@
             "columnName": "approvedPrincipal",
             "affinity": "REAL",
             "notNull": true
+          },
+          {
+            "fieldPath": "proposedPrincipal",
+            "columnName": "proposedPrincipal",
+            "affinity": "REAL",
+            "notNull": true,
+            "defaultValue": "0.0"
           },
           {
             "fieldPath": "termFrequency",
@@ -811,7 +818,7 @@
       },
       {
         "tableName": "LoansAccountSummary",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`loanId` INTEGER PRIMARY KEY AUTOINCREMENT, `currency` TEXT, `principalDisbursed` REAL, `principalPaid` REAL, `principalWrittenOff` REAL, `principalOutstanding` REAL, `principalOverdue` REAL, `interestCharged` REAL, `interestPaid` REAL, `interestWaived` REAL, `interestWrittenOff` REAL, `interestOutstanding` REAL, `interestOverdue` REAL, `feeChargesCharged` REAL, `feeChargesDueAtDisbursementCharged` REAL, `feeChargesPaid` REAL, `feeChargesWaived` REAL, `feeChargesWrittenOff` REAL, `feeChargesOutstanding` REAL, `feeChargesOverdue` REAL, `penaltyChargesCharged` REAL, `penaltyChargesPaid` REAL, `penaltyChargesWaived` REAL, `penaltyChargesWrittenOff` REAL, `penaltyChargesOutstanding` REAL, `penaltyChargesOverdue` REAL, `totalExpectedRepayment` REAL, `totalRepayment` REAL, `totalExpectedCostOfLoan` REAL, `totalCostOfLoan` REAL, `totalWaived` REAL, `totalWrittenOff` REAL, `totalOutstanding` REAL, `totalOverdue` REAL, `overdueSinceDate` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`loanId` INTEGER PRIMARY KEY AUTOINCREMENT, `currency` TEXT, `principalDisbursed` REAL, `principalPaid` REAL, `principalWaived` REAL, `principalWrittenOff` REAL, `principalOutstanding` REAL, `principalOverdue` REAL, `interestCharged` REAL, `interestPaid` REAL, `interestWaived` REAL, `interestWrittenOff` REAL, `interestOutstanding` REAL, `interestOverdue` REAL, `feeChargesCharged` REAL, `feeChargesDueAtDisbursementCharged` REAL, `feeChargesPaid` REAL, `feeChargesWaived` REAL, `feeChargesWrittenOff` REAL, `feeChargesOutstanding` REAL, `feeChargesOverdue` REAL, `penaltyChargesCharged` REAL, `penaltyChargesPaid` REAL, `penaltyChargesWaived` REAL, `penaltyChargesWrittenOff` REAL, `penaltyChargesOutstanding` REAL, `penaltyChargesOverdue` REAL, `totalExpectedRepayment` REAL, `totalRepayment` REAL, `totalExpectedCostOfLoan` REAL, `totalCostOfLoan` REAL, `totalWaived` REAL, `totalWrittenOff` REAL, `totalOutstanding` REAL, `totalOverdue` REAL, `overdueSinceDate` TEXT)",
         "fields": [
           {
             "fieldPath": "loanId",
@@ -831,6 +838,11 @@
           {
             "fieldPath": "principalPaid",
             "columnName": "principalPaid",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "principalWaived",
+            "columnName": "principalWaived",
             "affinity": "REAL"
           },
           {
@@ -4258,7 +4270,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ecad0596ed00653fe83104adad1c9540')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '466ba88048f83d75ab5fa462625c5257')"
     ]
   }
 }

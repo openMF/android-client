@@ -83,7 +83,7 @@ data class Loan(
 
     val timeline: LoanTimelineEntity? = null,
 
-    val summary: LoansAccountSummaryEntity? = null,
+    val summary: LoanAccountSummaryEntity? = null,
 
     val feeChargesAtDisbursementCharged: Double? = null,
 

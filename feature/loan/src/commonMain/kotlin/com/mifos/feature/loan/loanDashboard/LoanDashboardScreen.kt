@@ -110,11 +110,10 @@ import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect
-import com.mifos.room.entities.accounts.loans.LoanStatusEntity
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -122,6 +121,7 @@ import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanStatus as DomainLoanStatus
 
 @Composable
 internal fun LoanDashboardScreen(
@@ -195,8 +195,8 @@ internal fun LoanDashboardScreenContent(
                 }
 
                 LoanDashboardState.ViewState.Success -> {
-                    val currencyCode = state.loanDetails.currency.code
-                    val maxDigits = state.loanDetails.currency.decimalPlaces
+                    val currencyCode = state.loanDetails?.currency?.code
+                    val maxDigits = state.loanDetails?.currency?.decimalPlaces
 
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
@@ -205,8 +205,8 @@ internal fun LoanDashboardScreenContent(
                     ) {
                         item {
                             LoanHeroSummaryCard(
-                                productName = state.loanDetails.loanProductName,
-                                accountNumber = state.loanDetails.accountNo,
+                                productName = state.loanDetails?.loanProductName ?: "",
+                                accountNumber = state.loanDetails?.accountNo ?: "",
                                 status = state.loanStatus,
                                 heroLabel = state.heroLabel?.let { label ->
                                     stringResource(label)
@@ -239,7 +239,7 @@ internal fun LoanDashboardScreenContent(
                                 RecentTransactionsSection(
                                     transactions = state.recentTransactions,
                                     onViewAll = {
-                                        onAction(LoanDashboardAction.NavigateToTransactions(state.loanDetails.id))
+                                        onAction(LoanDashboardAction.NavigateToTransactions(state.loanDetails?.id ?: 0))
                                     },
                                 )
 
@@ -247,22 +247,22 @@ internal fun LoanDashboardScreenContent(
 
                                 LoanSummaryGridSection(
                                     principalAmount = CurrencyFormatter.format(
-                                        state.loanDetails.summary.principalDisbursed ?: 0.0,
+                                        state.loanDetails?.summary?.principalDisbursed ?: 0.0,
                                         currencyCode,
                                         maxDigits,
                                     ),
                                     interestAmount = CurrencyFormatter.format(
-                                        state.loanDetails.summary.interestCharged ?: 0.0,
+                                        state.loanDetails?.summary?.interestCharged ?: 0.0,
                                         currencyCode,
                                         maxDigits,
                                     ),
                                     repaidAmount = CurrencyFormatter.format(
-                                        state.loanDetails.summary.totalRepayment ?: 0.0,
+                                        state.loanDetails?.summary?.totalRepayment ?: 0.0,
                                         currencyCode,
                                         maxDigits,
                                     ),
                                     outstandingAmount = CurrencyFormatter.format(
-                                        state.loanDetails.summary.totalOutstanding ?: 0.0,
+                                        state.loanDetails?.summary?.totalOutstanding ?: 0.0,
                                         currencyCode,
                                         maxDigits,
                                     ),
@@ -309,7 +309,7 @@ internal fun LoanDashboardScreenContent(
                             item {
                                 LoanStatusActionButtons(
                                     loanStatus = state.loanStatus,
-                                    loanId = state.loanDetails.id,
+                                    loanId = state.loanDetails?.id ?: 0,
                                     onAction = onAction,
                                 )
                             }
@@ -1188,7 +1188,7 @@ private fun LoanStatusActionButtons(
 
 private class LoanDashboardPreviewProvider : PreviewParameterProvider<LoanDashboardState> {
 
-    private val demoLoanDetails = LoanWithAssociationsEntity(
+    private val demoLoanDetails = LoanWithAssociations(
         id = 12345,
         accountNo = "000000001",
         clientName = "John Doe",
@@ -1196,7 +1196,7 @@ private class LoanDashboardPreviewProvider : PreviewParameterProvider<LoanDashbo
         loanOfficerName = "Jane Smith",
         principal = 10000.0,
         approvedPrincipal = 10000.0,
-        status = LoanStatusEntity(active = true),
+        status = DomainLoanStatus(active = true),
     )
 
     private val demoTransactions = listOf(
@@ -1257,7 +1257,7 @@ private class LoanDashboardPreviewProvider : PreviewParameterProvider<LoanDashbo
                 nextRepaymentDueDate = "",
                 nextRepaymentAmount = "",
                 loanDetails = demoLoanDetails.copy(
-                    status = LoanStatusEntity(pendingApproval = true),
+                    status = DomainLoanStatus(pendingApproval = true),
                 ),
                 recentTransactions = emptyList(),
                 periodsGraphValues = emptyList(),
@@ -1271,7 +1271,7 @@ private class LoanDashboardPreviewProvider : PreviewParameterProvider<LoanDashbo
                 nextRepaymentDueDate = "01 Apr 2026",
                 nextRepaymentAmount = "$550.00",
                 loanDetails = demoLoanDetails.copy(
-                    status = LoanStatusEntity(waitingForDisbursal = true),
+                    status = DomainLoanStatus(waitingForDisbursal = true),
                 ),
                 recentTransactions = emptyList(),
                 periodsGraphValues = demoGraphValues,
@@ -1299,7 +1299,7 @@ private class LoanDashboardPreviewProvider : PreviewParameterProvider<LoanDashbo
                 nextRepaymentDueDate = "",
                 nextRepaymentAmount = "",
                 loanDetails = demoLoanDetails.copy(
-                    status = LoanStatusEntity(overpaid = true),
+                    status = DomainLoanStatus(overpaid = true),
                     totalOverpaid = 150.0,
                 ),
                 recentTransactions = demoTransactions,
@@ -1314,7 +1314,7 @@ private class LoanDashboardPreviewProvider : PreviewParameterProvider<LoanDashbo
                 nextRepaymentDueDate = "",
                 nextRepaymentAmount = "",
                 loanDetails = demoLoanDetails.copy(
-                    status = LoanStatusEntity(closedObligationsMet = true),
+                    status = DomainLoanStatus(closedObligationsMet = true),
                 ),
                 recentTransactions = demoTransactions,
                 periodsGraphValues = demoGraphValues,
@@ -1328,7 +1328,7 @@ private class LoanDashboardPreviewProvider : PreviewParameterProvider<LoanDashbo
                 nextRepaymentDueDate = "",
                 nextRepaymentAmount = "",
                 loanDetails = demoLoanDetails.copy(
-                    status = LoanStatusEntity(closedWrittenOff = true),
+                    status = DomainLoanStatus(closedWrittenOff = true),
                 ),
                 recentTransactions = demoTransactions,
                 periodsGraphValues = demoGraphValues,
@@ -1342,7 +1342,7 @@ private class LoanDashboardPreviewProvider : PreviewParameterProvider<LoanDashbo
                 nextRepaymentDueDate = "",
                 nextRepaymentAmount = "",
                 loanDetails = demoLoanDetails.copy(
-                    status = LoanStatusEntity(closedRescheduled = true),
+                    status = DomainLoanStatus(closedRescheduled = true),
                 ),
                 recentTransactions = demoTransactions,
                 periodsGraphValues = demoGraphValues,
@@ -1356,7 +1356,7 @@ private class LoanDashboardPreviewProvider : PreviewParameterProvider<LoanDashbo
                 nextRepaymentDueDate = "",
                 nextRepaymentAmount = "",
                 loanDetails = demoLoanDetails.copy(
-                    status = LoanStatusEntity(),
+                    status = DomainLoanStatus(),
                 ),
                 recentTransactions = emptyList(),
                 periodsGraphValues = emptyList(),

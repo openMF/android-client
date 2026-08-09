@@ -71,7 +71,7 @@ import template.core.base.database.PrimaryKey
             deferred = false,
         ),
         ForeignKey(
-            entity = LoansAccountSummaryEntity::class,
+            entity = LoanAccountSummaryEntity::class,
             parentColumns = ["loanId"],
             childColumns = ["summary"],
             onDelete = ForeignKeyAction.CASCADE,
@@ -129,6 +129,15 @@ data class LoanWithAssociationsEntity(
 
     val approvedPrincipal: Double = 0.0,
 
+    @ColumnInfo(
+        name = INHERIT_FIELD_NAME,
+        typeAffinity = UNDEFINED,
+        index = false,
+        collate = UNSPECIFIED,
+        defaultValue = "0.0",
+    )
+    val proposedPrincipal: Double = 0.0,
+
     val termFrequency: Int = 0,
 
     @IgnoredOnParcel
@@ -179,7 +188,7 @@ data class LoanWithAssociationsEntity(
         collate = UNSPECIFIED,
         defaultValue = VALUE_UNSPECIFIED,
     )
-    val summary: LoansAccountSummaryEntity = LoansAccountSummaryEntity(),
+    val summary: LoanAccountSummaryEntity = LoanAccountSummaryEntity(),
 
     @IgnoredOnParcel
     val repaymentSchedule: RepaymentSchedule = RepaymentSchedule(),

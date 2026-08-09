@@ -26,8 +26,8 @@ import com.mifos.core.common.utils.DataState.Success
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.loan.LoanRepaymentScheduleRepository
 import com.mifos.core.model.objects.account.loan.Period
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -132,26 +132,26 @@ class LoanRepaymentScheduleViewModel(
         }
     }
 
-    private fun mapToTableData(loan: LoanWithAssociationsEntity): LoanRepaymentScheduleState.RepaymentScheduleTableData {
-        val currencyCode = loan.currency.code
-        val maxDigits = loan.currency.decimalPlaces
+    private fun mapToTableData(loan: LoanWithAssociations): LoanRepaymentScheduleState.RepaymentScheduleTableData {
+        val currencyCode = loan.currency?.code
+        val maxDigits = loan.currency?.decimalPlaces
 
-        val periods = loan.repaymentSchedule.periods?.filter { it.period != null } ?: emptyList()
+        val periods = loan.repaymentSchedule?.periods?.filter { it.period != null } ?: emptyList()
 
         return LoanRepaymentScheduleState.RepaymentScheduleTableData(
-            accountNo = loan.accountNo,
-            clientName = loan.clientName,
-            productName = loan.loanProductName,
-            disbursementDate = loan.timeline.actualDisbursementDate?.filterNotNull()?.let {
+            accountNo = loan.accountNo ?: "",
+            clientName = loan.clientName ?: "",
+            productName = loan.loanProductName ?: "",
+            disbursementDate = loan.timeline?.actualDisbursementDate?.filterNotNull()?.let {
                 DateHelper.getDateAsString(it)
             } ?: "",
             loanAmount = CurrencyFormatter.format(
-                loan.summary.principalDisbursed,
+                loan.summary?.principalDisbursed,
                 currencyCode,
                 maxDigits,
             ),
             principalPaid = CurrencyFormatter.format(
-                loan.summary.principalPaid,
+                loan.summary?.principalPaid,
                 currencyCode,
                 maxDigits,
             ),
@@ -292,7 +292,7 @@ data class LoanRepaymentScheduleState(
     val basicDetails: Map<String, String?> = emptyMap(),
     val repaymentScheduleTableData: RepaymentScheduleTableData? = null,
     val dialogState: DialogState? = null,
-    val dataState: DataState<LoanWithAssociationsEntity> = Loading,
+    val dataState: DataState<LoanWithAssociations> = Loading,
 ) {
     /**
      * Represents the possible dialog states.

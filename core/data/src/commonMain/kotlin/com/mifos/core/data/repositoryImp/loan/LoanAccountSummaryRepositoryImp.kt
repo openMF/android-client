@@ -12,8 +12,8 @@ package com.mifos.core.data.repositoryImp.loan
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.loan.LoanAccountSummaryRepository
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.network.datamanager.DataManagerLoan
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -23,7 +23,7 @@ class LoanAccountSummaryRepositoryImp(
     private val dataManagerLoan: DataManagerLoan,
 ) : LoanAccountSummaryRepository {
 
-    override fun getLoanById(loanId: Int): Flow<DataState<LoanWithAssociationsEntity?>> {
+    override fun getLoanById(loanId: Int): Flow<DataState<LoanWithAssociations?>> {
         return dataManagerLoan.getLoanById(loanId)
             .asDataStateFlow()
     }

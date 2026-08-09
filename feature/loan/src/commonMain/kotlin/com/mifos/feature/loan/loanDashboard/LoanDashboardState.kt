@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.loan.loanDashboard
 
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import org.jetbrains.compose.resources.StringResource
 
 data class LoanDashboardState(
@@ -22,7 +22,7 @@ data class LoanDashboardState(
 
     val recentTransactions: List<RecentTransaction> = emptyList(),
 
-    val loanDetails: LoanWithAssociationsEntity = LoanWithAssociationsEntity(),
+    val loanDetails: LoanWithAssociations? = null,
 
     val periodsGraphValues: List<PeriodGraphValue> = emptyList(),
     val isGraphInterestVisible: Boolean = true,

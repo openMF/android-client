@@ -74,11 +74,11 @@ class LoanRepaymentViewModel(
                             return@collect
                         }
                         _loanDetailsState.value = _loanDetailsState.value.copy(
-                            loanId = loanWithAssociations.id,
-                            clientName = loanWithAssociations.clientName,
-                            loanProductName = loanWithAssociations.loanProductName,
-                            amountInArrears = loanWithAssociations.summary.totalOverdue,
-                            loanAccountNumber = loanWithAssociations.accountNo,
+                            loanId = loanWithAssociations.id ?: 0,
+                            clientName = loanWithAssociations.clientName ?: "",
+                            loanProductName = loanWithAssociations.loanProductName ?: "",
+                            amountInArrears = loanWithAssociations.summary?.totalOverdue,
+                            loanAccountNumber = loanWithAssociations.accountNo ?: "",
                         )
                         checkDatabaseLoanRepaymentByLoanId()
                     }

@@ -23,13 +23,13 @@ import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.loan.LoanAccountSummaryRepository
 import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.loan.loanAccountProfile.LoanAccountEvent.NavigateToDetail
 import com.mifos.feature.loan.loanAccountProfile.LoanAccountState.DialogState.Error
 import com.mifos.feature.loan.loanAccountProfile.components.LoanAccountProfileActionItem
-import com.mifos.feature.loan.utils.LoanStatus
+import com.mifos.feature.loan.utils.UiLoanStatus
 import com.mifos.feature.loan.utils.getLoanStatus
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -107,11 +107,11 @@ internal class LoanAccountProfileViewModel(
         }
     }
 
-    private fun calculateNextActionResource(status: LoanStatus): StringResource {
+    private fun calculateNextActionResource(status: UiLoanStatus): StringResource {
         return when (status) {
-            LoanStatus.PENDING_APPROVAL -> Res.string.feature_loan_profile_action_approve
-            LoanStatus.CLOSED_OVERPAID -> Res.string.feature_loan_profile_action_transfer
-            LoanStatus.ACTIVE -> Res.string.feature_loan_profile_action_repayment
+            UiLoanStatus.PENDING_APPROVAL -> Res.string.feature_loan_profile_action_approve
+            UiLoanStatus.CLOSED_OVERPAID -> Res.string.feature_loan_profile_action_transfer
+            UiLoanStatus.ACTIVE -> Res.string.feature_loan_profile_action_repayment
             else -> Res.string.feature_loan_profile_action_view
         }
     }
@@ -137,16 +137,16 @@ internal class LoanAccountProfileViewModel(
         val account = mutableStateFlow.value.loanAccount ?: return
 
         when (account.status.getLoanStatus()) {
-            LoanStatus.PENDING_APPROVAL -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Approve))
-            LoanStatus.CLOSED_OVERPAID -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Transfer))
-            LoanStatus.ACTIVE -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Repayment))
+            UiLoanStatus.PENDING_APPROVAL -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Approve))
+            UiLoanStatus.CLOSED_OVERPAID -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Transfer))
+            UiLoanStatus.ACTIVE -> sendEvent(LoanAccountEvent.NavigateToAction(LoanProfileAction.Repayment))
             else -> sendEvent(LoanAccountEvent.NavigateToAccountDetails)
         }
     }
 }
 
 data class LoanAccountState(
-    val loanAccount: LoanWithAssociationsEntity? = null,
+    val loanAccount: LoanWithAssociations? = null,
     val dialogState: DialogState? = null,
     val networkConnection: Boolean = false,
     val nextActionButtonRes: StringResource = Res.string.feature_loan_profile_action_view,
