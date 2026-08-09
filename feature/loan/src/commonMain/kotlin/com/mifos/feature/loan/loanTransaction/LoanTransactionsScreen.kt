@@ -173,8 +173,8 @@ internal fun LoanTransactionsScreenContent(
                             manuallyReversed = state.selectedRow?.manuallyReversed ?: false,
                             onDismissRequest = { onAction(LoanTransactionsAction.DismissBottomSheet) },
                             onAction = { action ->
-                                state.selectedRow?.id?.let { id ->
-                                    onAction(LoanTransactionsAction.TransactionActionSelected(action, id.toInt()))
+                                state.selectedRow?.id?.toIntOrNull()?.let { id ->
+                                    onAction(LoanTransactionsAction.TransactionActionSelected(action, id))
                                 }
                             },
                         )

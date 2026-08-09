@@ -18,6 +18,7 @@ import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.loan.LoanTransactionsRepository
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.ui.util.BaseViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -34,8 +35,11 @@ class LoanTransactionsViewModel(
         loadLoanTransaction()
     }
 
+    private var loadTransactionsJob: Job? = null
+
     private fun loadLoanTransaction() {
-        viewModelScope.launch {
+        loadTransactionsJob?.cancel()
+        loadTransactionsJob = viewModelScope.launch {
             repository.getLoanTransactions(loanId).collect { state ->
                 sendAction(LoanTransactionsAction.Internal.ReceiveTransactionsResult(state))
             }
