@@ -107,6 +107,7 @@ sealed interface LoanTransactionsAction {
     sealed interface Internal : LoanTransactionsAction {
         data class ReceiveTransactionsResult(
             val result: DataState<LoanWithAssociations>,
+            val notAvailableString: String,
         ) : Internal
     }
 }

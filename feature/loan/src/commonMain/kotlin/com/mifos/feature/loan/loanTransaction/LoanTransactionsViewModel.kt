@@ -9,6 +9,9 @@
  */
 package com.mifos.feature.loan.loanTransaction
 
+import androidclient.feature.loan.generated.resources.Res
+import androidclient.feature.loan.generated.resources.feature_loan_value_not_available
+import org.jetbrains.compose.resources.getString
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -40,24 +43,27 @@ class LoanTransactionsViewModel(
     private fun loadLoanTransaction() {
         loadTransactionsJob?.cancel()
         loadTransactionsJob = viewModelScope.launch {
+            val notAvailableString = getString(Res.string.feature_loan_value_not_available)
             repository.getLoanTransactions(loanId).collect { state ->
-                sendAction(LoanTransactionsAction.Internal.ReceiveTransactionsResult(state))
+                sendAction(LoanTransactionsAction.Internal.ReceiveTransactionsResult(state, notAvailableString))
             }
         }
     }
 
-    private fun handleTransactionsResult(result: DataState<LoanWithAssociations>) {
+    private fun handleTransactionsResult(result: DataState<LoanWithAssociations>, notAvailableString: String) {
         when (result) {
             is DataState.Error -> {
                 mutableStateFlow.update {
                     it.copy(viewState = LoanTransactionsState.ViewState.Error(result.message))
                 }
             }
+
             DataState.Loading -> {
                 mutableStateFlow.update {
                     it.copy(viewState = LoanTransactionsState.ViewState.Loading)
                 }
             }
+
             is DataState.Success -> {
                 val loanWithAssociations = result.data
                 val currencyCode = loanWithAssociations.currency?.code
@@ -67,57 +73,56 @@ class LoanTransactionsViewModel(
                     loanWithAssociations.transactions?.mapIndexed { index, transaction ->
                         LoanTransactionsState.TransactionRowData(
                             number = (index + 1).toString(),
-                            id = transaction.id?.toString() ?: "-",
-                            office = transaction.officeName ?: "-",
-                            externalId = "-",
+                            id = transaction.id?.toString() ?: notAvailableString,
+                            office = transaction.officeName ?: notAvailableString,
+                            externalId = notAvailableString,
                             transactionDate = if (transaction.date.isNotEmpty()) {
                                 DateHelper.getDateAsString(transaction.date)
                             } else {
-                                "-"
+                                notAvailableString
                             },
                             transactionType = transaction.type?.value?.let {
                                 TransactionType.fromValue(it)
                             } ?: TransactionType.UNKNOWN,
-                            amount = CurrencyFormatter.format(
-                                transaction.amount,
+                            amount = transaction.amount?.let { CurrencyFormatter.format(
+                                it,
                                 currencyCode,
                                 maxDigits,
-                            ),
-                            principal = CurrencyFormatter.format(
-                                transaction.principalPortion,
+                            ) } ?: notAvailableString,
+                            principal = transaction.principalPortion?.let { CurrencyFormatter.format(
+                                it,
                                 currencyCode,
                                 maxDigits,
-                            ),
-                            interest = CurrencyFormatter.format(
-                                transaction.interestPortion,
+                            ) } ?: notAvailableString,
+                            interest = transaction.interestPortion?.let { CurrencyFormatter.format(
+                                it,
                                 currencyCode,
                                 maxDigits,
-                            ),
-                            fees = CurrencyFormatter.format(
-                                transaction.feeChargesPortion,
+                            ) } ?: notAvailableString,
+                            fees = transaction.feeChargesPortion?.let { CurrencyFormatter.format(
+                                it,
                                 currencyCode,
                                 maxDigits,
-                            ),
-                            penalties = CurrencyFormatter.format(
-                                transaction.penaltyChargesPortion,
+                            ) } ?: notAvailableString,
+                            penalties = transaction.penaltyChargesPortion?.let { CurrencyFormatter.format(
+                                it,
                                 currencyCode,
                                 maxDigits,
-                            ),
-                            loanBalance = CurrencyFormatter.format(
-                                transaction.outstandingLoanBalance,
+                            ) } ?: notAvailableString,
+                            loanBalance = transaction.outstandingLoanBalance?.let { CurrencyFormatter.format(
+                                it,
                                 currencyCode,
                                 maxDigits,
-                            ),
+                            ) } ?: notAvailableString,
                             manuallyReversed = transaction.manuallyReversed ?: false,
                         )
                     }
-
 
                 mutableStateFlow.update {
                     it.copy(
                         viewState = LoanTransactionsState.ViewState.Success(
                             transactionsTableData = LoanTransactionsState.LoanTransactionsTableData(
-                                transactions = transactionsData,
+                                transactions = transactionsData ?: emptyList(),
                             ),
                         ),
                     )
@@ -135,58 +140,70 @@ class LoanTransactionsViewModel(
                     it.copy(isBottomSheetOpen = false, selectedRow = null)
                 }
             }
+
             is LoanTransactionsAction.RowSelected -> {
                 mutableStateFlow.update {
                     it.copy(selectedRow = action.row, isBottomSheetOpen = true)
                 }
             }
+
             is LoanTransactionsAction.TransactionActionSelected -> {
                 // TODO: Handle the action based on action string and id
                 handleAction(LoanTransactionsAction.DismissBottomSheet)
             }
+
             is LoanTransactionsAction.Internal.ReceiveTransactionsResult -> {
-                handleTransactionsResult(action.result)
+                handleTransactionsResult(action.result, action.notAvailableString)
             }
+
             LoanTransactionsAction.ExportClicked -> {
                 mutableStateFlow.update {
                     it.copy(exportDialogState = it.exportDialogState.copy(isVisible = true))
                 }
             }
+
             LoanTransactionsAction.DismissExportDialog -> {
                 mutableStateFlow.update {
                     it.copy(exportDialogState = it.exportDialogState.copy(isVisible = false))
                 }
             }
+
             LoanTransactionsAction.OpenFromDatePicker -> {
                 mutableStateFlow.update {
                     it.copy(exportDialogState = it.exportDialogState.copy(showFromDatePicker = true))
                 }
             }
+
             LoanTransactionsAction.DismissFromDatePicker -> {
                 mutableStateFlow.update {
                     it.copy(exportDialogState = it.exportDialogState.copy(showFromDatePicker = false))
                 }
             }
+
             is LoanTransactionsAction.FromDateSelected -> {
                 mutableStateFlow.update {
                     it.copy(exportDialogState = it.exportDialogState.copy(fromDate = action.dateMillis))
                 }
             }
+
             LoanTransactionsAction.OpenToDatePicker -> {
                 mutableStateFlow.update {
                     it.copy(exportDialogState = it.exportDialogState.copy(showToDatePicker = true))
                 }
             }
+
             LoanTransactionsAction.DismissToDatePicker -> {
                 mutableStateFlow.update {
                     it.copy(exportDialogState = it.exportDialogState.copy(showToDatePicker = false))
                 }
             }
+
             is LoanTransactionsAction.ToDateSelected -> {
                 mutableStateFlow.update {
                     it.copy(exportDialogState = it.exportDialogState.copy(toDate = action.dateMillis))
                 }
             }
+
             LoanTransactionsAction.GenerateReportClicked -> {
                 // No backend API call for report generation in this PR (placeholder only)
                 // We'll just dismiss the dialog for now.

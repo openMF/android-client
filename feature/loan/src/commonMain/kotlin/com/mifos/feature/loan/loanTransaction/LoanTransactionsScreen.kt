@@ -132,14 +132,15 @@ internal fun LoanTransactionsScreenContent(
         title = stringResource(Res.string.feature_loan_loan_transactions),
         onBackPressed = { onAction(LoanTransactionsAction.NavigateBack) },
         actions = {
-            IconButton(
-                onClick = { onAction(LoanTransactionsAction.ExportClicked) },
-                enabled = state.viewState is LoanTransactionsState.ViewState.Success,
-            ) {
-                Icon(
-                    imageVector = MifosIcons.FileUpload,
-                    contentDescription = stringResource(Res.string.feature_loan_export_to_pdf),
-                )
+            if (state.viewState is LoanTransactionsState.ViewState.Success && state.viewState.transactionsTableData.transactions.isNotEmpty()) {
+                IconButton(
+                    onClick = { onAction(LoanTransactionsAction.ExportClicked) },
+                ) {
+                    Icon(
+                        imageVector = MifosIcons.FileUpload,
+                        contentDescription = stringResource(Res.string.feature_loan_export_to_pdf),
+                    )
+                }
             }
         },
     ) { paddingValues ->
@@ -174,7 +175,12 @@ internal fun LoanTransactionsScreenContent(
                             onDismissRequest = { onAction(LoanTransactionsAction.DismissBottomSheet) },
                             onAction = { action ->
                                 state.selectedRow?.id?.toIntOrNull()?.let { id ->
-                                    onAction(LoanTransactionsAction.TransactionActionSelected(action, id))
+                                    onAction(
+                                        LoanTransactionsAction.TransactionActionSelected(
+                                            action,
+                                            id,
+                                        ),
+                                    )
                                 }
                             },
                         )
@@ -217,7 +223,7 @@ internal fun ExportTransactionsDialog(
         object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 return utcTimeMillis <= nowMillis &&
-                    (minToDate == null || utcTimeMillis >= minToDate)
+                        (minToDate == null || utcTimeMillis >= minToDate)
             }
         }
     }
