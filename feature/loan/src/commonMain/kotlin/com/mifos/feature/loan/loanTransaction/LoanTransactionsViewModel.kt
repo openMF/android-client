@@ -11,7 +11,6 @@ package com.mifos.feature.loan.loanTransaction
 
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_loan_value_not_available
-import org.jetbrains.compose.resources.getString
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -24,6 +23,7 @@ import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 
 class LoanTransactionsViewModel(
     private val repository: LoanTransactionsRepository,
@@ -84,36 +84,48 @@ class LoanTransactionsViewModel(
                             transactionType = transaction.type?.value?.let {
                                 TransactionType.fromValue(it)
                             } ?: TransactionType.UNKNOWN,
-                            amount = transaction.amount?.let { CurrencyFormatter.format(
-                                it,
-                                currencyCode,
-                                maxDigits,
-                            ) } ?: notAvailableString,
-                            principal = transaction.principalPortion?.let { CurrencyFormatter.format(
-                                it,
-                                currencyCode,
-                                maxDigits,
-                            ) } ?: notAvailableString,
-                            interest = transaction.interestPortion?.let { CurrencyFormatter.format(
-                                it,
-                                currencyCode,
-                                maxDigits,
-                            ) } ?: notAvailableString,
-                            fees = transaction.feeChargesPortion?.let { CurrencyFormatter.format(
-                                it,
-                                currencyCode,
-                                maxDigits,
-                            ) } ?: notAvailableString,
-                            penalties = transaction.penaltyChargesPortion?.let { CurrencyFormatter.format(
-                                it,
-                                currencyCode,
-                                maxDigits,
-                            ) } ?: notAvailableString,
-                            loanBalance = transaction.outstandingLoanBalance?.let { CurrencyFormatter.format(
-                                it,
-                                currencyCode,
-                                maxDigits,
-                            ) } ?: notAvailableString,
+                            amount = transaction.amount?.let {
+                                CurrencyFormatter.format(
+                                    it,
+                                    currencyCode,
+                                    maxDigits,
+                                )
+                            } ?: notAvailableString,
+                            principal = transaction.principalPortion?.let {
+                                CurrencyFormatter.format(
+                                    it,
+                                    currencyCode,
+                                    maxDigits,
+                                )
+                            } ?: notAvailableString,
+                            interest = transaction.interestPortion?.let {
+                                CurrencyFormatter.format(
+                                    it,
+                                    currencyCode,
+                                    maxDigits,
+                                )
+                            } ?: notAvailableString,
+                            fees = transaction.feeChargesPortion?.let {
+                                CurrencyFormatter.format(
+                                    it,
+                                    currencyCode,
+                                    maxDigits,
+                                )
+                            } ?: notAvailableString,
+                            penalties = transaction.penaltyChargesPortion?.let {
+                                CurrencyFormatter.format(
+                                    it,
+                                    currencyCode,
+                                    maxDigits,
+                                )
+                            } ?: notAvailableString,
+                            loanBalance = transaction.outstandingLoanBalance?.let {
+                                CurrencyFormatter.format(
+                                    it,
+                                    currencyCode,
+                                    maxDigits,
+                                )
+                            } ?: notAvailableString,
                             manuallyReversed = transaction.manuallyReversed ?: false,
                         )
                     }

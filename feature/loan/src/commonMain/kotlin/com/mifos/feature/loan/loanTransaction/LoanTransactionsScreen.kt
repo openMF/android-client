@@ -223,7 +223,7 @@ internal fun ExportTransactionsDialog(
         object : SelectableDates {
             override fun isSelectableDate(utcTimeMillis: Long): Boolean {
                 return utcTimeMillis <= nowMillis &&
-                        (minToDate == null || utcTimeMillis >= minToDate)
+                    (minToDate == null || utcTimeMillis >= minToDate)
             }
         }
     }
