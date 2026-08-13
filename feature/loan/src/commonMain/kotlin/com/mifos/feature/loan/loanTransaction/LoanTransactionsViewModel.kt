@@ -217,8 +217,7 @@ class LoanTransactionsViewModel(
             }
 
             LoanTransactionsAction.GenerateReportClicked -> {
-                // No backend API call for report generation in this PR (placeholder only)
-                // We'll just dismiss the dialog for now.
+                // TODO: Implement report generation
                 handleAction(LoanTransactionsAction.DismissExportDialog)
             }
         }
