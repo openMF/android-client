@@ -9,6 +9,9 @@
  */
 package com.mifos.core.network.mappers.loan
 
+import com.mifos.core.model.objects.account.loan.Currency
+import com.mifos.core.model.objects.account.loan.PaymentDetailData
+import com.mifos.core.model.objects.account.loan.PaymentType
 import com.mifos.core.model.objects.account.loan.Period
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.model.objects.account.loan.Transaction
@@ -169,9 +172,41 @@ fun LoanRepaymentScheduleDto.toDomain() = RepaymentSchedule(
 
 fun LoanTransactionDto.toDomain() = Transaction(
     id = this.id.toInt(),
+    officeId = this.officeId?.toInt(),
+    officeName = this.officeName,
     date = this.date?.let { ArrayList(it) } ?: ArrayList(),
+    currency = this.currency?.let {
+        Currency(
+            code = it.code,
+            name = it.name,
+            decimalPlaces = it.decimalPlaces,
+            displaySymbol = it.displaySymbol,
+            displayLabel = it.displayLabel,
+        )
+    },
+    paymentDetailData = this.paymentDetailData?.let {
+        PaymentDetailData(
+            id = it.id?.toInt(),
+            paymentType = it.paymentType?.let { pt ->
+                PaymentType(id = pt.id, name = pt.name)
+            },
+            accountNumber = it.accountNumber,
+            checkNumber = it.checkNumber,
+            routingCode = it.routingCode,
+            receiptNumber = it.receiptNumber,
+            bankNumber = it.bankNumber,
+        )
+    },
     amount = this.amount,
+    netDisbursalAmount = this.netDisbursalAmount,
+    principalPortion = this.principalPortion,
+    interestPortion = this.interestPortion,
+    feeChargesPortion = this.feeChargesPortion,
+    penaltyChargesPortion = this.penaltyChargesPortion,
+    overpaymentPortion = this.overpaymentPortion,
+    unrecognizedIncomePortion = this.unrecognizedIncomePortion,
     outstandingLoanBalance = this.outstandingLoanBalance,
+    submittedOnDate = this.submittedOnDate,
     manuallyReversed = this.manuallyReversed,
     type = this.type?.let {
         Type(
@@ -179,7 +214,30 @@ fun LoanTransactionDto.toDomain() = Transaction(
             code = it.code,
             value = it.value,
             disbursement = it.disbursement,
+            repaymentAtDisbursement = it.repaymentAtDisbursement,
             repayment = it.repayment,
+            merchantIssuedRefund = it.merchantIssuedRefund,
+            payoutRefund = it.payoutRefund,
+            goodwillCredit = it.goodwillCredit,
+            interestPaymentWaiver = it.interestPaymentWaiver,
+            chargeoff = it.chargeoff,
+            contra = it.contra,
+            waiveInterest = it.waiveInterest,
+            waiveCharges = it.waiveCharges,
+            accrual = it.accrual,
+            writeOff = it.writeOff,
+            recoveryRepayment = it.recoveryRepayment,
+            initiateTransfer = it.initiateTransfer,
+            approveTransfer = it.approveTransfer,
+            withdrawTransfer = it.withdrawTransfer,
+            rejectTransfer = it.rejectTransfer,
+            chargePayment = it.chargePayment,
+            refund = it.refund,
+            reAge = it.reAge,
+            reAmortize = it.reAmortize,
+            contractTermination = it.contractTermination,
+            buyDownFee = it.buyDownFee,
+            capitalizedIncome = it.capitalizedIncome,
         )
     },
 )

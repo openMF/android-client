@@ -21,10 +21,10 @@ import androidclient.feature.loan.generated.resources.feature_loan_general_summa
 import androidclient.feature.loan.generated.resources.feature_loan_general_summary_row_interest
 import androidclient.feature.loan.generated.resources.feature_loan_general_summary_row_penalties
 import androidclient.feature.loan.generated.resources.feature_loan_general_summary_row_principal
-import androidclient.feature.loan.generated.resources.feature_loan_general_value_not_available
 import androidclient.feature.loan.generated.resources.feature_loan_general_value_unassigned
 import androidclient.feature.loan.generated.resources.feature_loan_profile_error_details_not_found
 import androidclient.feature.loan.generated.resources.feature_loan_profile_error_network_not_available
+import androidclient.feature.loan.generated.resources.feature_loan_value_not_available
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -133,9 +133,9 @@ internal class LoanAccountGeneralViewModel(
         val loanOfficer = loan.loanOfficerName?.takeIf { it.isNotBlank() }
             ?: getString(Res.string.feature_loan_general_value_unassigned)
         val loanPurpose = loan.loanPurposeName?.takeIf { it.isNotBlank() }
-            ?: getString(Res.string.feature_loan_general_value_not_available)
+            ?: getString(Res.string.feature_loan_value_not_available)
         val externalId = loan.accountNo?.takeIf { it.isNotBlank() }
-            ?: getString(Res.string.feature_loan_general_value_not_available)
+            ?: getString(Res.string.feature_loan_value_not_available)
 
         val proposedAmountValue = formatAmount(loan.proposedPrincipal)
         val approvedAmountValue = formatAmount(loan.approvedPrincipal)

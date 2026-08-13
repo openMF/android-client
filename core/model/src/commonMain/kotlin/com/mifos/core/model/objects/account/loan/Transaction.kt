@@ -19,30 +19,20 @@ data class Transaction(
     var id: Int? = null,
 
     var officeId: Int? = null,
-
     var officeName: String? = null,
-
     var type: Type? = null,
-
     var date: List<Int> = ArrayList(),
-
     var currency: Currency? = null,
-
     var paymentDetailData: PaymentDetailData? = null,
-
     var amount: Double? = null,
-
+    var netDisbursalAmount: Double? = null,
     var principalPortion: Double? = null,
-
     var interestPortion: Double? = null,
-
     var feeChargesPortion: Double? = null,
-
     var penaltyChargesPortion: Double? = null,
-
     var overpaymentPortion: Double? = null,
-
+    var unrecognizedIncomePortion: Double? = null,
     var outstandingLoanBalance: Double? = null,
-
+    var submittedOnDate: List<Int>? = null,
     var manuallyReversed: Boolean? = null,
 ) : Parcelable

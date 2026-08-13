@@ -139,10 +139,90 @@ data class LoanRepaymentScheduleDto(val loanTermInDays: Int, val totalPrincipalD
 data class LoanPeriodDto(val period: Int? = null, val dueDate: List<Int>? = null, val principalDue: Double? = null, val principalPaid: Double? = null, val principalOutstanding: Double? = null, val totalDueForPeriod: Double? = null, val totalPaidForPeriod: Double? = null, val totalOutstandingForPeriod: Double? = null, val complete: Boolean? = null)
 
 @Serializable
-data class LoanTransactionDto(val id: Long, val type: LoanTransactionTypeDto? = null, val date: List<Int>? = null, val amount: Double, val outstandingLoanBalance: Double? = null, val manuallyReversed: Boolean = false)
+data class LoanTransactionDto(
+    val id: Long,
+    val officeId: Long? = null,
+    val officeName: String? = null,
+    val type: LoanTransactionTypeDto? = null,
+    val date: List<Int>? = null,
+    val currency: LoanCurrencyDto? = null,
+    val paymentDetailData: PaymentDetailDataDto? = null,
+    val amount: Double,
+    val netDisbursalAmount: Double? = null,
+    val principalPortion: Double? = null,
+    val interestPortion: Double? = null,
+    val feeChargesPortion: Double? = null,
+    val penaltyChargesPortion: Double? = null,
+    val overpaymentPortion: Double? = null,
+    val unrecognizedIncomePortion: Double? = null,
+    val outstandingLoanBalance: Double? = null,
+    val submittedOnDate: List<Int>? = null,
+    val manuallyReversed: Boolean = false,
+)
 
 @Serializable
-data class LoanTransactionTypeDto(val id: Int, val code: String? = null, val value: String? = null, val disbursement: Boolean = false, val repayment: Boolean = false)
+data class LoanTransactionTypeDto(
+    val id: Int,
+    val code: String? = null,
+    val value: String? = null,
+    val disbursement: Boolean = false,
+    val repaymentAtDisbursement: Boolean = false,
+    val repayment: Boolean = false,
+    val merchantIssuedRefund: Boolean = false,
+    val payoutRefund: Boolean = false,
+    val goodwillCredit: Boolean = false,
+    val interestPaymentWaiver: Boolean = false,
+    val chargeRefund: Boolean = false,
+    val contra: Boolean = false,
+    val waiveInterest: Boolean = false,
+    val waiveCharges: Boolean = false,
+    val accrual: Boolean = false,
+    val writeOff: Boolean = false,
+    val recoveryRepayment: Boolean = false,
+    val initiateTransfer: Boolean = false,
+    val approveTransfer: Boolean = false,
+    val withdrawTransfer: Boolean = false,
+    val rejectTransfer: Boolean = false,
+    val chargePayment: Boolean = false,
+    val refund: Boolean = false,
+    val refundForActiveLoans: Boolean = false,
+    val creditBalanceRefund: Boolean = false,
+    val chargeAdjustment: Boolean = false,
+    val chargeback: Boolean = false,
+    val chargeoff: Boolean = false,
+    val downPayment: Boolean = false,
+    val reAge: Boolean = false,
+    val reAmortize: Boolean = false,
+    val accrualActivity: Boolean = false,
+    val interestRefund: Boolean = false,
+    val accrualAdjustment: Boolean = false,
+    val capitalizedIncome: Boolean = false,
+    val capitalizedIncomeAmortization: Boolean = false,
+    val capitalizedIncomeAdjustment: Boolean = false,
+    val capitalizedIncomeAmortizationAdjustment: Boolean = false,
+    val contractTermination: Boolean = false,
+    val buyDownFee: Boolean = false,
+    val buyDownFeeAdjustment: Boolean = false,
+    val buyDownFeeAmortization: Boolean = false,
+    val buyDownFeeAmortizationAdjustment: Boolean = false,
+)
+
+@Serializable
+data class PaymentDetailDataDto(
+    val id: Long? = null,
+    val paymentType: PaymentTypeDto? = null,
+    val accountNumber: String? = null,
+    val checkNumber: String? = null,
+    val routingCode: String? = null,
+    val receiptNumber: String? = null,
+    val bankNumber: String? = null,
+)
+
+@Serializable
+data class PaymentTypeDto(
+    val id: Int? = null,
+    val name: String? = null,
+)
 
 @Serializable
 data class LoanChargeDto(val id: Long, val name: String? = null, val amount: Double, val amountPaid: Double, val amountOutstanding: Double, val paid: Boolean = false, val waived: Boolean = false)

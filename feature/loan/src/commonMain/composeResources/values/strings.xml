@@ -13,6 +13,7 @@
     <string name="feature_loan_account_created_successfully">Loan account created successfully</string>
     <string name="feature_error_network_not_available">Network is not Available</string>
     <string name="feature_loan_note_optional">Note (Optional)</string>
+    <string name="feature_loan_value_not_available">N/A</string>
 
     <string name="feature_loan_product">Loan Product</string>
     <string name="feature_loan_purpose">Loan Purpose</string>
@@ -240,6 +241,11 @@
     <string name="feature_loan_payment_success_transaction_label">Transaction ID: %1$s</string>
     <string name="feature_loan_payment_success_title">Payment Successful</string>
 
+    <string name="feature_loan_from_date">From Date*</string>
+    <string name="feature_loan_to_date">To Date*</string>
+    <string name="feature_loan_generate_report">Generate</string>
+    <string name="feature_loan_invalid_date_range">To Date cannot be earlier than From Date</string>
+
     <string name="feature_loan_general_section_performance_history">Performance History</string>
     <string name="feature_loan_general_section_loan_summary">Loan Summary</string>
     <string name="feature_loan_general_section_loan_details">Loan Details</string>
@@ -270,7 +276,6 @@
     <string name="feature_loan_general_detail_disbursed_amount">Disbursed Amount</string>
 
     <string name="feature_loan_general_value_unassigned">Unassigned</string>
-    <string name="feature_loan_general_value_not_available">Not Available</string>
 
     <!-- New Loan Account -->
     <string name="new_loan_account_title">New Loan Account</string>
