@@ -56,7 +56,6 @@ import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCard
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanAccountSummary
@@ -253,8 +252,8 @@ private fun LoanAccountTopCard(
     onArrowClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val currencyCode = loanAccount.currency.code
-    val decimalPlaces = loanAccount.currency.decimalPlaces
+    val currencyCode = loanAccount.currency?.code
+    val decimalPlaces = loanAccount.currency?.decimalPlaces
 
     val balance = loanAccount.summary?.totalOutstanding?.let {
         CurrencyFormatter.format(it, currencyCode, decimalPlaces)

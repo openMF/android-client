@@ -24,6 +24,8 @@ import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRespons
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplate
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.dto.loan.CreditBalanceRefundRequestDto
+import com.mifos.core.network.dto.loan.CreditBalanceRefundResponseDto
 import com.mifos.core.network.dto.loans.CreateGuarantorResponseDto
 import com.mifos.core.network.dto.loans.GuarantorRequestDto
 import com.mifos.core.network.dto.loans.LoanChargeOffRequestDto
@@ -41,15 +43,12 @@ import com.mifos.core.network.dto.loans.template.LoanDisburseTemplateDto
 import com.mifos.core.network.dto.loans.template.LoanOfficerOptionsTemplateDto
 import com.mifos.core.network.mappers.loan.LoanAccountMapper
 import com.mifos.core.network.mappers.loan.toDomain
-import com.mifos.core.network.dto.loan.CreditBalanceRefundRequestDto
-import com.mifos.core.network.dto.loan.CreditBalanceRefundResponseDto
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.LoanRefundDetailsEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.accounts.loans.toLoanRefundDetailsEntity
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import com.mifos.room.entities.templates.loans.LoanTemplate
@@ -313,14 +312,15 @@ class DataManagerLoan(
         val userStatus = prefManager.userInfo.first().userStatus
         return if (!userStatus) {
             try {
-                val loan = mBaseApiManager.loanService.getLoanByIdWithAllAssociations(loanId)
+                val loanDto = mBaseApiManager.loanService.getLoanByIdWithAllAssociations(loanId)
+                val loanEntity = LoanAccountMapper.mapToEntity(loanDto.toDomain())
                 val template = mBaseApiManager.loanService
                     .getLoanTransactionTemplate(loanId, APIEndPoint.CREDIT_BALANCE_REFUND)
                     .first()
 
                 val formattedDate = DateHelper.getDateAsString(template.date)
 
-                loan.toLoanRefundDetailsEntity(formattedDate).also {
+                loanEntity.toLoanRefundDetailsEntity(formattedDate).also {
                     loanDaoHelper.saveLoanRefundDetails(it)
                 }
             } catch (e: Exception) {

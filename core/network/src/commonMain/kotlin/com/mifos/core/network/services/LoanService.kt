@@ -22,6 +22,7 @@ import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.dto.loan.CreditBalanceRefundRequestDto
 import com.mifos.core.network.dto.loan.LoanWithAssociationsDto
 import com.mifos.core.network.dto.loans.CreateGuarantorResponseDto
 import com.mifos.core.network.dto.loans.GuarantorRequestDto
@@ -38,7 +39,6 @@ import com.mifos.core.network.dto.loans.template.GuarantorTemplateDto
 import com.mifos.core.network.dto.loans.template.LoanChargeOffTemplateDto
 import com.mifos.core.network.dto.loans.template.LoanDisburseTemplateDto
 import com.mifos.core.network.dto.loans.template.LoanOfficerOptionsTemplateDto
-import com.mifos.core.network.dto.loan.CreditBalanceRefundRequestDto
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.accounts.loans.Loan
