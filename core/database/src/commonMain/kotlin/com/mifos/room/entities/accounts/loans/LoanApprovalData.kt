@@ -9,13 +9,9 @@
  */
 package com.mifos.room.entities.accounts.loans
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
-import kotlinx.serialization.Serializable
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 
-@Parcelize
-@Serializable
 data class LoanApprovalData(
     val loanID: Int,
-    val loanWithAssociations: LoanWithAssociationsEntity,
-) : Parcelable
+    val loanWithAssociations: LoanWithAssociations,
+)

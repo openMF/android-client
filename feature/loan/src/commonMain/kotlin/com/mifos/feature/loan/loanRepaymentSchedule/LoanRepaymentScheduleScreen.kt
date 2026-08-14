@@ -76,6 +76,7 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.ui.components.MifosDetailsCard
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.pdf.Orientation
@@ -84,7 +85,6 @@ import com.mifos.core.ui.util.pdf.PageSize
 import com.mifos.core.ui.util.pdf.rememberPdfGenerator
 import com.mifos.feature.loan.loanRepaymentSchedule.pdf.RepaymentScheduleHtmlGenerator
 import com.mifos.feature.loan.loanRepaymentSchedule.pdf.RepaymentSchedulePdfStrings
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
@@ -177,7 +177,7 @@ internal fun LoanRepaymentScheduleScreenContent(
                     )
                 }
 
-                is DataState.Success<LoanWithAssociationsEntity> -> {
+                is DataState.Success<LoanWithAssociations> -> {
                     state.repaymentScheduleTableData?.let { data ->
                         LoanRepaymentScheduleContent(
                             tableData = data,

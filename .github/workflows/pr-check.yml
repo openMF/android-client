@@ -92,3 +92,4 @@ jobs:
       use_cocoapods: true
       shared_module: ':cmp-shared'
       java-version: '21'
+      xcode-version: 'latest-stable'

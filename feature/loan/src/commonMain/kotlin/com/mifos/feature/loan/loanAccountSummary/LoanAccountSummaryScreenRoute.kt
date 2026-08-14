@@ -12,7 +12,7 @@ package com.mifos.feature.loan.loanAccountSummary
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -31,9 +31,9 @@ fun NavGraphBuilder.loanAccountSummary(
     onRepaymentScheduleClicked: (loanId: Int) -> Unit,
     onDocumentsClicked: (Int) -> Unit,
     onChargesClicked: (Int) -> Unit,
-    approveLoan: (loanId: Int, loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
+    approveLoan: (loanId: Int) -> Unit,
     disburseLoan: (Int) -> Unit,
-    onRepaymentClick: (LoanWithAssociationsEntity) -> Unit,
+    onRepaymentClick: (LoanWithAssociations) -> Unit,
     navController: NavController,
 ) {
     composable<LoanAccountSummaryScreenRoute> {

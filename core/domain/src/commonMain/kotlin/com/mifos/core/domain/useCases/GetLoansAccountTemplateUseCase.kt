@@ -10,7 +10,7 @@
 package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.data.repository.LoanAccountRepository
+import com.mifos.core.data.repository.loan.LoanAccountRepository
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import kotlinx.coroutines.flow.Flow
 

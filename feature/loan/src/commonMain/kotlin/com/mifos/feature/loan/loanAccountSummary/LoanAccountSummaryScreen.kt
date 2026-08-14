@@ -18,7 +18,7 @@ import androidclient.feature.loan.generated.resources.feature_loan_balance
 import androidclient.feature.loan.generated.resources.feature_loan_closed
 import androidclient.feature.loan.generated.resources.feature_loan_copy
 import androidclient.feature.loan.generated.resources.feature_loan_date
-import androidclient.feature.loan.generated.resources.feature_loan_disburse_loan
+import androidclient.feature.loan.generated.resources.feature_loan_disburse
 import androidclient.feature.loan.generated.resources.feature_loan_disbursed_date
 import androidclient.feature.loan.generated.resources.feature_loan_documents
 import androidclient.feature.loan.generated.resources.feature_loan_info
@@ -88,22 +88,23 @@ import com.mifos.core.designsystem.component.MifosMenuDropDownItem
 import com.mifos.core.designsystem.component.MifosScaffold
 import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanAccountSummary
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanStatus
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect
-import com.mifos.room.entities.accounts.loans.LoanStatusEntity
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
-import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
+import com.mifos.feature.loan.utils.getLoanStatus
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
 import template.core.base.designsystem.theme.KptTheme
+import com.mifos.feature.loan.utils.UiLoanStatus as UiLoanStatus
 
 @Composable
 internal fun LoanAccountSummaryScreenRoute(
@@ -113,9 +114,9 @@ internal fun LoanAccountSummaryScreenRoute(
     onRepaymentScheduleClicked: (loanId: Int) -> Unit,
     onDocumentsClicked: (loanId: Int) -> Unit,
     onChargesClicked: (loanId: Int) -> Unit,
-    approveLoan: (loadId: Int, loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
+    approveLoan: (loadId: Int) -> Unit,
     disburseLoan: (loanId: Int) -> Unit,
-    onRepaymentClick: (loanWithAssociations: LoanWithAssociationsEntity) -> Unit,
+    onRepaymentClick: (loanWithAssociations: LoanWithAssociations) -> Unit,
     navController: NavController,
     viewModel: LoanAccountSummaryViewModel = koinViewModel(),
 ) {
@@ -147,7 +148,7 @@ internal fun LoanAccountSummaryScreenRoute(
             }
 
             is LoanAccountSummaryEvent.NavigateToApproveLoan -> {
-                approveLoan(event.loanId, event.loanWithAssociations)
+                approveLoan(event.loanId)
             }
 
             is LoanAccountSummaryEvent.NavigateToDisburseLoan -> {
@@ -261,7 +262,7 @@ private fun LoanAccountSummaryContent(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    text = loanWithAssociations.clientName,
+                    text = loanWithAssociations.clientName ?: "",
                     style = KptTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                 )
@@ -270,12 +271,7 @@ private fun LoanAccountSummaryContent(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    val statusDescription = when {
-                        loanWithAssociations.status.active == true -> "Active"
-                        loanWithAssociations.status.pendingApproval == true -> "Pending Approval"
-                        loanWithAssociations.status.waitingForDisbursal == true -> "Waiting for Disbursal"
-                        else -> "Closed"
-                    }
+                    val statusDescription = stringResource(loanWithAssociations.status.getLoanStatus().label)
                     Canvas(
                         modifier = Modifier
                             .size(DesignToken.sizes.iconMedium)
@@ -284,29 +280,13 @@ private fun LoanAccountSummaryContent(
                             },
                         onDraw = {
                             drawCircle(
-                                color = when {
-                                    loanWithAssociations.status.active == true -> {
-                                        AppColors.loanIndicatorActive
-                                    }
-
-                                    loanWithAssociations.status.pendingApproval == true -> {
-                                        AppColors.loanIndicatorPending
-                                    }
-
-                                    loanWithAssociations.status.waitingForDisbursal == true -> {
-                                        AppColors.loanIndicatorWaitingForDisbursal
-                                    }
-
-                                    else -> {
-                                        AppColors.loanIndicatorOther
-                                    }
-                                },
+                                color = loanWithAssociations.status?.getLoanStatus()?.color ?: UiLoanStatus.UNKNOWN.color,
                             )
                         },
                     )
                     Spacer(modifier = Modifier.width(DesignToken.spacing.mediumSmall))
                     Text(
-                        text = loanWithAssociations.loanProductName,
+                        text = loanWithAssociations.loanProductName ?: "",
                         style = MifosTypography.bodyLarge,
                         color = KptTheme.colorScheme.onSurface,
                     )
@@ -317,14 +297,14 @@ private fun LoanAccountSummaryContent(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = stringResource(Res.string.feature_loan_loan_id) + loanWithAssociations.accountNo,
+                        text = stringResource(Res.string.feature_loan_loan_id) + (loanWithAssociations.accountNo ?: ""),
                         color = KptTheme.colorScheme.onSurfaceVariant,
                         style = MifosTypography.bodyMedium,
                     )
                     Spacer(modifier = Modifier.width(KptTheme.spacing.xs))
                     IconButton(
                         onClick = {
-                            clipboardManager.setText(AnnotatedString(loanWithAssociations.accountNo))
+                            clipboardManager.setText(AnnotatedString(loanWithAssociations.accountNo ?: ""))
                             onAction(LoanAccountSummaryAction.OnLoanIdCopied)
                         },
                         modifier = Modifier.size(DesignToken.sizes.iconSmall),
@@ -430,7 +410,7 @@ private fun LoanAccountSummaryContent(
                     )
                     LoanSummaryFarApartTextItem(
                         title = stringResource(Res.string.feature_loan_staff),
-                        value = loanWithAssociations.loanOfficerName,
+                        value = loanWithAssociations.loanOfficerName ?: "",
                     )
                 }
             }
@@ -438,11 +418,11 @@ private fun LoanAccountSummaryContent(
 
         LoanSummaryDataTable(state = state)
 
-        val primaryAction = loanWithAssociations.status.getPrimaryAction()
+        val primaryAction = loanWithAssociations.status?.getPrimaryAction() ?: LoanPrimaryAction.CLOSED
         val buttonText = when (primaryAction) {
             LoanPrimaryAction.MAKE_REPAYMENT -> stringResource(Res.string.feature_loan_make_Repayment)
             LoanPrimaryAction.APPROVE_LOAN -> stringResource(Res.string.feature_loan_approve_loan)
-            LoanPrimaryAction.DISBURSE_LOAN -> stringResource(Res.string.feature_loan_disburse_loan)
+            LoanPrimaryAction.DISBURSE_LOAN -> stringResource(Res.string.feature_loan_disburse)
             LoanPrimaryAction.OVERPAID -> stringResource(Res.string.feature_loan_transfer_funds)
             LoanPrimaryAction.CLOSED -> stringResource(Res.string.feature_loan_closed)
         }
@@ -700,13 +680,14 @@ private fun LoanSummaryDropdown(
     }
 }
 
-private fun LoanStatusEntity.isButtonActive(): Boolean {
+private fun LoanStatus?.isButtonActive(): Boolean {
+    if (this == null) return false
     return active == true || pendingApproval == true || waitingForDisbursal == true || overpaid == true
 }
 
 private class LoanAccountSummaryPreviewProvider :
     PreviewParameterProvider<LoanAccountSummaryState> {
-    private val demoSummary = LoansAccountSummaryEntity(
+    private val demoSummary = LoanAccountSummary(
         loanId = 12345,
         principalDisbursed = 10000.0,
         principalPaid = 4000.0,
@@ -750,9 +731,9 @@ private class LoanAccountSummaryPreviewProvider :
                 dialogState = LoanAccountSummaryState.DialogState.Error("Could not fetch summary"),
             ),
             LoanAccountSummaryState(
-                loanWithAssociations = LoanWithAssociationsEntity(
+                loanWithAssociations = LoanWithAssociations(
                     accountNo = "90927493938",
-                    status = LoanStatusEntity(
+                    status = LoanStatus(
                         closedObligationsMet = true,
                     ),
                     clientName = "Pronay sarker",
@@ -763,9 +744,9 @@ private class LoanAccountSummaryPreviewProvider :
                 dialogState = null,
             ),
             LoanAccountSummaryState(
-                loanWithAssociations = LoanWithAssociationsEntity(
+                loanWithAssociations = LoanWithAssociations(
                     accountNo = "12345678901",
-                    status = LoanStatusEntity(
+                    status = LoanStatus(
                         active = true,
                     ),
                     clientName = "John Doe",

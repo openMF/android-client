@@ -22,12 +22,11 @@ import com.mifos.core.model.objects.account.loan.Transaction
 import com.mifos.core.model.objects.account.loan.Type
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.ActualDisbursementDateEntity
+import com.mifos.room.entities.accounts.loans.LoanAccountSummaryEntity
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanTimelineEntity
 import com.mifos.room.entities.accounts.loans.LoanTypeEntity
-import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import template.core.base.database.TypeConverter
 
@@ -98,12 +97,12 @@ class LoanTypeConverters {
     }
 
     @TypeConverter
-    fun fromSummary(summary: LoansAccountSummaryEntity?): String? {
+    fun fromSummary(summary: LoanAccountSummaryEntity?): String? {
         return summary?.let { Json.encodeToString(it) }
     }
 
     @TypeConverter
-    fun toSummary(json: String?): LoansAccountSummaryEntity? {
+    fun toSummary(json: String?): LoanAccountSummaryEntity? {
         return json?.let { Json.decodeFromString(it) }
     }
 

@@ -12,13 +12,13 @@ package com.mifos.core.data.repositoryImp
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.SyncGroupsDialogRepository
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.accounts.GroupAccounts
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.group.GroupEntity
@@ -42,7 +42,7 @@ class SyncGroupsDialogRepositoryImp(
             .asDataStateFlow()
     }
 
-    override fun syncLoanById(loanId: Int): Flow<DataState<LoanWithAssociationsEntity>> {
+    override fun syncLoanById(loanId: Int): Flow<DataState<LoanWithAssociations>> {
         return dataManagerLoan.syncLoanById(loanId)
             .asDataStateFlow()
     }

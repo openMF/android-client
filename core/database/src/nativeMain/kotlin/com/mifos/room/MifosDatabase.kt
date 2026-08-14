@@ -9,6 +9,7 @@
  */
 package com.mifos.room
 
+import androidx.room.AutoMigration
 import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
@@ -27,6 +28,7 @@ import com.mifos.room.dao.SurveyDao
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.ActualDisbursementDateEntity
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
+import com.mifos.room.entities.accounts.loans.LoanAccountSummaryEntity
 import com.mifos.room.entities.accounts.loans.LoanRefundDetailsEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
@@ -34,7 +36,6 @@ import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanTimelineEntity
 import com.mifos.room.entities.accounts.loans.LoanTypeEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
-import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
@@ -93,7 +94,7 @@ import com.mifos.room.typeconverters.CustomTypeConverters
         LoanStatusEntity::class,
         LoanTypeEntity::class,
         LoanWithAssociationsEntity::class,
-        LoansAccountSummaryEntity::class,
+        LoanAccountSummaryEntity::class,
         LoanTimelineEntity::class,
         // savings package
         SavingAccountDepositTypeEntity::class,
@@ -154,8 +155,11 @@ import com.mifos.room.typeconverters.CustomTypeConverters
         PaymentTypeOptionEntity::class,
     ],
     version = MifosDatabase.VERSION,
-    exportSchema = false,
-    autoMigrations = [],
+    exportSchema = true,
+    autoMigrations = [
+        AutoMigration(from = 1, to = 2),
+        AutoMigration(from = 2, to = 3),
+    ],
 )
 @TypeConverters(
     CustomTypeConverters::class,
@@ -174,7 +178,7 @@ actual abstract class MifosDatabase : RoomDatabase() {
     actual abstract val surveyDao: SurveyDao
 
     companion object {
-        const val VERSION = 1
+        const val VERSION = 3
     }
 }
 

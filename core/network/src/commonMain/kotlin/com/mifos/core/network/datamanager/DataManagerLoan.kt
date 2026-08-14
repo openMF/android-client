@@ -12,8 +12,8 @@ package com.mifos.core.network.datamanager
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.core.model.objects.account.loan.LoanDisbursement
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRejectionRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRequest
@@ -24,6 +24,23 @@ import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRespons
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplate
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.dto.loans.CreateGuarantorResponseDto
+import com.mifos.core.network.dto.loans.GuarantorRequestDto
+import com.mifos.core.network.dto.loans.LoanChargeOffRequestDto
+import com.mifos.core.network.dto.loans.LoanChargeOffResponseDto
+import com.mifos.core.network.dto.loans.RejectLoanRequestDto
+import com.mifos.core.network.dto.loans.RejectLoanResponseDto
+import com.mifos.core.network.dto.loans.assignLoanOfficer.AssignLoanOfficerRequestDto
+import com.mifos.core.network.dto.loans.assignLoanOfficer.AssignLoanOfficerResponseDto
+import com.mifos.core.network.dto.loans.disburse.LoanDisburseRequestDto
+import com.mifos.core.network.dto.loans.disburse.LoanDisburseResponseDto
+import com.mifos.core.network.dto.loans.template.GuarantorAccountTemplateDto
+import com.mifos.core.network.dto.loans.template.GuarantorTemplateDto
+import com.mifos.core.network.dto.loans.template.LoanChargeOffTemplateDto
+import com.mifos.core.network.dto.loans.template.LoanDisburseTemplateDto
+import com.mifos.core.network.dto.loans.template.LoanOfficerOptionsTemplateDto
+import com.mifos.core.network.mappers.loan.LoanAccountMapper
+import com.mifos.core.network.mappers.loan.toDomain
 import com.mifos.core.network.dto.loan.CreditBalanceRefundRequestDto
 import com.mifos.core.network.dto.loan.CreditBalanceRefundResponseDto
 import com.mifos.core.network.model.LoansPayload
@@ -43,6 +60,7 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.isSuccess
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
@@ -73,14 +91,14 @@ class DataManagerLoan(
      * @return LoanWithAssociation
      */
     @OptIn(ExperimentalCoroutinesApi::class)
-    fun getLoanById(loanId: Int): Flow<LoanWithAssociationsEntity?> {
+    fun getLoanById(loanId: Int): Flow<LoanWithAssociations?> {
         return prefManager.userInfo.flatMapLatest { userData ->
             when (userData.userStatus) {
                 false -> flow {
                     emit(
                         mBaseApiManager.loanService.getLoanByIdWithAllAssociations(
                             loanId,
-                        ),
+                        ).toDomain(),
                     )
                 }
 
@@ -88,7 +106,7 @@ class DataManagerLoan(
                     /**
                      * offline Mode, Return LoanWithAssociation from LoanDaoHelper.
                      */
-                    loanDaoHelper.getLoanById(loanId)
+                    loanDaoHelper.getLoanById(loanId).map { entity -> entity?.let(LoanAccountMapper::mapFromEntity) }
             }
         }
     }
@@ -102,11 +120,15 @@ class DataManagerLoan(
      * @param loanId Loan Id
      * @return LoanWithAssociations
      */
-    fun syncLoanById(loanId: Int): Flow<LoanWithAssociationsEntity> {
+    fun syncLoanById(loanId: Int): Flow<LoanWithAssociations> {
         return flow {
             val loanWithAssociations =
-                mBaseApiManager.loanService.getLoanByIdWithAllAssociations(loanId)
-            loanDaoHelper.saveLoanById(loanWithAssociations)
+                mBaseApiManager.loanService.getLoanByIdWithAllAssociations(loanId).toDomain()
+
+            val loanWithAssociationsEntity = LoanAccountMapper.mapToEntity(loanWithAssociations)
+
+            loanDaoHelper.saveLoanById(loanWithAssociationsEntity).collect()
+
             emit(loanWithAssociations)
         }
     }
@@ -116,6 +138,45 @@ class DataManagerLoan(
 
     fun getLoansAccountTemplate(clientId: Int, productId: Int): Flow<LoanTemplate> {
         return mBaseApiManager.loanService.getLoansAccountTemplate(clientId, productId)
+    }
+
+    suspend fun getGuarantorTemplate(loanId: Int): GuarantorTemplateDto {
+        return mBaseApiManager.loanService.getGuarantorTemplate(loanId)
+    }
+
+    suspend fun createGuarantor(
+        loanId: Int,
+        request: GuarantorRequestDto,
+    ): CreateGuarantorResponseDto {
+        return mBaseApiManager.loanService.createGuarantor(loanId, request)
+    }
+
+    suspend fun getGuarantorAccountTemplate(
+        loanId: Int,
+        clientId: Int,
+    ): GuarantorAccountTemplateDto {
+        return mBaseApiManager.loanService.getGuarantorAccountTemplate(
+            loanId = loanId,
+            clientId = clientId,
+        )
+    }
+
+    suspend fun getChargeOffTemplate(loanId: Int): LoanChargeOffTemplateDto {
+        return mBaseApiManager.loanService.getChargeOffTemplate(loanId)
+    }
+
+    suspend fun chargeOff(
+        loanId: Int,
+        loanChargeOffRequestDto: LoanChargeOffRequestDto,
+    ): LoanChargeOffResponseDto {
+        return mBaseApiManager.loanService.chargeOff(loanId, loanChargeOffRequestDto)
+    }
+
+    suspend fun rejectLoan(
+        loanId: Int,
+        request: RejectLoanRequestDto,
+    ): RejectLoanResponseDto {
+        return mBaseApiManager.loanService.rejectLoan(loanId, request)
     }
 
     fun createLoansAccount(loansPayload: LoansPayload?): Flow<HttpResponse> {
@@ -366,13 +427,6 @@ class DataManagerLoan(
         return mBaseApiManager.loanService.getLoanTransactionTemplate(loanId, command)
     }
 
-    fun disburseLoan(
-        loanId: Int,
-        loanDisbursement: LoanDisbursement?,
-    ): Flow<GenericResponse> {
-        return mBaseApiManager.loanService.disburseLoan(loanId, loanDisbursement)
-    }
-
     /**
      * Account Transfer Methods
      */
@@ -442,7 +496,9 @@ class DataManagerLoan(
                 throw IllegalStateException(errorMessage)
             }
 
-            Json { ignoreUnknownKeys = true }.decodeFromString<RepaymentSchedule>(response.bodyAsText())
+            Json {
+                ignoreUnknownKeys = true
+            }.decodeFromString<RepaymentSchedule>(response.bodyAsText())
         }
     }
 
@@ -460,7 +516,9 @@ class DataManagerLoan(
             val errorMessage = extractErrorMessage(response)
             throw IllegalStateException(errorMessage)
         }
-        return Json { ignoreUnknownKeys = true }.decodeFromString<GenericResponse>(response.bodyAsText())
+        return Json {
+            ignoreUnknownKeys = true
+        }.decodeFromString<GenericResponse>(response.bodyAsText())
     }
 
     suspend fun approveLoanReschedule(scheduleId: Int, request: LoanRescheduleApprovalRequest) {
@@ -481,5 +539,27 @@ class DataManagerLoan(
         if (!response.status.isSuccess()) {
             throw IllegalStateException(extractErrorMessage(response))
         }
+    }
+
+    suspend fun getLoanOfficerTemplate(loanId: Int): LoanOfficerOptionsTemplateDto {
+        return mBaseApiManager.loanService.getLoanOfficerTemplate(loanId)
+    }
+
+    suspend fun assignLoanOfficer(
+        loanId: Int,
+        request: AssignLoanOfficerRequestDto,
+    ): AssignLoanOfficerResponseDto {
+        return mBaseApiManager.loanService.assignLoanOfficer(loanId = loanId, request = request)
+    }
+
+    suspend fun getDisburseTemplate(loanId: Int): LoanDisburseTemplateDto {
+        return mBaseApiManager.loanService.getDisburseTemplate(loanId)
+    }
+
+    suspend fun disburse(
+        loanId: Int,
+        loanDisburseRequestDto: LoanDisburseRequestDto,
+    ): LoanDisburseResponseDto {
+        return mBaseApiManager.loanService.disburse(loanId, loanDisburseRequestDto)
     }
 }

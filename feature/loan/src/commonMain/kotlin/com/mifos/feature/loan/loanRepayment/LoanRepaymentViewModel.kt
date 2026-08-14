@@ -20,8 +20,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.data.repository.LoanAccountSummaryRepository
-import com.mifos.core.data.repository.LoanRepaymentRepository
+import com.mifos.core.data.repository.loan.LoanAccountSummaryRepository
+import com.mifos.core.data.repository.loan.LoanRepaymentRepository
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -74,11 +74,11 @@ class LoanRepaymentViewModel(
                             return@collect
                         }
                         _loanDetailsState.value = _loanDetailsState.value.copy(
-                            loanId = loanWithAssociations.id,
-                            clientName = loanWithAssociations.clientName,
-                            loanProductName = loanWithAssociations.loanProductName,
-                            amountInArrears = loanWithAssociations.summary.totalOverdue,
-                            loanAccountNumber = loanWithAssociations.accountNo,
+                            loanId = loanWithAssociations.id ?: 0,
+                            clientName = loanWithAssociations.clientName ?: "",
+                            loanProductName = loanWithAssociations.loanProductName ?: "",
+                            amountInArrears = loanWithAssociations.summary?.totalOverdue,
+                            loanAccountNumber = loanWithAssociations.accountNo ?: "",
                         )
                         checkDatabaseLoanRepaymentByLoanId()
                     }

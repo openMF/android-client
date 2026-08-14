@@ -11,20 +11,36 @@ package com.mifos.feature.loan.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
-import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import com.mifos.core.common.utils.Constants
 import com.mifos.feature.loan.amountTransfer.amountTransferScreen
 import com.mifos.feature.loan.amountTransfer.navigateToTransferScreen
+import com.mifos.feature.loan.assignLoanOfficer.assignLoanOfficerScreen
+import com.mifos.feature.loan.assignLoanOfficer.navigateToAssignLoanOfficerScreen
+import com.mifos.feature.loan.createGuarantor.createGuarantorScreen
+import com.mifos.feature.loan.createGuarantor.navigateToCreateGuarantorScreen
 import com.mifos.feature.loan.createLoanReschedules.loanRescheduleFormScreen
+import com.mifos.feature.loan.loanAccountAction.loanAccountActionDestination
+import com.mifos.feature.loan.loanAccountAction.navigateToLoanAccountActionScreen
+import com.mifos.feature.loan.loanAccountAction.payments.loanPaymentsActionDestination
+import com.mifos.feature.loan.loanAccountAction.payments.navigateToLoanPaymentsAction
+import com.mifos.feature.loan.loanAccountAction.reloadLoanAccountActionScreen
+import com.mifos.feature.loan.loanAccountGeneral.loanAccountGeneralDestination
+import com.mifos.feature.loan.loanAccountGeneral.navigateToLoanAccountGeneralScreen
 import com.mifos.feature.loan.loanAccountProfile.loanProfileAccountDestination
+import com.mifos.feature.loan.loanAccountProfile.reloadLoanAccountProfileScreen
 import com.mifos.feature.loan.loanAccountSummary.loanAccountSummary
-import com.mifos.feature.loan.loanApproval.LoanAccountApprovalScreen
+import com.mifos.feature.loan.loanApproval.loanApprovalDestination
+import com.mifos.feature.loan.loanApproval.navigateToLoanApprovalScreen
 import com.mifos.feature.loan.loanCharge.loanChargeScreen
 import com.mifos.feature.loan.loanCharge.navigateToLoanChargesScreen
-import com.mifos.feature.loan.loanDisbursement.loanDisbursementScreen
-import com.mifos.feature.loan.loanDisbursement.navigateToLoanDisbursementScreen
+import com.mifos.feature.loan.loanChargeOff.loanChargeOffScreen
+import com.mifos.feature.loan.loanChargeOff.navigateToLoanChargeOffScreen
+import com.mifos.feature.loan.loanDashboard.loanDashboardScreen
+import com.mifos.feature.loan.loanDashboard.navigateToLoanDashboardScreen
+import com.mifos.feature.loan.loanDisburse.loanDisburseScreen
+import com.mifos.feature.loan.loanDisburse.navigateToLoanDisburseScreen
+import com.mifos.feature.loan.loanReject.loanRejectScreen
+import com.mifos.feature.loan.loanReject.navigateToLoanRejectScreen
 import com.mifos.feature.loan.loanRepayment.loanRepaymentScreen
 import com.mifos.feature.loan.loanRepayment.navigateToLoanRepaymentScreen
 import com.mifos.feature.loan.loanRepaymentSchedule.loanRepaymentSchedule
@@ -34,7 +50,6 @@ import com.mifos.feature.loan.loanReschedules.navigateToLoanReschedulesScreen
 import com.mifos.feature.loan.loanTransaction.loanTransactionScreen
 import com.mifos.feature.loan.loanTransaction.navigateToLoanTransactionScreen
 import com.mifos.feature.loan.newLoanAccount.newLoanAccountDestination
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 
 fun NavGraphBuilder.loanDestination(
     navController: NavController,
@@ -51,15 +66,16 @@ fun NavGraphBuilder.loanDestination(
         onDocumentsClicked = { onDocumentsClicked(it, Constants.ENTITY_TYPE_LOANS) },
         onChargesClicked = navController::navigateToLoanChargesScreen,
         approveLoan = navController::navigateToLoanApprovalScreen,
-        disburseLoan = navController::navigateToLoanDisbursementScreen,
+        disburseLoan = navController::navigateToLoanDisburseScreen,
         onRepaymentClick = navController::navigateToLoanRepaymentScreen,
         navController = navController,
     )
 
-    loanDisbursementScreen {
-        navController.popBackStack()
-    }
-    loanApprovalScreen {
+    createGuarantorScreen(
+        navigateBack = navController::popBackStack,
+    )
+
+    loanApprovalDestination {
         navController.popBackStack()
     }
     loanRepaymentSchedule {
@@ -74,10 +90,33 @@ fun NavGraphBuilder.loanDestination(
     loanRepaymentScreen {
         navController.popBackStack()
     }
+    loanDashboardScreen(
+        onNavigateBack = navController::popBackStack,
+        navigateToTransactions = navController::navigateToLoanTransactionScreen,
+        navigateToRejectLoan = navController::navigateToLoanRejectScreen,
+        navigateToApproveLoan = navController::navigateToLoanApprovalScreen,
+        navigateToDisburseLoan = navController::navigateToLoanDisburseScreen,
+        navigateToMakeRepayment = navController::navigateToLoanRepaymentScreen,
+    )
+    loanChargeOffScreen(
+        onNavigateBack = navController::navigateUp,
+        onChargeOffSuccess = navController::reloadLoanAccountActionScreen,
+    )
+    loanRejectScreen(
+        onNavigateBack = navController::navigateUp,
+        onRejectSuccess = navController::reloadLoanAccountProfileScreen,
+    )
+    assignLoanOfficerScreen(
+        navigateBack = navController::navigateUp,
+        onAssignLoanOfficerSuccess = navController::reloadLoanAccountActionScreen,
+    )
     newLoanAccountDestination(
         onNavigateBack = navController::popBackStack,
         onFinish = navController::popBackStack,
         onLoanCreated = onLoanCreated,
+        navController = navController,
+    )
+    loanAccountGeneralDestination(
         navController = navController,
     )
 
@@ -86,6 +125,7 @@ fun NavGraphBuilder.loanDestination(
         navController = navController,
         approveLoan = navController::navigateToLoanApprovalScreen,
         onRepaymentClick = navController::navigateToLoanRepaymentScreen,
+        navigateToGeneral = navController::navigateToLoanAccountGeneralScreen,
         navigateToRepaymentSchedule = navController::navigateToLoanRepaymentScheduleScreen,
         navigateToTransactions = navController::navigateToLoanTransactionScreen,
         navigateToCharges = navController::navigateToLoanChargesScreen,
@@ -95,8 +135,32 @@ fun NavGraphBuilder.loanDestination(
         navigateToDocuments = { loanId ->
             onDocumentsClicked(loanId, Constants.ENTITY_TYPE_LOANS)
         },
+        navigateToDashboard = navController::navigateToLoanDashboardScreen,
         navigateToTransferScreen = navController::navigateToTransferScreen,
+        navigateToLoanAction = navController::navigateToLoanAccountActionScreen,
         navigateToReschedules = navController::navigateToLoanReschedulesScreen,
+    )
+
+    loanAccountActionDestination(
+        navController = navController,
+        onNavigateBack = navController::popBackStack,
+        navigateToPaymentsActionScreen = navController::navigateToLoanPaymentsAction,
+        navigateToChargeOff = navController::navigateToLoanChargeOffScreen,
+        navigateToReject = navController::navigateToLoanRejectScreen,
+        navigateToCreateGuarantor = navController::navigateToCreateGuarantorScreen,
+        navigateToAssignLoanOfficerScreen = navController::navigateToAssignLoanOfficerScreen,
+        navigateToDisburse = navController::navigateToLoanDisburseScreen,
+        navigateToApproveLoan = navController::navigateToLoanApprovalScreen,
+        navigateToAddLoanCharge = navController::navigateToLoanChargesScreen,
+    )
+
+    loanPaymentsActionDestination(
+        navController = navController,
+        onNavigateBack = navController::popBackStack,
+        onGoodwillCreditClick = {},
+        onInterestPaymentWaiverClick = {},
+        onPaymentRefundClick = {},
+        onMerchantIssuedRefundClick = {},
     )
 
     amountTransferScreen(
@@ -113,26 +177,13 @@ fun NavGraphBuilder.loanDestination(
         navController = navController,
         onBackPressed = navController::popBackStack,
     )
-}
 
-fun NavGraphBuilder.loanApprovalScreen(
-    onBackPressed: () -> Unit,
-) {
-    composable(
-        route = LoanScreens.LoanApprovalScreen.route,
-        arguments = listOf(
-            navArgument(name = "arg", builder = { type = NavType.StringType }),
-        ),
-    ) {
-        LoanAccountApprovalScreen(
-            navigateBack = onBackPressed,
-        )
-    }
-}
+    loanAccountGeneralDestination(
+        navController = navController,
+    )
 
-fun NavController.navigateToLoanApprovalScreen(
-    loanId: Int,
-    loanWithAssociations: LoanWithAssociationsEntity,
-) {
-    navigate(LoanScreens.LoanApprovalScreen.argument(loanId, loanWithAssociations))
+    loanDisburseScreen(
+        onNavigateBack = navController::navigateUp,
+        onDisburseSuccess = navController::reloadLoanAccountActionScreen,
+    )
 }

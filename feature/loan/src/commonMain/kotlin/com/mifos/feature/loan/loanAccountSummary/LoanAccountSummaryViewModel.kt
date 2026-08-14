@@ -17,10 +17,10 @@ import androidx.navigation.toRoute
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.data.repository.LoanAccountSummaryRepository
+import com.mifos.core.data.repository.loan.LoanAccountSummaryRepository
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanStatus
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.room.entities.accounts.loans.LoanStatusEntity
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -138,7 +138,7 @@ internal class LoanAccountSummaryViewModel(
                     }
 
                     is DataState.Success -> {
-                        val loan: LoanWithAssociationsEntity? = dataState.data
+                        val loan: LoanWithAssociations? = dataState.data
                         if (loan != null) {
                             fillLoanSummary(loan)
                         } else {
@@ -167,7 +167,7 @@ internal class LoanAccountSummaryViewModel(
         }
     }
 
-    private fun fillLoanSummary(loan: LoanWithAssociationsEntity) {
+    private fun fillLoanSummary(loan: LoanWithAssociations) {
         val actualDisbursementDate = formatActualDisbursementDate(
             loan.timeline?.actualDisbursementDate,
         )
@@ -271,7 +271,7 @@ internal class LoanAccountSummaryViewModel(
         }
     }
 
-    private fun LoanStatusEntity.shouldInflateLoanSummary(): Boolean {
+    private fun LoanStatus.shouldInflateLoanSummary(): Boolean {
         return active == true || closedObligationsMet == true || overpaid == true
     }
 
@@ -292,7 +292,7 @@ internal class LoanAccountSummaryViewModel(
 }
 
 data class LoanAccountSummaryState(
-    val loanWithAssociations: LoanWithAssociationsEntity? = null,
+    val loanWithAssociations: LoanWithAssociations? = null,
     val dialogState: DialogState? = null,
     val showLoanIdCopiedMessage: Boolean = false,
     val openDropdown: Boolean = false,
@@ -357,11 +357,11 @@ sealed interface LoanAccountSummaryEvent {
     data class NavigateToCharges(val loanId: Int) : LoanAccountSummaryEvent
     data class NavigateToApproveLoan(
         val loanId: Int,
-        val loanWithAssociations: LoanWithAssociationsEntity,
+        val loanWithAssociations: LoanWithAssociations,
     ) : LoanAccountSummaryEvent
 
     data class NavigateToDisburseLoan(val loanId: Int) : LoanAccountSummaryEvent
-    data class NavigateToMakeRepayment(val loanWithAssociations: LoanWithAssociationsEntity) :
+    data class NavigateToMakeRepayment(val loanWithAssociations: LoanWithAssociations) :
         LoanAccountSummaryEvent
 }
 
@@ -387,7 +387,7 @@ sealed interface LoanAccountSummaryAction {
 /**
  * Extension function to determine the primary action button for a loan based on its status.
  */
-internal fun LoanStatusEntity.getPrimaryAction(): LoanPrimaryAction {
+internal fun LoanStatus.getPrimaryAction(): LoanPrimaryAction {
     return when {
         active == true -> LoanPrimaryAction.MAKE_REPAYMENT
         pendingApproval == true -> LoanPrimaryAction.APPROVE_LOAN

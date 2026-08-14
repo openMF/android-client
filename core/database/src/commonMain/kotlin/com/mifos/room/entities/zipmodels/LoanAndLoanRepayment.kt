@@ -9,7 +9,7 @@
  */
 package com.mifos.room.entities.zipmodels
 
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 
 /**
@@ -17,12 +17,12 @@ import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
  * Created by Rajan Maurya on 08/08/16.
  */
 class LoanAndLoanRepayment {
-    var loanWithAssociations: LoanWithAssociationsEntity? = null
+    var loanWithAssociations: LoanWithAssociations? = null
     var loanRepaymentTemplate: LoanRepaymentTemplateEntity? = null
 
     constructor()
     constructor(
-        loanWithAssociations: LoanWithAssociationsEntity?,
+        loanWithAssociations: LoanWithAssociations?,
         loanRepaymentTemplate: LoanRepaymentTemplateEntity?,
     ) {
         this.loanWithAssociations = loanWithAssociations
