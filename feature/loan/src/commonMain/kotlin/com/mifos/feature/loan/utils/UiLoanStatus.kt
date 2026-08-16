@@ -22,10 +22,10 @@ import androidclient.feature.loan.generated.resources.feature_loan_unknown
 import androidclient.feature.loan.generated.resources.feature_loan_withdrawn_by_applicant
 import androidx.compose.ui.graphics.Color
 import com.mifos.core.designsystem.theme.AppColors
-import com.mifos.room.entities.accounts.loans.LoanStatusEntity
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanStatus
 import org.jetbrains.compose.resources.StringResource
 
-enum class LoanStatus(
+enum class UiLoanStatus(
     val label: StringResource,
     val color: Color,
 ) {
@@ -71,17 +71,18 @@ enum class LoanStatus(
     ),
 }
 
-fun LoanStatusEntity.getLoanStatus(): LoanStatus {
+fun LoanStatus?.getLoanStatus(): UiLoanStatus {
+    if (this == null) return UiLoanStatus.UNKNOWN
     return when {
-        this.code == "loanStatusType.withdrawn.by.client" -> LoanStatus.WITHDRAWN_BY_APPLICANT
-        this.code == "loanStatusType.rejected" -> LoanStatus.REJECTED
-        this.overpaid == true -> LoanStatus.CLOSED_OVERPAID
-        this.closedWrittenOff == true -> LoanStatus.CLOSED_WRITTEN_OFF
-        this.closedRescheduled == true -> LoanStatus.CLOSED_RESCHEDULED
-        this.closedObligationsMet == true -> LoanStatus.CLOSED_OBLIGATIONS_MET
-        this.active == true -> LoanStatus.ACTIVE
-        this.waitingForDisbursal == true -> LoanStatus.APPROVED
-        this.pendingApproval == true -> LoanStatus.PENDING_APPROVAL
-        else -> LoanStatus.UNKNOWN
+        this.code == "loanStatusType.withdrawn.by.client" -> UiLoanStatus.WITHDRAWN_BY_APPLICANT
+        this.code == "loanStatusType.rejected" -> UiLoanStatus.REJECTED
+        this.overpaid == true -> UiLoanStatus.CLOSED_OVERPAID
+        this.closedWrittenOff == true -> UiLoanStatus.CLOSED_WRITTEN_OFF
+        this.closedRescheduled == true -> UiLoanStatus.CLOSED_RESCHEDULED
+        this.closedObligationsMet == true -> UiLoanStatus.CLOSED_OBLIGATIONS_MET
+        this.active == true -> UiLoanStatus.ACTIVE
+        this.waitingForDisbursal == true -> UiLoanStatus.APPROVED
+        this.pendingApproval == true -> UiLoanStatus.PENDING_APPROVAL
+        else -> UiLoanStatus.UNKNOWN
     }
 }

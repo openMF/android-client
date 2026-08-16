@@ -12,9 +12,11 @@ package com.mifos.core.data.repositoryImp.loan
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.loan.LoanRepaymentScheduleRepository
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.network.DataManager
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.core.network.mappers.loan.toDomain
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 /**
  * Created by Aditya Gupta on 12/08/23.
@@ -23,7 +25,8 @@ class LoanRepaymentScheduleRepositoryImp(
     private val dataManager: DataManager,
 ) : LoanRepaymentScheduleRepository {
 
-    override fun getLoanRepaySchedule(loanId: Int): Flow<DataState<LoanWithAssociationsEntity>> {
-        return dataManager.getLoanRepaySchedule(loanId).asDataStateFlow()
+    override fun getLoanRepaySchedule(loanId: Int): Flow<DataState<LoanWithAssociations>> {
+        return dataManager.getLoanRepaySchedule(loanId).map { it.toDomain() }
+            .asDataStateFlow()
     }
 }

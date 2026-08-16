@@ -19,10 +19,10 @@ import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.loan.LoanAccountSummaryRepository
 import com.mifos.core.data.util.NetworkMonitor
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.ui.util.BaseViewModel
-import com.mifos.feature.loan.loanUtils.LoanStatus
-import com.mifos.feature.loan.loanUtils.getLoanStatus
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
+import com.mifos.feature.loan.utils.UiLoanStatus
+import com.mifos.feature.loan.utils.getLoanStatus
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -91,7 +91,7 @@ internal class LoanAccountActionsViewModel(
                             }
                             return@collect
                         }
-                        val status = loan.status.getLoanStatus()
+                        val status = loan.status?.getLoanStatus() ?: UiLoanStatus.UNKNOWN
                         val flags = calculateFlags(loan, status)
                         val actions = generateActions(status, flags)
                         mutableStateFlow.update {
@@ -106,16 +106,16 @@ internal class LoanAccountActionsViewModel(
     }
 
     private fun calculateFlags(
-        loan: LoanWithAssociationsEntity,
-        status: LoanStatus,
+        loan: LoanWithAssociations,
+        status: UiLoanStatus,
     ): LoanFeatureFlags {
         var isLoanReAged = false
         var isLoanReAmortized = false
         var disbursementCount = 0
 
-        loan.transactions.forEach { lt ->
+        loan.transactions?.forEach { lt ->
             if (lt.manuallyReversed == false) {
-                if (status == LoanStatus.ACTIVE) {
+                if (status == UiLoanStatus.ACTIVE) {
                     if (lt.type?.reAge == true) {
                         isLoanReAged = true
                     } else if (lt.type?.reAmortize == true) {
@@ -130,29 +130,29 @@ internal class LoanAccountActionsViewModel(
         }
 
         return LoanFeatureFlags(
-            enableBuyDownFee = loan.enableBuyDownFee,
-            enableIncomeCapitalization = loan.enableIncomeCapitalization,
-            multiDisburseLoan = loan.multiDisburseLoan,
-            canDisburse = loan.canDisburse,
+            enableBuyDownFee = loan.enableBuyDownFee ?: false,
+            enableIncomeCapitalization = loan.enableIncomeCapitalization ?: false,
+            multiDisburseLoan = loan.multiDisburseLoan ?: false,
+            canDisburse = loan.canDisburse ?: false,
             moreThanOneDisbursement = disbursementCount > 1,
-            recalculateInterest = loan.isInterestRecalculationEnabled,
-            chargedOff = loan.chargedOff,
+            recalculateInterest = loan.isInterestRecalculationEnabled ?: false,
+            chargedOff = loan.chargedOff ?: false,
             loanReAged = isLoanReAged,
             loanReAmortized = isLoanReAmortized,
-            isVariableInstallmentsAllowed = loan.allowPartialPeriodInterestCalculation,
-            advancedPaymentAllocationStrategy = loan.syncDisbursementWithMeeting,
-            canAssignLoanOfficer = loan.loanOfficerName.isBlank(),
+            isVariableInstallmentsAllowed = loan.allowPartialPeriodInterestCalculation ?: false,
+            advancedPaymentAllocationStrategy = loan.syncDisbursementWithMeeting ?: false,
+            canAssignLoanOfficer = loan.loanOfficerName?.isBlank() ?: true,
         )
     }
 
     private fun generateActions(
-        status: LoanStatus,
+        status: UiLoanStatus,
         flags: LoanFeatureFlags,
     ): List<LoanAccountActionItem> {
         val generatedActions = mutableListOf<LoanAccountActionItem>()
 
         when (status) {
-            LoanStatus.ACTIVE -> {
+            UiLoanStatus.ACTIVE -> {
                 generatedActions.add(LoanAccountActionItem.AddLoanCharge)
                 generatedActions.add(LoanAccountActionItem.Foreclosure)
                 generatedActions.add(LoanAccountActionItem.MakeRepayment)
@@ -221,7 +221,7 @@ internal class LoanAccountActionsViewModel(
                 }
             }
 
-            LoanStatus.PENDING_APPROVAL -> {
+            UiLoanStatus.PENDING_APPROVAL -> {
                 generatedActions.add(LoanAccountActionItem.AddLoanCharge)
                 generatedActions.add(LoanAccountActionItem.Approve)
                 generatedActions.add(LoanAccountActionItem.ModifyApplication)
@@ -245,7 +245,7 @@ internal class LoanAccountActionsViewModel(
                 }
             }
 
-            LoanStatus.APPROVED -> {
+            UiLoanStatus.APPROVED -> {
                 generatedActions.add(LoanAccountActionItem.Disburse)
                 generatedActions.add(LoanAccountActionItem.DisburseToSavings)
                 generatedActions.add(LoanAccountActionItem.UndoApproval)
@@ -266,7 +266,7 @@ internal class LoanAccountActionsViewModel(
                 }
             }
 
-            LoanStatus.CLOSED_OVERPAID -> {
+            UiLoanStatus.CLOSED_OVERPAID -> {
                 generatedActions.add(LoanAccountActionItem.TransferFunds)
                 generatedActions.add(LoanAccountActionItem.CreditBalanceRefund)
 
@@ -279,12 +279,12 @@ internal class LoanAccountActionsViewModel(
                 }
             }
 
-            LoanStatus.CLOSED_WRITTEN_OFF -> {
+            UiLoanStatus.CLOSED_WRITTEN_OFF -> {
                 generatedActions.add(LoanAccountActionItem.RecoveryPayment)
                 generatedActions.add(LoanAccountActionItem.UndoWriteOff)
             }
 
-            LoanStatus.CLOSED_OBLIGATIONS_MET -> {
+            UiLoanStatus.CLOSED_OBLIGATIONS_MET -> {
                 generatedActions.add(LoanAccountActionItem.GoodwillCredit)
                 generatedActions.add(LoanAccountActionItem.InterestPaymentWaiver)
                 generatedActions.add(LoanAccountActionItem.PaymentRefund)
@@ -299,9 +299,10 @@ internal class LoanAccountActionsViewModel(
                 }
             }
 
-            LoanStatus.WITHDRAWN_BY_APPLICANT -> Unit
-            LoanStatus.CLOSED_RESCHEDULED -> Unit
-            LoanStatus.REJECTED -> Unit
+            UiLoanStatus.WITHDRAWN_BY_APPLICANT -> Unit
+            UiLoanStatus.CLOSED_RESCHEDULED -> Unit
+            UiLoanStatus.REJECTED -> Unit
+            UiLoanStatus.UNKNOWN -> Unit
         }
         return generatedActions
     }

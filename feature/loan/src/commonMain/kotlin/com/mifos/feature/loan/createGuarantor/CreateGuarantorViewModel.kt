@@ -71,7 +71,6 @@ internal class CreateGuarantorViewModel(
                         existingClient = action.checked,
                         clientSearchQuery = "",
                         selectedClientId = null,
-                        existingGuarantorTypeId = null,
                         searchedClientOptions = emptyList(),
                         clientError = null,
                         relationshipError = null,
@@ -201,7 +200,10 @@ internal class CreateGuarantorViewModel(
                         viewState = CreateGuarantorState.ViewState.Success,
                         guarantorRelationshipOptions = result.data.allowedClientRelationshipTypes,
                         externalGuarantorTypeId = result.data.guarantorTypeOptions.firstOrNull { guarantorType ->
-                            guarantorType.code == "guarantor.external"
+                            guarantorType.code == "guarantorType.external"
+                        }?.id,
+                        existingGuarantorTypeId = result.data.guarantorTypeOptions.firstOrNull { guarantorType ->
+                            guarantorType.code == "guarantorType.existing.client"
                         }?.id,
                     )
                 }
@@ -233,7 +235,6 @@ internal class CreateGuarantorViewModel(
                 val template = result.data
                 mutableStateFlow.update {
                     it.copy(
-                        existingGuarantorTypeId = template.guarantorType.id,
                         fetchingGuarantorAccountTemplate = false,
                     )
                 }
