@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Mifos Initiative
+ * Copyright 2025 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,19 +13,20 @@ plugins {
 }
 
 android {
-    namespace = "com.mifos.feature.savings"
+    namespace = "com.mifos.feature.standing_instruction"
 }
 
-kotlin{
-    sourceSets{
+kotlin {
+    sourceSets {
         commonMain.dependencies {
-            implementation(projects.core.domain)
             implementation(compose.material3)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(compose.ui)
+            implementation(projects.core.common)
+            implementation(projects.core.domain)
+            implementation(projects.core.model)
             implementation(libs.kotlinx.serialization.json)
-            implementation(projects.feature.standingInstruction)
         }
     }
 }
