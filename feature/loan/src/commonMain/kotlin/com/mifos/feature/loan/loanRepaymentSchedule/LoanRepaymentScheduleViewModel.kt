@@ -25,8 +25,8 @@ import com.mifos.core.common.utils.DataState.Loading
 import com.mifos.core.common.utils.DataState.Success
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.loan.LoanRepaymentScheduleRepository
-import com.mifos.core.model.objects.account.loan.Period
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Period
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch

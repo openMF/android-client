@@ -53,9 +53,9 @@ import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.loan.LoanAccountSummaryRepository
-import com.mifos.core.model.objects.account.loan.Transaction
-import com.mifos.core.model.objects.account.loan.Type
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Transaction
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Type
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn

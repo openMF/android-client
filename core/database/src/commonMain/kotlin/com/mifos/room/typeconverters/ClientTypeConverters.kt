@@ -9,7 +9,7 @@
  */
 package com.mifos.room.typeconverters
 
-import com.mifos.core.model.objects.account.loan.Currency
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Currency
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json

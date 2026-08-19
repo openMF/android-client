@@ -5,9 +5,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.objects.account.loan
+package com.mifos.core.model.objects.account.loan.loanWithAssociations
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
@@ -20,6 +20,7 @@ data class LoanSummary(
     val currency: Currency? = null,
     val principalDisbursed: Double? = null,
     val principalPaid: Double? = null,
+    val principalWaived: Double? = null,
     val principalWrittenOff: Double? = null,
     val principalOutstanding: Double? = null,
     val principalOverdue: Double? = null,

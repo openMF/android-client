@@ -5,20 +5,24 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
 package com.mifos.core.data.mappers.loan
 
-import com.mifos.core.model.objects.account.loan.Currency
-import com.mifos.core.model.objects.account.loan.LoanStatus
-import com.mifos.core.model.objects.account.loan.LoanSummary
-import com.mifos.core.model.objects.account.loan.LoanTimeline
-import com.mifos.core.model.objects.account.loan.LoanWithAssociations
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.AmortizationType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Currency
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.InterestCalculationPeriodType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.InterestType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanStatus
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanSummary
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanTimeline
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.RepaymentFrequencyType
 import com.mifos.core.network.data.AbstractMapper
+import com.mifos.room.entities.accounts.loans.LoanAccountSummaryEntity
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanTimelineEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
-import com.mifos.room.entities.accounts.loans.LoansAccountSummaryEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
 
 object LoanWithAssociationsMapper :
@@ -48,18 +52,18 @@ object LoanWithAssociationsMapper :
             transactionProcessingStrategyName = entity.transactionProcessingStrategyName,
             syncDisbursementWithMeeting = entity.syncDisbursementWithMeeting,
             timeline = entity.timeline.toDomain(),
-            loanSummary = entity.summary.toDomain(),
+            summary = entity.summary.toDomain(),
             feeChargesAtDisbursementCharged = entity.feeChargesAtDisbursementCharged,
             loanProductCounter = entity.loanProductCounter,
             multiDisburseLoan = entity.multiDisburseLoan,
             canDisburse = entity.canDisburse,
             inArrears = entity.inArrears,
-            npa = entity.isNPA,
-            repaymentFrequencyType = entity.repaymentFrequencyType.value,
-            amortizationType = entity.amortizationType.value,
+            isNPA = entity.isNPA,
+            repaymentFrequencyType = entity.repaymentFrequencyType?.let { RepaymentFrequencyType(id = it.id, code = it.code, value = it.value) },
+            amortizationType = entity.amortizationType?.let { AmortizationType(id = it.id, code = it.code, value = it.value) },
             isEqualAmortization = entity.isEqualAmortization,
-            interestType = entity.interestType.value,
-            interestCalculationPeriodType = entity.interestCalculationPeriodType.value,
+            interestType = entity.interestType?.let { InterestType(id = it.id, code = it.code, value = it.value) },
+            interestCalculationPeriodType = entity.interestCalculationPeriodType?.let { InterestCalculationPeriodType(id = it.id, code = it.code, value = it.value) },
             fundId = entity.fundId,
             fundName = entity.fundName,
             loanPurposeId = entity.loanPurposeId,
@@ -73,9 +77,6 @@ object LoanWithAssociationsMapper :
             enableBuyDownFee = entity.enableBuyDownFee,
             enableInstallmentLevelDelinquency = entity.enableInstallmentLevelDelinquency,
             isInterestRecalculationEnabled = entity.isInterestRecalculationEnabled,
-            chargeOffBehaviour = entity.chargeOffBehaviour?.value,
-            daysInYearType = entity.daysInYearType?.value,
-            daysInMonthType = entity.daysInMonthType?.value,
             availableDisbursementAmount = (entity.principal - entity.approvedPrincipal),
             totalOverpaid = entity.totalOverpaid,
         )
@@ -87,18 +88,19 @@ object LoanWithAssociationsMapper :
 }
 
 fun LoanStatusEntity?.toDomain(): LoanStatus {
-    return when {
-        this == null -> LoanStatus.UNKNOWN
-        pendingApproval == true -> LoanStatus.PENDING
-        waitingForDisbursal == true -> LoanStatus.APPROVED
-        active == true -> LoanStatus.ACTIVE
-        overpaid == true -> LoanStatus.OVERPAID
-        closedWrittenOff == true -> LoanStatus.CLOSED_WRITTEN_OFF
-        closedObligationsMet == true -> LoanStatus.CLOSED_OBLIGATIONS_MET
-        closedRescheduled == true -> LoanStatus.CLOSED_RESCHEDULED
-        closed == true -> LoanStatus.CLOSED
-        else -> LoanStatus.UNKNOWN
-    }
+    return LoanStatus(
+        id = this?.id,
+        code = this?.code,
+        value = this?.value,
+        pendingApproval = this?.pendingApproval,
+        waitingForDisbursal = this?.waitingForDisbursal,
+        active = this?.active,
+        closedObligationsMet = this?.closedObligationsMet,
+        closedWrittenOff = this?.closedWrittenOff,
+        closedRescheduled = this?.closedRescheduled,
+        closed = this?.closed,
+        overpaid = this?.overpaid,
+    )
 }
 
 private fun SavingAccountCurrencyEntity?.toDomain(): Currency? {
@@ -137,13 +139,14 @@ private fun LoanTimelineEntity?.toDomain(): LoanTimeline? {
     }
 }
 
-private fun LoansAccountSummaryEntity?.toDomain(): LoanSummary? {
+private fun LoanAccountSummaryEntity?.toDomain(): LoanSummary? {
     return this?.let {
         LoanSummary(
             loanId = loanId,
             currency = currency?.toDomain(),
             principalDisbursed = principalDisbursed,
             principalPaid = principalPaid,
+            principalWaived = principalWaived,
             principalWrittenOff = principalWrittenOff,
             principalOutstanding = principalOutstanding,
             principalOverdue = principalOverdue,

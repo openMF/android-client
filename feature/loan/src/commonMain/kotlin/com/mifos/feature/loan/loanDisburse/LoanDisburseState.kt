@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.loan.loanDisburse
 
-import com.mifos.core.model.objects.account.loan.PaymentType
 import com.mifos.core.model.objects.account.loan.loanDisburse.LoanDisburseTemplate
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.PaymentType
 import org.jetbrains.compose.resources.StringResource
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime

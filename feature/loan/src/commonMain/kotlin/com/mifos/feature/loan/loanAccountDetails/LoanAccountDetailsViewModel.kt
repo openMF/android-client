@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/android-client/blob/master/LICENSE.md
+ * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
 package com.mifos.feature.loan.loanAccountDetails
 
@@ -56,9 +56,9 @@ import androidx.navigation.toRoute
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
-import com.mifos.core.data.repository.LoanAccountSummaryRepository
-import com.mifos.core.data.util.NetworkMonitor
-import com.mifos.core.model.objects.account.loan.LoanWithAssociations
+import com.mifos.core.data.repository.loan.LoanAccountSummaryRepository
+import com.mifos.core.data.util.NetworkUnavailableException
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.update
@@ -68,7 +68,6 @@ import org.jetbrains.compose.resources.getString
 
 internal class LoanAccountDetailsViewModel(
     savedStateHandle: SavedStateHandle,
-    private val networkMonitor: NetworkMonitor,
     private val loanRepository: LoanAccountSummaryRepository,
 ) : BaseViewModel<LoanAccountDetailsState, LoanAccountDetailsEvent, LoanAccountDetailsAction>(
     initialState = LoanAccountDetailsState(),
@@ -77,24 +76,7 @@ internal class LoanAccountDetailsViewModel(
     private var loadJob: Job? = null
 
     init {
-        observeNetworkAndLoad()
-    }
-
-    private fun observeNetworkAndLoad() {
-        viewModelScope.launch {
-            networkMonitor.isOnline.collect { isConnected ->
-                mutableStateFlow.update { it.copy(networkConnection = isConnected) }
-                if (isConnected) {
-                    if (mutableStateFlow.value.details.isEmpty()) {
-                        loadLoanAccountDetails(routeData.loanId)
-                    }
-                } else if (mutableStateFlow.value.details.isEmpty()) {
-                    mutableStateFlow.update {
-                        it.copy(dialogState = LoanAccountDetailsState.DialogState.Error(Res.string.feature_loan_profile_error_network_not_available))
-                    }
-                }
-            }
-        }
+        loadLoanAccountDetails(routeData.loanId)
     }
 
     private fun loadLoanAccountDetails(loanId: Int) {
@@ -115,8 +97,18 @@ internal class LoanAccountDetailsViewModel(
                         processLoanData(loan)
                     }
                     is DataState.Error -> {
+                        val isNetworkError = result.exception is NetworkUnavailableException
                         mutableStateFlow.update {
-                            it.copy(dialogState = LoanAccountDetailsState.DialogState.Error(Res.string.feature_loan_profile_failed_to_load_loan))
+                            it.copy(
+                                networkConnection = !isNetworkError,
+                                dialogState = LoanAccountDetailsState.DialogState.Error(
+                                    if (isNetworkError) {
+                                        Res.string.feature_loan_profile_error_network_not_available
+                                    } else {
+                                        Res.string.feature_loan_profile_failed_to_load_loan
+                                    },
+                                ),
+                            )
                         }
                     }
                     DataState.Loading -> {
@@ -132,13 +124,7 @@ internal class LoanAccountDetailsViewModel(
     override fun handleAction(action: LoanAccountDetailsAction) {
         when (action) {
             LoanAccountDetailsAction.NavigateBack -> sendEvent(LoanAccountDetailsEvent.NavigateBack)
-            LoanAccountDetailsAction.OnRetry -> if (stateFlow.value.networkConnection) {
-                loadLoanAccountDetails(routeData.loanId)
-            } else {
-                mutableStateFlow.update {
-                    it.copy(dialogState = LoanAccountDetailsState.DialogState.Error(Res.string.feature_loan_profile_error_details_not_found))
-                }
-            }
+            LoanAccountDetailsAction.OnRetry -> loadLoanAccountDetails(routeData.loanId)
         }
     }
 
@@ -152,16 +138,20 @@ internal class LoanAccountDetailsViewModel(
         val unassignedStr = getString(Res.string.feature_loan_unassigned)
         val notAvailableDateStr = getString(Res.string.feature_loan_not_available)
 
+        val numberOfRepayments = loan.numberOfRepayments
+        val repaymentEvery = loan.repaymentEvery
+        val repaymentFrequencyValue = loan.repaymentFrequencyType?.value
+
         val repaymentsFormat = if (
-            loan.numberOfRepayments?.let { it > 0 } == true &&
-            loan.repaymentEvery?.let { it > 0 } == true &&
-            !loan.repaymentFrequencyType.isNullOrBlank()
+            (numberOfRepayments != null) && (numberOfRepayments > 0) &&
+            (repaymentEvery != null) && (repaymentEvery > 0) &&
+            !repaymentFrequencyValue.isNullOrBlank()
         ) {
             getString(
                 Res.string.feature_loan_repayments_format,
-                loan.numberOfRepayments!!,
-                loan.repaymentEvery!!,
-                loan.repaymentFrequencyType!!,
+                numberOfRepayments,
+                repaymentEvery,
+                repaymentFrequencyValue,
             ).trim()
         } else {
             naStr
@@ -176,15 +166,15 @@ internal class LoanAccountDetailsViewModel(
                     ?: naStr
                 ),
             Res.string.repayments to repaymentsFormat,
-            Res.string.feature_loan_amortization to loan.amortizationType.orEmpty().ifBlank { naStr },
+            Res.string.feature_loan_amortization to loan.amortizationType?.value.orEmpty().ifBlank { naStr },
             Res.string.feature_loan_equal_amortization to if (loan.isEqualAmortization == true) yesStr else noStr,
         )
 
         val interestConfigurationMap = mapOf(
             Res.string.feature_loan_interest_rate to "$interestRateFormat $interestRateSubtitle".trim(),
-            Res.string.feature_loan_interest_type to loan.interestType.orEmpty().ifBlank { naStr },
+            Res.string.feature_loan_interest_type to loan.interestType?.value.orEmpty().ifBlank { naStr },
             Res.string.feature_loan_free_period to hyphenStr,
-            Res.string.interest_calculation_period to loan.interestCalculationPeriodType.orEmpty().ifBlank { naStr },
+            Res.string.interest_calculation_period to loan.interestCalculationPeriodType?.value.orEmpty().ifBlank { naStr },
             Res.string.feature_loan_allow_partial_calculation to if (loan.allowPartialPeriodInterestCalculation == true) yesStr else noStr,
             Res.string.feature_loan_interest_on_disbursement to if (loan.interestRecognitionOnDisbursementDate == true) yesStr else noStr,
         )
@@ -197,7 +187,7 @@ internal class LoanAccountDetailsViewModel(
 
         val settingsMap = mapOf(
             Res.string.feature_loan_enable_down_payments to if (loan.enableDownPayment == true) yesStr else noStr,
-            Res.string.feature_loan_charge_off_behavior to loan.chargeOffBehaviour.orEmpty().ifBlank { naStr },
+            Res.string.feature_loan_charge_off_behavior to loan.chargeOffBehaviour?.value.orEmpty().ifBlank { naStr },
             Res.string.feature_loan_enable_income_capitalization to if (loan.enableIncomeCapitalization == true) yesStr else noStr,
             Res.string.feature_loan_enable_buy_down_fee to if (loan.enableBuyDownFee == true) yesStr else noStr,
             Res.string.feature_loan_installment_level_delinquency to if (loan.enableInstallmentLevelDelinquency == true) yesStr else noStr,
@@ -213,8 +203,8 @@ internal class LoanAccountDetailsViewModel(
         val additionalInfoMap = mapOf(
             Res.string.feature_loan_fund_source to (loan.fundName?.ifBlank { unassignedStr } ?: unassignedStr),
             Res.string.recalculate_interest to if (loan.isInterestRecalculationEnabled == true) yesStr else noStr,
-            Res.string.feature_loan_days_in_year to loan.daysInYearType.orEmpty().ifBlank { naStr },
-            Res.string.loan_new_loan_days_in_month to loan.daysInMonthType.orEmpty().ifBlank { naStr },
+            Res.string.feature_loan_days_in_year to loan.daysInYearType?.value.orEmpty().ifBlank { naStr },
+            Res.string.loan_new_loan_days_in_month to loan.daysInMonthType?.value.orEmpty().ifBlank { naStr },
             Res.string.feature_loan_available_disbursement_amount to formatCurrency(
                 amount = availableDisbursement,
                 currencyCode = loan.currency?.code,
@@ -235,6 +225,7 @@ internal class LoanAccountDetailsViewModel(
             it.copy(
                 dialogState = null,
                 details = mappedDetails,
+                networkConnection = true,
             )
         }
     }
@@ -265,8 +256,8 @@ internal class LoanAccountDetailsViewModel(
 
 data class LoanAccountDetailsState(
     val dialogState: DialogState? = DialogState.Loading,
-    val networkConnection: Boolean = false,
     val details: List<Map<StringResource, String>> = emptyList(),
+    val networkConnection: Boolean = false,
 ) {
     sealed interface DialogState {
         data class Error(val message: StringResource) : DialogState

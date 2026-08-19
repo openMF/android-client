@@ -9,12 +9,12 @@
  */
 package com.mifos.room.entities.accounts.loans
 
-import com.mifos.core.model.objects.account.loan.Currency
-import com.mifos.core.model.objects.account.loan.InterestCalculationPeriodType
-import com.mifos.core.model.objects.account.loan.InterestRateFrequencyType
-import com.mifos.core.model.objects.account.loan.InterestType
-import com.mifos.core.model.objects.account.loan.RepaymentFrequencyType
-import com.mifos.core.model.objects.account.loan.TermPeriodFrequencyType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Currency
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.InterestCalculationPeriodType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.InterestRateFrequencyType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.InterestType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.RepaymentFrequencyType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.TermPeriodFrequencyType
 import kotlinx.serialization.Serializable
 
 @Serializable

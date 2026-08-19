@@ -9,7 +9,7 @@
  */
 package com.mifos.room.entities.templates.savings
 
-import com.mifos.core.model.objects.account.loan.Currency
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Currency
 import com.mifos.core.model.objects.account.saving.FieldOfficerOptions
 import com.mifos.core.model.objects.commonfiles.InterestType
 import com.mifos.core.model.objects.template.client.ChargeOptions

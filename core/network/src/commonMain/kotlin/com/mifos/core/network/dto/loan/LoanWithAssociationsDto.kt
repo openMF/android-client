@@ -58,6 +58,35 @@ data class LoanWithAssociationsDto(
     val enableInstallmentLevelDelinquency: Boolean? = null,
     val isInterestRecalculationEnabled: Boolean? = null,
     val chargedOff: Boolean? = null,
+    val chargeOffBehaviour: ChargeOffBehaviourDto? = null,
+    val daysInYearType: LoanOptionDto? = null,
+    val daysInMonthType: LoanOptionDto? = null,
+    val amortizationType: LoanOptionDto? = null,
+    val interestType: LoanOptionDto? = null,
+    val interestCalculationPeriodType: LoanOptionDto? = null,
+    val externalId: String? = null,
+    val fundId: Long? = null,
+    val fundName: String? = null,
+    val loanPurposeId: Long? = null,
+    val loanPurposeName: String? = null,
+    val availableDisbursementAmount: Double? = null,
+    val repaymentEvery: Int? = null,
+    val interestRatePerPeriod: Double? = null,
+    val transactionProcessingStrategyId: Long? = null,
+    val transactionProcessingStrategyName: String? = null,
+    val repaymentFrequencyType: LoanOptionDto? = null,
+    val termPeriodFrequencyType: LoanOptionDto? = null,
+    val interestRateFrequencyType: LoanOptionDto? = null,
+)
+
+@Serializable
+data class LoanOptionDto(val id: Int, val code: String? = null, val value: String? = null)
+
+@Serializable
+data class ChargeOffBehaviourDto(
+    val id: String? = null,
+    val code: String? = null,
+    val value: String? = null,
 )
 
 @Serializable

@@ -9,13 +9,14 @@
  */
 package com.mifos.core.model.objects.account.loan.loanWithAssociations
 
-data class SavingAccountCurrency(
-    val id: Int = 0,
+import com.mifos.core.model.utils.Parcelable
+import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.Serializable
+
+@Parcelize
+@Serializable
+data class ChargeOffBehaviour(
+    val id: String? = null,
     val code: String? = null,
-    val name: String? = null,
-    val decimalPlaces: Int? = null,
-    val inMultiplesOf: Int? = null,
-    val displaySymbol: String? = null,
-    val nameCode: String? = null,
-    val displayLabel: String? = null,
-)
+    val value: String? = null,
+) : Parcelable

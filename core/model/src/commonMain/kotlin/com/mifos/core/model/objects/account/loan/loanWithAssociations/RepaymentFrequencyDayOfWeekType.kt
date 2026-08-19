@@ -7,7 +7,7 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.objects.account.loan
+package com.mifos.core.model.objects.account.loan.loanWithAssociations
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize

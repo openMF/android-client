@@ -92,7 +92,7 @@ import com.mifos.feature.groups.navigation.navigateToCreateNewGroupScreen
 import com.mifos.feature.groups.navigation.navigateToGroupDetailsScreen
 import com.mifos.feature.groups.navigation.navigateToGroupListScreen
 import com.mifos.feature.loan.groupLoanAccount.navigateToGroupLoanScreen
-import com.mifos.feature.loan.loanAccountSummary.navigateToLoanAccountSummaryScreen
+import com.mifos.feature.loan.loanAccountSummary.navigateToLoanSummaryScreen
 import com.mifos.feature.note.notes.navigateToNoteScreen
 import com.mifos.feature.savings.navigation.navigateToAddSavingsAccount
 import com.mifos.feature.savings.navigation.navigateToSavingsAccountSummaryScreen
@@ -331,7 +331,7 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                     onCenter = navController::navigateCenterDetailsScreenRoute,
                     onClient = navController::navigateToClientProfileRoute,
                     onGroup = navController::navigateToGroupDetailsScreen,
-                    onLoan = navController::navigateToLoanAccountSummaryScreen,
+                    onLoan = navController::navigateToLoanSummaryScreen,
                     onSavings = navController::navigateClientDetailsScreen,
                 )
 
@@ -352,7 +352,7 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                     loadSavingsAccountSummary = navController::navigateToSavingsAccountSummaryScreen,
                     loadGroupDataTables = navController::navigateToDataTable,
                     loadNotes = navController::navigateToNoteScreen,
-                    loadLoanAccountSummary = navController::navigateToLoanAccountSummaryScreen,
+                    loadLoanSummary = navController::navigateToLoanSummaryScreen,
                     activateGroup = navController::navigateToActivateRoute,
                 )
 

@@ -9,8 +9,14 @@
  */
 package com.mifos.core.model.objects.account.loan.loanWithAssociations
 
+import com.mifos.core.model.utils.Parcelable
+import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.Serializable
+
+@Serializable
+@Parcelize
 data class LoanType(
     val id: Int? = null,
     val code: String? = null,
     val value: String? = null,
-)
+) : Parcelable
