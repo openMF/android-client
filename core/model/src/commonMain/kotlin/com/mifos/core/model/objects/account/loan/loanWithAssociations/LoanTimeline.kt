@@ -9,6 +9,12 @@
  */
 package com.mifos.core.model.objects.account.loan.loanWithAssociations
 
+import com.mifos.core.model.utils.Parcelable
+import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.Serializable
+
+@Serializable
+@Parcelize
 data class LoanTimeline(
     val loanId: Int? = null,
     val submittedOnDate: List<Int>? = null,
@@ -28,4 +34,4 @@ data class LoanTimeline(
     val closedOnDate: List<Int>? = null,
     val expectedMaturityDate: List<Int>? = null,
     val withdrawnOnDate: List<Int>? = null,
-)
+) : Parcelable

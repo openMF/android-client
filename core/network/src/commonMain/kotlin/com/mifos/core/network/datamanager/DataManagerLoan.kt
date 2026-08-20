@@ -11,8 +11,8 @@ package com.mifos.core.network.datamanager
 
 import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.RepaymentSchedule
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRejectionRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRequest

@@ -91,8 +91,8 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
-import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanAccountSummary
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanStatus
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanSummary
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosProgressIndicator
@@ -107,7 +107,7 @@ import template.core.base.designsystem.theme.KptTheme
 import com.mifos.feature.loan.utils.UiLoanStatus as UiLoanStatus
 
 @Composable
-internal fun LoanAccountSummaryScreenRoute(
+internal fun LoanSummaryScreenRoute(
     onNavigateBack: () -> Unit,
     onMoreInfoClicked: (String, loanId: Int) -> Unit,
     onTransactionsClicked: (loadId: Int) -> Unit,
@@ -118,7 +118,7 @@ internal fun LoanAccountSummaryScreenRoute(
     disburseLoan: (loanId: Int) -> Unit,
     onRepaymentClick: (loanWithAssociations: LoanWithAssociations) -> Unit,
     navController: NavController,
-    viewModel: LoanAccountSummaryViewModel = koinViewModel(),
+    viewModel: LoanSummaryViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -126,40 +126,40 @@ internal fun LoanAccountSummaryScreenRoute(
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
-            LoanAccountSummaryEvent.NavigateBack -> onNavigateBack()
-            is LoanAccountSummaryEvent.NavigateToMoreInfo -> {
+            LoanSummaryEvent.NavigateBack -> onNavigateBack()
+            is LoanSummaryEvent.NavigateToMoreInfo -> {
                 onMoreInfoClicked(Constants.DATA_TABLE_NAME_LOANS, event.loanId)
             }
 
-            is LoanAccountSummaryEvent.NavigateToTransactions -> {
+            is LoanSummaryEvent.NavigateToTransactions -> {
                 onTransactionsClicked(event.loanId)
             }
 
-            is LoanAccountSummaryEvent.NavigateToRepaymentSchedule -> {
+            is LoanSummaryEvent.NavigateToRepaymentSchedule -> {
                 onRepaymentScheduleClicked(event.loanId)
             }
 
-            is LoanAccountSummaryEvent.NavigateToDocuments -> {
+            is LoanSummaryEvent.NavigateToDocuments -> {
                 onDocumentsClicked(event.loanId)
             }
 
-            is LoanAccountSummaryEvent.NavigateToCharges -> {
+            is LoanSummaryEvent.NavigateToCharges -> {
                 onChargesClicked(event.loanId)
             }
 
-            is LoanAccountSummaryEvent.NavigateToApproveLoan -> {
+            is LoanSummaryEvent.NavigateToApproveLoan -> {
                 approveLoan(event.loanId)
             }
 
-            is LoanAccountSummaryEvent.NavigateToDisburseLoan -> {
+            is LoanSummaryEvent.NavigateToDisburseLoan -> {
                 disburseLoan(event.loanId)
             }
 
-            is LoanAccountSummaryEvent.NavigateToMakeRepayment -> {
+            is LoanSummaryEvent.NavigateToMakeRepayment -> {
                 onRepaymentClick(event.loanWithAssociations)
             }
 
-            is LoanAccountSummaryEvent.NavigateToLoanTransfer -> {}
+            is LoanSummaryEvent.NavigateToLoanTransfer -> {}
         }
     }
 
@@ -168,37 +168,37 @@ internal fun LoanAccountSummaryScreenRoute(
             .collect { showMessage ->
                 if (showMessage) {
                     snackbarHostState.showSnackbar(message = loanIdCopiedMessage)
-                    viewModel.trySendAction(LoanAccountSummaryAction.OnMessageShown)
+                    viewModel.trySendAction(LoanSummaryAction.OnMessageShown)
                 }
             }
     }
 
-    LoanAccountSummaryScreen(
+    LoanSummaryScreen(
         state = state,
         onAction = viewModel::trySendAction,
         navController = navController,
         snackbarHostState = snackbarHostState,
     )
 
-    LoanAccountSummaryDialog(
+    LoanSummaryDialog(
         state.dialogState,
         onAction = viewModel::trySendAction,
     )
 }
 
 @Composable
-internal fun LoanAccountSummaryScreen(
-    state: LoanAccountSummaryState,
-    onAction: (LoanAccountSummaryAction) -> Unit,
+internal fun LoanSummaryScreen(
+    state: LoanSummaryState,
+    onAction: (LoanSummaryAction) -> Unit,
     navController: NavController,
     snackbarHostState: SnackbarHostState,
 ) {
     MifosScaffold(
         title = stringResource(Res.string.feature_loan_loan_account_summary),
-        onBackPressed = { onAction(LoanAccountSummaryAction.NavigateBack) },
+        onBackPressed = { onAction(LoanSummaryAction.NavigateBack) },
         snackbarHostState = snackbarHostState,
         actions = {
-            IconButton(onClick = { onAction(LoanAccountSummaryAction.ToggleDropdown) }) {
+            IconButton(onClick = { onAction(LoanSummaryAction.ToggleDropdown) }) {
                 Icon(
                     imageVector = MifosIcons.MoreVert,
                     contentDescription = "More options",
@@ -225,7 +225,7 @@ internal fun LoanAccountSummaryScreen(
                     .weight(1f),
             ) {
                 state.loanWithAssociations?.let { loanWithAssociations ->
-                    LoanAccountSummaryContent(
+                    LoanSummaryContent(
                         state = state,
                         onAction = onAction,
                     )
@@ -236,9 +236,9 @@ internal fun LoanAccountSummaryScreen(
 }
 
 @Composable
-private fun LoanAccountSummaryContent(
-    state: LoanAccountSummaryState,
-    onAction: (LoanAccountSummaryAction) -> Unit,
+private fun LoanSummaryContent(
+    state: LoanSummaryState,
+    onAction: (LoanSummaryAction) -> Unit,
 ) {
     val loanWithAssociations = state.loanWithAssociations ?: return
     val actualDisbursementDate = state.actualDisbursementDate
@@ -305,7 +305,7 @@ private fun LoanAccountSummaryContent(
                     IconButton(
                         onClick = {
                             clipboardManager.setText(AnnotatedString(loanWithAssociations.accountNo ?: ""))
-                            onAction(LoanAccountSummaryAction.OnLoanIdCopied)
+                            onAction(LoanSummaryAction.OnLoanIdCopied)
                         },
                         modifier = Modifier.size(DesignToken.sizes.iconSmall),
                     ) {
@@ -435,10 +435,10 @@ private fun LoanAccountSummaryContent(
             shape = KptTheme.shapes.small,
             onClick = {
                 when (primaryAction) {
-                    LoanPrimaryAction.MAKE_REPAYMENT -> onAction(LoanAccountSummaryAction.OnMakeRepayment)
-                    LoanPrimaryAction.APPROVE_LOAN -> onAction(LoanAccountSummaryAction.OnApproveLoan)
-                    LoanPrimaryAction.DISBURSE_LOAN -> onAction(LoanAccountSummaryAction.OnDisburseLoan)
-                    LoanPrimaryAction.OVERPAID -> onAction(LoanAccountSummaryAction.NavigateToLoanTransfer)
+                    LoanPrimaryAction.MAKE_REPAYMENT -> onAction(LoanSummaryAction.OnMakeRepayment)
+                    LoanPrimaryAction.APPROVE_LOAN -> onAction(LoanSummaryAction.OnApproveLoan)
+                    LoanPrimaryAction.DISBURSE_LOAN -> onAction(LoanSummaryAction.OnDisburseLoan)
+                    LoanPrimaryAction.OVERPAID -> onAction(LoanSummaryAction.NavigateToLoanTransfer)
                     LoanPrimaryAction.CLOSED -> { }
                 }
             },
@@ -455,7 +455,7 @@ private fun LoanAccountSummaryContent(
 
 @Composable
 private fun LoanSummaryDataTable(
-    state: LoanAccountSummaryState,
+    state: LoanSummaryState,
 ) {
     MifosCard {
         DataTableRow(
@@ -618,19 +618,19 @@ private fun DataTableRow(
 }
 
 @Composable
-private fun LoanAccountSummaryDialog(
-    dialogState: LoanAccountSummaryState.DialogState?,
-    onAction: (LoanAccountSummaryAction) -> Unit,
+private fun LoanSummaryDialog(
+    dialogState: LoanSummaryState.DialogState?,
+    onAction: (LoanSummaryAction) -> Unit,
 ) {
     when (dialogState) {
-        is LoanAccountSummaryState.DialogState.Error -> {
+        is LoanSummaryState.DialogState.Error -> {
             MifosSweetError(
                 message = dialogState.message,
-                onclick = { onAction(LoanAccountSummaryAction.OnRetry) },
+                onclick = { onAction(LoanSummaryAction.OnRetry) },
             )
         }
 
-        LoanAccountSummaryState.DialogState.Loading -> {
+        LoanSummaryState.DialogState.Loading -> {
             MifosProgressIndicator()
         }
 
@@ -640,41 +640,41 @@ private fun LoanAccountSummaryDialog(
 
 @Composable
 private fun LoanSummaryDropdown(
-    state: LoanAccountSummaryState,
-    onAction: (LoanAccountSummaryAction) -> Unit,
+    state: LoanSummaryState,
+    onAction: (LoanSummaryAction) -> Unit,
 ) {
     DropdownMenu(
         expanded = state.openDropdown,
-        onDismissRequest = { onAction(LoanAccountSummaryAction.ToggleDropdown) },
+        onDismissRequest = { onAction(LoanSummaryAction.ToggleDropdown) },
     ) {
         MifosMenuDropDownItem(
             option = Constants.DATA_TABLE_LOAN_NAME,
             onClick = {
-                onAction(LoanAccountSummaryAction.DropdownAction(LoanSummaryDropDownAction.OnMoreInfoClick))
+                onAction(LoanSummaryAction.DropdownAction(LoanSummaryDropDownAction.OnMoreInfoClick))
             },
         )
         MifosMenuDropDownItem(
             option = stringResource(Res.string.feature_loan_transactions),
             onClick = {
-                onAction(LoanAccountSummaryAction.DropdownAction(LoanSummaryDropDownAction.OnTransactionsClick))
+                onAction(LoanSummaryAction.DropdownAction(LoanSummaryDropDownAction.OnTransactionsClick))
             },
         )
         MifosMenuDropDownItem(
             option = stringResource(Res.string.feature_loan_repayment_schedule),
             onClick = {
-                onAction(LoanAccountSummaryAction.DropdownAction(LoanSummaryDropDownAction.OnRepaymentScheduleClick))
+                onAction(LoanSummaryAction.DropdownAction(LoanSummaryDropDownAction.OnRepaymentScheduleClick))
             },
         )
         MifosMenuDropDownItem(
             option = stringResource(Res.string.feature_loan_documents),
             onClick = {
-                onAction(LoanAccountSummaryAction.DropdownAction(LoanSummaryDropDownAction.OnDocumentsClick))
+                onAction(LoanSummaryAction.DropdownAction(LoanSummaryDropDownAction.OnDocumentsClick))
             },
         )
         MifosMenuDropDownItem(
             option = stringResource(Res.string.feature_loan_loan_charges),
             onClick = {
-                onAction(LoanAccountSummaryAction.DropdownAction(LoanSummaryDropDownAction.OnChargesClick))
+                onAction(LoanSummaryAction.DropdownAction(LoanSummaryDropDownAction.OnChargesClick))
             },
         )
     }
@@ -685,9 +685,9 @@ private fun LoanStatus?.isButtonActive(): Boolean {
     return active == true || pendingApproval == true || waitingForDisbursal == true || overpaid == true
 }
 
-private class LoanAccountSummaryPreviewProvider :
-    PreviewParameterProvider<LoanAccountSummaryState> {
-    private val demoSummary = LoanAccountSummary(
+private class LoanSummaryPreviewProvider :
+    PreviewParameterProvider<LoanSummaryState> {
+    private val demoSummary = LoanSummary(
         loanId = 12345,
         principalDisbursed = 10000.0,
         principalPaid = 4000.0,
@@ -722,15 +722,15 @@ private class LoanAccountSummaryPreviewProvider :
         overdueSinceDate = listOf(2024, 6, 1),
     )
 
-    override val values: Sequence<LoanAccountSummaryState>
+    override val values: Sequence<LoanSummaryState>
         get() = sequenceOf(
-            LoanAccountSummaryState(
-                dialogState = LoanAccountSummaryState.DialogState.Loading,
+            LoanSummaryState(
+                dialogState = LoanSummaryState.DialogState.Loading,
             ),
-            LoanAccountSummaryState(
-                dialogState = LoanAccountSummaryState.DialogState.Error("Could not fetch summary"),
+            LoanSummaryState(
+                dialogState = LoanSummaryState.DialogState.Error("Could not fetch summary"),
             ),
-            LoanAccountSummaryState(
+            LoanSummaryState(
                 loanWithAssociations = LoanWithAssociations(
                     accountNo = "90927493938",
                     status = LoanStatus(
@@ -743,7 +743,7 @@ private class LoanAccountSummaryPreviewProvider :
                 ),
                 dialogState = null,
             ),
-            LoanAccountSummaryState(
+            LoanSummaryState(
                 loanWithAssociations = LoanWithAssociations(
                     accountNo = "12345678901",
                     status = LoanStatus(
@@ -779,11 +779,11 @@ private class LoanAccountSummaryPreviewProvider :
 
 @Composable
 @Preview
-private fun PreviewLoanAccountSummary(
-    @PreviewParameter(LoanAccountSummaryPreviewProvider::class) state: LoanAccountSummaryState,
+private fun PreviewLoanSummary(
+    @PreviewParameter(LoanSummaryPreviewProvider::class) state: LoanSummaryState,
 ) {
     MifosTheme {
-        LoanAccountSummaryScreen(
+        LoanSummaryScreen(
             state = state,
             onAction = { },
             navController = rememberNavController(),

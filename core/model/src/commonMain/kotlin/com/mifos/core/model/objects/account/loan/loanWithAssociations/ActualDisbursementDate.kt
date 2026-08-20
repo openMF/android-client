@@ -9,9 +9,15 @@
  */
 package com.mifos.core.model.objects.account.loan.loanWithAssociations
 
+import com.mifos.core.model.utils.Parcelable
+import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.Serializable
+
+@Serializable
+@Parcelize
 data class ActualDisbursementDate(
     val loanId: Int? = null,
     val year: Int? = null,
     val month: Int? = null,
     val date: Int? = null,
-)
+) : Parcelable

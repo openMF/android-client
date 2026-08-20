@@ -9,18 +9,10 @@
  */
 package com.mifos.core.model.objects.account.loan.loanWithAssociations
 
-import com.mifos.core.model.objects.account.loan.AmortizationType
-import com.mifos.core.model.objects.account.loan.InterestCalculationPeriodType
-import com.mifos.core.model.objects.account.loan.InterestRateFrequencyType
-import com.mifos.core.model.objects.account.loan.InterestType
-import com.mifos.core.model.objects.account.loan.RepaymentFrequencyType
-import com.mifos.core.model.objects.account.loan.RepaymentSchedule
-import com.mifos.core.model.objects.account.loan.TermPeriodFrequencyType
-import com.mifos.core.model.objects.account.loan.Transaction
-
 data class LoanWithAssociations(
     val id: Int? = null,
     val accountNo: String? = null,
+    val externalId: String? = null,
     val status: LoanStatus? = null,
     val clientId: Int? = null,
     val clientName: String? = null,
@@ -35,9 +27,10 @@ data class LoanWithAssociations(
     val loanOfficerId: Int? = null,
     val loanOfficerName: String? = null,
     val loanType: LoanType? = null,
-    val currency: SavingAccountCurrency? = null,
+    val currency: Currency? = null,
     val principal: Double? = null,
     val approvedPrincipal: Double? = null,
+    val availableDisbursementAmount: Double? = null,
     val proposedPrincipal: Double? = null,
     val termFrequency: Int? = null,
     val termPeriodFrequencyType: TermPeriodFrequencyType? = null,
@@ -54,7 +47,7 @@ data class LoanWithAssociations(
     val transactionProcessingStrategyName: String? = null,
     val syncDisbursementWithMeeting: Boolean? = null,
     val timeline: LoanTimeline? = null,
-    val summary: LoanAccountSummary? = null,
+    val summary: LoanSummary? = null,
     val repaymentSchedule: RepaymentSchedule? = null,
     val transactions: List<Transaction>? = null,
     val feeChargesAtDisbursementCharged: Double? = null,
@@ -75,4 +68,7 @@ data class LoanWithAssociations(
     val enableInstallmentLevelDelinquency: Boolean? = null,
     val isInterestRecalculationEnabled: Boolean? = null,
     val chargedOff: Boolean? = null,
+    val chargeOffBehaviour: ChargeOffBehaviour? = null,
+    val daysInYearType: DaysInYearType? = null,
+    val daysInMonthType: DaysInMonthType? = null,
 )

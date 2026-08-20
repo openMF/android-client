@@ -97,7 +97,7 @@ import com.mifos.feature.groups.navigation.navigateToGroupDetailsScreen
 import com.mifos.feature.loan.amountTransfer.navigateToTransferScreen
 import com.mifos.feature.loan.loanAccount.navigateToLoanAccountScreen
 import com.mifos.feature.loan.loanAccountProfile.navigateToLoanAccountProfileScreen
-import com.mifos.feature.loan.loanAccountSummary.navigateToLoanAccountSummaryScreen
+import com.mifos.feature.loan.loanAccountSummary.navigateToLoanSummaryScreen
 import com.mifos.feature.loan.loanRepayment.navigateToLoanRepaymentScreen
 import com.mifos.feature.loan.navigation.loanDestination
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountRoute
@@ -156,7 +156,7 @@ fun NavGraphBuilder.clientNavGraph(
             pinpointLocation = navController::navigateClientPinPointScreen,
             survey = navController::navigateClientSurveyListScreen,
             uploadSignature = navController::navigateToClientSignatureScreen,
-            loanAccountSelected = navController::navigateToLoanAccountSummaryScreen,
+            loanAccountSelected = navController::navigateToLoanSummaryScreen,
             savingsAccountSelected = navController::navigateToSavingsAccountSummaryScreen,
             activateClient = activateClient,
         )

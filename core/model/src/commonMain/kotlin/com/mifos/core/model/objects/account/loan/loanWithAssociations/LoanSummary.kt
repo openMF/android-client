@@ -9,9 +9,15 @@
  */
 package com.mifos.core.model.objects.account.loan.loanWithAssociations
 
-data class LoanAccountSummary(
+import com.mifos.core.model.utils.Parcelable
+import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.Serializable
+
+@Serializable
+@Parcelize
+data class LoanSummary(
     val loanId: Int? = null,
-    val currency: SavingAccountCurrency? = null,
+    val currency: Currency? = null,
     val principalDisbursed: Double? = null,
     val principalPaid: Double? = null,
     val principalWaived: Double? = null,
@@ -46,4 +52,4 @@ data class LoanAccountSummary(
     val totalOutstanding: Double? = null,
     val totalOverdue: Double? = null,
     val overdueSinceDate: List<Int>? = null,
-)
+) : Parcelable

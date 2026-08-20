@@ -32,7 +32,7 @@ fun NavGraphBuilder.groupNavGraph(
     loadClientList: () -> Unit,
     loadGroupDataTables: (String, Int) -> Unit,
     loadNotes: (Int, String) -> Unit,
-    loadLoanAccountSummary: (Int) -> Unit,
+    loadLoanSummary: (Int) -> Unit,
     loadSavingsAccountSummary: (Int, SavingAccountDepositTypeEntity) -> Unit,
     activateGroup: (Int, String) -> Unit,
 ) {
@@ -52,7 +52,7 @@ fun NavGraphBuilder.groupNavGraph(
             loadClientList = loadClientList,
             loadGroupDataTables = loadGroupDataTables,
             loadNotes = loadNotes,
-            loadLoanAccountSummary = loadLoanAccountSummary,
+            loadLoanSummary = loadLoanSummary,
             loadSavingsAccountSummary = loadSavingsAccountSummary,
             activateGroup = activateGroup,
         )
@@ -101,7 +101,7 @@ fun NavGraphBuilder.groupDetailsRoute(
     loadClientList: () -> Unit,
     loadGroupDataTables: (String, Int) -> Unit,
     loadNotes: (Int, String) -> Unit,
-    loadLoanAccountSummary: (Int) -> Unit,
+    loadLoanSummary: (Int) -> Unit,
     loadSavingsAccountSummary: (Int, SavingAccountDepositTypeEntity) -> Unit,
     activateGroup: (Int, String) -> Unit,
 ) {
@@ -114,7 +114,7 @@ fun NavGraphBuilder.groupDetailsRoute(
             groupClients = loadClientList,
             moreGroupInfo = loadGroupDataTables,
             notes = loadNotes,
-            loanAccountSelected = loadLoanAccountSummary,
+            loanAccountSelected = loadLoanSummary,
             savingsAccountSelected = loadSavingsAccountSummary,
             activateGroup = activateGroup,
         )

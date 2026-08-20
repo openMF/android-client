@@ -17,9 +17,10 @@ import com.mifos.feature.loan.groupLoanAccount.GroupLoanAccountViewModel
 import com.mifos.feature.loan.loanAccount.LoanAccountViewModel
 import com.mifos.feature.loan.loanAccountAction.LoanAccountActionsViewModel
 import com.mifos.feature.loan.loanAccountAction.payments.LoanPaymentsActionViewModel
+import com.mifos.feature.loan.loanAccountDetails.LoanAccountDetailsViewModel
 import com.mifos.feature.loan.loanAccountGeneral.LoanAccountGeneralViewModel
 import com.mifos.feature.loan.loanAccountProfile.LoanAccountProfileViewModel
-import com.mifos.feature.loan.loanAccountSummary.LoanAccountSummaryViewModel
+import com.mifos.feature.loan.loanAccountSummary.LoanSummaryViewModel
 import com.mifos.feature.loan.loanApproval.LoanAccountApprovalViewModel
 import com.mifos.feature.loan.loanCharge.LoanChargeViewModel
 import com.mifos.feature.loan.loanChargeForm.LoanChargeSheetViewModel
@@ -39,7 +40,7 @@ val LoanModule = module {
     viewModelOf(::GroupLoanAccountViewModel)
     viewModelOf(::LoanAccountViewModel)
     viewModelOf(::LoanAccountGeneralViewModel)
-    viewModelOf(::LoanAccountSummaryViewModel)
+    viewModelOf(::LoanSummaryViewModel)
     viewModelOf(::LoanAccountApprovalViewModel)
     viewModelOf(::LoanChargeViewModel)
     viewModelOf(::LoanChargeOffViewModel)
@@ -49,6 +50,7 @@ val LoanModule = module {
     viewModelOf(::LoanTransactionsViewModel)
     viewModelOf(::NewLoanAccountViewModel)
     viewModelOf(::LoanAccountProfileViewModel)
+    viewModelOf(::LoanAccountDetailsViewModel)
     viewModelOf(::AmountTransferViewModel)
     viewModelOf(::LoanAccountActionsViewModel)
     viewModelOf(::LoanPaymentsActionViewModel)

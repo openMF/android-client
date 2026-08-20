@@ -26,7 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
-import com.mifos.core.model.objects.account.loan.Period
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Period
 import com.mifos.core.ui.components.MifosDefaultListingComponentFromStringResources
 import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.loan.component.RepaymentPeriodCard

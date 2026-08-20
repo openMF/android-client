@@ -16,12 +16,12 @@ import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAs
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LoanAccountSummaryScreenRoute(
+data class LoanSummaryScreenRoute(
     val loanId: Int,
 )
 
-fun NavController.navigateToLoanAccountSummaryScreen(loanId: Int) {
-    navigate(LoanAccountSummaryScreenRoute(loanId))
+fun NavController.navigateToLoanSummaryScreen(loanId: Int) {
+    navigate(LoanSummaryScreenRoute(loanId))
 }
 
 fun NavGraphBuilder.loanAccountSummary(
@@ -36,8 +36,8 @@ fun NavGraphBuilder.loanAccountSummary(
     onRepaymentClick: (LoanWithAssociations) -> Unit,
     navController: NavController,
 ) {
-    composable<LoanAccountSummaryScreenRoute> {
-        LoanAccountSummaryScreenRoute(
+    composable<LoanSummaryScreenRoute> {
+        LoanSummaryScreenRoute(
             onMoreInfoClicked = onMoreInfoClicked,
             onTransactionsClicked = onTransactionsClicked,
             onRepaymentScheduleClicked = onRepaymentScheduleClicked,

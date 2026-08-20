@@ -84,8 +84,8 @@ import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.component.MifosTableRow
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
-import com.mifos.core.model.objects.account.loan.Transaction
-import com.mifos.core.model.objects.account.loan.Type
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Transaction
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Type
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.EventsEffect

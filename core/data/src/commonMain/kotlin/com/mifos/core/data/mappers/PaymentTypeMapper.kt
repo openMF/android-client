@@ -9,7 +9,7 @@
  */
 package com.mifos.core.data.mappers
 
-import com.mifos.core.model.objects.account.loan.PaymentType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.PaymentType
 import com.mifos.core.network.dto.PaymentTypeOptionDto
 
 fun PaymentTypeOptionDto.toModel(): PaymentType = PaymentType(

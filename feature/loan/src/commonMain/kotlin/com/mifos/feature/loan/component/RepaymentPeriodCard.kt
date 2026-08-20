@@ -39,7 +39,7 @@ import com.mifos.core.designsystem.component.MifosCard
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
-import com.mifos.core.model.objects.account.loan.Period
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Period
 import org.jetbrains.compose.resources.stringResource
 import template.core.base.designsystem.theme.KptTheme
 import kotlin.time.ExperimentalTime

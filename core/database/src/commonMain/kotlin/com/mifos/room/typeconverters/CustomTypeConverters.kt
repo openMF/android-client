@@ -10,16 +10,19 @@
 package com.mifos.room.typeconverters
 
 import com.mifos.core.model.objects.Changes
-import com.mifos.core.model.objects.account.loan.AmortizationType
-import com.mifos.core.model.objects.account.loan.Currency
-import com.mifos.core.model.objects.account.loan.InterestCalculationPeriodType
-import com.mifos.core.model.objects.account.loan.InterestRateFrequencyType
-import com.mifos.core.model.objects.account.loan.InterestType
-import com.mifos.core.model.objects.account.loan.Period
-import com.mifos.core.model.objects.account.loan.RepaymentFrequencyType
-import com.mifos.core.model.objects.account.loan.RepaymentSchedule
-import com.mifos.core.model.objects.account.loan.TermPeriodFrequencyType
-import com.mifos.core.model.objects.account.loan.Transaction
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.AmortizationType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.ChargeOffBehaviour
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Currency
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.DaysInMonthType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.DaysInYearType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.InterestCalculationPeriodType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.InterestRateFrequencyType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.InterestType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Period
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.RepaymentFrequencyType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.RepaymentSchedule
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.TermPeriodFrequencyType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Transaction
 import com.mifos.core.model.objects.account.saving.InterestCalculationDaysInYearType
 import com.mifos.core.model.objects.account.saving.InterestCalculationType
 import com.mifos.core.model.objects.account.saving.InterestCompoundingPeriodType
@@ -745,4 +748,34 @@ class CustomTypeConverters {
     @TypeConverter
     fun toAddressList(json: String?): List<Address>? =
         json?.let { Json.decodeFromString(it) }
+
+    @TypeConverter
+    fun fromChargeOffBehaviour(type: ChargeOffBehaviour?): String? {
+        return type?.let { Json.encodeToString(it) }
+    }
+
+    @TypeConverter
+    fun toChargeOffBehaviour(json: String?): ChargeOffBehaviour? {
+        return json?.let { Json.decodeFromString(it) }
+    }
+
+    @TypeConverter
+    fun fromDaysInYearType(type: DaysInYearType?): String? {
+        return type?.let { Json.encodeToString(it) }
+    }
+
+    @TypeConverter
+    fun toDaysInYearType(json: String?): DaysInYearType? {
+        return json?.let { Json.decodeFromString(it) }
+    }
+
+    @TypeConverter
+    fun fromDaysInMonthType(type: DaysInMonthType?): String? {
+        return type?.let { Json.encodeToString(it) }
+    }
+
+    @TypeConverter
+    fun toDaysInMonthType(json: String?): DaysInMonthType? {
+        return json?.let { Json.decodeFromString(it) }
+    }
 }

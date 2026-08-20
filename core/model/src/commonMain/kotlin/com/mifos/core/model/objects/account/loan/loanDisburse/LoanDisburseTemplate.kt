@@ -9,8 +9,8 @@
  */
 package com.mifos.core.model.objects.account.loan.loanDisburse
 
-import com.mifos.core.model.objects.account.loan.Currency
-import com.mifos.core.model.objects.account.loan.PaymentType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Currency
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.PaymentType
 
 data class LoanDisburseTemplate(
     val netDisbursalAmount: Double,

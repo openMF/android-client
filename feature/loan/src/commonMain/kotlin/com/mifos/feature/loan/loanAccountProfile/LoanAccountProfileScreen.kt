@@ -55,10 +55,10 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
-import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanAccountSummary
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Currency
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanStatus
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanSummary
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
-import com.mifos.core.model.objects.account.loan.loanWithAssociations.SavingAccountCurrency
 import com.mifos.core.ui.components.MifosBreadcrumbNavBar
 import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
@@ -82,6 +82,7 @@ internal fun LoanAccountProfileScreen(
     approveLoan: (Int) -> Unit,
     onRepaymentClick: (LoanWithAssociations) -> Unit,
     navigateToGeneral: (Int) -> Unit,
+    navigateToAccountDetails: (Int) -> Unit,
     navigateToRepaymentSchedule: (Int) -> Unit,
     navigateToTransactions: (Int) -> Unit,
     navigateToCharges: (Int) -> Unit,
@@ -119,6 +120,7 @@ internal fun LoanAccountProfileScreen(
 
                 when (event.detailItem) {
                     LoanAccountProfileActionItem.General -> navigateToGeneral(loanId)
+                    LoanAccountProfileActionItem.AccountDetails -> navigateToAccountDetails(loanId)
                     LoanAccountProfileActionItem.RepaymentSchedule -> navigateToRepaymentSchedule(loanId)
                     LoanAccountProfileActionItem.Transactions -> navigateToTransactions(loanId)
                     LoanAccountProfileActionItem.Charges -> navigateToCharges(loanId)
@@ -401,11 +403,11 @@ private class LoanAccountPreviewProvider : PreviewParameterProvider<LoanAccountS
                     clientName = "MARIA",
                     loanProductName = "PERSONAL",
                     totalOverpaid = 0.0,
-                    currency = SavingAccountCurrency(
+                    currency = Currency(
                         code = "USD",
                         decimalPlaces = 2,
                     ),
-                    summary = LoanAccountSummary(
+                    summary = LoanSummary(
                         totalOutstanding = 1500.00,
                         totalOverdue = 0.00,
                     ),

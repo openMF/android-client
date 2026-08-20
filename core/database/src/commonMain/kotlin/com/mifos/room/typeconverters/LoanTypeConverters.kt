@@ -10,16 +10,16 @@
 package com.mifos.room.typeconverters
 
 import com.mifos.core.model.objects.Changes
-import com.mifos.core.model.objects.account.loan.AmortizationType
-import com.mifos.core.model.objects.account.loan.InterestCalculationPeriodType
-import com.mifos.core.model.objects.account.loan.InterestRateFrequencyType
-import com.mifos.core.model.objects.account.loan.InterestType
-import com.mifos.core.model.objects.account.loan.Period
-import com.mifos.core.model.objects.account.loan.RepaymentFrequencyType
-import com.mifos.core.model.objects.account.loan.RepaymentSchedule
-import com.mifos.core.model.objects.account.loan.TermPeriodFrequencyType
-import com.mifos.core.model.objects.account.loan.Transaction
-import com.mifos.core.model.objects.account.loan.Type
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.AmortizationType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.InterestCalculationPeriodType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.InterestRateFrequencyType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.InterestType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Period
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.RepaymentFrequencyType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.RepaymentSchedule
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.TermPeriodFrequencyType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Transaction
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Type
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.ActualDisbursementDateEntity
 import com.mifos.room.entities.accounts.loans.LoanAccountSummaryEntity

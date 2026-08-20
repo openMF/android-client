@@ -9,20 +9,30 @@
  */
 package com.mifos.core.network.mappers.loan
 
-import com.mifos.core.model.objects.account.loan.Currency
-import com.mifos.core.model.objects.account.loan.PaymentDetailData
-import com.mifos.core.model.objects.account.loan.PaymentType
-import com.mifos.core.model.objects.account.loan.Period
-import com.mifos.core.model.objects.account.loan.RepaymentSchedule
-import com.mifos.core.model.objects.account.loan.Transaction
-import com.mifos.core.model.objects.account.loan.Type
-import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanAccountSummary
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.AmortizationType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.ChargeOffBehaviour
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Currency
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.DaysInMonthType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.DaysInYearType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.InterestCalculationPeriodType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.InterestRateFrequencyType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.InterestType
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanStatus
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanSummary
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanTimeline
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanType
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
-import com.mifos.core.model.objects.account.loan.loanWithAssociations.SavingAccountCurrency
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.PaymentDetailData
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.PaymentType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Period
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.RepaymentFrequencyType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.RepaymentSchedule
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.TermPeriodFrequencyType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Transaction
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Type
+import com.mifos.core.network.dto.loan.ChargeOffBehaviourDto
 import com.mifos.core.network.dto.loan.LoanCurrencyDto
+import com.mifos.core.network.dto.loan.LoanOptionDto
 import com.mifos.core.network.dto.loan.LoanRepaymentScheduleDto
 import com.mifos.core.network.dto.loan.LoanStatusDto
 import com.mifos.core.network.dto.loan.LoanSummaryDto
@@ -30,6 +40,16 @@ import com.mifos.core.network.dto.loan.LoanTimelineDto
 import com.mifos.core.network.dto.loan.LoanTransactionDto
 import com.mifos.core.network.dto.loan.LoanTypeDto
 import com.mifos.core.network.dto.loan.LoanWithAssociationsDto
+
+fun ChargeOffBehaviourDto.toChargeOffBehaviour() = ChargeOffBehaviour(id = id, code = code, value = value)
+fun LoanOptionDto.toDaysInYearType() = DaysInYearType(id = id, code = code, value = value)
+fun LoanOptionDto.toDaysInMonthType() = DaysInMonthType(id = id, code = code, value = value)
+fun LoanOptionDto.toAmortizationType() = AmortizationType(id = id, code = code, value = value)
+fun LoanOptionDto.toInterestType() = InterestType(id = id, code = code, value = value)
+fun LoanOptionDto.toInterestCalculationPeriodType() = InterestCalculationPeriodType(id = id, code = code, value = value)
+fun LoanOptionDto.toTermPeriodFrequencyType() = TermPeriodFrequencyType(id = id, code = code, value = value)
+fun LoanOptionDto.toRepaymentFrequencyType() = RepaymentFrequencyType(id = id, code = code, value = value)
+fun LoanOptionDto.toInterestRateFrequencyType() = InterestRateFrequencyType(id = id, code = code, value = value)
 
 fun LoanWithAssociationsDto.toDomain(): LoanWithAssociations = LoanWithAssociations(
     id = this.id.toInt(),
@@ -62,7 +82,6 @@ fun LoanWithAssociationsDto.toDomain(): LoanWithAssociations = LoanWithAssociati
     canDisburse = this.canDisburse,
     inArrears = this.inArrears,
     isNPA = this.isNPA,
-    overpaidOnDate = this.overpaidOnDate,
     isEqualAmortization = this.isEqualAmortization,
     allowPartialPeriodInterestCalculation = this.allowPartialPeriodInterestCalculation,
     interestRecognitionOnDisbursementDate = this.interestRecognitionOnDisbursementDate,
@@ -72,6 +91,26 @@ fun LoanWithAssociationsDto.toDomain(): LoanWithAssociations = LoanWithAssociati
     enableInstallmentLevelDelinquency = this.enableInstallmentLevelDelinquency,
     isInterestRecalculationEnabled = this.isInterestRecalculationEnabled,
     chargedOff = this.chargedOff,
+    chargeOffBehaviour = this.chargeOffBehaviour?.toChargeOffBehaviour(),
+    daysInYearType = this.daysInYearType?.toDaysInYearType(),
+    daysInMonthType = this.daysInMonthType?.toDaysInMonthType(),
+    amortizationType = this.amortizationType?.toAmortizationType(),
+    interestType = this.interestType?.toInterestType(),
+    interestCalculationPeriodType = this.interestCalculationPeriodType?.toInterestCalculationPeriodType(),
+    externalId = this.externalId,
+    fundId = this.fundId?.toInt(),
+    fundName = this.fundName,
+    loanPurposeId = this.loanPurposeId?.toInt(),
+    loanPurposeName = this.loanPurposeName,
+    availableDisbursementAmount = this.availableDisbursementAmount,
+    repaymentEvery = this.repaymentEvery,
+    interestRatePerPeriod = this.interestRatePerPeriod,
+    transactionProcessingStrategyId = this.transactionProcessingStrategyId?.toInt(),
+    transactionProcessingStrategyName = this.transactionProcessingStrategyName,
+    repaymentFrequencyType = this.repaymentFrequencyType?.toRepaymentFrequencyType(),
+    termPeriodFrequencyType = this.termPeriodFrequencyType?.toTermPeriodFrequencyType(),
+    interestRateFrequencyType = this.interestRateFrequencyType?.toInterestRateFrequencyType(),
+    overpaidOnDate = this.overpaidOnDate,
 )
 
 fun LoanStatusDto.toDomain() = LoanStatus(
@@ -94,7 +133,7 @@ fun LoanTypeDto.toDomain() = LoanType(
     value = this.value,
 )
 
-fun LoanCurrencyDto.toDomain() = SavingAccountCurrency(
+fun LoanCurrencyDto.toDomain() = Currency(
     code = this.code,
     name = this.name,
     decimalPlaces = this.decimalPlaces,
@@ -112,7 +151,7 @@ fun LoanTimelineDto.toDomain() = LoanTimeline(
     withdrawnOnDate = this.withdrawnOnDate,
 )
 
-fun LoanSummaryDto.toDomain() = LoanAccountSummary(
+fun LoanSummaryDto.toDomain() = LoanSummary(
     loanId = this.loanId,
     currency = this.currency?.toDomain(),
     principalDisbursed = this.principalDisbursed,

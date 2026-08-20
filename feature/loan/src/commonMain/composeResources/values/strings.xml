@@ -774,4 +774,37 @@
     <string name="feature_loan_disburse_failed">Failed to disburse loan</string>
     <string name="feature_loan_disburse_failed_to_load_template">Failed to load disburse template</string>
     <string name="feature_loan_disburse_amount_greater_than_zero">Amount must be greater than 0</string>
+
+    <string name="repayment_schedule">Repayment Schedule</string>
+    <string name="account_number">Account Number</string>
+    <string name="disbursement_date">Disbursement Date</string>
+    <string name="feature_loan_details">Loan Details</string>
+    <string name="feature_loan_not_available_abbr">N/A</string>
+    <string name="feature_loan_equal_amortization">Equal Amortization</string>
+    <string name="feature_loan_interest_rate">Interest Rate</string>
+    <string name="feature_loan_interest_type">Interest Type</string>
+    <string name="feature_loan_free_period">Free Period</string>
+    <string name="feature_loan_hyphen">-</string>
+    <string name="feature_loan_allow_partial_calculation">Allow Partial Calculation</string>
+    <string name="feature_loan_interest_on_disbursement">Interest on Disbursement</string>
+    <string name="feature_loan_settings">LOAN SETTINGS</string>
+    <string name="feature_loan_enable_down_payments">Enable Down Payments</string>
+    <string name="feature_loan_charge_off_behavior">Loan Charge-off behavior</string>
+    <string name="feature_loan_regular">Regular</string>
+    <string name="feature_loan_enable_income_capitalization">Enable Income capitalization</string>
+    <string name="feature_loan_enable_buy_down_fee">Enable Buy down fee</string>
+    <string name="feature_loan_installment_level_delinquency">Installment level Delinquency</string>
+    <string name="feature_loan_submitted_on">Submitted on</string>
+    <string name="feature_loan_disbursed_on">Disbursed on</string>
+    <string name="feature_loan_matures_on">Matures on</string>
+    <string name="feature_loan_fund_source">Fund Source</string>
+    <string name="feature_loan_unassigned">Unassigned</string>
+    <string name="feature_loan_days_in_year">Days in year</string>
+    <string name="feature_loan_actual">Actual</string>
+    <string name="feature_loan_available_disbursement_amount">Available Disbursement Amount</string>
+    <string name="feature_loan_not_available">Not Available</string>
+    <string name="feature_loan_repayments_format">%1$d every %2$d %3$s</string>
+    <string name="feature_loan_interest_rate_per_annum_format">%1$s %% per annum</string>
+    <string name="feature_loan_interest_rate_per_period_format">(%1$s %% Per period)</string>
+    <string name="feature_loan_zero_amount">0.00</string>
 </resources>

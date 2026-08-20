@@ -9,20 +9,20 @@
  */
 package com.mifos.core.network.mappers.loan
 
-import com.mifos.core.model.objects.account.loan.AmortizationType
-import com.mifos.core.model.objects.account.loan.InterestCalculationPeriodType
-import com.mifos.core.model.objects.account.loan.InterestRateFrequencyType
-import com.mifos.core.model.objects.account.loan.InterestType
-import com.mifos.core.model.objects.account.loan.RepaymentFrequencyType
-import com.mifos.core.model.objects.account.loan.RepaymentSchedule
-import com.mifos.core.model.objects.account.loan.TermPeriodFrequencyType
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.ActualDisbursementDate
-import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanAccountSummary
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.AmortizationType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Currency
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.InterestCalculationPeriodType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.InterestRateFrequencyType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.InterestType
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanStatus
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanSummary
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanTimeline
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanType
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
-import com.mifos.core.model.objects.account.loan.loanWithAssociations.SavingAccountCurrency
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.RepaymentFrequencyType
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.RepaymentSchedule
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.TermPeriodFrequencyType
 import com.mifos.core.network.data.AbstractMapper
 import com.mifos.room.entities.accounts.loans.ActualDisbursementDateEntity
 import com.mifos.room.entities.accounts.loans.LoanAccountSummaryEntity
@@ -161,8 +161,8 @@ private fun LoanTypeEntity.toDomain(): LoanType {
     )
 }
 
-private fun SavingAccountCurrencyEntity.toDomain(): SavingAccountCurrency {
-    return SavingAccountCurrency(
+private fun SavingAccountCurrencyEntity.toDomain(): Currency {
+    return Currency(
         id = id,
         code = code,
         name = name,
@@ -205,8 +205,8 @@ private fun ActualDisbursementDateEntity.toDomain(): ActualDisbursementDate {
     )
 }
 
-private fun LoanAccountSummaryEntity.toDomain(): LoanAccountSummary {
-    return LoanAccountSummary(
+private fun LoanAccountSummaryEntity.toDomain(): LoanSummary {
+    return LoanSummary(
         loanId = loanId,
         currency = currency?.toDomain(),
         principalDisbursed = principalDisbursed,
@@ -269,7 +269,7 @@ private fun LoanType.toEntity(): LoanTypeEntity {
     )
 }
 
-private fun SavingAccountCurrency.toEntity(): SavingAccountCurrencyEntity {
+private fun Currency.toEntity(): SavingAccountCurrencyEntity {
     return SavingAccountCurrencyEntity(
         id = id,
         code = code,
@@ -313,7 +313,7 @@ private fun ActualDisbursementDate.toEntity(): ActualDisbursementDateEntity {
     )
 }
 
-private fun LoanAccountSummary.toEntity(): LoanAccountSummaryEntity {
+private fun LoanSummary.toEntity(): LoanAccountSummaryEntity {
     return LoanAccountSummaryEntity(
         loanId = loanId ?: 0,
         currency = currency?.toEntity(),

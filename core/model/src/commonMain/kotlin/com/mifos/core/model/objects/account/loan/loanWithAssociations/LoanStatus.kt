@@ -9,6 +9,12 @@
  */
 package com.mifos.core.model.objects.account.loan.loanWithAssociations
 
+import com.mifos.core.model.utils.Parcelable
+import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.Serializable
+
+@Serializable
+@Parcelize
 data class LoanStatus(
     val id: Int? = null,
     val code: String? = null,
@@ -21,4 +27,4 @@ data class LoanStatus(
     val closedRescheduled: Boolean? = null,
     val closed: Boolean? = null,
     val overpaid: Boolean? = null,
-)
+) : Parcelable

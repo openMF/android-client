@@ -7,29 +7,18 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.objects.account.loan
+package com.mifos.core.model.objects.account.loan.loanWithAssociations
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
-/**
- * Created by mayankjindal on 22/10/16.
- */
 @Parcelize
 @Serializable
-data class Currency(
-    val code: String? = null,
+data class InterestCalculationPeriodType(
+    var id: Int? = null,
 
-    val name: String? = null,
+    var code: String? = null,
 
-    val decimalPlaces: Int? = null,
-
-    val inMultiplesOf: Int? = null,
-
-    val displaySymbol: String? = null,
-
-    val nameCode: String? = null,
-
-    val displayLabel: String? = null,
+    var value: String? = null,
 ) : Parcelable

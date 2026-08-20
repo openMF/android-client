@@ -7,18 +7,19 @@
  *
  * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
  */
-package com.mifos.core.model.objects.account.loan
+package com.mifos.core.model.objects.account.loan.loanWithAssociations
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
-import kotlinx.serialization.Serializable
 
+/**
+ * Created by nellyk on 2/21/2016.
+ */
 @Parcelize
-@Serializable
-class AmortizationType(
-    var id: Int? = null,
+data class RepaymentFrequencyNthDayType(
+    var id: Int = 0,
 
-    var code: String? = null,
+    var code: Int = 0,
 
-    var value: String? = null,
+    var value: Int = 0,
 ) : Parcelable

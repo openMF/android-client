@@ -9,7 +9,7 @@
  */
 package com.mifos.room.entities.accounts.loans
 
-import com.mifos.core.model.objects.account.loan.Currency
+import com.mifos.core.model.objects.account.loan.loanWithAssociations.Currency
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
