@@ -9,7 +9,6 @@
  */
 package com.mifos.core.model.objects.account.loan.loanWithAssociations
 
-
 data class LoanWithAssociations(
     val id: Int? = null,
     val accountNo: String? = null,
