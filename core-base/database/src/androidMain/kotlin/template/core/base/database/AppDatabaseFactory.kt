@@ -10,8 +10,8 @@
 package template.core.base.database
 
 import android.content.Context
-import androidx.room.Room
-import androidx.room.RoomDatabase
+import androidx.room3.Room
+import androidx.room3.RoomDatabase
 
 /**
  * Android-specific implementation of the database factory for creating Room database instances.

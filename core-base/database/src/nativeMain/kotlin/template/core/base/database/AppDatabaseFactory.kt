@@ -9,9 +9,9 @@
  */
 package template.core.base.database
 
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.room.util.findDatabaseConstructorAndInitDatabaseImpl
+import androidx.room3.Room
+import androidx.room3.RoomDatabase
+import androidx.room3.util.findDatabaseConstructorAndInitDatabaseImpl
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager

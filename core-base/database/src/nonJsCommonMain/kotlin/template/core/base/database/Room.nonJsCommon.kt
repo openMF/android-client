@@ -9,28 +9,28 @@
  */
 package template.core.base.database
 
-import androidx.room.ColumnInfo
-import androidx.room.Dao
-import androidx.room.Database
-import androidx.room.DatabaseView
-import androidx.room.Delete
-import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Ignore
-import androidx.room.Index
-import androidx.room.Insert
-import androidx.room.Junction
-import androidx.room.PrimaryKey
-import androidx.room.Query
-import androidx.room.Relation
-import androidx.room.Transaction
-import androidx.room.TypeConverter
-import androidx.room.TypeConverters
-import androidx.room.Update
-import androidx.room.Upsert
-import androidx.room.BuiltInTypeConverters
-import androidx.room.AutoMigration
+import androidx.room3.ColumnInfo
+import androidx.room3.Dao
+import androidx.room3.Database
+import androidx.room3.DatabaseView
+import androidx.room3.Delete
+import androidx.room3.Embedded
+import androidx.room3.Entity
+import androidx.room3.ForeignKey
+import androidx.room3.Ignore
+import androidx.room3.Index
+import androidx.room3.Insert
+import androidx.room3.Junction
+import androidx.room3.PrimaryKey
+import androidx.room3.Query
+import androidx.room3.Relation
+import androidx.room3.Transaction
+import androidx.room3.TypeConverter
+import androidx.room3.TypeConverters
+import androidx.room3.Update
+import androidx.room3.Upsert
+import androidx.room3.BuiltInTypeConverters
+import androidx.room3.AutoMigration
 
 /**
  * Multiplatform typealiases for Room database annotations and interfaces.

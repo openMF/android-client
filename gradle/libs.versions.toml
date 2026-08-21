@@ -181,7 +181,7 @@ mifosAuthenticatorBiometrics="2.2.0"
 
 buildkonfig = "0.21.2"
 kmpProductFlavors = "2.8.3"
-appId            = "org.mifos.kmp.template"   # Android applicationId + iOS bundle ID
+appId            = "com.mifos.mifosxdroid"    # EXTRACTED (T8, D14 fork-identity re-pin) — real fork Android applicationId; iOS bundle id stays independently sourced from cmp-ios/Configuration/Config.xcconfig (excluded/preserved)
 appDisplayName   = "Money Toolkit"    # Android app_name, iOS CFBundleDisplayName
 desktopAppName   = "App Toolkit"     # JVM package name, dock name
 projectName      = "kmp-project-template"      # rootProject.name, Fastlane PROJECT_NAME

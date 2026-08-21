@@ -9,9 +9,9 @@
  */
 package template.core.base.database
 
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.room.util.findAndInstantiateDatabaseImpl
+import androidx.room3.Room
+import androidx.room3.RoomDatabase
+import androidx.room3.util.findAndInstantiateDatabaseImpl
 import java.io.File
 
 /**
