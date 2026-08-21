@@ -1,0 +1,79 @@
+# app-profile/app.yaml — fork-owned white-label deployment SoT (COMMON, platform-agnostic).
+#
+# MIGRATED (2026-08-21) from a pre-white-label mifos-x-field-officer-app fork via
+# kmp-project-template-sync-whitelabel-adopt.md STEP WL-1/WL-2. Values marked GAP
+# were not found on disk in the old fork layout — never fabricated, left for human fill.
+#
+# This is the SINGLE source of truth for all fork-owned deployment data (text + media).
+# Edit HERE — never gradle/fork.properties (now a generated/fallback build-bridge).
+# `sync-dirs.sh` NEVER rewrites app-profile/** (owner: fork in customization-surface.yaml).
+
+identity:
+  app_id: com.mifos.mifosxdroid          # EXTRACTED — gradle/libs.versions.toml androidPackageNamespace (pre-sync)
+  app_name: MifosXDroid                  # EXTRACTED — cmp-android/src/main/res/values/strings.xml app_name
+  namespace: com.mifos.mifosxdroid       # mirrors app_id
+
+# GAP — field-officer-app is a multi-tenant Fineract client: officers configure their OWN
+# Mifos-instance server URL at runtime (cmp-navigation instance-selector), there is no single
+# app-wide demo/prod backend the way the template's showcase demo has. No access_points block
+# authored here; the runtime instance-selector remains the source of truth (D16, unchanged by
+# this migration). GAP recorded, not fabricated.
+network:
+  demo_base_url: ""     # GAP — no single backend; runtime-configurable per Mifos instance
+  prod_base_url: ""     # GAP — same
+  demo_username: ""
+  demo_password: ""
+  log_tag: MifosXDroid
+  access_points: []     # GAP — see note above; instance-selector owns endpoint config at runtime
+
+org:
+  name: Mifos Initiative                                                  # EXTRACTED — LICENCE:1, fastlane-config/project_config.rb ORGANIZATION_NAME
+  email: team@mifos.org                                                   # EXTRACTED — fastlane-config/project_config.rb contact fallback
+  first_name: Mifos                                                       # EXTRACTED — fastlane-config/project_config.rb
+  last_name: Initiative                                                   # EXTRACTED — fastlane-config/project_config.rb
+  phone: "+19078675309"                                                   # EXTRACTED (placeholder-shaped in source fastlane config — flagged as suspect, GAP for real contact)
+  copyright: "© 2026 Mifos Initiative. All rights reserved."
+  marketing_url: https://mifos.org                                        # EXTRACTED — fastlane-config/project_config.rb
+  privacy_url: ""                                                         # GAP — no field-officer-app-specific privacy policy URL found on disk
+  support_url: https://github.com/openMF/mifos-x-field-officer-app        # EXTRACTED — repo canonical URL
+
+legal:
+  company_name: Mifos Initiative
+  jurisdiction: ""      # GAP — not found on disk
+  effective_date: ""    # GAP — not found on disk
+  contact_email: team@mifos.org
+
+keystore_dn:
+  org_unit: ""    # GAP — not extractable from build.gradle.kts (only KEYSTORE_* env-var names found, no DN fields)
+  city: ""        # GAP
+  state: ""       # GAP
+  country: ""     # GAP
+
+store:
+  primary_locale: en-US
+  title: "MifosXDroid"        # EXTRACTED — app display name; GAP for a curated store title/subtitle/description
+  subtitle: ""                # GAP — not found on disk
+  promotional_text: ""        # GAP
+  description: ""             # GAP — field-officer-app has no committed store listing copy; defer to human (out of scope for this migration)
+  release_notes: ""           # GAP
+  copyright: "Copyright © 2026 Mifos Initiative"
+  age_rating: ""              # GAP
+  review:
+    notes: ""                 # GAP
+    first_name: Mifos
+    last_name: Initiative
+    demo_user: ""             # blank — reviewer provisions own Fineract-instance credentials at runtime
+    demo_password: ""
+  app_description: "Mifos X Field Officer Application"
+
+media:
+  root: media   # GAP — no store screenshots/media committed in the pre-white-label fork; defer to human
+
+# ── Deploy targets — matches the pre-sync settings.gradle.kts module set (cmp-android/ios/desktop/web all present) ──
+targets:
+  android: { enabled: true, tier: internal }
+  ios:     { enabled: true, tier: internal }
+  macos:   { enabled: false, tier: internal }   # cmp-desktop targets Windows/Linux/macOS jointly; no macOS-specific signing found — GAP, defer
+  web:     { enabled: true, tier: internal }
+  windows: { enabled: true, tier: internal }
+  ubuntu:  { enabled: true, tier: internal }

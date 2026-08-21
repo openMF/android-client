@@ -1,0 +1,38 @@
+# app-profile/platforms/apple/apple.yaml — Apple-shared (iOS + macOS: signing, Firebase, TestFlight, ASC).
+# MIGRATED (2026-08-21) — see app.yaml header. GAP = not extractable from the pre-white-label fork.
+#
+# DISCREPANCY FLAGGED (human review needed, not resolved by this migration):
+#   - cmp-ios/Configuration/Config.xcconfig:BUNDLE_ID = "cmp.ios"
+#   - fastlane-config/project_config.rb:app_identifier = "com.mifos.mifosxdroid"
+#   These two disagree in the pre-sync fork. bundle_id below is left as a GAP pending
+#   a human decision on which is the real shipping identifier (neither is silently picked).
+apple:
+  team_id: L432S2FZP5    # EXTRACTED — cmp-ios/Configuration/Config.xcconfig TEAM_ID
+  bundle_id: ""          # GAP — see discrepancy note above; do not guess between cmp.ios / com.mifos.mifosxdroid
+  match:
+    git:
+      url: ""            # GAP — no match/provisioning-profile repo found on disk
+      branch: dev
+  firebase:
+    ios_app_id_prod: 1:728434912738:ios:shjhsa78392shja   # EXTRACTED (fastlane-config/project_config.rb) — NOTE: not a well-formed Firebase App ID and no GoogleService-Info.plist exists on disk; iOS Firebase is effectively unconfigured. Flagged, not fabricated-fixed.
+    ios_app_id_demo: ""   # GAP — only one iOS Firebase id found on disk, no demo/prod split
+    ios_app_id: ""        # GAP
+  testers:
+    internal_group: Internal Testers
+    external_group: mifos-mobile-apps   # EXTRACTED — fastlane-config/project_config.rb groups
+    external_public_link: "true"
+  keywords: ''             # GAP — no store listing on disk
+  category: 'FINANCE'
+  trade_representative:
+    first_name: 'Mifos'
+    last_name: 'Initiative'
+    address_line1: ''      # GAP
+    address_line2: ''
+    address_line3: ''
+    city_name: ''           # GAP
+    state: ''               # GAP
+    country: ''             # GAP
+    postal_code: ''         # GAP
+    phone_number: ''        # GAP
+    email_address: 'team@mifos.org'
+    is_displayed_on_app_store: 'false'
