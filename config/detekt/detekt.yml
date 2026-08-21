@@ -137,7 +137,7 @@ complexity:
     threshold: 15
   ComplexCondition:
     active: true
-    threshold: 5
+    threshold: 4
   ComplexInterface:
     active: false
     threshold: 10
@@ -146,7 +146,7 @@ complexity:
     ignoreOverloaded: false
   CyclomaticComplexMethod:
     active: true
-    threshold: 30
+    threshold: 15
     ignoreSingleWhenExpression: false
     ignoreSimpleWhenEntries: false
     ignoreNestingFunctions: false
@@ -168,11 +168,11 @@ complexity:
     threshold: 600
   LongMethod:
     active: true
-    threshold: 400 #360 #180 #60
+    threshold: 150 #60
   LongParameterList:
     active: true
     # Updating Common values based on current scenario
-    functionThreshold: 30 #6
+    functionThreshold: 20 #6
     constructorThreshold: 30 #7
     ignoreDefaultParameters: false
     ignoreDataClasses: true
@@ -186,7 +186,7 @@ complexity:
     ignoreArgumentsMatchingNames: false
   NestedBlockDepth:
     active: true
-    threshold: 6
+    threshold: 4
   NestedScopeFunctions:
     active: false
     threshold: 1
@@ -230,8 +230,8 @@ complexity:
       ]
     # Modifying default values 11 to 20
     thresholdInFiles: 20
-    thresholdInClasses: 45
-    thresholdInInterfaces: 40
+    thresholdInClasses: 20
+    thresholdInInterfaces: 20
     thresholdInObjects: 20
     thresholdInEnums: 20
     ignoreDeprecated: false
@@ -323,7 +323,7 @@ exceptions:
   PrintStackTrace:
     active: true
   RethrowCaughtException:
-    active:  false
+    active: true
   ReturnFromFinally:
     active: true
     ignoreLabeled: false
@@ -690,7 +690,7 @@ style:
     active: false
   DestructuringDeclarationWithTooManyEntries:
     active: true
-    maxDestructuringEntries: 4
+    maxDestructuringEntries: 3
   DoubleNegativeLambda:
     active: false
     negativeFunctions:
@@ -801,7 +801,7 @@ style:
     maxChainedCalls: 5
   MaxLineLength:
     active: true
-    maxLineLength: 250
+    maxLineLength: 120
     excludePackageStatements: true
     excludeImportStatements: true
     excludeCommentStatements: false
@@ -844,7 +844,7 @@ style:
     active: false
   ReturnCount:
     active: true
-    max: 5
+    max: 2
     excludedFunctions:
       - "equals"
     excludeLabeled: false
@@ -908,7 +908,7 @@ style:
   UnusedPrivateMember:
     active: true
     allowedNames: ""
-    ignoreAnnotated: ['Preview', 'DevicePreview']
+    ignoreAnnotated: ['Preview', 'DevicePreviews']
   UnusedPrivateProperty:
     active: true
     allowedNames: "_|ignored|expected|serialVersionUID"

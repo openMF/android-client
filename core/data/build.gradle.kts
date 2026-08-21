@@ -1,25 +1,19 @@
 /*
- * Copyright 2024 Mifos Initiative
+ * Copyright 2025 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
+ * See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
 plugins {
     alias(libs.plugins.kmp.library.convention)
-    alias(libs.plugins.ktorfit)
-    alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.ksp)
 }
 
-android {
-    namespace = "com.mifos.core.data"
-
-    testOptions {
-        unitTests {
+androidComponents {
+    finalizeDsl { ext ->
+        ext.withHostTest {
             isIncludeAndroidResources = true
             isReturnDefaultValues = true
         }
@@ -29,34 +23,40 @@ android {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.koin.core)
-            implementation(libs.kotlinx.serialization.json)
-            implementation(libs.ktor.client.serialization)
-            implementation(libs.ktor.client.core)
-            implementation(libs.androidx.paging.common)
+            implementation(projects.core.common)
+            implementation(projects.core.database)
+            implementation(projects.coreBase.database)
+            implementation(projects.coreBase.datastore)
+            implementation(projects.coreBase.store)
+            // api: re-export the relocated sync/monitor infra (NetworkMonitor, Synchronizer,
+            // SyncManager, TimeZoneMonitor) so existing core/data consumers (features, sync,
+            // cmp-android) keep the transitive visibility they had when it lived in core/data.
+            api(projects.coreBase.data)
+            implementation(projects.core.datastore)
+            implementation(projects.core.model)
+            implementation(projects.core.network)
+            implementation(projects.core.firebase)
 
-            api(projects.core.common)
-            api(projects.core.datastore)
-            api(projects.core.network)
-            api(projects.core.database)
-            api(projects.coreBase.common)
+            implementation(projects.coreBase.common)
+            implementation(projects.coreBase.network)
+            api(projects.core.store)
 
-
-            implementation(libs.mifos.authenticator.passcode)
-            implementation(libs.mifos.authenticator.biometrics)
-            implementation(libs.multiplatform.settings)
-            implementation(libs.multiplatform.settings.serialization)
-            implementation(libs.multiplatform.settings.coroutines)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.datetime)
+            api(libs.cmp.network.monitor)
         }
+
         androidMain.dependencies {
-            api(libs.ktor.client.okhttp)
-            api(libs.koin.android)
+            implementation(libs.androidx.core.ktx)
+            implementation(libs.androidx.tracing.ktx)
+            implementation(libs.koin.android)
         }
-        desktopMain.dependencies {
-            api(libs.ktor.client.okhttp)
-        }
-        nativeMain.dependencies {
-            implementation(libs.ktor.client.darwin)
+
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.turbine)
+            implementation(libs.koin.test)
         }
     }
 }

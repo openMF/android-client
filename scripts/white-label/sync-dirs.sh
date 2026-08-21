@@ -112,38 +112,15 @@ SYNC_FILES=(
 declare -A EXCLUSIONS=(
     # Android — consumer-branded resources (drawables, strings, mipmaps), Firebase config,
     # launcher icon, and the dependency-guard baseline directory are preserved across syncs.
-    # STEP 3.5 guard finding (2026-08-21): lint-baseline.xml + proguard-rules.pro are neither
-    # merge-owned nor previously excluded — a blind checkout would drop fork-accumulated lint
-    # suppressions / Fineract-SDK keep-rules. Preserved-then-restored like the other branded paths.
-    ["cmp-android"]="src/main/res:dir dependencies:dir src/main/ic_launcher-playstore.png:file google-services.json:file lint-baseline.xml:file proguard-rules.pro:file"
+    ["cmp-android"]="src/main/res:dir dependencies:dir src/main/ic_launcher-playstore.png:file google-services.json:file"
     # iOS — consumer-branded asset catalog (app icon, color palette) preserved across syncs.
-    # STEP 3.5 guard finding: project.pbxproj/Info.plist/ContentView.swift are neither excluded
-    # nor merge-owned (cmp-navigation is merge-owned; the raw Xcode project files are not) —
-    # preserved so the fork's Xcode project + entry SwiftUI view survive the sync.
-    ["cmp-ios"]="iosApp/Assets.xcassets:dir Configuration/Config.xcconfig:file iosApp.xcodeproj/project.pbxproj:file iosApp/Info.plist:file iosApp/ContentView.swift:file"
+    ["cmp-ios"]="iosApp/Assets.xcassets:dir Configuration/Config.xcconfig:file"
     ["cmp-web"]="src/jsMain/resources:dir src/wasmJsMain/resources:dir"
     # icons:dir stays fork-preserved; build.gradle.kts is REMOVED from the hardcoded exclusion so the
     # customization-surface.yaml declaration (owner: merge / kotlin-3way) governs — template desktop
     # build improvements reach forks via the 3-way merge loop while fork packaging identity survives.
     # (Was clobbering the merge: the restore-excluded block below copied the fork's original back.)
-    # STEP 3.5 guard finding: src/jvmMain/kotlin/main.kt + compose-desktop.pro are neither excluded
-    # nor merge-owned — preserved so any fork-specific desktop entry-point customization survives.
-    ["cmp-desktop"]="icons:dir src/jvmMain/kotlin/main.kt:file compose-desktop.pro:file"
-    # STEP 3.5 guard finding: cmp-shared is NOT on the merge-owned list (unlike cmp-navigation) and
-    # NOT excluded — the fork's Koin wiring / SharedApp entry point would be blind-overwritten.
-    # Preserved wholesale; toolchain-only edits land via the T5/T6 workstreams, not this sync.
-    ["cmp-shared"]="src/commonMain/kotlin/cmp/shared/SharedApp.kt:file src/commonMain/kotlin/cmp/shared/utils/KoinExt.kt:file build.gradle.kts:file"
-    # STEP 3.5 guard finding (HIGH severity): core/*/build.gradle.kts is a COMPLETE architectural
-    # divergence from the template's own core/* modules (fork: Ktorfit + Fineract SDK + multi-module
-    # api() deps; template: buildkonfig + demo-API deps — confirmed on core/network/build.gradle.kts,
-    # not an incremental diff, a different design). Neither excluded nor merge-owned (merge-ownership
-    # only covers AndroidManifest/strings.xml/nav files under core/**, not the module build files).
-    # A blind checkout would silently strip every fork-only dependency declaration and break
-    # :core:network + every other core/* module at the FIRST compile. Preserved wholesale; the T5/T6/
-    # T7/T9/T10/T11 toolchain workstreams make PRECISE, fork-preserving edits to these same files
-    # afterward (plugin-id rename, AGP-9 swap, Room3 import, catalog-accessor bump) rather than
-    # accepting the sync's blind overwrite.
-    ["core"]="common/build.gradle.kts:file data/build.gradle.kts:file database/build.gradle.kts:file database/proguard-rules.pro:file datastore/build.gradle.kts:file designsystem/build.gradle.kts:file domain/build.gradle.kts:file model/build.gradle.kts:file network/build.gradle.kts:file network/consumer-rules.pro:file ui/build.gradle.kts:file"
+    ["cmp-desktop"]="icons:dir"
     ["fastlane-config"]="project_config.rb:file extract_config.rb:file"
     # Deployment — FULL-COPY, ZERO exclusions (E1 / D-3, epic pure-white-label-store5-network).
     # deployment/** is a pure TEMPLATE-OWNED module now: all fork DATA was relocated OUT —

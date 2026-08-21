@@ -5,11 +5,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
+ * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
 package cmp.navigation.utils
 
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.serializer
 import kotlin.reflect.KClass
@@ -23,6 +22,5 @@ fun <T : Any> T.toObjectNavigationRoute(): String = this::class.toObjectKClassNa
 /**
  * Gets the route string for a [KClass] of an object.
  */
-@OptIn(InternalSerializationApi::class, ExperimentalSerializationApi::class)
-fun <T : Any> KClass<T>.toObjectKClassNavigationRoute(): String =
-    this.serializer().descriptor.serialName
+@OptIn(InternalSerializationApi::class)
+fun <T : Any> KClass<T>.toObjectKClassNavigationRoute(): String = this.serializer().descriptor.serialName

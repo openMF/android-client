@@ -30,6 +30,7 @@ fun main() {
     if (storedLanguage != null) {
         document.documentElement?.setAttribute("lang", storedLanguage)
     }
+
     onWasmReady {
         ComposeViewport(document.body!!) {
             // State to trigger recomposition when locale changes
@@ -38,6 +39,11 @@ fun main() {
             // Use key() to force complete recomposition when locale changes
             key(localeVersion) {
                 SharedApp(
+                    updateScreenCapture = {},
+                    handleRecreate = {
+                        // Reload the page to apply locale changes
+                        window.location.reload()
+                    },
                     handleThemeMode = {},
                     handleAppLocale = { languageTag ->
                         if (languageTag != null) {

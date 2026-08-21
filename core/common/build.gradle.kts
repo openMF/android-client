@@ -1,84 +1,26 @@
 /*
- * Copyright 2024 Mifos Initiative
+ * Copyright 2025 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
+ * See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
 plugins {
     alias(libs.plugins.kmp.library.convention)
-    alias(libs.plugins.kmp.koin.convention)
-    alias(libs.plugins.secrets)
-    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
 }
 
-android {
-    namespace = "com.mifos.core.common"
-
-    buildFeatures {
-        buildConfig = true
-    }
-}
-
-secrets {
-    defaultPropertiesFileName = "secrets.defaults.properties"
-}
-
 kotlin {
-// This is commented out because it is already provided by the top-level KMP library plugin.
-//    listOf(
-//        iosX64(),
-//        iosArm64(),
-//        iosSimulatorArm64(),
-//    ).forEach {
-//        it.binaries.framework {
-//            isStatic = false
-//            export(libs.kermit.simple)
-//        }
-//    }
-
     sourceSets {
         commonMain.dependencies {
-            api(projects.core.model)
-
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.kotlinx.serialization.json)
-            api(libs.coil.kt)
-            api(libs.coil.core)
-            api(libs.coil.svg)
-            api(libs.coil.network.ktor)
             api(libs.kermit.logging)
-            api(libs.squareup.okio)
-            api(libs.jb.kotlin.stdlib)
             api(libs.kotlinx.datetime)
-            implementation(libs.filekit.core)
-            implementation(libs.filekit.coil)
-            implementation(libs.filekit.compose)
-            implementation(libs.filekit.dialog.compose)
-            implementation(libs.filekit.dialogs)
-            implementation(libs.ktor.client.core)
-        }
-
-        androidMain.dependencies {
-            implementation(libs.kotlinx.coroutines.android)
-            implementation(libs.koin.android)
-        }
-        commonTest.dependencies {
-            implementation(libs.kotlinx.coroutines.test)
-        }
-        iosMain.dependencies {
-            api(libs.kermit.simple)
-        }
-        desktopMain.dependencies {
-            implementation(libs.kotlinx.coroutines.swing)
-            implementation(libs.kotlin.reflect)
-        }
-        jsMain.dependencies {
-            api(libs.jb.kotlin.stdlib.js)
-            api(libs.jb.kotlin.dom)
+            // Re-export core-base/common (CommonModule DI, base utilities) so app-shell + feature
+            // modules depend on core/common, never core-base/common directly (encapsulation, Phase A).
+            api(projects.coreBase.common)
         }
     }
 }

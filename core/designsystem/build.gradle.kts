@@ -1,32 +1,21 @@
 /*
- * Copyright 2024 Mifos Initiative
+ * Copyright 2025 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
+ * See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
 plugins {
     alias(libs.plugins.kmp.library.convention)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.roborazzi)
 }
 
-android {
-    defaultConfig {
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-    namespace = "com.mifos.core.designsystem"
-}
 
 kotlin {
     sourceSets {
-        androidMain.dependencies {
-            implementation(libs.androidx.compose.ui.tooling.preview)
-            implementation(libs.androidx.activity.compose)
-        }
         androidInstrumentedTest.dependencies {
             implementation(libs.androidx.compose.ui.test)
         }
@@ -34,42 +23,27 @@ kotlin {
             implementation(libs.androidx.compose.ui.test)
         }
         commonMain.dependencies {
-            implementation(libs.coil.kt.compose)
+            api(projects.coreBase.designsystem)
+            // Theme wires LocalScreenStateDefaults from core/store so every screen
+            // wrapped by KptTheme picks up the app's branded ScreenState defaults.
+            implementation(projects.core.store)
+
+            implementation(compose.ui)
+            implementation(compose.uiUtil)
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
-            implementation(compose.ui)
-            implementation(compose.uiUtil)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            api(libs.back.handler)
-            api(libs.window.size)
-            api(projects.coreBase.designsystem)
-            implementation(libs.fluentui.system.icons)
-            api(projects.coreBase.designsystem)
-        }
 
-        nativeMain.dependencies {
-            implementation(compose.runtime)
-        }
-
-        jsMain.dependencies {
-            implementation(compose.runtime)
-        }
-
-        wasmJsMain.dependencies {
-            implementation(compose.runtime)
+            implementation(libs.coil.kt.compose)
         }
     }
-}
-
-dependencies {
-    debugImplementation(compose.uiTooling)
 }
 
 compose.resources {
     publicResClass = true
     generateResClass = always
-    packageOfResClass = "core.designsystem.generated.resources"
+    packageOfResClass = "kpt.core.designsystem.generated.resources"
 }
