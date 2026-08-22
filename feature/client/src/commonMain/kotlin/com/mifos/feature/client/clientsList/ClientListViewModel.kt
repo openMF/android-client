@@ -57,14 +57,14 @@ internal class ClientListViewModel(
             is ClientListAction.Internal.ReceiveClientResultFromDb -> handleClientResultFromDb(action.result)
             is ClientListAction.FetchImage -> fetchClientImage(action.clientId)
             ClientListAction.ActivateSearch -> {
-                updateState {
+                mutableStateFlow.update {
                     it.copy(
                         isSearchActive = true,
                     )
                 }
             }
             ClientListAction.DismissSearch -> {
-                updateState {
+                mutableStateFlow.update {
                     it.copy(
                         isSearchActive = false,
                     )
@@ -72,7 +72,7 @@ internal class ClientListViewModel(
             }
             ClientListAction.NavigateToCreateClient -> sendEvent(ClientListEvent.NavigateToCreateClient)
             is ClientListAction.OnQueryChange -> {
-                updateState {
+                mutableStateFlow.update {
                     it.copy(
                         searchQuery = action.query,
                     )
@@ -87,12 +87,8 @@ internal class ClientListViewModel(
         }
     }
 
-    private fun updateState(update: (ClientListState) -> ClientListState) {
-        mutableStateFlow.update(update)
-    }
-
     private fun dismissDialog() {
-        updateState { it.copy(dialogState = null) }
+        mutableStateFlow.update { it.copy(dialogState = null) }
     }
 
     private fun refreshClients() = loadClients()
@@ -110,13 +106,13 @@ internal class ClientListViewModel(
 
     private fun processClientsFromApi() {
         viewModelScope.launch {
-            updateState { it.copy(dialogState = ClientListState.DialogState.Loading) }
+            mutableStateFlow.update { it.copy(dialogState = ClientListState.DialogState.Loading) }
             runCatching {
                 repository.getAllClients()
             }.onSuccess { result ->
                 sendAction(ClientListAction.Internal.ReceiveClientResult(result))
             }.onFailure { throwable ->
-                updateState {
+                mutableStateFlow.update {
                     it.copy(
                         dialogState = ClientListState.DialogState.Error(
                             throwable.message ?: "An error occurred while loading clients",
@@ -129,10 +125,10 @@ internal class ClientListViewModel(
 
     private fun processClientsFromDb() {
         viewModelScope.launch {
-            updateState { it.copy(dialogState = ClientListState.DialogState.Loading) }
+            mutableStateFlow.update { it.copy(dialogState = ClientListState.DialogState.Loading) }
             repository.allDatabaseClients()
                 .catch { error ->
-                    updateState {
+                    mutableStateFlow.update {
                         it.copy(
                             dialogState = ClientListState.DialogState.Error(
                                 error.message ?: Res.string.feature_client_failed_to_load_client.toString(),
@@ -147,7 +143,7 @@ internal class ClientListViewModel(
     }
 
     private fun handleClientResultFromDb(result: Page<ClientEntity>) {
-        updateState {
+        mutableStateFlow.update {
             val data = result.pageItems
             if (data.isEmpty()) {
                 it.copy(isEmpty = true, dialogState = null)
@@ -158,7 +154,7 @@ internal class ClientListViewModel(
     }
 
     private fun handleClientResult(result: Flow<PagingData<ClientEntity>>) {
-        updateState {
+        mutableStateFlow.update {
             state.copy(
                 clientsFlow = result,
                 dialogState = null,
@@ -173,7 +169,7 @@ internal class ClientListViewModel(
                 .catch { }
                 .collect { image ->
                     val imageBytes = imageToByteArray(image)
-                    updateState { state ->
+                    mutableStateFlow.update { state ->
                         state.copy(
                             clientImages = state.clientImages + (clientId to imageBytes),
                         )
@@ -183,7 +179,7 @@ internal class ClientListViewModel(
     }
 
     private fun handleSortClick(sort: SortTypes?) {
-        updateState {
+        mutableStateFlow.update {
             val sortedList = when (sort) {
                 SortTypes.NAME -> it.clients.sortedBy { it.displayName?.lowercase() }
                 SortTypes.ACCOUNT_NUMBER -> it.clients.sortedBy { it.accountNo }
@@ -199,7 +195,7 @@ internal class ClientListViewModel(
     }
 
     private fun toggleFilterVisibility() {
-        updateState {
+        mutableStateFlow.update {
             it.copy(
                 isFilterVisible = !it.isFilterVisible,
             )
@@ -207,7 +203,7 @@ internal class ClientListViewModel(
     }
 
     private fun onUpdateOffice(offices: List<String?>) {
-        updateState {
+        mutableStateFlow.update {
             it.copy(
                 officeNames = (offices + it.officeNames).distinct().sortedBy { it },
             )
@@ -215,7 +211,7 @@ internal class ClientListViewModel(
     }
 
     private fun handleFilterClick(filter: String, filterType: FilterType) {
-        updateState {
+        mutableStateFlow.update {
             val newSelectedStatus = if (filterType == FilterType.STATUS) {
                 if (filter in it.selectedStatus) {
                     it.selectedStatus - filter
@@ -260,7 +256,7 @@ internal class ClientListViewModel(
     }
 
     private fun clearFilters() {
-        updateState {
+        mutableStateFlow.update {
             it.copy(
                 clients = it.unfilteredClients,
                 clientsFlow = it.unfilteredClientsFlow,

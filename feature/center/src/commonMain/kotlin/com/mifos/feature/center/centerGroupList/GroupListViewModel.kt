@@ -45,7 +45,7 @@ class GroupListViewModel(
                 GroupListUiState.Error(Res.string.feature_center_failed_to_load_group_list)
         }.collect {
             _groupListUiState.value =
-                GroupListUiState.GroupList(it.data ?: CenterWithAssociations())
+                GroupListUiState.GroupList(it)
         }
     }
 
@@ -56,7 +56,7 @@ class GroupListViewModel(
                 _groupListUiState.value =
                     GroupListUiState.Error(Res.string.feature_center_failed_to_load_group_list)
             }.collect {
-                _groupAssociationState.value = it.data
+                _groupAssociationState.value = it
             }
         }
     }

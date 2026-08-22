@@ -22,7 +22,6 @@ import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.DataTableListRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
@@ -34,6 +33,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -135,44 +135,30 @@ class DataTableListViewModel(
 
     private fun createLoanAccount(loansPayload: LoansPayload?) {
         viewModelScope.launch {
+            _dataTableListUiState.value = DataTableListUiState.Loading
             repository.createLoansAccount(loansPayload)
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error ->
-                            _dataTableListUiState.value =
-                                DataTableListUiState.ShowMessage(Res.string.feature_data_table_generic_failure_message)
-
-                        DataState.Loading ->
-                            _dataTableListUiState.value =
-                                DataTableListUiState.Loading
-
-                        is DataState.Success -> {
-                            _dataTableListUiState.value =
-                                DataTableListUiState.ShowMessage(Res.string.feature_data_table_loan_creation_success)
-                        }
-                    }
+                .catch {
+                    _dataTableListUiState.value =
+                        DataTableListUiState.ShowMessage(Res.string.feature_data_table_generic_failure_message)
+                }
+                .collect {
+                    _dataTableListUiState.value =
+                        DataTableListUiState.ShowMessage(Res.string.feature_data_table_loan_creation_success)
                 }
         }
     }
 
     private fun createGroupLoanAccount(loansPayload: GroupLoanPayload?) {
         viewModelScope.launch {
+            _dataTableListUiState.value = DataTableListUiState.Loading
             repository.createGroupLoansAccount(loansPayload)
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error ->
-                            _dataTableListUiState.value =
-                                DataTableListUiState.ShowMessage(Res.string.feature_data_table_generic_failure_message)
-
-                        DataState.Loading ->
-                            _dataTableListUiState.value =
-                                DataTableListUiState.Loading
-
-                        is DataState.Success -> {
-                            _dataTableListUiState.value =
-                                DataTableListUiState.ShowMessage(Res.string.feature_data_table_loan_creation_success)
-                        }
-                    }
+                .catch {
+                    _dataTableListUiState.value =
+                        DataTableListUiState.ShowMessage(Res.string.feature_data_table_generic_failure_message)
+                }
+                .collect {
+                    _dataTableListUiState.value =
+                        DataTableListUiState.ShowMessage(Res.string.feature_data_table_loan_creation_success)
                 }
         }
     }

@@ -15,12 +15,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.DataTableRepository
 import com.mifos.feature.dataTable.navigation.DataTableRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 /**
@@ -55,26 +55,17 @@ class DataTableViewModel(
     }
 
     suspend fun loadDataTable(tableName: String?) {
+        _dataTableUiState.value = DataTableUiState.ShowProgressbar
         repository.getDataTable(tableName)
-            .collect { dataState ->
-                when (dataState) {
-                    is DataState.Error -> {
-                        _dataTableUiState.value =
-                            DataTableUiState.ShowError(Res.string.feature_data_table_something_went_wrong)
-                    }
-
-                    DataState.Loading ->
-                        _dataTableUiState.value =
-                            DataTableUiState.ShowProgressbar
-
-                    is DataState.Success -> {
-                        val result = dataState.data
-                        _dataTableUiState.value = if (result.isEmpty()) {
-                            DataTableUiState.ShowEmptyDataTables
-                        } else {
-                            DataTableUiState.ShowDataTables(result)
-                        }
-                    }
+            .catch {
+                _dataTableUiState.value =
+                    DataTableUiState.ShowError(Res.string.feature_data_table_something_went_wrong)
+            }
+            .collect { result ->
+                _dataTableUiState.value = if (result.isEmpty()) {
+                    DataTableUiState.ShowEmptyDataTables
+                } else {
+                    DataTableUiState.ShowDataTables(result)
                 }
             }
     }

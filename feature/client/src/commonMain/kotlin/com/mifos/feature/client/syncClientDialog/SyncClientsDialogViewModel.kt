@@ -201,8 +201,8 @@ class SyncClientsDialogViewModel(
                     repository.syncLoanRepaymentTemplate(loanId),
                 ) { loanWithAssociations, loanRepaymentTemplate ->
                     LoanAndLoanRepayment().apply {
-                        this.loanWithAssociations = loanWithAssociations.data
-                        this.loanRepaymentTemplate = loanRepaymentTemplate.data
+                        this.loanWithAssociations = loanWithAssociations
+                        this.loanRepaymentTemplate = loanRepaymentTemplate
                     }
                 }.collect { loanAndLoanRepayment ->
                     mLoanAndRepaymentSyncIndex += 1
@@ -242,8 +242,8 @@ class SyncClientsDialogViewModel(
                 ),
             ) { savingsAccountWithAssociations, savingsAccountTransactionTemplate ->
                 SavingsAccountAndTransactionTemplate(
-                    savingsAccountTransactionTemplate = savingsAccountTransactionTemplate.data,
-                    savingsAccountWithAssociations = savingsAccountWithAssociations.data,
+                    savingsAccountTransactionTemplate = savingsAccountTransactionTemplate,
+                    savingsAccountWithAssociations = savingsAccountWithAssociations,
                 )
             }.catch {
                 onAccountSyncFailed(it)

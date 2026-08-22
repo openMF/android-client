@@ -16,6 +16,7 @@ kotlin{
     sourceSets{
         commonMain.dependencies {
             implementation(projects.core.domain)
+            implementation(projects.core.datastore)
             implementation(compose.material3)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)

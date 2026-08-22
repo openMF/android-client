@@ -69,7 +69,7 @@ class CenterListViewModel(
                         CenterListUiState.Error(Res.string.feature_center_failed_to_load_db_centers)
                 }.collect {
                     _centerListUiState.value =
-                        CenterListUiState.CenterListDb(it.data?.pageItems)
+                        CenterListUiState.CenterListDb(it.pageItems)
                 }
         }
     }

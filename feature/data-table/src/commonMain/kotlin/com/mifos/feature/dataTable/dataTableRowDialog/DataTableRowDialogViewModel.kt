@@ -13,7 +13,6 @@ import kpt.feature.data_table.generated.resources.Res
 import kpt.feature.data_table.generated.resources.feature_data_table_failed_to_add_data_table
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.AddDataTableEntryUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,13 +33,14 @@ class DataTableRowDialogViewModel(
         payload: Map<String, String>,
     ) {
         viewModelScope.launch {
-            val result = addDataTableEntryUseCase(table, entityId, payload)
-            _dataTableRowDialogUiState.value = when (result) {
-                is DataState.Success -> DataTableRowDialogUiState.DataTableEntrySuccessfully
-                is DataState.Error -> DataTableRowDialogUiState.Error(
+            _dataTableRowDialogUiState.value = DataTableRowDialogUiState.Loading
+            _dataTableRowDialogUiState.value = try {
+                addDataTableEntryUseCase(table, entityId, payload)
+                DataTableRowDialogUiState.DataTableEntrySuccessfully
+            } catch (e: Exception) {
+                DataTableRowDialogUiState.Error(
                     getString(Res.string.feature_data_table_failed_to_add_data_table),
                 )
-                is DataState.Loading -> DataTableRowDialogUiState.Loading
             }
         }
     }

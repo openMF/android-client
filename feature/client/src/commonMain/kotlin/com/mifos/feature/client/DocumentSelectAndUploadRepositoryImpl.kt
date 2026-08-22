@@ -22,6 +22,7 @@ import io.github.vinceglb.filekit.PlatformFile
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.statement.readRawBytes
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
@@ -45,35 +46,28 @@ class DocumentSelectAndUploadRepositoryImpl(
     override fun downloadDocumentAndCache() = flow {
         emit(DataState.Loading)
         val state = entityDocumentStateMutableStateFlow.first()
-        val response = documentsRepository.downloadDocument(
+        val httpResponse = documentsRepository.downloadDocument(
             entityType = when (state.entityType) {
                 EntityDocumentState.EntityType.Clients -> "clients"
                 EntityDocumentState.EntityType.Loans -> "loans"
             },
             entityId = state.entityId,
             documentId = state.documentId,
-        ).first { it !is DataState.Loading }
+        ).first()
 
-        if (response is DataState.Error) {
-            emit(DataState.Error(Exception(response.message)))
-            return@flow
-        } else {
-            response.data?.let { httpResponse ->
-                val byte = httpResponse.readRawBytes()
-                val extension = httpResponse.headers["Content-Type"]?.split('/')?.last()
-                    ?: throw Exception(getString(Res.string.error_failed_to_get_document_type))
-                FileKitUtil.writeFileToCache(
-                    getString(Res.string.default_preview_pdf_name),
-                    extension,
-                    byte,
-                ).collect { writeState ->
-                    if (writeState !is DataState.Loading) {
-                        emit(writeState)
-                    }
-                }
-            } ?: emit(DataState.Error(Exception("Received null data.")))
+        val byte = httpResponse.readRawBytes()
+        val extension = httpResponse.headers["Content-Type"]?.split('/')?.last()
+            ?: throw Exception(getString(Res.string.error_failed_to_get_document_type))
+        FileKitUtil.writeFileToCache(
+            getString(Res.string.default_preview_pdf_name),
+            extension,
+            byte,
+        ).collect { writeState ->
+            if (writeState !is DataState.Loading) {
+                emit(writeState)
+            }
         }
-    }
+    }.catch { emit(DataState.Error(Exception(it))) }
 
     override suspend fun deleteDocument() = runCatching {
         val state = entityDocumentStateMutableStateFlow.first()
@@ -107,8 +101,8 @@ class DocumentSelectAndUploadRepositoryImpl(
                 },
                 entityId = state.entityId,
                 file = multiPartFormDataContent,
-            ).first { it !is DataState.Loading }
-            emit(result)
+            ).first()
+            emit(DataState.Success(result))
         } catch (e: Exception) {
             emit(DataState.Error(e))
         }
@@ -134,8 +128,8 @@ class DocumentSelectAndUploadRepositoryImpl(
                 entityId = state.entityId,
                 documentId = state.documentId,
                 file = multiPartFormDataContent,
-            ).first { it !is DataState.Loading }
-            emit(result)
+            ).first()
+            emit(DataState.Success(result))
         } catch (e: Exception) {
             emit(DataState.Error(e))
         }

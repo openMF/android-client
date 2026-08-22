@@ -23,6 +23,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.ui)
             implementation(compose.components.uiToolingPreview)
+            implementation(projects.core.datastore)
             api(projects.core.domain)
         }
     }
