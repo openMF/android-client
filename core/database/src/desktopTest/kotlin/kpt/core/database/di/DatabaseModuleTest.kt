@@ -39,15 +39,6 @@ class DatabaseModuleTest : KoinTest {
         assertNotNull(database)
     }
 
-    @Test
-    fun databaseModuleProvidesAlertDao() {
-        val database: AppDatabase = get()
-        assertNotNull(database.alertDao)
-    }
-
-    @Test
-    fun alertDaoComesFromDatabase() {
-        val database: AppDatabase = get()
-        assertNotNull(database.alertDao)
-    }
+    // NOTE: the template's demo `alertDao` tests were removed — this fork stripped the
+    // template-showcase demo entities (offline-first-template-migration app-shell reconciliation).
 }

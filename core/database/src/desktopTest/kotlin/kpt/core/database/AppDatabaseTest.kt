@@ -36,25 +36,9 @@ class AppDatabaseTest {
         assertNotNull(database)
     }
 
-    @Test
-    fun databaseExposeAlertDao() {
-        database = Room.inMemoryDatabaseBuilder<AppDatabase>()
-            .setDriver(BundledSQLiteDriver())
-            .setQueryCoroutineContext(Dispatchers.IO)
-            .build()
-
-        assertNotNull(database!!.alertDao)
-    }
-
-    @Test
-    fun databaseExposeInterestRateSeriesDao() {
-        database = Room.inMemoryDatabaseBuilder<AppDatabase>()
-            .setDriver(BundledSQLiteDriver())
-            .setQueryCoroutineContext(Dispatchers.IO)
-            .build()
-
-        assertNotNull(database!!.interestRateSeriesDao)
-    }
+    // NOTE: the template's demo `alertDao` / `interestRateSeriesDao` tests were removed — this
+    // fork stripped those template-showcase demo entities (offline-first-template-migration
+    // app-shell reconciliation), so the template AppDatabase no longer exposes them.
 
     @Test
     fun databaseVersionIsCurrent() {
