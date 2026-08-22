@@ -58,6 +58,8 @@ import kpt.feature.home.generated.resources.screens_home_feature_clients_title
 import kpt.feature.home.generated.resources.screens_home_feature_collection_subtitle
 import kpt.feature.home.generated.resources.screens_home_feature_collection_title
 import kpt.feature.home.generated.resources.screens_home_feature_groups_subtitle
+import kpt.feature.home.generated.resources.screens_home_feature_loans_subtitle
+import kpt.feature.home.generated.resources.screens_home_feature_loans_title
 import kpt.feature.home.generated.resources.screens_home_feature_groups_title
 import kpt.feature.home.generated.resources.screens_home_feature_open_cd
 import kpt.feature.home.generated.resources.screens_home_feature_pathtracking_subtitle
