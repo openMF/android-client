@@ -13,13 +13,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.ActivateSavingsUseCase
-import com.mifos.core.network.GenericResponse
 import com.mifos.feature.savings.navigation.SavingsAccountActivate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 /**
@@ -39,23 +38,18 @@ class SavingsAccountActivateViewModel(
 
     fun activateSavings(request: HashMap<String, String>) =
         viewModelScope.launch {
+            _savingsAccountActivateUiState.value =
+                SavingsAccountActivateUiState.ShowProgressbar
             activateSavingsUseCase(savingsAccountId, request)
-                .collect { state ->
-                    when (state) {
-                        is DataState.Error ->
-                            _savingsAccountActivateUiState.value =
-                                SavingsAccountActivateUiState.ShowError(state.message)
-
-                        DataState.Loading ->
-                            _savingsAccountActivateUiState.value =
-                                SavingsAccountActivateUiState.ShowProgressbar
-
-                        is DataState.Success ->
-                            _savingsAccountActivateUiState.value =
-                                SavingsAccountActivateUiState.ShowSavingAccountActivatedSuccessfully(
-                                    state.data ?: GenericResponse(),
-                                )
-                    }
+                .catch { error ->
+                    _savingsAccountActivateUiState.value =
+                        SavingsAccountActivateUiState.ShowError(error.message ?: "")
+                }
+                .collect { response ->
+                    _savingsAccountActivateUiState.value =
+                        SavingsAccountActivateUiState.ShowSavingAccountActivatedSuccessfully(
+                            response,
+                        )
                 }
         }
 }

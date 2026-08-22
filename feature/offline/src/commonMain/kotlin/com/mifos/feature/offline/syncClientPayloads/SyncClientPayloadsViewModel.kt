@@ -11,7 +11,6 @@ package com.mifos.feature.offline.syncClientPayloads
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileUtils
 import com.mifos.core.data.repository.SyncClientPayloadsRepository
 import com.mifos.core.data.util.NetworkMonitor
@@ -21,6 +20,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -70,25 +70,17 @@ class SyncClientPayloadsViewModel(
 
     fun loadDatabaseClientPayload() {
         viewModelScope.launch {
+            _syncClientPayloadsUiState.value =
+                SyncClientPayloadsUiState.ShowProgressbar
             repository.allDatabaseClientPayload()
-                .collect { state ->
-                    when (state) {
-                        is DataState.Success -> {
-                            mClientPayloads = state.data.toMutableList()
-                            _syncClientPayloadsUiState.value =
-                                SyncClientPayloadsUiState.ShowPayloads(mClientPayloads)
-                        }
-
-                        is DataState.Error -> {
-                            _syncClientPayloadsUiState.value =
-                                SyncClientPayloadsUiState.ShowError(state.message)
-                        }
-
-                        is DataState.Loading -> {
-                            _syncClientPayloadsUiState.value =
-                                SyncClientPayloadsUiState.ShowProgressbar
-                        }
-                    }
+                .catch { error ->
+                    _syncClientPayloadsUiState.value =
+                        SyncClientPayloadsUiState.ShowError(error.message ?: "")
+                }
+                .collect { clientPayloads ->
+                    mClientPayloads = clientPayloads.toMutableList()
+                    _syncClientPayloadsUiState.value =
+                        SyncClientPayloadsUiState.ShowPayloads(mClientPayloads)
                 }
         }
     }
@@ -118,30 +110,21 @@ class SyncClientPayloadsViewModel(
 
     fun deleteAndUpdateClientPayload(id: Int, clientCreationTIme: Long) {
         viewModelScope.launch {
+            _syncClientPayloadsUiState.value =
+                SyncClientPayloadsUiState.ShowProgressbar
             repository.deleteAndUpdatePayloads(id, clientCreationTIme)
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Success -> {
-                            mClientSyncIndex = 0
-                            val list = dataState.data
-                            if (list.isNotEmpty()) {
-                                syncClientPayload()
-                            }
-                            mClientPayloads = list.toMutableList()
-                            _syncClientPayloadsUiState.value =
-                                SyncClientPayloadsUiState.ShowPayloads(mClientPayloads)
-                        }
-
-                        is DataState.Error -> {
-                            _syncClientPayloadsUiState.value =
-                                SyncClientPayloadsUiState.ShowError(dataState.message)
-                        }
-
-                        is DataState.Loading -> {
-                            _syncClientPayloadsUiState.value =
-                                SyncClientPayloadsUiState.ShowProgressbar
-                        }
+                .catch { error ->
+                    _syncClientPayloadsUiState.value =
+                        SyncClientPayloadsUiState.ShowError(error.message ?: "")
+                }
+                .collect { list ->
+                    mClientSyncIndex = 0
+                    if (list.isNotEmpty()) {
+                        syncClientPayload()
                     }
+                    mClientPayloads = list.toMutableList()
+                    _syncClientPayloadsUiState.value =
+                        SyncClientPayloadsUiState.ShowPayloads(mClientPayloads)
                 }
         }
     }

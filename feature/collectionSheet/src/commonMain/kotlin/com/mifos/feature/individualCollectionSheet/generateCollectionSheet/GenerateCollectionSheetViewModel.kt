@@ -22,7 +22,6 @@ import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.core.domain.useCases.FetchCenterDetailsUseCase
 import com.mifos.core.domain.useCases.FetchCollectionSheetUseCase
@@ -85,16 +84,10 @@ class GenerateCollectionSheetViewModel(
         loadingState = GenerateCollectionSheetUiState.Loading,
         errorMessage = Res.string.feature_collection_sheet_failed_to_load_office,
     ) {
-        newIndividualCollectionSheetRepository.offices().collect { result ->
-            when (result) {
-                is DataState.Success -> {
-                    _officeList.value = result.data ?: emptyList()
-                    result.data?.firstOrNull()?.id?.let { officeId ->
-                        loadStaffInOffice(officeId)
-                    }
-                }
-                is DataState.Error -> emitError(Res.string.feature_collection_sheet_failed_to_load_office)
-                else -> Unit
+        newIndividualCollectionSheetRepository.offices().collect { offices ->
+            _officeList.value = offices
+            offices.firstOrNull()?.id?.let { officeId ->
+                loadStaffInOffice(officeId)
             }
         }
     }
@@ -102,40 +95,28 @@ class GenerateCollectionSheetViewModel(
     fun loadStaffInOffice(officeId: Int) = launchWithStateHandling(
         errorMessage = Res.string.feature_collection_sheet_failed_to_load_staff,
     ) {
-        getStaffInOfficeUseCase(officeId).collect { result ->
-            when (result) {
-                is DataState.Success -> {
-                    _staffList.value = result.data ?: emptyList()
-                    val staffId = result.data?.firstOrNull()?.id ?: return@collect
-                    loadCentersInOffice(officeId, staffId)
-                    loadGroupsInOffice(officeId, staffId)
-                }
-                is DataState.Error -> emitError(Res.string.feature_collection_sheet_failed_to_load_staff)
-                else -> Unit
-            }
+        getStaffInOfficeUseCase(officeId).collect { staff ->
+            _staffList.value = staff
+            val staffId = staff.firstOrNull()?.id ?: return@collect
+            loadCentersInOffice(officeId, staffId)
+            loadGroupsInOffice(officeId, staffId)
         }
     }
 
     fun loadCentersInOffice(officeId: Int, staffId: Int) = launchWithStateHandling(
         errorMessage = Res.string.feature_collection_sheet_failed_to_load_center,
     ) {
-        getCentersInOfficeUseCase(officeId, buildParams(staffId)).collect { result ->
-            if (result is DataState.Success) {
-                _centerList.value = result.data
-            } else if (result is DataState.Error) emitError(Res.string.feature_collection_sheet_failed_to_load_center)
+        getCentersInOfficeUseCase(officeId, buildParams(staffId)).collect { centers ->
+            _centerList.value = centers
         }
     }
 
     fun loadGroupsInOffice(officeId: Int, staffId: Int) = launchWithStateHandling(
         errorMessage = Res.string.feature_collection_sheet_failed_to_load_group,
     ) {
-        getGroupsByOfficeUseCase(officeId, buildParams(staffId)).collect { result ->
-            if (result is DataState.Success) {
-                _groupList.value = result.data ?: emptyList()
-                uiStateInternal.value = GenerateCollectionSheetUiState.Success
-            } else if (result is DataState.Error) {
-                emitError(Res.string.feature_collection_sheet_failed_to_load_group)
-            }
+        getGroupsByOfficeUseCase(officeId, buildParams(staffId)).collect { groups ->
+            _groupList.value = groups
+            uiStateInternal.value = GenerateCollectionSheetUiState.Success
         }
     }
 
@@ -148,54 +129,36 @@ class GenerateCollectionSheetViewModel(
             meetingDate,
             officeId,
             staffId,
-        ).collect { result ->
-            if (result is DataState.Success) {
-                _centerDetails.value = result.data
-            } else if (result is DataState.Error) emitError(Res.string.feature_collection_sheet_failed_to_load_center_details)
+        ).collect { details ->
+            _centerDetails.value = details
         }
     }
 
     fun loadProductiveCollectionSheet(centerId: Int, payload: CollectionSheetRequestPayload?) =
         launchWithStateHandling(Res.string.feature_collection_sheet_failed_to_load_productive_sheet) {
-            fetchProductiveCollectionSheetUseCase(centerId, payload).collect { result ->
-                if (result is DataState.Success) {
-                    _collectionSheet.value = result.data
-                } else if (result is DataState.Error) emitError(Res.string.feature_collection_sheet_failed_to_load_productive_sheet)
+            fetchProductiveCollectionSheetUseCase(centerId, payload).collect { sheet ->
+                _collectionSheet.value = sheet
             }
         }
 
     fun loadCollectionSheet(groupId: Int, payload: CollectionSheetRequestPayload?) =
         launchWithStateHandling(Res.string.feature_collection_sheet_failed_to_load_collection_sheet) {
-            fetchCollectionSheetUseCase(groupId, payload).collect { result ->
-                if (result is DataState.Success) {
-                    _collectionSheet.value = result.data
-                } else if (result is DataState.Error) emitError(Res.string.feature_collection_sheet_failed_to_load_collection_sheet)
+            fetchCollectionSheetUseCase(groupId, payload).collect { sheet ->
+                _collectionSheet.value = sheet
             }
         }
 
     fun submitProductiveSheet(centerId: Int, payload: ProductiveCollectionSheetPayload?) =
         launchWithStateHandling(Res.string.feature_collection_sheet_failed_to_submit_productive_sheet) {
-            submitProductiveSheetUseCase(centerId, payload).collect { result ->
-                uiStateInternal.value = when (result) {
-                    is DataState.Success -> GenerateCollectionSheetUiState.ProductiveSheetSuccess
-                    is DataState.Loading -> GenerateCollectionSheetUiState.Loading
-                    is DataState.Error -> GenerateCollectionSheetUiState.Error(
-                        getString(Res.string.feature_collection_sheet_failed_to_submit_productive_sheet),
-                    )
-                }
+            submitProductiveSheetUseCase(centerId, payload).collect {
+                uiStateInternal.value = GenerateCollectionSheetUiState.ProductiveSheetSuccess
             }
         }
 
     fun submitCollectionSheet(groupId: Int, payload: CollectionSheetPayload?) =
         launchWithStateHandling(Res.string.feature_collection_sheet_failed_to_submit_collection_sheet) {
-            submitCollectionSheetUseCase(groupId, payload).collect { result ->
-                uiStateInternal.value = when (result) {
-                    is DataState.Success -> GenerateCollectionSheetUiState.CollectionSheetSuccess
-                    is DataState.Loading -> GenerateCollectionSheetUiState.Loading
-                    is DataState.Error -> GenerateCollectionSheetUiState.Error(
-                        getString(Res.string.feature_collection_sheet_failed_to_submit_collection_sheet),
-                    )
-                }
+            submitCollectionSheetUseCase(groupId, payload).collect {
+                uiStateInternal.value = GenerateCollectionSheetUiState.CollectionSheetSuccess
             }
         }
 
@@ -204,10 +167,6 @@ class GenerateCollectionSheetViewModel(
         put(ORDER_BY, ORDER_BY_FIELD_NAME)
         put(SORT_ORDER, ASCENDING)
         if (staffId >= 0) put(STAFF_ID, staffId.toString())
-    }
-
-    private suspend fun emitError(resId: StringResource) {
-        uiStateInternal.value = GenerateCollectionSheetUiState.Error(getString(resId))
     }
 
     private fun launchWithStateHandling(

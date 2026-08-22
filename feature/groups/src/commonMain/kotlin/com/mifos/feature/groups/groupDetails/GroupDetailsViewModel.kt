@@ -17,7 +17,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.GroupDetailsRepository
 import com.mifos.core.domain.useCases.GetGroupDetailsUseCase
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
@@ -26,6 +25,7 @@ import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.group.GroupEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class GroupDetailsViewModel(
@@ -51,56 +51,38 @@ class GroupDetailsViewModel(
 
     fun getGroupDetails(groupId: Int) {
         viewModelScope.launch {
+            _groupDetailsUiState.value = GroupDetailsUiState.Loading
             getGroupDetailsUseCase.invoke(groupId)
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> {
-                            _groupDetailsUiState.value =
-                                GroupDetailsUiState.Error(Res.string.feature_groups_failed_to_fetch_group_and_account)
-                        }
-
-                        DataState.Loading ->
-                            _groupDetailsUiState.value =
-                                GroupDetailsUiState.Loading
-
-                        is DataState.Success -> {
-                            val account = dataState.data
-                            _groupDetailsUiState.value =
-                                GroupDetailsUiState.ShowGroup(account.group ?: GroupEntity())
-                            _loanAccounts.value =
-                                account.groupAccounts?.loanAccounts ?: emptyList()
-                            _savingsAccounts.value =
-                                account.groupAccounts?.savingsAccounts ?: emptyList()
-                        }
-                    }
+                .catch {
+                    _groupDetailsUiState.value =
+                        GroupDetailsUiState.Error(Res.string.feature_groups_failed_to_fetch_group_and_account)
+                }
+                .collect { account ->
+                    _groupDetailsUiState.value =
+                        GroupDetailsUiState.ShowGroup(account.group ?: GroupEntity())
+                    _loanAccounts.value =
+                        account.groupAccounts?.loanAccounts ?: emptyList()
+                    _savingsAccounts.value =
+                        account.groupAccounts?.savingsAccounts ?: emptyList()
                 }
         }
     }
 
     fun getGroupAssociateClients(groupId: Int) {
         viewModelScope.launch {
+            _groupDetailsUiState.value = GroupDetailsUiState.Loading
             repository.getGroupWithAssociations(groupId)
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> {
-                            _groupDetailsUiState.value =
-                                GroupDetailsUiState.Error(Res.string.feature_groups_failed_to_load_client)
-                        }
-
-                        DataState.Loading -> {
-                            _groupDetailsUiState.value =
-                                GroupDetailsUiState.Loading
-                        }
-
-                        is DataState.Success -> {
-                            if (dataState.data.clientMembers.isNotEmpty()) {
-                                _groupAssociateClients.value =
-                                    dataState.data.clientMembers
-                            } else {
-                                _groupDetailsUiState.value =
-                                    GroupDetailsUiState.Error(Res.string.feature_groups_no_group_clients)
-                            }
-                        }
+                .catch {
+                    _groupDetailsUiState.value =
+                        GroupDetailsUiState.Error(Res.string.feature_groups_failed_to_load_client)
+                }
+                .collect { groupWithAssociations ->
+                    if (groupWithAssociations.clientMembers.isNotEmpty()) {
+                        _groupAssociateClients.value =
+                            groupWithAssociations.clientMembers
+                    } else {
+                        _groupDetailsUiState.value =
+                            GroupDetailsUiState.Error(Res.string.feature_groups_no_group_clients)
                     }
                 }
         }

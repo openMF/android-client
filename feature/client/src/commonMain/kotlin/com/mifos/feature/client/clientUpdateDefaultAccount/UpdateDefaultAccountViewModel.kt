@@ -13,7 +13,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import co.touchlab.kermit.Logger
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.network.model.SavingAccountOption
@@ -77,24 +76,20 @@ internal class UpdateDefaultAccountViewModel(
     private suspend fun updateDefaultAccount() {
         mutableStateFlow.update { it.copy(dialogState = UpdateDefaultAccountState.DialogState.Loading) }
         val accountId = state.accounts[state.currentSelectedIndex].id
-        val result = repo.updateDefaultSavingsAccount(route.clientId, accountId)
-        when (result) {
-            is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(dialogState = UpdateDefaultAccountState.DialogState.ShowStatusDialog(ResultStatus.SUCCESS))
-                }
+        try {
+            repo.updateDefaultSavingsAccount(route.clientId, accountId)
+            mutableStateFlow.update {
+                it.copy(dialogState = UpdateDefaultAccountState.DialogState.ShowStatusDialog(ResultStatus.SUCCESS))
             }
-            is DataState.Error -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = UpdateDefaultAccountState.DialogState.ShowStatusDialog(
-                            ResultStatus.FAILURE,
-                            result.message,
-                        ),
-                    )
-                }
+        } catch (e: Exception) {
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = UpdateDefaultAccountState.DialogState.ShowStatusDialog(
+                        ResultStatus.FAILURE,
+                        e.message ?: "",
+                    ),
+                )
             }
-            else -> Unit
         }
     }
     private suspend fun getClientSavingsAccountId() {

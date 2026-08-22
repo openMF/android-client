@@ -17,13 +17,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.DownloadDocumentUseCase
 import com.mifos.core.domain.useCases.GetDocumentsListUseCase
 import com.mifos.core.domain.useCases.RemoveDocumentUseCase
 import com.mifos.feature.document.navigation.DocumentListRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class DocumentListViewModel(
@@ -56,54 +56,43 @@ class DocumentListViewModel(
 
     fun loadDocumentList() =
         viewModelScope.launch {
-            getDocumentsListUseCase(entityType, entityId).collect { result ->
-                when (result) {
-                    is DataState.Error ->
-                        _documentListUiState.value =
-                            DocumentListUiState.Error(Res.string.feature_document_failed_to_load_documents_list)
-
-                    is DataState.Loading -> _documentListUiState.value = DocumentListUiState.Loading
-
-                    is DataState.Success ->
-                        _documentListUiState.value =
-                            DocumentListUiState.DocumentList(result.data)
+            _documentListUiState.value = DocumentListUiState.Loading
+            getDocumentsListUseCase(entityType, entityId)
+                .catch {
+                    _documentListUiState.value =
+                        DocumentListUiState.Error(Res.string.feature_document_failed_to_load_documents_list)
                 }
-            }
+                .collect { documents ->
+                    _documentListUiState.value =
+                        DocumentListUiState.DocumentList(documents)
+                }
         }
 
     fun downloadDocument(documentId: Int) =
         viewModelScope.launch {
-            downloadDocumentUseCase(entityType, entityId, documentId).collect { result ->
-                when (result) {
-                    is DataState.Error ->
-                        _documentListUiState.value =
-                            DocumentListUiState.Error(Res.string.feature_document_failed_to_download_document)
-
-                    is DataState.Loading -> _documentListUiState.value = DocumentListUiState.Loading
-
-                    is DataState.Success -> {
-                        _downloadDocumentState.value = true
-                        loadDocumentList()
-                    }
+            _documentListUiState.value = DocumentListUiState.Loading
+            downloadDocumentUseCase(entityType, entityId, documentId)
+                .catch {
+                    _documentListUiState.value =
+                        DocumentListUiState.Error(Res.string.feature_document_failed_to_download_document)
                 }
-            }
+                .collect {
+                    _downloadDocumentState.value = true
+                    loadDocumentList()
+                }
         }
 
     fun removeDocument(documentId: Int) =
         viewModelScope.launch {
-            removeDocumentUseCase(entityType, entityId, documentId).collect { result ->
-                when (result) {
-                    is DataState.Error ->
-                        _documentListUiState.value =
-                            DocumentListUiState.Error(Res.string.feature_document_failed_to_remove_document)
-
-                    is DataState.Loading -> _documentListUiState.value = DocumentListUiState.Loading
-
-                    is DataState.Success -> {
-                        _removeDocumentState.value = true
-                        loadDocumentList()
-                    }
+            _documentListUiState.value = DocumentListUiState.Loading
+            removeDocumentUseCase(entityType, entityId, documentId)
+                .catch {
+                    _documentListUiState.value =
+                        DocumentListUiState.Error(Res.string.feature_document_failed_to_remove_document)
                 }
-            }
+                .collect {
+                    _removeDocumentState.value = true
+                    loadDocumentList()
+                }
         }
 }

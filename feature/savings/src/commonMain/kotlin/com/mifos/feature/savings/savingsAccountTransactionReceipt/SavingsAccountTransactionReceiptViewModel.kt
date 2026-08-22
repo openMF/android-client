@@ -11,10 +11,10 @@ package com.mifos.feature.savings.savingsAccountTransactionReceipt
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SavingsAccountTransactionReceiptRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 /**
@@ -33,26 +33,18 @@ class SavingsAccountTransactionReceiptViewModel(
 
     fun loadReceipt(transactionId: Int) {
         viewModelScope.launch {
+            _savingsAccountTransactionReceiptUiState.value =
+                SavingsAccountTransactionReceiptUiState.ShowProgressbar
             repository.getSavingsAccountTransactionReceipt(transactionId)
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Loading -> {
-                            _savingsAccountTransactionReceiptUiState.value =
-                                SavingsAccountTransactionReceiptUiState.ShowProgressbar
-                        }
-
-                        is DataState.Error -> {
-                            _savingsAccountTransactionReceiptUiState.value =
-                                SavingsAccountTransactionReceiptUiState.ShowError(
-                                    "Failed to Fetch Receipt",
-                                )
-                        }
-
-                        is DataState.Success -> {
-                            _savingsAccountTransactionReceiptUiState.value =
-                                SavingsAccountTransactionReceiptUiState.ShowReceipt(dataState.data)
-                        }
-                    }
+                .catch {
+                    _savingsAccountTransactionReceiptUiState.value =
+                        SavingsAccountTransactionReceiptUiState.ShowError(
+                            "Failed to Fetch Receipt",
+                        )
+                }
+                .collect { receipt ->
+                    _savingsAccountTransactionReceiptUiState.value =
+                        SavingsAccountTransactionReceiptUiState.ShowReceipt(receipt)
                 }
         }
     }

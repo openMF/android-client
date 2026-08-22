@@ -16,7 +16,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.Constants.LOCALE_EN
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.ChargeRepository
 import com.mifos.core.data.util.NetworkMonitor
@@ -28,6 +27,7 @@ import com.mifos.core.ui.components.ResultStatus
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.core.ui.util.TextFieldsValidator
 import com.mifos.room.entities.client.ChargesEntity
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
@@ -210,36 +210,28 @@ class ChargesViewModel(
      * it fetch client charge list
      */
     private suspend fun clientLoadCharges(showBottomSheet: Boolean = false) {
+        if (!showBottomSheet) {
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ChargesState.DialogState.Loading,
+                )
+            }
+        }
         repository.getListOfClientCharges(route.resourceType, route.resourceId)
-            .collect { dataState ->
-                when (dataState) {
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ChargesState.DialogState.Error(dataState.message),
-                            )
-                        }
-                    }
-
-                    DataState.Loading -> {
-                        if (!showBottomSheet) {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = ChargesState.DialogState.Loading,
-                                )
-                            }
-                        }
-                    }
-
-                    is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                chargesList = dataState.data.pageItems,
-                                totalCharges = dataState.data.totalFilteredRecords,
-                                dialogState = if (showBottomSheet && dataState.data.pageItems.isNotEmpty()) ChargesState.DialogState.ShowChargeBottomSheet else null,
-                            )
-                        }
-                    }
+            .catch { error ->
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = ChargesState.DialogState.Error(error.message ?: ""),
+                    )
+                }
+            }
+            .collect { page ->
+                mutableStateFlow.update {
+                    it.copy(
+                        chargesList = page.pageItems,
+                        totalCharges = page.totalFilteredRecords,
+                        dialogState = if (showBottomSheet && page.pageItems.isNotEmpty()) ChargesState.DialogState.ShowChargeBottomSheet else null,
+                    )
                 }
             }
     }
@@ -248,159 +240,129 @@ class ChargesViewModel(
      * it fetch other account charge list like saving, load and etc.
      */
     private suspend fun loadOtherAccountCharges(showBottomSheet: Boolean = false) {
+        if (!showBottomSheet) {
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ChargesState.DialogState.Loading,
+                )
+            }
+        }
         repository.getListOfOtherAccountCharge(route.resourceType, route.resourceId)
-            .collect { dataState ->
-                when (dataState) {
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ChargesState.DialogState.Error(dataState.message),
-                            )
-                        }
-                    }
-
-                    DataState.Loading -> {
-                        if (!showBottomSheet) {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = ChargesState.DialogState.Loading,
-                                )
-                            }
-                        }
-                    }
-
-                    is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                chargesList = dataState.data,
-                                dialogState = if (showBottomSheet && dataState.data.isNotEmpty()) ChargesState.DialogState.ShowChargeBottomSheet else null,
-                                totalCharges = dataState.data.size,
-                            )
-                        }
-                    }
+            .catch { error ->
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = ChargesState.DialogState.Error(error.message ?: ""),
+                    )
+                }
+            }
+            .collect { charges ->
+                mutableStateFlow.update {
+                    it.copy(
+                        chargesList = charges,
+                        dialogState = if (showBottomSheet && charges.isNotEmpty()) ChargesState.DialogState.ShowChargeBottomSheet else null,
+                        totalCharges = charges.size,
+                    )
                 }
             }
     }
 
     private fun getCharge(chargeId: Int) {
         viewModelScope.launch {
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ChargesState.DialogState.Loading,
+                    isOverlayLoading = true,
+                )
+            }
             repository.getCharge(route.resourceType, route.resourceId, chargeId)
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = ChargesState.DialogState.Error(dataState.message),
-                                    isOverlayLoading = false,
-                                )
-                            }
-                        }
-
-                        DataState.Loading -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = ChargesState.DialogState.Loading,
-                                    isOverlayLoading = true,
-                                )
-                            }
-                        }
-
-                        is DataState.Success -> {
-                            mutableStateFlow.update {
-                                val index =
-                                    state.chargeTemplate?.chargeOptions?.indexOfFirst { item -> item.name == dataState.data.name }
-                                it.copy(
-                                    amount = dataState.data.amount.toString(),
-                                    dueDate = DateHelper.getDateAsString(
-                                        dataState.data.dueDate ?: emptyList(),
-                                    ),
-                                    chargeOptionIndex = index,
-                                    chargeOptionId = index?.let { item ->
-                                        state.chargeTemplate?.chargeOptions?.get(
-                                            item,
-                                        )?.id
-                                    },
-                                    dialogState = null,
-                                    showChargeAddFields = true,
-                                    isOverlayLoading = false,
-                                    isUpdate = true,
-                                    chargeId = chargeId,
-                                )
-                            }
-                        }
+                .catch { error ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ChargesState.DialogState.Error(error.message ?: ""),
+                            isOverlayLoading = false,
+                        )
+                    }
+                }
+                .collect { charge ->
+                    mutableStateFlow.update {
+                        val index =
+                            state.chargeTemplate?.chargeOptions?.indexOfFirst { item -> item.name == charge.name }
+                        it.copy(
+                            amount = charge.amount.toString(),
+                            dueDate = DateHelper.getDateAsString(
+                                charge.dueDate ?: emptyList(),
+                            ),
+                            chargeOptionIndex = index,
+                            chargeOptionId = index?.let { item ->
+                                state.chargeTemplate?.chargeOptions?.get(
+                                    item,
+                                )?.id
+                            },
+                            dialogState = null,
+                            showChargeAddFields = true,
+                            isOverlayLoading = false,
+                            isUpdate = true,
+                            chargeId = chargeId,
+                        )
                     }
                 }
         }
     }
 
     private suspend fun loadChargeTemplate() {
-        getChargeTemplateUseCase(route.resourceType, route.resourceId).collect { result ->
-            when (result) {
-                is DataState.Error -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = ChargesState.DialogState.Error(
-                                message = result.message,
-                            ),
-                        )
-                    }
-                }
-
-                is DataState.Loading -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = ChargesState.DialogState.Loading,
-                        )
-                    }
-                }
-
-                is DataState.Success -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            chargeTemplate = result.data,
-                        )
-                    }
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = ChargesState.DialogState.Loading,
+            )
+        }
+        getChargeTemplateUseCase(route.resourceType, route.resourceId)
+            .catch { error ->
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = ChargesState.DialogState.Error(
+                            message = error.message ?: "",
+                        ),
+                    )
                 }
             }
-        }
+            .collect { template ->
+                mutableStateFlow.update {
+                    it.copy(
+                        chargeTemplate = template,
+                    )
+                }
+            }
     }
 
     private suspend fun createCharge(payload: ChargesPayload) {
-        createChargesUseCase(route.resourceType, route.resourceId, payload).collect { result ->
-            when (result) {
-                is DataState.Error -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = ChargesState.DialogState.ShowStatusDialog(
-                                ResultStatus.FAILURE,
-                                message = result.message,
-                            ),
-                            isOverlayLoading = false,
-                        )
-                    }
-                }
-
-                is DataState.Loading -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = ChargesState.DialogState.Loading,
-                            isOverlayLoading = true,
-                        )
-                    }
-                }
-
-                is DataState.Success -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = ChargesState.DialogState.ShowStatusDialog(
-                                ResultStatus.SUCCESS,
-                            ),
-                            isOverlayLoading = false,
-                        )
-                    }
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = ChargesState.DialogState.Loading,
+                isOverlayLoading = true,
+            )
+        }
+        createChargesUseCase(route.resourceType, route.resourceId, payload)
+            .catch { error ->
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = ChargesState.DialogState.ShowStatusDialog(
+                            ResultStatus.FAILURE,
+                            message = error.message ?: "",
+                        ),
+                        isOverlayLoading = false,
+                    )
                 }
             }
-        }
+            .collect { _ ->
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = ChargesState.DialogState.ShowStatusDialog(
+                            ResultStatus.SUCCESS,
+                        ),
+                        isOverlayLoading = false,
+                    )
+                }
+            }
     }
 
     private suspend fun updateCharge(payload: ChargesPayload, chargeId: Int?) {
@@ -419,93 +381,79 @@ class ChargesViewModel(
             }
         } else {
             chargeId?.let { chargeId ->
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = ChargesState.DialogState.Loading,
+                        isOverlayLoading = true,
+                    )
+                }
                 repository.updateCharge(
                     resourceType = route.resourceType,
                     resourceId = route.resourceId,
                     payload = payload,
                     chargeId = chargeId,
-                ).collect { result ->
-                    when (result) {
-                        is DataState.Error -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = ChargesState.DialogState.ShowStatusDialog(
-                                        ResultStatus.FAILURE,
-                                        message = result.message,
-                                    ),
-                                    isOverlayLoading = false,
-                                )
-                            }
-                        }
-
-                        is DataState.Loading -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = ChargesState.DialogState.Loading,
-                                    isOverlayLoading = true,
-                                )
-                            }
-                        }
-
-                        is DataState.Success -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = ChargesState.DialogState.ShowStatusDialog(
-                                        ResultStatus.SUCCESS,
-                                    ),
-                                    isOverlayLoading = false,
-                                )
-                            }
+                )
+                    .catch { error ->
+                        mutableStateFlow.update {
+                            it.copy(
+                                dialogState = ChargesState.DialogState.ShowStatusDialog(
+                                    ResultStatus.FAILURE,
+                                    message = error.message ?: "",
+                                ),
+                                isOverlayLoading = false,
+                            )
                         }
                     }
-                }
+                    .collect { _ ->
+                        mutableStateFlow.update {
+                            it.copy(
+                                dialogState = ChargesState.DialogState.ShowStatusDialog(
+                                    ResultStatus.SUCCESS,
+                                ),
+                                isOverlayLoading = false,
+                            )
+                        }
+                    }
             }
         }
     }
 
     private fun deleteCharge(chargeId: Int) {
         viewModelScope.launch {
+            mutableStateFlow.update {
+                it.copy(
+                    isOverlayLoading = true,
+                )
+            }
             repository.deleteCharge(
                 resourceType = route.resourceType,
                 resourceId = route.resourceId,
                 chargeId = chargeId,
-            ).collect { result ->
-                when (result) {
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ChargesState.DialogState.Error(
-                                    message = result.message,
-                                ),
-                                isOverlayLoading = false,
-                            )
-                        }
-                    }
-
-                    is DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                isOverlayLoading = true,
-                            )
-                        }
-                    }
-
-                    is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ChargesState.DialogState.ShowChargeBottomSheet,
-                                isOverlayLoading = false,
-                            )
-                        }
-
-                        if (route.resourceType == Constants.ENTITY_TYPE_CLIENTS) {
-                            clientLoadCharges(true)
-                        } else {
-                            loadOtherAccountCharges(true)
-                        }
+            )
+                .catch { error ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ChargesState.DialogState.Error(
+                                message = error.message ?: "",
+                            ),
+                            isOverlayLoading = false,
+                        )
                     }
                 }
-            }
+                .collect { _ ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ChargesState.DialogState.ShowChargeBottomSheet,
+                            isOverlayLoading = false,
+                        )
+                    }
+
+                    if (route.resourceType == Constants.ENTITY_TYPE_CLIENTS) {
+                        clientLoadCharges(true)
+                    } else {
+                        loadOtherAccountCharges(true)
+                    }
+                }
         }
     }
 }

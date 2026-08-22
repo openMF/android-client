@@ -27,6 +27,7 @@ import com.mifos.feature.client.EntityDocumentState.EntityType
 import com.mifos.feature.client.utils.openPdfWithDefaultExternalApp
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.extension
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -127,37 +128,32 @@ class ClientDocumentsViewModel(
             updateNetworkState(isConnected)
             when (isConnected) {
                 true -> {
+                    loadingDialogState()
                     documentsRepository.getDocumentsList(
                         entityType = entityType,
                         route.clientId,
-                    ).collect { dataState ->
-                        when (dataState) {
-                            is DataState.Error<*> -> {
-                                errorDialogState(dataState.message)
-                                mutableStateFlow.update {
-                                    it.copy(
-                                        pullDownRefresh = false,
-                                    )
-                                }
-                            }
-                            DataState.Loading -> {
-                                loadingDialogState()
-                            }
-                            is DataState.Success -> {
-                                updateEntityDocumentState()
-                                nullDialogState()
-                                mutableStateFlow.update {
-                                    it.copy(
-                                        clientDocuments = dataState.data.reversed()
-                                            .filter { document ->
-                                                document.fileName?.contains(state.searchText) ?: false
-                                            },
-                                        pullDownRefresh = false,
-                                    )
-                                }
+                    )
+                        .catch { error ->
+                            errorDialogState(error.message ?: getString(Res.string.unknown_error))
+                            mutableStateFlow.update {
+                                it.copy(
+                                    pullDownRefresh = false,
+                                )
                             }
                         }
-                    }
+                        .collect { documents ->
+                            updateEntityDocumentState()
+                            nullDialogState()
+                            mutableStateFlow.update {
+                                it.copy(
+                                    clientDocuments = documents.reversed()
+                                        .filter { document ->
+                                            document.fileName?.contains(state.searchText) ?: false
+                                        },
+                                    pullDownRefresh = false,
+                                )
+                            }
+                        }
                 }
                 false -> {
                     errorDialogState(getString(Res.string.no_internet_message))

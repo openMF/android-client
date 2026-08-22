@@ -14,13 +14,13 @@ import kpt.feature.path_tracking.generated.resources.feature_path_tracking_faile
 import kpt.feature.path_tracking.generated.resources.feature_path_tracking_no_path_tracking_found
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.GetUserPathTrackingUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -55,27 +55,22 @@ class PathTrackingViewModel(
     fun loadPathTracking() = viewModelScope.launch {
         val officeId = prefManager.userData.firstOrNull()?.officeId
         if (officeId != null) {
-            getUserPathTrackingUseCase(officeId.toInt()).collect { result ->
-                when (result) {
-                    is DataState.Error ->
-                        _pathTrackingUiState.value =
-                            PathTrackingUiState.Error(Res.string.feature_path_tracking_failed_to_load_path_tracking)
-
-                    is DataState.Loading -> _pathTrackingUiState.value = PathTrackingUiState.Loading
-
-                    is DataState.Success ->
-                        result.data.let { pathTracking ->
-                            _pathTrackingUiState.value =
-                                if (pathTracking.isEmpty()) {
-                                    PathTrackingUiState.Error(Res.string.feature_path_tracking_no_path_tracking_found)
-                                } else {
-                                    PathTrackingUiState.PathTracking(
-                                        pathTracking,
-                                    )
-                                }
+            _pathTrackingUiState.value = PathTrackingUiState.Loading
+            getUserPathTrackingUseCase(officeId.toInt())
+                .catch {
+                    _pathTrackingUiState.value =
+                        PathTrackingUiState.Error(Res.string.feature_path_tracking_failed_to_load_path_tracking)
+                }
+                .collect { pathTracking ->
+                    _pathTrackingUiState.value =
+                        if (pathTracking.isEmpty()) {
+                            PathTrackingUiState.Error(Res.string.feature_path_tracking_no_path_tracking_found)
+                        } else {
+                            PathTrackingUiState.PathTracking(
+                                pathTracking,
+                            )
                         }
                 }
-            }
         } else {
             _pathTrackingUiState.value =
                 PathTrackingUiState.Error(Res.string.feature_path_tracking_no_path_tracking_found)

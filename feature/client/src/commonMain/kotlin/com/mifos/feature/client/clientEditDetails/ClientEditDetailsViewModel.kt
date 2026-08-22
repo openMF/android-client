@@ -17,7 +17,6 @@ import kpt.feature.client.generated.resources.feature_client_failed_to_fetch_sta
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsEditRepository
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.repository.CreateNewClientRepository
@@ -51,28 +50,21 @@ internal class ClientEditDetailsViewModel(
 
     fun loadClientDetails(clientId: Int = route.id) {
         viewModelScope.launch {
-            getClientDetailsUseCase(clientId).collect { result ->
-                when (result) {
-                    is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                client = result.data.client,
-                                dialogState = ClientEditDetailsState.DialogState.ShowUpdateDetailsContent,
-                            )
-                        }
-                    }
-
-                    is DataState.Error -> {}
-
-                    DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientEditDetailsState.DialogState.Loading,
-                            )
-                        }
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ClientEditDetailsState.DialogState.Loading,
+                )
+            }
+            getClientDetailsUseCase(clientId)
+                .catch { }
+                .collect { clientAndClientAccounts ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            client = clientAndClientAccounts.client,
+                            dialogState = ClientEditDetailsState.DialogState.ShowUpdateDetailsContent,
+                        )
                     }
                 }
-            }
         }
     }
 
@@ -97,7 +89,7 @@ internal class ClientEditDetailsViewModel(
             }.collect {
                 mutableStateFlow.update { currState ->
                     currState.copy(
-                        clientsTemplate = it.data ?: ClientsTemplateEntity(),
+                        clientsTemplate = it,
                     )
                 }
             }
@@ -116,7 +108,7 @@ internal class ClientEditDetailsViewModel(
                 }.collect { offices ->
                     mutableStateFlow.update {
                         it.copy(
-                            showOffices = offices.data ?: emptyList(),
+                            showOffices = offices,
                         )
                     }
                 }
@@ -125,25 +117,21 @@ internal class ClientEditDetailsViewModel(
 
     fun loadStaffInOffices(officeId: Int) {
         viewModelScope.launch {
-            newClientRepository.getStaffInOffice(officeId).collect { result ->
-                when (result) {
-                    is DataState.Error ->
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientEditDetailsState.DialogState.Error(getString(Res.string.feature_client_failed_to_fetch_staffs)),
-                            )
-                        }
-
-                    DataState.Loading -> Unit
-                    is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                staffInOffices = result.data,
-                            )
-                        }
+            newClientRepository.getStaffInOffice(officeId)
+                .catch {
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ClientEditDetailsState.DialogState.Error(getString(Res.string.feature_client_failed_to_fetch_staffs)),
+                        )
                     }
                 }
-            }
+                .collect { staffList ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            staffInOffices = staffList,
+                        )
+                    }
+                }
         }
     }
 

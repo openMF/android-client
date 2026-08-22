@@ -19,7 +19,6 @@ import com.attafitamim.krop.core.crop.ImageCropper
 import com.attafitamim.krop.core.crop.crop
 import com.attafitamim.krop.core.crop.imageCropper
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.CreateSignatureUseCase
 import com.mifos.core.domain.useCases.DownloadDocumentUseCase
@@ -36,6 +35,7 @@ import io.github.vinceglb.filekit.dialogs.compose.util.encodeToByteArray
 import io.github.vinceglb.filekit.dialogs.compose.util.toImageBitmap
 import io.github.vinceglb.filekit.dialogs.openFilePicker
 import io.ktor.client.statement.readRawBytes
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -103,34 +103,22 @@ class ClientSignatureViewModel(
                 extension = ImageFormat.PNG.name,
                 description = DESCRIPTION,
             ),
-        ).collect { state ->
-            when (state) {
-                is DataState.Error -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = ClientSignatureState.DialogState.Error(state.message),
-                        )
-                    }
-                }
-
-                DataState.Loading -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = ClientSignatureState.DialogState.Loading,
-                        )
-                    }
-                }
-
-                is DataState.Success -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = null,
-                        )
-                    }
-                    getSignatureOptionsAndObserveNetwork()
+        )
+            .catch { error ->
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = ClientSignatureState.DialogState.Error(error.message ?: ""),
+                    )
                 }
             }
-        }
+            .collect { _ ->
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = null,
+                    )
+                }
+                getSignatureOptionsAndObserveNetwork()
+            }
     }
 
     private suspend fun updateSignature(file: ImageBitmap) {
@@ -145,72 +133,52 @@ class ClientSignatureViewModel(
                     extension = ImageFormat.PNG.name,
                     description = DESCRIPTION,
                 ),
-            ).collect { dataState ->
-                when (dataState) {
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientSignatureState.DialogState.Error(
-                                    dataState.message,
-                                ),
-                            )
-                        }
-                    }
-
-                    DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientSignatureState.DialogState.Loading,
-                            )
-                        }
-                    }
-
-                    is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = null,
-                            )
-                        }
-
-                        getSignatureOptionsAndObserveNetwork()
+            )
+                .catch { error ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ClientSignatureState.DialogState.Error(
+                                error.message ?: "",
+                            ),
+                        )
                     }
                 }
-            }
+                .collect { _ ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = null,
+                        )
+                    }
+
+                    getSignatureOptionsAndObserveNetwork()
+                }
         }
     }
 
     private suspend fun deleteSignature() {
         state.signatureId?.let { signatureId ->
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ClientSignatureState.DialogState.Loading,
+                )
+            }
             removeDocumentUseCase(Constants.CLIENTS, route.clientId, signatureId)
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = ClientSignatureState.DialogState.Error(
-                                        dataState.message,
-                                    ),
-                                )
-                            }
-                        }
-
-                        DataState.Loading -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = ClientSignatureState.DialogState.Loading,
-                                )
-                            }
-                        }
-
-                        is DataState.Success -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = null,
-                                    clientSignatureImage = null,
-                                    signatureId = null,
-                                )
-                            }
-                        }
+                .catch { error ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ClientSignatureState.DialogState.Error(
+                                error.message ?: "",
+                            ),
+                        )
+                    }
+                }
+                .collect { _ ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = null,
+                            clientSignatureImage = null,
+                            signatureId = null,
+                        )
                     }
                 }
         }
@@ -230,71 +198,55 @@ class ClientSignatureViewModel(
      *   (e.g., retrieval, deletion, or update).
      */
     private suspend fun getSignatureId() {
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = ClientSignatureState.DialogState.Loading,
+            )
+        }
         getDocumentListUseCase(Constants.CLIENTS, route.clientId)
-            .collect { dataState ->
-                when (dataState) {
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientSignatureState.DialogState.Error(dataState.message),
-                            )
-                        }
-                    }
+            .catch { error ->
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = ClientSignatureState.DialogState.Error(error.message ?: ""),
+                    )
+                }
+            }
+            .collect { documents ->
+                val signatureId =
+                    documents.firstOrNull { it.name == NAME }?.id
 
-                    DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientSignatureState.DialogState.Loading,
-                            )
-                        }
-                    }
-
-                    is DataState.Success -> {
-                        val signatureId =
-                            dataState.data.firstOrNull { it.name == NAME }?.id
-
-                        mutableStateFlow.update {
-                            it.copy(
-                                signatureId = signatureId,
-                                dialogState = null,
-                            )
-                        }
-                    }
+                mutableStateFlow.update {
+                    it.copy(
+                        signatureId = signatureId,
+                        dialogState = null,
+                    )
                 }
             }
     }
 
     private suspend fun getSignature() {
         state.signatureId?.let { signatureId ->
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ClientSignatureState.DialogState.Loading,
+                )
+            }
             downloadDocumentUseCase(Constants.CLIENTS, route.clientId, signatureId)
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = ClientSignatureState.DialogState.Error(
-                                        dataState.message,
-                                    ),
-                                )
-                            }
-                        }
-
-                        DataState.Loading -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = ClientSignatureState.DialogState.Loading,
-                                )
-                            }
-                        }
-
-                        is DataState.Success -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    clientSignatureImage = dataState.data.readRawBytes(),
-                                    dialogState = null,
-                                )
-                            }
-                        }
+                .catch { error ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ClientSignatureState.DialogState.Error(
+                                error.message ?: "",
+                            ),
+                        )
+                    }
+                }
+                .collect { response ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            clientSignatureImage = response.readRawBytes(),
+                            dialogState = null,
+                        )
                     }
                 }
         }

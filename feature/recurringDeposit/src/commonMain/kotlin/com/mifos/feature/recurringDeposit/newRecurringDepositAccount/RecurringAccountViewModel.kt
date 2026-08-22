@@ -16,7 +16,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.RecurringAccountRepository
 import com.mifos.core.data.util.NetworkMonitor
@@ -27,6 +26,7 @@ import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.core.ui.util.TextFieldsValidator
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountState.ScreenState
 import com.mifos.room.entities.templates.recurringDeposit.RecurringDepositAccountTemplate
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -159,54 +159,45 @@ class RecurringAccountViewModel(
 
         viewModelScope.launch {
             isOnline {
-                recurringAccountRepo.createRecurringDepositAccount(payload).collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> {
-                            if (dataState.exception is IllegalStateException) {
-                                mutableStateFlow.update {
-                                    it.copy(
-                                        dialogState = RecurringAccountState.DialogState.SuccessResponseStatus(
-                                            successStatus = false,
-                                            msg = dataState.message,
-                                        ),
-                                        launchEffectKey = Random.nextInt(),
-                                        isOverlayLoadingActive = false,
-                                    )
-                                }
-                            } else {
-                                mutableStateFlow.update {
-                                    it.copy(
-                                        screenState = RecurringAccountState.ScreenState.Error(
-                                            dataState.message,
-                                        ),
-                                        isOverlayLoadingActive = false,
-                                    )
-                                }
-                            }
-                        }
-
-                        is DataState.Loading -> {
+                mutableStateFlow.update {
+                    it.copy(isOverlayLoadingActive = true)
+                }
+                recurringAccountRepo.createRecurringDepositAccount(payload)
+                    .catch { throwable ->
+                        if (throwable is IllegalStateException) {
                             mutableStateFlow.update {
                                 it.copy(
-                                    isOverlayLoadingActive = true,
+                                    dialogState = RecurringAccountState.DialogState.SuccessResponseStatus(
+                                        successStatus = false,
+                                        msg = throwable.message.orEmpty(),
+                                    ),
+                                    launchEffectKey = Random.nextInt(),
+                                    isOverlayLoadingActive = false,
                                 )
                             }
-                        }
-
-                        is DataState.Success -> {
+                        } else {
                             mutableStateFlow.update {
                                 it.copy(
-                                    isOverlayLoadingActive = false,
-                                    launchEffectKey = Random.nextInt(),
-                                    dialogState = RecurringAccountState.DialogState.SuccessResponseStatus(
-                                        successStatus = true,
-                                        msg = getString(Res.string.feature_recurring_account_created_successfully),
+                                    screenState = RecurringAccountState.ScreenState.Error(
+                                        throwable.message.orEmpty(),
                                     ),
+                                    isOverlayLoadingActive = false,
                                 )
                             }
                         }
                     }
-                }
+                    .collect {
+                        mutableStateFlow.update {
+                            it.copy(
+                                isOverlayLoadingActive = false,
+                                launchEffectKey = Random.nextInt(),
+                                dialogState = RecurringAccountState.DialogState.SuccessResponseStatus(
+                                    successStatus = true,
+                                    msg = getString(Res.string.feature_recurring_account_created_successfully),
+                                ),
+                            )
+                        }
+                    }
             }
         }
     }
@@ -314,33 +305,25 @@ class RecurringAccountViewModel(
 
     private fun loadRecurringAccountTemplate() = viewModelScope.launch {
         isOnline {
+            mutableStateFlow.update {
+                it.copy(
+                    screenState = ScreenState.Loading,
+                )
+            }
             recurringAccountRepo.getRecurringAccountTemplate(clientId = state.clientId)
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Success -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    template = dataState.data,
-                                    screenState = ScreenState.Success,
-                                )
-                            }
-                        }
-
-                        is DataState.Error -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    screenState = ScreenState.Error(dataState.message),
-                                )
-                            }
-                        }
-
-                        DataState.Loading -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    screenState = ScreenState.Loading,
-                                )
-                            }
-                        }
+                .catch { throwable ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            screenState = ScreenState.Error(throwable.message.orEmpty()),
+                        )
+                    }
+                }
+                .collect { template ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            template = template,
+                            screenState = ScreenState.Success,
+                        )
                     }
                 }
         }
@@ -351,36 +334,29 @@ class RecurringAccountViewModel(
         productId: Int,
     ) = viewModelScope.launch {
         isOnline {
-            recurringAccountRepo.getRecurringAccountTemplate(clientId, productId).collect { state ->
-                when (state) {
-                    is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                screenState = ScreenState.Success,
-                                template = state.data,
-                                isOverlayLoadingActive = false,
-                            )
-                        }
-                    }
-
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                screenState = ScreenState.Error(state.message),
-                                isOverlayLoadingActive = false,
-                            )
-                        }
-                    }
-
-                    DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                isOverlayLoadingActive = true,
-                            )
-                        }
+            mutableStateFlow.update {
+                it.copy(
+                    isOverlayLoadingActive = true,
+                )
+            }
+            recurringAccountRepo.getRecurringAccountTemplate(clientId, productId)
+                .catch { throwable ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            screenState = ScreenState.Error(throwable.message.orEmpty()),
+                            isOverlayLoadingActive = false,
+                        )
                     }
                 }
-            }
+                .collect { template ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            screenState = ScreenState.Success,
+                            template = template,
+                            isOverlayLoadingActive = false,
+                        )
+                    }
+                }
         }
     }
 

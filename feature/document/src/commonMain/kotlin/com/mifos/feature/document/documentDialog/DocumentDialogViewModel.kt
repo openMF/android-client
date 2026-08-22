@@ -11,7 +11,6 @@ package com.mifos.feature.document.documentDialog
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.DocumentCreateUpdateRepository
 import com.mifos.core.ui.util.multipartRequestBody
 import io.github.vinceglb.filekit.FileKit
@@ -23,6 +22,7 @@ import io.github.vinceglb.filekit.readBytes
 import io.ktor.utils.io.InternalAPI
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class DocumentDialogViewModel(
@@ -72,6 +72,7 @@ class DocumentDialogViewModel(
         file: PlatformFile,
     ) {
         viewModelScope.launch {
+            _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
             repository.createDocument(
                 entityType = entityType,
                 entityId = entityId,
@@ -81,21 +82,15 @@ class DocumentDialogViewModel(
                     extension = file.extension,
                     description = description,
                 ),
-            ).collect { result ->
-                when (result) {
-                    is DataState.Error ->
-                        _documentDialogUiState.value =
-                            DocumentDialogUiState.ShowError(result.message)
-
-                    DataState.Loading ->
-                        _documentDialogUiState.value =
-                            DocumentDialogUiState.ShowProgressbar
-
-                    is DataState.Success ->
-                        _documentDialogUiState.value =
-                            DocumentDialogUiState.ShowDocumentedCreatedSuccessfully
+            )
+                .catch {
+                    _documentDialogUiState.value =
+                        DocumentDialogUiState.ShowError(it.message.toString())
                 }
-            }
+                .collect {
+                    _documentDialogUiState.value =
+                        DocumentDialogUiState.ShowDocumentedCreatedSuccessfully
+                }
         }
     }
 
@@ -108,6 +103,7 @@ class DocumentDialogViewModel(
         file: PlatformFile,
     ) {
         viewModelScope.launch {
+            _documentDialogUiState.value = DocumentDialogUiState.ShowProgressbar
             repository.updateDocument(
                 entityType,
                 entityId,
@@ -118,21 +114,15 @@ class DocumentDialogViewModel(
                     extension = file.extension,
                     description = description,
                 ),
-            ).collect { result ->
-                when (result) {
-                    is DataState.Error ->
-                        _documentDialogUiState.value =
-                            DocumentDialogUiState.ShowError(result.message)
-
-                    DataState.Loading ->
-                        _documentDialogUiState.value =
-                            DocumentDialogUiState.ShowProgressbar
-
-                    is DataState.Success ->
-                        _documentDialogUiState.value =
-                            DocumentDialogUiState.ShowDocumentUpdatedSuccessfully
+            )
+                .catch {
+                    _documentDialogUiState.value =
+                        DocumentDialogUiState.ShowError(it.message.toString())
                 }
-            }
+                .collect {
+                    _documentDialogUiState.value =
+                        DocumentDialogUiState.ShowDocumentUpdatedSuccessfully
+                }
         }
     }
 }

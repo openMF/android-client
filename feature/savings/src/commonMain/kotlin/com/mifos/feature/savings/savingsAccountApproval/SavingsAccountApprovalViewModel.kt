@@ -13,13 +13,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.ApproveSavingsApplicationUseCase
 import com.mifos.core.model.objects.account.loan.SavingsApproval
 import com.mifos.feature.savings.navigation.SavingsAccountApproval
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 /**
@@ -40,28 +40,20 @@ class SavingsAccountApprovalViewModel(
 
     fun approveSavingsApplication(savingsApproval: SavingsApproval?) =
         viewModelScope.launch {
+            _savingsAccountApprovalUiState.value =
+                SavingsAccountApprovalUiState.ShowProgressbar
             approveSavingsApplicationUseCase(savingsAccountId, savingsApproval)
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> {
-                            _savingsAccountApprovalUiState.value =
-                                SavingsAccountApprovalUiState.ShowError(
-                                    dataState.message,
-                                )
-                        }
-
-                        DataState.Loading -> {
-                            _savingsAccountApprovalUiState.value =
-                                SavingsAccountApprovalUiState.ShowProgressbar
-                        }
-
-                        is DataState.Success -> {
-                            _savingsAccountApprovalUiState.value =
-                                SavingsAccountApprovalUiState.ShowSavingAccountApprovedSuccessfully(
-                                    dataState.data,
-                                )
-                        }
-                    }
+                .catch { error ->
+                    _savingsAccountApprovalUiState.value =
+                        SavingsAccountApprovalUiState.ShowError(
+                            error.message ?: "",
+                        )
+                }
+                .collect { response ->
+                    _savingsAccountApprovalUiState.value =
+                        SavingsAccountApprovalUiState.ShowSavingAccountApprovedSuccessfully(
+                            response,
+                        )
                 }
         }
 }

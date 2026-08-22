@@ -19,13 +19,13 @@ import kpt.feature.note.generated.resources.feature_note_write_note_label
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.NoteRepository
 import com.mifos.core.domain.useCases.AddNoteUseCase
 import com.mifos.core.domain.useCases.UpdateNoteUseCase
 import com.mifos.core.model.objects.note.CreateNoteInput
 import com.mifos.core.model.objects.note.UpdateNoteInput
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
@@ -65,31 +65,24 @@ class AddEditNoteViewModel(
     private suspend fun loadSingleNote() {
         route.resourceType?.let { type ->
             route.noteId?.let { id ->
-                repository.retrieveNote(type, route.resourceId.toLong(), id).collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> {
-                            mutableStateFlow.update {
-                                it.copy(dialogState = AddEditNoteState.DialogState.Error(dataState.message))
-                            }
-                        }
-
-                        DataState.Loading -> {
-                            mutableStateFlow.update {
-                                it.copy(dialogState = AddEditNoteState.DialogState.Loading)
-                            }
-                        }
-
-                        is DataState.Success -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = null,
-                                    textFieldNotesPayload = dataState.data.note,
-                                    notesPayloadInitialData = dataState.data.note,
-                                )
-                            }
+                mutableStateFlow.update {
+                    it.copy(dialogState = AddEditNoteState.DialogState.Loading)
+                }
+                repository.retrieveNote(type, route.resourceId.toLong(), id)
+                    .catch { error ->
+                        mutableStateFlow.update {
+                            it.copy(dialogState = AddEditNoteState.DialogState.Error(error.message.orEmpty()))
                         }
                     }
-                }
+                    .collect { note ->
+                        mutableStateFlow.update {
+                            it.copy(
+                                dialogState = null,
+                                textFieldNotesPayload = note.note,
+                                notesPayloadInitialData = note.note,
+                            )
+                        }
+                    }
             }
         }
     }
@@ -99,8 +92,14 @@ class AddEditNoteViewModel(
             it.copy(dialogState = AddEditNoteState.DialogState.Loading)
         }
         route.resourceType?.let { type ->
-            val result = addNoteUseCase(type, route.resourceId.toLong(), CreateNoteInput(note = createNote))
-            sendAction(AddEditNoteAction.Internal.ReceiveAddNoteResult(result))
+            try {
+                addNoteUseCase(type, route.resourceId.toLong(), CreateNoteInput(note = createNote))
+                sendAction(AddEditNoteAction.Internal.ReceiveAddNoteResult)
+            } catch (e: Exception) {
+                mutableStateFlow.update {
+                    it.copy(dialogState = AddEditNoteState.DialogState.Error(e.message.orEmpty()))
+                }
+            }
         }
     }
 
@@ -111,60 +110,37 @@ class AddEditNoteViewModel(
         viewModelScope.launch {
             route.resourceType?.let { type ->
                 route.noteId?.let { id ->
-                    val result =
+                    try {
                         updateNoteUseCase(type, route.resourceId.toLong(), id, UpdateNoteInput(note = updateNote))
-                    sendAction(AddEditNoteAction.Internal.ReceiveEditNoteResult(result))
+                        sendAction(AddEditNoteAction.Internal.ReceiveEditNoteResult)
+                    } catch (e: Exception) {
+                        mutableStateFlow.update {
+                            it.copy(dialogState = AddEditNoteState.DialogState.Error(e.message.orEmpty()))
+                        }
+                    }
                 }
             }
         }
     }
 
-    private fun handleAddNoteResult(action: AddEditNoteAction.Internal.ReceiveAddNoteResult) {
-        when (action.addNoteResult) {
-            is DataState.Error -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = AddEditNoteState.DialogState.Error(action.addNoteResult.message),
-                    )
-                }
-            }
-
-            is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = null,
-                        notesPayloadInitialData = state.textFieldNotesPayload,
-                    )
-                }
-                sendEvent(AddEditNoteEvent.NavigateBackWithUpdateList)
-            }
-
-            else -> Unit
+    private fun handleAddNoteResult() {
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = null,
+                notesPayloadInitialData = state.textFieldNotesPayload,
+            )
         }
+        sendEvent(AddEditNoteEvent.NavigateBackWithUpdateList)
     }
 
-    private fun handleEditNoteResult(action: AddEditNoteAction.Internal.ReceiveEditNoteResult) {
-        when (action.editNoteResult) {
-            is DataState.Error -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = AddEditNoteState.DialogState.Error(action.editNoteResult.message),
-                    )
-                }
-            }
-
-            is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = null,
-                        notesPayloadInitialData = state.textFieldNotesPayload,
-                    )
-                }
-                sendEvent(AddEditNoteEvent.NavigateBackWithUpdateList)
-            }
-
-            else -> Unit
+    private fun handleEditNoteResult() {
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = null,
+                notesPayloadInitialData = state.textFieldNotesPayload,
+            )
         }
+        sendEvent(AddEditNoteEvent.NavigateBackWithUpdateList)
     }
 
     override fun handleAction(action: AddEditNoteAction) {
@@ -230,12 +206,12 @@ class AddEditNoteViewModel(
                 }
             }
 
-            is AddEditNoteAction.Internal.ReceiveEditNoteResult -> {
-                handleEditNoteResult(action)
+            AddEditNoteAction.Internal.ReceiveEditNoteResult -> {
+                handleEditNoteResult()
             }
 
-            is AddEditNoteAction.Internal.ReceiveAddNoteResult -> {
-                handleAddNoteResult(action)
+            AddEditNoteAction.Internal.ReceiveAddNoteResult -> {
+                handleAddNoteResult()
             }
         }
     }
@@ -275,12 +251,8 @@ sealed interface AddEditNoteAction {
     data class TextFieldNotesPayload(val note: String?) : AddEditNoteAction
 
     sealed interface Internal : AddEditNoteAction {
-        data class ReceiveEditNoteResult(
-            val editNoteResult: DataState<Unit>,
-        ) : Internal
+        data object ReceiveEditNoteResult : Internal
 
-        data class ReceiveAddNoteResult(
-            val addNoteResult: DataState<Unit>,
-        ) : Internal
+        data object ReceiveAddNoteResult : Internal
     }
 }

@@ -18,7 +18,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.GetReportFullParameterListUseCase
 import com.mifos.core.domain.useCases.GetReportParameterDetailsUseCase
 import com.mifos.core.domain.useCases.GetRunReportOfficesUseCase
@@ -30,6 +29,7 @@ import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlin.time.Clock
@@ -74,86 +74,64 @@ class ReportDetailViewModel(
     fun fetchFullParameterList(reportName: String, parameterType: Boolean) =
 
         viewModelScope.launch {
-            getReportFullParameterListUseCase(reportName, parameterType).collect { result ->
-                when (result) {
-                    is DataState.Error ->
-                        _reportDetailUiState.value =
-                            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
-
-                    is DataState.Loading -> _reportDetailUiState.value = ReportDetailUiState.Loading
-
-                    is DataState.Success ->
-                        _reportParameterList.value =
-                            result.data.data
+            _reportDetailUiState.value = ReportDetailUiState.Loading
+            getReportFullParameterListUseCase(reportName, parameterType)
+                .catch {
+                    _reportDetailUiState.value =
+                        ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
                 }
-            }
+                .collect { response ->
+                    _reportParameterList.value = response.data
+                }
         }
 
     fun fetchParameterDetails(parameterName: String, parameterType: Boolean) =
         viewModelScope.launch {
-            getReportParameterDetailsUseCase(parameterName, parameterType).collect { result ->
-                when (result) {
-                    is DataState.Error -> Unit
-
-                    is DataState.Loading -> Unit
-
-                    is DataState.Success -> {
-                        _reportDetail.value =
-                            Pair(result.data.data, parameterName)
-                    }
+            getReportParameterDetailsUseCase(parameterName, parameterType)
+                .catch { }
+                .collect { response ->
+                    _reportDetail.value =
+                        Pair(response.data, parameterName)
                 }
-            }
         }
 
     fun fetchOffices(parameterName: String, officeId: Int, parameterType: Boolean) =
         viewModelScope.launch {
-            getRunReportOfficesUseCase(parameterName, officeId, parameterType).collect { result ->
-                when (result) {
-                    is DataState.Error ->
-                        _reportDetailUiState.value =
-                            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
-
-                    is DataState.Loading -> Unit
-
-                    is DataState.Success -> {
-                        _reportOffices.value = result.data.data
-                        _reportDetailUiState.value = ReportDetailUiState.ParameterDetailsSuccess
-                    }
+            getRunReportOfficesUseCase(parameterName, officeId, parameterType)
+                .catch {
+                    _reportDetailUiState.value =
+                        ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
                 }
-            }
+                .collect { response ->
+                    _reportOffices.value = response.data
+                    _reportDetailUiState.value = ReportDetailUiState.ParameterDetailsSuccess
+                }
         }
 
     fun fetchProduct(parameterName: String, currencyId: String, parameterType: Boolean) =
         viewModelScope.launch {
-            getRunReportProductUseCase(parameterName, currencyId, parameterType).collect { result ->
-                when (result) {
-                    is DataState.Error ->
-                        _reportDetailUiState.value =
-                            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
-
-                    is DataState.Loading -> Unit
-
-                    is DataState.Success -> {
-                        _reportProducts.value = result.data.data
-                        _reportDetailUiState.value = ReportDetailUiState.ParameterDetailsSuccess
-                    }
+            getRunReportProductUseCase(parameterName, currencyId, parameterType)
+                .catch {
+                    _reportDetailUiState.value =
+                        ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
                 }
-            }
+                .collect { response ->
+                    _reportProducts.value = response.data
+                    _reportDetailUiState.value = ReportDetailUiState.ParameterDetailsSuccess
+                }
         }
 
     fun fetchRunReportWithQuery(reportName: String, options: MutableMap<String, String>) =
         viewModelScope.launch {
-            getRunReportWithQueryUseCase(reportName, options).collect { result ->
-                when (result) {
-                    is DataState.Error ->
-                        _reportDetailUiState.value =
-                            ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
-
-                    is DataState.Loading -> _reportDetailUiState.value = ReportDetailUiState.Loading
-
-                    is DataState.Success -> _runReport.value = result.data
+            _reportDetailUiState.value = ReportDetailUiState.Loading
+            getRunReportWithQueryUseCase(reportName, options)
+                .catch {
+                    _reportDetailUiState.value =
+                        ReportDetailUiState.Error(Res.string.feature_report_failed_to_load_report_details)
                 }
-            }
+                .collect { response ->
+                    _runReport.value = response
+                }
         }
 
     @OptIn(ExperimentalTime::class)

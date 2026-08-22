@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SyncGroupsDialogRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.GetLoanAndLoanRepaymentUseCase
@@ -26,6 +25,7 @@ import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.ServerResponseException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -200,28 +200,19 @@ class SyncGroupsDialogViewModel(
     private fun syncGroupAccounts(groupId: Int) {
         viewModelScope.launch {
             repository.syncGroupAccounts(groupId)
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> onAccountSyncFailed(dataState.exception)
+                .catch { onAccountSyncFailed(it) }
+                .collect { groupAccounts ->
+                    mLoanAccountList = getActiveLoanAccounts(
+                        groupAccounts.loanAccounts,
+                    )
+                    mSavingsAccountList = getActiveSavingsAccounts(
+                        groupAccounts.savingsAccounts,
+                    )
 
-                        DataState.Loading -> Unit
-
-                        is DataState.Success -> {
-                            val groupAccounts = dataState.data
-
-                            mLoanAccountList = getActiveLoanAccounts(
-                                groupAccounts.loanAccounts,
-                            )
-                            mSavingsAccountList = getActiveSavingsAccounts(
-                                groupAccounts.savingsAccounts,
-                            )
-
-                            // Updating UI
-                            maxSingleSyncGroupProgressBar =
-                                mLoanAccountList.size + mSavingsAccountList.size
-                            checkAccountsSyncStatusAndSyncAccounts()
-                        }
-                    }
+                    // Updating UI
+                    maxSingleSyncGroupProgressBar =
+                        mLoanAccountList.size + mSavingsAccountList.size
+                    checkAccountsSyncStatusAndSyncAccounts()
                 }
         }
     }
@@ -238,23 +229,16 @@ class SyncGroupsDialogViewModel(
     private fun syncLoanAndLoanRepayment(loanId: Int) {
         viewModelScope.launch {
             getLoanAndLoanRepaymentUseCase.invoke(loanId)
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> onAccountSyncFailed(dataState.exception)
+                .catch { onAccountSyncFailed(it) }
+                .collect { _ ->
+                    mLoanAndRepaymentSyncIndex += 1
+                    _syncGroupData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex) }
 
-                        DataState.Loading -> Unit
-
-                        is DataState.Success -> {
-                            mLoanAndRepaymentSyncIndex += 1
-                            _syncGroupData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex) }
-
-                            if (mLoanAndRepaymentSyncIndex != mLoanAccountList.size) {
-                                checkNetworkConnectionAndSyncLoanAndLoanRepayment()
-                            } else {
-                                setLoanAccountSyncStatusTrue()
-                                checkAccountsSyncStatusAndSyncAccounts()
-                            }
-                        }
+                    if (mLoanAndRepaymentSyncIndex != mLoanAccountList.size) {
+                        checkNetworkConnectionAndSyncLoanAndLoanRepayment()
+                    } else {
+                        setLoanAccountSyncStatusTrue()
+                        checkAccountsSyncStatusAndSyncAccounts()
                     }
                 }
         }
@@ -272,23 +256,17 @@ class SyncGroupsDialogViewModel(
             getSavingsAccountAndTemplateUseCase.invoke(
                 savingsAccountType,
                 savingsAccountId,
-            ).collect { dataState ->
-                when (dataState) {
-                    is DataState.Error -> onAccountSyncFailed(dataState.exception)
-
-                    DataState.Loading -> Unit
-
-                    is DataState.Success -> {
-                        mSavingsAndTransactionSyncIndex += 1
-                        _syncGroupData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex + mSavingsAndTransactionSyncIndex) }
-                        if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
-                            checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate()
-                        } else {
-                            mGroupList[mGroupSyncIndex].id?.let { loadGroupAssociateClients(it) }
-                        }
+            )
+                .catch { onAccountSyncFailed(it) }
+                .collect { _ ->
+                    mSavingsAndTransactionSyncIndex += 1
+                    _syncGroupData.update { it.copy(singleSyncCount = mLoanAndRepaymentSyncIndex + mSavingsAndTransactionSyncIndex) }
+                    if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
+                        checkNetworkConnectionAndSyncSavingsAccountAndTransactionTemplate()
+                    } else {
+                        mGroupList[mGroupSyncIndex].id?.let { loadGroupAssociateClients(it) }
                     }
                 }
-            }
         }
     }
 
@@ -299,27 +277,18 @@ class SyncGroupsDialogViewModel(
      */
     private fun loadGroupAssociateClients(groupId: Int) {
         viewModelScope.launch {
+            _syncGroupsDialogUiState.value = SyncGroupsDialogUiState.Loading
             repository.getGroupWithAssociations(groupId)
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> onAccountSyncFailed(dataState.exception)
-
-                        DataState.Loading ->
-                            _syncGroupsDialogUiState.value =
-                                SyncGroupsDialogUiState.Loading
-
-                        is DataState.Success -> {
-                            val groupWithAssociations = dataState.data
-                            mClients = groupWithAssociations.clientMembers
-                            mClientSyncIndex = 0
-                            resetIndexes()
-                            if (mClients.isNotEmpty()) {
-                                _syncGroupData.update { it.copy(totalClientSyncCount = mClients.size) }
-                                syncClientAccounts(mClients[mClientSyncIndex].id)
-                            } else {
-                                syncGroup(mGroupList[mGroupSyncIndex])
-                            }
-                        }
+                .catch { onAccountSyncFailed(it) }
+                .collect { groupWithAssociations ->
+                    mClients = groupWithAssociations.clientMembers
+                    mClientSyncIndex = 0
+                    resetIndexes()
+                    if (mClients.isNotEmpty()) {
+                        _syncGroupData.update { it.copy(totalClientSyncCount = mClients.size) }
+                        syncClientAccounts(mClients[mClientSyncIndex].id)
+                    } else {
+                        syncGroup(mGroupList[mGroupSyncIndex])
                     }
                 }
         }
@@ -417,23 +386,16 @@ class SyncGroupsDialogViewModel(
     private fun syncClientLoanAndLoanRepayment(loanId: Int) {
         viewModelScope.launch {
             getLoanAndLoanRepaymentUseCase.invoke(loanId)
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> onAccountSyncFailed(dataState.exception)
-
-                        DataState.Loading -> Unit
-
-                        is DataState.Success -> {
-                            mLoanAndRepaymentSyncIndex += 1
-                            if (mLoanAndRepaymentSyncIndex != mLoanAccountList.size) {
-                                mLoanAccountList[mLoanAndRepaymentSyncIndex].id?.let {
-                                    syncClientLoanAndLoanRepayment(it)
-                                }
-                            } else {
-                                setLoanAccountSyncStatusTrue()
-                                checkAccountsSyncStatusAndSyncClientAccounts()
-                            }
+                .catch { onAccountSyncFailed(it) }
+                .collect { _ ->
+                    mLoanAndRepaymentSyncIndex += 1
+                    if (mLoanAndRepaymentSyncIndex != mLoanAccountList.size) {
+                        mLoanAccountList[mLoanAndRepaymentSyncIndex].id?.let {
+                            syncClientLoanAndLoanRepayment(it)
                         }
+                    } else {
+                        setLoanAccountSyncStatusTrue()
+                        checkAccountsSyncStatusAndSyncClientAccounts()
                     }
                 }
         }
@@ -454,30 +416,24 @@ class SyncGroupsDialogViewModel(
             getSavingsAccountAndTemplateUseCase.invoke(
                 savingsAccountType,
                 savingsAccountId,
-            ).collect { dataState ->
-                when (dataState) {
-                    is DataState.Error -> onAccountSyncFailed(dataState.exception)
-
-                    DataState.Loading -> Unit
-
-                    is DataState.Success -> {
-                        mSavingsAndTransactionSyncIndex += 1
-                        if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
-                            mSavingsAccountList[mSavingsAndTransactionSyncIndex]
-                                .depositType?.endpoint?.let {
-                                    mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let { it1 ->
-                                        syncClientSavingsAccountAndTemplate(
-                                            it,
-                                            it1,
-                                        )
-                                    }
+            )
+                .catch { onAccountSyncFailed(it) }
+                .collect { _ ->
+                    mSavingsAndTransactionSyncIndex += 1
+                    if (mSavingsAndTransactionSyncIndex != mSavingsAccountList.size) {
+                        mSavingsAccountList[mSavingsAndTransactionSyncIndex]
+                            .depositType?.endpoint?.let {
+                                mSavingsAccountList[mSavingsAndTransactionSyncIndex].id?.let { it1 ->
+                                    syncClientSavingsAccountAndTemplate(
+                                        it,
+                                        it1,
+                                    )
                                 }
-                        } else {
-                            syncClient(mClients[mClientSyncIndex])
-                        }
+                            }
+                    } else {
+                        syncClient(mClients[mClientSyncIndex])
                     }
                 }
-            }
         }
     }
 

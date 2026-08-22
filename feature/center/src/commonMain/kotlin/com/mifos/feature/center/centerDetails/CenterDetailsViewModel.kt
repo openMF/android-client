@@ -15,12 +15,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.GetCenterDetailsUseCase
 import com.mifos.core.model.objects.groups.CenterInfo
 import com.mifos.feature.center.navigation.CenterDetailRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class CenterDetailsViewModel(
@@ -35,23 +35,17 @@ class CenterDetailsViewModel(
     val centerDetailsUiState = _centerDetailsUiState.asStateFlow()
 
     fun loadClientDetails() = viewModelScope.launch {
-        getCenterDetailsUseCase(centerId, false).collect { result ->
-            when (result) {
-                is DataState.Error ->
-                    _centerDetailsUiState.value =
-                        CenterDetailsUiState.Error(Res.string.feature_center_error_loading_centers)
-
-                is DataState.Loading -> _centerDetailsUiState.value = CenterDetailsUiState.Loading
-
-                is DataState.Success -> {
-                    result.data.let {
-                        _centerDetailsUiState.value = CenterDetailsUiState.CenterDetails(
-                            it.first,
-                            if (it.second.isNotEmpty()) it.second[0] else CenterInfo(),
-                        )
-                    }
-                }
+        _centerDetailsUiState.value = CenterDetailsUiState.Loading
+        getCenterDetailsUseCase(centerId, false)
+            .catch {
+                _centerDetailsUiState.value =
+                    CenterDetailsUiState.Error(Res.string.feature_center_error_loading_centers)
             }
-        }
+            .collect { result ->
+                _centerDetailsUiState.value = CenterDetailsUiState.CenterDetails(
+                    result.first,
+                    if (result.second.isNotEmpty()) result.second[0] else CenterInfo(),
+                )
+            }
     }
 }

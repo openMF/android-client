@@ -14,7 +14,6 @@ import kpt.feature.client.generated.resources.feature_client_failed_to_load_clie
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.filter
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.Page
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.repository.ClientListRepository
@@ -23,6 +22,7 @@ import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -129,33 +129,30 @@ internal class ClientListViewModel(
 
     private fun processClientsFromDb() {
         viewModelScope.launch {
-            repository.allDatabaseClients().collect { result ->
-                sendAction(ClientListAction.Internal.ReceiveClientResultFromDb(result))
-            }
+            updateState { it.copy(dialogState = ClientListState.DialogState.Loading) }
+            repository.allDatabaseClients()
+                .catch { error ->
+                    updateState {
+                        it.copy(
+                            dialogState = ClientListState.DialogState.Error(
+                                error.message ?: Res.string.feature_client_failed_to_load_client.toString(),
+                            ),
+                        )
+                    }
+                }
+                .collect { result ->
+                    sendAction(ClientListAction.Internal.ReceiveClientResultFromDb(result))
+                }
         }
     }
 
-    private fun handleClientResultFromDb(result: DataState<Page<ClientEntity>>) {
-        when (result) {
-            is DataState.Loading -> updateState {
-                it.copy(dialogState = ClientListState.DialogState.Loading)
-            }
-
-            is DataState.Error -> updateState {
-                it.copy(
-                    dialogState = ClientListState.DialogState.Error(
-                        result.exception.message ?: Res.string.feature_client_failed_to_load_client.toString(),
-                    ),
-                )
-            }
-
-            is DataState.Success -> updateState {
-                val data = result.data.pageItems
-                if (data.isEmpty()) {
-                    it.copy(isEmpty = true, dialogState = null)
-                } else {
-                    it.copy(clients = data, dialogState = null, unfilteredClients = data)
-                }
+    private fun handleClientResultFromDb(result: Page<ClientEntity>) {
+        updateState {
+            val data = result.pageItems
+            if (data.isEmpty()) {
+                it.copy(isEmpty = true, dialogState = null)
+            } else {
+                it.copy(clients = data, dialogState = null, unfilteredClients = data)
             }
         }
     }
@@ -172,20 +169,16 @@ internal class ClientListViewModel(
 
     private fun fetchClientImage(clientId: Int) {
         viewModelScope.launch {
-            clientDetailsRepo.getImage(clientId).collect { result ->
-                when (result) {
-                    is DataState.Error -> {}
-                    DataState.Loading -> {}
-                    is DataState.Success -> {
-                        val imageBytes = imageToByteArray(result.data)
-                        updateState { state ->
-                            state.copy(
-                                clientImages = state.clientImages + (clientId to imageBytes),
-                            )
-                        }
+            clientDetailsRepo.getImage(clientId)
+                .catch { }
+                .collect { image ->
+                    val imageBytes = imageToByteArray(image)
+                    updateState { state ->
+                        state.copy(
+                            clientImages = state.clientImages + (clientId to imageBytes),
+                        )
                     }
                 }
-            }
         }
     }
 
@@ -344,6 +337,6 @@ sealed interface ClientListAction {
 
     sealed class Internal : ClientListAction {
         data class ReceiveClientResult(val result: Flow<PagingData<ClientEntity>>) : Internal()
-        data class ReceiveClientResultFromDb(val result: DataState<Page<ClientEntity>>) : Internal()
+        data class ReceiveClientResultFromDb(val result: Page<ClientEntity>) : Internal()
     }
 }

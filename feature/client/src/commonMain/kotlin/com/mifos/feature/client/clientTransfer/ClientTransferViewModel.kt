@@ -12,7 +12,6 @@ package com.mifos.feature.client.clientTransfer
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.repository.CreateNewGroupRepository
@@ -20,6 +19,7 @@ import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.ui.components.ResultStatus
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.room.entities.organisation.OfficeEntity
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.time.Clock
@@ -52,56 +52,48 @@ internal class ClientTransferViewModel(
     }
 
     private suspend fun loadOffices() {
-        repository.offices().collect { result ->
-            when (result) {
-                is DataState.Error -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = ClientTransferState.DialogState.Error(result.message),
-                        )
-                    }
-                }
-                DataState.Loading -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = ClientTransferState.DialogState.Loading,
-                        )
-                    }
-                }
-                is DataState.Success -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = null,
-                            offices = result.data,
-                        )
-                    }
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = ClientTransferState.DialogState.Loading,
+            )
+        }
+        repository.offices()
+            .catch { error ->
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = ClientTransferState.DialogState.Error(error.message ?: ""),
+                    )
                 }
             }
-        }
+            .collect { offices ->
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = null,
+                        offices = offices,
+                    )
+                }
+            }
     }
 
     private suspend fun transferClient() {
         mutableStateFlow.update { it.copy(dialogState = ClientTransferState.DialogState.Loading) }
-        val result = repo.proposeTransfer(
-            clientId = route.id,
-            destinationOfficeId = state.offices[state.currentSelectedIndex].id,
-            transferDate = DateHelper.getDateAsStringFromLong(state.date),
-            note = state.note,
-        )
-        when {
-            result is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = ClientTransferState.DialogState.ShowStatusDialog(ResultStatus.SUCCESS),
-                    )
-                }
+        try {
+            repo.proposeTransfer(
+                clientId = route.id,
+                destinationOfficeId = state.offices[state.currentSelectedIndex].id,
+                transferDate = DateHelper.getDateAsStringFromLong(state.date),
+                note = state.note,
+            )
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ClientTransferState.DialogState.ShowStatusDialog(ResultStatus.SUCCESS),
+                )
             }
-            result is DataState.Error -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = ClientTransferState.DialogState.ShowStatusDialog(ResultStatus.FAILURE, result.message),
-                    )
-                }
+        } catch (e: Exception) {
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ClientTransferState.DialogState.ShowStatusDialog(ResultStatus.FAILURE, e.message ?: ""),
+                )
             }
         }
     }

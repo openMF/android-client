@@ -11,7 +11,6 @@ package com.mifos.feature.offline.syncCenterPayloads
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileUtils
 import com.mifos.core.data.repository.SyncCenterPayloadsRepository
 import com.mifos.core.data.util.NetworkMonitor
@@ -21,6 +20,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -70,24 +70,16 @@ class SyncCenterPayloadsViewModel(
 
     fun loadDatabaseCenterPayload() {
         viewModelScope.launch {
+            _syncCenterPayloadsUiState.value =
+                SyncCenterPayloadsUiState.ShowProgressbar
             repository.getAllDatabaseCenterPayload()
-                .collect { mCenterPayloads ->
-                    when (mCenterPayloads) {
-                        is DataState.Success -> {
-                            _syncCenterPayloadsUiState.value =
-                                SyncCenterPayloadsUiState.ShowCenters(mCenterPayloads.data)
-                        }
-
-                        is DataState.Error -> {
-                            _syncCenterPayloadsUiState.value =
-                                SyncCenterPayloadsUiState.ShowError(mCenterPayloads.message)
-                        }
-
-                        is DataState.Loading -> {
-                            _syncCenterPayloadsUiState.value =
-                                SyncCenterPayloadsUiState.ShowProgressbar
-                        }
-                    }
+                .catch { error ->
+                    _syncCenterPayloadsUiState.value =
+                        SyncCenterPayloadsUiState.ShowError(error.message ?: "")
+                }
+                .collect { centerPayloads ->
+                    _syncCenterPayloadsUiState.value =
+                        SyncCenterPayloadsUiState.ShowCenters(centerPayloads)
                 }
         }
     }
@@ -112,27 +104,21 @@ class SyncCenterPayloadsViewModel(
 
     private fun deleteAndUpdateCenterPayload(id: Int) {
         viewModelScope.launch {
+            _syncCenterPayloadsUiState.value =
+                SyncCenterPayloadsUiState.ShowProgressbar
             repository.deleteAndUpdateCenterPayloads(id)
-                .collect { result ->
-                    when (result) {
-                        is DataState.Error ->
-                            _syncCenterPayloadsUiState.value =
-                                SyncCenterPayloadsUiState.ShowError(result.message)
+                .catch { error ->
+                    _syncCenterPayloadsUiState.value =
+                        SyncCenterPayloadsUiState.ShowError(error.message ?: "")
+                }
+                .collect { centerPayloads ->
+                    centerSyncIndex = 0
+                    mCenterPayloads = centerPayloads.toMutableList()
+                    _syncCenterPayloadsUiState.value =
+                        SyncCenterPayloadsUiState.ShowCenters(mCenterPayloads)
 
-                        DataState.Loading ->
-                            _syncCenterPayloadsUiState.value =
-                                SyncCenterPayloadsUiState.ShowProgressbar
-
-                        is DataState.Success -> {
-                            centerSyncIndex = 0
-                            result.data.let { mCenterPayloads = it.toMutableList() }
-                            _syncCenterPayloadsUiState.value =
-                                SyncCenterPayloadsUiState.ShowCenters(mCenterPayloads)
-
-                            if (mCenterPayloads.isNotEmpty()) {
-                                syncCenterPayload()
-                            }
-                        }
+                    if (mCenterPayloads.isNotEmpty()) {
+                        syncCenterPayload()
                     }
                 }
         }

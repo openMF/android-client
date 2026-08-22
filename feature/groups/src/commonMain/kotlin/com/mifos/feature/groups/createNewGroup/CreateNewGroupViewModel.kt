@@ -11,13 +11,13 @@ package com.mifos.feature.groups.createNewGroup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.CreateNewGroupRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.group.GroupPayloadEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -55,30 +55,16 @@ class CreateNewGroupViewModel(
 
     fun loadOffices() {
         viewModelScope.launch {
-            repository.offices().collect { dataState ->
-                when (dataState) {
-                    is DataState.Error -> {
-                        _createNewGroupUiState.value =
-                            CreateNewGroupUiState.ShowFetchingError(dataState.message)
-                    }
-
-                    DataState.Loading -> {
-                        _createNewGroupUiState.value =
-                            CreateNewGroupUiState.ShowProgressbar
-                    }
-
-                    is DataState.Success -> {
-                        val offices = dataState.data
-                        if (offices == null) {
-                            _createNewGroupUiState.value =
-                                CreateNewGroupUiState.ShowFetchingError("No offices found")
-                        } else {
-                            _createNewGroupUiState.value =
-                                CreateNewGroupUiState.ShowOffices(offices)
-                        }
-                    }
+            _createNewGroupUiState.value = CreateNewGroupUiState.ShowProgressbar
+            repository.offices()
+                .catch { error ->
+                    _createNewGroupUiState.value =
+                        CreateNewGroupUiState.ShowFetchingError(error.message.toString())
                 }
-            }
+                .collect { offices ->
+                    _createNewGroupUiState.value =
+                        CreateNewGroupUiState.ShowOffices(offices)
+                }
         }
     }
 

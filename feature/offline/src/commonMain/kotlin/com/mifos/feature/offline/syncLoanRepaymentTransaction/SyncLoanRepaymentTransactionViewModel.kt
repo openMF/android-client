@@ -15,7 +15,6 @@ import kpt.feature.offline.generated.resources.feature_offline_failed_to_load_pa
 import kpt.feature.offline.generated.resources.feature_offline_no_loanrepayment_to_sync
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileUtils
 import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
 import com.mifos.core.data.util.NetworkMonitor
@@ -26,6 +25,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -77,48 +77,32 @@ class SyncLoanRepaymentTransactionViewModel(
 
     fun loadDatabaseLoanRepaymentTransactions() {
         viewModelScope.launch {
+            _syncLoanRepaymentTransactionUiState.value =
+                SyncLoanRepaymentTransactionUiState.ShowProgressbar
             repository.databaseLoanRepayments()
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Success -> {
-                            mLoanRepaymentRequests = dataState.data.toMutableList()
-                            updateUiState()
-                        }
-
-                        is DataState.Error -> {
-                            _syncLoanRepaymentTransactionUiState.value =
-                                SyncLoanRepaymentTransactionUiState.ShowError(Res.string.feature_offline_failed_to_load_loanrepayment)
-                        }
-
-                        is DataState.Loading -> {
-                            _syncLoanRepaymentTransactionUiState.value =
-                                SyncLoanRepaymentTransactionUiState.ShowProgressbar
-                        }
-                    }
+                .catch {
+                    _syncLoanRepaymentTransactionUiState.value =
+                        SyncLoanRepaymentTransactionUiState.ShowError(Res.string.feature_offline_failed_to_load_loanrepayment)
+                }
+                .collect { loanRepayments ->
+                    mLoanRepaymentRequests = loanRepayments.toMutableList()
+                    updateUiState()
                 }
         }
     }
 
     fun loanPaymentTypeOption() {
         viewModelScope.launch {
+            _syncLoanRepaymentTransactionUiState.value =
+                SyncLoanRepaymentTransactionUiState.ShowProgressbar
             repository.paymentTypeOption()
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Success -> {
-                            mPaymentTypeOptions = dataState.data
-                            updateUiState()
-                        }
-
-                        is DataState.Error -> {
-                            _syncLoanRepaymentTransactionUiState.value =
-                                SyncLoanRepaymentTransactionUiState.ShowError(Res.string.feature_offline_failed_to_load_paymentoptions)
-                        }
-
-                        is DataState.Loading -> {
-                            _syncLoanRepaymentTransactionUiState.value =
-                                SyncLoanRepaymentTransactionUiState.ShowProgressbar
-                        }
-                    }
+                .catch {
+                    _syncLoanRepaymentTransactionUiState.value =
+                        SyncLoanRepaymentTransactionUiState.ShowError(Res.string.feature_offline_failed_to_load_paymentoptions)
+                }
+                .collect { paymentTypeOptions ->
+                    mPaymentTypeOptions = paymentTypeOptions
+                    updateUiState()
                 }
         }
     }
@@ -161,58 +145,43 @@ class SyncLoanRepaymentTransactionViewModel(
 
     private fun deleteAndUpdateLoanRepayments(loanId: Int) {
         viewModelScope.launch {
+            _syncLoanRepaymentTransactionUiState.value =
+                SyncLoanRepaymentTransactionUiState.ShowProgressbar
             repository.deleteAndUpdateLoanRepayments(loanId)
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> Unit
-
-                        DataState.Loading ->
-                            _syncLoanRepaymentTransactionUiState.value =
-                                SyncLoanRepaymentTransactionUiState.ShowProgressbar
-
-                        is DataState.Success -> {
-                            mClientSyncIndex = 0
-                            mLoanRepaymentRequests = dataState.data.toMutableList()
-                            if (mLoanRepaymentRequests.isNotEmpty()) {
-                                syncGroupPayload()
-                            } else {
-                                _syncLoanRepaymentTransactionUiState.value =
-                                    SyncLoanRepaymentTransactionUiState.ShowEmptyLoanRepayments(
-                                        Res.string.feature_offline_no_loanrepayment_to_sync.toString(),
-                                    )
-                            }
-                            updateUiState()
-                        }
+                .catch { }
+                .collect { loanRepayments ->
+                    mClientSyncIndex = 0
+                    mLoanRepaymentRequests = loanRepayments.toMutableList()
+                    if (mLoanRepaymentRequests.isNotEmpty()) {
+                        syncGroupPayload()
+                    } else {
+                        _syncLoanRepaymentTransactionUiState.value =
+                            SyncLoanRepaymentTransactionUiState.ShowEmptyLoanRepayments(
+                                Res.string.feature_offline_no_loanrepayment_to_sync.toString(),
+                            )
                     }
+                    updateUiState()
                 }
         }
     }
 
     private fun updateLoanRepayment(loanRepaymentRequest: LoanRepaymentRequestEntity?) {
         viewModelScope.launch {
+            _syncLoanRepaymentTransactionUiState.value =
+                SyncLoanRepaymentTransactionUiState.ShowProgressbar
             repository.updateLoanRepaymentTransaction(loanRepaymentRequest!!)
+                .catch {
+                    _syncLoanRepaymentTransactionUiState.value =
+                        SyncLoanRepaymentTransactionUiState.ShowError(Res.string.feature_offline_failed_to_load_loanrepayment)
+                }
                 .collect { result ->
-                    when (result) {
-                        is DataState.Success -> {
-                            val updatedEntity = result.data ?: LoanRepaymentRequestEntity()
-                            mLoanRepaymentRequests[mClientSyncIndex] = updatedEntity
-                            mClientSyncIndex += 1
-                            if (mLoanRepaymentRequests.size != mClientSyncIndex) {
-                                syncGroupPayload()
-                            }
-                            updateUiState()
-                        }
-
-                        is DataState.Error -> {
-                            _syncLoanRepaymentTransactionUiState.value =
-                                SyncLoanRepaymentTransactionUiState.ShowError(Res.string.feature_offline_failed_to_load_loanrepayment)
-                        }
-
-                        is DataState.Loading -> {
-                            _syncLoanRepaymentTransactionUiState.value =
-                                SyncLoanRepaymentTransactionUiState.ShowProgressbar
-                        }
+                    val updatedEntity = result ?: LoanRepaymentRequestEntity()
+                    mLoanRepaymentRequests[mClientSyncIndex] = updatedEntity
+                    mClientSyncIndex += 1
+                    if (mLoanRepaymentRequests.size != mClientSyncIndex) {
+                        syncGroupPayload()
                     }
+                    updateUiState()
                 }
         }
     }

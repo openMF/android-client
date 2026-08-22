@@ -19,7 +19,6 @@ import kpt.feature.offline.generated.resources.feature_offline_no_transaction_to
 import kpt.feature.offline.generated.resources.feature_offline_nothing_to_sync
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.datastore.UserPreferencesRepository
@@ -29,6 +28,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -191,30 +191,22 @@ class SyncSavingsAccountTransactionViewModel(
      </SavingsAccountTransactionRequest> */
     fun loadDatabaseSavingsAccountTransactions() {
         viewModelScope.launch {
+            _syncSavingsAccountTransactionUiState.value =
+                SyncSavingsAccountTransactionUiState.Loading
             repository.allSavingsAccountTransactions()
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> {
-                            _syncSavingsAccountTransactionUiState.value =
-                                SyncSavingsAccountTransactionUiState.ShowError(Res.string.feature_offline_failed_to_load_savingaccounttransaction)
-                        }
-
-                        DataState.Loading ->
-                            _syncSavingsAccountTransactionUiState.value =
-                                SyncSavingsAccountTransactionUiState.Loading
-
-                        is DataState.Success -> {
-                            val transactions = dataState.data
-                            if (transactions.isNotEmpty()) {
-                                mSavingsAccountTransactionRequests = transactions.toMutableList()
-                                updateUiState()
-                            } else {
-                                _syncSavingsAccountTransactionUiState.value =
-                                    SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(
-                                        Res.string.feature_offline_no_transaction_to_sync,
-                                    )
-                            }
-                        }
+                .catch {
+                    _syncSavingsAccountTransactionUiState.value =
+                        SyncSavingsAccountTransactionUiState.ShowError(Res.string.feature_offline_failed_to_load_savingaccounttransaction)
+                }
+                .collect { transactions ->
+                    if (transactions.isNotEmpty()) {
+                        mSavingsAccountTransactionRequests = transactions.toMutableList()
+                        updateUiState()
+                    } else {
+                        _syncSavingsAccountTransactionUiState.value =
+                            SyncSavingsAccountTransactionUiState.ShowEmptySavingsAccountTransactions(
+                                Res.string.feature_offline_no_transaction_to_sync,
+                            )
                     }
                 }
         }
@@ -225,24 +217,17 @@ class SyncSavingsAccountTransactionViewModel(
      * and update the UI.
      */
     fun loadPaymentTypeOption() = viewModelScope.launch {
-        repository.paymentTypeOption().collect { state ->
-            when (state) {
-                is DataState.Success -> {
-                    mPaymentTypeOptions = state.data
-                    updateUiState()
-                }
-
-                is DataState.Error -> {
-                    _syncSavingsAccountTransactionUiState.value =
-                        SyncSavingsAccountTransactionUiState.ShowError(Res.string.feature_offline_failed_to_load_paymentoptions)
-                }
-
-                is DataState.Loading -> {
-                    _syncSavingsAccountTransactionUiState.value =
-                        SyncSavingsAccountTransactionUiState.Loading
-                }
+        _syncSavingsAccountTransactionUiState.value =
+            SyncSavingsAccountTransactionUiState.Loading
+        repository.paymentTypeOption()
+            .catch {
+                _syncSavingsAccountTransactionUiState.value =
+                    SyncSavingsAccountTransactionUiState.ShowError(Res.string.feature_offline_failed_to_load_paymentoptions)
             }
-        }
+            .collect { paymentTypeOptions ->
+                mPaymentTypeOptions = paymentTypeOptions
+                updateUiState()
+            }
     }
 
     private fun updateUiState() {
@@ -281,21 +266,17 @@ class SyncSavingsAccountTransactionViewModel(
     ) = viewModelScope.launch {
         require(!type.isNullOrBlank()) { "Account type must not be null or blank" }
         requireNotNull(request) { "Request must not be null" }
+        _syncSavingsAccountTransactionUiState.value =
+            SyncSavingsAccountTransactionUiState.Loading
         repository.processTransaction(
             type,
             accountId,
             transactionType,
             request,
-        ).collect { state ->
-            when (state) {
-                is DataState.Error -> showTransactionSyncFailed(state.message)
-
-                DataState.Loading ->
-                    _syncSavingsAccountTransactionUiState.value =
-                        SyncSavingsAccountTransactionUiState.Loading
-
-                is DataState.Success -> showTransactionSyncSuccessfully()
-            }
+        ).catch { error ->
+            showTransactionSyncFailed(error.message)
+        }.collect {
+            showTransactionSyncSuccessfully()
         }
     }
 
@@ -308,23 +289,17 @@ class SyncSavingsAccountTransactionViewModel(
      </SavingsAccountTransactionRequest></SavingsAccountTransactionRequest> */
     private fun deleteAndUpdateSavingsAccountTransaction(savingsAccountId: Int) {
         viewModelScope.launch {
+            _syncSavingsAccountTransactionUiState.value =
+                SyncSavingsAccountTransactionUiState.Loading
             repository.deleteAndUpdateTransactions(savingsAccountId)
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error ->
-                            _syncSavingsAccountTransactionUiState.value =
-                                SyncSavingsAccountTransactionUiState.ShowError(Res.string.feature_offline_failed_to_update_list)
-
-                        DataState.Loading ->
-                            _syncSavingsAccountTransactionUiState.value =
-                                SyncSavingsAccountTransactionUiState.Loading
-
-                        is DataState.Success -> {
-                            showTransactionDeletedAndUpdated(
-                                dataState.data.toMutableList(),
-                            )
-                        }
-                    }
+                .catch {
+                    _syncSavingsAccountTransactionUiState.value =
+                        SyncSavingsAccountTransactionUiState.ShowError(Res.string.feature_offline_failed_to_update_list)
+                }
+                .collect { transactions ->
+                    showTransactionDeletedAndUpdated(
+                        transactions.toMutableList(),
+                    )
                 }
         }
     }

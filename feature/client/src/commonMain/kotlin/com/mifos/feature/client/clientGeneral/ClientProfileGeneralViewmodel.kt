@@ -12,7 +12,6 @@ package com.mifos.feature.client.clientGeneral
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import kpt.core.base.ui.viewmodel.BaseViewModel
@@ -20,6 +19,7 @@ import com.mifos.feature.client.clientGeneral.ClientProfileGeneralEvent.OnAction
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.zipmodels.ClientAndClientAccounts
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -104,38 +104,31 @@ internal class ClientProfileGeneralViewmodel(
      */
     private fun loadClientDetails(clientId: Int) {
         viewModelScope.launch {
-            getClientDetailsUseCase(clientId).collect { result ->
-                when (result) {
-                    is DataState.Success -> {
-                        val performanceHistory = loadPerformanceHistory(result.data)
-                        mutableStateFlow.update {
-                            it.copy(
-                                currency = result.data.clientAccounts?.savingsAccounts?.firstOrNull()?.currency?.displaySymbol
-                                    ?: "$",
-                                client = result.data.client,
-                                performanceHistory = performanceHistory,
-                                dialogState = null,
-                            )
-                        }
-                    }
-
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientProfileGeneralState.DialogState.Error(result.message),
-                            )
-                        }
-                    }
-
-                    DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientProfileGeneralState.DialogState.Loading,
-                            )
-                        }
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ClientProfileGeneralState.DialogState.Loading,
+                )
+            }
+            getClientDetailsUseCase(clientId)
+                .catch { error ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ClientProfileGeneralState.DialogState.Error(error.message ?: ""),
+                        )
                     }
                 }
-            }
+                .collect { clientAndClientAccounts ->
+                    val performanceHistory = loadPerformanceHistory(clientAndClientAccounts)
+                    mutableStateFlow.update {
+                        it.copy(
+                            currency = clientAndClientAccounts.clientAccounts?.savingsAccounts?.firstOrNull()?.currency?.displaySymbol
+                                ?: "$",
+                            client = clientAndClientAccounts.client,
+                            performanceHistory = performanceHistory,
+                            dialogState = null,
+                        )
+                    }
+                }
         }
     }
 }

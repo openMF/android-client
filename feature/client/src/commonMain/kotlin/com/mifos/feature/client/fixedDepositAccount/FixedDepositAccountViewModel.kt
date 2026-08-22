@@ -14,12 +14,12 @@ import kpt.feature.client.generated.resources.no_internet_message
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -119,51 +119,44 @@ class FixedDepositAccountViewModel(
 
     private fun getFixedDepositAccounts() {
         viewModelScope.launch {
-            getClientDetailsUseCase.invoke(route.clientId).collect { result ->
-                when (result) {
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = FixedDepositAccountState.DialogState.Error(
-                                    result.message,
-                                ),
-                                isLoading = false,
-                            )
-                        }
-                    }
-
-                    is DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                isLoading = true,
-                                dialogState = null,
-                            )
-                        }
-                    }
-
-                    is DataState.Success -> {
-                        val fixedDepositAccount =
-                            result.data.clientAccounts?.savingsAccounts?.let {
-                                it.filter { accountEntity ->
-                                    accountEntity.depositType?.serverType ==
-                                        SavingAccountDepositTypeEntity.ServerTypes.FIXED &&
-                                        accountEntity.status?.closed == false
-                                }.filter { accountEntity ->
-                                    accountEntity.accountNo.toString().contains(state.searchText.trim())
-                                }
-                            } ?: emptyList()
-
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = null,
-                                clientId = route.clientId,
-                                fixedDepositAccount = fixedDepositAccount,
-                                isLoading = false,
-                            )
-                        }
+            mutableStateFlow.update {
+                it.copy(
+                    isLoading = true,
+                    dialogState = null,
+                )
+            }
+            getClientDetailsUseCase.invoke(route.clientId)
+                .catch { error ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = FixedDepositAccountState.DialogState.Error(
+                                error.message ?: "",
+                            ),
+                            isLoading = false,
+                        )
                     }
                 }
-            }
+                .collect { clientAndClientAccounts ->
+                    val fixedDepositAccount =
+                        clientAndClientAccounts.clientAccounts?.savingsAccounts?.let {
+                            it.filter { accountEntity ->
+                                accountEntity.depositType?.serverType ==
+                                    SavingAccountDepositTypeEntity.ServerTypes.FIXED &&
+                                    accountEntity.status?.closed == false
+                            }.filter { accountEntity ->
+                                accountEntity.accountNo.toString().contains(state.searchText.trim())
+                            }
+                        } ?: emptyList()
+
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = null,
+                            clientId = route.clientId,
+                            fixedDepositAccount = fixedDepositAccount,
+                            isLoading = false,
+                        )
+                    }
+                }
         }
     }
 }

@@ -12,7 +12,6 @@ package com.mifos.feature.client.clientCollateral
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.network.model.CollateralItem
@@ -47,25 +46,22 @@ internal class ClientCollateralViewModel(
 
     private suspend fun loadCollaterals() {
         mutableStateFlow.update { it.copy(dialogState = ClientCollateralState.DialogState.Loading) }
-        when (val result = repo.getCollateralItems()) {
-            is DataState.Error -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = ClientCollateralState.DialogState.Error(
-                            result.message,
-                        ),
-                    )
-                }
+        try {
+            val result = repo.getCollateralItems()
+            mutableStateFlow.update {
+                it.copy(
+                    collaterals = result,
+                    dialogState = null,
+                )
             }
-            is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        collaterals = result.data,
-                        dialogState = null,
-                    )
-                }
+        } catch (e: Exception) {
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ClientCollateralState.DialogState.Error(
+                        e.message ?: "",
+                    ),
+                )
             }
-            else -> Unit
         }
     }
 
@@ -76,32 +72,28 @@ internal class ClientCollateralViewModel(
             )
         }
         val collateralId = state.collaterals[state.currentSelectedIndex].id
-        val result = repo.createCollateral(
-            state.id,
-            collateralId = collateralId,
-            quantity = state.quantity,
-        )
-        when (result) {
-            is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = ShowStatusDialog(ResultStatus.SUCCESS),
-                        isOverlayLoading = false,
-                    )
-                }
+        try {
+            repo.createCollateral(
+                state.id,
+                collateralId = collateralId,
+                quantity = state.quantity,
+            )
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ShowStatusDialog(ResultStatus.SUCCESS),
+                    isOverlayLoading = false,
+                )
             }
-            is DataState.Error -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = ShowStatusDialog(
-                            ResultStatus.FAILURE,
-                            result.message,
-                        ),
-                        isOverlayLoading = false,
-                    )
-                }
+        } catch (e: Exception) {
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ShowStatusDialog(
+                        ResultStatus.FAILURE,
+                        e.message ?: "",
+                    ),
+                    isOverlayLoading = false,
+                )
             }
-            else -> Unit
         }
     }
 

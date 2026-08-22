@@ -15,7 +15,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.SaveIndividualCollectionSheetUseCase
 import com.mifos.core.model.objects.collectionsheets.LoanAndClientName
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
@@ -23,6 +22,7 @@ import com.mifos.room.entities.collectionsheet.ClientCollectionSheet
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
@@ -48,13 +48,14 @@ class IndividualCollectionSheetDetailsViewModel(
 
     fun submitIndividualCollectionSheet(payload: IndividualCollectionSheetPayload) = viewModelScope.launch {
         val errorMsg = getString(Res.string.feature_collection_sheet_failed_to_save_collection_sheet)
-        saveIndividualCollectionSheetUseCase(payload).collect { result ->
-            uiStateInternal.value = when (result) {
-                is DataState.Loading -> IndividualCollectionSheetDetailsUiState.Loading
-                is DataState.Success -> IndividualCollectionSheetDetailsUiState.SavedSuccessfully
-                is DataState.Error -> IndividualCollectionSheetDetailsUiState.Error(errorMsg)
+        uiStateInternal.value = IndividualCollectionSheetDetailsUiState.Loading
+        saveIndividualCollectionSheetUseCase(payload)
+            .catch {
+                uiStateInternal.value = IndividualCollectionSheetDetailsUiState.Error(errorMsg)
             }
-        }
+            .collect {
+                uiStateInternal.value = IndividualCollectionSheetDetailsUiState.SavedSuccessfully
+            }
     }
 
     fun filterLoanAndClientNames(clientSheets: List<ClientCollectionSheet>): List<LoanAndClientName> {

@@ -25,7 +25,6 @@ import kpt.feature.client.generated.resources.submission_date
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
@@ -35,6 +34,7 @@ import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.core.ui.util.toDateString
 import com.mifos.feature.client.clientDetailsProfile.components.ClientProfileDetailsActionItem
 import com.mifos.room.entities.client.ClientEntity
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
@@ -86,47 +86,39 @@ internal class ClientProfileDetailsViewModel(
     private fun loadClientDetailsAndImage(clientId: Int) {
         // Fetch client details
         viewModelScope.launch {
-            getClientDetailsUseCase(clientId).collect { result ->
-                when (result) {
-                    is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                client = result.data.client,
-                                details = buildClientDetails(result.data.client),
-                                dialogState = null,
-                            )
-                        }
-                    }
-
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientProfileDetailsState.DialogState.Error(result.message),
-                            )
-                        }
-                    }
-
-                    DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientProfileDetailsState.DialogState.Loading,
-                            )
-                        }
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ClientProfileDetailsState.DialogState.Loading,
+                )
+            }
+            getClientDetailsUseCase(clientId)
+                .catch { error ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ClientProfileDetailsState.DialogState.Error(error.message ?: ""),
+                        )
                     }
                 }
-            }
+                .collect { clientAndClientAccounts ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            client = clientAndClientAccounts.client,
+                            details = buildClientDetails(clientAndClientAccounts.client),
+                            dialogState = null,
+                        )
+                    }
+                }
         }
 
         // Fetch profile image
         viewModelScope.launch {
-            clientDetailsRepo.getImage(clientId).collect { result ->
-                when (result) {
-                    is DataState.Success -> mutableStateFlow.update {
-                        it.copy(profileImage = imageToByteArray(result.data))
+            clientDetailsRepo.getImage(clientId)
+                .catch { }
+                .collect { image ->
+                    mutableStateFlow.update {
+                        it.copy(profileImage = imageToByteArray(image))
                     }
-                    else -> Unit
                 }
-            }
         }
     }
 
@@ -259,23 +251,20 @@ internal class ClientProfileDetailsViewModel(
                 dialogState = ClientProfileDetailsState.DialogState.Loading,
             )
         }
-        val result = clientDetailsRepo.unassignStaff(route.id, state.client!!.staffId)
-        when {
-            result is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = ClientProfileDetailsState.DialogState
-                            .ShowStatusDialog(ResultStatus.SUCCESS),
-                    )
-                }
+        try {
+            clientDetailsRepo.unassignStaff(route.id, state.client!!.staffId)
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ClientProfileDetailsState.DialogState
+                        .ShowStatusDialog(ResultStatus.SUCCESS),
+                )
             }
-            result is DataState.Error -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = ClientProfileDetailsState.DialogState
-                            .ShowStatusDialog(ResultStatus.FAILURE, result.message),
-                    )
-                }
+        } catch (e: Exception) {
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ClientProfileDetailsState.DialogState
+                        .ShowStatusDialog(ResultStatus.FAILURE, e.message ?: ""),
+                )
             }
         }
     }

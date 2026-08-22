@@ -17,13 +17,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SurveyListRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.room.entities.survey.QuestionDatasEntity
 import com.mifos.room.entities.survey.SurveyEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -47,106 +47,86 @@ class SurveyListViewModel(
 
     fun loadSurveyList() {
         viewModelScope.launch {
-            repository.allSurvey().collect { result ->
-                when (result) {
-                    is DataState.Error -> {
-                        _surveyListUiState.value =
-                            SurveyListUiState.ShowFetchingError(Res.string.feature_client_failed_to_fetch_surveys_list)
-                    }
-                    DataState.Loading -> {
-                        _surveyListUiState.value = SurveyListUiState.ShowProgressbar
-                    }
-                    is DataState.Success -> {
-                        mSyncSurveyList = result.data
-                        loadDatabaseSurveys()
-                    }
+            _surveyListUiState.value = SurveyListUiState.ShowProgressbar
+            repository.allSurvey()
+                .catch {
+                    _surveyListUiState.value =
+                        SurveyListUiState.ShowFetchingError(Res.string.feature_client_failed_to_fetch_surveys_list)
                 }
-            }
+                .collect { surveys ->
+                    mSyncSurveyList = surveys
+                    loadDatabaseSurveys()
+                }
         }
     }
 
     private fun loadDatabaseSurveys() {
         viewModelScope.launch {
-            repository.databaseSurveys().collect { result ->
-                when (result) {
-                    is DataState.Error -> {
-                        _surveyListUiState.value =
-                            SurveyListUiState.ShowFetchingError(Res.string.feature_client_failed_to_fetch_datatable)
-                    }
-                    DataState.Loading -> {
-                        _surveyListUiState.value = SurveyListUiState.ShowProgressbar
-                    }
-                    is DataState.Success -> {
-                        mDbSurveyList = result.data
-                        if (prefManager.userInfo.first().userStatus) {
-                            for (survey in mSyncSurveyList) {
-                                loadDatabaseQuestionData(survey.id, survey)
-                            }
-                        }
-                        // OnCompleted
-                        setAlreadySurveySyncStatus(mSyncSurveyList)
-                        _surveyListUiState.value = SurveyListUiState.ShowAllSurvey(mSyncSurveyList)
-                    }
+            _surveyListUiState.value = SurveyListUiState.ShowProgressbar
+            repository.databaseSurveys()
+                .catch {
+                    _surveyListUiState.value =
+                        SurveyListUiState.ShowFetchingError(Res.string.feature_client_failed_to_fetch_datatable)
                 }
-            }
+                .collect { surveys ->
+                    mDbSurveyList = surveys
+                    if (prefManager.userInfo.first().userStatus) {
+                        for (survey in mSyncSurveyList) {
+                            loadDatabaseQuestionData(survey.id, survey)
+                        }
+                    }
+                    // OnCompleted
+                    setAlreadySurveySyncStatus(mSyncSurveyList)
+                    _surveyListUiState.value = SurveyListUiState.ShowAllSurvey(mSyncSurveyList)
+                }
         }
     }
 
     private fun loadDatabaseQuestionData(surveyId: Int, survey: SurveyEntity?) {
         viewModelScope.launch {
-            repository.getDatabaseQuestionData(surveyId).collect { result ->
-                when (result) {
-                    is DataState.Error -> {
-                        _surveyListUiState.value =
-                            SurveyListUiState.ShowFetchingError(Res.string.feature_client_failed_to_load_db_question_data)
-                    }
-                    DataState.Loading -> {
-                        _surveyListUiState.value = SurveyListUiState.ShowProgressbar
-                    }
-                    is DataState.Success -> {
-                        for (questionDatas in result.data) {
-                            loadDatabaseResponseDatas(questionDatas.id, questionDatas)
-                        }
-                        val updatedSurvey = survey!!.copy(questionDatas = result.data)
-                        mSyncSurveyList = mSyncSurveyList.map {
-                            if (it.id == survey.id) updatedSurvey else it
-                        }
-                        _surveyListUiState.value = SurveyListUiState.ShowAllSurvey(mSyncSurveyList)
-                    }
+            _surveyListUiState.value = SurveyListUiState.ShowProgressbar
+            repository.getDatabaseQuestionData(surveyId)
+                .catch {
+                    _surveyListUiState.value =
+                        SurveyListUiState.ShowFetchingError(Res.string.feature_client_failed_to_load_db_question_data)
                 }
-            }
+                .collect { questionDataList ->
+                    for (questionDatas in questionDataList) {
+                        loadDatabaseResponseDatas(questionDatas.id, questionDatas)
+                    }
+                    val updatedSurvey = survey!!.copy(questionDatas = questionDataList)
+                    mSyncSurveyList = mSyncSurveyList.map {
+                        if (it.id == survey.id) updatedSurvey else it
+                    }
+                    _surveyListUiState.value = SurveyListUiState.ShowAllSurvey(mSyncSurveyList)
+                }
         }
     }
 
     private fun loadDatabaseResponseDatas(questionId: Int, questionDatas: QuestionDatasEntity) {
         viewModelScope.launch {
-            repository.getDatabaseResponseDatas(questionId).collect { result ->
-                when (result) {
-                    is DataState.Error -> {
-                        _surveyListUiState.value =
-                            SurveyListUiState.ShowFetchingError(Res.string.feature_client_failed_to_load_db_question_data)
-                    }
-                    DataState.Loading -> {
-                        _surveyListUiState.value = SurveyListUiState.ShowProgressbar
-                    }
-                    is DataState.Success -> {
-                        val updatedQuestionDatas = questionDatas.copy(responseDatas = result.data)
-
-                        mSyncSurveyList = mSyncSurveyList.map { survey ->
-                            if (survey.id == questionDatas.surveyId) {
-                                survey.copy(
-                                    questionDatas = survey.questionDatas.map {
-                                        if (it.id == questionDatas.id) updatedQuestionDatas else it
-                                    },
-                                )
-                            } else {
-                                survey
-                            }
-                        }
-                        _surveyListUiState.value = SurveyListUiState.ShowAllSurvey(mSyncSurveyList)
-                    }
+            _surveyListUiState.value = SurveyListUiState.ShowProgressbar
+            repository.getDatabaseResponseDatas(questionId)
+                .catch {
+                    _surveyListUiState.value =
+                        SurveyListUiState.ShowFetchingError(Res.string.feature_client_failed_to_load_db_question_data)
                 }
-            }
+                .collect { responseDataList ->
+                    val updatedQuestionDatas = questionDatas.copy(responseDatas = responseDataList)
+
+                    mSyncSurveyList = mSyncSurveyList.map { survey ->
+                        if (survey.id == questionDatas.surveyId) {
+                            survey.copy(
+                                questionDatas = survey.questionDatas.map {
+                                    if (it.id == questionDatas.id) updatedQuestionDatas else it
+                                },
+                            )
+                        } else {
+                            survey
+                        }
+                    }
+                    _surveyListUiState.value = SurveyListUiState.ShowAllSurvey(mSyncSurveyList)
+                }
         }
     }
 

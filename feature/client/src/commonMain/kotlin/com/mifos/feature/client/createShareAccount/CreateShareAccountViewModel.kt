@@ -16,7 +16,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.ShareAccountRepository
 import com.mifos.core.data.util.NetworkMonitor
@@ -28,6 +27,7 @@ import com.mifos.core.network.model.share.SavingsAccountOption
 import com.mifos.core.network.model.share.ShareAccountPayload
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.core.ui.util.TextFieldsValidator
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -85,54 +85,47 @@ class CreateShareAccountViewModel(
         )
         viewModelScope.launch {
             isOnline {
-                repository.createShareAccount(shareAccountPayload).collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> {
-                            if (dataState.exception is IllegalStateException) {
-                                mutableStateFlow.update {
-                                    it.copy(
-                                        dialogState = CreateShareAccountState.DialogState.SuccessResponseStatus(
-                                            successStatus = false,
-                                            msg = dataState.message,
-                                        ),
-                                        launchEffectKey = Random.nextInt(),
-                                        isOverLayLoadingActive = false,
-                                    )
-                                }
-                            } else {
-                                mutableStateFlow.update {
-                                    it.copy(
-                                        screenState = CreateShareAccountState.ScreenState.Error(
-                                            dataState.message,
-                                        ),
-                                        isOverLayLoadingActive = false,
-                                    )
-                                }
-                            }
-                        }
-
-                        DataState.Loading -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        isOverLayLoadingActive = true,
+                    )
+                }
+                repository.createShareAccount(shareAccountPayload)
+                    .catch { error ->
+                        if (error is IllegalStateException) {
                             mutableStateFlow.update {
                                 it.copy(
-                                    isOverLayLoadingActive = true,
+                                    dialogState = CreateShareAccountState.DialogState.SuccessResponseStatus(
+                                        successStatus = false,
+                                        msg = error.message ?: "",
+                                    ),
+                                    launchEffectKey = Random.nextInt(),
+                                    isOverLayLoadingActive = false,
                                 )
                             }
-                        }
-
-                        is DataState.Success -> {
+                        } else {
                             mutableStateFlow.update {
                                 it.copy(
-                                    isOverLayLoadingActive = false,
-                                    launchEffectKey = Random.nextInt(),
-                                    dialogState = CreateShareAccountState.DialogState.SuccessResponseStatus(
-                                        successStatus = true,
-                                        msg = getString(Res.string.feature_share_account_created_successfully),
+                                    screenState = CreateShareAccountState.ScreenState.Error(
+                                        error.message ?: "",
                                     ),
+                                    isOverLayLoadingActive = false,
                                 )
                             }
                         }
                     }
-                }
+                    .collect { _ ->
+                        mutableStateFlow.update {
+                            it.copy(
+                                isOverLayLoadingActive = false,
+                                launchEffectKey = Random.nextInt(),
+                                dialogState = CreateShareAccountState.DialogState.SuccessResponseStatus(
+                                    successStatus = true,
+                                    msg = getString(Res.string.feature_share_account_created_successfully),
+                                ),
+                            )
+                        }
+                    }
             }
         }
     }
@@ -140,42 +133,35 @@ class CreateShareAccountViewModel(
     private fun loadShareTemplateFromProduct(client: Int, productId: Int?) {
         viewModelScope.launch {
             isOnline {
-                repository.getShareTemplate(client, productId).collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    screenState = CreateShareAccountState.ScreenState.Error(
-                                        dataState.message,
-                                    ),
-                                    isOverLayLoadingActive = false,
-                                )
-                            }
-                        }
-
-                        DataState.Loading -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    isOverLayLoadingActive = true,
-                                )
-                            }
-                        }
-
-                        is DataState.Success -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    screenState = CreateShareAccountState.ScreenState.Success,
-                                    currency = dataState.data.currency?.name,
-                                    currentPrice = dataState.data.currentMarketPrice?.toString(),
-                                    savingsAccountOptions = dataState.data.savingsAccountOptions.orEmpty(),
-                                    lockInPeriodFrequencyTypeOptions = dataState.data.lockinPeriodFrequencyTypeOptions.orEmpty(),
-                                    minimumActivePeriodFrequencyTypeOptions = dataState.data.minimumActivePeriodFrequencyTypeOptions.orEmpty(),
-                                    isOverLayLoadingActive = false,
-                                )
-                            }
+                mutableStateFlow.update {
+                    it.copy(
+                        isOverLayLoadingActive = true,
+                    )
+                }
+                repository.getShareTemplate(client, productId)
+                    .catch { error ->
+                        mutableStateFlow.update {
+                            it.copy(
+                                screenState = CreateShareAccountState.ScreenState.Error(
+                                    error.message ?: "",
+                                ),
+                                isOverLayLoadingActive = false,
+                            )
                         }
                     }
-                }
+                    .collect { template ->
+                        mutableStateFlow.update {
+                            it.copy(
+                                screenState = CreateShareAccountState.ScreenState.Success,
+                                currency = template.currency?.name,
+                                currentPrice = template.currentMarketPrice?.toString(),
+                                savingsAccountOptions = template.savingsAccountOptions.orEmpty(),
+                                lockInPeriodFrequencyTypeOptions = template.lockinPeriodFrequencyTypeOptions.orEmpty(),
+                                minimumActivePeriodFrequencyTypeOptions = template.minimumActivePeriodFrequencyTypeOptions.orEmpty(),
+                                isOverLayLoadingActive = false,
+                            )
+                        }
+                    }
             }
         }
     }
@@ -183,37 +169,30 @@ class CreateShareAccountViewModel(
     private fun loadShareTemplate(client: Int) {
         viewModelScope.launch {
             isOnline {
-                repository.getShareTemplate(client, null).collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    screenState = CreateShareAccountState.ScreenState.Error(
-                                        dataState.message,
-                                    ),
-                                )
-                            }
-                        }
-
-                        DataState.Loading -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    screenState = CreateShareAccountState.ScreenState.Loading,
-                                )
-                            }
-                        }
-
-                        is DataState.Success -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    screenState = CreateShareAccountState.ScreenState.Success,
-                                    productOption = dataState.data.productOptions,
-                                    chargeOptions = dataState.data.chargeOptions,
-                                )
-                            }
+                mutableStateFlow.update {
+                    it.copy(
+                        screenState = CreateShareAccountState.ScreenState.Loading,
+                    )
+                }
+                repository.getShareTemplate(client, null)
+                    .catch { error ->
+                        mutableStateFlow.update {
+                            it.copy(
+                                screenState = CreateShareAccountState.ScreenState.Error(
+                                    error.message ?: "",
+                                ),
+                            )
                         }
                     }
-                }
+                    .collect { template ->
+                        mutableStateFlow.update {
+                            it.copy(
+                                screenState = CreateShareAccountState.ScreenState.Success,
+                                productOption = template.productOptions,
+                                chargeOptions = template.chargeOptions,
+                            )
+                        }
+                    }
             }
         }
     }
