@@ -50,7 +50,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.CurrencyFormatter
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.loan.LoanAccountSummaryRepository
 import com.mifos.core.model.objects.account.loan.Transaction
@@ -58,8 +57,10 @@ import com.mifos.core.model.objects.account.loan.Type
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import org.jetbrains.compose.resources.StringResource
 import kotlin.math.roundToInt
@@ -82,34 +83,29 @@ internal class LoanDashboardViewModel(
 
     private fun loadLoanDetails() {
         loadLoanJob?.cancel()
-        loadLoanJob = repository.getLoanById(loanId).onEach { state ->
-            when (state) {
-                is DataState.Error -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            viewState = LoanDashboardState.ViewState.Error(Res.string.feature_loan_failed_to_load_loan),
-                        )
-                    }
+        loadLoanJob = repository.getLoanById(loanId)
+            .onStart {
+                mutableStateFlow.update {
+                    it.copy(viewState = LoanDashboardState.ViewState.Loading)
                 }
-
-                DataState.Loading -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            viewState = LoanDashboardState.ViewState.Loading,
-                        )
-                    }
-                }
-
-                is DataState.Success ->
-                    state.data?.let(::populateLoanDashboardState) ?: run {
-                        mutableStateFlow.update {
-                            it.copy(
-                                viewState = LoanDashboardState.ViewState.Empty,
-                            )
-                        }
-                    }
             }
-        }.launchIn(viewModelScope)
+            .catch {
+                mutableStateFlow.update {
+                    it.copy(
+                        viewState = LoanDashboardState.ViewState.Error(Res.string.feature_loan_failed_to_load_loan),
+                    )
+                }
+            }
+            .onEach { loan ->
+                loan?.let(::populateLoanDashboardState) ?: run {
+                    mutableStateFlow.update {
+                        it.copy(
+                            viewState = LoanDashboardState.ViewState.Empty,
+                        )
+                    }
+                }
+            }
+            .launchIn(viewModelScope)
     }
 
     private fun populateLoanDashboardState(loanDetails: LoanWithAssociations) {

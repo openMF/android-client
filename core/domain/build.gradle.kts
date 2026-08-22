@@ -23,6 +23,14 @@ kotlin {
             implementation(projects.core.common)
             api(projects.core.data)
             api(projects.core.model)
+            // Fork use-cases (paging data sources + data-access use-cases) reference these
+            // directly in their public signatures; core.data exposes them only via
+            // `implementation`, so core/domain must depend on them itself. (Restores deps the
+            // template-sync's state-free core/domain build.gradle dropped — offline-first 04b.)
+            api(projects.core.database)
+            api(projects.core.network)
+            api(libs.androidx.paging.common)
+            implementation(libs.ktor.client.core)
 
             implementation(compose.runtime)
             implementation(compose.components.resources)

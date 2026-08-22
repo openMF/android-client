@@ -16,7 +16,6 @@ import kpt.feature.auth.generated.resources.feature_auth_error_username_length
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.domain.useCases.LoginUseCase
 import com.mifos.core.domain.useCases.PasswordValidationUseCase
@@ -25,6 +24,7 @@ import com.mifos.core.model.objects.users.User
 import com.mifos.core.network.model.PostAuthenticationResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 /**
@@ -62,30 +62,22 @@ class LoginViewModel(
 
     private fun login(username: String, password: String) {
         viewModelScope.launch {
-            loginUseCase(username, password).collect { result ->
-                when (result) {
-                    is DataState.Error -> {
+            _loginUiState.value = LoginUiState.ShowProgress
+            loginUseCase(username, password)
+                .catch { error ->
+                    _loginUiState.value =
+                        LoginUiState.ShowError(Res.string.feature_auth_error_login_failed)
+                    Logger.d("@@@", error)
+                }
+                .collect { result ->
+                    if (result.authenticated == true) {
+                        onLoginSuccessful(result, username, password)
+                    } else {
                         _loginUiState.value =
                             LoginUiState.ShowError(Res.string.feature_auth_error_login_failed)
-                        Logger.d("@@@", Throwable("login: ${result.data}"))
-                    }
-
-                    is DataState.Loading -> {
-                        _loginUiState.value = LoginUiState.ShowProgress
-                    }
-
-                    is DataState.Success -> {
-                        if (result.data.authenticated == true) {
-                            onLoginSuccessful(result.data, username, password)
-                        } else {
-                            _loginUiState.value =
-                                LoginUiState.ShowError(Res.string.feature_auth_error_login_failed)
-
-                            Logger.d("@@@", Throwable("login: ${result.data}"))
-                        }
+                        Logger.d("@@@", Throwable("login: $result"))
                     }
                 }
-            }
         }
     }
 

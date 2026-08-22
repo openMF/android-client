@@ -17,7 +17,6 @@ import kpt.feature.loan.generated.resources.feature_loan_disburse_success
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.common.utils.DateHelper.getDateAsLongFromList
 import com.mifos.core.domain.useCases.loanDisburse.GetLoanDisburseTemplateUseCase
@@ -45,8 +44,14 @@ internal class LoanDisburseViewModel(
     private fun loadTemplate() {
         viewModelScope.launch {
             mutableStateFlow.update { it.copy(viewState = LoanDisburseState.ViewState.Loading) }
-            val result = getTemplateUseCase(route.loanId)
-            sendAction(LoanDisburseAction.Internal.ReceiveTemplateResult(result))
+            try {
+                val result = getTemplateUseCase(route.loanId)
+                sendAction(LoanDisburseAction.Internal.ReceiveTemplateResult(result))
+            } catch (e: Exception) {
+                mutableStateFlow.update {
+                    it.copy(viewState = LoanDisburseState.ViewState.Error(Res.string.feature_loan_disburse_failed_to_load_template))
+                }
+            }
         }
     }
 
@@ -67,46 +72,10 @@ internal class LoanDisburseViewModel(
                 receiptNumber = currentState.receiptNumber.ifEmpty { null },
                 bankNumber = currentState.bankNumber.ifEmpty { null },
             )
-            val result = disburseUseCase(route.loanId, input)
-            sendAction(LoanDisburseAction.Internal.ReceiveDisburseResult(result))
-        }
-    }
-
-    private fun handleTemplateResult(result: DataState<LoanDisburseTemplate>) {
-        when (result) {
-            is DataState.Error -> {
-                mutableStateFlow.update {
-                    it.copy(viewState = LoanDisburseState.ViewState.Error(Res.string.feature_loan_disburse_failed_to_load_template))
-                }
-            }
-
-            DataState.Loading -> {
-                mutableStateFlow.update {
-                    it.copy(viewState = LoanDisburseState.ViewState.Loading)
-                }
-            }
-
-            is DataState.Success -> {
-                val template = result.data
-                val minDate = getDateAsLongFromList(template.date) ?: 0L
-                mutableStateFlow.update {
-                    it.copy(
-                        viewState = LoanDisburseState.ViewState.Success(template),
-                        transactionAmount = template.netDisbursalAmount,
-                        netDisbursalAmount = template.netDisbursalAmount,
-                        availableAmount = template.netDisbursalAmount.toString(),
-                        paymentTypes = template.paymentTypeOptions,
-                        disbursedDateText = DateHelper.getDateAsStringFromLong(it.disbursedDate),
-                        minDisbursementDate = minDate,
-                    )
-                }
-            }
-        }
-    }
-
-    private fun handleDisburseResult(result: DataState<Unit>) {
-        when (result) {
-            is DataState.Error -> {
+            try {
+                disburseUseCase(route.loanId, input)
+                sendAction(LoanDisburseAction.Internal.ReceiveDisburseResult)
+            } catch (e: Exception) {
                 mutableStateFlow.update {
                     it.copy(
                         isSubmitting = false,
@@ -114,22 +83,32 @@ internal class LoanDisburseViewModel(
                     )
                 }
             }
+        }
+    }
 
-            DataState.Loading -> {
-                mutableStateFlow.update {
-                    it.copy(isSubmitting = true)
-                }
-            }
+    private fun handleTemplateResult(result: LoanDisburseTemplate) {
+        val template = result
+        val minDate = getDateAsLongFromList(template.date) ?: 0L
+        mutableStateFlow.update {
+            it.copy(
+                viewState = LoanDisburseState.ViewState.Success(template),
+                transactionAmount = template.netDisbursalAmount,
+                netDisbursalAmount = template.netDisbursalAmount,
+                availableAmount = template.netDisbursalAmount.toString(),
+                paymentTypes = template.paymentTypeOptions,
+                disbursedDateText = DateHelper.getDateAsStringFromLong(it.disbursedDate),
+                minDisbursementDate = minDate,
+            )
+        }
+    }
 
-            is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        isSubmitting = false,
-                        dialogMessage = Res.string.feature_loan_disburse_success,
-                        isDisburseSuccessful = true,
-                    )
-                }
-            }
+    private fun handleDisburseResult() {
+        mutableStateFlow.update {
+            it.copy(
+                isSubmitting = false,
+                dialogMessage = Res.string.feature_loan_disburse_success,
+                isDisburseSuccessful = true,
+            )
         }
     }
 
@@ -192,7 +171,7 @@ internal class LoanDisburseViewModel(
             LoanDisburseAction.Submit -> submitDisburse()
 
             is LoanDisburseAction.Internal.ReceiveTemplateResult -> handleTemplateResult(action.result)
-            is LoanDisburseAction.Internal.ReceiveDisburseResult -> handleDisburseResult(action.result)
+            LoanDisburseAction.Internal.ReceiveDisburseResult -> handleDisburseResult()
         }
     }
 
@@ -255,11 +234,9 @@ sealed interface LoanDisburseAction {
 
     sealed interface Internal : LoanDisburseAction {
         data class ReceiveTemplateResult(
-            val result: DataState<LoanDisburseTemplate>,
+            val result: LoanDisburseTemplate,
         ) : Internal
 
-        data class ReceiveDisburseResult(
-            val result: DataState<Unit>,
-        ) : Internal
+        data object ReceiveDisburseResult : Internal
     }
 }

@@ -14,35 +14,29 @@ package kpt.sync.infra
 import io.github.mobilebytelabs.worker.CoroutineWorker
 import io.github.mobilebytelabs.worker.WorkResult
 import io.github.mobilebytelabs.worker.WorkerContext
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kpt.core.base.data.infra.Synchronizer
 import kpt.core.base.datastore.infra.ChangeListVersions
 import kpt.core.base.datastore.infra.SyncStatePersister
-import kpt.core.data.demo.currency.CurrencyRepository
-import kpt.core.data.demo.economic.MacroIndicatorsRepository
 
 /**
- * Single data-sync worker. Implements [Synchronizer] so its two [Syncable]
- * collaborators ([CurrencyRepository], [MacroIndicatorsRepository]) can read +
- * write [ChangeListVersions] through `this` without an extra abstraction.
+ * Single data-sync worker. Implements [Synchronizer] so any [kpt.core.base.data.infra.Syncable]
+ * collaborator can read + write [ChangeListVersions] through `this` without an extra abstraction.
  *
- * **No `getAll<Syncable>()`** — the two repos are constructor-injected as named interfaces. Adding a third
- * Syncable (e.g. FRED interest rates) requires editing this class signature +
- * the [SyncModule] binding — not a runtime discovery.
+ * The template's showcase demo `Syncable` repositories (currency / macro-indicators) were removed
+ * during template adoption — the field-officer fork does not sync those domains. This fork's real
+ * offline sync (client / center / group / loan / savings payloads) is driven by the feature-layer
+ * `Sync*DialogViewModel`s pushing queued payloads on demand, not by a headless background
+ * `Synchronizer` adopter, so no repository is enrolled here yet.
  *
- * The `awaitAll` shape means partial failure is full failure — if one repo
- * throws, the entire sync is `Result.retry()`. This matches NiA's surface
- * (single `Flow<Boolean>` to observers) and is what the template's home
- * dashboard expects.
+ * **No `getAll<Syncable>()`** — collaborators are constructor-injected as named interfaces. Enrolling
+ * a repository (once one adopts [kpt.core.base.data.infra.Syncable]) requires editing this class
+ * signature + its worker-registry autowiring — not a runtime discovery.
+ *
+ * The worker still reads the persisted [ChangeListVersions] at start and writes them back at end, so
+ * the [SyncStatePersister] round-trip and the [Synchronizer] seam stay live for the first adopter.
  */
 public class DataSyncWorker(
     context: WorkerContext,
-    // demo:begin
-    private val currencyRepository: CurrencyRepository,
-    private val macroIndicatorsRepository: MacroIndicatorsRepository,
-    // demo:end
     private val persister: SyncStatePersister,
 ) : CoroutineWorker(context), Synchronizer {
 
@@ -58,17 +52,9 @@ public class DataSyncWorker(
 
     override suspend fun doWork(): WorkResult {
         workingVersions = persister.read()
-        // demo:begin
-        val ok = runCatching {
-            coroutineScope {
-                listOf(
-                    async { currencyRepository.syncWith(this@DataSyncWorker) },
-                    async { macroIndicatorsRepository.syncWith(this@DataSyncWorker) },
-                ).awaitAll().all { it }
-            }
-        }.getOrDefault(false)
-        if (!ok) return WorkResult.retry()
-        // demo:end
+        // No Syncable repositories are enrolled in this fork yet (see class KDoc). The persister
+        // round-trip below keeps the sync-state seam live for the first adopter; once a repository
+        // adopts Syncable, run its `syncWith(this@DataSyncWorker)` here and gate success on the result.
         persister.write(workingVersions)
         return WorkResult.success()
     }

@@ -16,7 +16,6 @@ import kpt.feature.loan.generated.resources.feature_loan_charge_off_success
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.domain.useCases.loanChargeOff.GetLoanChargeOffTemplateUseCase
 import com.mifos.core.domain.useCases.loanChargeOff.LoanChargeOffUseCase
@@ -42,8 +41,14 @@ internal class LoanChargeOffViewModel(
     private fun loadTemplate() {
         viewModelScope.launch {
             mutableStateFlow.update { it.copy(viewState = LoanChargeOffState.ViewState.Loading) }
-            val result = getTemplateUseCase(route.loanId)
-            sendAction(LoanChargeOffAction.Internal.ReceiveTemplateResult(result))
+            try {
+                val result = getTemplateUseCase(route.loanId)
+                sendAction(LoanChargeOffAction.Internal.ReceiveTemplateResult(result))
+            } catch (e: Exception) {
+                mutableStateFlow.update {
+                    it.copy(viewState = LoanChargeOffState.ViewState.Error(Res.string.feature_loan_charge_off_failed_to_load_charge_off_reasons))
+                }
+            }
         }
     }
 
@@ -62,36 +67,10 @@ internal class LoanChargeOffViewModel(
                 externalId = currentState.externalId.ifEmpty { null },
                 note = currentState.note.ifEmpty { null },
             )
-            val result = chargeOffUseCase(route.loanId, input)
-            sendAction(LoanChargeOffAction.Internal.ReceiveChargeOffResult(result))
-        }
-    }
-
-    private fun handleTemplateResult(result: DataState<List<ChargeOffReasonOption>>) {
-        when (result) {
-            is DataState.Error -> {
-                mutableStateFlow.update {
-                    it.copy(viewState = LoanChargeOffState.ViewState.Error(Res.string.feature_loan_charge_off_failed_to_load_charge_off_reasons))
-                }
-            }
-
-            DataState.Loading -> {
-                mutableStateFlow.update {
-                    it.copy(viewState = LoanChargeOffState.ViewState.Loading)
-                }
-            }
-
-            is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(viewState = LoanChargeOffState.ViewState.Success(result.data))
-                }
-            }
-        }
-    }
-
-    private fun handleChargeOffResult(result: DataState<Unit>) {
-        when (result) {
-            is DataState.Error -> {
+            try {
+                chargeOffUseCase(route.loanId, input)
+                sendAction(LoanChargeOffAction.Internal.ReceiveChargeOffResult)
+            } catch (e: Exception) {
                 mutableStateFlow.update {
                     it.copy(
                         isSubmitting = false,
@@ -99,22 +78,22 @@ internal class LoanChargeOffViewModel(
                     )
                 }
             }
+        }
+    }
 
-            DataState.Loading -> {
-                mutableStateFlow.update {
-                    it.copy(isSubmitting = true)
-                }
-            }
+    private fun handleTemplateResult(result: List<ChargeOffReasonOption>) {
+        mutableStateFlow.update {
+            it.copy(viewState = LoanChargeOffState.ViewState.Success(result))
+        }
+    }
 
-            is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        isSubmitting = false,
-                        dialogMessage = Res.string.feature_loan_charge_off_success,
-                        isChargeOffSuccessful = true,
-                    )
-                }
-            }
+    private fun handleChargeOffResult() {
+        mutableStateFlow.update {
+            it.copy(
+                isSubmitting = false,
+                dialogMessage = Res.string.feature_loan_charge_off_success,
+                isChargeOffSuccessful = true,
+            )
         }
     }
 
@@ -181,7 +160,7 @@ internal class LoanChargeOffViewModel(
             LoanChargeOffAction.Submit -> submitChargeOff()
 
             is LoanChargeOffAction.Internal.ReceiveTemplateResult -> handleTemplateResult(action.result)
-            is LoanChargeOffAction.Internal.ReceiveChargeOffResult -> handleChargeOffResult(action.result)
+            LoanChargeOffAction.Internal.ReceiveChargeOffResult -> handleChargeOffResult()
         }
     }
 }
@@ -205,11 +184,9 @@ sealed interface LoanChargeOffAction {
 
     sealed interface Internal : LoanChargeOffAction {
         data class ReceiveTemplateResult(
-            val result: DataState<List<ChargeOffReasonOption>>,
+            val result: List<ChargeOffReasonOption>,
         ) : Internal
 
-        data class ReceiveChargeOffResult(
-            val result: DataState<Unit>,
-        ) : Internal
+        data object ReceiveChargeOffResult : Internal
     }
 }

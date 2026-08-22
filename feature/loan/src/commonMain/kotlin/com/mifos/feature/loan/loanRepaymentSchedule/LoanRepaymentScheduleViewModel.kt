@@ -20,14 +20,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.DataState.Error
 import com.mifos.core.common.utils.DataState.Loading
-import com.mifos.core.common.utils.DataState.Success
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.loan.LoanRepaymentScheduleRepository
 import com.mifos.core.model.objects.account.loan.Period
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -94,41 +93,31 @@ class LoanRepaymentScheduleViewModel(
         }
 
         viewModelScope.launch {
-            repository.getLoanRepaySchedule(state.loanId).collect { dataState ->
-                when (dataState) {
-                    is Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dataState = DataState.Error(
-                                    exception = Exception(getString(Res.string.feature_loan_error_fetching_repayment_schedule)),
-                                ),
-                            )
-                        }
-                    }
-
-                    Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(dataState = DataState.Loading)
-                        }
-                    }
-
-                    is Success -> {
-                        val tableData = mapToTableData(dataState.data)
-                        mutableStateFlow.update {
-                            it.copy(
-                                repaymentScheduleTableData = tableData,
-                                basicDetails = mapOf(
-                                    getString(Res.string.feature_loan_account_number) to tableData.accountNo,
-                                    getString(Res.string.feature_loan_disbursed_date) to tableData.disbursementDate,
-                                    getString(Res.string.principal_paid_off) to tableData.principalPaid,
-                                    getString(Res.string.total_installments) to "${tableData.installmentsPaid} / ${tableData.totalInstallments}",
-                                ),
-                                dataState = DataState.Success(dataState.data),
-                            )
-                        }
+            repository.getLoanRepaySchedule(state.loanId)
+                .catch {
+                    mutableStateFlow.update {
+                        it.copy(
+                            dataState = DataState.Error(
+                                exception = Exception(getString(Res.string.feature_loan_error_fetching_repayment_schedule)),
+                            ),
+                        )
                     }
                 }
-            }
+                .collect { loan ->
+                    val tableData = mapToTableData(loan)
+                    mutableStateFlow.update {
+                        it.copy(
+                            repaymentScheduleTableData = tableData,
+                            basicDetails = mapOf(
+                                getString(Res.string.feature_loan_account_number) to tableData.accountNo,
+                                getString(Res.string.feature_loan_disbursed_date) to tableData.disbursementDate,
+                                getString(Res.string.principal_paid_off) to tableData.principalPaid,
+                                getString(Res.string.total_installments) to "${tableData.installmentsPaid} / ${tableData.totalInstallments}",
+                            ),
+                            dataState = DataState.Success(loan),
+                        )
+                    }
+                }
         }
     }
 

@@ -15,12 +15,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.CurrencyFormatter
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.loan.LoanAccountSummaryRepository
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanStatus
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -131,39 +131,30 @@ internal class LoanAccountSummaryViewModel(
         viewModelScope.launch {
             mutableStateFlow.update { it.copy(dialogState = LoanAccountSummaryState.DialogState.Loading) }
 
-            repository.getLoanById(loanId).collect { dataState ->
-                when (dataState) {
-                    is DataState.Loading -> {
-                        mutableStateFlow.update { it.copy(dialogState = LoanAccountSummaryState.DialogState.Loading) }
+            repository.getLoanById(loanId)
+                .catch {
+                    val errorMessage = getString(Res.string.feature_loan_unknown_error_occured)
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = LoanAccountSummaryState.DialogState.Error(errorMessage),
+                        )
                     }
-
-                    is DataState.Success -> {
-                        val loan: LoanWithAssociations? = dataState.data
-                        if (loan != null) {
-                            fillLoanSummary(loan)
-                        } else {
-                            val errorMessage =
-                                getString(Res.string.feature_loan_unknown_error_occured)
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = LoanAccountSummaryState.DialogState.Error(
-                                        errorMessage,
-                                    ),
-                                )
-                            }
-                        }
-                    }
-
-                    is DataState.Error -> {
-                        val errorMessage = getString(Res.string.feature_loan_unknown_error_occured)
+                }
+                .collect { loan ->
+                    if (loan != null) {
+                        fillLoanSummary(loan)
+                    } else {
+                        val errorMessage =
+                            getString(Res.string.feature_loan_unknown_error_occured)
                         mutableStateFlow.update {
                             it.copy(
-                                dialogState = LoanAccountSummaryState.DialogState.Error(errorMessage),
+                                dialogState = LoanAccountSummaryState.DialogState.Error(
+                                    errorMessage,
+                                ),
                             )
                         }
                     }
                 }
-            }
         }
     }
 

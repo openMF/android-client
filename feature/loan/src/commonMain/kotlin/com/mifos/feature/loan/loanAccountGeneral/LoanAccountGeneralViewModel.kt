@@ -29,7 +29,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.CurrencyFormatter
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.LoanAccountGeneralRepository
 import com.mifos.core.data.util.NetworkUnavailableException
@@ -66,39 +65,34 @@ internal class LoanAccountGeneralViewModel(
             mutableStateFlow.update {
                 it.copy(dialogState = LoanAccountGeneralState.DialogState.Loading)
             }
-            when (val dataState = repository.getLoanById(loanId)) {
-                is DataState.Loading -> Unit
-                is DataState.Success -> {
-                    val loan = dataState.data
-                    if (loan != null) {
-                        try {
-                            fillGeneralState(loan)
-                        } catch (e: Exception) {
-                            mutableStateFlow.update {
-                                it.copy(dialogState = LoanAccountGeneralState.DialogState.Error(e.message.toString()))
-                            }
-                        }
-                    } else {
+            try {
+                val loan = repository.getLoanById(loanId)
+                if (loan != null) {
+                    try {
+                        fillGeneralState(loan)
+                    } catch (e: Exception) {
                         mutableStateFlow.update {
-                            it.copy(dialogState = LoanAccountGeneralState.DialogState.Error(getString(Res.string.feature_loan_profile_error_details_not_found)))
+                            it.copy(dialogState = LoanAccountGeneralState.DialogState.Error(e.message.toString()))
                         }
+                    }
+                } else {
+                    mutableStateFlow.update {
+                        it.copy(dialogState = LoanAccountGeneralState.DialogState.Error(getString(Res.string.feature_loan_profile_error_details_not_found)))
                     }
                 }
-
-                is DataState.Error -> {
-                    val isNetworkError = dataState.exception is NetworkUnavailableException
-                    mutableStateFlow.update {
-                        it.copy(
-                            networkConnection = !isNetworkError,
-                            dialogState = LoanAccountGeneralState.DialogState.Error(
-                                if (isNetworkError) {
-                                    getString(Res.string.feature_loan_profile_error_network_not_available)
-                                } else {
-                                    dataState.message
-                                },
-                            ),
-                        )
-                    }
+            } catch (e: Exception) {
+                val isNetworkError = e is NetworkUnavailableException
+                mutableStateFlow.update {
+                    it.copy(
+                        networkConnection = !isNetworkError,
+                        dialogState = LoanAccountGeneralState.DialogState.Error(
+                            if (isNetworkError) {
+                                getString(Res.string.feature_loan_profile_error_network_not_available)
+                            } else {
+                                e.message.toString()
+                            },
+                        ),
+                    )
                 }
             }
         }

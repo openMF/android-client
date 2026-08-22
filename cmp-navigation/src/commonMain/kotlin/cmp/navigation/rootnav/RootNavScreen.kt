@@ -34,6 +34,11 @@ import androidx.navigation.navOptions
 import cmp.navigation.authenticated.AuthenticatedGraphRoute
 import cmp.navigation.authenticated.authenticatedGraph
 import cmp.navigation.authenticated.navigateToAuthenticatedGraph
+import com.mifos.feature.auth.navigation.LoginRoute
+import com.mifos.feature.auth.navigation.authNavGraph
+import com.mifos.feature.auth.navigation.navigateToLogin
+import com.mifos.feature.passcode.mifosPasscode.navigateToRootMifosPasscodeScreen
+import com.mifos.feature.passcode.mifosPasscode.rootMifosPasscodeScreen
 import cmp.navigation.splash.SplashRoute
 import cmp.navigation.splash.navigateToSplash
 import cmp.navigation.splash.splashDestination
@@ -98,7 +103,17 @@ fun RootNavScreen(
             ) {
                 splashDestination()
 //            onboardingDestination()
-//            authNavGraph(navController)
+                // Fork auth flow — login → passcode → authenticated. The template sync left this
+                // commented out; RootNavState.AuthenticateUser now routes to LoginRoute.
+                authNavGraph(
+                    navigatePasscode = { navController.navigateToRootMifosPasscodeScreen() },
+                    updateServerConfig = { /* server switcher — reachable from settings; login uses the configured default */ },
+                )
+                rootMifosPasscodeScreen(
+                    navigateToLogin = { navController.navigateToLogin() },
+                    onAuthenticationSuccess = { navController.navigateToAuthenticatedGraph() },
+                    onPasscodeCreation = { navController.navigateToAuthenticatedGraph() },
+                )
                 authenticatedGraph(navController)
 //            userUnlockDestination()
             }
@@ -107,10 +122,9 @@ fun RootNavScreen(
 
     val targetRoute = when (state) {
         RootNavState.Splash -> SplashRoute
-        // AuthGraphRoute — field-officer's fork auth (feature/auth + feature/passcode) gates
-        // access before RootNavState ever reaches UserAuthenticated; no separate auth-graph
-        // route is wired at the RootNav level (offline-first-template-migration T5).
-        RootNavState.AuthenticateUser -> ""
+        // Fork auth: unauthenticated → the login route (feature/auth). Login → passcode →
+        // reactive UserAuthenticated → AuthenticatedGraphRoute.
+        RootNavState.AuthenticateUser -> LoginRoute
         RootNavState.UserAuthenticated -> AuthenticatedGraphRoute
     }
     val currentRoute = navController.currentDestination?.rootLevelRoute()
@@ -148,8 +162,7 @@ fun RootNavScreen(
     LaunchedEffect(state) {
         when (state) {
             RootNavState.Splash -> navController.navigateToSplash(rootNavOptions)
-            // No separate auth-graph route at the RootNav level — see targetRoute comment above.
-            RootNavState.AuthenticateUser -> {}
+            RootNavState.AuthenticateUser -> navController.navigateToLogin(rootNavOptions)
             RootNavState.UserAuthenticated -> navController.navigateToAuthenticatedGraph(
                 navOptions = rootNavOptions,
             )

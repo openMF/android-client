@@ -18,6 +18,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.data)
+            implementation(projects.core.model)
             implementation(projects.coreBase.ui)
             implementation(projects.core.datastore)
             implementation(compose.material3)

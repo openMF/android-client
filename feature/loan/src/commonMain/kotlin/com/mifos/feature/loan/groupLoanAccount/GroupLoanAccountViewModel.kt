@@ -17,13 +17,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.CreateGroupLoansAccountUseCase
 import com.mifos.core.domain.useCases.GetAllLoanUseCase
 import com.mifos.core.domain.useCases.GetGroupLoansAccountTemplateUseCase
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class GroupLoanAccountViewModel(
@@ -43,56 +43,44 @@ class GroupLoanAccountViewModel(
     val loanProducts = _loanProducts.asStateFlow()
 
     fun loadAllLoans() = viewModelScope.launch {
-        getAllLoanUseCase().collect { result ->
-            when (result) {
-                is DataState.Error ->
-                    _groupLoanAccountUiState.value =
-                        GroupLoanAccountUiState.Error(Res.string.feature_loan_failed_to_load_loan)
-
-                is DataState.Loading ->
-                    _groupLoanAccountUiState.value =
-                        GroupLoanAccountUiState.Loading
-
-                is DataState.Success -> _loanProducts.value = result.data
+        _groupLoanAccountUiState.value = GroupLoanAccountUiState.Loading
+        getAllLoanUseCase()
+            .catch {
+                _groupLoanAccountUiState.value =
+                    GroupLoanAccountUiState.Error(Res.string.feature_loan_failed_to_load_loan)
             }
-        }
+            .collect { loanProducts ->
+                _loanProducts.value = loanProducts
+            }
     }
 
     fun loadGroupLoansAccountTemplate(productId: Int) =
         viewModelScope.launch {
-            getGroupLoansAccountTemplateUseCase(groupId, productId).collect { result ->
-                when (result) {
-                    is DataState.Error ->
-                        _groupLoanAccountUiState.value =
-                            GroupLoanAccountUiState.Error(Res.string.feature_loan_failed_to_load_template)
-
-                    is DataState.Loading -> GroupLoanAccountUiState.Loading
-
-                    is DataState.Success ->
-                        _groupLoanAccountUiState.value =
-                            GroupLoanAccountUiState.GroupLoanAccountTemplate(
-                                result.data,
-                            )
+            _groupLoanAccountUiState.value = GroupLoanAccountUiState.Loading
+            getGroupLoansAccountTemplateUseCase(groupId, productId)
+                .catch {
+                    _groupLoanAccountUiState.value =
+                        GroupLoanAccountUiState.Error(Res.string.feature_loan_failed_to_load_template)
                 }
-            }
+                .collect { template ->
+                    _groupLoanAccountUiState.value =
+                        GroupLoanAccountUiState.GroupLoanAccountTemplate(
+                            template,
+                        )
+                }
         }
 
     fun createGroupLoanAccount(loansPayload: GroupLoanPayload) =
         viewModelScope.launch {
-            createGroupLoansAccountUseCase(loansPayload).collect { result ->
-                when (result) {
-                    is DataState.Error ->
-                        _groupLoanAccountUiState.value =
-                            GroupLoanAccountUiState.Error(Res.string.feature_loan_failed_to_create_loan_account)
-
-                    is DataState.Loading ->
-                        _groupLoanAccountUiState.value =
-                            GroupLoanAccountUiState.Loading
-
-                    is DataState.Success ->
-                        _groupLoanAccountUiState.value =
-                            GroupLoanAccountUiState.GroupLoanAccountCreatedSuccessfully
+            _groupLoanAccountUiState.value = GroupLoanAccountUiState.Loading
+            createGroupLoansAccountUseCase(loansPayload)
+                .catch {
+                    _groupLoanAccountUiState.value =
+                        GroupLoanAccountUiState.Error(Res.string.feature_loan_failed_to_create_loan_account)
                 }
-            }
+                .collect {
+                    _groupLoanAccountUiState.value =
+                        GroupLoanAccountUiState.GroupLoanAccountCreatedSuccessfully
+                }
         }
 }

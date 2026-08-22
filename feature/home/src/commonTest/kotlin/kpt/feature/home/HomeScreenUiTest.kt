@@ -14,58 +14,34 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.runComposeUiTest
 import kpt.core.designsystem.theme.KptTheme
-import kpt.feature.home.demo.HomeDashboard
-import kpt.feature.home.demo.ui.EmptyBillReminderRepository
-import kpt.feature.home.demo.ui.EmptyLoanRepository
-import kpt.feature.home.demo.ui.FakeDashboardCurrencyRepository
-import kpt.feature.home.demo.ui.HomeViewModel
-import kpt.feature.home.demo.ui.LoadingEconomicRatesRepository
+import kpt.feature.home.ui.HomeViewModel
 import kpt.feature.home.ui.TestTags
 import kotlin.test.Test
 
 /**
- * Compose Multiplatform UI test for [HomeScreen] — the top-level bottom-nav
- * shell that wraps [HomeDashboard] inside a framework-owned [Scaffold] with
- * a settings top-bar action.
+ * Compose Multiplatform UI test for [HomeScreen] — the top-level bottom-nav shell that wraps the
+ * fork-owned home body inside a framework-owned [androidx.compose.material3.Scaffold] with a
+ * settings top-bar action.
  *
- * Reuses the same `internal` fake repositories from [HomeDashboardViewModelTest]
- * (all in the same module's `commonTest`). Constructs the real [HomeViewModel]
- * with no Koin and asserts [TestTags.Home.SCREEN] — the root [Scaffold] testTag
- * added to [HomeScreen] — which is always rendered regardless of dashboard state
- * (RULE-KMP-COMPOSE-UITEST-001 CU-1..CU-3).
+ * Renders the real field-officer [HomeDashboard] as the body (mirroring production, where
+ * `cmp-navigation`'s `BackboneRegistry.homeBody` supplies it) with a plain-constructed
+ * [HomeViewModel] (no Koin — the officer home VM has no constructor dependencies) and asserts
+ * [TestTags.Home.SCREEN], the root Scaffold testTag, is always displayed (RULE-KMP-COMPOSE-UITEST-001
+ * CU-1..CU-3).
  */
 @OptIn(ExperimentalTestApi::class)
 class HomeScreenUiTest {
 
     @Test
     fun screenScaffoldIsDisplayed() = runComposeUiTest {
-        val viewModel = HomeViewModel(
-            loanRepository = EmptyLoanRepository,
-            billReminderRepository = EmptyBillReminderRepository,
-            economicRatesRepository = LoadingEconomicRatesRepository,
-            currencyRepository = FakeDashboardCurrencyRepository(),
-        )
         setContent {
             KptTheme {
                 HomeScreen(
                     onSettingsClick = {},
-                    // The fork-owned home body — here the demo dashboard wired to fake repos, mirroring
-                    // production where cmp-navigation's BackboneRegistry.homeBody supplies it.
                     homeBody = {
                         HomeDashboard(
-                            onNavigateToLoans = {},
-                            onNavigateToBills = {},
-                            onNavigateToRates = {},
-                            onNavigateToExchangeRates = {},
-                            onNavigateToRateHistory = {},
-                            onNavigateToMacro = {},
-                            onNavigateToEmi = {},
-                            onNavigateToAffordability = {},
-                            onNavigateToAmortization = {},
-                            onNavigateToLoanComparison = {},
-                            onNavigateToLoanCalcWizard = {},
-                            onNavigateToCrypto = {},
-                            viewModel = viewModel,
+                            onNavigate = {},
+                            viewModel = HomeViewModel(),
                         )
                     },
                 )

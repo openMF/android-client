@@ -20,7 +20,6 @@ import kpt.feature.loan.generated.resources.feature_loan_profile_failed_to_load_
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.loan.LoanAccountSummaryRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
@@ -31,6 +30,7 @@ import com.mifos.feature.loan.loanAccountProfile.components.LoanAccountProfileAc
 import com.mifos.feature.loan.utils.UiLoanStatus
 import com.mifos.feature.loan.utils.getLoanStatus
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
@@ -70,40 +70,34 @@ internal class LoanAccountProfileViewModel(
     private fun loadLoanAccountDetails(loanId: Int) {
         loadJob?.cancel()
         loadJob = viewModelScope.launch {
-            loanRepository.getLoanById(loanId).collect { result ->
-                when (result) {
-                    is DataState.Success -> {
-                        val loan = result.data
-                        if (loan == null) {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = LoanAccountState.DialogState.Error(Res.string.feature_loan_profile_error_details_not_found),
-                                )
-                            }
-                            return@collect
-                        }
-                        val currentStatus = loan.status.getLoanStatus()
-
-                        mutableStateFlow.update {
-                            it.copy(
-                                loanAccount = loan,
-                                dialogState = null,
-                                nextActionButtonRes = calculateNextActionResource(currentStatus),
-                            )
-                        }
-                    }
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(dialogState = LoanAccountState.DialogState.Error(Res.string.feature_loan_profile_failed_to_load_loan))
-                        }
-                    }
-                    DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(dialogState = LoanAccountState.DialogState.Loading)
-                        }
+            mutableStateFlow.update {
+                it.copy(dialogState = LoanAccountState.DialogState.Loading)
+            }
+            loanRepository.getLoanById(loanId)
+                .catch {
+                    mutableStateFlow.update {
+                        it.copy(dialogState = LoanAccountState.DialogState.Error(Res.string.feature_loan_profile_failed_to_load_loan))
                     }
                 }
-            }
+                .collect { loan ->
+                    if (loan == null) {
+                        mutableStateFlow.update {
+                            it.copy(
+                                dialogState = LoanAccountState.DialogState.Error(Res.string.feature_loan_profile_error_details_not_found),
+                            )
+                        }
+                        return@collect
+                    }
+                    val currentStatus = loan.status.getLoanStatus()
+
+                    mutableStateFlow.update {
+                        it.copy(
+                            loanAccount = loan,
+                            dialogState = null,
+                            nextActionButtonRes = calculateNextActionResource(currentStatus),
+                        )
+                    }
+                }
         }
     }
 

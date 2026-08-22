@@ -22,7 +22,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.AmountTransferRepository
 import com.mifos.core.data.repository.ClientDetailsRepository
@@ -37,6 +36,7 @@ import com.mifos.core.model.objects.account.loan.transfer.ClientOption
 import com.mifos.core.model.objects.account.loan.transfer.OfficeOption
 import com.mifos.core.ui.components.ResultStatus
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -165,46 +165,41 @@ class AmountTransferViewModel(
     }
 
     private fun fetchLoanAccountDetails(accountId: Int) {
-        loanAccountSummaryRepository.getLoanById(accountId).onEach { result ->
-            sendAction(
-                AmountTransferAction.Internal.ReceiveLoanAccountDetailsResult(
-                    result,
-                ),
-            )
-        }.launchIn(viewModelScope)
-    }
-
-    private fun handleLoanAccountDetailsResult(action: AmountTransferAction.Internal.ReceiveLoanAccountDetailsResult) {
-        when (val result = action.loanAccountDetailsResult) {
-            is DataState.Error -> {
+        mutableStateFlow.update { it.copy(dialogState = AmountTransferUiState.DialogState.Loading) }
+        loanAccountSummaryRepository.getLoanById(accountId)
+            .catch { error ->
                 mutableStateFlow.update {
                     it.copy(
                         dialogState = AmountTransferUiState.DialogState.FetchingFailed(
-                            result.message,
+                            error.message.toString(),
                         ),
                     )
                 }
             }
-
-            DataState.Loading -> {
-                mutableStateFlow.update { it.copy(dialogState = AmountTransferUiState.DialogState.Loading) }
+            .onEach { result ->
+                sendAction(
+                    AmountTransferAction.Internal.ReceiveLoanAccountDetailsResult(
+                        result,
+                    ),
+                )
             }
+            .launchIn(viewModelScope)
+    }
 
-            is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = null,
-                        fromOfficeId = result.data?.loanOfficerId,
-                        currency = result.data?.currency?.code.orEmpty(),
-                        fromClientId = result.data?.clientId,
-                        fromAccountNumber = result.data?.accountNo,
-                        fromAccountType = result.data?.loanType?.id,
-                    )
-                }
-
-                fetchClientDetails(state.fromClientId)
-            }
+    private fun handleLoanAccountDetailsResult(action: AmountTransferAction.Internal.ReceiveLoanAccountDetailsResult) {
+        val result = action.loanAccountDetailsResult
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = null,
+                fromOfficeId = result?.loanOfficerId,
+                currency = result?.currency?.code.orEmpty(),
+                fromClientId = result?.clientId,
+                fromAccountNumber = result?.accountNo,
+                fromAccountType = result?.loanType?.id,
+            )
         }
+
+        fetchClientDetails(state.fromClientId)
     }
 
     private fun fetchClientDetails(clientId: Int?) {
@@ -242,39 +237,27 @@ class AmountTransferViewModel(
                     fromOfficeId = state.fromOfficeId,
                 )
             }
+        }?.catch { error ->
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = AmountTransferUiState.DialogState.FetchingFailed(
+                        error.message.toString(),
+                    ),
+                )
+            }
         }?.onEach { result ->
             sendAction(AmountTransferAction.Internal.ReceiveInitialTemplateResult(result))
         }?.launchIn(viewModelScope)
     }
 
     private fun handleInitialTemplateResult(action: AmountTransferAction.Internal.ReceiveInitialTemplateResult) {
-        when (val result = action.initialTemplateResult) {
-            is DataState.Loading -> {
-                mutableStateFlow.update {
-                    it.copy(dialogState = AmountTransferUiState.DialogState.Loading)
-                }
-            }
-
-            is DataState.Success -> {
-                val template = result.data
-                mutableStateFlow.update { state ->
-                    state.copy(
-                        dialogState = null,
-                        offices = template.toOfficeOptions.sortedBy { it.name },
-                        accountTypes = template.toAccountTypeOptions.sortedBy { it.value },
-                    )
-                }
-            }
-
-            is DataState.Error -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = AmountTransferUiState.DialogState.FetchingFailed(
-                            result.message,
-                        ),
-                    )
-                }
-            }
+        val template = action.initialTemplateResult
+        mutableStateFlow.update { state ->
+            state.copy(
+                dialogState = null,
+                offices = template.toOfficeOptions.sortedBy { it.name },
+                accountTypes = template.toAccountTypeOptions.sortedBy { it.value },
+            )
         }
     }
 
@@ -296,6 +279,14 @@ class AmountTransferViewModel(
                     toAccountType = currentState.accountTypeId,
                 )
             }
+        }?.catch { error ->
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = AmountTransferUiState.DialogState.FetchingFailed(
+                        error.message.toString(),
+                    ),
+                )
+            }
         }?.onEach { dataState ->
             sendAction(
                 AmountTransferAction.Internal.ReceiveTemplateWithDependencyResult(
@@ -306,40 +297,20 @@ class AmountTransferViewModel(
     }
 
     private fun handleTemplateWithDependenciesResult(action: AmountTransferAction.Internal.ReceiveTemplateWithDependencyResult) {
-        when (val result = action.templateWithDependencyResult) {
-            is DataState.Loading -> {
-                mutableStateFlow.update {
-                    it.copy(dialogState = AmountTransferUiState.DialogState.Loading)
-                }
-            }
+        val template = action.templateWithDependencyResult
+        mutableStateFlow.update { state ->
+            val newClients = template.toClientOptions.sortedBy { it.displayName }
+            val newAccountTypes = template.toAccountTypeOptions.sortedBy { it.value }
+            val newAccounts = template.toAccountOptions.sortedBy { it.accountNo }
+            val offices = template.toOfficeOptions.sortedBy { it.name }
 
-            is DataState.Success -> {
-                val template = result.data
-                mutableStateFlow.update { state ->
-                    val newClients = template.toClientOptions.sortedBy { it.displayName }
-                    val newAccountTypes = template.toAccountTypeOptions.sortedBy { it.value }
-                    val newAccounts = template.toAccountOptions.sortedBy { it.accountNo }
-                    val offices = template.toOfficeOptions.sortedBy { it.name }
-
-                    state.copy(
-                        dialogState = null,
-                        offices = offices,
-                        clients = newClients,
-                        accountTypes = newAccountTypes,
-                        accounts = newAccounts,
-                    )
-                }
-            }
-
-            is DataState.Error -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = AmountTransferUiState.DialogState.FetchingFailed(
-                            result.message,
-                        ),
-                    )
-                }
-            }
+            state.copy(
+                dialogState = null,
+                offices = offices,
+                clients = newClients,
+                accountTypes = newAccountTypes,
+                accounts = newAccounts,
+            )
         }
     }
 
@@ -363,32 +334,31 @@ class AmountTransferViewModel(
                 locale = Constants.LOCALE_EN,
             )
 
-            val result = repository.submitAccountTransfer(request)
-            val message = getString(Res.string.feature_loan_transfer_success)
-            sendAction(AmountTransferAction.Internal.ReceiveSubmitTransferResult(result, message))
+            try {
+                val result = repository.submitAccountTransfer(request)
+                val message = getString(Res.string.feature_loan_transfer_success)
+                sendAction(AmountTransferAction.Internal.ReceiveSubmitTransferResult(result, message))
+            } catch (e: Exception) {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = AmountTransferUiState.DialogState.TransferState(
+                            status = ResultStatus.FAILURE,
+                            message = e.message.toString(),
+                        ),
+                    )
+                }
+            }
         }
     }
 
     private fun handleSubmitTransferResult(action: AmountTransferAction.Internal.ReceiveSubmitTransferResult) {
-        when (val result = action.submitTransferResult) {
-            DataState.Loading -> Unit
-            is DataState.Error -> mutableStateFlow.update {
-                it.copy(
-                    dialogState = AmountTransferUiState.DialogState.TransferState(
-                        status = ResultStatus.FAILURE,
-                        message = result.message,
-                    ),
-                )
-            }
-
-            is DataState.Success -> mutableStateFlow.update {
-                it.copy(
-                    dialogState = AmountTransferUiState.DialogState.TransferState(
-                        status = ResultStatus.SUCCESS,
-                        message = action.message,
-                    ),
-                )
-            }
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = AmountTransferUiState.DialogState.TransferState(
+                    status = ResultStatus.SUCCESS,
+                    message = action.message,
+                ),
+            )
         }
     }
 
@@ -525,19 +495,19 @@ sealed interface AmountTransferAction {
 
     sealed interface Internal : AmountTransferAction {
         data class ReceiveLoanAccountDetailsResult(
-            val loanAccountDetailsResult: DataState<LoanWithAssociations?>,
+            val loanAccountDetailsResult: LoanWithAssociations?,
         ) : Internal
 
         data class ReceiveInitialTemplateResult(
-            val initialTemplateResult: DataState<AccountTransferTemplate>,
+            val initialTemplateResult: AccountTransferTemplate,
         ) : Internal
 
         data class ReceiveTemplateWithDependencyResult(
-            val templateWithDependencyResult: DataState<AccountTransferTemplate>,
+            val templateWithDependencyResult: AccountTransferTemplate,
         ) : Internal
 
         data class ReceiveSubmitTransferResult(
-            val submitTransferResult: DataState<AccountTransferResponse>,
+            val submitTransferResult: AccountTransferResponse,
             val message: String,
         ) : Internal
     }

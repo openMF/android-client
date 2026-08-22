@@ -17,7 +17,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.CreateLoanAccountUseCase
 import com.mifos.core.domain.useCases.GetAllLoanUseCase
 import com.mifos.core.domain.useCases.GetLoansAccountTemplateUseCase
@@ -25,6 +24,7 @@ import com.mifos.core.network.model.LoansPayload
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class LoanAccountViewModel(
@@ -44,51 +44,40 @@ class LoanAccountViewModel(
     val loanAccountTemplateUiState = _loanAccountTemplateUiState.asStateFlow()
 
     fun loadAllLoans() = viewModelScope.launch {
-        getAllLoanUseCase().collect { result ->
-            when (result) {
-                is DataState.Error ->
-                    _loanAccountUiState.value =
-                        LoanAccountUiState.Error(Res.string.feature_loan_failed_to_load_loan)
-
-                is DataState.Loading -> _loanAccountUiState.value = LoanAccountUiState.Loading
-
-                is DataState.Success ->
-                    _loanAccountUiState.value =
-                        LoanAccountUiState.AllLoan(result.data)
+        _loanAccountUiState.value = LoanAccountUiState.Loading
+        getAllLoanUseCase()
+            .catch {
+                _loanAccountUiState.value =
+                    LoanAccountUiState.Error(Res.string.feature_loan_failed_to_load_loan)
             }
-        }
+            .collect { result ->
+                _loanAccountUiState.value =
+                    LoanAccountUiState.AllLoan(result)
+            }
     }
 
     fun loadLoanAccountTemplate(productId: Int) =
         viewModelScope.launch {
-            getLoansAccountTemplateUseCase(clientId, productId).collect { result ->
-                when (result) {
-                    is DataState.Error ->
-                        _loanAccountUiState.value =
-                            LoanAccountUiState.Error(Res.string.feature_loan_failed_to_load_template)
-
-                    is DataState.Loading -> Unit
-
-                    is DataState.Success ->
-                        _loanAccountTemplateUiState.value =
-                            result.data
+            getLoansAccountTemplateUseCase(clientId, productId)
+                .catch {
+                    _loanAccountUiState.value =
+                        LoanAccountUiState.Error(Res.string.feature_loan_failed_to_load_template)
                 }
-            }
+                .collect { result ->
+                    _loanAccountTemplateUiState.value = result
+                }
         }
 
     fun createLoansAccount(loansPayload: LoansPayload) = viewModelScope.launch {
-        createLoanAccountUseCase(loansPayload).collect { result ->
-            when (result) {
-                is DataState.Error ->
-                    _loanAccountUiState.value =
-                        LoanAccountUiState.Error(Res.string.feature_loan_failed_to_create_loan_account)
-
-                is DataState.Loading -> _loanAccountUiState.value = LoanAccountUiState.Loading
-
-                is DataState.Success ->
-                    _loanAccountUiState.value =
-                        LoanAccountUiState.LoanAccountCreatedSuccessfully
+        _loanAccountUiState.value = LoanAccountUiState.Loading
+        createLoanAccountUseCase(loansPayload)
+            .catch {
+                _loanAccountUiState.value =
+                    LoanAccountUiState.Error(Res.string.feature_loan_failed_to_create_loan_account)
             }
-        }
+            .collect {
+                _loanAccountUiState.value =
+                    LoanAccountUiState.LoanAccountCreatedSuccessfully
+            }
     }
 }

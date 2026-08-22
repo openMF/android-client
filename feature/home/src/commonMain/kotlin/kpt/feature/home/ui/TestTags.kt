@@ -29,5 +29,12 @@ object TestTags {
 
         /** The vertically-scrollable dashboard `Column`. */
         const val DASHBOARD_SCROLL: String = "home_dashboard_scroll"
+
+        /**
+         * Stable per-tile tag for the field-officer entry-point cards. One tag per
+         * [kpt.feature.home.ui.HomeFeature] so Compose UI tests + Maestro flows can tap a
+         * specific feature tile (e.g. `home_tile_CLIENTS`).
+         */
+        fun featureTile(feature: HomeFeature): String = "home_tile_${feature.name}"
     }
 }

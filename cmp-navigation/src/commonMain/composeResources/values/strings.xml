@@ -10,6 +10,7 @@
 -->
 <resources>
     <string name="app_name">KPT Design</string>
+    <string name="powered_by">Powered by</string>
     <string name="home">Home</string>
     <string name="profile">Profile</string>
     <string name="settings">Settings</string>

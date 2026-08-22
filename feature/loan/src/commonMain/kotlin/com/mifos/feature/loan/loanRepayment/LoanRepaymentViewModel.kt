@@ -19,13 +19,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.CurrencyFormatter
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.loan.LoanAccountSummaryRepository
 import com.mifos.core.data.repository.loan.LoanRepaymentRepository
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import kotlin.math.round
 
@@ -59,66 +59,52 @@ class LoanRepaymentViewModel(
 
     fun loadLoanById() {
         viewModelScope.launch {
-            summaryRepository.getLoanById(args.loanId).collect { dataState ->
-                when (dataState) {
-                    is DataState.Loading -> {
-                        _loanRepaymentUiState.value = LoanRepaymentUiState.ShowProgressbar
-                    }
-
-                    is DataState.Success -> {
-                        val loanWithAssociations = dataState.data
-                        if (loanWithAssociations == null) {
-                            _loanRepaymentUiState.value = LoanRepaymentUiState.ShowError(
-                                Res.string.feature_loan_profile_error_details_not_found,
-                            )
-                            return@collect
-                        }
-                        _loanDetailsState.value = _loanDetailsState.value.copy(
-                            loanId = loanWithAssociations.id ?: 0,
-                            clientName = loanWithAssociations.clientName ?: "",
-                            loanProductName = loanWithAssociations.loanProductName ?: "",
-                            amountInArrears = loanWithAssociations.summary?.totalOverdue,
-                            loanAccountNumber = loanWithAssociations.accountNo ?: "",
-                        )
-                        checkDatabaseLoanRepaymentByLoanId()
-                    }
-
-                    is DataState.Error -> {
-                        _loanRepaymentUiState.value = LoanRepaymentUiState.ShowError(
-                            Res.string.feature_loan_profile_failed_to_load_loan,
-                        )
-                    }
+            _loanRepaymentUiState.value = LoanRepaymentUiState.ShowProgressbar
+            summaryRepository.getLoanById(args.loanId)
+                .catch {
+                    _loanRepaymentUiState.value = LoanRepaymentUiState.ShowError(
+                        Res.string.feature_loan_profile_failed_to_load_loan,
+                    )
                 }
-            }
+                .collect { loanWithAssociations ->
+                    if (loanWithAssociations == null) {
+                        _loanRepaymentUiState.value = LoanRepaymentUiState.ShowError(
+                            Res.string.feature_loan_profile_error_details_not_found,
+                        )
+                        return@collect
+                    }
+                    _loanDetailsState.value = _loanDetailsState.value.copy(
+                        loanId = loanWithAssociations.id ?: 0,
+                        clientName = loanWithAssociations.clientName ?: "",
+                        loanProductName = loanWithAssociations.loanProductName ?: "",
+                        amountInArrears = loanWithAssociations.summary?.totalOverdue,
+                        loanAccountNumber = loanWithAssociations.accountNo ?: "",
+                    )
+                    checkDatabaseLoanRepaymentByLoanId()
+                }
         }
     }
 
     fun loadLoanRepaymentTemplate() {
         viewModelScope.launch {
-            repository.getLoanRepayTemplate(args.loanId).collect { state ->
-                when (state) {
-                    is DataState.Error ->
-                        _loanRepaymentUiState.value =
-                            LoanRepaymentUiState.ShowError(
-                                Res.string
-                                    .feature_loan_failed_to_load_loan_repayment,
-                            )
-
-                    DataState.Loading ->
-                        _loanRepaymentUiState.value = LoanRepaymentUiState.ShowProgressbar
-
-                    is DataState.Success -> {
-                        val template = state.data
-                        if (template == null) {
-                            _loanRepaymentUiState.value = LoanRepaymentUiState.ShowError(
-                                Res.string.feature_loan_failed_to_load_loan_repayment,
-                            )
-                            return@collect
-                        }
-                        _loanRepaymentUiState.value = LoanRepaymentUiState.ShowLoanRepayTemplate(template)
-                    }
+            _loanRepaymentUiState.value = LoanRepaymentUiState.ShowProgressbar
+            repository.getLoanRepayTemplate(args.loanId)
+                .catch {
+                    _loanRepaymentUiState.value =
+                        LoanRepaymentUiState.ShowError(
+                            Res.string
+                                .feature_loan_failed_to_load_loan_repayment,
+                        )
                 }
-            }
+                .collect { template ->
+                    if (template == null) {
+                        _loanRepaymentUiState.value = LoanRepaymentUiState.ShowError(
+                            Res.string.feature_loan_failed_to_load_loan_repayment,
+                        )
+                        return@collect
+                    }
+                    _loanRepaymentUiState.value = LoanRepaymentUiState.ShowLoanRepayTemplate(template)
+                }
         }
     }
 
@@ -141,29 +127,24 @@ class LoanRepaymentViewModel(
 
     fun checkDatabaseLoanRepaymentByLoanId() {
         viewModelScope.launch {
-            repository.getDatabaseLoanRepaymentByLoanId(args.loanId).collect { state ->
-                when (state) {
-                    is DataState.Error ->
+            _loanRepaymentUiState.value = LoanRepaymentUiState.ShowProgressbar
+            repository.getDatabaseLoanRepaymentByLoanId(args.loanId)
+                .catch {
+                    _loanRepaymentUiState.value =
+                        LoanRepaymentUiState.ShowError(
+                            Res.string
+                                .feature_loan_failed_to_load_loan_repayment,
+                        )
+                }
+                .collect { loanRepaymentRequest ->
+                    if (loanRepaymentRequest != null) {
                         _loanRepaymentUiState.value =
-                            LoanRepaymentUiState.ShowError(
-                                Res.string
-                                    .feature_loan_failed_to_load_loan_repayment,
-                            )
-
-                    DataState.Loading ->
-                        _loanRepaymentUiState.value = LoanRepaymentUiState.ShowProgressbar
-
-                    is DataState.Success -> {
-                        if (state.data != null) {
-                            _loanRepaymentUiState.value =
-                                LoanRepaymentUiState.ShowLoanRepaymentExistInDatabase
-                        } else {
-                            _loanRepaymentUiState.value =
-                                LoanRepaymentUiState.ShowLoanRepaymentDoesNotExistInDatabase
-                        }
+                            LoanRepaymentUiState.ShowLoanRepaymentExistInDatabase
+                    } else {
+                        _loanRepaymentUiState.value =
+                            LoanRepaymentUiState.ShowLoanRepaymentDoesNotExistInDatabase
                     }
                 }
-            }
         }
     }
 

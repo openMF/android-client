@@ -15,12 +15,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.CurrencyFormatter
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.loan.LoanTransactionsRepository
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -44,30 +44,34 @@ class LoanTransactionsViewModel(
         loadTransactionsJob?.cancel()
         loadTransactionsJob = viewModelScope.launch {
             val notAvailableString = getString(Res.string.feature_loan_value_not_available)
-            repository.getLoanTransactions(loanId).collect { state ->
-                sendAction(LoanTransactionsAction.Internal.ReceiveTransactionsResult(state, notAvailableString))
+            mutableStateFlow.update {
+                it.copy(viewState = LoanTransactionsState.ViewState.Loading)
             }
+            repository.getLoanTransactions(loanId)
+                .catch { error ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            viewState = LoanTransactionsState.ViewState.Error(
+                                error.message ?: notAvailableString,
+                            ),
+                        )
+                    }
+                }
+                .collect { loanWithAssociations ->
+                    sendAction(
+                        LoanTransactionsAction.Internal.ReceiveTransactionsResult(
+                            loanWithAssociations,
+                            notAvailableString,
+                        ),
+                    )
+                }
         }
     }
 
-    private fun handleTransactionsResult(result: DataState<LoanWithAssociations>, notAvailableString: String) {
-        when (result) {
-            is DataState.Error -> {
-                mutableStateFlow.update {
-                    it.copy(viewState = LoanTransactionsState.ViewState.Error(result.message))
-                }
-            }
-
-            DataState.Loading -> {
-                mutableStateFlow.update {
-                    it.copy(viewState = LoanTransactionsState.ViewState.Loading)
-                }
-            }
-
-            is DataState.Success -> {
-                val loanWithAssociations = result.data
-                val currencyCode = loanWithAssociations.currency?.code
-                val maxDigits = loanWithAssociations.currency?.decimalPlaces
+    private fun handleTransactionsResult(result: LoanWithAssociations, notAvailableString: String) {
+        val loanWithAssociations = result
+        val currencyCode = loanWithAssociations.currency?.code
+        val maxDigits = loanWithAssociations.currency?.decimalPlaces
 
                 val transactionsData =
                     loanWithAssociations.transactions?.mapIndexed { index, transaction ->
@@ -139,8 +143,6 @@ class LoanTransactionsViewModel(
                         ),
                     )
                 }
-            }
-        }
     }
 
     override fun handleAction(action: LoanTransactionsAction) {

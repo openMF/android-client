@@ -11,6 +11,8 @@ package cmp.navigation.registry
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import com.mifos.feature.loan.di.LoanModule
+import com.mifos.feature.loan.navigation.loanDestination
 import org.koin.core.module.Module
 
 /**
@@ -45,12 +47,28 @@ object FeatureRegistry {
      * [cmp.navigation.di.KoinModules] and are always present; this is the fork's own features.
      * Populated per-feature-sub-plan (05-21) — empty until the first feature migrates.
      */
-    val featureKoinModules: List<Module> = emptyList()
+    val featureKoinModules: List<Module> = listOf(
+        // loan feature — first feature wired (pilot: offline-first-template-migration 04/04b).
+        // Its LoanTransaction vertical (Store5 ledger) is device-proven here; the remaining
+        // features land per-sub-plan (05-21).
+        LoanModule,
+    )
 
     /**
      * Feature nav destinations — registered into the authenticated graph. The shell destinations
      * (settings, notification) stay in [BackboneRegistry]; this is the fork's routes. Populated
-     * per-feature-sub-plan (05-21) — empty until the first feature migrates.
+     * per-feature-sub-plan (05-21) — the loan feature is wired first for the pilot.
      */
-    val featureDestinations: NavGraphBuilder.(NavController) -> Unit = { }
+    val featureDestinations: NavGraphBuilder.(NavController) -> Unit = { navController ->
+        // Cross-feature callbacks (documents/notes/more-info/loan-created) route to features not
+        // yet migrated (document/note/client — sub-plans 12/11/21); no-op until they land, then
+        // re-point to their real navigateTo* here.
+        loanDestination(
+            navController = navController,
+            onDocumentsClicked = { _, _ -> },
+            onNotesClicked = { _, _ -> },
+            onMoreInfoClicked = { _, _ -> },
+            onLoanCreated = { },
+        )
+    }
 }

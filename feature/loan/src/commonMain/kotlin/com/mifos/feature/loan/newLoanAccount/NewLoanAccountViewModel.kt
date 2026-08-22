@@ -13,6 +13,7 @@ import kpt.feature.loan.generated.resources.Res
 import kpt.feature.loan.generated.resources.feature_loan_account_created_successfully
 import kpt.feature.loan.generated.resources.feature_loan_account_number
 import kpt.feature.loan.generated.resources.feature_loan_disbursed_date
+import kpt.feature.loan.generated.resources.feature_loan_unknown_error_occured
 import kpt.feature.loan.generated.resources.installment_paid
 import kpt.feature.loan.generated.resources.principal_paid_off
 import kpt.feature.loan.generated.resources.total_installments
@@ -20,7 +21,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.CurrencyFormatter
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.domain.useCases.CalculateLoanScheduleUseCase
@@ -35,6 +35,7 @@ import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState.DialogState
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
@@ -280,54 +281,49 @@ internal class NewLoanAccountViewModel(
                 externalId = state.externalId,
             )
 
-            loanUseCase(payload).collect { dataState ->
-                when (dataState) {
-                    is DataState.Error -> {
-                        if (dataState.exception is IllegalStateException) {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = NewLoanAccountState.DialogState.SuccessResponseStatus(
-                                        successStatus = false,
-                                        msg = dataState.message,
-                                    ),
-                                    launchEffectKey = Random.nextInt(),
-                                    isOverLayLoadingActive = false,
-                                )
-                            }
-                        } else {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    screenState = NewLoanAccountState.ScreenState.Error(dataState.message),
-                                    isOverLayLoadingActive = false,
-                                )
-                            }
-                        }
-                    }
-
-                    DataState.Loading -> {
+            mutableStateFlow.update {
+                it.copy(isOverLayLoadingActive = true)
+            }
+            loanUseCase(payload)
+                .catch { error ->
+                    if (error is IllegalStateException) {
                         mutableStateFlow.update {
                             it.copy(
-                                isOverLayLoadingActive = true,
-                            )
-                        }
-                    }
-
-                    is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                isOverLayLoadingActive = false,
-                                launchEffectKey = Random.nextInt(),
                                 dialogState = NewLoanAccountState.DialogState.SuccessResponseStatus(
-                                    successStatus = true,
-                                    msg = getString(Res.string.feature_loan_account_created_successfully),
+                                    successStatus = false,
+                                    msg = error.message
+                                        ?: getString(Res.string.feature_loan_unknown_error_occured),
                                 ),
+                                launchEffectKey = Random.nextInt(),
+                                isOverLayLoadingActive = false,
                             )
                         }
-                        delay(1000)
-                        sendEvent(NewLoanAccountEvent.LoanCreationSuccess(state.clientId))
+                    } else {
+                        mutableStateFlow.update {
+                            it.copy(
+                                screenState = NewLoanAccountState.ScreenState.Error(
+                                    error.message
+                                        ?: getString(Res.string.feature_loan_unknown_error_occured),
+                                ),
+                                isOverLayLoadingActive = false,
+                            )
+                        }
                     }
                 }
-            }
+                .collect {
+                    mutableStateFlow.update {
+                        it.copy(
+                            isOverLayLoadingActive = false,
+                            launchEffectKey = Random.nextInt(),
+                            dialogState = NewLoanAccountState.DialogState.SuccessResponseStatus(
+                                successStatus = true,
+                                msg = getString(Res.string.feature_loan_account_created_successfully),
+                            ),
+                        )
+                    }
+                    delay(1000)
+                    sendEvent(NewLoanAccountEvent.LoanCreationSuccess(state.clientId))
+                }
         }
     }
 
@@ -779,148 +775,139 @@ internal class NewLoanAccountViewModel(
     }
 
     private suspend fun loadCollaterals() {
-        val result = repo.getCollateralItems()
-        when (result) {
-            is DataState.Error -> {}
-            is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        collaterals = result.data,
-                    )
-                }
+        try {
+            val result = repo.getCollateralItems()
+            mutableStateFlow.update {
+                it.copy(
+                    collaterals = result,
+                )
             }
-
-            else -> Unit
+        } catch (e: Exception) {
+            // Collateral options are optional; preserve prior UI state on load failure.
         }
     }
 
     private suspend fun loadAllLoans() {
-        getAllLoanUseCase().collect { result ->
-            when (result) {
-                is DataState.Error -> mutableStateFlow.update {
+        mutableStateFlow.update {
+            it.copy(screenState = NewLoanAccountState.ScreenState.Loading)
+        }
+        getAllLoanUseCase()
+            .catch { error ->
+                mutableStateFlow.update {
                     it.copy(
-                        screenState = NewLoanAccountState.ScreenState.Error(result.message),
-                    )
-                }
-
-                is DataState.Loading -> mutableStateFlow.update {
-                    it.copy(screenState = NewLoanAccountState.ScreenState.Loading)
-                }
-
-                is DataState.Success -> mutableStateFlow.update {
-                    it.copy(
-                        screenState = NewLoanAccountState.ScreenState.Success,
-                        productLoans = result.data,
+                        screenState = NewLoanAccountState.ScreenState.Error(
+                            error.message
+                                ?: getString(Res.string.feature_loan_unknown_error_occured),
+                        ),
                     )
                 }
             }
-        }
+            .collect { result ->
+                mutableStateFlow.update {
+                    it.copy(
+                        screenState = NewLoanAccountState.ScreenState.Success,
+                        productLoans = result,
+                    )
+                }
+            }
     }
 
     fun loadLoanAccountTemplate(productId: Int) = viewModelScope.launch {
         mutableStateFlow.update {
-            it.copy(productId = productId)
+            it.copy(productId = productId, isOverLayLoadingActive = true)
         }
-        getLoansAccountTemplateUseCase(state.clientId, productId).collect { result ->
-            when (result) {
-                is DataState.Error -> mutableStateFlow.update {
+        getLoansAccountTemplateUseCase(state.clientId, productId)
+            .catch { error ->
+                mutableStateFlow.update {
                     it.copy(
-                        screenState = NewLoanAccountState.ScreenState.Error(result.message),
+                        screenState = NewLoanAccountState.ScreenState.Error(
+                            error.message
+                                ?: getString(Res.string.feature_loan_unknown_error_occured),
+                        ),
                         isOverLayLoadingActive = false,
-                    )
-                }
-
-                is DataState.Loading -> mutableStateFlow.update {
-                    it.copy(
-                        isOverLayLoadingActive = true,
-                    )
-                }
-
-                is DataState.Success -> mutableStateFlow.update {
-                    it.copy(
-                        screenState = NewLoanAccountState.ScreenState.Success,
-                        isOverLayLoadingActive = false,
-                        loanTemplate = result.data,
-                        principalAmount = (result.data.principal ?: 0).toString(),
-                        noOfRepayments = result.data.numberOfRepayments ?: 0,
-                        repaidEvery = result.data.repaymentEvery ?: 0,
-                        nominalInterestRate = (
-                            result.data.interestRatePerPeriod
-                                ?: 0
-                            ).toString(),
-                        nominalAmortizationIndex = result.data.amortizationTypeOptions.indexOfFirst { item -> item.value == result.data.amortizationType?.value },
-                        termFrequencyIndex = result.data.termFrequencyTypeOptions.indexOfFirst { item -> item.value == result.data.termPeriodFrequencyType?.value },
-                        nominalFrequencyIndex = result.data.interestRateFrequencyTypeOptions.indexOfFirst { item -> item.value == result.data.interestRateFrequencyType?.value },
-                        nominalInterestMethodIndex = result.data.interestTypeOptions.indexOfFirst { item -> item.value == result.data.interestType?.value },
-                        repaymentStrategyIndex = result.data.transactionProcessingStrategyOptions.indexOfFirst { item -> item.code == result.data.transactionProcessingStrategyCode },
-                        interestCalculationPeriodIndex = result.data.interestCalculationPeriodTypeOptions.indexOfFirst { item -> item.value == result.data.interestCalculationPeriodType?.value },
                     )
                 }
             }
-        }
+            .collect { result ->
+                mutableStateFlow.update {
+                    it.copy(
+                        screenState = NewLoanAccountState.ScreenState.Success,
+                        isOverLayLoadingActive = false,
+                        loanTemplate = result,
+                        principalAmount = (result.principal ?: 0).toString(),
+                        noOfRepayments = result.numberOfRepayments ?: 0,
+                        repaidEvery = result.repaymentEvery ?: 0,
+                        nominalInterestRate = (
+                            result.interestRatePerPeriod
+                                ?: 0
+                            ).toString(),
+                        nominalAmortizationIndex = result.amortizationTypeOptions.indexOfFirst { item -> item.value == result.amortizationType?.value },
+                        termFrequencyIndex = result.termFrequencyTypeOptions.indexOfFirst { item -> item.value == result.termPeriodFrequencyType?.value },
+                        nominalFrequencyIndex = result.interestRateFrequencyTypeOptions.indexOfFirst { item -> item.value == result.interestRateFrequencyType?.value },
+                        nominalInterestMethodIndex = result.interestTypeOptions.indexOfFirst { item -> item.value == result.interestType?.value },
+                        repaymentStrategyIndex = result.transactionProcessingStrategyOptions.indexOfFirst { item -> item.code == result.transactionProcessingStrategyCode },
+                        interestCalculationPeriodIndex = result.interestCalculationPeriodTypeOptions.indexOfFirst { item -> item.value == result.interestCalculationPeriodType?.value },
+                    )
+                }
+            }
     }
 
     private suspend fun repaymentScheduler() {
         // Build LoansPayload from current form state to calculate schedule preview
         val payload = buildLoansPayloadForSchedulePreview()
 
-        calculateLoanScheduleUseCase(payload).collect { dataState ->
-            when (dataState) {
-                is DataState.Error -> {
-                    if (dataState.exception is IllegalStateException) {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = NewLoanAccountState.DialogState.SuccessResponseStatus(
-                                    successStatus = false,
-                                    msg = dataState.message,
-                                ),
-                                launchEffectKey = Random.nextInt(),
-                                isOverLayLoadingActive = false,
-                            )
-                        }
-                    } else {
-                        mutableStateFlow.update {
-                            it.copy(
-                                screenState = NewLoanAccountState.ScreenState.Error(dataState.message),
-                                isOverLayLoadingActive = false,
-                            )
-                        }
-                    }
-                }
-
-                DataState.Loading -> {
+        mutableStateFlow.update {
+            it.copy(isOverLayLoadingActive = true)
+        }
+        calculateLoanScheduleUseCase(payload)
+            .catch { error ->
+                if (error is IllegalStateException) {
                     mutableStateFlow.update {
                         it.copy(
-                            isOverLayLoadingActive = true,
+                            dialogState = NewLoanAccountState.DialogState.SuccessResponseStatus(
+                                successStatus = false,
+                                msg = error.message
+                                    ?: getString(Res.string.feature_loan_unknown_error_occured),
+                            ),
+                            launchEffectKey = Random.nextInt(),
+                            isOverLayLoadingActive = false,
                         )
                     }
-                }
-
-                is DataState.Success -> {
-                    val schedulerDetails = mapOf(
-                        Res.string.feature_loan_account_number to (state.accountNo),
-                        Res.string.feature_loan_disbursed_date to state.expectedDisbursementDate.ifEmpty { "N/A" },
-                        Res.string.principal_paid_off to CurrencyFormatter.format(
-                            balance = state.repaymentSchedule.totalPrincipalPaid,
-                            currencyCode = dataState.data.currency?.code ?: "N/A",
-                            maximumFractionDigits = dataState.data.currency?.decimalPlaces ?: 0,
-                        ),
-                        Res.string.installment_paid to "0",
-                        Res.string.total_installments to state.noOfRepayments.toString(),
-                    )
-
+                } else {
                     mutableStateFlow.update {
                         it.copy(
-                            repaymentSchedulesSummary = schedulerDetails,
-                            screenState = NewLoanAccountState.ScreenState.Success,
-                            repaymentSchedule = dataState.data,
+                            screenState = NewLoanAccountState.ScreenState.Error(
+                                error.message
+                                    ?: getString(Res.string.feature_loan_unknown_error_occured),
+                            ),
                             isOverLayLoadingActive = false,
-                            launchEffectKey = Random.nextInt(),
                         )
                     }
                 }
             }
-        }
+            .collect { repaymentSchedule ->
+                val schedulerDetails = mapOf(
+                    Res.string.feature_loan_account_number to (state.accountNo),
+                    Res.string.feature_loan_disbursed_date to state.expectedDisbursementDate.ifEmpty { "N/A" },
+                    Res.string.principal_paid_off to CurrencyFormatter.format(
+                        balance = state.repaymentSchedule.totalPrincipalPaid,
+                        currencyCode = repaymentSchedule.currency?.code ?: "N/A",
+                        maximumFractionDigits = repaymentSchedule.currency?.decimalPlaces ?: 0,
+                    ),
+                    Res.string.installment_paid to "0",
+                    Res.string.total_installments to state.noOfRepayments.toString(),
+                )
+
+                mutableStateFlow.update {
+                    it.copy(
+                        repaymentSchedulesSummary = schedulerDetails,
+                        screenState = NewLoanAccountState.ScreenState.Success,
+                        repaymentSchedule = repaymentSchedule,
+                        isOverLayLoadingActive = false,
+                        launchEffectKey = Random.nextInt(),
+                    )
+                }
+            }
     }
 
     /**

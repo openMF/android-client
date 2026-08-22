@@ -24,6 +24,10 @@ kotlin {
             implementation(projects.core.model)
             implementation(projects.core.common)
             implementation(projects.core.datastore)
+            // core/domain — fork use-cases (UseCaseModule) consumed by the fork feature ViewModels
+            // (loan et al). Restored to KoinModules.allModules after a template sync dropped the fork's
+            // own DI modules; the use-cases sit above core/data repositories.
+            implementation(projects.core.domain)
             // Firebase analytics (firebaseModule + AnalyticsHelper + Compose helpers) via core/firebase.
             implementation(projects.core.firebase)
             // core/platform re-exports core-base/platform (platformModule, GarbageCollectionManager) —
@@ -44,9 +48,24 @@ kotlin {
             implementation(projects.feature.home)
             implementation(projects.feature.profile)
             implementation(projects.feature.settings)
+            // loan feature — first business feature wired via FeatureRegistry (pilot 04/04b).
+            implementation(projects.feature.loan)
+            // passcode/auth feature — MifosAuthenticatorModule binds PasscodeManager +
+            // Passcode/Biometric adapters that RootNavViewModel's fork logout/auth sequence needs.
+            implementation(projects.feature.passcode)
+            // auth feature — the fork login flow (LoginScreen + authNavGraph) wired into RootNav's
+            // AuthenticateUser state. The template sync left the auth graph commented out.
+            implementation(projects.feature.auth)
             // Fork feature-module deps come from the fork-owned `feature-deps.gradle.kts` seam
             // (applied at the bottom of this file, S7/F4). A fork adds a feature there, never here.
             implementation(projects.sync)
+
+            // Passcode/biometric authenticator libs — RootNavViewModel's real fork logout sequence
+            // consumes org.mifos.authenticator.passcode.{PasscodeManager,PasscodeStorageAdapter} and
+            // org.mifos.authenticator.biometrics.BiometricStorageAdapter (same artifacts core/data and
+            // feature/passcode depend on). Restored after a template sync dropped them from this module.
+            implementation(libs.mifos.authenticator.passcode)
+            implementation(libs.mifos.authenticator.biometrics)
 
             // put your multiplatform dependencies here
             implementation(compose.material3)

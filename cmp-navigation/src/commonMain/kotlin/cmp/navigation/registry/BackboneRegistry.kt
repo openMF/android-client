@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import kpt.core.base.ui.nav.popBackStackSafely
+import kpt.feature.home.HomeDashboard
 import kpt.feature.profile.demo.ProfileDemoBody
 import kpt.feature.settings.navigateToSettings
 import kpt.feature.settings.notificationDestination
@@ -46,8 +47,21 @@ import kpt.feature.settings.syncAndDraftsDestination
  * (`feature/home`'s `HomeScreen`, the navbar graph) while this file survives.
  */
 object BackboneRegistry {
-    /** The home tab's body. See class doc — empty until field-officer's real dashboard lands. */
-    val homeBody: @Composable (NavController) -> Unit = { }
+    /**
+     * The home tab's body — the field-officer [HomeDashboard]: a board of navigable entry-point
+     * tiles for the fork's real features (clients, groups, centers, collection sheet, checker
+     * inbox, path tracking, search). Replaces the template's currency/macro demo dashboard, which
+     * referenced demo repositories this fork never carried.
+     *
+     * The board emits a navigation intent per tile tap through its ViewModel event channel,
+     * surfaced via `HomeDashboard(onNavigate = …)`. Per-tile routing to each feature's list screen
+     * (e.g. `navController.navigateToClientListScreen()`) is wired here as the feature modules
+     * migrate onto this backbone — the same per-feature migration that populates
+     * [FeatureRegistry.featureDestinations] (currently empty) and adds their `feature-deps.gradle.kts`
+     * dependencies to `cmp-navigation`. Until a target's route is registered, its `onNavigate`
+     * branch stays unwired here rather than the board rendering an empty/demo placeholder.
+     */
+    val homeBody: @Composable (NavController) -> Unit = { HomeDashboard() }
 
     /** The settings tab's INNER content. See class doc — empty until field-officer's real settings body lands. */
     val settingsBody: @Composable (NavController) -> Unit = { }

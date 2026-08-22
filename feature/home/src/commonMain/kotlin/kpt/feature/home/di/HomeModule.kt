@@ -9,12 +9,14 @@
  */
 package kpt.feature.home.di
 
-import kpt.feature.home.demo.ui.HomeViewModel
+import kpt.feature.home.ui.HomeViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
+/**
+ * Koin module for the field-officer home tab. Registers the nav-scoped [HomeViewModel] that
+ * backs the home board ([kpt.feature.home.HomeDashboard]).
+ */
 val HomeModule = module {
-    // demo:begin
     viewModelOf(::HomeViewModel)
-    // demo:end
 }

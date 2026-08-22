@@ -15,12 +15,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.loan.LoanAccountApprovalRepository
 import com.mifos.core.model.objects.account.loan.LoanApproval
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 
@@ -39,27 +39,18 @@ class LoanAccountApprovalViewModel(
 
     fun approveLoan(loanApproval: LoanApproval?) {
         viewModelScope.launch {
-            repository.approveLoan(loanId, loanApproval).collect { dataState ->
-                when (dataState) {
-                    is DataState.Loading -> {
-                        _loanAccountApprovalUiState.value =
-                            LoanAccountApprovalUiState.ShowProgressbar
-                    }
-
-                    is DataState.Success -> {
-                        val response = dataState.data
-                        _loanAccountApprovalUiState.value =
-                            LoanAccountApprovalUiState.ShowLoanApproveSuccessfully(response)
-                    }
-
-                    is DataState.Error -> {
-                        _loanAccountApprovalUiState.value =
-                            LoanAccountApprovalUiState.ShowLoanApproveFailed(
-                                getString(Res.string.feature_loan_unknown_error_occured),
-                            )
-                    }
+            _loanAccountApprovalUiState.value = LoanAccountApprovalUiState.ShowProgressbar
+            repository.approveLoan(loanId, loanApproval)
+                .catch {
+                    _loanAccountApprovalUiState.value =
+                        LoanAccountApprovalUiState.ShowLoanApproveFailed(
+                            getString(Res.string.feature_loan_unknown_error_occured),
+                        )
                 }
-            }
+                .collect { response ->
+                    _loanAccountApprovalUiState.value =
+                        LoanAccountApprovalUiState.ShowLoanApproveSuccessfully(response)
+                }
         }
     }
 }

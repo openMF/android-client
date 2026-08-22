@@ -9,7 +9,6 @@
  */
 package com.mifos.feature.loan.loanTransaction
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 
 data class LoanTransactionsState(
@@ -106,7 +105,7 @@ sealed interface LoanTransactionsAction {
 
     sealed interface Internal : LoanTransactionsAction {
         data class ReceiveTransactionsResult(
-            val result: DataState<LoanWithAssociations>,
+            val result: LoanWithAssociations,
             val notAvailableString: String,
         ) : Internal
     }
