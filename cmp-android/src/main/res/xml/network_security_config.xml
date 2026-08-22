@@ -15,6 +15,12 @@
         </trust-anchors>
     </base-config>
 
+    <!-- Dev/self-hosted Fineract instances served over cleartext HTTP (e.g. mifos-bank-2). -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">mifos-bank-2.mifos.community</domain>
+        <domain includeSubdomains="true">mifos.community</domain>
+    </domain-config>
+
     <!-- Allow cleartext + user-added certs for local development only in debug builds -->
     <debug-overrides>
         <trust-anchors>

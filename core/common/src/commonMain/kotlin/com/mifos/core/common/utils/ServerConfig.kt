@@ -24,11 +24,11 @@ data class ServerConfig(
 ) {
     companion object {
         val DEFAULT = ServerConfig(
-            protocol = "https://",
-            endPoint = "apis.mifos.community",
+            protocol = "http://",
+            endPoint = "mifos-bank-2.mifos.community",
             apiPath = "/1.0/field/v1/",
-            port = "443",
-            tenant = "mifos-bank-1",
+            port = "80",
+            tenant = "mifos-bank-2",
         )
 
         val LOCALHOST = ServerConfig(
