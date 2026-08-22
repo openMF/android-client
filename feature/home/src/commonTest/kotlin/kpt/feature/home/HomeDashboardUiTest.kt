@@ -11,8 +11,8 @@ package kpt.feature.home
 
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertExists
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.runComposeUiTest
 import kpt.core.designsystem.theme.KptTheme
 import kpt.feature.home.ui.HomeFeature
@@ -43,12 +43,13 @@ class HomeDashboardUiTest {
         onNodeWithTag(TestTags.Home.DASHBOARD_SCROLL).assertIsDisplayed()
         // Top management tile is on screen.
         onNodeWithTag(TestTags.Home.featureTile(HomeFeature.CLIENTS)).assertIsDisplayed()
-        // Remaining tiles are composed in the scroll container (may be below the fold).
-        onNodeWithTag(TestTags.Home.featureTile(HomeFeature.GROUPS)).assertExists()
-        onNodeWithTag(TestTags.Home.featureTile(HomeFeature.CENTERS)).assertExists()
-        onNodeWithTag(TestTags.Home.featureTile(HomeFeature.COLLECTION_SHEET)).assertExists()
-        onNodeWithTag(TestTags.Home.featureTile(HomeFeature.CHECKER_INBOX)).assertExists()
-        onNodeWithTag(TestTags.Home.featureTile(HomeFeature.PATH_TRACKING)).assertExists()
-        onNodeWithTag(TestTags.Home.featureTile(HomeFeature.SEARCH)).assertExists()
+        // Remaining tiles are composed in the scroll container — scroll each into view before
+        // asserting it renders (they may start below the fold).
+        onNodeWithTag(TestTags.Home.featureTile(HomeFeature.GROUPS)).performScrollTo().assertIsDisplayed()
+        onNodeWithTag(TestTags.Home.featureTile(HomeFeature.CENTERS)).performScrollTo().assertIsDisplayed()
+        onNodeWithTag(TestTags.Home.featureTile(HomeFeature.COLLECTION_SHEET)).performScrollTo().assertIsDisplayed()
+        onNodeWithTag(TestTags.Home.featureTile(HomeFeature.CHECKER_INBOX)).performScrollTo().assertIsDisplayed()
+        onNodeWithTag(TestTags.Home.featureTile(HomeFeature.PATH_TRACKING)).performScrollTo().assertIsDisplayed()
+        onNodeWithTag(TestTags.Home.featureTile(HomeFeature.SEARCH)).performScrollTo().assertIsDisplayed()
     }
 }

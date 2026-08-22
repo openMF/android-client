@@ -47,6 +47,7 @@ import kpt.core.base.designsystem.component.HeroCard
 import kpt.core.base.ui.AppInfo
 import kpt.core.designsystem.component.SectionHeader
 import kpt.core.designsystem.icon.AppIcons
+import kpt.core.designsystem.theme.KptTheme
 import kpt.core.designsystem.theme.spacing
 import kpt.feature.home.generated.resources.Res
 import kpt.feature.home.generated.resources.screens_home_feature_centers_subtitle
@@ -78,6 +79,7 @@ import kpt.feature.home.ui.HomeViewModel
 import kpt.feature.home.ui.TestTags
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinNavViewModel as retainedKoinViewModel
 
 /**
@@ -110,16 +112,33 @@ fun HomeDashboard(
         }
     }
 
+    HomeBoard(
+        features = state.features,
+        onFeatureClick = { viewModel.trySendAction(HomeAction.FeatureClicked(it)) },
+    )
+}
+
+/**
+ * Stateless officer board — the hero header + the Manage/Field sections of navigable feature
+ * tiles. Split out from [HomeDashboard] so it renders VM-free for the device-free CMP screenshot
+ * tier ([HomeDashboardPreview]).
+ */
+@Composable
+internal fun HomeBoard(
+    features: List<HomeFeature>,
+    onFeatureClick: (HomeFeature) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val sp = MaterialTheme.spacing
-    val manage = state.features.filter { it.section == HomeSection.MANAGE }
-    val field = state.features.filter { it.section == HomeSection.FIELD }
+    val manage = features.filter { it.section == HomeSection.MANAGE }
+    val field = features.filter { it.section == HomeSection.FIELD }
 
     // `rememberScrollState()` internally uses `rememberSaveable` with `ScrollState.Saver`, so the
     // board's scroll position survives tab-switch (Navigation saveState/restoreState) and
     // config-change without any per-screen retention code.
     val scrollState = rememberScrollState()
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(horizontal = sp.lg)
             .verticalScroll(scrollState)
@@ -132,21 +151,28 @@ fun HomeDashboard(
 
         SectionHeader(title = stringResource(Res.string.screens_home_section_manage))
         manage.forEach { feature ->
-            FeatureTile(
-                feature = feature,
-                onClick = { viewModel.trySendAction(HomeAction.FeatureClicked(feature)) },
-            )
+            FeatureTile(feature = feature, onClick = { onFeatureClick(feature) })
         }
 
         SectionHeader(title = stringResource(Res.string.screens_home_section_fieldwork))
         field.forEach { feature ->
-            FeatureTile(
-                feature = feature,
-                onClick = { viewModel.trySendAction(HomeAction.FeatureClicked(feature)) },
-            )
+            FeatureTile(feature = feature, onClick = { onFeatureClick(feature) })
         }
 
         Spacer(Modifier.height(sp.lg))
+    }
+}
+
+/**
+ * Reference @Preview for the device-free CMP render tier (SCREENSHOT_TEST.md CMP-PRIMARY) —
+ * auto-discovered by `CommonComposablePreviewScanner` and rendered off `desktopTest` via
+ * `verifyRoborazziDesktop`. Locks the officer home board (incl. the LOANS entry tile) render.
+ */
+@Preview
+@Composable
+internal fun HomeDashboardPreview() {
+    KptTheme {
+        HomeBoard(features = HomeFeature.entries, onFeatureClick = {})
     }
 }
 

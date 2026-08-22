@@ -28,6 +28,7 @@ kotlin {
             // RULE-IMPL-NO-HARDCODED-STRING-001 (W2 of store5-superbrain-v2).
             // Mirrors `feature/loans/build.gradle.kts` wiring.
             implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
 
             // Phase 3 (store5-screen-state-persistence 03-vm-scoping) — koinNavViewModel()
             // for NavBackStackEntry-scoped VM acquisition on the HomeScreen bottom-nav-tab

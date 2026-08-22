@@ -55,6 +55,7 @@ class HomeViewModelTest {
                 HomeFeature.CLIENTS,
                 HomeFeature.GROUPS,
                 HomeFeature.CENTERS,
+                HomeFeature.LOANS,
                 HomeFeature.COLLECTION_SHEET,
                 HomeFeature.CHECKER_INBOX,
                 HomeFeature.PATH_TRACKING,
