@@ -34,12 +34,14 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
+import kpt.core.base.designsystem.KptTheme
 import kpt.feature.loan.generated.resources.Res
 import kpt.feature.loan.generated.resources.feature_loan_lookup_account_label
 import kpt.feature.loan.generated.resources.feature_loan_lookup_hint
 import kpt.feature.loan.generated.resources.feature_loan_lookup_title
 import kpt.feature.loan.generated.resources.feature_loan_lookup_view
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Serializable
 data object LoanAccountLookupRoute
@@ -105,5 +107,19 @@ internal fun LoanAccountLookupScreen(
                 Text(stringResource(Res.string.feature_loan_lookup_view))
             }
         }
+    }
+}
+
+/**
+ * Reference @Preview for the device-free CMP render tier (SCREENSHOT_TEST.md CMP-PRIMARY) —
+ * auto-discovered by `CommonComposablePreviewScanner` and rendered off `desktopTest` via
+ * `verifyRoborazziDesktop`. Locks the loan-account lookup (the officer home's entry into the
+ * loan vertical) render.
+ */
+@Preview
+@Composable
+internal fun LoanAccountLookupScreenPreview() {
+    KptTheme {
+        LoanAccountLookupScreen(onViewTransactions = {})
     }
 }
