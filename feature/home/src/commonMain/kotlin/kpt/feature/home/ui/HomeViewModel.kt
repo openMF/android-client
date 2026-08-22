@@ -78,6 +78,9 @@ enum class HomeFeature(val section: HomeSection) {
     /** Center list — center meetings and their member groups. */
     CENTERS(HomeSection.MANAGE),
 
+    /** Loan lookup — open a loan account's transactions by number. */
+    LOANS(HomeSection.MANAGE),
+
     /** Collection sheet — record repayments and savings for a group/center. */
     COLLECTION_SHEET(HomeSection.FIELD),
 

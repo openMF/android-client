@@ -13,7 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import kpt.core.base.ui.nav.popBackStackSafely
+import com.mifos.feature.loan.loanLookup.navigateToLoanAccountLookup
 import kpt.feature.home.HomeDashboard
+import kpt.feature.home.ui.HomeFeature
 import kpt.feature.profile.demo.ProfileDemoBody
 import kpt.feature.settings.navigateToSettings
 import kpt.feature.settings.notificationDestination
@@ -61,7 +63,19 @@ object BackboneRegistry {
      * dependencies to `cmp-navigation`. Until a target's route is registered, its `onNavigate`
      * branch stays unwired here rather than the board rendering an empty/demo placeholder.
      */
-    val homeBody: @Composable (NavController) -> Unit = { HomeDashboard() }
+    val homeBody: @Composable (NavController) -> Unit = { navController ->
+        HomeDashboard(
+            onNavigate = { feature ->
+                when (feature) {
+                    // Loan lookup is the first business feature wired (pilot 04). The other
+                    // tiles route to features not yet migrated (sub-plans 05-21) — no-op until
+                    // each lands its FeatureRegistry destination + home routing.
+                    HomeFeature.LOANS -> navController.navigateToLoanAccountLookup()
+                    else -> Unit
+                }
+            },
+        )
+    }
 
     /** The settings tab's INNER content. See class doc — empty until field-officer's real settings body lands. */
     val settingsBody: @Composable (NavController) -> Unit = { }

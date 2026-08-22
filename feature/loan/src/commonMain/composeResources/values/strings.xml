@@ -774,4 +774,8 @@
     <string name="feature_loan_disburse_failed">Failed to disburse loan</string>
     <string name="feature_loan_disburse_failed_to_load_template">Failed to load disburse template</string>
     <string name="feature_loan_disburse_amount_greater_than_zero">Amount must be greater than 0</string>
+    <string name="feature_loan_lookup_title">Loan lookup</string>
+    <string name="feature_loan_lookup_hint">Enter a loan account number to view its transactions.</string>
+    <string name="feature_loan_lookup_account_label">Loan account number</string>
+    <string name="feature_loan_lookup_view">View transactions</string>
 </resources>

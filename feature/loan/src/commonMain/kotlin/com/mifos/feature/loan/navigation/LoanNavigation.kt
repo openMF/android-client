@@ -47,6 +47,7 @@ import com.mifos.feature.loan.loanRepaymentSchedule.loanRepaymentSchedule
 import com.mifos.feature.loan.loanRepaymentSchedule.navigateToLoanRepaymentScheduleScreen
 import com.mifos.feature.loan.loanReschedules.loanReschedulesScreen
 import com.mifos.feature.loan.loanReschedules.navigateToLoanReschedulesScreen
+import com.mifos.feature.loan.loanLookup.loanAccountLookupScreen
 import com.mifos.feature.loan.loanTransaction.loanTransactionScreen
 import com.mifos.feature.loan.loanTransaction.navigateToLoanTransactionScreen
 import com.mifos.feature.loan.newLoanAccount.newLoanAccountDestination
@@ -84,6 +85,10 @@ fun NavGraphBuilder.loanDestination(
     loanTransactionScreen {
         navController.popBackStack()
     }
+    // Loan-account lookup — the home-board entry into the loan vertical (pilot 04 entry).
+    loanAccountLookupScreen(
+        onViewTransactions = navController::navigateToLoanTransactionScreen,
+    )
     loanChargeScreen {
         navController.popBackStack()
     }

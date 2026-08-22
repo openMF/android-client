@@ -26,6 +26,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ReceiptLong
+import androidx.compose.material.icons.filled.AccountBalanceWallet
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -265,5 +266,10 @@ private fun HomeFeature.presentation(): FeaturePresentation = when (this) {
         icon = AppIcons.Search,
         title = Res.string.screens_home_feature_search_title,
         subtitle = Res.string.screens_home_feature_search_subtitle,
+    )
+    HomeFeature.LOANS -> FeaturePresentation(
+        icon = Icons.Filled.AccountBalanceWallet,
+        title = Res.string.screens_home_feature_loans_title,
+        subtitle = Res.string.screens_home_feature_loans_subtitle,
     )
 }
