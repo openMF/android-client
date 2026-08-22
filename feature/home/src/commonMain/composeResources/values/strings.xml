@@ -31,7 +31,7 @@
     <string name="screens_home_feature_clients_title">Clients</string>
     <string name="screens_home_feature_clients_subtitle">Browse and manage client accounts</string>
     <string name="screens_home_feature_loans_title">Loans</string>
-    <string name="screens_home_feature_loans_subtitle">Open a loan account\'s transactions</string>
+    <string name="screens_home_feature_loans_subtitle">Open a loan account and view its transactions</string>
     <string name="screens_home_feature_groups_title">Groups</string>
     <string name="screens_home_feature_groups_subtitle">Group-lending portfolios</string>
     <string name="screens_home_feature_centers_title">Centers</string>
