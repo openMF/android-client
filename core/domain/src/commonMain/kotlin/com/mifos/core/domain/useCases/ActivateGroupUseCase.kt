@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.data.repository.ActivateRepository
 import com.mifos.core.model.objects.clients.ActivatePayload
@@ -20,16 +19,10 @@ class ActivateGroupUseCase(
     suspend operator fun invoke(
         groupId: Int,
         groupPayload: ActivatePayload,
-    ): DataState<Unit> = try {
+    ) {
         val response = activateRepository.activateGroup(groupId, groupPayload)
-
         if (response.status.value != 200) {
-            val errorMessage = extractErrorMessage(response)
-            DataState.Error(Exception(errorMessage), null)
-        } else {
-            DataState.Success(Unit)
+            throw Exception(extractErrorMessage(response))
         }
-    } catch (e: Exception) {
-        DataState.Error(e)
     }
 }

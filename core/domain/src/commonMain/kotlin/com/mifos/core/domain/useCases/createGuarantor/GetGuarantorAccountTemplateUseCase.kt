@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases.createGuarantor
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.loan.LoanCreateGuarantorRepository
 import com.mifos.core.model.objects.account.loan.guarantor.GuarantorAccountTemplate
 
@@ -19,7 +18,7 @@ class GetGuarantorAccountTemplateUseCase(
     suspend operator fun invoke(
         loanId: Int,
         clientId: Int,
-    ): DataState<GuarantorAccountTemplate> {
+    ): GuarantorAccountTemplate {
         return repository.getGuarantorAccountTemplate(
             loanId = loanId,
             clientId = clientId,

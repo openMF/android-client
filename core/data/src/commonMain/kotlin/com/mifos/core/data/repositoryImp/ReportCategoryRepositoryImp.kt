@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.ReportCategoryRepository
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import com.mifos.core.network.datamanager.DataManagerRunReport
@@ -27,8 +25,8 @@ class ReportCategoryRepositoryImp(
         reportCategory: String,
         genericResultSet: Boolean,
         parameterType: Boolean,
-    ): Flow<DataState<List<ClientReportTypeItem>>> {
+    ): Flow<List<ClientReportTypeItem>> {
         return dataManager.getReportCategories(reportCategory, genericResultSet, parameterType)
-            .asDataStateFlow()
+            
     }
 }

@@ -9,11 +9,11 @@
  */
 package com.mifos.feature.auth.login
 
-import androidclient.feature.auth.generated.resources.Res
-import androidclient.feature.auth.generated.resources.feature_auth_enter_credentials
-import androidclient.feature.auth.generated.resources.feature_auth_mifos_logo
-import androidclient.feature.auth.generated.resources.feature_auth_password
-import androidclient.feature.auth.generated.resources.feature_auth_username
+import kpt.feature.auth.generated.resources.Res
+import kpt.feature.auth.generated.resources.feature_auth_enter_credentials
+import kpt.feature.auth.generated.resources.feature_auth_mifos_logo
+import kpt.feature.auth.generated.resources.feature_auth_password
+import kpt.feature.auth.generated.resources.feature_auth_username
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -63,7 +63,10 @@ import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 /**
  * Created by Aditya Gupta on 11/02/24.
@@ -126,8 +129,8 @@ internal fun LoginScreen(
     Scaffold(
         modifier = modifier
             .fillMaxSize()
-            .padding(KptTheme.spacing.md),
-        containerColor = KptTheme.colorScheme.surface,
+            .padding(LocalKptSpacing.current.md),
+        containerColor = LocalKptColors.current.surface,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = {
             Box(
@@ -141,13 +144,13 @@ internal fun LoginScreen(
                     modifier = Modifier
                         .align(Alignment.Center),
                     colors = ButtonDefaults.filledTonalButtonColors(
-                        containerColor = KptTheme.colorScheme.tertiaryContainer,
-                        contentColor = KptTheme.colorScheme.tertiary,
+                        containerColor = LocalKptColors.current.tertiaryContainer,
+                        contentColor = LocalKptColors.current.tertiary,
                     ),
                 ) {
                     Text(text = "Update Server Configuration")
 
-                    Spacer(modifier = Modifier.width(KptTheme.spacing.xs))
+                    Spacer(modifier = Modifier.width(LocalKptSpacing.current.xs))
 
                     Icon(
                         imageVector = MifosIcons.ArrowForward,
@@ -172,13 +175,13 @@ internal fun LoginScreen(
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = KptTheme.spacing.sm),
+                    .padding(top = LocalKptSpacing.current.sm),
                 text = stringResource(Res.string.feature_auth_enter_credentials),
                 textAlign = TextAlign.Center,
-                style = KptTheme.typography.bodyMedium,
+                style = LocalKptTypography.current.bodyMedium,
             )
 
-            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
             MifosOutlinedTextField(
                 value = userName,
@@ -222,7 +225,7 @@ internal fun LoginScreen(
                 },
             )
 
-            Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.sm))
 
             Button(
                 onClick = {
@@ -233,10 +236,10 @@ internal fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(DesignToken.spacing.dp44)
-                    .padding(horizontal = KptTheme.spacing.md),
+                    .padding(horizontal = LocalKptSpacing.current.md),
                 contentPadding = PaddingValues(),
             ) {
-                Text(text = "Login", style = KptTheme.typography.bodyLarge)
+                Text(text = "Login", style = LocalKptTypography.current.bodyLarge)
             }
         }
         if (showDialog.value) {

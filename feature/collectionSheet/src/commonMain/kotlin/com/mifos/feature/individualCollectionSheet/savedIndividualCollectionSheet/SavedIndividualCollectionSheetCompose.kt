@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.individualCollectionSheet.savedIndividualCollectionSheet
 
-import androidclient.feature.collectionsheet.generated.resources.Res
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_no_saved_collection_sheet
+import kpt.feature.collectionsheet.generated.resources.Res
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_no_saved_collection_sheet
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,7 +25,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.mifos.core.ui.util.DevicePreview
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @Composable
 internal fun SavedIndividualCollectionSheetCompose(
@@ -35,7 +36,7 @@ internal fun SavedIndividualCollectionSheetCompose(
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        containerColor = KptTheme.colorScheme.background,
+        containerColor = LocalKptColors.current.background,
     ) { paddingValue ->
         Column(
             modifier = Modifier

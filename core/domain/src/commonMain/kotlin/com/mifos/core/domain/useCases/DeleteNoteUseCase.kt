@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.NoteRepository
 
 class DeleteNoteUseCase(
@@ -19,5 +18,5 @@ class DeleteNoteUseCase(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-    ): DataState<Unit> = repository.deleteNote(resourceType, resourceId, noteId)
+    ): Unit = repository.deleteNote(resourceType, resourceId, noteId)
 }

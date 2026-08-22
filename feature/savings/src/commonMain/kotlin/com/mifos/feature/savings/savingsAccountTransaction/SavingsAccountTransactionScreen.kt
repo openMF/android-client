@@ -9,27 +9,27 @@
  */
 package com.mifos.feature.savings.savingsAccountTransaction
 
-import androidclient.feature.savings.generated.resources.Res
-import androidclient.feature.savings.generated.resources.feature_savings_account_number
-import androidclient.feature.savings.generated.resources.feature_savings_amount
-import androidclient.feature.savings.generated.resources.feature_savings_amount_message_field_required
-import androidclient.feature.savings.generated.resources.feature_savings_cancel
-import androidclient.feature.savings.generated.resources.feature_savings_date
-import androidclient.feature.savings.generated.resources.feature_savings_deposit
-import androidclient.feature.savings.generated.resources.feature_savings_deposit_successful_transaction_ID
-import androidclient.feature.savings.generated.resources.feature_savings_dialog_message_sync_savingaccounttransaction
-import androidclient.feature.savings.generated.resources.feature_savings_error_amount_can_not_be_empty
-import androidclient.feature.savings.generated.resources.feature_savings_error_invalid_amount
-import androidclient.feature.savings.generated.resources.feature_savings_payment_type
-import androidclient.feature.savings.generated.resources.feature_savings_review_transaction
-import androidclient.feature.savings.generated.resources.feature_savings_review_transaction_details
-import androidclient.feature.savings.generated.resources.feature_savings_savingsAccount
-import androidclient.feature.savings.generated.resources.feature_savings_select_date
-import androidclient.feature.savings.generated.resources.feature_savings_sync_previous_transaction
-import androidclient.feature.savings.generated.resources.feature_savings_transaction_date
-import androidclient.feature.savings.generated.resources.feature_savings_transaction_saved_in_db
-import androidclient.feature.savings.generated.resources.feature_savings_withdrawal
-import androidclient.feature.savings.generated.resources.feature_savings_withdrawal_successful_transaction_ID
+import kpt.feature.savings.generated.resources.Res
+import kpt.feature.savings.generated.resources.feature_savings_account_number
+import kpt.feature.savings.generated.resources.feature_savings_amount
+import kpt.feature.savings.generated.resources.feature_savings_amount_message_field_required
+import kpt.feature.savings.generated.resources.feature_savings_cancel
+import kpt.feature.savings.generated.resources.feature_savings_date
+import kpt.feature.savings.generated.resources.feature_savings_deposit
+import kpt.feature.savings.generated.resources.feature_savings_deposit_successful_transaction_ID
+import kpt.feature.savings.generated.resources.feature_savings_dialog_message_sync_savingaccounttransaction
+import kpt.feature.savings.generated.resources.feature_savings_error_amount_can_not_be_empty
+import kpt.feature.savings.generated.resources.feature_savings_error_invalid_amount
+import kpt.feature.savings.generated.resources.feature_savings_payment_type
+import kpt.feature.savings.generated.resources.feature_savings_review_transaction
+import kpt.feature.savings.generated.resources.feature_savings_review_transaction_details
+import kpt.feature.savings.generated.resources.feature_savings_savingsAccount
+import kpt.feature.savings.generated.resources.feature_savings_select_date
+import kpt.feature.savings.generated.resources.feature_savings_sync_previous_transaction
+import kpt.feature.savings.generated.resources.feature_savings_transaction_date
+import kpt.feature.savings.generated.resources.feature_savings_transaction_saved_in_db
+import kpt.feature.savings.generated.resources.feature_savings_withdrawal
+import kpt.feature.savings.generated.resources.feature_savings_withdrawal_successful_transaction_ID
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -87,7 +87,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -281,7 +284,7 @@ private fun SavingsAccountTransactionContent(
             title = {
                 Text(
                     text = stringResource(Res.string.feature_savings_review_transaction_details),
-                    style = KptTheme.typography.titleLarge,
+                    style = LocalKptTypography.current.titleLarge,
                 )
             },
             text = {
@@ -356,12 +359,12 @@ private fun SavingsAccountTransactionContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = KptTheme.spacing.md, vertical = DesignToken.spacing.dp10)
+            .padding(horizontal = LocalKptSpacing.current.md, vertical = DesignToken.spacing.dp10)
             .verticalScroll(scrollState),
     ) {
         Text(
-            style = KptTheme.typography.bodyLarge,
-            color = KptTheme.colorScheme.onBackground,
+            style = LocalKptTypography.current.bodyLarge,
+            color = LocalKptColors.current.onBackground,
             text = clientName ?: "",
 
             // TODO from old fragment
@@ -375,7 +378,7 @@ private fun SavingsAccountTransactionContent(
             value = savingsAccountNumber?.toString() ?: "",
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         // TODO from old fragment: Add Validation to make sure :
         // 1. Date Is in Correct Format
@@ -389,7 +392,7 @@ private fun SavingsAccountTransactionContent(
             openDatepicker = true
         }
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
@@ -400,7 +403,7 @@ private fun SavingsAccountTransactionContent(
             keyboardType = KeyboardType.Number,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosTextFieldDropdown(
             modifier = Modifier.fillMaxWidth(),
@@ -415,7 +418,7 @@ private fun SavingsAccountTransactionContent(
             readOnly = true,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         Row(
             modifier = Modifier.fillMaxSize(),
@@ -479,13 +482,13 @@ private fun FarApartTextItem(title: String, value: String) {
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
-            style = KptTheme.typography.bodyLarge,
+            style = LocalKptTypography.current.bodyLarge,
             text = title,
             color = Black,
         )
 
         Text(
-            style = KptTheme.typography.bodyLarge,
+            style = LocalKptTypography.current.bodyLarge,
             text = value,
             color = DarkGray,
         )

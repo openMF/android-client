@@ -9,15 +9,15 @@
  */
 package com.mifos.feature.loan.loanCharge
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_charge_amount
-import androidclient.feature.loan.generated.resources.feature_loan_charge_created_successfully
-import androidclient.feature.loan.generated.resources.feature_loan_charge_due_date
-import androidclient.feature.loan.generated.resources.feature_loan_charge_id
-import androidclient.feature.loan.generated.resources.feature_loan_charge_name
-import androidclient.feature.loan.generated.resources.feature_loan_failed_to_load_loan_charges
-import androidclient.feature.loan.generated.resources.feature_loan_loan_charges
-import androidclient.feature.loan.generated.resources.feature_loan_no_loan_charges
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_charge_amount
+import kpt.feature.loan.generated.resources.feature_loan_charge_created_successfully
+import kpt.feature.loan.generated.resources.feature_loan_charge_due_date
+import kpt.feature.loan.generated.resources.feature_loan_charge_id
+import kpt.feature.loan.generated.resources.feature_loan_charge_name
+import kpt.feature.loan.generated.resources.feature_loan_failed_to_load_loan_charges
+import kpt.feature.loan.generated.resources.feature_loan_loan_charges
+import kpt.feature.loan.generated.resources.feature_loan_no_loan_charges
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -68,7 +68,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun LoanChargeScreen(
@@ -201,11 +202,11 @@ private fun LoanChargeItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(KptTheme.spacing.sm),
+            .padding(LocalKptSpacing.current.sm),
         shape = DesignToken.shapes.none,
         elevation = CardDefaults.cardElevation(defaultElevation = DesignToken.elevation.dp2),
     ) {
-        Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.sm))
         MifosLoanChargeDetailsText(
             stringResource(Res.string.feature_loan_charge_id),
             charges.chargeId.toString(),
@@ -222,7 +223,7 @@ private fun LoanChargeItem(
             stringResource(Res.string.feature_loan_charge_due_date),
             charges.formattedDueDate,
         )
-        Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.sm))
     }
 }
 
@@ -236,7 +237,7 @@ private fun MifosLoanChargeDetailsText(field: String, value: String) {
         Text(
             modifier = Modifier
                 .weight(1f)
-                .padding(start = KptTheme.spacing.md),
+                .padding(start = LocalKptSpacing.current.md),
             text = field,
             style = TextStyle(
                 fontSize = 16.sp,

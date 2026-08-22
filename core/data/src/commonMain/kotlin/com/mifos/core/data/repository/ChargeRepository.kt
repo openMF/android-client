@@ -10,7 +10,6 @@
 package com.mifos.core.data.repository
 
 import androidx.paging.PagingData
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.clients.ChargeCreationResponse
 import com.mifos.core.model.objects.clients.Page
 import com.mifos.core.model.objects.payloads.ChargesPayload
@@ -40,28 +39,28 @@ interface ChargeRepository {
         resourceId: Int,
         resourceType: String,
         chargeId: Int,
-    ): Flow<DataState<Unit>>
+    ): Flow<Unit>
 
     suspend fun updateCharge(
         resourceId: Int,
         resourceType: String,
         chargeId: Int,
         payload: ChargesPayload,
-    ): Flow<DataState<Unit>>
+    ): Flow<Unit>
 
     fun getListOfClientCharges(
         resourceType: String,
         resourceId: Int,
-    ): Flow<DataState<Page<ChargesEntity>>>
+    ): Flow<Page<ChargesEntity>>
 
     fun getListOfOtherAccountCharge(
         resourceType: String,
         resourceId: Int,
-    ): Flow<DataState<List<ChargesEntity>>>
+    ): Flow<List<ChargesEntity>>
 
     fun getCharge(
         resourceType: String,
         resourceId: Int,
         chargeId: Int,
-    ): Flow<DataState<ChargesEntity>>
+    ): Flow<ChargesEntity>
 }

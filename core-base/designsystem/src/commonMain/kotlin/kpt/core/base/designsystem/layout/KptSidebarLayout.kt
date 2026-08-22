@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kpt.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @Composable
 fun KptSidebarLayout(
@@ -43,13 +44,13 @@ fun KptSidebarLayout(
         if (configuration.position == SidebarPosition.Start && sidebarVisible) {
             Surface(
                 modifier = Modifier.width(configuration.width),
-                color = configuration.backgroundColor ?: KptTheme.colorScheme.surface,
+                color = configuration.backgroundColor ?: LocalKptColors.current.surface,
                 content = sidebarContent,
             )
 
             if (!configuration.overlay) {
                 VerticalDivider(
-                    color = configuration.dividerColor ?: KptTheme.colorScheme.outline,
+                    color = configuration.dividerColor ?: LocalKptColors.current.outline,
                 )
             }
         }
@@ -71,7 +72,7 @@ fun KptSidebarLayout(
                                 Alignment.CenterEnd
                             },
                         ),
-                    color = configuration.backgroundColor ?: KptTheme.colorScheme.surface,
+                    color = configuration.backgroundColor ?: LocalKptColors.current.surface,
                     shadowElevation = 8.dp,
                     content = sidebarContent,
                 )
@@ -81,13 +82,13 @@ fun KptSidebarLayout(
         if (configuration.position == SidebarPosition.End && sidebarVisible) {
             if (!configuration.overlay) {
                 VerticalDivider(
-                    color = configuration.dividerColor ?: KptTheme.colorScheme.outline,
+                    color = configuration.dividerColor ?: LocalKptColors.current.outline,
                 )
             }
 
             Surface(
                 modifier = Modifier.width(configuration.width),
-                color = configuration.backgroundColor ?: KptTheme.colorScheme.surface,
+                color = configuration.backgroundColor ?: LocalKptColors.current.surface,
                 content = sidebarContent,
             )
         }

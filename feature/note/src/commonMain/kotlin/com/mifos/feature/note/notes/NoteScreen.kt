@@ -9,15 +9,15 @@
  */
 package com.mifos.feature.note.notes
 
-import androidclient.feature.note.generated.resources.Res
-import androidclient.feature.note.generated.resources.delete_document
-import androidclient.feature.note.generated.resources.edit
-import androidclient.feature.note.generated.resources.feature_note_add_item
-import androidclient.feature.note.generated.resources.feature_note_delete
-import androidclient.feature.note.generated.resources.feature_note_delete_note
-import androidclient.feature.note.generated.resources.feature_note_delete_note_confirmation
-import androidclient.feature.note.generated.resources.feature_note_item
-import androidclient.feature.note.generated.resources.feature_note_notes
+import kpt.feature.note.generated.resources.Res
+import kpt.feature.note.generated.resources.delete_document
+import kpt.feature.note.generated.resources.edit
+import kpt.feature.note.generated.resources.feature_note_add_item
+import kpt.feature.note.generated.resources.feature_note_delete
+import kpt.feature.note.generated.resources.feature_note_delete_note
+import kpt.feature.note.generated.resources.feature_note_delete_note_confirmation
+import kpt.feature.note.generated.resources.feature_note_item
+import kpt.feature.note.generated.resources.feature_note_notes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -64,7 +64,10 @@ import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -188,8 +191,8 @@ private fun NoteContent(
 ) {
     Column(
         modifier = modifier
-            .padding(horizontal = KptTheme.spacing.md)
-            .padding(bottom = KptTheme.spacing.md),
+            .padding(horizontal = LocalKptSpacing.current.md)
+            .padding(bottom = LocalKptSpacing.current.md),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -200,13 +203,13 @@ private fun NoteContent(
                 Text(
                     text = stringResource(Res.string.feature_note_notes),
                     style = MifosTypography.titleMediumEmphasized,
-                    color = KptTheme.colorScheme.onSurface,
+                    color = LocalKptColors.current.onSurface,
                 )
 
                 Text(
                     text = "${state.notes.size} ${stringResource(Res.string.feature_note_item)}",
-                    style = KptTheme.typography.labelMedium,
-                    color = KptTheme.colorScheme.secondary,
+                    style = LocalKptTypography.current.labelMedium,
+                    color = LocalKptColors.current.secondary,
                 )
             }
 
@@ -219,7 +222,7 @@ private fun NoteContent(
             )
         }
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         if (state.notes.isEmpty()) {
             MifosEmptyCard(
@@ -227,7 +230,7 @@ private fun NoteContent(
             )
         } else {
             LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
+                verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.sm),
             ) {
                 items(state.notes.reversed()) { note ->
 

@@ -35,7 +35,8 @@ import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @Composable
 fun MifosSearchBar(
@@ -49,7 +50,7 @@ fun MifosSearchBar(
         modifier = modifier
             .fillMaxWidth()
             .background(
-                color = KptTheme.colorScheme.surface,
+                color = LocalKptColors.current.surface,
                 shape = DesignToken.shapes.full,
             ),
         verticalAlignment = Alignment.CenterVertically,
@@ -58,7 +59,7 @@ fun MifosSearchBar(
             Icon(
                 imageVector = MifosIcons.ChevronLeft,
                 contentDescription = "Back",
-                tint = KptTheme.colorScheme.primary,
+                tint = LocalKptColors.current.primary,
             )
         }
 
@@ -75,9 +76,9 @@ fun MifosSearchBar(
             modifier = Modifier
                 .weight(1f),
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = KptTheme.colorScheme.surface,
+                focusedContainerColor = LocalKptColors.current.surface,
                 unfocusedContainerColor = Color.Transparent,
-                cursorColor = KptTheme.colorScheme.primary,
+                cursorColor = LocalKptColors.current.primary,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
@@ -89,7 +90,7 @@ fun MifosSearchBar(
                 .padding(start = DesignToken.padding.small)
                 .size(DesignToken.sizes.iconExtraLarge)
                 .clip(CircleShape)
-                .background(KptTheme.colorScheme.primary),
+                .background(LocalKptColors.current.primary),
             contentAlignment = Alignment.Center,
         ) {
             IconButton(onClick = { onSearchClick(query) }, modifier = Modifier.size(DesignToken.sizes.iconMedium)) {

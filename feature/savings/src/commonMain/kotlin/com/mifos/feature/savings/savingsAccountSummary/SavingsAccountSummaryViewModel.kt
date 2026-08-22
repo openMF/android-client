@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.savings.savingsAccountSummary
 
-import androidclient.feature.savings.generated.resources.Res
-import androidclient.feature.savings.generated.resources.feature_savings_failed_to_fetch_savingsaccount
+import kpt.feature.savings.generated.resources.Res
+import kpt.feature.savings.generated.resources.feature_savings_failed_to_fetch_savingsaccount
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

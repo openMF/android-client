@@ -9,10 +9,10 @@
  */
 package com.mifos.feature.groups.groupDetails
 
-import androidclient.feature.groups.generated.resources.Res
-import androidclient.feature.groups.generated.resources.feature_groups_failed_to_fetch_group_and_account
-import androidclient.feature.groups.generated.resources.feature_groups_failed_to_load_client
-import androidclient.feature.groups.generated.resources.feature_groups_no_group_clients
+import kpt.feature.groups.generated.resources.Res
+import kpt.feature.groups.generated.resources.feature_groups_failed_to_fetch_group_and_account
+import kpt.feature.groups.generated.resources.feature_groups_failed_to_load_client
+import kpt.feature.groups.generated.resources.feature_groups_no_group_clients
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

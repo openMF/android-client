@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.core.model.objects.noncoreobjects.Document
 import kotlinx.coroutines.flow.Flow
@@ -20,6 +19,6 @@ class GetDocumentsListUseCase(
     operator fun invoke(
         entityType: String,
         entityId: Int,
-    ): Flow<DataState<List<Document>>> =
+    ): Flow<List<Document>> =
         repository.getDocumentsList(entityType, entityId)
 }

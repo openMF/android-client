@@ -9,51 +9,51 @@
  */
 package com.mifos.feature.loan.newLoanAccount.pages
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.add_new
-import androidclient.feature.loan.generated.resources.amortization
-import androidclient.feature.loan.generated.resources.arrears_tolerance
-import androidclient.feature.loan.generated.resources.back
-import androidclient.feature.loan.generated.resources.balloon_repayment_amount
-import androidclient.feature.loan.generated.resources.calculate_interest_partial
-import androidclient.feature.loan.generated.resources.collateral_count
-import androidclient.feature.loan.generated.resources.collateral_data
-import androidclient.feature.loan.generated.resources.feature_loan_cancel
-import androidclient.feature.loan.generated.resources.feature_loan_select
-import androidclient.feature.loan.generated.resources.first_repayment_date
-import androidclient.feature.loan.generated.resources.grace_on_interest_payment
-import androidclient.feature.loan.generated.resources.grace_on_principal_payment
-import androidclient.feature.loan.generated.resources.interest_calculation_period
-import androidclient.feature.loan.generated.resources.interest_calculations
-import androidclient.feature.loan.generated.resources.interest_charged_from
-import androidclient.feature.loan.generated.resources.interest_free_period
-import androidclient.feature.loan.generated.resources.interest_frequency
-import androidclient.feature.loan.generated.resources.interest_method
-import androidclient.feature.loan.generated.resources.is_equal_amortization
-import androidclient.feature.loan.generated.resources.loan_schedule
-import androidclient.feature.loan.generated.resources.loan_schedule_type
-import androidclient.feature.loan.generated.resources.loan_term
-import androidclient.feature.loan.generated.resources.moratorium
-import androidclient.feature.loan.generated.resources.next
-import androidclient.feature.loan.generated.resources.no
-import androidclient.feature.loan.generated.resources.nominal_interest_rate
-import androidclient.feature.loan.generated.resources.nominal_interest_rate_percent
-import androidclient.feature.loan.generated.resources.number_of_repayments
-import androidclient.feature.loan.generated.resources.on_arrears_ageing
-import androidclient.feature.loan.generated.resources.principal
-import androidclient.feature.loan.generated.resources.recalculate_interest
-import androidclient.feature.loan.generated.resources.repaid_every
-import androidclient.feature.loan.generated.resources.repaid_every_label
-import androidclient.feature.loan.generated.resources.repayment_frequency
-import androidclient.feature.loan.generated.resources.repayment_strategy
-import androidclient.feature.loan.generated.resources.repayments
-import androidclient.feature.loan.generated.resources.select_day
-import androidclient.feature.loan.generated.resources.select_on
-import androidclient.feature.loan.generated.resources.term_frequency
-import androidclient.feature.loan.generated.resources.term_options
-import androidclient.feature.loan.generated.resources.terms
-import androidclient.feature.loan.generated.resources.view
-import androidclient.feature.loan.generated.resources.yes
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.add_new
+import kpt.feature.loan.generated.resources.amortization
+import kpt.feature.loan.generated.resources.arrears_tolerance
+import kpt.feature.loan.generated.resources.back
+import kpt.feature.loan.generated.resources.balloon_repayment_amount
+import kpt.feature.loan.generated.resources.calculate_interest_partial
+import kpt.feature.loan.generated.resources.collateral_count
+import kpt.feature.loan.generated.resources.collateral_data
+import kpt.feature.loan.generated.resources.feature_loan_cancel
+import kpt.feature.loan.generated.resources.feature_loan_select
+import kpt.feature.loan.generated.resources.first_repayment_date
+import kpt.feature.loan.generated.resources.grace_on_interest_payment
+import kpt.feature.loan.generated.resources.grace_on_principal_payment
+import kpt.feature.loan.generated.resources.interest_calculation_period
+import kpt.feature.loan.generated.resources.interest_calculations
+import kpt.feature.loan.generated.resources.interest_charged_from
+import kpt.feature.loan.generated.resources.interest_free_period
+import kpt.feature.loan.generated.resources.interest_frequency
+import kpt.feature.loan.generated.resources.interest_method
+import kpt.feature.loan.generated.resources.is_equal_amortization
+import kpt.feature.loan.generated.resources.loan_schedule
+import kpt.feature.loan.generated.resources.loan_schedule_type
+import kpt.feature.loan.generated.resources.loan_term
+import kpt.feature.loan.generated.resources.moratorium
+import kpt.feature.loan.generated.resources.next
+import kpt.feature.loan.generated.resources.no
+import kpt.feature.loan.generated.resources.nominal_interest_rate
+import kpt.feature.loan.generated.resources.nominal_interest_rate_percent
+import kpt.feature.loan.generated.resources.number_of_repayments
+import kpt.feature.loan.generated.resources.on_arrears_ageing
+import kpt.feature.loan.generated.resources.principal
+import kpt.feature.loan.generated.resources.recalculate_interest
+import kpt.feature.loan.generated.resources.repaid_every
+import kpt.feature.loan.generated.resources.repaid_every_label
+import kpt.feature.loan.generated.resources.repayment_frequency
+import kpt.feature.loan.generated.resources.repayment_strategy
+import kpt.feature.loan.generated.resources.repayments
+import kpt.feature.loan.generated.resources.select_day
+import kpt.feature.loan.generated.resources.select_on
+import kpt.feature.loan.generated.resources.term_frequency
+import kpt.feature.loan.generated.resources.term_options
+import kpt.feature.loan.generated.resources.terms
+import kpt.feature.loan.generated.resources.view
+import kpt.feature.loan.generated.resources.yes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -94,7 +94,9 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountAction
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -179,7 +181,7 @@ fun TermsPage(
         }
     }
 
-    Column(Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
+    Column(Modifier.fillMaxSize().padding(bottom = LocalKptSpacing.current.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -188,7 +190,7 @@ fun TermsPage(
                 style = MifosTypography.labelLargeEmphasized,
             )
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosOutlinedTextField(
                 value = state.principalAmount,
@@ -202,14 +204,14 @@ fun TermsPage(
                     ),
                 ),
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             Text(
                 text = stringResource(Res.string.term_options),
                 style = MifosTypography.labelLargeEmphasized,
             )
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosOutlinedTextField(
                 value = (state.noOfRepayments * state.repaidEvery).toString(),
@@ -243,7 +245,7 @@ fun TermsPage(
                 style = MifosTypography.labelLargeEmphasized,
             )
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosOutlinedTextField(
                 value = state.noOfRepayments.toString(),
@@ -252,7 +254,7 @@ fun TermsPage(
                 },
                 label = stringResource(Res.string.number_of_repayments),
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
             MifosDatePickerTextField(
                 value = state.firstRepaymentDate,
                 label = stringResource(Res.string.first_repayment_date),
@@ -260,7 +262,7 @@ fun TermsPage(
                     onAction(NewLoanAccountAction.OnFirstRepaymentDatePick(true))
                 },
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
             MifosDatePickerTextField(
                 value = state.interestChargedFromDate,
                 label = stringResource(Res.string.interest_charged_from),
@@ -269,14 +271,14 @@ fun TermsPage(
                 },
             )
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             Text(
                 text = stringResource(Res.string.repaid_every),
                 style = MifosTypography.labelLargeEmphasized,
             )
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosOutlinedTextField(
                 value = state.repaidEvery.toString(),
@@ -344,14 +346,14 @@ fun TermsPage(
                     label = stringResource(Res.string.select_day),
                 )
 
-                Spacer(Modifier.height(KptTheme.spacing.md))
+                Spacer(Modifier.height(LocalKptSpacing.current.md))
             }
             Text(
                 text = stringResource(Res.string.nominal_interest_rate),
                 style = MifosTypography.labelLargeEmphasized,
             )
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosOutlinedTextField(
                 value = state.nominalInterestRate,
@@ -440,14 +442,14 @@ fun TermsPage(
                 )
             }
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             Text(
                 text = stringResource(Res.string.loan_schedule),
                 style = MifosTypography.labelLargeEmphasized,
             )
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosListingComponentOutline {
                 MifosListingRowItem(
@@ -457,7 +459,7 @@ fun TermsPage(
                 )
             }
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosTextFieldDropdown(
                 value = if (state.repaymentStrategyIndex == -1) {
@@ -493,14 +495,14 @@ fun TermsPage(
                 ),
             )
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             Text(
                 text = stringResource(Res.string.interest_calculations),
                 style = MifosTypography.labelLargeEmphasized,
             )
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosTextFieldDropdown(
                 value = if (state.interestCalculationPeriodIndex == -1) {
@@ -551,7 +553,7 @@ fun TermsPage(
                 ),
             )
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosOutlinedTextField(
                 value = state.interestFreePeriod.toString(),
@@ -566,14 +568,14 @@ fun TermsPage(
                 ),
             )
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             Text(
                 text = stringResource(Res.string.moratorium),
                 style = MifosTypography.labelLargeEmphasized,
             )
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosOutlinedTextField(
                 value = state.moratoriumGraceOnPrincipalPayment.toString(),
@@ -592,7 +594,7 @@ fun TermsPage(
                 ),
             )
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosOutlinedTextField(
                 value = state.moratoriumGraceOnInterestPayment.toString(),
@@ -611,7 +613,7 @@ fun TermsPage(
                 ),
             )
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosOutlinedTextField(
                 value = state.moratoriumOnArrearsAgeing.toString(),
@@ -630,7 +632,7 @@ fun TermsPage(
                 ),
             )
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosListingComponentOutline {
                 MifosListingRowItem(
@@ -644,7 +646,7 @@ fun TermsPage(
                 )
             }
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -662,19 +664,19 @@ fun TermsPage(
                     Icon(
                         imageVector = MifosIcons.Add,
                         contentDescription = "",
-                        tint = KptTheme.colorScheme.primary,
+                        tint = LocalKptColors.current.primary,
                         modifier = Modifier.size(DesignToken.sizes.iconSmall),
                     )
 
                     Text(
                         text = stringResource(Res.string.add_new),
-                        color = KptTheme.colorScheme.primary,
+                        color = LocalKptColors.current.primary,
                         style = MifosTypography.labelLargeEmphasized,
                     )
                 }
             }
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosRowWithTextAndButton(
                 onBtnClick = {
@@ -684,7 +686,7 @@ fun TermsPage(
                 text = stringResource(Res.string.collateral_count, state.addedCollaterals.size),
                 btnEnabled = state.addedCollaterals.isNotEmpty(),
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
         }
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.back),

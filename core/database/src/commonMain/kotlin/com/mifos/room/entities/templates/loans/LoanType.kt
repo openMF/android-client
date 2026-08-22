@@ -9,12 +9,9 @@
  */
 package com.mifos.room.entities.templates.loans
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 @Serializable
-@Parcelize
 data class LoanType(
     val id: Int? = null,
 
@@ -51,4 +48,4 @@ data class LoanType(
     val chargePayment: Boolean? = null,
 
     val refund: Boolean? = null,
-) : Parcelable
+)

@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.ShareAccountRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerShare
@@ -23,15 +21,15 @@ class ShareAccountRepositoryImpl(
     private val dataManagerShare: DataManagerShare,
 ) : ShareAccountRepository {
 
-    override fun getShareTemplate(clientId: Int, productId: Int?): Flow<DataState<ShareTemplate>> {
-        return dataManagerShare.getShareTemplate(clientId, productId).asDataStateFlow()
+    override fun getShareTemplate(clientId: Int, productId: Int?): Flow<ShareTemplate> {
+        return dataManagerShare.getShareTemplate(clientId, productId)
     }
 
     override fun createShareAccount(
         shareAccountPayload: ShareAccountPayload,
-    ): Flow<DataState<GenericResponse>> {
+    ): Flow<GenericResponse> {
         return flow {
             emit(dataManagerShare.createShareAccount(shareAccountPayload))
-        }.asDataStateFlow()
+        }
     }
 }

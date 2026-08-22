@@ -22,13 +22,14 @@ import androidx.compose.ui.unit.Dp
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.ui.util.DevicePreview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptElevation
 
 @Composable
 fun MifosItemCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    elevation: Dp = KptTheme.elevation.level1,
+    elevation: Dp = LocalKptElevation.current.level1,
     shape: Shape = DesignToken.shapes.small,
     content: @Composable ColumnScope.() -> Unit,
 ) {

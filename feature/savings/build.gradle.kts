@@ -12,10 +12,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-android {
-    namespace = "com.mifos.feature.savings"
-}
-
 kotlin{
     sourceSets{
         commonMain.dependencies {
@@ -29,6 +25,9 @@ kotlin{
     }
 }
 
-dependencies {
-    debugImplementation(compose.uiTooling)
+
+compose.resources {
+    publicResClass = true
+    generateResClass = always
+    packageOfResClass = "kpt.feature.savings.generated.resources"
 }

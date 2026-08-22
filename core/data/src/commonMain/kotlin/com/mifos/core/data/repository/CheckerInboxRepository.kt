@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.checkerinboxtask.CheckerInboxSearchTemplate
 import com.mifos.core.model.objects.checkerinboxtask.CheckerTask
 import com.mifos.core.network.GenericResponse
@@ -21,7 +20,7 @@ interface CheckerInboxRepository {
         actionName: String? = null,
         entityName: String? = null,
         resourceId: Int? = null,
-    ): Flow<DataState<List<CheckerTask>>>
+    ): Flow<List<CheckerTask>>
 
     suspend fun approveCheckerEntry(auditId: Int): GenericResponse
 

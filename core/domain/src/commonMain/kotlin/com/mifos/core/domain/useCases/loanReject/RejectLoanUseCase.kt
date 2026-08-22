@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases.loanReject
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanRejectRepository
 import com.mifos.core.model.objects.account.loan.RejectLoanInput
 
@@ -19,5 +18,5 @@ class RejectLoanUseCase(
     suspend operator fun invoke(
         loanId: Int,
         request: RejectLoanInput,
-    ): DataState<Unit> = repository.rejectLoan(loanId, request)
+    ): Unit = repository.rejectLoan(loanId, request)
 }

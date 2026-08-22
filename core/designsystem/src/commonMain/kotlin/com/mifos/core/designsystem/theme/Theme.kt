@@ -14,10 +14,10 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import template.core.base.designsystem.KptMaterialTheme
-import template.core.base.designsystem.theme.KptThemeProviderImpl
-import template.core.base.designsystem.toKptColorScheme
-import template.core.base.designsystem.toKptTypography
+import kpt.core.base.designsystem.KptMaterialTheme
+import kpt.core.base.designsystem.theme.KptThemeProviderImpl
+import kpt.core.base.designsystem.toKptColorScheme
+import kpt.core.base.designsystem.toKptTypography
 val lightScheme = lightColorScheme(
     primary = primaryLight,
     onPrimary = onPrimaryLight,

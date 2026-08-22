@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kpt.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 /**
  * Material 3 elevated card for grouping related content (loan rows, form sections,
@@ -55,7 +56,7 @@ import kpt.core.base.designsystem.theme.KptTheme
 @Composable
 fun AppCard(
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(KptTheme.spacing.md),
+    contentPadding: PaddingValues = PaddingValues(LocalKptSpacing.current.md),
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainerLowest,
     accentColor: Color? = null,
     cornerRadius: Dp = 20.dp,

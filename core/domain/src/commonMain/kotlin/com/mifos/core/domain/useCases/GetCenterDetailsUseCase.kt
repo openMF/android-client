@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.CenterDetailsRepository
 import com.mifos.core.model.objects.groups.CenterInfo
 import com.mifos.room.entities.group.CenterWithAssociations
@@ -24,16 +23,11 @@ class GetCenterDetailsUseCase(
     operator fun invoke(
         centerId: Int,
         genericResultSet: Boolean,
-    ): Flow<DataState<Pair<CenterWithAssociations, List<CenterInfo>>>> =
+    ): Flow<Pair<CenterWithAssociations, List<CenterInfo>>> =
         combine(
             flow { emit(repository.getCentersGroupAndMeeting(centerId)) },
             repository.getCenterSummaryInfo(centerId, genericResultSet),
-        ) { centerGroup, centerInfoState ->
-
-            when (centerInfoState) {
-                is DataState.Error -> DataState.Error(centerInfoState.exception)
-                DataState.Loading -> DataState.Loading
-                is DataState.Success -> DataState.Success(Pair(centerGroup, centerInfoState.data))
-            }
+        ) { centerGroup, centerInfo ->
+            Pair(centerGroup, centerInfo)
         }
 }

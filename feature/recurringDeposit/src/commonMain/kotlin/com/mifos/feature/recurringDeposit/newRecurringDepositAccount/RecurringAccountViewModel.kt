@@ -9,9 +9,9 @@
  */
 package com.mifos.feature.recurringDeposit.newRecurringDepositAccount
 
-import androidclient.feature.recurringdeposit.generated.resources.Res
-import androidclient.feature.recurringdeposit.generated.resources.feature_error_network_not_available
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_account_created_successfully
+import kpt.feature.recurringdeposit.generated.resources.Res
+import kpt.feature.recurringdeposit.generated.resources.feature_error_network_not_available
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_account_created_successfully
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -23,7 +23,7 @@ import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.model.objects.payloads.ChargeItem
 import com.mifos.core.model.objects.payloads.RecurringDepositAccountPayload
 import com.mifos.core.model.objects.template.recurring.FieldOfficerOption
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.core.ui.util.TextFieldsValidator
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountState.ScreenState
 import com.mifos.room.entities.templates.recurringDeposit.RecurringDepositAccountTemplate

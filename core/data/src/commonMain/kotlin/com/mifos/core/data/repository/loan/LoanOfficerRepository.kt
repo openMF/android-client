@@ -9,16 +9,15 @@
  */
 package com.mifos.core.data.repository.loan
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.account.loan.assignLoanOfficer.AssignLoanOfficerInput
 import com.mifos.core.model.objects.account.loan.assignLoanOfficer.AssignLoanOfficerResponse
 import com.mifos.core.model.objects.template.loan.LoanOfficerOption
 
 interface LoanOfficerRepository {
-    suspend fun getLoanOfficerOptions(loanId: Int): DataState<List<LoanOfficerOption>>
+    suspend fun getLoanOfficerOptions(loanId: Int): List<LoanOfficerOption>
 
     suspend fun assignLoanOfficer(
         loanId: Int,
         input: AssignLoanOfficerInput,
-    ): DataState<AssignLoanOfficerResponse>
+    ): AssignLoanOfficerResponse
 }

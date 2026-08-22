@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.center.centerDetails
 
-import androidclient.feature.center.generated.resources.Res
-import androidclient.feature.center.generated.resources.feature_center_error_loading_centers
+import kpt.feature.center.generated.resources.Res
+import kpt.feature.center.generated.resources.feature_center_error_loading_centers
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

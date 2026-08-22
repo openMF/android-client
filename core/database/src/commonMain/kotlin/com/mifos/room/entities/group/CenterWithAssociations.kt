@@ -10,9 +10,6 @@
 package com.mifos.room.entities.group
 
 import com.mifos.core.model.objects.collectionsheets.CollectionMeetingCalendar
-import com.mifos.core.model.utils.IgnoredOnParcel
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.Timeline
 import com.mifos.room.entities.client.ClientStatusEntity
 import kotlinx.serialization.Serializable
@@ -20,7 +17,6 @@ import kotlinx.serialization.Serializable
 /**
  * Created by ishankhanna on 28/06/14.
  */
-@Parcelize
 @Serializable
 data class CenterWithAssociations(
     var id: Int? = null,
@@ -51,6 +47,5 @@ data class CenterWithAssociations(
 
     var groupMembers: List<GroupEntity> = ArrayList(),
 
-    @IgnoredOnParcel
     var collectionMeetingCalendar: CollectionMeetingCalendar = CollectionMeetingCalendar(),
-) : Parcelable
+)

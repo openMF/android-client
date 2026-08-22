@@ -9,11 +9,9 @@
  */
 package com.mifos.room.entities.accounts.savings
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
-import template.core.base.database.Entity
-import template.core.base.database.PrimaryKey
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 
 @Entity(
     indices = [],
@@ -23,7 +21,6 @@ import template.core.base.database.PrimaryKey
     ignoredColumns = [],
     tableName = "SavingsAccountStatus",
 )
-@Parcelize
 @Serializable
 data class SavingsAccountStatusEntity(
     @PrimaryKey(autoGenerate = true)
@@ -44,4 +41,4 @@ data class SavingsAccountStatusEntity(
     val active: Boolean? = null,
 
     val closed: Boolean? = null,
-) : Parcelable
+)

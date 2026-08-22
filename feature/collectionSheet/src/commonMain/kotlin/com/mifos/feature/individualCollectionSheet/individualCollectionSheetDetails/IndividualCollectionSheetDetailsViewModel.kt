@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.individualCollectionSheet.individualCollectionSheetDetails
 
-import androidclient.feature.collectionsheet.generated.resources.Res
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_failed_to_save_collection_sheet
+import kpt.feature.collectionsheet.generated.resources.Res
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_failed_to_save_collection_sheet
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

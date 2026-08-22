@@ -9,22 +9,22 @@
  */
 package com.mifos.feature.client.newFixedDepositAccount.pages
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.action_view
-import androidclient.feature.client.generated.resources.btn_back
-import androidclient.feature.client.generated.resources.feature_client_next
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_interest_description
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_interest_empty_date
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_interest_end_date
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_interest_grouping_by_amount
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_interest_interest_rate_chart
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_interest_name
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_interest_no
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_interest_no_interest_chart
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_interest_rate_chart
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_interest_valid_from_date
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_interest_yes
-import androidclient.feature.client.generated.resources.step_interest
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.action_view
+import kpt.feature.client.generated.resources.btn_back
+import kpt.feature.client.generated.resources.feature_client_next
+import kpt.feature.client.generated.resources.feature_fixed_deposit_interest_description
+import kpt.feature.client.generated.resources.feature_fixed_deposit_interest_empty_date
+import kpt.feature.client.generated.resources.feature_fixed_deposit_interest_end_date
+import kpt.feature.client.generated.resources.feature_fixed_deposit_interest_grouping_by_amount
+import kpt.feature.client.generated.resources.feature_fixed_deposit_interest_interest_rate_chart
+import kpt.feature.client.generated.resources.feature_fixed_deposit_interest_name
+import kpt.feature.client.generated.resources.feature_fixed_deposit_interest_no
+import kpt.feature.client.generated.resources.feature_fixed_deposit_interest_no_interest_chart
+import kpt.feature.client.generated.resources.feature_fixed_deposit_interest_rate_chart
+import kpt.feature.client.generated.resources.feature_fixed_deposit_interest_valid_from_date
+import kpt.feature.client.generated.resources.feature_fixed_deposit_interest_yes
+import kpt.feature.client.generated.resources.step_interest
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -49,7 +49,8 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountAction
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountState
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun InterestPage(
@@ -57,7 +58,7 @@ fun InterestPage(
     modifier: Modifier = Modifier,
     onAction: (NewFixedDepositAccountAction) -> Unit,
 ) {
-    Column(Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
+    Column(Modifier.fillMaxSize().padding(bottom = LocalKptSpacing.current.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -65,7 +66,7 @@ fun InterestPage(
                 text = stringResource(Res.string.step_interest),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosDefaultListingComponentFromStringResources(
                 data = mapOf(
@@ -89,10 +90,10 @@ fun InterestPage(
                         stringResource(Res.string.feature_fixed_deposit_interest_no)
                     },
                 ),
-                verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
+                verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.sm),
             )
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosRowWithTextAndButton(
                 onBtnClick = {
@@ -106,7 +107,7 @@ fun InterestPage(
                 },
                 btnEnabled = state.isRateChartEmpty,
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
         }
 
         MifosTwoButtonRow(
@@ -129,7 +130,7 @@ fun FixedDepositRateChart(
         },
         content = {
             Column(
-                modifier = Modifier.fillMaxWidth().padding(KptTheme.spacing.md),
+                modifier = Modifier.fillMaxWidth().padding(LocalKptSpacing.current.md),
                 verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
             ) {
                 Text(

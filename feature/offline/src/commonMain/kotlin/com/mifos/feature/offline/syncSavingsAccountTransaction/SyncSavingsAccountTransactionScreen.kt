@@ -9,18 +9,18 @@
  */
 package com.mifos.feature.offline.syncSavingsAccountTransaction
 
-import androidclient.feature.offline.generated.resources.Res
-import androidclient.feature.offline.generated.resources.feature_offline_error_not_connected_internet
-import androidclient.feature.offline.generated.resources.feature_offline_failed_to_load_savingaccounttransaction
-import androidclient.feature.offline.generated.resources.feature_offline_no_transaction_to_sync
-import androidclient.feature.offline.generated.resources.feature_offline_nothing_to_sync
-import androidclient.feature.offline.generated.resources.feature_offline_payment_type
-import androidclient.feature.offline.generated.resources.feature_offline_retry
-import androidclient.feature.offline.generated.resources.feature_offline_savings_account_id
-import androidclient.feature.offline.generated.resources.feature_offline_sync_savingsAccountTransactions
-import androidclient.feature.offline.generated.resources.feature_offline_transaction_amount
-import androidclient.feature.offline.generated.resources.feature_offline_transaction_date
-import androidclient.feature.offline.generated.resources.feature_offline_transaction_type
+import kpt.feature.offline.generated.resources.Res
+import kpt.feature.offline.generated.resources.feature_offline_error_not_connected_internet
+import kpt.feature.offline.generated.resources.feature_offline_failed_to_load_savingaccounttransaction
+import kpt.feature.offline.generated.resources.feature_offline_no_transaction_to_sync
+import kpt.feature.offline.generated.resources.feature_offline_nothing_to_sync
+import kpt.feature.offline.generated.resources.feature_offline_payment_type
+import kpt.feature.offline.generated.resources.feature_offline_retry
+import kpt.feature.offline.generated.resources.feature_offline_savings_account_id
+import kpt.feature.offline.generated.resources.feature_offline_sync_savingsAccountTransactions
+import kpt.feature.offline.generated.resources.feature_offline_transaction_amount
+import kpt.feature.offline.generated.resources.feature_offline_transaction_date
+import kpt.feature.offline.generated.resources.feature_offline_transaction_type
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -63,7 +63,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun SyncSavingsAccountTransactionScreenRoute(
@@ -194,7 +196,7 @@ private fun SavingsAccountTransactionItem(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(KptTheme.spacing.sm),
+                .padding(LocalKptSpacing.current.sm),
         ) {
             TransactionRow(
                 label = stringResource(Res.string.feature_offline_savings_account_id),
@@ -222,8 +224,8 @@ private fun SavingsAccountTransactionItem(
             if (transaction.errorMessage != null) {
                 Text(
                     text = transaction.errorMessage!!,
-                    style = KptTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(top = KptTheme.spacing.xs),
+                    style = LocalKptTypography.current.bodyMedium,
+                    modifier = Modifier.padding(top = LocalKptSpacing.current.xs),
                 )
             }
         }
@@ -239,17 +241,17 @@ private fun TransactionRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = KptTheme.spacing.xs),
+            .padding(vertical = LocalKptSpacing.current.xs),
     ) {
         Text(
             text = label,
-            style = KptTheme.typography.bodyMedium,
+            style = LocalKptTypography.current.bodyMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
         )
         Text(
             text = value,
-            style = KptTheme.typography.bodyMedium,
+            style = LocalKptTypography.current.bodyMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
         )
@@ -272,7 +274,7 @@ private fun ErrorStateScreen(
             contentDescription = null,
             modifier = Modifier.size(DesignToken.sizes.dp48),
         )
-        Text(text = message, modifier = Modifier.padding(vertical = KptTheme.spacing.sm))
+        Text(text = message, modifier = Modifier.padding(vertical = LocalKptSpacing.current.sm))
         Button(onClick = onRefresh) {
             Text(stringResource(Res.string.feature_offline_retry))
         }

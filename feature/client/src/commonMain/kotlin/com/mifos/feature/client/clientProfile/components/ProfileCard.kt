@@ -9,9 +9,9 @@
  */
 package com.mifos.feature.client.clientProfile.components
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.group_label
-import androidclient.feature.client.generated.resources.group_na
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.group_label
+import kpt.feature.client.generated.resources.group_na
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -40,7 +40,10 @@ import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosUserImage
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptShapes
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun ProfileCard(
@@ -55,16 +58,16 @@ fun ProfileCard(
     MifosCard(
         modifier = Modifier.clickable { onClick() },
         colors = CardDefaults.cardColors(
-            containerColor = KptTheme.colorScheme.primary,
-            contentColor = KptTheme.colorScheme.onPrimary,
-            disabledContainerColor = KptTheme.colorScheme.primary,
-            disabledContentColor = KptTheme.colorScheme.onPrimary,
+            containerColor = LocalKptColors.current.primary,
+            contentColor = LocalKptColors.current.onPrimary,
+            disabledContainerColor = LocalKptColors.current.primary,
+            disabledContentColor = LocalKptColors.current.onPrimary,
         ),
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(KptTheme.spacing.lg),
+                .padding(LocalKptSpacing.current.lg),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             MifosUserImage(
@@ -84,15 +87,15 @@ fun ProfileCard(
                 Text(
                     text = "Acc. No. $accountNo",
                     style = MifosTypography.bodySmall,
-                    color = KptTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
+                    color = LocalKptColors.current.onPrimary.copy(alpha = 0.8f),
                 )
                 Text(
                     text = office,
                     style = MifosTypography.bodySmall,
-                    color = KptTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
+                    color = LocalKptColors.current.onPrimary.copy(alpha = 0.8f),
                 )
 
-                Spacer(Modifier.height(KptTheme.spacing.sm))
+                Spacer(Modifier.height(LocalKptSpacing.current.sm))
 
                 val displayGroupName = groupName ?: stringResource(Res.string.group_na)
                 val isClickable = !groupName.isNullOrBlank() && groupName != stringResource(Res.string.group_na)
@@ -109,7 +112,7 @@ fun ProfileCard(
                 imageVector = MifosIcons.ChevronRight,
                 contentDescription = null,
                 modifier = Modifier.size(DesignToken.sizes.iconSmall),
-                tint = KptTheme.colorScheme.onPrimary.copy(alpha = 0.6f),
+                tint = LocalKptColors.current.onPrimary.copy(alpha = 0.6f),
             )
         }
     }
@@ -123,25 +126,25 @@ private fun GroupChip(
 ) {
     Box(
         modifier = Modifier
-            .clip(KptTheme.shapes.small)
+            .clip(LocalKptShapes.current.small)
             .background(
-                color = KptTheme.colorScheme.onPrimary.copy(alpha = 0.15f),
+                color = LocalKptColors.current.onPrimary.copy(alpha = 0.15f),
             )
             .clickable(enabled = isClickable, onClick = onClick)
-            .padding(horizontal = KptTheme.spacing.sm, vertical = KptTheme.spacing.xs),
+            .padding(horizontal = LocalKptSpacing.current.sm, vertical = LocalKptSpacing.current.xs),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 imageVector = MifosIcons.Group,
                 contentDescription = null,
                 modifier = Modifier.size(DesignToken.sizes.iconSmall),
-                tint = KptTheme.colorScheme.onPrimary,
+                tint = LocalKptColors.current.onPrimary,
             )
-            Spacer(modifier = Modifier.width(KptTheme.spacing.xs))
+            Spacer(modifier = Modifier.width(LocalKptSpacing.current.xs))
             Text(
                 text = text,
                 style = MifosTypography.bodySmall.copy(fontWeight = FontWeight.Medium),
-                color = KptTheme.colorScheme.onPrimary,
+                color = LocalKptColors.current.onPrimary,
             )
         }
     }

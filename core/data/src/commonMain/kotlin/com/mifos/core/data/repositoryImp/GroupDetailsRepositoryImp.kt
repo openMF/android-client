@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.GroupDetailsRepository
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.room.entities.accounts.GroupAccounts
@@ -25,18 +23,18 @@ class GroupDetailsRepositoryImp(
     private val dataManagerGroups: DataManagerGroups,
 ) : GroupDetailsRepository {
 
-    override fun getGroup(groupId: Int): Flow<DataState<GroupEntity>> {
+    override fun getGroup(groupId: Int): Flow<GroupEntity> {
         return dataManagerGroups.getGroup(groupId)
-            .asDataStateFlow()
+            
     }
 
-    override fun getGroupAccounts(groupId: Int): Flow<DataState<GroupAccounts>> {
+    override fun getGroupAccounts(groupId: Int): Flow<GroupAccounts> {
         return dataManagerGroups.getGroupAccounts(groupId)
-            .asDataStateFlow()
+            
     }
 
-    override fun getGroupWithAssociations(groupId: Int): Flow<DataState<GroupWithAssociations>> {
+    override fun getGroupWithAssociations(groupId: Int): Flow<GroupWithAssociations> {
         return dataManagerGroups.getGroupWithAssociations(groupId)
-            .asDataStateFlow()
+            
     }
 }

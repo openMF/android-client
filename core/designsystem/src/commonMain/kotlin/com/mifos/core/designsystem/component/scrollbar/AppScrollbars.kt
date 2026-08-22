@@ -53,7 +53,8 @@ import com.mifos.core.designsystem.theme.DesignToken
 import kotlinx.coroutines.delay
 import org.mifos.core.designsystem.component.scrollbar.Scrollbar
 import org.mifos.core.designsystem.component.scrollbar.ScrollbarState
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 /**
  * The time period for showing the scrollbar thumb after interacting with it, before it fades away
@@ -219,8 +220,8 @@ private fun scrollbarThumbColor(
 
     val color = animateColorAsState(
         targetValue = when (state) {
-            Active -> KptTheme.colorScheme.onSurface.copy(0.5f)
-            Inactive -> KptTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+            Active -> LocalKptColors.current.onSurface.copy(0.5f)
+            Inactive -> LocalKptColors.current.onSurface.copy(alpha = 0.2f)
             Dormant -> Color.Transparent
         },
         animationSpec = SpringSpec(

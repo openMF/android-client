@@ -9,18 +9,18 @@
  */
 package com.mifos.feature.document.documentDialog
 
-import androidclient.feature.document.generated.resources.Res
-import androidclient.feature.document.generated.resources.feature_document_browse
-import androidclient.feature.document.generated.resources.feature_document_description
-import androidclient.feature.document.generated.resources.feature_document_document_updated_successfully
-import androidclient.feature.document.generated.resources.feature_document_message_field_required
-import androidclient.feature.document.generated.resources.feature_document_message_file_required
-import androidclient.feature.document.generated.resources.feature_document_name
-import androidclient.feature.document.generated.resources.feature_document_selected_file
-import androidclient.feature.document.generated.resources.feature_document_update_document
-import androidclient.feature.document.generated.resources.feature_document_upload
-import androidclient.feature.document.generated.resources.feature_document_upload_document
-import androidclient.feature.document.generated.resources.feature_document_uploaded_successfully
+import kpt.feature.document.generated.resources.Res
+import kpt.feature.document.generated.resources.feature_document_browse
+import kpt.feature.document.generated.resources.feature_document_description
+import kpt.feature.document.generated.resources.feature_document_document_updated_successfully
+import kpt.feature.document.generated.resources.feature_document_message_field_required
+import kpt.feature.document.generated.resources.feature_document_message_file_required
+import kpt.feature.document.generated.resources.feature_document_name
+import kpt.feature.document.generated.resources.feature_document_selected_file
+import kpt.feature.document.generated.resources.feature_document_update_document
+import kpt.feature.document.generated.resources.feature_document_upload
+import kpt.feature.document.generated.resources.feature_document_upload_document
+import kpt.feature.document.generated.resources.feature_document_uploaded_successfully
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -74,7 +74,11 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptShapes
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun DocumentDialogScreen(
@@ -254,7 +258,7 @@ private fun DocumentDialogContent(
     Dialog(onDismissRequest = { setShowDialog(false) }) {
         Box(
             modifier = modifier
-                .clip(KptTheme.shapes.large),
+                .clip(LocalKptShapes.current.large),
             contentAlignment = Alignment.Center,
         ) {
             Column(
@@ -264,14 +268,14 @@ private fun DocumentDialogContent(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = KptTheme.spacing.md),
+                        .padding(bottom = LocalKptSpacing.current.md),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = dialogTitle,
-                        fontSize = KptTheme.typography.titleLarge.fontSize,
-                        color = KptTheme.colorScheme.primary,
+                        fontSize = LocalKptTypography.current.titleLarge.fontSize,
+                        color = LocalKptColors.current.primary,
                     )
                     Icon(
                         imageVector = MifosIcons.Cancel,
@@ -322,7 +326,7 @@ private fun DocumentDialogContent(
                     label = { Text(stringResource(Res.string.feature_document_selected_file)) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = KptTheme.spacing.md),
+                        .padding(horizontal = LocalKptSpacing.current.md),
                     trailingIcon = {
                         if (descriptionError) {
                             Icon(imageVector = MifosIcons.Error, contentDescription = null)
@@ -340,7 +344,7 @@ private fun DocumentDialogContent(
                             Text(
                                 modifier = Modifier.fillMaxWidth(),
                                 text = stringResource(Res.string.feature_document_message_file_required),
-                                color = KptTheme.colorScheme.error,
+                                color = LocalKptColors.current.error,
                             )
                         }
                     },

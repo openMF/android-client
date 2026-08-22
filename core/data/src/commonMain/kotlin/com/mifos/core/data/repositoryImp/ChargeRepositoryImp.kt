@@ -12,8 +12,6 @@ package com.mifos.core.data.repositoryImp
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.pagingSource.ClientChargesPagingSource
 import com.mifos.core.data.repository.ChargeRepository
 import com.mifos.core.model.objects.clients.ChargeCreationResponse
@@ -63,7 +61,7 @@ class ChargeRepositoryImp(
         resourceId: Int,
         resourceType: String,
         chargeId: Int,
-    ): Flow<DataState<Unit>> {
+    ): Flow<Unit> {
         return flow {
             emit(
                 dataManagerCharge.deleteCharge(
@@ -72,7 +70,7 @@ class ChargeRepositoryImp(
                     chargeId = chargeId,
                 ),
             )
-        }.asDataStateFlow()
+        }
     }
 
     override suspend fun updateCharge(
@@ -80,7 +78,7 @@ class ChargeRepositoryImp(
         resourceType: String,
         chargeId: Int,
         payload: ChargesPayload,
-    ): Flow<DataState<Unit>> {
+    ): Flow<Unit> {
         return flow {
             emit(
                 dataManagerCharge.updateCharge(
@@ -90,33 +88,33 @@ class ChargeRepositoryImp(
                     payload = payload,
                 ),
             )
-        }.asDataStateFlow()
+        }
     }
 
     override fun getListOfClientCharges(
         resourceType: String,
         resourceId: Int,
-    ): Flow<DataState<Page<ChargesEntity>>> {
-        return dataManagerCharge.getListOfClientCharges(resourceType, resourceId).asDataStateFlow()
+    ): Flow<Page<ChargesEntity>> {
+        return dataManagerCharge.getListOfClientCharges(resourceType, resourceId)
     }
 
     override fun getListOfOtherAccountCharge(
         resourceType: String,
         resourceId: Int,
-    ): Flow<DataState<List<ChargesEntity>>> {
+    ): Flow<List<ChargesEntity>> {
         return dataManagerCharge.getListOfOtherAccountCharge(resourceType, resourceId)
-            .asDataStateFlow()
+            
     }
 
     override fun getCharge(
         resourceType: String,
         resourceId: Int,
         chargeId: Int,
-    ): Flow<DataState<ChargesEntity>> {
+    ): Flow<ChargesEntity> {
         return dataManagerCharge.getCharge(
             resourceId = resourceId,
             resourceType = resourceType,
             chargeId = chargeId,
-        ).asDataStateFlow()
+        )
     }
 }

@@ -9,18 +9,18 @@
  */
 package com.mifos.feature.loan.loanChargeForm
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_charge_disbursement
-import androidclient.feature.loan.generated.resources.feature_loan_charge_flat
-import androidclient.feature.loan.generated.resources.feature_loan_charge_installment
-import androidclient.feature.loan.generated.resources.feature_loan_charge_specified_due_date
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_charge_disbursement
+import kpt.feature.loan.generated.resources.feature_loan_charge_flat
+import kpt.feature.loan.generated.resources.feature_loan_charge_installment
+import kpt.feature.loan.generated.resources.feature_loan_charge_specified_due_date
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.domain.useCases.CreateLoanChargesUseCase
 import com.mifos.core.domain.useCases.GetChargeTemplateUseCase
 import com.mifos.core.model.objects.payloads.ChargesPayload
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource

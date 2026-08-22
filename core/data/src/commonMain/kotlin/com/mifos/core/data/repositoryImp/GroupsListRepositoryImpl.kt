@@ -9,9 +9,7 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.Page
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.GroupsListRepository
 import com.mifos.core.network.datamanager.DataManagerGroups
 import com.mifos.room.entities.group.GroupEntity
@@ -24,7 +22,7 @@ class GroupsListRepositoryImpl(
     override suspend fun getAllGroups(paged: Boolean, offset: Int, limit: Int): List<GroupEntity> =
         dataManager.getGroups(paged, offset, limit).pageItems
 
-    override fun getAllLocalGroups(): Flow<DataState<Page<GroupEntity>>> {
-        return dataManager.databaseGroups.asDataStateFlow()
+    override fun getAllLocalGroups(): Flow<Page<GroupEntity>> {
+        return dataManager.databaseGroups
     }
 }

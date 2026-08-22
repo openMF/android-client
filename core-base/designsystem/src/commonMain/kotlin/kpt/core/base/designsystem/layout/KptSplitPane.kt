@@ -24,6 +24,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kpt.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @Composable
 fun KptSplitPane(
@@ -34,7 +35,7 @@ fun KptSplitPane(
     minLeftWidth: Dp = 200.dp,
     minRightWidth: Dp = 200.dp,
     resizable: Boolean = true,
-    dividerColor: Color = KptTheme.colorScheme.outline,
+    dividerColor: Color = LocalKptColors.current.outline,
     dividerWidth: Dp = 1.dp,
 ) {
     var splitRatio by remember { mutableFloatStateOf(initialSplitRatio) }

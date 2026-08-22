@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.GroupLoanAccountRepository
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
@@ -28,13 +26,13 @@ class GroupLoanAccountRepositoryImp(
     override fun getGroupLoansAccountTemplate(
         groupId: Int,
         productId: Int,
-    ): Flow<DataState<GroupLoanTemplate>> {
+    ): Flow<GroupLoanTemplate> {
         return dataManager.getGroupLoansAccountTemplate(groupId, productId)
-            .asDataStateFlow()
+            
     }
 
-    override fun createGroupLoansAccount(loansPayload: GroupLoanPayload): Flow<DataState<Loan>> {
+    override fun createGroupLoansAccount(loansPayload: GroupLoanPayload): Flow<Loan> {
         return dataManager.createGroupLoansAccount(loansPayload)
-            .asDataStateFlow()
+            
     }
 }

@@ -11,27 +11,27 @@
 
 package com.mifos.feature.client.clientIdentifiersAddUpdate
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.add_document_title
-import androidclient.feature.client.generated.resources.client_identifier_btn_add
-import androidclient.feature.client.generated.resources.client_identifier_btn_back
-import androidclient.feature.client.generated.resources.client_identifier_btn_create_new
-import androidclient.feature.client.generated.resources.client_identifier_btn_next
-import androidclient.feature.client.generated.resources.client_identifier_btn_submit
-import androidclient.feature.client.generated.resources.client_identifier_btn_update
-import androidclient.feature.client.generated.resources.client_identifier_btn_upload_new
-import androidclient.feature.client.generated.resources.client_identifier_btn_view
-import androidclient.feature.client.generated.resources.client_identifier_description
-import androidclient.feature.client.generated.resources.client_identifier_document_key
-import androidclient.feature.client.generated.resources.client_identifier_document_name
-import androidclient.feature.client.generated.resources.client_identifier_document_type
-import androidclient.feature.client.generated.resources.client_identifier_no_file_selected
-import androidclient.feature.client.generated.resources.client_identifier_status
-import androidclient.feature.client.generated.resources.client_identifier_title
-import androidclient.feature.client.generated.resources.client_identifiers_error_text
-import androidclient.feature.client.generated.resources.client_update_document_title
-import androidclient.feature.client.generated.resources.feature_client_cancel
-import androidclient.feature.client.generated.resources.feature_client_dialog_action_ok
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.add_document_title
+import kpt.feature.client.generated.resources.client_identifier_btn_add
+import kpt.feature.client.generated.resources.client_identifier_btn_back
+import kpt.feature.client.generated.resources.client_identifier_btn_create_new
+import kpt.feature.client.generated.resources.client_identifier_btn_next
+import kpt.feature.client.generated.resources.client_identifier_btn_submit
+import kpt.feature.client.generated.resources.client_identifier_btn_update
+import kpt.feature.client.generated.resources.client_identifier_btn_upload_new
+import kpt.feature.client.generated.resources.client_identifier_btn_view
+import kpt.feature.client.generated.resources.client_identifier_description
+import kpt.feature.client.generated.resources.client_identifier_document_key
+import kpt.feature.client.generated.resources.client_identifier_document_name
+import kpt.feature.client.generated.resources.client_identifier_document_type
+import kpt.feature.client.generated.resources.client_identifier_no_file_selected
+import kpt.feature.client.generated.resources.client_identifier_status
+import kpt.feature.client.generated.resources.client_identifier_title
+import kpt.feature.client.generated.resources.client_identifiers_error_text
+import kpt.feature.client.generated.resources.client_update_document_title
+import kpt.feature.client.generated.resources.feature_client_cancel
+import kpt.feature.client.generated.resources.feature_client_dialog_action_ok
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -69,7 +69,10 @@ import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.client.utils.PdfPreview
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptSpacing
+import kpt.core.base.designsystem.theme.LocalKptElevation
 
 @Composable
 internal fun ClientIdentifiersAddUpdateScreen(
@@ -136,7 +139,7 @@ private fun ClientIdentifiersAddUpdateDialog(
                 )
             } else {
                 MifosErrorComponent(
-                    modifier = Modifier.background(KptTheme.colorScheme.background),
+                    modifier = Modifier.background(LocalKptColors.current.background),
                     message = state.dialogState.message,
                     isRetryEnabled = true,
                     onRetry = {
@@ -191,7 +194,7 @@ internal fun ClientIdentifiersAddUpdateContent(
 
         Column(
             modifier = Modifier.fillMaxSize().padding(
-                horizontal = KptTheme.spacing.md,
+                horizontal = LocalKptSpacing.current.md,
             ),
         ) {
             if (state.feature != Feature.VIEW_DOCUMENT) {
@@ -207,7 +210,7 @@ internal fun ClientIdentifiersAddUpdateContent(
                 )
             }
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             when (state.feature) {
                 Feature.ADD_IDENTIFIER -> {
@@ -272,7 +275,7 @@ private fun ClientIdentifiersAddIdentifier(
         label = stringResource(Res.string.client_identifier_document_key),
     )
 
-    Spacer(Modifier.height(KptTheme.spacing.md))
+    Spacer(Modifier.height(LocalKptSpacing.current.md))
 
     MifosOutlinedTextField(
         value = state.description ?: "",
@@ -310,7 +313,7 @@ private fun ClientIdentifiersAddUpdateDocument(
         label = stringResource(Res.string.client_identifier_document_name),
     )
 
-    Spacer(Modifier.height(KptTheme.spacing.md))
+    Spacer(Modifier.height(LocalKptSpacing.current.md))
 
     MifosRowWithTextAndButton(
         text = state.imageFileName ?: stringResource(Res.string.client_identifier_no_file_selected),
@@ -359,9 +362,9 @@ private fun ClientIdentifiersDocumentPreview(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         MifosCard(
-            colors = CardDefaults.cardColors(containerColor = KptTheme.colorScheme.onPrimary),
-            elevation = KptTheme.elevation.level0,
-            borderStroke = BorderStroke(DesignToken.strokes.thin, KptTheme.colorScheme.secondaryContainer),
+            colors = CardDefaults.cardColors(containerColor = LocalKptColors.current.onPrimary),
+            elevation = LocalKptElevation.current.level0,
+            borderStroke = BorderStroke(DesignToken.strokes.thin, LocalKptColors.current.secondaryContainer),
         ) {
             Box(
                 modifier = Modifier.aspectRatio(0.707f, true),

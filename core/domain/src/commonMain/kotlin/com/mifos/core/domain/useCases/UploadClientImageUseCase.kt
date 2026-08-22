@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import core.domain.generated.resources.Res
 import core.domain.generated.resources.core_domain_client_image_uploaded_successfully
@@ -26,14 +25,11 @@ class UploadClientImageUseCase(
     private val repository: ClientDetailsRepository,
 ) {
 
-    operator fun invoke(id: Int, image: MultiPartFormDataContent): Flow<DataState<String>> = flow {
-        emit(DataState.Loading)
-
-        try {
-            repository.uploadClientImage(id, image)
-            emit(DataState.Success(getString(Res.string.core_domain_client_image_uploaded_successfully)))
-        } catch (e: Exception) {
-            emit(DataState.Error(e))
-        }
+    // offline-first-template-migration 03-core-datastate-removal (D18): no Loading emission —
+    // that's a UI/VM-layer state concern, not domain. Exceptions propagate through the
+    // Flow's exception channel; AppErrorMapper translates them at the caller boundary.
+    operator fun invoke(id: Int, image: MultiPartFormDataContent): Flow<String> = flow {
+        repository.uploadClientImage(id, image)
+        emit(getString(Res.string.core_domain_client_image_uploaded_successfully))
     }
 }

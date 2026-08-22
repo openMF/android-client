@@ -9,10 +9,10 @@
  */
 package com.mifos.feature.groups.groupList
 
-import androidclient.feature.groups.generated.resources.Res
-import androidclient.feature.groups.generated.resources.feature_groups_failed_to_fetch_groups
-import androidclient.feature.groups.generated.resources.feature_groups_no_more_groups_available
-import androidclient.feature.groups.generated.resources.feature_groups_sync
+import kpt.feature.groups.generated.resources.Res
+import kpt.feature.groups.generated.resources.feature_groups_failed_to_fetch_groups
+import kpt.feature.groups.generated.resources.feature_groups_no_more_groups_available
+import kpt.feature.groups.generated.resources.feature_groups_sync
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -79,7 +79,11 @@ import com.mifos.feature.groups.syncGroupDialog.SyncGroupDialogScreen
 import com.mifos.room.entities.group.GroupEntity
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptShapes
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -274,9 +278,9 @@ private fun LazyListScope.appendState(data: LazyPagingItems<GroupEntity>) {
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(KptTheme.spacing.sm),
+                            .padding(LocalKptSpacing.current.sm),
                         text = stringResource(Res.string.feature_groups_no_more_groups_available),
-                        style = KptTheme.typography.labelLarge,
+                        style = LocalKptTypography.current.labelLarge,
                         color = DarkGray,
                         textAlign = TextAlign.Center,
                     )
@@ -328,24 +332,24 @@ fun GroupItem(
         CardDefaults.outlinedCardBorder()
     }
     val containerColor = if (doesSelected) {
-        KptTheme.colorScheme.secondaryContainer
+        LocalKptColors.current.secondaryContainer
     } else {
         Color.Unspecified
     }
     // TODO: replace primary with Green after we define Theme colours of mockups
     val indicatorColor = if (group.active == true) {
-        KptTheme.colorScheme.primary
+        LocalKptColors.current.primary
     } else {
-        KptTheme.colorScheme.error
+        LocalKptColors.current.error
     }
 
     group.name?.let {
         OutlinedCard(
             modifier = modifier
                 .testTag(it)
-                .padding(KptTheme.spacing.sm)
+                .padding(LocalKptSpacing.current.sm)
                 .fillMaxWidth()
-                .clip(KptTheme.shapes.small)
+                .clip(LocalKptShapes.current.small)
                 .combinedClickable(
                     onClick = {
                         if (inSelectionMode) {
@@ -356,7 +360,7 @@ fun GroupItem(
                     },
                     onLongClick = onSelectItem,
                 ),
-            shape = KptTheme.shapes.small,
+            shape = LocalKptShapes.current.small,
             colors = CardDefaults.outlinedCardColors(
                 containerColor = containerColor,
             ),
@@ -387,7 +391,7 @@ fun GroupItem(
                 trailingContent = {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(KptTheme.spacing.xs),
+                        horizontalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.xs),
                     ) {
                         if (group.sync) {
                             Icon(imageVector = MifosIcons.DoneAll, contentDescription = "Sync")

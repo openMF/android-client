@@ -9,15 +9,15 @@
  */
 package com.mifos.feature.savings.savingsAccountApproval
 
-import androidclient.feature.savings.generated.resources.Res
-import androidclient.feature.savings.generated.resources.feature_savings_approval_savings_date
-import androidclient.feature.savings.generated.resources.feature_savings_approve_savings
-import androidclient.feature.savings.generated.resources.feature_savings_approved_on
-import androidclient.feature.savings.generated.resources.feature_savings_cancel
-import androidclient.feature.savings.generated.resources.feature_savings_save
-import androidclient.feature.savings.generated.resources.feature_savings_savings_approval_reason
-import androidclient.feature.savings.generated.resources.feature_savings_savings_approved
-import androidclient.feature.savings.generated.resources.feature_savings_select_date
+import kpt.feature.savings.generated.resources.Res
+import kpt.feature.savings.generated.resources.feature_savings_approval_savings_date
+import kpt.feature.savings.generated.resources.feature_savings_approve_savings
+import kpt.feature.savings.generated.resources.feature_savings_approved_on
+import kpt.feature.savings.generated.resources.feature_savings_cancel
+import kpt.feature.savings.generated.resources.feature_savings_save
+import kpt.feature.savings.generated.resources.feature_savings_savings_approval_reason
+import kpt.feature.savings.generated.resources.feature_savings_savings_approved
+import kpt.feature.savings.generated.resources.feature_savings_select_date
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -61,7 +61,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -193,15 +195,15 @@ private fun SavingsAccountApprovalContent(
             .verticalScroll(scrollState)
             .fillMaxSize(),
     ) {
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         Text(
-            style = KptTheme.typography.bodyLarge,
+            style = LocalKptTypography.current.bodyLarge,
             text = stringResource(Res.string.feature_savings_approved_on),
-            modifier = Modifier.padding(start = KptTheme.spacing.md),
+            modifier = Modifier.padding(start = LocalKptSpacing.current.md),
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosDatePickerTextField(
             value = DateHelper.getDateAsStringFromLong(approvalDate),
@@ -210,7 +212,7 @@ private fun SavingsAccountApprovalContent(
             showDatePickerDialog = true
         }
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             value = reasonForApproval,
@@ -219,12 +221,12 @@ private fun SavingsAccountApprovalContent(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = KptTheme.spacing.md)
+                .padding(horizontal = LocalKptSpacing.current.md)
                 .heightIn(DesignToken.spacing.dp44),
             onClick = {
                 approveLoan.invoke(

@@ -9,15 +9,15 @@
  */
 package com.mifos.feature.client.fixedDepositAccount
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.no_internet_message
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.no_internet_message
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import kotlinx.coroutines.flow.update

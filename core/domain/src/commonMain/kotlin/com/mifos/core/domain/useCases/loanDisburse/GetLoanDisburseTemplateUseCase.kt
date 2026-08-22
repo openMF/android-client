@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases.loanDisburse
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.loan.LoanDisburseRepository
 import com.mifos.core.model.objects.account.loan.loanDisburse.LoanDisburseTemplate
 
@@ -18,5 +17,5 @@ class GetLoanDisburseTemplateUseCase(
 ) {
     suspend operator fun invoke(
         loanId: Int,
-    ): DataState<LoanDisburseTemplate> = repository.getDisburseTemplate(loanId)
+    ): LoanDisburseTemplate = repository.getDisburseTemplate(loanId)
 }

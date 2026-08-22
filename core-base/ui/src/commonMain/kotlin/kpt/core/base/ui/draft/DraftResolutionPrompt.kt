@@ -19,6 +19,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import kpt.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 /**
  * The **three-case** draft-resolution prompt shown when a user re-opens a form that already has a
@@ -68,7 +69,7 @@ fun DraftResolutionPrompt(
         confirmButton = {
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.xs),
+                verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.xs),
             ) {
                 TextButton(onClick = onResume, modifier = Modifier.fillMaxWidth()) { Text(resumeLabel) }
                 TextButton(onClick = onStartFresh, modifier = Modifier.fillMaxWidth()) { Text(startFreshLabel) }

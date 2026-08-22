@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.PinPointClientRepository
 import com.mifos.core.model.objects.clients.ClientAddressResponse
 import kotlinx.coroutines.flow.Flow
@@ -18,6 +17,6 @@ class GetClientPinpointLocationsUseCase(
     private val pinPointClientRepository: PinPointClientRepository,
 ) {
 
-    operator fun invoke(clientId: Int): Flow<DataState<List<ClientAddressResponse>>> =
+    operator fun invoke(clientId: Int): Flow<List<ClientAddressResponse>> =
         pinPointClientRepository.getClientPinpointLocations(clientId)
 }

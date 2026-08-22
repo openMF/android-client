@@ -67,6 +67,12 @@ kotlin {
             api(projects.coreBase.network)
 
             implementation(projects.core.datastore)
+            // fork-preserved (offline-first-template-migration 01-template-adoption T-AC3-merge):
+            // core/network/**/{datamanager,mappers,services}/DataTable*.kt reference
+            // com.mifos.room.entities.noncore.DataTableEntity directly (network layer reaching into
+            // Room entities — a pre-Store5 pattern the epic's later sub-plans replace). Needed for
+            // AC-3 compile-green now; not part of the template's own network module.
+            implementation(projects.core.database)
 
             implementation(libs.kotlinx.serialization.json)
 

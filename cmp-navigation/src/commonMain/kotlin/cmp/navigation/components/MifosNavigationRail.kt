@@ -39,7 +39,8 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @Composable
 fun MifosNavigationRail(
@@ -50,7 +51,7 @@ fun MifosNavigationRail(
     windowInsets: WindowInsets = NavigationRailDefaults.windowInsets,
 ) {
     Surface(
-        color = KptTheme.colorScheme.surface,
+        color = LocalKptColors.current.surface,
         contentColor = Color.Unspecified,
         modifier = modifier,
     ) {

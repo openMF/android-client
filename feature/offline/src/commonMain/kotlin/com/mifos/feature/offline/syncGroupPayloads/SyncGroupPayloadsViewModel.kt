@@ -9,10 +9,10 @@
  */
 package com.mifos.feature.offline.syncGroupPayloads
 
-import androidclient.feature.offline.generated.resources.Res
-import androidclient.feature.offline.generated.resources.feature_offline_error_failed_to_load_groupPayload
-import androidclient.feature.offline.generated.resources.feature_offline_error_failed_to_update_list
-import androidclient.feature.offline.generated.resources.feature_offline_error_group_sync_failed
+import kpt.feature.offline.generated.resources.Res
+import kpt.feature.offline.generated.resources.feature_offline_error_failed_to_load_groupPayload
+import kpt.feature.offline.generated.resources.feature_offline_error_failed_to_update_list
+import kpt.feature.offline.generated.resources.feature_offline_error_group_sync_failed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState

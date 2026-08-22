@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.CenterDetailsRepository
 import com.mifos.core.model.objects.groups.CenterInfo
 import com.mifos.core.network.datamanager.DataManagerCenter
@@ -33,8 +31,8 @@ class CenterDetailsRepositoryImp(
     override fun getCenterSummaryInfo(
         centerId: Int,
         genericResultSet: Boolean,
-    ): Flow<DataState<List<CenterInfo>>> {
+    ): Flow<List<CenterInfo>> {
         return dataManagerRunReport.getCenterSummaryInfo(centerId, genericResultSet)
-            .asDataStateFlow()
+            
     }
 }

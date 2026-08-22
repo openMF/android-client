@@ -10,9 +10,6 @@
 package com.mifos.room.entities.templates.loans
 
 import com.mifos.core.model.objects.template.loan.Type
-import com.mifos.core.model.utils.IgnoredOnParcel
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import kotlinx.serialization.Serializable
 
@@ -20,9 +17,7 @@ import kotlinx.serialization.Serializable
  * Created by Rajan Maurya on 14/02/17.
  */
 @Serializable
-@Parcelize
 data class LoanTransactionTemplate(
-    @IgnoredOnParcel
     val type: Type? = null,
 
     val date: List<Int> = emptyList(),
@@ -34,4 +29,4 @@ data class LoanTransactionTemplate(
     val possibleNextRepaymentDate: List<Int> = emptyList(),
 
     val paymentTypeOptions: List<PaymentTypeOptionEntity> = emptyList(),
-) : Parcelable
+)

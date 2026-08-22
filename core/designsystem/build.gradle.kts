@@ -16,6 +16,16 @@ plugins {
 
 kotlin {
     sourceSets {
+        // fork-preserved (offline-first-template-migration 04-pilot-loan-transaction-ledger —
+        // discovered while chasing the first real end-to-end compile): the full template
+        // build.gradle.kts overwrite (01-template-adoption) dropped this whole block, but the
+        // fork's real MifosPermissionBox.android.kt still needs
+        // androidx.activity.compose.{rememberLauncherForActivityResult,ActivityResultContracts}
+        // (+ transitively androidx.core.app.ActivityCompat / androidx.core.content.ContextCompat).
+        androidMain.dependencies {
+            implementation(libs.androidx.compose.ui.tooling.preview)
+            implementation(libs.androidx.activity.compose)
+        }
         androidInstrumentedTest.dependencies {
             implementation(libs.androidx.compose.ui.test)
         }
@@ -38,6 +48,14 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
 
             implementation(libs.coil.kt.compose)
+
+            // fork-preserved (offline-first-template-migration 02-store-infra-screenstate
+            // T5-merge): dropped by the full core/designsystem/build.gradle.kts template
+            // overwrite, but the fork's real MifosIcons.kt (FluentIcons) and
+            // MifosBottomSheet.kt (BackCallback/arkivanov essenty) still need them.
+            api(libs.back.handler)
+            api(libs.window.size)
+            implementation(libs.fluentui.system.icons)
         }
     }
 }

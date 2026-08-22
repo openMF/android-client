@@ -9,11 +9,11 @@
  */
 package com.mifos.feature.client.clientSurveyList
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_datatable
-import androidclient.feature.client.generated.resources.feature_client_no_survey_available_for_client
-import androidclient.feature.client.generated.resources.feature_client_select_one_survey
-import androidclient.feature.client.generated.resources.feature_client_surveys
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_client_failed_to_fetch_datatable
+import kpt.feature.client.generated.resources.feature_client_no_survey_available_for_client
+import kpt.feature.client.generated.resources.feature_client_select_one_survey
+import kpt.feature.client.generated.resources.feature_client_surveys
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,7 +46,11 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptShapes
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 /**
  * Created by Pronay Sarker on 03/07/2024 (6:05 AM)
@@ -130,9 +134,9 @@ private fun SurveyListContent(
         Text(
             modifier = Modifier
                 .padding(horizontal = DesignToken.spacing.dp18)
-                .padding(top = KptTheme.spacing.md, bottom = KptTheme.spacing.sm),
+                .padding(top = LocalKptSpacing.current.md, bottom = LocalKptSpacing.current.sm),
             text = stringResource(Res.string.feature_client_select_one_survey),
-            style = KptTheme.typography.titleMedium.copy(
+            style = LocalKptTypography.current.titleMedium.copy(
                 fontWeight = FontWeight.Normal,
                 fontStyle = FontStyle.Normal,
             ),
@@ -162,11 +166,11 @@ private fun SurveyCardItem(
             .padding(horizontal = DesignToken.padding.medium)
             .padding(bottom = DesignToken.padding.medium),
         colors = CardDefaults.cardColors(
-            containerColor = KptTheme.colorScheme.surface,
+            containerColor = LocalKptColors.current.surface,
         ),
         elevation = CardDefaults.cardElevation(DesignToken.elevation.dp2),
         onClick = onCardClicked,
-        shape = KptTheme.shapes.extraSmall,
+        shape = LocalKptShapes.current.extraSmall,
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -175,22 +179,22 @@ private fun SurveyCardItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(DesignToken.sizes.dp5)
-                    .background(color = KptTheme.colorScheme.primary),
+                    .background(color = LocalKptColors.current.primary),
             )
 
             Column(
-                modifier = Modifier.padding(horizontal = KptTheme.spacing.sm, vertical = KptTheme.spacing.sm),
+                modifier = Modifier.padding(horizontal = LocalKptSpacing.current.sm, vertical = LocalKptSpacing.current.sm),
             ) {
                 Text(
                     text = surveyName ?: "",
-                    style = KptTheme.typography.bodyLarge,
-                    color = KptTheme.colorScheme.onBackground,
+                    style = LocalKptTypography.current.bodyLarge,
+                    color = LocalKptColors.current.onBackground,
                 )
 
                 Text(
                     text = description ?: "",
-                    style = KptTheme.typography.bodyLarge,
-                    color = KptTheme.colorScheme.onBackground.copy(alpha = .8f),
+                    style = LocalKptTypography.current.bodyLarge,
+                    color = LocalKptColors.current.onBackground.copy(alpha = .8f),
                 )
             }
         }

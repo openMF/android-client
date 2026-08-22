@@ -9,24 +9,24 @@
  */
 package com.mifos.feature.client.clientLoanAccounts
 
-import androidclient.core.ui.generated.resources.send_money
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.add_icon
-import androidclient.feature.client.generated.resources.cash_bundel
-import androidclient.feature.client.generated.resources.client_loan_accounts_not_available
-import androidclient.feature.client.generated.resources.client_savings_item
-import androidclient.feature.client.generated.resources.feature_client_account_status
-import androidclient.feature.client.generated.resources.feature_client_dialog_action_ok
-import androidclient.feature.client.generated.resources.feature_client_filters
-import androidclient.feature.client.generated.resources.feature_client_loan_account
-import androidclient.feature.client.generated.resources.feature_client_status_active
-import androidclient.feature.client.generated.resources.feature_client_status_closed
-import androidclient.feature.client.generated.resources.feature_client_status_overpaid
-import androidclient.feature.client.generated.resources.feature_client_status_pending
-import androidclient.feature.client.generated.resources.feature_loan_account_empty_list_message
-import androidclient.feature.client.generated.resources.filter
-import androidclient.feature.client.generated.resources.search
-import androidclient.feature.client.generated.resources.wallet
+import kpt.core.ui.generated.resources.send_money
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.add_icon
+import kpt.feature.client.generated.resources.cash_bundel
+import kpt.feature.client.generated.resources.client_loan_accounts_not_available
+import kpt.feature.client.generated.resources.client_savings_item
+import kpt.feature.client.generated.resources.feature_client_account_status
+import kpt.feature.client.generated.resources.feature_client_dialog_action_ok
+import kpt.feature.client.generated.resources.feature_client_filters
+import kpt.feature.client.generated.resources.feature_client_loan_account
+import kpt.feature.client.generated.resources.feature_client_status_active
+import kpt.feature.client.generated.resources.feature_client_status_closed
+import kpt.feature.client.generated.resources.feature_client_status_overpaid
+import kpt.feature.client.generated.resources.feature_client_status_pending
+import kpt.feature.client.generated.resources.feature_loan_account_empty_list_message
+import kpt.feature.client.generated.resources.filter
+import kpt.feature.client.generated.resources.search
+import kpt.feature.client.generated.resources.wallet
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -81,8 +81,10 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
-import androidclient.core.ui.generated.resources.Res as UiRes
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptSpacing
+import kpt.core.ui.generated.resources.Res as UiRes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -144,7 +146,7 @@ private fun ClientLoanAccountsScreen(
         MifosBreadcrumbNavBar(navController)
 
         Column(
-            modifier = Modifier.fillMaxSize().padding(horizontal = KptTheme.spacing.md),
+            modifier = Modifier.fillMaxSize().padding(horizontal = LocalKptSpacing.current.md),
         ) {
             ClientsAccountHeader(
                 totalItem = state.loanAccounts.size.toString(),
@@ -168,7 +170,7 @@ private fun ClientLoanAccountsScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
             LoanAccountsList(
                 onAction = onAction,
@@ -207,7 +209,7 @@ fun LoanAccountsList(
                 )
 
                 Spacer(
-                    modifier = Modifier.height(KptTheme.spacing.sm),
+                    modifier = Modifier.height(LocalKptSpacing.current.sm),
                 )
             }
         }
@@ -377,9 +379,9 @@ private fun ClientsAccountHeader(
                 if (isFilterActive) {
                     Box(
                         modifier = Modifier.align(Alignment.TopEnd)
-                            .padding(top = DesignToken.padding.medium, end = KptTheme.spacing.md)
+                            .padding(top = DesignToken.padding.medium, end = LocalKptSpacing.current.md)
                             .size(DesignToken.sizes.iconMinyMiny).clip(CircleShape)
-                            .background(KptTheme.colorScheme.error),
+                            .background(LocalKptColors.current.error),
                     )
                 }
             }
@@ -430,10 +432,10 @@ private fun FilterBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
         dragHandle = null,
-        containerColor = KptTheme.colorScheme.background,
+        containerColor = LocalKptColors.current.background,
     ) {
         Column(
-            modifier = Modifier.padding(KptTheme.spacing.md),
+            modifier = Modifier.padding(LocalKptSpacing.current.md),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -443,7 +445,7 @@ private fun FilterBottomSheet(
                 Text(
                     text = stringResource(Res.string.feature_client_filters),
                     style = MifosTypography.titleLargeEmphasized,
-                    color = KptTheme.colorScheme.primary,
+                    color = LocalKptColors.current.primary,
                 )
                 Row {
                     IconButton(
@@ -475,7 +477,7 @@ private fun FilterBottomSheet(
             Text(
                 text = stringResource(Res.string.feature_client_account_status),
                 style = MifosTypography.titleMediumEmphasized,
-                modifier = Modifier.padding(bottom = KptTheme.spacing.sm),
+                modifier = Modifier.padding(bottom = LocalKptSpacing.current.sm),
             )
 
             LoanStatusFilter.entries.forEach { status ->

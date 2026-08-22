@@ -9,13 +9,13 @@
  */
 package com.mifos.feature.loan.newLoanAccount
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_account_created_successfully
-import androidclient.feature.loan.generated.resources.feature_loan_account_number
-import androidclient.feature.loan.generated.resources.feature_loan_disbursed_date
-import androidclient.feature.loan.generated.resources.installment_paid
-import androidclient.feature.loan.generated.resources.principal_paid_off
-import androidclient.feature.loan.generated.resources.total_installments
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_account_created_successfully
+import kpt.feature.loan.generated.resources.feature_loan_account_number
+import kpt.feature.loan.generated.resources.feature_loan_disbursed_date
+import kpt.feature.loan.generated.resources.installment_paid
+import kpt.feature.loan.generated.resources.principal_paid_off
+import kpt.feature.loan.generated.resources.total_installments
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -31,7 +31,7 @@ import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.network.model.CollateralItem
 import com.mifos.core.network.model.LoansPayload
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState.DialogState
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import kotlinx.coroutines.delay

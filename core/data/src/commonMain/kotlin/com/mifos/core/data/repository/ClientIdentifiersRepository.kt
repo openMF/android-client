@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.noncoreobjects.Identifier
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.model.objects.noncoreobjects.IdentifierTemplate
@@ -22,11 +21,11 @@ import kotlinx.coroutines.flow.Flow
  */
 interface ClientIdentifiersRepository {
 
-    fun getClientListIdentifiers(clientId: Long): Flow<DataState<List<Identifier>>>
+    fun getClientListIdentifiers(clientId: Long): Flow<List<Identifier>>
 
-    fun getClientIdentifiers(clientId: Long, identifierId: Long): Flow<DataState<Identifier>>
+    fun getClientIdentifiers(clientId: Long, identifierId: Long): Flow<Identifier>
 
-    fun getClientIdentifierTemplate(clientId: Long): Flow<DataState<IdentifierTemplate>>
+    fun getClientIdentifierTemplate(clientId: Long): Flow<IdentifierTemplate>
 
     suspend fun deleteClientIdentifier(clientId: Long, identifierId: Long): GenericResponse
 

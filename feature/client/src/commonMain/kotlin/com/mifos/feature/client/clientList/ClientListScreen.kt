@@ -11,12 +11,12 @@
 
 package com.mifos.feature.client.clientList
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_clients
-import androidclient.feature.client.generated.resources.feature_client_failed_to_more_clients
-import androidclient.feature.client.generated.resources.feature_client_ic_done_all_black_24dp
-import androidclient.feature.client.generated.resources.feature_client_ic_dp_placeholder
-import androidclient.feature.client.generated.resources.feature_client_no_more_clients_available
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_client_failed_to_fetch_clients
+import kpt.feature.client.generated.resources.feature_client_failed_to_more_clients
+import kpt.feature.client.generated.resources.feature_client_ic_done_all_black_24dp
+import kpt.feature.client.generated.resources.feature_client_ic_dp_placeholder
+import kpt.feature.client.generated.resources.feature_client_no_more_clients_available
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -82,7 +82,10 @@ import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 /**
  * Created by Aditya Gupta on 21/02/24.
@@ -162,7 +165,7 @@ internal fun ClientListScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { createNewClient() },
-                containerColor = KptTheme.colorScheme.secondary,
+                containerColor = LocalKptColors.current.secondary,
             ) {
                 Icon(
                     imageVector = MifosIcons.AddFilled,
@@ -170,7 +173,7 @@ internal fun ClientListScreen(
                 )
             }
         },
-        containerColor = KptTheme.colorScheme.surfaceContainer,
+        containerColor = LocalKptColors.current.surfaceContainer,
         snackbarHostState = snackbarHostState,
     ) { padding ->
         Column(
@@ -240,13 +243,13 @@ private fun SelectionModeTopAppBar(
     val selectedItems = currentSelectedItems.toMutableStateList()
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = KptTheme.colorScheme.secondary,
+            containerColor = LocalKptColors.current.secondary,
         ),
         title = {
             Text(
                 text = "${selectedItems.size} selected",
-                style = KptTheme.typography.titleLarge.copy(
-                    color = KptTheme.colorScheme.onBackground,
+                style = LocalKptTypography.current.titleLarge.copy(
+                    color = LocalKptColors.current.onBackground,
                 ),
             )
         },
@@ -257,7 +260,7 @@ private fun SelectionModeTopAppBar(
                 Icon(
                     imageVector = MifosIcons.Close,
                     contentDescription = "Close",
-                    tint = KptTheme.colorScheme.onSurface,
+                    tint = LocalKptColors.current.onSurface,
                 )
             }
         },
@@ -271,7 +274,7 @@ private fun SelectionModeTopAppBar(
                 Icon(
                     imageVector = MifosIcons.Sync,
                     contentDescription = "Sync",
-                    tint = KptTheme.colorScheme.onSurface,
+                    tint = LocalKptColors.current.onSurface,
                 )
             }
         },
@@ -456,15 +459,15 @@ private fun LazyColumnForClientListDb(clientList: List<ClientEntity>) {
             OutlinedCard(
                 modifier = Modifier.padding(DesignToken.padding.dp6),
                 colors = CardDefaults.cardColors(
-                    containerColor = KptTheme.colorScheme.surface,
+                    containerColor = LocalKptColors.current.surface,
                 ),
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
-                            horizontal = KptTheme.spacing.md,
-                            vertical = KptTheme.spacing.lg,
+                            horizontal = LocalKptSpacing.current.md,
+                            vertical = LocalKptSpacing.current.lg,
                         ),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -474,22 +477,22 @@ private fun LazyColumnForClientListDb(clientList: List<ClientEntity>) {
                         modifier = Modifier
                             .size(DesignToken.sizes.topBarStandardHeight)
                             .clip(CircleShape)
-                            .border(DesignToken.spacing.dp1, KptTheme.colorScheme.outline, CircleShape),
+                            .border(DesignToken.spacing.dp1, LocalKptColors.current.outline, CircleShape),
                     )
                     Column(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(horizontal = KptTheme.spacing.md),
+                            .padding(horizontal = LocalKptSpacing.current.md),
                     ) {
                         client.displayName?.let {
                             Text(
                                 text = it,
-                                style = KptTheme.typography.bodyLarge,
+                                style = LocalKptTypography.current.bodyLarge,
                             )
                         }
                         Text(
                             text = client.accountNo.toString(),
-                            style = KptTheme.typography.bodyMedium,
+                            style = LocalKptTypography.current.bodyMedium,
                         )
                     }
                     if (client.sync) {

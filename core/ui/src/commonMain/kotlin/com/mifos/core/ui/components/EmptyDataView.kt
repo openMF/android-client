@@ -9,8 +9,8 @@
  */
 package com.mifos.core.ui.components
 
-import androidclient.core.ui.generated.resources.Res
-import androidclient.core.ui.generated.resources.core_ui_no_internet
+import kpt.core.ui.generated.resources.Res
+import kpt.core.ui.generated.resources.core_ui_no_internet
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,7 +31,8 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptTypography
 
 @Composable
 fun EmptyDataView(
@@ -55,7 +56,7 @@ fun EmptyDataView(
         Text(
             modifier = Modifier.padding(horizontal = DesignToken.padding.largeIncreased),
             text = error,
-            style = KptTheme.typography.labelSmall,
+            style = LocalKptTypography.current.labelSmall,
             textAlign = TextAlign.Center,
         )
     }
@@ -86,7 +87,7 @@ fun EmptyDataView(
         Text(
             modifier = Modifier.padding(horizontal = DesignToken.padding.largeIncreased),
             text = errorString ?: stringResource(error),
-            style = KptTheme.typography.labelMedium,
+            style = LocalKptTypography.current.labelMedium,
             textAlign = TextAlign.Center,
         )
     }

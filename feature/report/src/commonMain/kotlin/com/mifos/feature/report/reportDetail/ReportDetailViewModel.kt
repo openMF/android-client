@@ -9,11 +9,11 @@
  */
 package com.mifos.feature.report.reportDetail
 
-import androidclient.feature.report.generated.resources.Res
-import androidclient.feature.report.generated.resources.feature_report_export_started
-import androidclient.feature.report.generated.resources.feature_report_exported_successfully
-import androidclient.feature.report.generated.resources.feature_report_failed_to_load_report_details
-import androidclient.feature.report.generated.resources.feature_report_unable_to_export
+import kpt.feature.report.generated.resources.Res
+import kpt.feature.report.generated.resources.feature_report_export_started
+import kpt.feature.report.generated.resources.feature_report_exported_successfully
+import kpt.feature.report.generated.resources.feature_report_failed_to_load_report_details
+import kpt.feature.report.generated.resources.feature_report_unable_to_export
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

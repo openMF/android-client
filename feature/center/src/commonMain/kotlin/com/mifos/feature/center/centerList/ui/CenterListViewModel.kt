@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.center.centerList.ui
 
-import androidclient.feature.center.generated.resources.Res
-import androidclient.feature.center.generated.resources.feature_center_failed_to_load_db_centers
+import kpt.feature.center.generated.resources.Res
+import kpt.feature.center.generated.resources.feature_center_failed_to_load_db_centers
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.CenterListRepository

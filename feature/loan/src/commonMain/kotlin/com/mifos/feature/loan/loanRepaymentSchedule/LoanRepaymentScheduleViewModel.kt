@@ -9,12 +9,12 @@
  */
 package com.mifos.feature.loan.loanRepaymentSchedule
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_account_number
-import androidclient.feature.loan.generated.resources.feature_loan_disbursed_date
-import androidclient.feature.loan.generated.resources.feature_loan_error_fetching_repayment_schedule
-import androidclient.feature.loan.generated.resources.principal_paid_off
-import androidclient.feature.loan.generated.resources.total_installments
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_account_number
+import kpt.feature.loan.generated.resources.feature_loan_disbursed_date
+import kpt.feature.loan.generated.resources.feature_loan_error_fetching_repayment_schedule
+import kpt.feature.loan.generated.resources.principal_paid_off
+import kpt.feature.loan.generated.resources.total_installments
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -27,7 +27,7 @@ import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.loan.LoanRepaymentScheduleRepository
 import com.mifos.core.model.objects.account.loan.Period
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString

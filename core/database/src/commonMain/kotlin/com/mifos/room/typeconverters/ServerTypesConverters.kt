@@ -10,15 +10,15 @@
 package com.mifos.room.typeconverters
 
 import com.mifos.room.entities.accounts.savings.SavingAccountDepositTypeEntity.ServerTypes
-import template.core.base.database.TypeConverter
+import androidx.room3.ColumnTypeConverter
 
 class ServerTypesConverters {
-    @TypeConverter
+    @ColumnTypeConverter
     fun toServerTypes(id: Int?): ServerTypes? {
         return id?.let { ServerTypes.fromId(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromServerTypes(serverTypes: ServerTypes?): Int? {
         return serverTypes?.id
     }

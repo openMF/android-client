@@ -27,7 +27,8 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.ui.util.DevicePreview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 import kotlin.math.min
 
 @Composable
@@ -41,7 +42,7 @@ fun MifosTextUserImage(
         modifier = modifier
             .clip(CircleShape)
             .background(
-                color ?: KptTheme.colorScheme.primary,
+                color ?: LocalKptColors.current.primary,
             )
             .onGloballyPositioned { coordinates ->
                 boxSize = Size(

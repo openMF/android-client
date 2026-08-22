@@ -9,12 +9,12 @@
  */
 package com.mifos.feature.client.clientsList
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.account_number_prefix
-import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_clients
-import androidclient.feature.client.generated.resources.feature_client_failed_to_more_clients
-import androidclient.feature.client.generated.resources.feature_client_no_more_clients_available
-import androidclient.feature.client.generated.resources.string_not_available
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.account_number_prefix
+import kpt.feature.client.generated.resources.feature_client_failed_to_fetch_clients
+import kpt.feature.client.generated.resources.feature_client_failed_to_more_clients
+import kpt.feature.client.generated.resources.feature_client_no_more_clients_available
+import kpt.feature.client.generated.resources.string_not_available
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -71,7 +71,9 @@ import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -131,7 +133,7 @@ private fun ClientActions(
     toggleFilterVisibility: () -> Unit,
 ) {
     Row(
-        modifier = modifier.fillMaxWidth().padding(KptTheme.spacing.md),
+        modifier = modifier.fillMaxWidth().padding(LocalKptSpacing.current.md),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -144,17 +146,17 @@ private fun ClientActions(
                     modifier = Modifier.clickable {
                         onAction(ClientListAction.NavigateToCreateClient)
                     },
-                    horizontalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
+                    horizontalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.sm),
                 ) {
                     Text(
                         text = "Clients",
                         style = MifosTypography.titleMediumEmphasized,
-                        color = KptTheme.colorScheme.primary,
+                        color = LocalKptColors.current.primary,
                     )
                     Icon(
                         imageVector = MifosIcons.Add,
                         contentDescription = null,
-                        tint = KptTheme.colorScheme.primary,
+                        tint = LocalKptColors.current.primary,
                         modifier = Modifier
                             .size(DesignToken.sizes.iconAverage),
                     )
@@ -231,7 +233,7 @@ private fun ClientListContentScreen(
                         onClientClick = { clientId ->
                             onAction(ClientListAction.OnClientClick(clientId))
                         },
-                        modifier = Modifier.padding(KptTheme.spacing.md),
+                        modifier = Modifier.padding(LocalKptSpacing.current.md),
                         fetchImage = {
                             onAction(ClientListAction.FetchImage(it))
                         },
@@ -302,12 +304,12 @@ fun ClientItem(client: ClientEntity, byteArray: ByteArray?, onClientClick: (Int)
                     (client.accountNo ?: stringResource(Res.string.string_not_available)),
                 ),
                 style = MifosTypography.bodySmall,
-                color = KptTheme.colorScheme.secondary,
+                color = LocalKptColors.current.secondary,
             ),
             TextUtil(
                 text = client.officeName ?: stringResource(Res.string.string_not_available),
                 style = MifosTypography.bodySmall,
-                color = KptTheme.colorScheme.secondary,
+                color = LocalKptColors.current.secondary,
             ),
         ),
         rightValues = buildList {
@@ -319,7 +321,7 @@ fun ClientItem(client: ClientEntity, byteArray: ByteArray?, onClientClick: (Int)
                         color = when (status) {
                             "Active" -> AppColors.customEnable
                             "Pending" -> AppColors.customYellow
-                            else -> KptTheme.colorScheme.error
+                            else -> LocalKptColors.current.error
                         },
                     ),
                 )
@@ -330,7 +332,7 @@ fun ClientItem(client: ClientEntity, byteArray: ByteArray?, onClientClick: (Int)
                     TextUtil(
                         text = externalId,
                         style = MifosTypography.labelSmall,
-                        color = KptTheme.colorScheme.secondary,
+                        color = LocalKptColors.current.secondary,
                     ),
                 )
             }
@@ -339,7 +341,7 @@ fun ClientItem(client: ClientEntity, byteArray: ByteArray?, onClientClick: (Int)
             .clickable {
                 onClientClick(client.id)
             }
-            .padding(KptTheme.spacing.md),
+            .padding(LocalKptSpacing.current.md),
     )
 }
 
@@ -502,7 +504,7 @@ fun FilterBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
         dragHandle = null,
-        containerColor = KptTheme.colorScheme.background,
+        containerColor = LocalKptColors.current.background,
     ) {
         val sortTypes = listOf(SortTypes.NAME, SortTypes.ACCOUNT_NUMBER, SortTypes.EXTERNAL_ID)
         val statusTypes = listOf("Active", "Pending", "Closed")
@@ -519,7 +521,7 @@ fun FilterBottomSheet(
                 Text(
                     text = "Filters",
                     style = MifosTypography.titleLargeEmphasized,
-                    color = KptTheme.colorScheme.primary,
+                    color = LocalKptColors.current.primary,
                 )
                 Row {
                     IconButton(

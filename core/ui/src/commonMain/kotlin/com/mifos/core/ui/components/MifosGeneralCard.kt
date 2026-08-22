@@ -27,8 +27,9 @@ import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.KptTheme
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @Composable
 fun MifosGeneralCardComponentOutline(
@@ -46,7 +47,7 @@ fun MifosGeneralCardComponentOutline(
                     bottomStart = borderCorner,
                     bottomEnd = borderCorner,
                 ),
-                color = KptTheme.colorScheme.secondaryContainer,
+                color = LocalKptColors.current.secondaryContainer,
             ),
     ) {
         content()

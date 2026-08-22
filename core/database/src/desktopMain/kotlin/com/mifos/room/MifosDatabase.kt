@@ -12,14 +12,16 @@ package com.mifos.room
 import androidx.room3.AutoMigration
 import androidx.room3.Database
 import androidx.room3.RoomDatabase
-import androidx.room3.TypeConverters
+import androidx.room3.ColumnTypeConverters
 import com.mifos.room.dao.CenterDao
 import com.mifos.room.dao.ChargeDao
 import com.mifos.room.dao.ClientDao
 import com.mifos.room.dao.ColumnValueDao
 import com.mifos.room.dao.GroupsDao
 import com.mifos.room.dao.LoanDao
+import com.mifos.room.dao.LoanTransactionDao
 import com.mifos.room.dao.OfficeDao
+import com.mifos.room.dao.SavingsAccountTransactionDao
 import com.mifos.room.dao.SavingsDao
 import com.mifos.room.dao.StaffDao
 import com.mifos.room.dao.SurveyDao
@@ -31,6 +33,7 @@ import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 import com.mifos.room.entities.accounts.loans.LoanTimelineEntity
+import com.mifos.room.entities.accounts.loans.LoanTransactionEntity
 import com.mifos.room.entities.accounts.loans.LoanTypeEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
@@ -93,6 +96,7 @@ import com.mifos.room.typeconverters.CustomTypeConverters
         LoanWithAssociationsEntity::class,
         LoanAccountSummaryEntity::class,
         LoanTimelineEntity::class,
+        LoanTransactionEntity::class,
         // savings package
         SavingAccountDepositTypeEntity::class,
         SavingsAccountEntity::class,
@@ -155,9 +159,12 @@ import com.mifos.room.typeconverters.CustomTypeConverters
     autoMigrations = [
         AutoMigration(from = 1, to = 2),
         AutoMigration(from = 2, to = 3),
+        // v4: purely-additive `loan_transactions` table (new entity, no destructive
+        // column edits) — Room3 auto-migration handles a brand-new table with no spec.
+        AutoMigration(from = 3, to = 4),
     ],
 )
-@TypeConverters(
+@ColumnTypeConverters(
     CustomTypeConverters::class,
 )
 actual abstract class MifosDatabase : RoomDatabase() {
@@ -167,12 +174,14 @@ actual abstract class MifosDatabase : RoomDatabase() {
     actual abstract val columnValueDao: ColumnValueDao
     actual abstract val groupsDao: GroupsDao
     actual abstract val loanDao: LoanDao
+    actual abstract val loanTransactionDao: LoanTransactionDao
     actual abstract val officeDao: OfficeDao
     actual abstract val savingsDao: SavingsDao
+    actual abstract val savingsAccountTransactionDao: SavingsAccountTransactionDao
     actual abstract val staffDao: StaffDao
     actual abstract val surveyDao: SurveyDao
 
     companion object {
-        const val VERSION = 3
+        const val VERSION = 4
     }
 }

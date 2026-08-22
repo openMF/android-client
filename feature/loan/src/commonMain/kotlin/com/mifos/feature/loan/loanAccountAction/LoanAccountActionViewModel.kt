@@ -9,10 +9,10 @@
  */
 package com.mifos.feature.loan.loanAccountAction
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_action_error_details_not_found
-import androidclient.feature.loan.generated.resources.feature_loan_action_failed_to_load_loan_actions
-import androidclient.feature.loan.generated.resources.feature_loan_profile_error_network_not_available
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_action_error_details_not_found
+import kpt.feature.loan.generated.resources.feature_loan_action_failed_to_load_loan_actions
+import kpt.feature.loan.generated.resources.feature_loan_profile_error_network_not_available
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -20,7 +20,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.loan.LoanAccountSummaryRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.feature.loan.utils.UiLoanStatus
 import com.mifos.feature.loan.utils.getLoanStatus
 import kotlinx.coroutines.Job

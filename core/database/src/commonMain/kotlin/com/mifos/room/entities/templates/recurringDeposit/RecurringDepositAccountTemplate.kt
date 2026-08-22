@@ -32,49 +32,45 @@ import com.mifos.core.model.objects.template.recurring.period.LockinPeriodFreque
 import com.mifos.core.model.objects.template.recurring.period.LockinPeriodFrequencyTypeOption
 import com.mifos.core.model.objects.template.recurring.period.PeriodFrequencyTypeOption
 import com.mifos.core.model.objects.template.recurring.period.ProductOption
-import com.mifos.core.model.utils.IgnoredOnParcel
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
-@Parcelize
 @Serializable
 data class RecurringDepositAccountTemplate(
-    @IgnoredOnParcel val accountChart: AccountChart? = null,
+    val accountChart: AccountChart? = null,
     val adjustAdvanceTowardsFuturePayments: Boolean? = null,
     val allowWithdrawal: Boolean? = null,
-    @IgnoredOnParcel val chargeOptions: List<ChargeOption>? = null,
+    val chargeOptions: List<ChargeOption>? = null,
     val clientId: Int? = null,
     val clientName: String? = null,
-    @IgnoredOnParcel val currency: Currency? = null,
+    val currency: Currency? = null,
     val depositProductId: Int? = null,
     val depositProductName: String? = null,
-    @IgnoredOnParcel val depositType: DepositType? = null,
-    @IgnoredOnParcel val fieldOfficerOptions: List<FieldOfficerOption>? = null,
-    @IgnoredOnParcel val inMultiplesOfDepositTermType: InMultiplesOfDepositTermType? = null,
-    @IgnoredOnParcel val interestCalculationDaysInYearType: InterestCalculationDaysInYearType? = null,
-    @IgnoredOnParcel val interestCalculationDaysInYearTypeOptions: List<InterestCalculationDaysInYearTypeOption>? = null,
-    @IgnoredOnParcel val interestCalculationType: InterestCalculationType? = null,
-    @IgnoredOnParcel val interestCalculationTypeOptions: List<InterestCalculationTypeOption>? = null,
-    @IgnoredOnParcel val interestCompoundingPeriodType: InterestCompoundingPeriodType? = null,
-    @IgnoredOnParcel val interestCompoundingPeriodTypeOptions: List<InterestCompoundingPeriodTypeOption>? = null,
-    @IgnoredOnParcel val interestPostingPeriodType: InterestPostingPeriodType? = null,
-    @IgnoredOnParcel val interestPostingPeriodTypeOptions: List<InterestPostingPeriodTypeOption>? = null,
+    val depositType: DepositType? = null,
+    val fieldOfficerOptions: List<FieldOfficerOption>? = null,
+    val inMultiplesOfDepositTermType: InMultiplesOfDepositTermType? = null,
+    val interestCalculationDaysInYearType: InterestCalculationDaysInYearType? = null,
+    val interestCalculationDaysInYearTypeOptions: List<InterestCalculationDaysInYearTypeOption>? = null,
+    val interestCalculationType: InterestCalculationType? = null,
+    val interestCalculationTypeOptions: List<InterestCalculationTypeOption>? = null,
+    val interestCompoundingPeriodType: InterestCompoundingPeriodType? = null,
+    val interestCompoundingPeriodTypeOptions: List<InterestCompoundingPeriodTypeOption>? = null,
+    val interestPostingPeriodType: InterestPostingPeriodType? = null,
+    val interestPostingPeriodTypeOptions: List<InterestPostingPeriodTypeOption>? = null,
     val isCalendarInherited: Boolean? = null,
     val isMandatoryDeposit: Boolean? = null,
     val lockinPeriodFrequency: Int? = null,
-    @IgnoredOnParcel val lockinPeriodFrequencyType: LockinPeriodFrequencyType? = null,
-    @IgnoredOnParcel val lockinPeriodFrequencyTypeOptions: List<LockinPeriodFrequencyTypeOption>? = null,
-    @IgnoredOnParcel val maxDepositTermType: MaxDepositTermType? = null,
+    val lockinPeriodFrequencyType: LockinPeriodFrequencyType? = null,
+    val lockinPeriodFrequencyTypeOptions: List<LockinPeriodFrequencyTypeOption>? = null,
+    val maxDepositTermType: MaxDepositTermType? = null,
     val minDepositTerm: Int? = null,
-    @IgnoredOnParcel val minDepositTermType: MinDepositTermType? = null,
+    val minDepositTermType: MinDepositTermType? = null,
     val nominalAnnualInterestRate: Double? = null,
-    @IgnoredOnParcel val periodFrequencyTypeOptions: List<PeriodFrequencyTypeOption>? = null,
+    val periodFrequencyTypeOptions: List<PeriodFrequencyTypeOption>? = null,
     val preClosurePenalApplicable: Boolean? = null,
-    @IgnoredOnParcel val preClosurePenalInterestOnTypeOptions: List<PreClosurePenalInterestOnTypeOption>? = null,
-    @IgnoredOnParcel val productOptions: List<ProductOption>? = null,
-    @IgnoredOnParcel val timeline: Timeline? = null,
+    val preClosurePenalInterestOnTypeOptions: List<PreClosurePenalInterestOnTypeOption>? = null,
+    val productOptions: List<ProductOption>? = null,
+    val timeline: Timeline? = null,
     val withHoldTax: Boolean? = null,
     val withdrawalFeeForTransfers: Boolean? = null,
-    @IgnoredOnParcel val withdrawalFeeTypeOptions: List<WithdrawalFeeTypeOption>? = null,
-) : Parcelable
+    val withdrawalFeeTypeOptions: List<WithdrawalFeeTypeOption>? = null,
+)

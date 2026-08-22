@@ -9,26 +9,26 @@
  */
 package com.mifos.feature.loan.createLoanReschedules
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_adjust_interest
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_cancel
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_change_repayment_date
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_comments
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_extend_repayment
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_failure_title
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_from_date
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_installment_rescheduled_to
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_interest_grace
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_introduce_grace_periods
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_new_interest_rate
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_new_repayments
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_ok
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_principal_grace
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_reason
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_submit
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_submitted_on
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_waive_penalties
-import androidclient.feature.loan.generated.resources.feature_loan_reschedules_new_title
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_adjust_interest
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_cancel
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_change_repayment_date
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_comments
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_extend_repayment
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_failure_title
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_from_date
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_installment_rescheduled_to
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_interest_grace
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_introduce_grace_periods
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_new_interest_rate
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_new_repayments
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_ok
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_principal_grace
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_reason
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_submit
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_submitted_on
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_waive_penalties
+import kpt.feature.loan.generated.resources.feature_loan_reschedules_new_title
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -70,7 +70,10 @@ import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptShapes
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun LoanRescheduleFormScreenRoute(
@@ -120,14 +123,14 @@ internal fun RescheduleFormContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = KptTheme.spacing.md)
+            .padding(horizontal = LocalKptSpacing.current.md)
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.md),
+        verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.md),
     ) {
         Text(
             text = stringResource(Res.string.feature_loan_reschedules_new_title),
             style = MifosTypography.labelLarge,
-            modifier = Modifier.padding(bottom = KptTheme.spacing.sm),
+            modifier = Modifier.padding(bottom = LocalKptSpacing.current.sm),
         )
 
         RescheduleDatePickerField(
@@ -190,8 +193,8 @@ internal fun RescheduleFormContent(
             onToggle = { onAction(LoanRescheduleFormAction.ToggleIntroduceGracePeriods(it)) },
         ) {
             Column(
-                modifier = Modifier.padding(top = KptTheme.spacing.xs).fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.xs),
+                modifier = Modifier.padding(top = LocalKptSpacing.current.xs).fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.xs),
             ) {
                 MifosOutlinedTextField(
                     modifier = Modifier.fillMaxWidth(),
@@ -245,7 +248,7 @@ internal fun RescheduleFormContent(
         MifosTextButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = KptTheme.spacing.md),
+                .padding(vertical = LocalKptSpacing.current.md),
             text = { Text(stringResource(Res.string.feature_loan_reschedule_submit)) },
             enabled = state.isSubmitEnabled,
             onClick = { onAction(LoanRescheduleFormAction.OnSubmitClicked) },
@@ -333,19 +336,19 @@ private fun RescheduleOptionItem(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(KptTheme.shapes.small)
+                .clip(LocalKptShapes.current.small)
                 .toggleable(
                     value = selected,
                     role = Role.Checkbox,
                     onValueChange = onToggle,
                 )
-                .padding(vertical = KptTheme.spacing.xs),
+                .padding(vertical = LocalKptSpacing.current.xs),
         ) {
             Checkbox(checked = selected, onCheckedChange = null)
             Text(
                 text = label,
-                style = KptTheme.typography.bodyLarge,
-                modifier = Modifier.padding(start = KptTheme.spacing.sm),
+                style = LocalKptTypography.current.bodyLarge,
+                modifier = Modifier.padding(start = LocalKptSpacing.current.sm),
             )
         }
         AnimatedVisibility(visible = selected) {

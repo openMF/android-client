@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.loan.LoanChargeRepository
 import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
@@ -18,6 +17,6 @@ class GetListOfLoanChargesUseCase(
     private val repository: LoanChargeRepository,
 ) {
 
-    operator fun invoke(loanId: Int): Flow<DataState<List<ChargesEntity>>> =
+    operator fun invoke(loanId: Int): Flow<List<ChargesEntity>> =
         repository.getListOfLoanCharges(loanId)
 }

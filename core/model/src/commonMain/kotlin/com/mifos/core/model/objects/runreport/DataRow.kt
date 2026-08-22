@@ -9,8 +9,6 @@
  */
 package com.mifos.core.model.objects.runreport
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
@@ -34,12 +32,11 @@ import kotlinx.serialization.json.jsonPrimitive
 /**
  * Created by Tarun on 03-08-17.
  */
-@Parcelize
 @Serializable
 data class DataRow(
     @Serializable(with = RowDeserializer::class)
     val row: List<String?> = emptyList(),
-) : Parcelable
+)
 
 object RowDeserializer : KSerializer<List<String?>> {
 

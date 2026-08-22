@@ -15,17 +15,17 @@
 
 package com.mifos.feature.checker.inbox.task.checkerInbox
 
-import androidclient.feature.checker_inbox_task.generated.resources.Res
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_are_you_sure_you_want_to_approve_this_task
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_are_you_sure_you_want_to_delete_this_task
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_are_you_sure_you_want_to_reject_this_task
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_checker_inbox
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_client_Approval
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_create_by
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_failed_to_Load_Checker_Inbox
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_no
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_search_by_user
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_yes
+import kpt.feature.checker_inbox_task.generated.resources.Res
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_are_you_sure_you_want_to_approve_this_task
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_are_you_sure_you_want_to_delete_this_task
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_are_you_sure_you_want_to_reject_this_task
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_checker_inbox
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_client_Approval
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_create_by
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_failed_to_Load_Checker_Inbox
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_no
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_search_by_user
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_yes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
@@ -85,7 +85,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -350,11 +353,11 @@ private fun CheckerInboxScreen(
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             ElevatedCard(
-                modifier = Modifier.padding(KptTheme.spacing.sm),
+                modifier = Modifier.padding(LocalKptSpacing.current.sm),
                 elevation = CardDefaults.elevatedCardElevation(DesignToken.elevation.dp4),
             ) {
                 Row(
-                    modifier = Modifier.padding(KptTheme.spacing.xs),
+                    modifier = Modifier.padding(LocalKptSpacing.current.xs),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -506,8 +509,8 @@ private fun CheckerInboxItem(
     selectedItemsState: SelectedItemsState,
     selectedMode: () -> Unit,
 ) {
-    val selectedColor = KptTheme.colorScheme.primaryContainer
-    val unselectedColor = KptTheme.colorScheme.surface
+    val selectedColor = LocalKptColors.current.primaryContainer
+    val unselectedColor = LocalKptColors.current.surface
 
     val selectedItems by selectedItemsState.selectedItems
     val isSelected = selectedItemsState.contains(checkerTask.id)
@@ -563,16 +566,16 @@ private fun CheckerInboxItem(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(
-                modifier = Modifier.padding(KptTheme.spacing.md),
+                modifier = Modifier.padding(LocalKptSpacing.current.md),
             ) {
                 Text(
                     text = "# ${checkerTask.id} ${checkerTask.actionName} ${checkerTask.entityName}",
-                    style = KptTheme.typography.bodyLarge,
+                    style = LocalKptTypography.current.bodyLarge,
                 )
-                Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+                Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
                 Text(
                     text = checkerTask.processingResult,
-                    style = KptTheme.typography.bodyMedium,
+                    style = LocalKptTypography.current.bodyMedium,
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -581,27 +584,27 @@ private fun CheckerInboxItem(
                     Row {
                         Text(
                             text = stringResource(Res.string.feature_checker_inbox_task_create_by),
-                            style = KptTheme.typography.bodyMedium,
+                            style = LocalKptTypography.current.bodyMedium,
                         )
-                        Spacer(modifier = Modifier.width(KptTheme.spacing.sm))
+                        Spacer(modifier = Modifier.width(LocalKptSpacing.current.sm))
                         Text(
                             text = checkerTask.maker,
-                            style = KptTheme.typography.labelLarge,
+                            style = LocalKptTypography.current.labelLarge,
                         )
                     }
                     Text(
                         text = checkerTask.getDate(),
-                        style = KptTheme.typography.labelLarge,
+                        style = LocalKptTypography.current.labelLarge,
                     )
                 }
             }
         }
         HorizontalDivider()
         if (expendCheckerTask) {
-            Column(modifier = Modifier.padding(KptTheme.spacing.sm)) {
+            Column(modifier = Modifier.padding(LocalKptSpacing.current.sm)) {
                 Text(
                     text = checkerTask.entityName,
-                    style = KptTheme.typography.labelLarge,
+                    style = LocalKptTypography.current.labelLarge,
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -632,7 +635,7 @@ private fun CheckerInboxItem(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = checkerTask.getDate(),
-                    style = KptTheme.typography.labelLarge,
+                    style = LocalKptTypography.current.labelLarge,
                     textAlign = TextAlign.Center,
                 )
             }

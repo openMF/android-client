@@ -9,9 +9,9 @@
  */
 package com.mifos.feature.center.createCenter
 
-import androidclient.feature.center.generated.resources.Res
-import androidclient.feature.center.generated.resources.feature_center_failed_to_create_center
-import androidclient.feature.center.generated.resources.feature_center_failed_to_load_offices
+import kpt.feature.center.generated.resources.Res
+import kpt.feature.center.generated.resources.feature_center_failed_to_create_center
+import kpt.feature.center.generated.resources.feature_center_failed_to_load_offices
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState

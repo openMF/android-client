@@ -9,11 +9,8 @@
  */
 package com.mifos.core.model.objects.account.loan.transfer
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
-@Parcelize
 @Serializable
 data class AccountTransferChanges(
     val fromOfficeId: Int? = null,
@@ -30,4 +27,4 @@ data class AccountTransferChanges(
     val currencyCode: String? = null,
     val locale: String? = null,
     val dateFormat: String? = null,
-) : Parcelable
+)

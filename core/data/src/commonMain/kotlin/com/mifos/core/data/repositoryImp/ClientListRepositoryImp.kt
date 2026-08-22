@@ -12,9 +12,7 @@ package com.mifos.core.data.repositoryImp
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.Page
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.pagingSource.ClientListPagingSource
 import com.mifos.core.data.repository.ClientListRepository
 import com.mifos.core.network.datamanager.DataManagerClient
@@ -39,8 +37,8 @@ class ClientListRepositoryImp(
         ).flow
     }
 
-    override fun allDatabaseClients(): Flow<DataState<Page<ClientEntity>>> {
+    override fun allDatabaseClients(): Flow<Page<ClientEntity>> {
         return dataManagerClient.allDatabaseClients
-            .asDataStateFlow()
+            
     }
 }

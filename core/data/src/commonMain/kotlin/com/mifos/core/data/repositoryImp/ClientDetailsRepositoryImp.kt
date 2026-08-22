@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.model.objects.account.share.ShareAccounts
@@ -66,31 +65,16 @@ class ClientDetailsRepositoryImp(
         return dataManagerClient.getClientAccounts(clientId).shareAccounts
     }
 
-    override suspend fun getClientCloseTemplate(): DataState<ClientCloseTemplateResponse> {
-        return try {
-            val res = dataManagerClient.getClientCloseTemplate()
-            return DataState.Success(res)
-        } catch (e: Exception) {
-            DataState.Error(e)
-        }
+    override suspend fun getClientCloseTemplate(): ClientCloseTemplateResponse {
+        return dataManagerClient.getClientCloseTemplate()
     }
 
-    override suspend fun getCollateralItems(): DataState<List<CollateralItem>> {
-        return try {
-            val res = dataManagerClient.getCollateralItems()
-            return DataState.Success(res)
-        } catch (e: Exception) {
-            DataState.Error(e)
-        }
+    override suspend fun getCollateralItems(): List<CollateralItem> {
+        return dataManagerClient.getCollateralItems()
     }
 
-    override suspend fun getClientCollaterals(clientId: Int): DataState<List<CollateralItemResult>> {
-        return try {
-            val res = dataManagerClient.getClientCollateralItems(clientId)
-            return DataState.Success(res)
-        } catch (e: Exception) {
-            DataState.Error(e)
-        }
+    override suspend fun getClientCollaterals(clientId: Int): List<CollateralItemResult> {
+        return dataManagerClient.getClientCollateralItems(clientId)
     }
 
     override suspend fun getClient(clientId: Int): ClientEntity {
@@ -107,41 +91,27 @@ class ClientDetailsRepositoryImp(
         return client
     }
 
-    override fun getImage(clientId: Int): Flow<DataState<String>> {
+    override fun getImage(clientId: Int): Flow<String> {
         return dataManagerClient.getClientImage(clientId)
     }
 
     override suspend fun assignStaff(
         clientId: Int,
         staffId: Int,
-    ): DataState<Unit> {
-        return try {
-            val res = dataManagerClient.assignClientStaff(clientId, staffId)
-            if (res.status.value == 200) {
-                DataState.Success(Unit)
-            } else {
-                val errorBody = extractErrorMessage(res)
-                DataState.Error(Exception(errorBody))
-            }
-        } catch (e: Exception) {
-            DataState.Error(e)
+    ) {
+        val res = dataManagerClient.assignClientStaff(clientId, staffId)
+        if (res.status.value != 200) {
+            throw Exception(extractErrorMessage(res))
         }
     }
 
     override suspend fun unassignStaff(
         clientId: Int,
         staffId: Int,
-    ): DataState<Unit> {
-        return try {
-            val res = dataManagerClient.unAssignClientStaff(clientId, staffId)
-            if (res.status.value == 200) {
-                DataState.Success(Unit)
-            } else {
-                val errorBody = extractErrorMessage(res)
-                DataState.Error(Exception(errorBody))
-            }
-        } catch (e: Exception) {
-            DataState.Error(e)
+    ) {
+        val res = dataManagerClient.unAssignClientStaff(clientId, staffId)
+        if (res.status.value != 200) {
+            throw Exception(extractErrorMessage(res))
         }
     }
 
@@ -150,42 +120,28 @@ class ClientDetailsRepositoryImp(
         destinationOfficeId: Int,
         transferDate: String,
         note: String,
-    ): DataState<Unit> {
-        return try {
-            val res = dataManagerClient.proposeClientTransfer(
-                clientId = clientId,
-                destinationOfficeId = destinationOfficeId,
-                transferDate = transferDate,
-                note = note,
-            )
-            if (res.status.value == 200) {
-                DataState.Success(Unit)
-            } else {
-                val errorBody = extractErrorMessage(res)
-                DataState.Error(Exception(errorBody))
-            }
-        } catch (e: Exception) {
-            DataState.Error(e)
+    ) {
+        val res = dataManagerClient.proposeClientTransfer(
+            clientId = clientId,
+            destinationOfficeId = destinationOfficeId,
+            transferDate = transferDate,
+            note = note,
+        )
+        if (res.status.value != 200) {
+            throw Exception(extractErrorMessage(res))
         }
     }
 
     override suspend fun updateDefaultSavingsAccount(
         clientId: Int,
         accountId: Long,
-    ): DataState<Unit> {
-        return try {
-            val res = dataManagerClient.updateDefaultSavingsAccount(
-                clientId = clientId,
-                savingsId = accountId,
-            )
-            if (res.status.value == 200) {
-                DataState.Success(Unit)
-            } else {
-                val errorBody = extractErrorMessage(res)
-                DataState.Error(Exception(errorBody))
-            }
-        } catch (e: Exception) {
-            DataState.Error(e)
+    ) {
+        val res = dataManagerClient.updateDefaultSavingsAccount(
+            clientId = clientId,
+            savingsId = accountId,
+        )
+        if (res.status.value != 200) {
+            throw Exception(extractErrorMessage(res))
         }
     }
 
@@ -193,21 +149,14 @@ class ClientDetailsRepositoryImp(
         clientId: Int,
         closureDate: String,
         closureReasonId: Int,
-    ): DataState<Unit> {
-        return try {
-            val res = dataManagerClient.closeClient(
-                clientId = clientId,
-                closureDate = closureDate,
-                closureReasonId = closureReasonId,
-            )
-            if (res.status.value == 200) {
-                DataState.Success(Unit)
-            } else {
-                val errorBody = extractErrorMessage(res)
-                DataState.Error(Exception(errorBody))
-            }
-        } catch (e: Exception) {
-            DataState.Error(e)
+    ) {
+        val res = dataManagerClient.closeClient(
+            clientId = clientId,
+            closureDate = closureDate,
+            closureReasonId = closureReasonId,
+        )
+        if (res.status.value != 200) {
+            throw Exception(extractErrorMessage(res))
         }
     }
 
@@ -215,21 +164,14 @@ class ClientDetailsRepositoryImp(
         clientId: Int,
         collateralId: Int,
         quantity: String,
-    ): DataState<Unit> {
-        return try {
-            val res = dataManagerClient.createCollateral(
-                clientId = clientId,
-                collateralId = collateralId,
-                quantity = quantity,
-            )
-            if (res.status.value == 200) {
-                DataState.Success(Unit)
-            } else {
-                val errorBody = extractErrorMessage(res)
-                DataState.Error(Exception(errorBody))
-            }
-        } catch (e: Exception) {
-            DataState.Error(e)
+    ) {
+        val res = dataManagerClient.createCollateral(
+            clientId = clientId,
+            collateralId = collateralId,
+            quantity = quantity,
+        )
+        if (res.status.value != 200) {
+            throw Exception(extractErrorMessage(res))
         }
     }
 }

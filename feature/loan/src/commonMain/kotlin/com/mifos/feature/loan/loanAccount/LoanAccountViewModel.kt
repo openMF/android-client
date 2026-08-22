@@ -9,10 +9,10 @@
  */
 package com.mifos.feature.loan.loanAccount
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_failed_to_create_loan_account
-import androidclient.feature.loan.generated.resources.feature_loan_failed_to_load_loan
-import androidclient.feature.loan.generated.resources.feature_loan_failed_to_load_template
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_failed_to_create_loan_account
+import kpt.feature.loan.generated.resources.feature_loan_failed_to_load_loan
+import kpt.feature.loan.generated.resources.feature_loan_failed_to_load_template
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

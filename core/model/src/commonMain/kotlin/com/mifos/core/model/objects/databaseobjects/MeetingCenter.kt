@@ -9,10 +9,7 @@
  */
 package com.mifos.core.model.objects.databaseobjects
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 
-@Parcelize
 data class MeetingCenter(
     var name: String? = null,
 
@@ -37,4 +34,4 @@ data class MeetingCenter(
     var centerId: Long = 0,
 
     var activationDate: List<Int>? = null,
-) : Parcelable
+)

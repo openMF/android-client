@@ -9,8 +9,8 @@
  */
 package com.mifos.core.ui.components
 
-import androidclient.core.ui.generated.resources.Res
-import androidclient.core.ui.generated.resources.bread_crumb_back_icon
+import kpt.core.ui.generated.resources.Res
+import kpt.core.ui.generated.resources.bread_crumb_back_icon
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -31,7 +31,8 @@ import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @Composable
 fun MifosBreadcrumbNavBar(
@@ -113,7 +114,7 @@ fun BreadcrumbItem(
 ) {
     Text(
         text = text,
-        color = if (isActive) KptTheme.colorScheme.primary else KptTheme.colorScheme.onBackground,
+        color = if (isActive) LocalKptColors.current.primary else LocalKptColors.current.onBackground,
         modifier = Modifier.clickable(
             enabled = !isActive,
             interactionSource = MutableInteractionSource(),

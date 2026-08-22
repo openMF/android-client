@@ -9,14 +9,14 @@
  */
 package com.mifos.feature.client.clientAddDocuments
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.error_document_size_exceeded
-import androidclient.feature.client.generated.resources.no_internet_message
-import androidclient.feature.client.generated.resources.unknown_error
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.error_document_size_exceeded
+import kpt.feature.client.generated.resources.no_internet_message
+import kpt.feature.client.generated.resources.unknown_error
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.util.NetworkMonitor
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.feature.client.DocumentSelectAndUploadRepository
 import com.mifos.feature.client.EntityDocumentState
 import com.mifos.feature.client.utils.openPdfWithDefaultExternalApp

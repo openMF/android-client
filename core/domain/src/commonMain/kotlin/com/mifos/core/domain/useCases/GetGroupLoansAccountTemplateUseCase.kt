@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.GroupLoanAccountRepository
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import kotlinx.coroutines.flow.Flow
@@ -18,6 +17,6 @@ class GetGroupLoansAccountTemplateUseCase(
     private val repository: GroupLoanAccountRepository,
 ) {
 
-    operator fun invoke(groupId: Int, productId: Int): Flow<DataState<GroupLoanTemplate>> =
+    operator fun invoke(groupId: Int, productId: Int): Flow<GroupLoanTemplate> =
         repository.getGroupLoansAccountTemplate(groupId, productId)
 }

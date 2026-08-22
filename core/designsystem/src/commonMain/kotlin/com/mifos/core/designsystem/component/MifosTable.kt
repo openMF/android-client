@@ -30,7 +30,8 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.mifos.core.designsystem.theme.DesignToken
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @Composable
 fun MifosTableRow(
@@ -38,12 +39,12 @@ fun MifosTableRow(
     widths: List<Dp>,
     modifier: Modifier = Modifier,
     edgeOffset: Dp = 0.dp,
-    backgroundColor: Color = KptTheme.colorScheme.surfaceVariant,
+    backgroundColor: Color = LocalKptColors.current.surfaceVariant,
     cornerShape: Shape = DesignToken.shapes.none,
     showTopBorder: Boolean = false,
     showBottomBorder: Boolean = true,
     showSideBorders: Boolean = true,
-    borderColor: Color = KptTheme.colorScheme.outlineVariant,
+    borderColor: Color = LocalKptColors.current.outlineVariant,
     onClick: () -> Unit = {},
 ) {
     Column(

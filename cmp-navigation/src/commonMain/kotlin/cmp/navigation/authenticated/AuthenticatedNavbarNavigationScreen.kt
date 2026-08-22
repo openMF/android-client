@@ -106,13 +106,13 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import org.mifos.navigation.generated.resources.Res
-import org.mifos.navigation.generated.resources.cmp_navigation_dp_placeholder
-import org.mifos.navigation.generated.resources.cmp_navigation_mifos
-import org.mifos.navigation.generated.resources.cmp_navigation_no_internet
-import org.mifos.navigation.generated.resources.cmp_navigation_profile_header
-import org.mifos.navigation.generated.resources.drawer_profile_header
-import org.mifos.navigation.generated.resources.ic_dp_placeholder
+import cmp.navigation.generated.resources.Res
+import cmp.navigation.generated.resources.cmp_navigation_dp_placeholder
+import cmp.navigation.generated.resources.cmp_navigation_mifos
+import cmp.navigation.generated.resources.cmp_navigation_no_internet
+import cmp.navigation.generated.resources.cmp_navigation_profile_header
+import cmp.navigation.generated.resources.drawer_profile_header
+import cmp.navigation.generated.resources.ic_dp_placeholder
 
 @Composable
 internal fun AuthenticatedNavbarNavigationScreen(

@@ -9,12 +9,12 @@
  */
 package com.mifos.feature.center.centerList.ui
 
-import androidclient.feature.center.generated.resources.Res
-import androidclient.feature.center.generated.resources.feature_center_error_loading_centers
-import androidclient.feature.center.generated.resources.feature_center_failed_to_load_db_centers
-import androidclient.feature.center.generated.resources.feature_center_ic_done_all_black_24dp
-import androidclient.feature.center.generated.resources.feature_center_no_more_centers
-import androidclient.feature.center.generated.resources.feature_center_sync
+import kpt.feature.center.generated.resources.Res
+import kpt.feature.center.generated.resources.feature_center_error_loading_centers
+import kpt.feature.center.generated.resources.feature_center_failed_to_load_db_centers
+import kpt.feature.center.generated.resources.feature_center_ic_done_all_black_24dp
+import kpt.feature.center.generated.resources.feature_center_no_more_centers
+import kpt.feature.center.generated.resources.feature_center_sync
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -75,7 +75,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun CenterListScreen(
@@ -267,8 +269,8 @@ fun CenterListContent(
         }
 
         LazyColumn(
-            modifier = modifier.fillMaxSize().padding(horizontal = KptTheme.spacing.md),
-            verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.md),
+            modifier = modifier.fillMaxSize().padding(horizontal = LocalKptSpacing.current.md),
+            verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.md),
         ) {
             items(
                 count = centerPagingList.itemCount,
@@ -319,7 +321,7 @@ fun CenterListContent(
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(KptTheme.spacing.sm),
+                                .padding(LocalKptSpacing.current.sm),
                             text = stringResource(Res.string.feature_center_no_more_centers),
                             style = MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Center,
@@ -341,8 +343,8 @@ fun CenterCard(
     isInSelectionMode: Boolean,
     onSelect: (CenterEntity) -> Unit,
     modifier: Modifier = Modifier,
-    selectedColor: Color = KptTheme.colorScheme.secondaryContainer,
-    unselectedColor: Color = KptTheme.colorScheme.surface,
+    selectedColor: Color = LocalKptColors.current.secondaryContainer,
+    unselectedColor: Color = LocalKptColors.current.surface,
     onClick: (CenterEntity) -> Unit,
 ) {
     val containerColor = if (selected) selectedColor else unselectedColor
@@ -389,7 +391,7 @@ fun CenterCard(
             trailingContent = {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(KptTheme.spacing.xs),
+                    horizontalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.xs),
                 ) {
                     if (center.sync) {
                         AsyncImage(

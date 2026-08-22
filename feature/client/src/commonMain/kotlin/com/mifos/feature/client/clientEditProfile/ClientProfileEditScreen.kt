@@ -9,22 +9,22 @@
  */
 package com.mifos.feature.client.clientEditProfile
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.account_number_prefix
-import androidclient.feature.client.generated.resources.arrow_up
-import androidclient.feature.client.generated.resources.camera
-import androidclient.feature.client.generated.resources.cancel
-import androidclient.feature.client.generated.resources.client_profile_edit_failure_title
-import androidclient.feature.client.generated.resources.client_profile_edit_success_title
-import androidclient.feature.client.generated.resources.client_signature_more
-import androidclient.feature.client.generated.resources.delete_dialog_message
-import androidclient.feature.client.generated.resources.delete_dialog_title
-import androidclient.feature.client.generated.resources.delete_photo
-import androidclient.feature.client.generated.resources.dialog_continue
-import androidclient.feature.client.generated.resources.gallery
-import androidclient.feature.client.generated.resources.remove
-import androidclient.feature.client.generated.resources.update_profile_photo_message
-import androidclient.feature.client.generated.resources.upload_new_photo
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.account_number_prefix
+import kpt.feature.client.generated.resources.arrow_up
+import kpt.feature.client.generated.resources.camera
+import kpt.feature.client.generated.resources.cancel
+import kpt.feature.client.generated.resources.client_profile_edit_failure_title
+import kpt.feature.client.generated.resources.client_profile_edit_success_title
+import kpt.feature.client.generated.resources.client_signature_more
+import kpt.feature.client.generated.resources.delete_dialog_message
+import kpt.feature.client.generated.resources.delete_dialog_title
+import kpt.feature.client.generated.resources.delete_photo
+import kpt.feature.client.generated.resources.dialog_continue
+import kpt.feature.client.generated.resources.gallery
+import kpt.feature.client.generated.resources.remove
+import kpt.feature.client.generated.resources.update_profile_photo_message
+import kpt.feature.client.generated.resources.upload_new_photo
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -73,7 +73,10 @@ import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptShapes
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun ClientProfileEditScreen(
@@ -121,7 +124,7 @@ private fun ClientProfileEditContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .padding(horizontal = KptTheme.spacing.md),
+                    .padding(horizontal = LocalKptSpacing.current.md),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Spacer(Modifier.height(DesignToken.padding.largeIncreased))
@@ -134,7 +137,7 @@ private fun ClientProfileEditContent(
                 Text(
                     text = stringResource(Res.string.account_number_prefix, state.accountNo),
                     style = MifosTypography.bodySmall,
-                    color = KptTheme.colorScheme.secondary,
+                    color = LocalKptColors.current.secondary,
                 )
                 Spacer(Modifier.height(DesignToken.padding.largeIncreased))
                 MifosUserImage(
@@ -143,11 +146,11 @@ private fun ClientProfileEditContent(
                     hasBorder = true,
                 )
                 if (state.profileImage == null) {
-                    Spacer(Modifier.height(KptTheme.spacing.md))
+                    Spacer(Modifier.height(LocalKptSpacing.current.md))
                     Text(
                         text = stringResource(Res.string.update_profile_photo_message),
                         style = MifosTypography.bodySmall,
-                        color = KptTheme.colorScheme.secondary,
+                        color = LocalKptColors.current.secondary,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -166,7 +169,7 @@ private fun ClientProfileEditContent(
                     },
                     modifier = Modifier.fillMaxWidth(),
                 )
-                Spacer(Modifier.height(KptTheme.spacing.md))
+                Spacer(Modifier.height(LocalKptSpacing.current.md))
                 MifosTextButton(
                     text = { Text(stringResource(Res.string.upload_new_photo)) },
                     onClick = {
@@ -224,7 +227,7 @@ private fun ClientProfileEditDialogs(
                     Icon(
                         imageVector = MifosIcons.DeleteDocument,
                         contentDescription = null,
-                        tint = KptTheme.colorScheme.primary,
+                        tint = LocalKptColors.current.primary,
                         modifier = Modifier.size(DesignToken.sizes.iconMedium),
                     )
                 },
@@ -254,11 +257,11 @@ private fun ClientProfileEditDialogs(
                 ),
             ) {
                 Surface(
-                    shape = KptTheme.shapes.extraLarge,
-                    color = KptTheme.colorScheme.surface,
+                    shape = LocalKptShapes.current.extraLarge,
+                    color = LocalKptColors.current.surface,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(KptTheme.spacing.md),
+                        .padding(LocalKptSpacing.current.md),
                 ) {
                     MifosStatusDialog(
                         status = state.dialogState.status,
@@ -305,9 +308,9 @@ private fun ShowUploadOption(
         Row(
             modifier = Modifier
                 .padding(
-                    start = KptTheme.spacing.md,
-                    end = KptTheme.spacing.md,
-                    bottom = KptTheme.spacing.md,
+                    start = LocalKptSpacing.current.md,
+                    end = LocalKptSpacing.current.md,
+                    bottom = LocalKptSpacing.current.md,
                 ),
         ) {
             MifosBottomSheetOptionItem(

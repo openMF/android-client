@@ -9,13 +9,10 @@
  */
 package com.mifos.room.entities.collectionsheet
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 
 /**
  * Created by Tarun on 25-07-2017.
  */
-@Parcelize
 data class GroupCollectionSheet(
     var clients: MutableList<ClientCollectionSheet> = ArrayList(),
 
@@ -30,4 +27,4 @@ data class GroupCollectionSheet(
     var staffId: Int = 0,
 
     var staffName: String? = null,
-) : Parcelable
+)

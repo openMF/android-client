@@ -9,15 +9,12 @@
  */
 package com.mifos.core.model.objects.template.loan
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Created by mayankjindal on 02/10/16.
  */
 @Serializable
-@Parcelize
 data class GroupLoanTemplate(
     var group: Group? = null,
 
@@ -128,4 +125,4 @@ data class GroupLoanTemplate(
     var minimumGap: Int? = null,
 
     var maximumGap: Int? = null,
-) : Parcelable
+)

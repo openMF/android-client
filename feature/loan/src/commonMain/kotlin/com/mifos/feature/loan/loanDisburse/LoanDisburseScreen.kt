@@ -11,23 +11,23 @@
 
 package com.mifos.feature.loan.loanDisburse
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.cancel
-import androidclient.feature.loan.generated.resources.feature_loan_disburse
-import androidclient.feature.loan.generated.resources.feature_loan_disburse_account_number
-import androidclient.feature.loan.generated.resources.feature_loan_disburse_available_amount
-import androidclient.feature.loan.generated.resources.feature_loan_disburse_bank_number
-import androidclient.feature.loan.generated.resources.feature_loan_disburse_cheque_number
-import androidclient.feature.loan.generated.resources.feature_loan_disburse_date
-import androidclient.feature.loan.generated.resources.feature_loan_disburse_external_id
-import androidclient.feature.loan.generated.resources.feature_loan_disburse_receipt_number
-import androidclient.feature.loan.generated.resources.feature_loan_disburse_routing_code
-import androidclient.feature.loan.generated.resources.feature_loan_disburse_show_payment_details
-import androidclient.feature.loan.generated.resources.feature_loan_disburse_transaction_amount
-import androidclient.feature.loan.generated.resources.feature_loan_note_optional
-import androidclient.feature.loan.generated.resources.feature_loan_payment_type
-import androidclient.feature.loan.generated.resources.feature_loan_submit
-import androidclient.feature.loan.generated.resources.ok
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.cancel
+import kpt.feature.loan.generated.resources.feature_loan_disburse
+import kpt.feature.loan.generated.resources.feature_loan_disburse_account_number
+import kpt.feature.loan.generated.resources.feature_loan_disburse_available_amount
+import kpt.feature.loan.generated.resources.feature_loan_disburse_bank_number
+import kpt.feature.loan.generated.resources.feature_loan_disburse_cheque_number
+import kpt.feature.loan.generated.resources.feature_loan_disburse_date
+import kpt.feature.loan.generated.resources.feature_loan_disburse_external_id
+import kpt.feature.loan.generated.resources.feature_loan_disburse_receipt_number
+import kpt.feature.loan.generated.resources.feature_loan_disburse_routing_code
+import kpt.feature.loan.generated.resources.feature_loan_disburse_show_payment_details
+import kpt.feature.loan.generated.resources.feature_loan_disburse_transaction_amount
+import kpt.feature.loan.generated.resources.feature_loan_note_optional
+import kpt.feature.loan.generated.resources.feature_loan_payment_type
+import kpt.feature.loan.generated.resources.feature_loan_submit
+import kpt.feature.loan.generated.resources.ok
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -69,7 +69,8 @@ import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.math.max
 import kotlin.time.ExperimentalTime
 
@@ -193,7 +194,7 @@ private fun LoanDisburseForm(
             modifier = Modifier
                 .fillMaxWidth()
                 .verticalScroll(scrollState)
-                .padding(KptTheme.spacing.md),
+                .padding(LocalKptSpacing.current.md),
         ) {
             MifosDatePickerTextField(
                 value = state.disbursedDateText,

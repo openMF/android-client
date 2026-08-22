@@ -10,13 +10,10 @@
 package com.mifos.core.model.objects.account.loan
 
 import com.mifos.core.model.utils.DateConstants
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 
 /**
  * Created by ishankhanna on 23/06/14.
  */
-@Parcelize
 data class LoanApprovalRequest(
     var locale: String = DateConstants.LOCALE,
 
@@ -25,4 +22,4 @@ data class LoanApprovalRequest(
     var approvedOnDate: String? = null,
 
     var note: String? = null,
-) : Parcelable
+)

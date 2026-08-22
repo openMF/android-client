@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.SyncLoanRepaymentTransactionRepository
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.room.entities.PaymentTypeOptionEntity
@@ -22,14 +20,14 @@ class SyncLoanRepaymentTransactionRepositoryImp(
     private val dataManagerLoan: DataManagerLoan,
 ) : SyncLoanRepaymentTransactionRepository {
 
-    override fun databaseLoanRepayments(): Flow<DataState<List<LoanRepaymentRequestEntity>>> {
+    override fun databaseLoanRepayments(): Flow<List<LoanRepaymentRequestEntity>> {
         return dataManagerLoan.databaseLoanRepayments
-            .asDataStateFlow()
+            
     }
 
-    override fun paymentTypeOption(): Flow<DataState<List<PaymentTypeOptionEntity>>> {
+    override fun paymentTypeOption(): Flow<List<PaymentTypeOptionEntity>> {
         return dataManagerLoan.paymentTypeOption
-            .asDataStateFlow()
+            
     }
 
     override suspend fun submitPayment(
@@ -39,13 +37,13 @@ class SyncLoanRepaymentTransactionRepositoryImp(
         return dataManagerLoan.submitPayment(loanId, request)
     }
 
-    override fun deleteAndUpdateLoanRepayments(loanId: Int): Flow<DataState<List<LoanRepaymentRequestEntity>>> {
+    override fun deleteAndUpdateLoanRepayments(loanId: Int): Flow<List<LoanRepaymentRequestEntity>> {
         return dataManagerLoan.deleteAndUpdateLoanRepayments(loanId)
-            .asDataStateFlow()
+            
     }
 
-    override fun updateLoanRepaymentTransaction(loanRepaymentRequest: LoanRepaymentRequestEntity): Flow<DataState<LoanRepaymentRequestEntity>> {
+    override fun updateLoanRepaymentTransaction(loanRepaymentRequest: LoanRepaymentRequestEntity): Flow<LoanRepaymentRequestEntity> {
         return dataManagerLoan.updateLoanRepaymentTransaction(loanRepaymentRequest)
-            .asDataStateFlow()
+            
     }
 }

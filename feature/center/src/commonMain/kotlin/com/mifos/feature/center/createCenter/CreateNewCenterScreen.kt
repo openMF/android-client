@@ -11,21 +11,21 @@
 
 package com.mifos.feature.center.createCenter
 
-import androidclient.feature.center.generated.resources.Res
-import androidclient.feature.center.generated.resources.feature_center_activate
-import androidclient.feature.center.generated.resources.feature_center_activation_date
-import androidclient.feature.center.generated.resources.feature_center_cancel
-import androidclient.feature.center.generated.resources.feature_center_center_created_successfully
-import androidclient.feature.center.generated.resources.feature_center_center_name
-import androidclient.feature.center.generated.resources.feature_center_center_name_empty
-import androidclient.feature.center.generated.resources.feature_center_center_name_should_be_more_than_4_characters
-import androidclient.feature.center.generated.resources.feature_center_center_name_should_not_contains_special_characters_or_numbers
-import androidclient.feature.center.generated.resources.feature_center_create
-import androidclient.feature.center.generated.resources.feature_center_create_new_center
-import androidclient.feature.center.generated.resources.feature_center_failed_to_load_offices
-import androidclient.feature.center.generated.resources.feature_center_office
-import androidclient.feature.center.generated.resources.feature_center_select
-import androidclient.feature.center.generated.resources.feature_center_select_office
+import kpt.feature.center.generated.resources.Res
+import kpt.feature.center.generated.resources.feature_center_activate
+import kpt.feature.center.generated.resources.feature_center_activation_date
+import kpt.feature.center.generated.resources.feature_center_cancel
+import kpt.feature.center.generated.resources.feature_center_center_created_successfully
+import kpt.feature.center.generated.resources.feature_center_center_name
+import kpt.feature.center.generated.resources.feature_center_center_name_empty
+import kpt.feature.center.generated.resources.feature_center_center_name_should_be_more_than_4_characters
+import kpt.feature.center.generated.resources.feature_center_center_name_should_not_contains_special_characters_or_numbers
+import kpt.feature.center.generated.resources.feature_center_create
+import kpt.feature.center.generated.resources.feature_center_create_new_center
+import kpt.feature.center.generated.resources.feature_center_failed_to_load_offices
+import kpt.feature.center.generated.resources.feature_center_office
+import kpt.feature.center.generated.resources.feature_center_select
+import kpt.feature.center.generated.resources.feature_center_select_office
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -74,7 +74,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -260,7 +262,7 @@ private fun CreateNewCenterContent(
         )
 
         Row(
-            modifier = Modifier.padding(vertical = KptTheme.spacing.sm),
+            modifier = Modifier.padding(vertical = LocalKptSpacing.current.sm),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Checkbox(
@@ -280,7 +282,7 @@ private fun CreateNewCenterContent(
                     showDatePicker = true
                 },
             )
-            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
         }
 
         MifosButton(
@@ -306,12 +308,12 @@ private fun CreateNewCenterContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(DesignToken.spacing.dp44)
-                .padding(horizontal = KptTheme.spacing.md),
+                .padding(horizontal = LocalKptSpacing.current.md),
             contentPadding = PaddingValues(),
         ) {
             Text(
                 text = stringResource(Res.string.feature_center_create),
-                style = KptTheme.typography.bodyMedium,
+                style = LocalKptTypography.current.bodyMedium,
             )
         }
     }

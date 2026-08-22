@@ -9,41 +9,35 @@
  */
 package com.mifos.core.data.util
 
-import com.mifos.core.common.utils.DataState
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 
 interface NetworkMonitor {
     val isOnline: Flow<Boolean>
 }
 
 /**
- * Wraps an [upstream] [DataState] [Flow] with a reactive network guard.
- *
- * Uses [combine] internally so the merge function re-runs whenever *either*
- * [isOnline] **or** [upstream] emits a new value.
- *
- * Emission priority (evaluated top-to-bottom on every pair of values):
- *  1. **[DataState.Success]**  — always forwarded; cached data survives going offline.
- *  2. **[DataState.Loading]**  — always forwarded; lets the UI render a spinner
- *                                before any network error is surfaced.
- *  3. **offline**              — emits [NetworkUnavailableException].
- *  4. **otherwise**            — forwards whatever error the upstream emitted.
+ * offline-first-template-migration 03-core-datastate-removal (D18/D20): [upstream] is now a
+ * plain [Flow] — success values are ordinary emissions (no state-envelope wrapper to
+ * special-case; "loading" is a UI/VM-layer concept per D18, not a data-layer one).
+ * The network guard now works on the exception channel via [catch]: when [upstream] throws,
+ * replace the error with [NetworkUnavailableException] if the device is offline, otherwise
+ * rethrow the original error unchanged (so a genuine server-side failure isn't masked as a
+ * connectivity issue).
  *
  * ```kotlin
- * override fun getLoans(): Flow<DataState<List<Loan>>> =
+ * override fun getLoans(): Flow<List<Loan>> =
  *     networkMonitor.withNetworkCheck(
- *         dataManager.getLoans().asDataStateFlow()
+ *         dataManager.getLoans()
  *     ).flowOn(ioDispatcher)
  * ```
  */
-fun <T> NetworkMonitor.withNetworkCheck(
-    upstream: Flow<DataState<T>>,
-): Flow<DataState<T>> = combine(isOnline, upstream) { isOnline, dataState ->
-    when {
-        dataState is DataState.Success -> dataState
-        dataState is DataState.Loading -> dataState
-        !isOnline -> DataState.Error(NetworkUnavailableException())
-        else -> dataState
+fun <T> NetworkMonitor.withNetworkCheck(upstream: Flow<T>): Flow<T> =
+    upstream.catch { e ->
+        if (!isOnline.first()) {
+            throw NetworkUnavailableException()
+        } else {
+            throw e
+        }
     }
-}

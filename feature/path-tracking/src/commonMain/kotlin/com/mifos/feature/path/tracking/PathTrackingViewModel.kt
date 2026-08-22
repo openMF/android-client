@@ -9,9 +9,9 @@
  */
 package com.mifos.feature.path.tracking
 
-import androidclient.feature.path_tracking.generated.resources.Res
-import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_failed_to_load_path_tracking
-import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_no_path_tracking_found
+import kpt.feature.path_tracking.generated.resources.Res
+import kpt.feature.path_tracking.generated.resources.feature_path_tracking_failed_to_load_path_tracking
+import kpt.feature.path_tracking.generated.resources.feature_path_tracking_no_path_tracking_found
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState

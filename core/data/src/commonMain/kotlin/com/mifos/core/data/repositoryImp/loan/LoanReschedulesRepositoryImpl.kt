@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp.loan
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.loan.LoanReschedulesRepository
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRejectionRequest
@@ -28,48 +26,33 @@ class LoanReschedulesRepositoryImpl(
     private val ioDispatcher: CoroutineDispatcher,
 ) : LoanReschedulesRepository {
 
-    override fun getLoanReschedules(loanId: Int): Flow<DataState<List<LoanRescheduleResponse>>> {
+    override fun getLoanReschedules(loanId: Int): Flow<List<LoanRescheduleResponse>> {
         return dataManagerLoan.getLoanReschedules(loanId)
-            .asDataStateFlow()
+            
             .flowOn(ioDispatcher)
     }
 
-    override fun getLoanRescheduleTemplate(): Flow<DataState<LoanRescheduleTemplate>> {
+    override fun getLoanRescheduleTemplate(): Flow<LoanRescheduleTemplate> {
         return dataManagerLoan.getLoanRescheduleTemplate()
-            .asDataStateFlow()
+            
             .flowOn(ioDispatcher)
     }
 
-    override suspend fun submitLoanReschedule(request: LoanRescheduleRequest): DataState<Unit> {
-        return withContext(ioDispatcher) {
-            try {
-                dataManagerLoan.submitLoanReschedule(request)
-                DataState.Success(Unit)
-            } catch (e: Exception) {
-                DataState.Error(e)
-            }
+    override suspend fun submitLoanReschedule(request: LoanRescheduleRequest) {
+        withContext(ioDispatcher) {
+            dataManagerLoan.submitLoanReschedule(request)
         }
     }
 
-    override suspend fun approveReschedule(rescheduleId: Int, request: LoanRescheduleApprovalRequest): DataState<Unit> {
-        return withContext(ioDispatcher) {
-            try {
-                dataManagerLoan.approveLoanReschedule(rescheduleId, request)
-                DataState.Success(Unit)
-            } catch (e: Exception) {
-                DataState.Error(e)
-            }
+    override suspend fun approveReschedule(rescheduleId: Int, request: LoanRescheduleApprovalRequest) {
+        withContext(ioDispatcher) {
+            dataManagerLoan.approveLoanReschedule(rescheduleId, request)
         }
     }
 
-    override suspend fun deleteReschedule(rescheduleId: Int, request: LoanRescheduleRejectionRequest): DataState<Unit> {
-        return withContext(ioDispatcher) {
-            try {
-                dataManagerLoan.rejectLoanReschedule(rescheduleId, request)
-                DataState.Success(Unit)
-            } catch (e: Exception) {
-                DataState.Error(e)
-            }
+    override suspend fun deleteReschedule(rescheduleId: Int, request: LoanRescheduleRejectionRequest) {
+        withContext(ioDispatcher) {
+            dataManagerLoan.rejectLoanReschedule(rescheduleId, request)
         }
     }
 }

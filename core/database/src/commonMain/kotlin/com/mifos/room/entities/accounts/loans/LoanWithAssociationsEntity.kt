@@ -17,20 +17,16 @@ import com.mifos.core.model.objects.account.loan.RepaymentFrequencyType
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.model.objects.account.loan.TermPeriodFrequencyType
 import com.mifos.core.model.objects.account.loan.Transaction
-import com.mifos.core.model.utils.IgnoredOnParcel
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
 import kotlinx.serialization.Serializable
-import template.core.base.database.CollationSequence.UNSPECIFIED
-import template.core.base.database.ColumnInfo
-import template.core.base.database.ColumnInfoTypeAffinity.INHERIT_FIELD_NAME
-import template.core.base.database.ColumnInfoTypeAffinity.UNDEFINED
-import template.core.base.database.ColumnInfoTypeAffinity.VALUE_UNSPECIFIED
-import template.core.base.database.Entity
-import template.core.base.database.ForeignKey
-import template.core.base.database.ForeignKeyAction
-import template.core.base.database.PrimaryKey
+import androidx.room3.ColumnInfo.Companion.UNSPECIFIED
+import androidx.room3.ColumnInfo
+import androidx.room3.ColumnInfo.Companion.INHERIT_FIELD_NAME
+import androidx.room3.ColumnInfo.Companion.UNDEFINED
+import androidx.room3.ColumnInfo.Companion.VALUE_UNSPECIFIED
+import androidx.room3.Entity
+import androidx.room3.ForeignKey
+import androidx.room3.PrimaryKey
 
 // @TypeConverters(
 //    AmortizationTypeConverter::class,
@@ -46,7 +42,6 @@ import template.core.base.database.PrimaryKey
 //    TransactionListConverter::class,
 // )
 
-@Parcelize
 @Entity(
     tableName = "LoanWithAssociations",
     indices = [],
@@ -58,24 +53,24 @@ import template.core.base.database.PrimaryKey
             entity = LoanStatusEntity::class,
             parentColumns = ["id"],
             childColumns = ["status"],
-            onDelete = ForeignKeyAction.CASCADE,
-            onUpdate = ForeignKeyAction.NO_ACTION,
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.NO_ACTION,
             deferred = false,
         ),
         ForeignKey(
             entity = LoanTimelineEntity::class,
             parentColumns = ["loanId"],
             childColumns = ["timeline"],
-            onDelete = ForeignKeyAction.CASCADE,
-            onUpdate = ForeignKeyAction.NO_ACTION,
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.NO_ACTION,
             deferred = false,
         ),
         ForeignKey(
             entity = LoanAccountSummaryEntity::class,
             parentColumns = ["loanId"],
             childColumns = ["summary"],
-            onDelete = ForeignKeyAction.CASCADE,
-            onUpdate = ForeignKeyAction.NO_ACTION,
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.NO_ACTION,
             deferred = false,
         ),
     ],
@@ -122,7 +117,6 @@ data class LoanWithAssociationsEntity(
 
     val loanType: LoanTypeEntity = LoanTypeEntity(),
 
-    @IgnoredOnParcel
     val currency: SavingAccountCurrencyEntity = SavingAccountCurrencyEntity(),
 
     val principal: Double = 0.0,
@@ -140,30 +134,24 @@ data class LoanWithAssociationsEntity(
 
     val termFrequency: Int = 0,
 
-    @IgnoredOnParcel
     val termPeriodFrequencyType: TermPeriodFrequencyType = TermPeriodFrequencyType(),
 
     val numberOfRepayments: Int = 0,
 
     val repaymentEvery: Int = 0,
 
-    @IgnoredOnParcel
     val repaymentFrequencyType: RepaymentFrequencyType = RepaymentFrequencyType(),
 
     val interestRatePerPeriod: Double = 0.0,
 
-    @IgnoredOnParcel
     val interestRateFrequencyType: InterestRateFrequencyType = InterestRateFrequencyType(),
 
     val annualInterestRate: Double = 0.0,
 
-    @IgnoredOnParcel
     val amortizationType: AmortizationType = AmortizationType(),
 
-    @IgnoredOnParcel
     val interestType: InterestType = InterestType(),
 
-    @IgnoredOnParcel
     val interestCalculationPeriodType: InterestCalculationPeriodType = InterestCalculationPeriodType(),
 
     val transactionProcessingStrategyId: Int = 0,
@@ -190,10 +178,8 @@ data class LoanWithAssociationsEntity(
     )
     val summary: LoanAccountSummaryEntity = LoanAccountSummaryEntity(),
 
-    @IgnoredOnParcel
     val repaymentSchedule: RepaymentSchedule = RepaymentSchedule(),
 
-    @IgnoredOnParcel
     val transactions: List<Transaction> = emptyList(),
 
     val feeChargesAtDisbursementCharged: Double = 0.0,
@@ -293,4 +279,4 @@ data class LoanWithAssociationsEntity(
         defaultValue = "0",
     )
     val chargedOff: Boolean = false,
-) : Parcelable
+)

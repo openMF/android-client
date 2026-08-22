@@ -20,14 +20,14 @@ import com.mifos.feature.path.tracking.navigation.PathTrackingScreenRoute
 import com.mifos.feature.report.navigation.RunReportScreenRoute
 import com.mifos.feature.settings.navigation.SettingsRoute
 import org.jetbrains.compose.resources.StringResource
-import org.mifos.navigation.generated.resources.Res
-import org.mifos.navigation.generated.resources.about
-import org.mifos.navigation.generated.resources.checker_inbox_tasks
-import org.mifos.navigation.generated.resources.collection_sheet
-import org.mifos.navigation.generated.resources.offline_sync
-import org.mifos.navigation.generated.resources.path_tracker
-import org.mifos.navigation.generated.resources.run_reports
-import org.mifos.navigation.generated.resources.settings
+import cmp.navigation.generated.resources.Res
+import cmp.navigation.generated.resources.about
+import cmp.navigation.generated.resources.checker_inbox_tasks
+import cmp.navigation.generated.resources.collection_sheet
+import cmp.navigation.generated.resources.offline_sync
+import cmp.navigation.generated.resources.path_tracker
+import cmp.navigation.generated.resources.run_reports
+import cmp.navigation.generated.resources.settings
 
 sealed class HomeDestinationsScreen(
     val title: StringResource,

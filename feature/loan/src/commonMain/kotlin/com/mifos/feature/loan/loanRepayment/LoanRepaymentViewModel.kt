@@ -9,11 +9,11 @@
  */
 package com.mifos.feature.loan.loanRepayment
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_failed_to_load_loan_repayment
-import androidclient.feature.loan.generated.resources.feature_loan_payment_failed
-import androidclient.feature.loan.generated.resources.feature_loan_profile_error_details_not_found
-import androidclient.feature.loan.generated.resources.feature_loan_profile_failed_to_load_loan
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_failed_to_load_loan_repayment
+import kpt.feature.loan.generated.resources.feature_loan_payment_failed
+import kpt.feature.loan.generated.resources.feature_loan_profile_error_details_not_found
+import kpt.feature.loan.generated.resources.feature_loan_profile_failed_to_load_loan
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

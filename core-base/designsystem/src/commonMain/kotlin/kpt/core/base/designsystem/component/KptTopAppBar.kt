@@ -41,6 +41,8 @@ import kpt.core.base.designsystem.core.KptTopAppBarConfiguration
 import kpt.core.base.designsystem.core.TopAppBarAction
 import kpt.core.base.designsystem.core.TopAppBarVariant
 import kpt.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,8 +67,8 @@ fun KptTopAppBar(configuration: KptTopAppBarConfiguration) {
             configuration.subtitle?.let { subtitle ->
                 Text(
                     text = subtitle,
-                    style = KptTheme.typography.bodySmall,
-                    color = KptTheme.colorScheme.onSurfaceVariant,
+                    style = LocalKptTypography.current.bodySmall,
+                    color = LocalKptColors.current.onSurfaceVariant,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )

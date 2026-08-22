@@ -9,22 +9,22 @@
  */
 package com.mifos.feature.center.syncCentersDialog
 
-import androidclient.feature.center.generated.resources.Res
-import androidclient.feature.center.generated.resources.feature_center_cancel
-import androidclient.feature.center.generated.resources.feature_center_center
-import androidclient.feature.center.generated.resources.feature_center_dialog_action_ok
-import androidclient.feature.center.generated.resources.feature_center_failed_sync
-import androidclient.feature.center.generated.resources.feature_center_hide
-import androidclient.feature.center.generated.resources.feature_center_name
-import androidclient.feature.center.generated.resources.feature_center_slash
-import androidclient.feature.center.generated.resources.feature_center_something_went_wrong
-import androidclient.feature.center.generated.resources.feature_center_space
-import androidclient.feature.center.generated.resources.feature_center_sync_centers_full_information
-import androidclient.feature.center.generated.resources.feature_center_syncing_center
-import androidclient.feature.center.generated.resources.feature_center_syncing_client
-import androidclient.feature.center.generated.resources.feature_center_syncing_group
-import androidclient.feature.center.generated.resources.feature_center_total
-import androidclient.feature.center.generated.resources.feature_center_total_sync_progress
+import kpt.feature.center.generated.resources.Res
+import kpt.feature.center.generated.resources.feature_center_cancel
+import kpt.feature.center.generated.resources.feature_center_center
+import kpt.feature.center.generated.resources.feature_center_dialog_action_ok
+import kpt.feature.center.generated.resources.feature_center_failed_sync
+import kpt.feature.center.generated.resources.feature_center_hide
+import kpt.feature.center.generated.resources.feature_center_name
+import kpt.feature.center.generated.resources.feature_center_slash
+import kpt.feature.center.generated.resources.feature_center_something_went_wrong
+import kpt.feature.center.generated.resources.feature_center_space
+import kpt.feature.center.generated.resources.feature_center_sync_centers_full_information
+import kpt.feature.center.generated.resources.feature_center_syncing_center
+import kpt.feature.center.generated.resources.feature_center_syncing_client
+import kpt.feature.center.generated.resources.feature_center_syncing_group
+import kpt.feature.center.generated.resources.feature_center_total
+import kpt.feature.center.generated.resources.feature_center_total_sync_progress
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -53,7 +53,10 @@ import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.group.CenterEntity
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun SyncCenterDialogScreen(
@@ -127,8 +130,8 @@ private fun SyncGroupDialogContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(KptTheme.spacing.sm)
-            .background(KptTheme.colorScheme.surface),
+            .padding(LocalKptSpacing.current.sm)
+            .background(LocalKptColors.current.surface),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
@@ -240,17 +243,17 @@ private fun PayloadField(label: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = KptTheme.spacing.xs),
+            .padding(vertical = LocalKptSpacing.current.xs),
     ) {
         Text(
             text = label,
-            style = KptTheme.typography.bodyMedium,
+            style = LocalKptTypography.current.bodyMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
         )
         Text(
             text = value,
-            style = KptTheme.typography.bodyMedium,
+            style = LocalKptTypography.current.bodyMedium,
             modifier = Modifier.weight(1f),
         )
     }

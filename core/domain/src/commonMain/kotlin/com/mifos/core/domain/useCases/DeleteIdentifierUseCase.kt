@@ -9,8 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
@@ -23,7 +21,7 @@ class DeleteIdentifierUseCase(
     operator fun invoke(
         clientId: Long,
         identifierId: Long,
-    ): Flow<DataState<GenericResponse>> = flow {
+    ): Flow<GenericResponse> = flow {
         emit(repository.deleteClientIdentifier(clientId = clientId, identifierId = identifierId))
-    }.asDataStateFlow()
+    }
 }

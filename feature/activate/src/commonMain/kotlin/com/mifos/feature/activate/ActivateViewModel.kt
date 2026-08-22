@@ -9,13 +9,13 @@
  */
 package com.mifos.feature.activate
 
-import androidclient.feature.activate.generated.resources.Res
-import androidclient.feature.activate.generated.resources.feature_activate_center
-import androidclient.feature.activate.generated.resources.feature_activate_client
-import androidclient.feature.activate.generated.resources.feature_activate_failed_to_activate_center
-import androidclient.feature.activate.generated.resources.feature_activate_failed_to_activate_client
-import androidclient.feature.activate.generated.resources.feature_activate_failed_to_activate_group
-import androidclient.feature.activate.generated.resources.feature_activate_group
+import kpt.feature.activate.generated.resources.Res
+import kpt.feature.activate.generated.resources.feature_activate_center
+import kpt.feature.activate.generated.resources.feature_activate_client
+import kpt.feature.activate.generated.resources.feature_activate_failed_to_activate_center
+import kpt.feature.activate.generated.resources.feature_activate_failed_to_activate_client
+import kpt.feature.activate.generated.resources.feature_activate_failed_to_activate_group
+import kpt.feature.activate.generated.resources.feature_activate_group
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

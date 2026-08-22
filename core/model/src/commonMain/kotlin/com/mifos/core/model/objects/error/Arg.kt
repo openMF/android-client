@@ -9,11 +9,8 @@
  */
 package com.mifos.core.model.objects.error
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 
-@Parcelize
 data class Arg(
     var value: String? = null,
 
-) : Parcelable
+)

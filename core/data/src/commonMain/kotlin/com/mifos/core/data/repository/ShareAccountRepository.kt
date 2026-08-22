@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.share.ShareAccountPayload
 import com.mifos.core.network.model.share.ShareTemplate
@@ -17,6 +16,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface ShareAccountRepository {
 
-    fun getShareTemplate(clientId: Int, productId: Int?): Flow<DataState<ShareTemplate>>
-    fun createShareAccount(shareAccountPayload: ShareAccountPayload): Flow<DataState<GenericResponse>>
+    fun getShareTemplate(clientId: Int, productId: Int?): Flow<ShareTemplate>
+    fun createShareAccount(shareAccountPayload: ShareAccountPayload): Flow<GenericResponse>
 }

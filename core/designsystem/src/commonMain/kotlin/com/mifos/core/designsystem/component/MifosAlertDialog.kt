@@ -34,7 +34,8 @@ import androidx.compose.ui.window.DialogProperties
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun MifosDialogBox(
@@ -149,7 +150,7 @@ fun MifosRadioButtonDialog(
                             )
                             Text(
                                 text = item,
-                                modifier = Modifier.padding(start = KptTheme.spacing.xs),
+                                modifier = Modifier.padding(start = LocalKptSpacing.current.xs),
                             )
                         }
                     }
@@ -205,7 +206,7 @@ private fun MifosDialogBoxWithComposableMessagePreview() {
             message = {
                 Column {
                     Text("This is a custom composable inside the dialog.")
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+                    Spacer(modifier = Modifier.height(LocalKptSpacing.current.sm))
                     Text("You can place anything here, like a list or input field.")
                 }
             },
@@ -235,11 +236,11 @@ private fun MifosCustomDialogPreview() {
             onDismiss = {},
             content = {
                 Card(
-                    modifier = Modifier.padding(KptTheme.spacing.md),
+                    modifier = Modifier.padding(LocalKptSpacing.current.md),
                 ) {
-                    Column(modifier = Modifier.padding(KptTheme.spacing.md)) {
+                    Column(modifier = Modifier.padding(LocalKptSpacing.current.md)) {
                         Text("This is a custom dialog.")
-                        Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+                        Spacer(modifier = Modifier.height(LocalKptSpacing.current.sm))
                         Text("You can fully customize this content.")
                     }
                 }

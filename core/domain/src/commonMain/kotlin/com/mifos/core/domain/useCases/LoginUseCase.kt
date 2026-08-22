@@ -9,8 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.LoginRepository
 import com.mifos.core.network.model.PostAuthenticationResponse
 import kotlinx.coroutines.flow.Flow
@@ -26,7 +24,7 @@ class LoginUseCase(
     operator fun invoke(
         username: String,
         password: String,
-    ): Flow<DataState<PostAuthenticationResponse>> = flow {
+    ): Flow<PostAuthenticationResponse> = flow {
         emit(loginRepository.login(username, password))
-    }.asDataStateFlow()
+    }
 }

@@ -9,10 +9,10 @@
  */
 package com.mifos.feature.auth.login
 
-import androidclient.feature.auth.generated.resources.Res
-import androidclient.feature.auth.generated.resources.feature_auth_error_login_failed
-import androidclient.feature.auth.generated.resources.feature_auth_error_password_length
-import androidclient.feature.auth.generated.resources.feature_auth_error_username_length
+import kpt.feature.auth.generated.resources.Res
+import kpt.feature.auth.generated.resources.feature_auth_error_login_failed
+import kpt.feature.auth.generated.resources.feature_auth_error_password_length
+import kpt.feature.auth.generated.resources.feature_auth_error_username_length
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger

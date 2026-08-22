@@ -9,10 +9,10 @@
  */
 package com.mifos.feature.loan.loanChargeOff
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_charge_off_failed
-import androidclient.feature.loan.generated.resources.feature_loan_charge_off_failed_to_load_charge_off_reasons
-import androidclient.feature.loan.generated.resources.feature_loan_charge_off_success
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_charge_off_failed
+import kpt.feature.loan.generated.resources.feature_loan_charge_off_failed_to_load_charge_off_reasons
+import kpt.feature.loan.generated.resources.feature_loan_charge_off_success
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -22,7 +22,7 @@ import com.mifos.core.domain.useCases.loanChargeOff.GetLoanChargeOffTemplateUseC
 import com.mifos.core.domain.useCases.loanChargeOff.LoanChargeOffUseCase
 import com.mifos.core.model.objects.account.loan.ChargeOffReasonOption
 import com.mifos.core.model.objects.account.loan.LoanChargeOffInput
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 

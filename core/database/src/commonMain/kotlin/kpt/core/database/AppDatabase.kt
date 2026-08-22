@@ -9,43 +9,16 @@
  */
 package kpt.core.database
 
-import androidx.room3.AutoMigration
-import androidx.room3.ColumnTypeConverters
 import androidx.room3.ConstructedBy
 import androidx.room3.Database
-import androidx.room3.DeleteTable
 import androidx.room3.RoomDatabase
 import androidx.room3.RoomDatabaseConstructor
-import androidx.room3.migration.AutoMigrationSpec
 import kpt.core.base.database.infra.dao.BookkeeperDao
 import kpt.core.base.database.infra.dao.DraftDao
 import kpt.core.base.database.infra.dao.FetchedAtDao
 import kpt.core.base.database.infra.entity.BookkeeperEntity
 import kpt.core.base.database.infra.entity.DraftEntity
 import kpt.core.base.database.infra.entity.FetchedAtEntity
-import kpt.core.database.demo.alerts.AlertDao
-import kpt.core.database.demo.alerts.AlertEntity
-import kpt.core.database.demo.banking.converter.BankingTypeConverters
-import kpt.core.database.demo.banking.dao.BillReminderDao
-import kpt.core.database.demo.banking.dao.LoanDao
-import kpt.core.database.demo.banking.entity.BillReminderEntity
-import kpt.core.database.demo.banking.entity.LoanEntity
-import kpt.core.database.demo.cloudtodo.CloudTodoDao
-import kpt.core.database.demo.cloudtodo.CloudTodoEntity
-import kpt.core.database.demo.crypto.converter.FintechTypeConverters
-import kpt.core.database.demo.crypto.dao.CoinDetailDao
-import kpt.core.database.demo.crypto.dao.CoinMarketDao
-import kpt.core.database.demo.crypto.entity.CoinDetailEntity
-import kpt.core.database.demo.crypto.entity.CoinMarketEntity
-import kpt.core.database.demo.currency.converter.ChargeTypeConverters
-import kpt.core.database.demo.currency.dao.ExchangeRatesDao
-import kpt.core.database.demo.currency.dao.RateHistoryDao
-import kpt.core.database.demo.currency.entity.ExchangeRatesEntity
-import kpt.core.database.demo.currency.entity.RateHistoryEntity
-import kpt.core.database.demo.economic.InterestRateSeriesDao
-import kpt.core.database.demo.economic.InterestRateSeriesEntity
-import kpt.core.database.demo.watchlist.dao.WatchlistDao
-import kpt.core.database.demo.watchlist.entity.WatchlistEntity
 
 /**
  * KSP-generated constructor bridge for [AppDatabase].
@@ -95,18 +68,12 @@ expect object AppDatabaseConstructor : RoomDatabaseConstructor<AppDatabase> {
         BookkeeperEntity::class,
         FetchedAtEntity::class,
         DraftEntity::class,
-        // demo:begin
-        ExchangeRatesEntity::class,
-        CoinMarketEntity::class,
-        CoinDetailEntity::class,
-        RateHistoryEntity::class,
-        WatchlistEntity::class,
-        LoanEntity::class,
-        BillReminderEntity::class,
-        AlertEntity::class,
-        InterestRateSeriesEntity::class,
-        CloudTodoEntity::class,
-        // demo:end
+        // demo:begin/demo:end block removed (offline-first-template-migration 01-template-adoption
+        // T-AC3-merge): the demo entities/DAOs/converters this fork never carried a
+        // `core/database/demo/**` tree for (never synced in — customizer --clean was never run on
+        // this legacy fork, so this file was the one dangling reference left behind). Stripped by
+        // hand, matching exactly what `customizer --clean` documents doing per this file's own
+        // "Demo demarcation" doc comment above.
         // fork:begin — a fork adds its OWN @Entity classes here. This block is PRESERVED across
         // /kmp-project-template-sync; never add entities outside it. For each schema-changing fork
         // entity, bump ForkDatabaseConfig.VERSION_OFFSET and add a matching AutoMigration in the fork
@@ -117,40 +84,13 @@ expect object AppDatabaseConstructor : RoomDatabaseConstructor<AppDatabase> {
     version = AppDatabase.VERSION,
     exportSchema = true,
     autoMigrations = [
-        // demo:begin
-        // v3 → v4: adds `framework_fetched_at` for durable lastFetchedAt timestamps.
-        AutoMigration(from = 3, to = 4),
-        // v4 → v5: adds `framework_submit_drafts` for offline-first form submission outbox.
-        AutoMigration(from = 4, to = 5),
-        // v5 → v6: adds `personal_watchlist` for the user's private watchlist.
-        AutoMigration(from = 5, to = 6),
-        // v6 → v7: adds nullable `uniqueKey` column to `framework_submit_drafts` for
-        // multi-pending drafts under one formKey (Portfolio Tracker, Bill Reminders, wizard steps).
-        AutoMigration(from = 6, to = 7),
-        // v7 → v8: purely additive — creates `banking_loans` and `banking_bill_reminders`
-        // for the local-only Loan Tracker (B1) and Bill Reminders (B4) features.
-        // No existing schema modifications, so Room's auto-migration trivially generates
-        // `CREATE TABLE IF NOT EXISTS …` statements; existing rows are untouched.
-        AutoMigration(from = 7, to = 8),
-        // v8 → v10: adds `alerts` + `interest_rate_series` tables; drops `samples` table.
-        // v9 was never shipped — both v8→9 and v9→10 were introduced in the same unreleased
-        // commit, so they are collapsed here into a single 8→10 hop. Room auto-migration
-        // generates CREATE TABLE for the two new tables; the explicit @DeleteTable spec
-        // handles the DROP of `samples`.
-        AutoMigration(from = 8, to = 10, spec = AppDatabase.MigrationSpec8to10::class),
-        // demo:end
+        // demo:begin/demo:end autoMigrations + @DeleteTable spec removed alongside the entities
+        // above — see the entities-list comment for rationale.
         // fork:begin — a fork adds its own AutoMigration(...) entries here, one per schema-changing
         // fork entity (from = previous effective version, to = new). PRESERVED across sync.
         // fork:end
     ],
 )
-// demo:begin
-@ColumnTypeConverters(
-    ChargeTypeConverters::class,
-    FintechTypeConverters::class,
-    BankingTypeConverters::class,
-)
-// demo:end
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase : RoomDatabase() {
 
@@ -159,41 +99,19 @@ abstract class AppDatabase : RoomDatabase() {
     abstract val fetchedAtDao: FetchedAtDao
     abstract val draftDao: DraftDao
 
-    // demo:begin
-    abstract val exchangeRatesDao: ExchangeRatesDao
-    abstract val cloudTodoDao: CloudTodoDao
-    abstract val coinMarketDao: CoinMarketDao
-    abstract val coinDetailDao: CoinDetailDao
-    abstract val rateHistoryDao: RateHistoryDao
-    abstract val watchlistDao: WatchlistDao
-    abstract val loanDao: LoanDao
-    abstract val billReminderDao: BillReminderDao
-    abstract val alertDao: AlertDao
-    abstract val interestRateSeriesDao: InterestRateSeriesDao
-    // demo:end
+    // demo:begin/demo:end DAO accessors + MigrationSpec8to10 removed alongside the entities above.
 
     // fork:begin — a fork adds its own `abstract val fooDao: FooDao` accessors here. PRESERVED
     // across /kmp-project-template-sync; kept in its own region so fork + template DAO additions
     // never share a merge hunk.
     // fork:end
 
-    // demo:begin
-    /**
-     * Auto-migration spec for v8 → v10 (collapsed from the never-shipped v8→9 + v9→10 path).
-     *
-     * Instructs Room to DROP the `samples` table that was present in v1–v8 and is no
-     * longer part of the schema. Adding [AlertEntity] and [InterestRateSeriesEntity] tables
-     * is fully auto-handled by Room; only the DROP requires an explicit declaration.
-     */
-    @DeleteTable(tableName = "samples")
-    class MigrationSpec8to10 : AutoMigrationSpec
-    // demo:end
-
     companion object {
-        // NOTE: `customizer --clean` resets TEMPLATE_BASE_VERSION to 1 (fresh-fork baseline) via a
-        // targeted sed, since the migration history above is stripped with the demo block.
+        // `customizer --clean` resets TEMPLATE_BASE_VERSION to 1 (fresh-fork baseline) since the
+        // demo migration history is stripped with the demo block — done by hand here (see the
+        // entities-list comment above for why this fork does it post-hoc).
         /** Template-owned base schema version — the TEMPLATE bumps this on its own schema changes. */
-        const val TEMPLATE_BASE_VERSION = 11
+        const val TEMPLATE_BASE_VERSION = 1
 
         /**
          * Effective DB schema version = template base + the fork's offset ([ForkDatabaseConfig],

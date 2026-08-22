@@ -9,10 +9,10 @@
  */
 package com.mifos.feature.dataTable.dataTableRowDialog
 
-import androidclient.feature.data_table.generated.resources.Res
-import androidclient.feature.data_table.generated.resources.feature_data_table_add_data_table
-import androidclient.feature.data_table.generated.resources.feature_data_table_added_data_table_successfully
-import androidclient.feature.data_table.generated.resources.feature_data_table_submit
+import kpt.feature.data_table.generated.resources.Res
+import kpt.feature.data_table.generated.resources.feature_data_table_add_data_table
+import kpt.feature.data_table.generated.resources.feature_data_table_added_data_table_successfully
+import kpt.feature.data_table.generated.resources.feature_data_table_submit
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,7 +46,11 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptShapes
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun DataTableRowDialogScreen(
@@ -95,8 +99,8 @@ fun DataTableRowDialogScreen(
     ) {
         Surface(
             modifier = modifier,
-            shape = KptTheme.shapes.large,
-            color = KptTheme.colorScheme.surface,
+            shape = LocalKptShapes.current.large,
+            color = LocalKptColors.current.surface,
         ) {
             Box(
                 contentAlignment = Alignment.Center,
@@ -121,14 +125,14 @@ fun DataTableRowDialogScreen(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(bottom = KptTheme.spacing.md),
+                                    .padding(bottom = LocalKptSpacing.current.md),
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Text(
                                     text = stringResource(Res.string.feature_data_table_add_data_table),
-                                    fontSize = KptTheme.typography.titleLarge.fontSize,
-                                    color = KptTheme.colorScheme.primary,
+                                    fontSize = LocalKptTypography.current.titleLarge.fontSize,
+                                    color = LocalKptColors.current.primary,
                                 )
                                 IconButton(onClick = { onDismiss() }) {
                                     Icon(

@@ -11,35 +11,35 @@
 
 package com.mifos.feature.client.clientDetails
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client
-import androidclient.feature.client.generated.resources.feature_client_account_number
-import androidclient.feature.client.generated.resources.feature_client_accounts
-import androidclient.feature.client.generated.resources.feature_client_activate_client
-import androidclient.feature.client.generated.resources.feature_client_activation_date
-import androidclient.feature.client.generated.resources.feature_client_add_loan_account
-import androidclient.feature.client.generated.resources.feature_client_add_savings_account
-import androidclient.feature.client.generated.resources.feature_client_charges
-import androidclient.feature.client.generated.resources.feature_client_client_image_deleted
-import androidclient.feature.client.generated.resources.feature_client_client_image_updated
-import androidclient.feature.client.generated.resources.feature_client_client_not_found
-import androidclient.feature.client.generated.resources.feature_client_delete_image
-import androidclient.feature.client.generated.resources.feature_client_documents
-import androidclient.feature.client.generated.resources.feature_client_external_id
-import androidclient.feature.client.generated.resources.feature_client_group
-import androidclient.feature.client.generated.resources.feature_client_identifiers
-import androidclient.feature.client.generated.resources.feature_client_loan_account
-import androidclient.feature.client.generated.resources.feature_client_more_client_info
-import androidclient.feature.client.generated.resources.feature_client_notes
-import androidclient.feature.client.generated.resources.feature_client_office
-import androidclient.feature.client.generated.resources.feature_client_phone_no
-import androidclient.feature.client.generated.resources.feature_client_pinpoint_location
-import androidclient.feature.client.generated.resources.feature_client_please_select
-import androidclient.feature.client.generated.resources.feature_client_savings_account
-import androidclient.feature.client.generated.resources.feature_client_survey
-import androidclient.feature.client.generated.resources.feature_client_take_new_image
-import androidclient.feature.client.generated.resources.feature_client_upload_new_image
-import androidclient.feature.client.generated.resources.feature_client_upload_signature
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_client
+import kpt.feature.client.generated.resources.feature_client_account_number
+import kpt.feature.client.generated.resources.feature_client_accounts
+import kpt.feature.client.generated.resources.feature_client_activate_client
+import kpt.feature.client.generated.resources.feature_client_activation_date
+import kpt.feature.client.generated.resources.feature_client_add_loan_account
+import kpt.feature.client.generated.resources.feature_client_add_savings_account
+import kpt.feature.client.generated.resources.feature_client_charges
+import kpt.feature.client.generated.resources.feature_client_client_image_deleted
+import kpt.feature.client.generated.resources.feature_client_client_image_updated
+import kpt.feature.client.generated.resources.feature_client_client_not_found
+import kpt.feature.client.generated.resources.feature_client_delete_image
+import kpt.feature.client.generated.resources.feature_client_documents
+import kpt.feature.client.generated.resources.feature_client_external_id
+import kpt.feature.client.generated.resources.feature_client_group
+import kpt.feature.client.generated.resources.feature_client_identifiers
+import kpt.feature.client.generated.resources.feature_client_loan_account
+import kpt.feature.client.generated.resources.feature_client_more_client_info
+import kpt.feature.client.generated.resources.feature_client_notes
+import kpt.feature.client.generated.resources.feature_client_office
+import kpt.feature.client.generated.resources.feature_client_phone_no
+import kpt.feature.client.generated.resources.feature_client_pinpoint_location
+import kpt.feature.client.generated.resources.feature_client_please_select
+import kpt.feature.client.generated.resources.feature_client_savings_account
+import kpt.feature.client.generated.resources.feature_client_survey
+import kpt.feature.client.generated.resources.feature_client_take_new_image
+import kpt.feature.client.generated.resources.feature_client_upload_new_image
+import kpt.feature.client.generated.resources.feature_client_upload_signature
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -107,7 +107,10 @@ import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 /**
  * Created by Aditya Gupta on 18/03/24.
@@ -200,7 +203,7 @@ internal fun ClientDetailsScreen(
                 Icon(imageVector = MifosIcons.MoreVert, contentDescription = null)
             }
             DropdownMenu(
-                modifier = Modifier.background(KptTheme.colorScheme.surface),
+                modifier = Modifier.background(LocalKptColors.current.surface),
                 expanded = showMenu,
                 onDismissRequest = { showMenu = false },
             ) {
@@ -288,12 +291,12 @@ internal fun ClientDetailsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(DesignToken.spacing.dp44)
-                        .padding(horizontal = KptTheme.spacing.md),
+                        .padding(horizontal = LocalKptSpacing.current.md),
                     contentPadding = PaddingValues(),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_client_activate_client),
-                        style = KptTheme.typography.bodyLarge,
+                        style = LocalKptTypography.current.bodyLarge,
                     )
                 }
             }
@@ -374,9 +377,9 @@ private fun MifosClientDetailsScreen(
         Spacer(modifier = Modifier.height(DesignToken.spacing.dp10))
         client?.displayName?.let {
             Text(
-                modifier = Modifier.padding(KptTheme.spacing.md),
+                modifier = Modifier.padding(LocalKptSpacing.current.md),
                 text = it,
-                style = KptTheme.typography.titleLarge,
+                style = LocalKptTypography.current.titleLarge,
                 textAlign = TextAlign.Start,
             )
         }
@@ -430,9 +433,9 @@ private fun MifosClientDetailsScreen(
         Spacer(modifier = Modifier.height(DesignToken.spacing.largeIncreased))
         if (loanAccounts != null && savingsAccounts != null) {
             Text(
-                modifier = Modifier.padding(start = KptTheme.spacing.md, bottom = DesignToken.spacing.mediumSmall),
+                modifier = Modifier.padding(start = LocalKptSpacing.current.md, bottom = DesignToken.spacing.mediumSmall),
                 text = stringResource(Res.string.feature_client_accounts),
-                style = KptTheme.typography.titleMedium,
+                style = LocalKptTypography.current.titleMedium,
                 textAlign = TextAlign.Start,
             )
         }
@@ -468,7 +471,7 @@ private fun MifosLoanAccountExpendableCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(KptTheme.spacing.sm)
+            .padding(LocalKptSpacing.current.sm)
             .animateContentSize(
                 animationSpec = tween(
                     durationMillis = 300,
@@ -476,7 +479,7 @@ private fun MifosLoanAccountExpendableCard(
                 ),
             ),
         shape = DesignToken.shapes.dp22,
-        colors = CardDefaults.cardColors(KptTheme.colorScheme.secondary),
+        colors = CardDefaults.cardColors(LocalKptColors.current.secondary),
     ) {
         Column(
             modifier = Modifier
@@ -489,9 +492,9 @@ private fun MifosLoanAccountExpendableCard(
                 Text(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(start = KptTheme.spacing.sm),
+                        .padding(start = LocalKptSpacing.current.sm),
                     text = accountType,
-                    style = KptTheme.typography.bodyLarge,
+                    style = LocalKptTypography.current.bodyLarge,
                     textAlign = TextAlign.Start,
                 )
                 IconButton(
@@ -523,9 +526,9 @@ private fun MifosLoanAccountsLazyColumn(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(KptTheme.spacing.sm),
+            .padding(LocalKptSpacing.current.sm),
         shape = DesignToken.shapes.dp22,
-        colors = CardDefaults.cardColors(KptTheme.colorScheme.secondary),
+        colors = CardDefaults.cardColors(LocalKptColors.current.secondary),
     ) {
         LazyColumn(
             modifier = Modifier
@@ -550,7 +553,7 @@ private fun MifosLoanAccountsLazyColumn(
                     Canvas(
                         modifier = Modifier
                             .size(DesignToken.sizes.iconAverage)
-                            .padding(KptTheme.spacing.xs),
+                            .padding(LocalKptSpacing.current.xs),
                         onDraw = {
                             drawCircle(
                                 color = when {
@@ -580,25 +583,25 @@ private fun MifosLoanAccountsLazyColumn(
                     Column(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(start = KptTheme.spacing.xs),
+                            .padding(start = LocalKptSpacing.current.xs),
                     ) {
                         loanAccount.productName?.let {
                             Text(
                                 text = it,
-                                style = KptTheme.typography.bodyLarge,
+                                style = LocalKptTypography.current.bodyLarge,
                                 textAlign = TextAlign.Start,
                             )
                         }
                         Text(
                             text = loanAccount.accountNo.toString(),
-                            style = KptTheme.typography.bodyMedium,
+                            style = LocalKptTypography.current.bodyMedium,
                             textAlign = TextAlign.Start,
                         )
                     }
                     loanAccount.productId?.let {
                         Text(
                             text = it.toString(),
-                            style = KptTheme.typography.bodyLarge,
+                            style = LocalKptTypography.current.bodyLarge,
                             textAlign = TextAlign.Start,
                         )
                     }
@@ -623,7 +626,7 @@ private fun MifosSavingsAccountExpandableCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(KptTheme.spacing.sm)
+            .padding(LocalKptSpacing.current.sm)
             .animateContentSize(
                 animationSpec = tween(
                     durationMillis = 300,
@@ -631,7 +634,7 @@ private fun MifosSavingsAccountExpandableCard(
                 ),
             ),
         shape = DesignToken.shapes.dp22,
-        colors = CardDefaults.cardColors(KptTheme.colorScheme.secondary),
+        colors = CardDefaults.cardColors(LocalKptColors.current.secondary),
     ) {
         Column(
             modifier = Modifier
@@ -644,9 +647,9 @@ private fun MifosSavingsAccountExpandableCard(
                 Text(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(start = KptTheme.spacing.sm),
+                        .padding(start = LocalKptSpacing.current.sm),
                     text = accountType,
-                    style = KptTheme.typography.bodyLarge,
+                    style = LocalKptTypography.current.bodyLarge,
                     textAlign = TextAlign.Start,
                 )
                 IconButton(
@@ -678,9 +681,9 @@ private fun MifosSavingsAccountsLazyColumn(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(KptTheme.spacing.sm),
+            .padding(LocalKptSpacing.current.sm),
         shape = DesignToken.shapes.dp22,
-        colors = CardDefaults.cardColors(KptTheme.colorScheme.surface),
+        colors = CardDefaults.cardColors(LocalKptColors.current.surface),
     ) {
         LazyColumn(
             modifier = Modifier
@@ -708,7 +711,7 @@ private fun MifosSavingsAccountsLazyColumn(
                     Canvas(
                         modifier = Modifier
                             .size(DesignToken.sizes.iconAverage)
-                            .padding(KptTheme.spacing.xs),
+                            .padding(LocalKptSpacing.current.xs),
                         onDraw = {
                             drawCircle(
                                 color = when {
@@ -734,25 +737,25 @@ private fun MifosSavingsAccountsLazyColumn(
                     Column(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(start = KptTheme.spacing.xs),
+                            .padding(start = LocalKptSpacing.current.xs),
                     ) {
                         savingsAccount.productName?.let {
                             Text(
                                 text = it,
-                                style = KptTheme.typography.bodyLarge,
+                                style = LocalKptTypography.current.bodyLarge,
                                 textAlign = TextAlign.Start,
                             )
                         }
                         Text(
                             text = savingsAccount.accountNo.toString(),
-                            style = KptTheme.typography.bodyMedium,
+                            style = LocalKptTypography.current.bodyMedium,
                             textAlign = TextAlign.Start,
                         )
                     }
                     savingsAccount.productId?.let {
                         Text(
                             text = it.toString(),
-                            style = KptTheme.typography.bodyLarge,
+                            style = LocalKptTypography.current.bodyLarge,
                             textAlign = TextAlign.Start,
                         )
                     }
@@ -777,7 +780,7 @@ private fun MifosSelectImageDialog(
         ),
     ) {
         Card(
-            colors = CardDefaults.cardColors(KptTheme.colorScheme.surface),
+            colors = CardDefaults.cardColors(LocalKptColors.current.surface),
             shape = DesignToken.shapes.largeIncreased,
         ) {
             Column(
@@ -789,41 +792,41 @@ private fun MifosSelectImageDialog(
                 Text(
                     text = stringResource(Res.string.feature_client_please_select),
                     modifier = Modifier.fillMaxWidth(),
-                    style = KptTheme.typography.bodyLarge,
+                    style = LocalKptTypography.current.bodyLarge,
                     textAlign = TextAlign.Center,
                 )
                 Spacer(modifier = Modifier.height(DesignToken.spacing.largeIncreased))
 
                 Button(
                     onClick = { takeImage() },
-                    colors = ButtonDefaults.buttonColors(KptTheme.colorScheme.secondary),
+                    colors = ButtonDefaults.buttonColors(LocalKptColors.current.secondary),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_client_take_new_image),
                         modifier = Modifier.fillMaxWidth(),
-                        style = KptTheme.typography.bodyLarge,
+                        style = LocalKptTypography.current.bodyLarge,
                         textAlign = TextAlign.Center,
                     )
                 }
                 Button(
                     onClick = { uploadImage() },
-                    colors = ButtonDefaults.buttonColors(KptTheme.colorScheme.primary),
+                    colors = ButtonDefaults.buttonColors(LocalKptColors.current.primary),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_client_upload_new_image),
                         modifier = Modifier.fillMaxWidth(),
-                        style = KptTheme.typography.bodyLarge,
+                        style = LocalKptTypography.current.bodyLarge,
                         textAlign = TextAlign.Center,
                     )
                 }
                 Button(
                     onClick = { deleteImage() },
-                    colors = ButtonDefaults.buttonColors(KptTheme.colorScheme.secondary),
+                    colors = ButtonDefaults.buttonColors(LocalKptColors.current.secondary),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_client_delete_image),
                         modifier = Modifier.fillMaxWidth(),
-                        style = KptTheme.typography.bodyLarge,
+                        style = LocalKptTypography.current.bodyLarge,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -836,7 +839,7 @@ private fun MifosSelectImageDialog(
 private fun MifosClientDetailsText(icon: ImageVector, field: String, value: String) {
     Row(
         modifier = Modifier
-            .padding(vertical = KptTheme.spacing.sm, horizontal = KptTheme.spacing.md)
+            .padding(vertical = LocalKptSpacing.current.sm, horizontal = LocalKptSpacing.current.md)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -844,19 +847,19 @@ private fun MifosClientDetailsText(icon: ImageVector, field: String, value: Stri
             modifier = Modifier.size(DesignToken.sizes.dp18),
             imageVector = icon,
             contentDescription = null,
-            tint = KptTheme.colorScheme.onSurfaceVariant,
+            tint = LocalKptColors.current.onSurfaceVariant,
         )
         Text(
             modifier = Modifier
                 .weight(1f)
-                .padding(start = KptTheme.spacing.md),
+                .padding(start = LocalKptSpacing.current.md),
             text = field,
-            style = KptTheme.typography.bodyLarge,
+            style = LocalKptTypography.current.bodyLarge,
             textAlign = TextAlign.Start,
         )
         Text(
             text = value,
-            style = KptTheme.typography.bodyLarge,
+            style = LocalKptTypography.current.bodyLarge,
             textAlign = TextAlign.Start,
         )
     }

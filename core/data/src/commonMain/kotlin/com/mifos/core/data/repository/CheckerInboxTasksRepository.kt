@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.checkerinboxtask.CheckerTask
 import com.mifos.core.model.objects.checkerinboxtask.RescheduleLoansTask
 import kotlinx.coroutines.flow.Flow
@@ -20,11 +19,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface CheckerInboxTasksRepository {
 
-    fun getRescheduleLoansTaskList(): Flow<DataState<List<RescheduleLoansTask>>>
+    fun getRescheduleLoansTaskList(): Flow<List<RescheduleLoansTask>>
 
     fun getCheckerTaskList(
         actionName: String? = null,
         entityName: String? = null,
         resourceId: Int? = null,
-    ): Flow<DataState<List<CheckerTask>>>
+    ): Flow<List<CheckerTask>>
 }

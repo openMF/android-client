@@ -10,9 +10,7 @@
 package com.mifos.core.network.datamanager
 
 import com.mifos.core.common.utils.ApiDateFormatter
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.Page
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.model.objects.clients.AssignStaffRequest
@@ -240,20 +238,11 @@ class DataManagerClient(
         return mBaseApiManager.clientService.uploadClientImage(clientId, file)
     }
 
-    fun getClientImage(clientId: Int): Flow<DataState<String>> {
+    fun getClientImage(clientId: Int): Flow<String> {
         return mBaseApiManager.clientService.getClientImage(clientId)
-            .asDataStateFlow()
-            .map {
-                    response ->
-                when (response) {
-                    is DataState.Success -> {
-                        val encodedString = response.data.bodyAsText()
-                        val pureBase64Encoded = encodedString.substringAfter(',')
-                        DataState.Success(pureBase64Encoded)
-                    }
-                    is DataState.Error -> DataState.Error(response.exception)
-                    DataState.Loading -> DataState.Loading
-                }
+            .map { response ->
+                val encodedString = response.bodyAsText()
+                encodedString.substringAfter(',')
             }
     }
 

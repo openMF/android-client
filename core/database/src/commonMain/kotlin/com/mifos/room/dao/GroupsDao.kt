@@ -14,11 +14,11 @@ import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.group.GroupEntity
 import com.mifos.room.entities.group.GroupPayloadEntity
 import kotlinx.coroutines.flow.Flow
-import template.core.base.database.Dao
-import template.core.base.database.Insert
-import template.core.base.database.OnConflictStrategy
-import template.core.base.database.Query
-import template.core.base.database.Update
+import androidx.room3.Dao
+import androidx.room3.Insert
+import androidx.room3.OnConflictStrategy
+import androidx.room3.Query
+import androidx.room3.Update
 
 /**
  * Created by Pronay Sarker on 15/02/2025 (1:07 PM)

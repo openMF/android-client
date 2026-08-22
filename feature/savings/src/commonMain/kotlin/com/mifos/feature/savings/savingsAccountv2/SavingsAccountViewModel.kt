@@ -9,11 +9,11 @@
  */
 package com.mifos.feature.savings.savingsAccountv2
 
-import androidclient.feature.savings.generated.resources.Res
-import androidclient.feature.savings.generated.resources.feature_savings_error_not_connected_internet
-import androidclient.feature.savings.generated.resources.feature_savings_new_savings_account_created_successfully
-import androidclient.feature.savings.generated.resources.field_empty_msg
-import androidclient.feature.savings.generated.resources.step_terms_decimal_places_error
+import kpt.feature.savings.generated.resources.Res
+import kpt.feature.savings.generated.resources.feature_savings_error_not_connected_internet
+import kpt.feature.savings.generated.resources.feature_savings_new_savings_account_created_successfully
+import kpt.feature.savings.generated.resources.field_empty_msg
+import kpt.feature.savings.generated.resources.step_terms_decimal_places_error
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -26,7 +26,7 @@ import com.mifos.core.domain.useCases.GetClientTemplateUseCase
 import com.mifos.core.domain.useCases.GetSavingsProductTemplateUseCase
 import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.model.objects.payloads.SavingsPayload
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import com.mifos.room.entities.templates.clients.SavingProductOptionsEntity
 import com.mifos.room.entities.templates.clients.StaffOptionsEntity

@@ -9,9 +9,9 @@
  */
 package com.mifos.feature.client.clientEditProfile
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.client_profile_photo_updated_failure
-import androidclient.feature.client.generated.resources.client_profile_photo_updated_success
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.client_profile_photo_updated_failure
+import kpt.feature.client.generated.resources.client_profile_photo_updated_success
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -26,7 +26,7 @@ import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.UploadClientImageUseCase
 import com.mifos.core.ui.components.ResultStatus
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.core.ui.util.multipartRequestBody
 import io.github.vinceglb.filekit.FileKit

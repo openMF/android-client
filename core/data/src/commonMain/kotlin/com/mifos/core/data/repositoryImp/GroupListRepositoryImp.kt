@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.GroupListRepository
 import com.mifos.core.network.DataManager
 import com.mifos.room.entities.group.CenterWithAssociations
@@ -24,11 +22,11 @@ class GroupListRepositoryImp(
     private val dataManager: DataManager,
 ) : GroupListRepository {
 
-    override fun getGroups(groupId: Int): Flow<DataState<GroupWithAssociations>> {
-        return dataManager.getGroups(groupId).asDataStateFlow()
+    override fun getGroups(groupId: Int): Flow<GroupWithAssociations> {
+        return dataManager.getGroups(groupId)
     }
 
-    override fun getGroupsByCenter(id: Int): Flow<DataState<CenterWithAssociations>> {
-        return dataManager.getGroupsByCenter(id).asDataStateFlow()
+    override fun getGroupsByCenter(id: Int): Flow<CenterWithAssociations> {
+        return dataManager.getGroupsByCenter(id)
     }
 }

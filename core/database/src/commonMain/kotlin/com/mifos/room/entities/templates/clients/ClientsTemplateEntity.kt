@@ -9,14 +9,11 @@
  */
 package com.mifos.room.entities.templates.clients
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.noncore.DataTableEntity
 import kotlinx.serialization.Serializable
-import template.core.base.database.Entity
-import template.core.base.database.PrimaryKey
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 
-@Parcelize
 @Serializable
 @Entity(
     indices = [],
@@ -47,4 +44,4 @@ data class ClientsTemplateEntity(
     val clientLegalFormOptions: List<InterestTypeEntity>? = emptyList(),
 
     val dataTables: List<DataTableEntity>? = emptyList(),
-) : Parcelable
+)

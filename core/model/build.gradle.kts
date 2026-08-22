@@ -9,14 +9,19 @@
  */
 plugins {
     alias(libs.plugins.kmp.library.convention)
-    alias(libs.plugins.kotlin.parcelize)
     id("kotlinx-serialization")
 }
 
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.core.common)
+            // NOTE (offline-first-template-migration 01-template-adoption T-AC3-merge): the
+            // template's own core/model demo content depends on core/common, but the fork's real
+            // core/model source (verified: zero `import com.mifos.core.common.*` references) does
+            // NOT — and core/common's fork-preserved utils (MFErrorParser etc., same sub-plan) need
+            // `com.mifos.core.model.objects.error.MifosError` + `.utils.{Parcelable,Parcelize}`,
+            // which is the OPPOSITE direction. Keeping both would be a common<->model cycle. Dropped
+            // to restore the fork's original (working) common -> model direction.
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.datetime)
         }

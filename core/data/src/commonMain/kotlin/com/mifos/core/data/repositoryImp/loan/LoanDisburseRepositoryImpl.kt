@@ -9,24 +9,23 @@
  */
 package com.mifos.core.data.repositoryImp.loan
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.mappers.loan.toDto
 import com.mifos.core.data.mappers.loan.toModel
 import com.mifos.core.data.repository.loan.LoanDisburseRepository
 import com.mifos.core.data.util.NetworkMonitor
-import com.mifos.core.data.util.runAsDataState
+import com.mifos.core.data.util.runSuspendCall
 import com.mifos.core.model.objects.account.loan.loanDisburse.LoanDisburseInput
 import com.mifos.core.model.objects.account.loan.loanDisburse.LoanDisburseTemplate
 import com.mifos.core.network.datamanager.DataManagerLoan
-import template.core.base.common.manager.DispatcherManager
+import kpt.core.base.common.manager.DispatcherManager
 
 class LoanDisburseRepositoryImpl(
     private val dataManagerLoan: DataManagerLoan,
     private val networkMonitor: NetworkMonitor,
     private val dispatcher: DispatcherManager,
 ) : LoanDisburseRepository {
-    override suspend fun getDisburseTemplate(loanId: Int): DataState<LoanDisburseTemplate> {
-        return runAsDataState(
+    override suspend fun getDisburseTemplate(loanId: Int): LoanDisburseTemplate {
+        return runSuspendCall(
             networkMonitor = networkMonitor,
             context = dispatcher.io,
         ) {
@@ -37,8 +36,8 @@ class LoanDisburseRepositoryImpl(
     override suspend fun disburse(
         loanId: Int,
         loanDisburseInput: LoanDisburseInput,
-    ): DataState<Unit> {
-        return runAsDataState(
+    ): Unit {
+        return runSuspendCall(
             networkMonitor = networkMonitor,
             context = dispatcher.io,
         ) {

@@ -14,51 +14,51 @@ import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionEntity
 import com.mifos.room.entities.group.CenterEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import template.core.base.database.TypeConverter
+import androidx.room3.ColumnTypeConverter
 
 class ListTypeConverters {
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromIntList(value: String): ArrayList<Int?> {
         return Json.decodeFromString(value)
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toIntList(list: ArrayList<Int?>): String {
         return Json.encodeToString(list)
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromCenterList(centers: List<CenterEntity?>): String {
         return centers.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toCenterList(json: String): List<CenterEntity?> {
         return json.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toListOfInts(json: String?): List<Int?>? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromListOfTransactions(list: List<SavingsAccountTransactionEntity>?): String? {
         return list?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toListOfTransactions(json: String?): List<SavingsAccountTransactionEntity>? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromListOfCharges(list: List<Charge?>?): String? {
         return list?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toListOfCharges(json: String?): List<Charge?>? {
         return json?.let { Json.decodeFromString(it) }
     }

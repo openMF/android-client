@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import kpt.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 /**
  * Full-screen picker for the **multi-pending** case — a form that can hold N concurrent drafts (one
@@ -58,7 +59,7 @@ fun DraftPickerList(
     startFreshLabel: String,
     modifier: Modifier = Modifier,
 ) {
-    val sp = KptTheme.spacing
+    val sp = LocalKptSpacing.current
     Column(modifier = modifier.fillMaxSize().padding(sp.md), verticalArrangement = Arrangement.spacedBy(sp.sm)) {
         LazyColumn(
             modifier = Modifier.fillMaxWidth().weight(1f),
@@ -88,7 +89,7 @@ private fun DraftPickerRow(
     onResume: () -> Unit,
     onDiscard: () -> Unit,
 ) {
-    val sp = KptTheme.spacing
+    val sp = LocalKptSpacing.current
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.fillMaxWidth().padding(sp.md), verticalArrangement = Arrangement.spacedBy(sp.xs)) {
             Text(

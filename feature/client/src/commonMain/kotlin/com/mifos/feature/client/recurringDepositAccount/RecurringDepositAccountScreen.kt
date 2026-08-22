@@ -9,17 +9,17 @@
  */
 package com.mifos.feature.client.recurringDepositAccount
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.add_icon
-import androidclient.feature.client.generated.resources.client_product_recurring_deposit_account
-import androidclient.feature.client.generated.resources.client_profile_recurring_deposit_account_title
-import androidclient.feature.client.generated.resources.client_savings_item
-import androidclient.feature.client.generated.resources.client_savings_not_available
-import androidclient.feature.client.generated.resources.client_savings_pending_approval
-import androidclient.feature.client.generated.resources.feature_client_dialog_action_ok
-import androidclient.feature.client.generated.resources.feature_recurring_account_empty_list_message
-import androidclient.feature.client.generated.resources.filter
-import androidclient.feature.client.generated.resources.search
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.add_icon
+import kpt.feature.client.generated.resources.client_product_recurring_deposit_account
+import kpt.feature.client.generated.resources.client_profile_recurring_deposit_account_title
+import kpt.feature.client.generated.resources.client_savings_item
+import kpt.feature.client.generated.resources.client_savings_not_available
+import kpt.feature.client.generated.resources.client_savings_pending_approval
+import kpt.feature.client.generated.resources.feature_client_dialog_action_ok
+import kpt.feature.client.generated.resources.feature_recurring_account_empty_list_message
+import kpt.feature.client.generated.resources.filter
+import kpt.feature.client.generated.resources.search
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -61,7 +61,8 @@ import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun RecurringDepositAccountScreen(
@@ -151,7 +152,7 @@ internal fun RecurringDepositAccountContent(
             false -> {
                 Column(
                     Modifier.fillMaxSize()
-                        .padding(horizontal = KptTheme.spacing.md),
+                        .padding(horizontal = LocalKptSpacing.current.md),
                 ) {
                     val notAvailableText = stringResource(Res.string.client_savings_not_available)
                     RecurringDepositAccountHeader(
@@ -184,7 +185,7 @@ internal fun RecurringDepositAccountContent(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.lg))
+                    Spacer(modifier = Modifier.height(LocalKptSpacing.current.lg))
 
                     if (state.recurringDepositAccounts.isEmpty()) {
                         MifosEmptyCard(
@@ -244,7 +245,7 @@ internal fun RecurringDepositAccountContent(
                                     }
                                 }
 
-                                Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+                                Spacer(modifier = Modifier.height(LocalKptSpacing.current.sm))
                             }
                         }
                     }

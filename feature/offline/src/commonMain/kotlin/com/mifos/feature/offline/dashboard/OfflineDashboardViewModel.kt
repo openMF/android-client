@@ -9,12 +9,12 @@
  */
 package com.mifos.feature.offline.dashboard
 
-import androidclient.feature.offline.generated.resources.Res
-import androidclient.feature.offline.generated.resources.feature_offline_sync_centers
-import androidclient.feature.offline.generated.resources.feature_offline_sync_clients
-import androidclient.feature.offline.generated.resources.feature_offline_sync_groups
-import androidclient.feature.offline.generated.resources.feature_offline_sync_loanRepayments
-import androidclient.feature.offline.generated.resources.feature_offline_sync_savingsAccountTransactions
+import kpt.feature.offline.generated.resources.Res
+import kpt.feature.offline.generated.resources.feature_offline_sync_centers
+import kpt.feature.offline.generated.resources.feature_offline_sync_clients
+import kpt.feature.offline.generated.resources.feature_offline_sync_groups
+import kpt.feature.offline.generated.resources.feature_offline_sync_loanRepayments
+import kpt.feature.offline.generated.resources.feature_offline_sync_savingsAccountTransactions
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState

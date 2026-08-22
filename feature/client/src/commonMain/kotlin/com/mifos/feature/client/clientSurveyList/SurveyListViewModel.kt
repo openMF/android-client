@@ -9,10 +9,10 @@
  */
 package com.mifos.feature.client.clientSurveyList
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_datatable
-import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_surveys_list
-import androidclient.feature.client.generated.resources.feature_client_failed_to_load_db_question_data
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_client_failed_to_fetch_datatable
+import kpt.feature.client.generated.resources.feature_client_failed_to_fetch_surveys_list
+import kpt.feature.client.generated.resources.feature_client_failed_to_load_db_question_data
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

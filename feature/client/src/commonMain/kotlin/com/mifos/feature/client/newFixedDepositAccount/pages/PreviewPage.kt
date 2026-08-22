@@ -9,48 +9,48 @@
  */
 package com.mifos.feature.client.newFixedDepositAccount.pages
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.action_view
-import androidclient.feature.client.generated.resources.client_identifier_btn_view
-import androidclient.feature.client.generated.resources.feature_client_external_id
-import androidclient.feature.client.generated.resources.feature_fixed_days_in_year
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_deposit_amount
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_deposit_period
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_interest_description
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_interest_empty_date
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_interest_end_date
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_interest_grouping_by_amount
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_interest_interest_rate_chart
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_interest_name
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_interest_no
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_interest_no_interest_chart
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_interest_valid_from_date
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_interest_yes
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_apply_penal_interest
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_interest_transfer
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_investing_account
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_linked_saving_account_field
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_lock_in_period
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_maturity_instructions
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_maximum_deposit_term
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_minimum_deposit_term
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_penal_interest
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_period
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_thereafter_in_multiples
-import androidclient.feature.client.generated.resources.feature_fixed_interest_calculated_using
-import androidclient.feature.client.generated.resources.feature_fixed_interest_compounding_period
-import androidclient.feature.client.generated.resources.feature_fixed_interest_posting_period
-import androidclient.feature.client.generated.resources.feature_share_account_back
-import androidclient.feature.client.generated.resources.feature_share_account_charge_active_charge
-import androidclient.feature.client.generated.resources.feature_share_account_submit
-import androidclient.feature.client.generated.resources.field_officer
-import androidclient.feature.client.generated.resources.one_year_fixed_deposit
-import androidclient.feature.client.generated.resources.step_charges
-import androidclient.feature.client.generated.resources.step_details
-import androidclient.feature.client.generated.resources.step_interest
-import androidclient.feature.client.generated.resources.step_settings
-import androidclient.feature.client.generated.resources.step_terms
-import androidclient.feature.client.generated.resources.submission_on
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.action_view
+import kpt.feature.client.generated.resources.client_identifier_btn_view
+import kpt.feature.client.generated.resources.feature_client_external_id
+import kpt.feature.client.generated.resources.feature_fixed_days_in_year
+import kpt.feature.client.generated.resources.feature_fixed_deposit_deposit_amount
+import kpt.feature.client.generated.resources.feature_fixed_deposit_deposit_period
+import kpt.feature.client.generated.resources.feature_fixed_deposit_interest_description
+import kpt.feature.client.generated.resources.feature_fixed_deposit_interest_empty_date
+import kpt.feature.client.generated.resources.feature_fixed_deposit_interest_end_date
+import kpt.feature.client.generated.resources.feature_fixed_deposit_interest_grouping_by_amount
+import kpt.feature.client.generated.resources.feature_fixed_deposit_interest_interest_rate_chart
+import kpt.feature.client.generated.resources.feature_fixed_deposit_interest_name
+import kpt.feature.client.generated.resources.feature_fixed_deposit_interest_no
+import kpt.feature.client.generated.resources.feature_fixed_deposit_interest_no_interest_chart
+import kpt.feature.client.generated.resources.feature_fixed_deposit_interest_valid_from_date
+import kpt.feature.client.generated.resources.feature_fixed_deposit_interest_yes
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_apply_penal_interest
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_interest_transfer
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_investing_account
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_linked_saving_account_field
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_lock_in_period
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_maturity_instructions
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_maximum_deposit_term
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_minimum_deposit_term
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_penal_interest
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_period
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_thereafter_in_multiples
+import kpt.feature.client.generated.resources.feature_fixed_interest_calculated_using
+import kpt.feature.client.generated.resources.feature_fixed_interest_compounding_period
+import kpt.feature.client.generated.resources.feature_fixed_interest_posting_period
+import kpt.feature.client.generated.resources.feature_share_account_back
+import kpt.feature.client.generated.resources.feature_share_account_charge_active_charge
+import kpt.feature.client.generated.resources.feature_share_account_submit
+import kpt.feature.client.generated.resources.field_officer
+import kpt.feature.client.generated.resources.one_year_fixed_deposit
+import kpt.feature.client.generated.resources.step_charges
+import kpt.feature.client.generated.resources.step_details
+import kpt.feature.client.generated.resources.step_interest
+import kpt.feature.client.generated.resources.step_settings
+import kpt.feature.client.generated.resources.step_terms
+import kpt.feature.client.generated.resources.submission_on
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -71,7 +71,8 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountAction
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountState
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun PreviewPage(
@@ -80,7 +81,7 @@ fun PreviewPage(
     onAction: (NewFixedDepositAccountAction) -> Unit,
 ) {
     Column(
-        Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md),
+        Modifier.fillMaxSize().padding(bottom = LocalKptSpacing.current.md),
     ) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
@@ -128,7 +129,7 @@ fun PreviewPage(
                 text = "${state.fixedDepositAccountCharges.addedCharges.size} ${stringResource(Res.string.feature_share_account_charge_active_charge)}",
                 btnEnabled = state.fixedDepositAccountCharges.addedCharges.isNotEmpty(),
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
         }
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.feature_share_account_back),
@@ -160,7 +161,7 @@ fun DetailsCard(state: NewFixedDepositAccountState) {
                 ),
             Res.string.feature_client_external_id to state.fixedDepositAccountDetail.externalId,
         ),
-        verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
+        verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.sm),
     )
 }
 
@@ -195,7 +196,7 @@ fun TermsCard(state: NewFixedDepositAccountState) {
                 ""
             },
         ),
-        verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
+        verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.sm),
     )
 }
 
@@ -260,7 +261,7 @@ fun SettingCard(state: NewFixedDepositAccountState) {
                 ""
             },
         ),
-        verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
+        verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.sm),
     )
 }
 
@@ -292,10 +293,10 @@ fun InterestRate(
                     stringResource(Res.string.feature_fixed_deposit_interest_no)
                 },
             ),
-            verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
+            verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.sm),
         )
 
-        Spacer(Modifier.height(KptTheme.spacing.sm))
+        Spacer(Modifier.height(LocalKptSpacing.current.sm))
 
         MifosRowWithTextAndButton(
             onBtnClick = {

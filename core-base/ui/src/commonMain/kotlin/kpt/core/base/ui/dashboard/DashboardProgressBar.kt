@@ -22,6 +22,7 @@ import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import kpt.core.base.designsystem.component.progress.KptProgress
 import kpt.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 /**
  * Top-of-dashboard progress strip showing "X of Y cards loaded".
@@ -43,7 +44,7 @@ fun DashboardProgressBar(
     // Hide when there's nothing to show or everything's already loaded.
     if (state.total == 0 || state.loaded >= state.total) return
 
-    val spacing = KptTheme.spacing
+    val spacing = LocalKptSpacing.current
     val progressFraction = state.loaded.toFloat() / state.total.toFloat()
     val label = "${state.loaded} of ${state.total} loaded"
 

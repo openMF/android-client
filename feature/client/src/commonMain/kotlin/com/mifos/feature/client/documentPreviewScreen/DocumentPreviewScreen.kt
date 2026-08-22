@@ -9,11 +9,11 @@
  */
 package com.mifos.feature.client.documentPreviewScreen
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.action_go_back
-import androidclient.feature.client.generated.resources.btn_back
-import androidclient.feature.client.generated.resources.btn_submit
-import androidclient.feature.client.generated.resources.btn_update_new
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.action_go_back
+import kpt.feature.client.generated.resources.btn_back
+import kpt.feature.client.generated.resources.btn_submit
+import kpt.feature.client.generated.resources.btn_update_new
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -50,7 +50,12 @@ import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.client.EntityDocumentState
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptShapes
+import kpt.core.base.designsystem.theme.LocalKptSpacing
+import kpt.core.base.designsystem.theme.LocalKptElevation
 
 @Composable
 fun DocumentPreviewScreen(
@@ -81,7 +86,7 @@ private fun ViewDocumentContent(
 ) {
     Column(
         modifier = modifier
-            .padding(KptTheme.spacing.md)
+            .padding(LocalKptSpacing.current.md)
             .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -107,14 +112,14 @@ private fun ViewDocumentContent(
                     }
                 },
                 colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = KptTheme.colorScheme.onPrimary,
-                    contentColor = KptTheme.colorScheme.primary,
+                    containerColor = LocalKptColors.current.onPrimary,
+                    contentColor = LocalKptColors.current.primary,
                 ),
                 border = BorderStroke(
                     DesignToken.strokes.thin,
-                    KptTheme.colorScheme.secondaryContainer,
+                    LocalKptColors.current.secondaryContainer,
                 ),
-                shape = KptTheme.shapes.small,
+                shape = LocalKptShapes.current.small,
                 modifier = Modifier
                     .height(DesignToken.sizes.iconExtraLarge)
                     .weight(1f),
@@ -122,10 +127,10 @@ private fun ViewDocumentContent(
                 Text(
                     stringResource(Res.string.btn_back),
                     fontFamily = FontFamily.SansSerif,
-                    style = KptTheme.typography.labelLarge,
+                    style = LocalKptTypography.current.labelLarge,
                 )
             }
-            Spacer(modifier = Modifier.width(KptTheme.spacing.sm))
+            Spacer(modifier = Modifier.width(LocalKptSpacing.current.sm))
             MifosOutlinedButton(
                 onClick = {
                     if (state.step == EntityDocumentState.Step.PREVIEW) {
@@ -135,14 +140,14 @@ private fun ViewDocumentContent(
                     }
                 },
                 colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = KptTheme.colorScheme.primary,
-                    contentColor = KptTheme.colorScheme.onPrimary,
+                    containerColor = LocalKptColors.current.primary,
+                    contentColor = LocalKptColors.current.onPrimary,
                 ),
                 border = BorderStroke(
                     DesignToken.strokes.thin,
-                    KptTheme.colorScheme.secondaryContainer,
+                    LocalKptColors.current.secondaryContainer,
                 ),
-                shape = KptTheme.shapes.small,
+                shape = LocalKptShapes.current.small,
                 enabled = state.step == EntityDocumentState.Step.PREVIEW ||
                     state.step == EntityDocumentState.Step.UPDATE_PREVIEW,
                 modifier = Modifier
@@ -156,7 +161,7 @@ private fun ViewDocumentContent(
                         stringResource(Res.string.btn_submit)
                     },
                     fontFamily = FontFamily.SansSerif,
-                    style = KptTheme.typography.labelLarge,
+                    style = LocalKptTypography.current.labelLarge,
                 )
             }
         }
@@ -212,9 +217,9 @@ private fun ViewDocumentsScreenContent(
 ) {
     MifosCard(
         modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = KptTheme.colorScheme.onPrimary),
-        elevation = KptTheme.elevation.level0,
-        borderStroke = BorderStroke(DesignToken.strokes.thin, KptTheme.colorScheme.secondaryContainer),
+        colors = CardDefaults.cardColors(containerColor = LocalKptColors.current.onPrimary),
+        elevation = LocalKptElevation.current.level0,
+        borderStroke = BorderStroke(DesignToken.strokes.thin, LocalKptColors.current.secondaryContainer),
     ) {
         if (state.dialogState != null) {
             DocumentsPreviewScreenDialog(

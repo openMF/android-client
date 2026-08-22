@@ -11,26 +11,20 @@ package com.mifos.room.entities.collectionsheet
 
 import com.mifos.core.model.objects.collectionsheets.AttendanceTypeOption
 import com.mifos.core.model.objects.collectionsheets.LoanCollectionSheet
-import com.mifos.core.model.utils.IgnoredOnParcel
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Created by Tarun on 06-07-2017.
  */
-@Parcelize
 @Serializable
 data class ClientCollectionSheet(
     var clientId: Int = 0,
 
     var clientName: String? = null,
 
-    @IgnoredOnParcel
     var loans: ArrayList<LoanCollectionSheet>? = null,
 
-    @IgnoredOnParcel
     var attendanceType: AttendanceTypeOption? = null,
 
     var savings: ArrayList<SavingsCollectionSheet> = ArrayList(),
-) : Parcelable
+)

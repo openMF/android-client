@@ -9,14 +9,14 @@
  */
 package com.mifos.feature.loan.loanAccountProfile
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_profile_action_approve
-import androidclient.feature.loan.generated.resources.feature_loan_profile_action_repayment
-import androidclient.feature.loan.generated.resources.feature_loan_profile_action_transfer
-import androidclient.feature.loan.generated.resources.feature_loan_profile_action_view
-import androidclient.feature.loan.generated.resources.feature_loan_profile_error_details_not_found
-import androidclient.feature.loan.generated.resources.feature_loan_profile_error_network_not_available
-import androidclient.feature.loan.generated.resources.feature_loan_profile_failed_to_load_loan
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_profile_action_approve
+import kpt.feature.loan.generated.resources.feature_loan_profile_action_repayment
+import kpt.feature.loan.generated.resources.feature_loan_profile_action_transfer
+import kpt.feature.loan.generated.resources.feature_loan_profile_action_view
+import kpt.feature.loan.generated.resources.feature_loan_profile_error_details_not_found
+import kpt.feature.loan.generated.resources.feature_loan_profile_error_network_not_available
+import kpt.feature.loan.generated.resources.feature_loan_profile_failed_to_load_loan
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -24,7 +24,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.loan.LoanAccountSummaryRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.feature.loan.loanAccountProfile.LoanAccountEvent.NavigateToDetail
 import com.mifos.feature.loan.loanAccountProfile.LoanAccountState.DialogState.Error
 import com.mifos.feature.loan.loanAccountProfile.components.LoanAccountProfileActionItem

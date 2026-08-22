@@ -9,15 +9,15 @@
  */
 package com.mifos.feature.search
 
-import androidclient.feature.search.generated.resources.Res
-import androidclient.feature.search.generated.resources.feature_search_filter_options_clients_label
-import androidclient.feature.search.generated.resources.feature_search_filter_options_clients_value
-import androidclient.feature.search.generated.resources.feature_search_filter_options_groups_label
-import androidclient.feature.search.generated.resources.feature_search_filter_options_groups_value
-import androidclient.feature.search.generated.resources.feature_search_filter_options_loans_label
-import androidclient.feature.search.generated.resources.feature_search_filter_options_loans_value
-import androidclient.feature.search.generated.resources.feature_search_filter_options_savings_label
-import androidclient.feature.search.generated.resources.feature_search_filter_options_savings_value
+import kpt.feature.search.generated.resources.Res
+import kpt.feature.search.generated.resources.feature_search_filter_options_clients_label
+import kpt.feature.search.generated.resources.feature_search_filter_options_clients_value
+import kpt.feature.search.generated.resources.feature_search_filter_options_groups_label
+import kpt.feature.search.generated.resources.feature_search_filter_options_groups_value
+import kpt.feature.search.generated.resources.feature_search_filter_options_loans_label
+import kpt.feature.search.generated.resources.feature_search_filter_options_loans_value
+import kpt.feature.search.generated.resources.feature_search_filter_options_savings_label
+import kpt.feature.search.generated.resources.feature_search_filter_options_savings_value
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

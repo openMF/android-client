@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.PinPointClientRepository
 import com.mifos.core.model.objects.clients.ClientAddressRequest
 import com.mifos.core.model.objects.clients.ClientAddressResponse
@@ -25,9 +23,9 @@ class PinPointClientRepositoryImp(
     private val dataManagerClient: DataManagerClient,
 ) : PinPointClientRepository {
 
-    override fun getClientPinpointLocations(clientId: Int): Flow<DataState<List<ClientAddressResponse>>> {
+    override fun getClientPinpointLocations(clientId: Int): Flow<List<ClientAddressResponse>> {
         return dataManagerClient.getClientPinpointLocations(clientId)
-            .asDataStateFlow()
+            
     }
 
     override suspend fun addClientPinpointLocation(

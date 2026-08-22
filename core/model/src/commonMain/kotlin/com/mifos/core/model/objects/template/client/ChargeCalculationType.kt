@@ -9,20 +9,17 @@
  */
 package com.mifos.core.model.objects.template.client
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Created by mayankjindal on 13/12/16.
  */
 @Serializable
-@Parcelize
 data class ChargeCalculationType(
     val id: Int,
     val code: String,
     val value: String,
-) : Parcelable {
+) {
     override fun toString(): String {
         return "ChargeCalculationType{" +
             "id=$id, code='$code', value='$value'}"

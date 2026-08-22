@@ -9,12 +9,10 @@
  */
 package com.mifos.room.entities.accounts.savings
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.basemodel.APIEndPoint
 import kotlinx.serialization.Serializable
-import template.core.base.database.Entity
-import template.core.base.database.PrimaryKey
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 
 @Entity(
     indices = [],
@@ -24,7 +22,6 @@ import template.core.base.database.PrimaryKey
     ignoredColumns = [],
     tableName = "SavingAccountDepositType",
 )
-@Parcelize
 @Serializable
 data class SavingAccountDepositTypeEntity(
     @PrimaryKey(autoGenerate = true)
@@ -33,7 +30,7 @@ data class SavingAccountDepositTypeEntity(
     val code: String? = null,
 
     val value: String? = null,
-) : Parcelable {
+) {
 
     val isRecurring: Boolean
         get() = ServerTypes.RECURRING.id == id

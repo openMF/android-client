@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.collectionsheets.CollectionSheetRequestPayload
 import com.mifos.core.network.GenericResponse
 import com.mifos.room.entities.collectionsheet.CenterDetail
@@ -26,12 +25,12 @@ import kotlinx.coroutines.flow.Flow
  */
 interface GenerateCollectionSheetRepository {
 
-    fun getCentersInOffice(id: Int, params: Map<String, String>): Flow<DataState<List<CenterEntity>>>
+    fun getCentersInOffice(id: Int, params: Map<String, String>): Flow<List<CenterEntity>>
 
     fun getGroupsByOffice(
         office: Int,
         params: Map<String, String>,
-    ): Flow<DataState<List<GroupEntity>>>
+    ): Flow<List<GroupEntity>>
 
     suspend fun fetchGroupsAssociatedWithCenter(centerId: Int): CenterWithAssociations
 
@@ -41,7 +40,7 @@ interface GenerateCollectionSheetRepository {
         meetingDate: String?,
         officeId: Int,
         staffId: Int,
-    ): Flow<DataState<List<CenterDetail>>>
+    ): Flow<List<CenterDetail>>
 
     suspend fun fetchProductiveCollectionSheet(
         centerId: Int,

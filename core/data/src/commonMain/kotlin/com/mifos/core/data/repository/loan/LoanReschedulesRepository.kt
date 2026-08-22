@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository.loan
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRejectionRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRequest
@@ -18,9 +17,9 @@ import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleTempl
 import kotlinx.coroutines.flow.Flow
 
 interface LoanReschedulesRepository {
-    fun getLoanReschedules(loanId: Int): Flow<DataState<List<LoanRescheduleResponse>>>
-    fun getLoanRescheduleTemplate(): Flow<DataState<LoanRescheduleTemplate>>
-    suspend fun submitLoanReschedule(request: LoanRescheduleRequest): DataState<Unit>
-    suspend fun approveReschedule(rescheduleId: Int, request: LoanRescheduleApprovalRequest): DataState<Unit>
-    suspend fun deleteReschedule(rescheduleId: Int, request: LoanRescheduleRejectionRequest): DataState<Unit>
+    fun getLoanReschedules(loanId: Int): Flow<List<LoanRescheduleResponse>>
+    fun getLoanRescheduleTemplate(): Flow<LoanRescheduleTemplate>
+    suspend fun submitLoanReschedule(request: LoanRescheduleRequest): Unit
+    suspend fun approveReschedule(rescheduleId: Int, request: LoanRescheduleApprovalRequest): Unit
+    suspend fun deleteReschedule(rescheduleId: Int, request: LoanRescheduleRejectionRequest): Unit
 }

@@ -115,13 +115,13 @@ fun KptMaterialTheme(
 private fun KptMaterialThemeUsageExample() {
     KptMaterialTheme {
         // All Material3 components will use KptTheme values
-        MaterialTheme.colorScheme.primary // = KptTheme.colorScheme.primary
-        MaterialTheme.typography.titleLarge // = KptTheme.typography.titleLarge
-        MaterialTheme.shapes.medium // = KptTheme.shapes.medium
+        MaterialTheme.colorScheme.primary // = LocalKptColors.current.primary
+        MaterialTheme.typography.titleLarge // = LocalKptTypography.current.titleLarge
+        MaterialTheme.shapes.medium // = LocalKptShapes.current.medium
 
         // KptTheme values are also available directly
-        KptTheme.spacing.md
-        KptTheme.elevation.level2
+        LocalKptSpacing.current.md
+        LocalKptElevation.current.level2
     }
 }
 

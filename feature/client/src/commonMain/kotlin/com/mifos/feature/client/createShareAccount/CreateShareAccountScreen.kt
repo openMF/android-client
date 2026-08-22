@@ -9,18 +9,18 @@
  */
 package com.mifos.feature.client.createShareAccount
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_share_account_back
-import androidclient.feature.client.generated.resources.feature_share_account_charge_add
-import androidclient.feature.client.generated.resources.feature_share_account_charge_add_new_charge
-import androidclient.feature.client.generated.resources.feature_share_account_charge_btn_add_new
-import androidclient.feature.client.generated.resources.feature_share_account_charge_click_on_add_new
-import androidclient.feature.client.generated.resources.feature_share_account_charge_edit_charge
-import androidclient.feature.client.generated.resources.feature_share_account_charge_view_charges
-import androidclient.feature.client.generated.resources.feature_share_account_charges
-import androidclient.feature.client.generated.resources.feature_share_account_details
-import androidclient.feature.client.generated.resources.feature_share_account_preview
-import androidclient.feature.client.generated.resources.feature_share_account_terms
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_share_account_back
+import kpt.feature.client.generated.resources.feature_share_account_charge_add
+import kpt.feature.client.generated.resources.feature_share_account_charge_add_new_charge
+import kpt.feature.client.generated.resources.feature_share_account_charge_btn_add_new
+import kpt.feature.client.generated.resources.feature_share_account_charge_click_on_add_new
+import kpt.feature.client.generated.resources.feature_share_account_charge_edit_charge
+import kpt.feature.client.generated.resources.feature_share_account_charge_view_charges
+import kpt.feature.client.generated.resources.feature_share_account_charges
+import kpt.feature.client.generated.resources.feature_share_account_details
+import kpt.feature.client.generated.resources.feature_share_account_preview
+import kpt.feature.client.generated.resources.feature_share_account_terms
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -62,7 +62,8 @@ import com.mifos.feature.client.createShareAccount.pages.TermsPage
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun CreateShareAccountScreen(
@@ -282,7 +283,7 @@ private fun ShowChargesDialog(
         },
         content = {
             Column(
-                modifier = Modifier.fillMaxWidth().padding(KptTheme.spacing.md),
+                modifier = Modifier.fillMaxWidth().padding(LocalKptSpacing.current.md),
                 verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
             ) {
                 Text(

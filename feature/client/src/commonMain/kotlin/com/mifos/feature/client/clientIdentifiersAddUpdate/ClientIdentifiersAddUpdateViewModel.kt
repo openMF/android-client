@@ -24,7 +24,7 @@ import com.mifos.core.domain.useCases.GetDocumentsListUseCase
 import com.mifos.core.model.objects.noncoreobjects.DocumentType
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.ui.components.Status
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.core.ui.util.multipartRequestBody
 import io.github.vinceglb.filekit.extension
 import io.github.vinceglb.filekit.name

@@ -9,8 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.SignatureRepository
 import com.mifos.core.network.GenericResponse
 import io.ktor.client.request.forms.MultiPartFormDataContent
@@ -25,7 +23,7 @@ class UpdateSignatureUseCase(
         entityId: Int,
         documentId: Int,
         file: MultiPartFormDataContent,
-    ): Flow<DataState<GenericResponse>> = flow {
+    ): Flow<GenericResponse> = flow {
         emit(repository.updateSignature(entityType, entityId, documentId, file))
-    }.asDataStateFlow()
+    }
 }

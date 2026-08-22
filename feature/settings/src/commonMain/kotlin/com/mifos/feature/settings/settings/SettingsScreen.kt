@@ -9,14 +9,14 @@
  */
 package com.mifos.feature.settings.settings
 
-import androidclient.feature.settings.generated.resources.Res
-import androidclient.feature.settings.generated.resources.feature_settings
-import androidclient.feature.settings.generated.resources.feature_settings_biometrics_registration_error
-import androidclient.feature.settings.generated.resources.feature_settings_change_app_theme
-import androidclient.feature.settings.generated.resources.feature_settings_choose_language
-import androidclient.feature.settings.generated.resources.feature_settings_disable_biometrics
-import androidclient.feature.settings.generated.resources.feature_settings_enable_biometrics
-import androidclient.feature.settings.generated.resources.feature_settings_languages
+import kpt.feature.settings.generated.resources.Res
+import kpt.feature.settings.generated.resources.feature_settings
+import kpt.feature.settings.generated.resources.feature_settings_biometrics_registration_error
+import kpt.feature.settings.generated.resources.feature_settings_change_app_theme
+import kpt.feature.settings.generated.resources.feature_settings_choose_language
+import kpt.feature.settings.generated.resources.feature_settings_disable_biometrics
+import kpt.feature.settings.generated.resources.feature_settings_enable_biometrics
+import kpt.feature.settings.generated.resources.feature_settings_languages
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -61,7 +61,10 @@ import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.mifos.authenticator.biometrics.platformAuthenticationProvider
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun SettingsScreen(
@@ -284,7 +287,7 @@ private fun SettingsCardItem(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(vertical = KptTheme.spacing.md),
+            modifier = Modifier.padding(vertical = LocalKptSpacing.current.md),
         ) {
             icon?.let {
                 Icon(
@@ -301,13 +304,13 @@ private fun SettingsCardItem(
             ) {
                 Text(
                     text = stringResource(title),
-                    style = KptTheme.typography.bodyMedium,
+                    style = LocalKptTypography.current.bodyMedium,
                 )
                 Text(
-                    modifier = Modifier.padding(end = KptTheme.spacing.md),
+                    modifier = Modifier.padding(end = LocalKptSpacing.current.md),
                     text = stringResource(details),
-                    color = KptTheme.colorScheme.onBackground.copy(alpha = 0.8f),
-                    style = KptTheme.typography.bodyMedium,
+                    color = LocalKptColors.current.onBackground.copy(alpha = 0.8f),
+                    style = LocalKptTypography.current.bodyMedium,
                 )
             }
         }

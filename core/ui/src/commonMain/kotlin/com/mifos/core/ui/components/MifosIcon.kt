@@ -9,8 +9,8 @@
  */
 package com.mifos.core.ui.components
 
-import androidclient.core.ui.generated.resources.Res
-import androidclient.core.ui.generated.resources.core_ui_ic_centers_24dp
+import kpt.core.ui.generated.resources.Res
+import kpt.core.ui.generated.resources.core_ui_ic_centers_24dp
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

@@ -9,8 +9,8 @@
  */
 package com.mifos.core.ui.components
 
-import androidclient.core.ui.generated.resources.Res
-import androidclient.core.ui.generated.resources.profile
+import kpt.core.ui.generated.resources.Res
+import kpt.core.ui.generated.resources.profile
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.shape.CircleShape
@@ -26,7 +26,8 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.ui.util.DevicePreview
 import org.jetbrains.compose.resources.painterResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @Composable
 fun MifosUserImage(
@@ -51,7 +52,7 @@ fun MifosUserImage(
             if (hasBorder) {
                 Modifier.border(
                     width = DesignToken.strokes.dp2,
-                    color = KptTheme.colorScheme.primary,
+                    color = LocalKptColors.current.primary,
                     shape = CircleShape,
                 )
             } else {

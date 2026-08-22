@@ -21,7 +21,8 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @Composable
 fun MifosAddressCard(
@@ -60,7 +61,7 @@ fun MifosAddressItem(
         Text(
             text = addressLabel,
             style = MifosTypography.labelSmall,
-            color = KptTheme.colorScheme.secondary,
+            color = LocalKptColors.current.secondary,
         )
         Text(
             text = addressValue,

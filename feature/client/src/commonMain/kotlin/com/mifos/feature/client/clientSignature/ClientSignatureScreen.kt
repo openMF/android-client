@@ -9,20 +9,20 @@
  */
 package com.mifos.feature.client.clientSignature
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.account_number_prefix
-import androidclient.feature.client.generated.resources.arrow_up
-import androidclient.feature.client.generated.resources.cancel
-import androidclient.feature.client.generated.resources.client_signature_delete
-import androidclient.feature.client.generated.resources.client_signature_delete_warning_message
-import androidclient.feature.client.generated.resources.client_signature_draw
-import androidclient.feature.client.generated.resources.client_signature_gallery
-import androidclient.feature.client.generated.resources.client_signature_more
-import androidclient.feature.client.generated.resources.client_signature_not_found
-import androidclient.feature.client.generated.resources.client_signature_upload
-import androidclient.feature.client.generated.resources.client_signature_upload_message
-import androidclient.feature.client.generated.resources.delete_dialog_title
-import androidclient.feature.client.generated.resources.remove
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.account_number_prefix
+import kpt.feature.client.generated.resources.arrow_up
+import kpt.feature.client.generated.resources.cancel
+import kpt.feature.client.generated.resources.client_signature_delete
+import kpt.feature.client.generated.resources.client_signature_delete_warning_message
+import kpt.feature.client.generated.resources.client_signature_draw
+import kpt.feature.client.generated.resources.client_signature_gallery
+import kpt.feature.client.generated.resources.client_signature_more
+import kpt.feature.client.generated.resources.client_signature_not_found
+import kpt.feature.client.generated.resources.client_signature_upload
+import kpt.feature.client.generated.resources.client_signature_upload_message
+import kpt.feature.client.generated.resources.delete_dialog_title
+import kpt.feature.client.generated.resources.remove
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -63,7 +63,9 @@ import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun ClientSignatureScreen(
@@ -128,7 +130,7 @@ fun ClientSignatureDialog(
                     Icon(
                         imageVector = MifosIcons.DeleteDocument,
                         contentDescription = null,
-                        tint = KptTheme.colorScheme.primary,
+                        tint = LocalKptColors.current.primary,
                         modifier = Modifier.size(DesignToken.sizes.iconMedium),
                     )
                 },
@@ -181,7 +183,7 @@ internal fun ClientSignatureContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .padding(horizontal = KptTheme.spacing.md),
+                    .padding(horizontal = LocalKptSpacing.current.md),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Spacer(Modifier.height(DesignToken.padding.largeIncreased))
@@ -194,7 +196,7 @@ internal fun ClientSignatureContent(
                 Text(
                     text = stringResource(Res.string.account_number_prefix, state.accountNo),
                     style = MifosTypography.bodySmall,
-                    color = KptTheme.colorScheme.secondary,
+                    color = LocalKptColors.current.secondary,
                 )
                 Spacer(Modifier.height(DesignToken.padding.largeIncreased))
 
@@ -203,11 +205,11 @@ internal fun ClientSignatureContent(
                     emptyMessage = stringResource(Res.string.client_signature_not_found),
                 )
                 if (state.signatureId == null) {
-                    Spacer(Modifier.height(KptTheme.spacing.md))
+                    Spacer(Modifier.height(LocalKptSpacing.current.md))
                     Text(
                         text = stringResource(Res.string.client_signature_upload_message),
                         style = MifosTypography.bodySmall,
-                        color = KptTheme.colorScheme.secondary,
+                        color = LocalKptColors.current.secondary,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -231,7 +233,7 @@ internal fun ClientSignatureContent(
                     },
                     modifier = Modifier.fillMaxWidth(),
                 )
-                Spacer(Modifier.height(KptTheme.spacing.md))
+                Spacer(Modifier.height(LocalKptSpacing.current.md))
                 MifosTextButton(
                     text = {
                         Text(
@@ -268,9 +270,9 @@ private fun ShowUploadOption(
         Row(
             modifier = Modifier
                 .padding(
-                    start = KptTheme.spacing.md,
-                    end = KptTheme.spacing.md,
-                    bottom = KptTheme.spacing.md,
+                    start = LocalKptSpacing.current.md,
+                    end = LocalKptSpacing.current.md,
+                    bottom = LocalKptSpacing.current.md,
                 ),
         ) {
             MifosBottomSheetOptionItem(

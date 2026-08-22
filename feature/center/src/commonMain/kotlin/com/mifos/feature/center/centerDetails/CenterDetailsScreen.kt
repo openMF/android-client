@@ -9,25 +9,25 @@
  */
 package com.mifos.feature.center.centerDetails
 
-import androidclient.feature.center.generated.resources.Res
-import androidclient.feature.center.generated.resources.feature_center_activate_center
-import androidclient.feature.center.generated.resources.feature_center_activation_date
-import androidclient.feature.center.generated.resources.feature_center_active_client
-import androidclient.feature.center.generated.resources.feature_center_active_client_borrowers
-import androidclient.feature.center.generated.resources.feature_center_active_client_loans
-import androidclient.feature.center.generated.resources.feature_center_active_group_borrowers
-import androidclient.feature.center.generated.resources.feature_center_active_group_loan
-import androidclient.feature.center.generated.resources.feature_center_active_overdue_group_loans
-import androidclient.feature.center.generated.resources.feature_center_add_savings_account
-import androidclient.feature.center.generated.resources.feature_center_center_details
-import androidclient.feature.center.generated.resources.feature_center_error_loading_centers
-import androidclient.feature.center.generated.resources.feature_center_group_list
-import androidclient.feature.center.generated.resources.feature_center_meeting_frequency
-import androidclient.feature.center.generated.resources.feature_center_next_meeting_on
-import androidclient.feature.center.generated.resources.feature_center_no_staff
-import androidclient.feature.center.generated.resources.feature_center_staff_name
-import androidclient.feature.center.generated.resources.feature_center_summary_info
-import androidclient.feature.center.generated.resources.feature_center_unassigned
+import kpt.feature.center.generated.resources.Res
+import kpt.feature.center.generated.resources.feature_center_activate_center
+import kpt.feature.center.generated.resources.feature_center_activation_date
+import kpt.feature.center.generated.resources.feature_center_active_client
+import kpt.feature.center.generated.resources.feature_center_active_client_borrowers
+import kpt.feature.center.generated.resources.feature_center_active_client_loans
+import kpt.feature.center.generated.resources.feature_center_active_group_borrowers
+import kpt.feature.center.generated.resources.feature_center_active_group_loan
+import kpt.feature.center.generated.resources.feature_center_active_overdue_group_loans
+import kpt.feature.center.generated.resources.feature_center_add_savings_account
+import kpt.feature.center.generated.resources.feature_center_center_details
+import kpt.feature.center.generated.resources.feature_center_error_loading_centers
+import kpt.feature.center.generated.resources.feature_center_group_list
+import kpt.feature.center.generated.resources.feature_center_meeting_frequency
+import kpt.feature.center.generated.resources.feature_center_next_meeting_on
+import kpt.feature.center.generated.resources.feature_center_no_staff
+import kpt.feature.center.generated.resources.feature_center_staff_name
+import kpt.feature.center.generated.resources.feature_center_summary_info
+import kpt.feature.center.generated.resources.feature_center_unassigned
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -70,7 +70,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun CenterDetailsScreen(
@@ -150,11 +152,11 @@ internal fun CenterDetailsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(DesignToken.spacing.dp44)
-                        .padding(horizontal = KptTheme.spacing.md),
+                        .padding(horizontal = LocalKptSpacing.current.md),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_center_activate_center),
-                        style = KptTheme.typography.bodyMedium,
+                        style = LocalKptTypography.current.bodyMedium,
                     )
                 }
             }
@@ -200,9 +202,9 @@ private fun CenterDetailsContent(
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(KptTheme.spacing.md),
+                    .padding(LocalKptSpacing.current.md),
                 text = it,
-                style = KptTheme.typography.titleMedium,
+                style = LocalKptTypography.current.titleMedium,
                 textAlign = TextAlign.Center,
             )
         }
@@ -241,15 +243,15 @@ private fun CenterDetailsContent(
             },
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
-        HorizontalDivider(modifier = Modifier.padding(horizontal = KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
+        HorizontalDivider(modifier = Modifier.padding(horizontal = LocalKptSpacing.current.md))
 
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(KptTheme.spacing.md),
+                .padding(LocalKptSpacing.current.md),
             text = stringResource(Res.string.feature_center_summary_info),
-            style = KptTheme.typography.titleMedium,
+            style = LocalKptTypography.current.titleMedium,
             textAlign = TextAlign.Center,
         )
 
@@ -295,7 +297,7 @@ private fun CenterDetailsContent(
 private fun MifosCenterDetailsText(icon: ImageVector, field: String, value: String) {
     Row(
         modifier = Modifier
-            .padding(horizontal = KptTheme.spacing.md, vertical = KptTheme.spacing.sm)
+            .padding(horizontal = LocalKptSpacing.current.md, vertical = LocalKptSpacing.current.sm)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -307,14 +309,14 @@ private fun MifosCenterDetailsText(icon: ImageVector, field: String, value: Stri
         Text(
             modifier = Modifier
                 .weight(1f)
-                .padding(start = KptTheme.spacing.md),
+                .padding(start = LocalKptSpacing.current.md),
             text = field,
-            style = KptTheme.typography.bodyLarge,
+            style = LocalKptTypography.current.bodyLarge,
             textAlign = TextAlign.Start,
         )
         Text(
             text = value,
-            style = KptTheme.typography.bodyLarge,
+            style = LocalKptTypography.current.bodyLarge,
             textAlign = TextAlign.Start,
         )
     }

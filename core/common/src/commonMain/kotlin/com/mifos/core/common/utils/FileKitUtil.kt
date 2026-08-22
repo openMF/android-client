@@ -11,7 +11,6 @@ package com.mifos.core.common.utils
 
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.PlatformFile
-import io.github.vinceglb.filekit.dialogs.FileKitMode
 import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.openFilePicker
 import kotlinx.coroutines.flow.Flow
@@ -24,25 +23,24 @@ import kotlinx.coroutines.flow.flow
  *  Use PlatformFile object returned by pickers directly.
  */
 object FileKitUtil {
+    // offline-first-template-migration 01-template-adoption T-AC3-merge: FileKit 0.14.2 (bumped
+    // via the T7 catalog 3-way merge) dropped `openFilePicker`'s `title` param (dialog copy now
+    // comes from `FileKitDialogSettings`, not a per-call title) and moved `mode` to a separate
+    // multi-mode overload — the single-selection overload used here defaults to Single implicitly.
+    // `dialogTitle` had no other purpose, so it's removed from both signatures + their 2 call
+    // sites (DocumentSelectAndUploadRepositoryImpl.kt) rather than kept as a dead parameter.
     fun pickFile(
-        dialogTitle: String = "",
         extensions: Set<String> = setOf("pdf", "jpeg", "jpg", "png"),
     ): Flow<DataState<PlatformFile?>> = flow {
         val file = FileKit.openFilePicker(
             type = FileKitType.File(extensions),
-            mode = FileKitMode.Single,
-            title = dialogTitle,
         )
         emit(file)
     }.asDataStateFlow()
 
-    fun pickImage(
-        dialogTitle: String = "",
-    ): Flow<DataState<PlatformFile?>> = flow {
+    fun pickImage(): Flow<DataState<PlatformFile?>> = flow {
         val image = FileKit.openFilePicker(
             type = FileKitType.Image,
-            mode = FileKitMode.Single,
-            title = dialogTitle,
         )
         emit(image)
     }.asDataStateFlow()

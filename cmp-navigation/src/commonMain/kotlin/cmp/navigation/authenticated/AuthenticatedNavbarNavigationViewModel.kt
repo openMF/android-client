@@ -12,7 +12,7 @@ package cmp.navigation.authenticated
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.model.objects.searchrecord.RecordType
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn

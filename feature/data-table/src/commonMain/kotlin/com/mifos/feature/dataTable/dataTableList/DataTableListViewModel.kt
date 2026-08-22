@@ -11,11 +11,11 @@ package com.mifos.feature.dataTable.dataTableList
 
 import FormSpinnerDTO
 import FormWidgetDTO
-import androidclient.feature.data_table.generated.resources.Res
-import androidclient.feature.data_table.generated.resources.feature_data_table_generic_failure_message
-import androidclient.feature.data_table.generated.resources.feature_data_table_loan_creation_success
-import androidclient.feature.data_table.generated.resources.feature_data_table_something_went_wrong
-import androidclient.feature.data_table.generated.resources.feature_data_table_waiting_for_checker_approval
+import kpt.feature.data_table.generated.resources.Res
+import kpt.feature.data_table.generated.resources.feature_data_table_generic_failure_message
+import kpt.feature.data_table.generated.resources.feature_data_table_loan_creation_success
+import kpt.feature.data_table.generated.resources.feature_data_table_something_went_wrong
+import kpt.feature.data_table.generated.resources.feature_data_table_waiting_for_checker_approval
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

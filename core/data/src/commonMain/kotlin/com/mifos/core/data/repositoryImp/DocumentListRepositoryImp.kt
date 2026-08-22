@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.core.model.objects.noncoreobjects.Document
 import com.mifos.core.network.GenericResponse
@@ -25,17 +23,17 @@ class DocumentListRepositoryImp(
     private val dataManagerDocument: DataManagerDocument,
 ) : DocumentListRepository {
 
-    override fun getDocumentsList(entityType: String, entityId: Int): Flow<DataState<List<Document>>> {
+    override fun getDocumentsList(entityType: String, entityId: Int): Flow<List<Document>> {
         return dataManagerDocument.getDocumentsList(entityType, entityId)
-            .asDataStateFlow()
+            
     }
 
     override fun downloadDocument(
         entityType: String,
         entityId: Int,
         documentId: Int,
-    ): Flow<DataState<HttpResponse>> {
-        return dataManagerDocument.downloadDocument(entityType, entityId, documentId).asDataStateFlow()
+    ): Flow<HttpResponse> {
+        return dataManagerDocument.downloadDocument(entityType, entityId, documentId)
     }
 
     override suspend fun removeDocument(

@@ -26,14 +26,15 @@ import androidx.compose.ui.util.fastForEach
 import androidx.compose.ui.util.fastMap
 import androidx.compose.ui.util.fastMaxBy
 import kpt.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.math.min
 
 @Composable
 fun KptGrid(
     modifier: Modifier = Modifier,
     configuration: GridConfiguration = GridConfiguration(
-        spacing = KptTheme.spacing.md,
-        horizontalPadding = KptTheme.spacing.md,
+        spacing = LocalKptSpacing.current.md,
+        horizontalPadding = LocalKptSpacing.current.md,
     ),
     content: @Composable GridScope.() -> Unit,
 ) {

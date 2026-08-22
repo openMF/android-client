@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp.loan
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.loan.LoanAccountRepository
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.model.objects.organisations.LoanProducts
@@ -27,27 +25,27 @@ class LoanAccountRepositoryImp(
     private val dataManagerLoan: DataManagerLoan,
 ) : LoanAccountRepository {
 
-    override fun allLoans(): Flow<DataState<List<LoanProducts>>> {
-        return dataManagerLoan.allLoans.asDataStateFlow()
+    override fun allLoans(): Flow<List<LoanProducts>> {
+        return dataManagerLoan.allLoans
     }
 
     override fun getLoansAccountTemplate(
         clientId: Int,
         productId: Int,
-    ): Flow<DataState<LoanTemplate>> {
+    ): Flow<LoanTemplate> {
         return dataManagerLoan.getLoansAccountTemplate(clientId, productId)
-            .asDataStateFlow()
+            
     }
 
-    override fun createLoansAccount(loansPayload: LoansPayload): Flow<DataState<HttpResponse>> {
+    override fun createLoansAccount(loansPayload: LoansPayload): Flow<HttpResponse> {
         return dataManagerLoan.createLoansAccount(loansPayload)
-            .asDataStateFlow()
+            
     }
 
     override fun calculateLoanSchedule(
         loansPayload: LoansPayload,
-    ): Flow<DataState<RepaymentSchedule>> {
+    ): Flow<RepaymentSchedule> {
         return dataManagerLoan.calculateLoanSchedule(loansPayload)
-            .asDataStateFlow()
+            
     }
 }

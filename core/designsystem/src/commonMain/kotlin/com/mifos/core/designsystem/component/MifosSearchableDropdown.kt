@@ -29,7 +29,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.ImeAction
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,7 +69,7 @@ fun MifosSearchableDropdown(
                 errorMessage?.let {
                     Text(
                         text = it,
-                        color = KptTheme.colorScheme.error,
+                        color = LocalKptColors.current.error,
                     )
                 }
             },
@@ -83,8 +84,8 @@ fun MifosSearchableDropdown(
             ),
             shape = DesignToken.shapes.medium,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = KptTheme.colorScheme.secondaryContainer,
-                unfocusedBorderColor = KptTheme.colorScheme.secondaryContainer,
+                focusedBorderColor = LocalKptColors.current.secondaryContainer,
+                unfocusedBorderColor = LocalKptColors.current.secondaryContainer,
             ),
             maxLines = 1,
             textStyle = MifosTypography.bodyLarge,

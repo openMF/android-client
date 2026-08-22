@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.SurveySubmitRepository
 import com.mifos.core.model.objects.surveys.Scorecard
 import com.mifos.core.network.datamanager.DataManagerSurveys
@@ -23,8 +21,8 @@ class SurveySubmitRepositoryImp(
     private val dataManagerSurveys: DataManagerSurveys,
 ) : SurveySubmitRepository {
 
-    override fun submitScore(surveyId: Int, scorecardPayload: Scorecard?): Flow<DataState<Scorecard>> {
+    override fun submitScore(surveyId: Int, scorecardPayload: Scorecard?): Flow<Scorecard> {
         return dataManagerSurveys.submitScore(surveyId, scorecardPayload)
-            .asDataStateFlow()
+            
     }
 }

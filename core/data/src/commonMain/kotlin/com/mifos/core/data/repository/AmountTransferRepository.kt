@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRequest
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferResponse
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplate
@@ -40,7 +39,7 @@ interface AmountTransferRepository {
         toOfficeId: Int? = null,
         toClientId: Int? = null,
         toAccountType: Int? = null,
-    ): Flow<DataState<AccountTransferTemplate>>
+    ): Flow<AccountTransferTemplate>
 
     /**
      * Submit an account transfer
@@ -50,5 +49,5 @@ interface AmountTransferRepository {
      */
     suspend fun submitAccountTransfer(
         request: AccountTransferRequest,
-    ): DataState<AccountTransferResponse>
+    ): AccountTransferResponse
 }

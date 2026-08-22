@@ -9,16 +9,16 @@
  */
 package com.mifos.feature.about
 
-import androidclient.feature.about.generated.resources.Res
-import androidclient.feature.about.generated.resources.feature_about_app_version
-import androidclient.feature.about.generated.resources.feature_about_ic_source_code
-import androidclient.feature.about.generated.resources.feature_about_ic_website
-import androidclient.feature.about.generated.resources.feature_about_icon_twitter
-import androidclient.feature.about.generated.resources.feature_about_license
-import androidclient.feature.about.generated.resources.feature_about_license_sub
-import androidclient.feature.about.generated.resources.feature_about_support_github
-import androidclient.feature.about.generated.resources.feature_about_support_twitter
-import androidclient.feature.about.generated.resources.feature_about_website
+import kpt.feature.about.generated.resources.Res
+import kpt.feature.about.generated.resources.feature_about_app_version
+import kpt.feature.about.generated.resources.feature_about_ic_source_code
+import kpt.feature.about.generated.resources.feature_about_ic_website
+import kpt.feature.about.generated.resources.feature_about_icon_twitter
+import kpt.feature.about.generated.resources.feature_about_license
+import kpt.feature.about.generated.resources.feature_about_license_sub
+import kpt.feature.about.generated.resources.feature_about_support_github
+import kpt.feature.about.generated.resources.feature_about_support_twitter
+import kpt.feature.about.generated.resources.feature_about_website
 
 val aboutItems = listOf(
     AboutItem(

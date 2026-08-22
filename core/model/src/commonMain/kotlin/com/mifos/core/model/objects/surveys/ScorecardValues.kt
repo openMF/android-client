@@ -9,14 +9,11 @@
  */
 package com.mifos.core.model.objects.surveys
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Created by Nasim Banu on 28,January,2016.
  */
-@Parcelize
 @Serializable
 data class ScorecardValues(
     var questionId: Int? = null,
@@ -24,4 +21,4 @@ data class ScorecardValues(
     var responseId: Int? = null,
 
     var value: Int? = null,
-) : Parcelable
+)

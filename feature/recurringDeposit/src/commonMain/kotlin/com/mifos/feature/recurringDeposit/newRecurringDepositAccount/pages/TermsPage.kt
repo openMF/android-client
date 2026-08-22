@@ -9,14 +9,14 @@
  */
 package com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages
 
-import androidclient.feature.recurringdeposit.generated.resources.Res
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_back
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_calculation_days_in_year
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_interest_calculation
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_interest_compounding_period
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_interest_posting_period
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_next
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_terms
+import kpt.feature.recurringdeposit.generated.resources.Res
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_back
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_calculation_days_in_year
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_interest_calculation
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_interest_compounding_period
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_interest_posting_period
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_next
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_terms
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,7 +33,8 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountAction
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountState
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun TermsPage(
@@ -41,7 +42,7 @@ fun TermsPage(
     modifier: Modifier = Modifier,
     onAction: (RecurringAccountAction) -> Unit,
 ) {
-    Column(Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
+    Column(Modifier.fillMaxSize().padding(bottom = LocalKptSpacing.current.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -49,7 +50,7 @@ fun TermsPage(
                 text = stringResource(Res.string.feature_recurring_deposit_step_terms),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
             MifosTextFieldDropdown(
                 value = if (state.recurringDepositAccountInterestChart.interestCompoundingPeriodType == -1) {
                     ""
@@ -137,7 +138,7 @@ fun TermsPage(
             secondBtnText = stringResource(Res.string.feature_recurring_deposit_next),
             onFirstBtnClick = { onAction(RecurringAccountAction.OnBackPress) },
             onSecondBtnClick = { onAction(RecurringAccountAction.OnNextPress) },
-            modifier = Modifier.padding(top = KptTheme.spacing.sm),
+            modifier = Modifier.padding(top = LocalKptSpacing.current.sm),
         )
     }
 }

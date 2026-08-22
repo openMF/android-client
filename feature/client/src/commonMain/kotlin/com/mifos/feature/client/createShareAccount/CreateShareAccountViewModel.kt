@@ -9,9 +9,9 @@
  */
 package com.mifos.feature.client.createShareAccount
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_error_network_not_available
-import androidclient.feature.client.generated.resources.feature_share_account_created_successfully
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_client_error_network_not_available
+import kpt.feature.client.generated.resources.feature_share_account_created_successfully
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -26,7 +26,7 @@ import com.mifos.core.network.model.share.FrequencyTypeOption
 import com.mifos.core.network.model.share.ProductOption
 import com.mifos.core.network.model.share.SavingsAccountOption
 import com.mifos.core.network.model.share.ShareAccountPayload
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.core.ui.util.TextFieldsValidator
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update

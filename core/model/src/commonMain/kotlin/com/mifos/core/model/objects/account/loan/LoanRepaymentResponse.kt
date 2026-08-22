@@ -10,11 +10,8 @@
 package com.mifos.core.model.objects.account.loan
 
 import com.mifos.core.model.objects.Changes
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
-@Parcelize
 @Serializable
 data class LoanRepaymentResponse(
     var officeId: Int? = null,
@@ -26,4 +23,4 @@ data class LoanRepaymentResponse(
     var resourceId: Int? = null,
 
     var changes: Changes? = null,
-) : Parcelable
+)

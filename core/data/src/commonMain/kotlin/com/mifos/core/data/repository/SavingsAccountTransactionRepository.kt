@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
@@ -24,16 +23,16 @@ interface SavingsAccountTransactionRepository {
         type: String,
         savingsAccountId: Int,
         transactionType: String?,
-    ): Flow<DataState<SavingsAccountTransactionTemplateEntity?>>
+    ): Flow<SavingsAccountTransactionTemplateEntity?>
 
     fun processTransaction(
         savingsAccountType: String,
         savingsAccountId: Int,
         transactionType: String?,
         request: SavingsAccountTransactionRequestEntity,
-    ): Flow<DataState<SavingsAccountTransactionResponse?>>
+    ): Flow<SavingsAccountTransactionResponse?>
 
     fun getSavingsAccountTransaction(
         savingAccountId: Int,
-    ): Flow<DataState<SavingsAccountTransactionRequestEntity?>>
+    ): Flow<SavingsAccountTransactionRequestEntity?>
 }

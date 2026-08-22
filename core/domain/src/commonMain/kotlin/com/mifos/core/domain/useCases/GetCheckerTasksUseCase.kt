@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.CheckerInboxRepository
 import com.mifos.core.model.objects.checkerinboxtask.CheckerTask
 import kotlinx.coroutines.flow.Flow
@@ -22,6 +21,6 @@ class GetCheckerTasksUseCase(
         actionName: String? = null,
         entityName: String? = null,
         resourceId: Int? = null,
-    ): Flow<DataState<List<CheckerTask>>> =
+    ): Flow<List<CheckerTask>> =
         repository.loadCheckerTasks(actionName, entityName, resourceId)
 }

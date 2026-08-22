@@ -35,7 +35,8 @@ import androidx.compose.ui.unit.sp
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 data class Step(
     val name: String,
@@ -66,7 +67,7 @@ fun MifosStepper(
         Box(
             modifier = Modifier
                 .clip(shape = DesignToken.shapes.medium)
-                .background(KptTheme.colorScheme.primary)
+                .background(LocalKptColors.current.primary)
                 .padding(
                     vertical = DesignToken.padding.largeIncreasedExtra,
                 )
@@ -91,8 +92,8 @@ fun MifosStepper(
                                             .clip(CircleShape)
                                             .background(
                                                 when {
-                                                    index == currentIndex -> KptTheme.colorScheme.onPrimary
-                                                    else -> KptTheme.colorScheme.primaryContainer
+                                                    index == currentIndex -> LocalKptColors.current.onPrimary
+                                                    else -> LocalKptColors.current.primaryContainer
                                                 },
                                             )
                                             .clickable(enabled = index < currentIndex) {
@@ -103,8 +104,8 @@ fun MifosStepper(
                                         Text(
                                             text = (index + 1).toString(),
                                             color = when {
-                                                index == currentIndex -> KptTheme.colorScheme.primary
-                                                else -> KptTheme.colorScheme.onPrimaryContainer
+                                                index == currentIndex -> LocalKptColors.current.primary
+                                                else -> LocalKptColors.current.onPrimaryContainer
                                             },
                                         )
                                     }
@@ -116,7 +117,7 @@ fun MifosStepper(
                                             maxFontSize = 11.sp,
                                         ),
                                         style = MifosTypography.labelSmall.copy(
-                                            color = KptTheme.colorScheme.onPrimary,
+                                            color = LocalKptColors.current.onPrimary,
                                         ),
                                     )
                                 }
@@ -126,7 +127,7 @@ fun MifosStepper(
                                         .padding(vertical = DesignToken.padding.large)
                                         .width(DesignToken.padding.small)
                                         .height(DesignToken.padding.dp1)
-                                        .background(KptTheme.colorScheme.primaryContainer),
+                                        .background(LocalKptColors.current.primaryContainer),
                                 )
                             }
                         }

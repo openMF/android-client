@@ -9,14 +9,11 @@
  */
 package com.mifos.core.model.objects.collectionsheets
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Created by ishankhanna on 16/07/14.
  */
-@Parcelize
 @Serializable
 data class CollectionMeetingCalendar(
     var id: Int = 0,
@@ -68,4 +65,4 @@ data class CollectionMeetingCalendar(
     var lastUpdatedByUserId: Int? = null,
 
     var lastUpdatedByUsername: String? = null,
-) : Parcelable
+)

@@ -13,25 +13,25 @@ import com.mifos.core.model.objects.account.loan.Currency
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import template.core.base.database.TypeConverter
+import androidx.room3.ColumnTypeConverter
 
 class ClientTypeConverters {
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromCurrency(type: Currency?): String? {
         return type?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toCurrency(json: String?): Currency? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromLoanAccountEntity(type: LoanAccountEntity?): String? {
         return type?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toLoanAccountEntity(json: String?): LoanAccountEntity? {
         return json?.let { Json.decodeFromString(it) }
     }

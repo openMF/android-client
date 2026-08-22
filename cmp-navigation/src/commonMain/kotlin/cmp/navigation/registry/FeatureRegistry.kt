@@ -1,0 +1,56 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
+ */
+package cmp.navigation.registry
+
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import org.koin.core.module.Module
+
+/**
+ * FeatureRegistry — the FORK-OWNED white-label seam for feature contributions.
+ *
+ * offline-first-template-migration 02-store-infra-screenstate T6: this seam never existed on this
+ * fork (pre-sync, all 20 feature modules' Koin DI + nav destinations were wired inline in
+ * `AuthenticatedNavigation.kt` directly — see that file's `dev` branch history). The template's
+ * current architecture replaced that inline pattern with this registry, which the merge-owned
+ * `AuthenticatedNavigation.kt` + `KoinModules.kt` now read from.
+ *
+ * Deliberately EMPTY here — re-wiring all 20 features (client, loan, savings, groups, center,
+ * checker-inbox-task, data-table, collection-sheet, offline, document, note, report, path-tracking,
+ * activate, recurring-deposit, search, auth, about, settings) into this seam is exactly the
+ * per-feature migration work `offline-first-template-migration` sub-plans 05-21 own (D19: one
+ * sub-plan per feature; D5: bottom-to-top sequencing) — each sub-plan lands its feature's real
+ * `xModule` (Koin) + `xGraph(navController)` (nav) entries here as it migrates that feature onto
+ * the new Store5/ScreenState architecture, rather than eagerly porting 20 features' worth of
+ * pre-ScreenState-cutover wiring now.
+ *
+ * The template infra modules READ from this registry; a fork extends the app by editing THIS ONE
+ * file (+ its build.gradle deps + settings.gradle include), never the template infra files:
+ *   - `cmp-navigation/di/KoinModules.kt` includes [featureKoinModules] into the app DI graph.
+ *   - `cmp-navigation/.../AuthenticatedNavigation.kt` invokes [featureDestinations] to register routes.
+ *
+ * Ownership: `owner: fork` in customization-surface.yaml — `sync-dirs`/`white-label-doctor` NEVER
+ * overwrite it, so a template sync full-copies the infra modules while features survive.
+ */
+object FeatureRegistry {
+    /**
+     * Feature Koin modules the app installs. The framework SHELL modules (Home, Settings) live in
+     * [cmp.navigation.di.KoinModules] and are always present; this is the fork's own features.
+     * Populated per-feature-sub-plan (05-21) — empty until the first feature migrates.
+     */
+    val featureKoinModules: List<Module> = emptyList()
+
+    /**
+     * Feature nav destinations — registered into the authenticated graph. The shell destinations
+     * (settings, notification) stay in [BackboneRegistry]; this is the fork's routes. Populated
+     * per-feature-sub-plan (05-21) — empty until the first feature migrates.
+     */
+    val featureDestinations: NavGraphBuilder.(NavController) -> Unit = { }
+}

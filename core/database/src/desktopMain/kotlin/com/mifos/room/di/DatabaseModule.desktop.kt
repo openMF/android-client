@@ -9,25 +9,14 @@
  */
 package com.mifos.room.di
 
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import com.mifos.core.common.network.MifosDispatchers
 import com.mifos.core.common.utils.Constants
 import com.mifos.room.MifosDatabase
+import kpt.core.base.database.DatabaseNaming
+import kpt.core.base.database.platformDatabaseModule
 import org.koin.core.module.Module
-import org.koin.core.qualifier.named
-import org.koin.dsl.module
-import template.core.base.database.AppDatabaseFactory
-import kotlin.coroutines.CoroutineContext
 
-actual val PlatformSpecificDatabaseModule: Module = module {
-    single<MifosDatabase> {
-        val ioContext: CoroutineContext = getKoin().get(named(MifosDispatchers.IO.name))
-
-        AppDatabaseFactory()
-            .createDatabase<MifosDatabase>(Constants.DATABASE_NAME)
-            .fallbackToDestructiveMigrationOnDowngrade(false)
-            .setDriver(BundledSQLiteDriver())
-            .setQueryCoroutineContext(ioContext)
-            .build()
-    }
-}
+// offline-first-template-migration 01-template-adoption T-AC3-merge: see DatabaseModule.android.kt
+// for the AppDatabaseFactory-bridge-removal rationale.
+actual val PlatformSpecificDatabaseModule: Module = platformDatabaseModule<MifosDatabase>(
+    DatabaseNaming(fileName = Constants.DATABASE_NAME, desktopDirName = "MifosFieldOfficer"),
+)

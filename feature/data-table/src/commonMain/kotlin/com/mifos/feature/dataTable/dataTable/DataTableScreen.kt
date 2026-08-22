@@ -9,10 +9,10 @@
  */
 package com.mifos.feature.dataTable.dataTable
 
-import androidclient.feature.data_table.generated.resources.Res
-import androidclient.feature.data_table.generated.resources.feature_data_table_empty_data_table
-import androidclient.feature.data_table.generated.resources.feature_data_table_failed_to_fetch_data_table
-import androidclient.feature.data_table.generated.resources.feature_data_table_title
+import kpt.feature.data_table.generated.resources.Res
+import kpt.feature.data_table.generated.resources.feature_data_table_empty_data_table
+import kpt.feature.data_table.generated.resources.feature_data_table_failed_to_fetch_data_table
+import kpt.feature.data_table.generated.resources.feature_data_table_title
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -42,7 +42,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 /**
  * Created on 27/06/2024 (11:38 PM) by Pronay Sarker
  */
@@ -153,23 +156,23 @@ fun DataTableItem(
         modifier = modifier
             .fillMaxWidth()
             .padding(
-                horizontal = KptTheme.spacing.xs,
-                vertical = KptTheme.spacing.xs,
+                horizontal = LocalKptSpacing.current.xs,
+                vertical = LocalKptSpacing.current.xs,
             ),
         shape = DesignToken.shapes.none,
         elevation = CardDefaults.cardElevation(defaultElevation = DesignToken.elevation.dp2),
         colors = CardDefaults.cardColors(
-            containerColor = KptTheme.colorScheme.surface,
+            containerColor = LocalKptColors.current.surface,
         ),
         onClick = { onClick.invoke(dataTable) },
     ) {
         dataTable.registeredTableName?.let {
             Text(
                 modifier = Modifier.padding(
-                    horizontal = KptTheme.spacing.md,
+                    horizontal = LocalKptSpacing.current.md,
                     vertical = DesignToken.spacing.dp18,
                 ),
-                style = KptTheme.typography.bodyLarge,
+                style = LocalKptTypography.current.bodyLarge,
                 text = it,
             )
         }

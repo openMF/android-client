@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases.loanDisburse
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.loan.LoanDisburseRepository
 import com.mifos.core.model.objects.account.loan.loanDisburse.LoanDisburseInput
 
@@ -19,5 +18,5 @@ class LoanDisburseUseCase(
     suspend operator fun invoke(
         loanId: Int,
         loanDisburseInput: LoanDisburseInput,
-    ): DataState<Unit> = repository.disburse(loanId, loanDisburseInput)
+    ): Unit = repository.disburse(loanId, loanDisburseInput)
 }

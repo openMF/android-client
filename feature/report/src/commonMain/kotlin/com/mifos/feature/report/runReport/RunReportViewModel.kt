@@ -9,9 +9,9 @@
  */
 package com.mifos.feature.report.runReport
 
-import androidclient.feature.report.generated.resources.Res
-import androidclient.feature.report.generated.resources.feature_report_failed_to_fetch_reports
-import androidclient.feature.report.generated.resources.feature_report_no_reports_found
+import kpt.feature.report.generated.resources.Res
+import kpt.feature.report.generated.resources.feature_report_failed_to_fetch_reports
+import kpt.feature.report.generated.resources.feature_report_no_reports_found
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState

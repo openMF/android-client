@@ -18,7 +18,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.ui.util.DevicePreview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptTypography
 
 @Composable
 fun MifosLinkText(
@@ -29,7 +30,7 @@ fun MifosLinkText(
 ) {
     Text(
         text = text,
-        style = KptTheme.typography.bodyMedium.copy(
+        style = LocalKptTypography.current.bodyMedium.copy(
             textDecoration = if (isUnderlined) TextDecoration.Underline else null,
         ),
         modifier = modifier

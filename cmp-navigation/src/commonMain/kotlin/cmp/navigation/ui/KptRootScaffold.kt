@@ -46,6 +46,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import kpt.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 import kpt.core.ui.bottombar.KptBottomBar
 import kpt.core.ui.bottombar.KptNavigationRail
 import kpt.core.ui.scaffold.KptPullToRefreshState
@@ -144,8 +145,8 @@ fun KptRootScaffold(
                                 modifier = Modifier.align(Alignment.TopCenter),
                                 isRefreshing = pullToRefreshState.isRefreshing,
                                 state = internalPullToRefreshState,
-                                containerColor = KptTheme.colorScheme.tertiary,
-                                color = KptTheme.colorScheme.onTertiary,
+                                containerColor = LocalKptColors.current.tertiary,
+                                color = LocalKptColors.current.onTertiary,
                             )
                         }
                     }

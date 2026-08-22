@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.SavingsAccountActivateRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerSavings
@@ -26,8 +24,8 @@ class SavingsAccountActivateRepositoryImp(
     override fun activateSavings(
         savingsAccountId: Int,
         request: HashMap<String, String>,
-    ): Flow<DataState<GenericResponse>> {
+    ): Flow<GenericResponse> {
         return dataManagerSavings.activateSavings(savingsAccountId, request)
-            .asDataStateFlow()
+            
     }
 }

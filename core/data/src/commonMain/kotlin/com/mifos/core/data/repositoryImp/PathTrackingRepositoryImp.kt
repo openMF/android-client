@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.PathTrackingRepository
 import com.mifos.core.model.objects.users.UserLocation
 import com.mifos.core.network.datamanager.DataManagerDataTable
@@ -23,8 +21,8 @@ class PathTrackingRepositoryImp(
     private val dataManagerDataTable: DataManagerDataTable,
 ) : PathTrackingRepository {
 
-    override fun getUserPathTracking(userId: Int): Flow<DataState<List<UserLocation>>> {
+    override fun getUserPathTracking(userId: Int): Flow<List<UserLocation>> {
         return dataManagerDataTable.getUserPathTracking(userId)
-            .asDataStateFlow()
+            
     }
 }

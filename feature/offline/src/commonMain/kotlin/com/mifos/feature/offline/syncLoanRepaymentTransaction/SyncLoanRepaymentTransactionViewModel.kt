@@ -9,10 +9,10 @@
  */
 package com.mifos.feature.offline.syncLoanRepaymentTransaction
 
-import androidclient.feature.offline.generated.resources.Res
-import androidclient.feature.offline.generated.resources.feature_offline_failed_to_load_loanrepayment
-import androidclient.feature.offline.generated.resources.feature_offline_failed_to_load_paymentoptions
-import androidclient.feature.offline.generated.resources.feature_offline_no_loanrepayment_to_sync
+import kpt.feature.offline.generated.resources.Res
+import kpt.feature.offline.generated.resources.feature_offline_failed_to_load_loanrepayment
+import kpt.feature.offline.generated.resources.feature_offline_failed_to_load_paymentoptions
+import kpt.feature.offline.generated.resources.feature_offline_no_loanrepayment_to_sync
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState

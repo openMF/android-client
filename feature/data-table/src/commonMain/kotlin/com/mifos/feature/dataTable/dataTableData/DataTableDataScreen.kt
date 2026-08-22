@@ -9,15 +9,15 @@
  */
 package com.mifos.feature.dataTable.dataTableData
 
-import androidclient.feature.data_table.generated.resources.Res
-import androidclient.feature.data_table.generated.resources.feature_data_table_client_id
-import androidclient.feature.data_table.generated.resources.feature_data_table_data_id
-import androidclient.feature.data_table.generated.resources.feature_data_table_data_table_created_successfully
-import androidclient.feature.data_table.generated.resources.feature_data_table_delete_data_table
-import androidclient.feature.data_table.generated.resources.feature_data_table_failed_to_delete_data_table
-import androidclient.feature.data_table.generated.resources.feature_data_table_no_data_table_details_to_show
-import androidclient.feature.data_table.generated.resources.feature_data_table_select_options
-import androidclient.feature.data_table.generated.resources.feature_data_table_title
+import kpt.feature.data_table.generated.resources.Res
+import kpt.feature.data_table.generated.resources.feature_data_table_client_id
+import kpt.feature.data_table.generated.resources.feature_data_table_data_id
+import kpt.feature.data_table.generated.resources.feature_data_table_data_table_created_successfully
+import kpt.feature.data_table.generated.resources.feature_data_table_delete_data_table
+import kpt.feature.data_table.generated.resources.feature_data_table_failed_to_delete_data_table
+import kpt.feature.data_table.generated.resources.feature_data_table_no_data_table_details_to_show
+import kpt.feature.data_table.generated.resources.feature_data_table_select_options
+import kpt.feature.data_table.generated.resources.feature_data_table_title
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -80,7 +80,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun DataTableDataScreen(
@@ -256,7 +257,7 @@ fun DataTableDataCardItem(
 ) {
     OutlinedCard(
         modifier = modifier
-            .padding(KptTheme.spacing.sm)
+            .padding(LocalKptSpacing.current.sm)
             .clickable {
                 onDataClicked(dataItem.clientId?.toInt() ?: dataItem.id?.toInt() ?: 0)
             },
@@ -265,18 +266,18 @@ fun DataTableDataCardItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(KptTheme.spacing.md),
+                .padding(LocalKptSpacing.current.md),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = KptTheme.spacing.md),
+                    .padding(start = LocalKptSpacing.current.md),
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = KptTheme.spacing.sm),
+                        .padding(top = LocalKptSpacing.current.sm),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
@@ -304,7 +305,7 @@ fun DataTableDataCardItem(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = KptTheme.spacing.sm),
+                        .padding(top = LocalKptSpacing.current.sm),
                 ) {
                     Text(
                         modifier = Modifier.weight(1f),

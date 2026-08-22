@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kpt.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kpt.core.base.store.freshness.FreshnessSignal
 import kpt.core.base.store.screen.ScreenDataStream
 import kpt.core.base.store.screen.ScreenState
@@ -76,7 +77,7 @@ fun <T> IndependentCardLayout(
     error: (@Composable (index: Int, error: Throwable) -> Unit)? = null,
     content: @Composable (index: Int, data: T, freshnessSignal: FreshnessSignal) -> Unit,
 ) {
-    val spacing = KptTheme.spacing
+    val spacing = LocalKptSpacing.current
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(spacing.md),

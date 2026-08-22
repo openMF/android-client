@@ -12,10 +12,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-android {
-    namespace = "com.mifos.feature.data_table"
-}
-
 kotlin{
     sourceSets{
         commonMain.dependencies {
@@ -32,6 +28,9 @@ kotlin{
     }
 }
 
-dependencies {
-    debugImplementation(compose.uiTooling)
+
+compose.resources {
+    publicResClass = true
+    generateResClass = always
+    packageOfResClass = "kpt.feature.data_table.generated.resources"
 }

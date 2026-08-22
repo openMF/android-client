@@ -20,6 +20,9 @@ kotlin {
             implementation(libs.androidx.browser)
             implementation(libs.androidx.compose.runtime)
             implementation(compose.uiTooling)
+            // fork-preserved (offline-first-template-migration 02-store-infra-screenstate
+            // T5-merge): dropped by the full core/ui/build.gradle.kts template overwrite.
+            implementation(libs.google.oss.licenses)
         }
 
         commonMain.dependencies {
@@ -44,6 +47,25 @@ kotlin {
             implementation(libs.jb.composeNavigation)
             implementation(libs.filekit.compose)
             implementation(libs.filekit.core)
+
+            // fork-preserved (offline-first-template-migration 02-store-infra-screenstate
+            // T5-merge): dropped by the full core/ui/build.gradle.kts template overwrite,
+            // but the fork's real HtmlTemplateGenerator.kt (PDF export), signature capture,
+            // image cropping, and Lottie animations still need them.
+            api(libs.kotlinx.datetime)
+            implementation(libs.jb.lifecycle.compose)
+            implementation(libs.ktor.client.core)
+            implementation(libs.compose.signature)
+            implementation(libs.crop.krop.ui)
+            implementation(libs.compottie.resources)
+            implementation(libs.compottie.lite)
+            implementation(libs.kotlinx.html)
+        }
+        desktopMain.dependencies {
+            // fork-preserved (offline-first-template-migration 02-store-infra-screenstate
+            // T5-merge): PDF rendering backend is JVM/desktop-only in the fork original.
+            implementation(libs.openhtmltopdf.pdfbox)
+            implementation(libs.openhtmltopdf.svg.support)
         }
         androidInstrumentedTest.dependencies {
             implementation(libs.bundles.androidx.compose.ui.test)

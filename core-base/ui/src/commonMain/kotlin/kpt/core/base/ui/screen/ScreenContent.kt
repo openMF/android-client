@@ -49,6 +49,7 @@ import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import io.github.alexzhirkevich.compottie.rememberLottiePainter
 import kpt.core.base.designsystem.component.KptShimmerLoadingBox
 import kpt.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kpt.core.base.store.freshness.FreshnessSignal
 import kpt.core.base.store.screen.ScreenDataStream
 import kpt.core.base.store.screen.ScreenState
@@ -225,7 +226,7 @@ private fun SkeletonLoadingContent(
     rowCount: Int,
     modifier: Modifier = Modifier,
 ) {
-    val spacing = KptTheme.spacing
+    val spacing = LocalKptSpacing.current
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -251,7 +252,7 @@ fun DefaultEmptyContent(
     modifier: Modifier = Modifier,
     config: ScreenStateEmpty = LocalScreenStateDefaults.current.empty,
 ) {
-    val spacing = KptTheme.spacing
+    val spacing = LocalKptSpacing.current
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -296,7 +297,7 @@ fun DefaultNoNetworkContent(
     onDismiss: (() -> Unit)? = null,
     config: ScreenStateNoNetwork = LocalScreenStateDefaults.current.noNetwork,
 ) {
-    val spacing = KptTheme.spacing
+    val spacing = LocalKptSpacing.current
     val visual = if (isCaptivePortal) config.captivePortalVisual else config.visual
     val message = if (isCaptivePortal) config.captivePortalMessage else config.message
     // Prefer an explicitly configured action; fall back to the library-provided launcher.
@@ -345,7 +346,7 @@ fun DefaultErrorContent(
     config: ScreenStateError = LocalScreenStateDefaults.current.error,
 ) {
     LaunchedEffect(error) { config.onShown?.invoke(error) }
-    val spacing = KptTheme.spacing
+    val spacing = LocalKptSpacing.current
     val message = config.messageFor(error)
     Column(
         modifier = modifier
@@ -393,7 +394,7 @@ private fun ActionRow(
     retryAsOutlined: Boolean = false,
 ) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
+        horizontalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.sm),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (retryAsOutlined) {

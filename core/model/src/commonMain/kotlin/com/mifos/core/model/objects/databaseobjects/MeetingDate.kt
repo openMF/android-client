@@ -9,14 +9,11 @@
  */
 package com.mifos.core.model.objects.databaseobjects
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 
-@Parcelize
 data class MeetingDate(
     var year: Int = 0,
 
     var month: Int = 0,
 
     var day: Int = 0,
-) : Parcelable
+)

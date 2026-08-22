@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.DataTableRepository
 import com.mifos.core.network.datamanager.DataManagerDataTable
 import com.mifos.room.entities.noncore.DataTableEntity
@@ -23,7 +21,7 @@ class DataTableRepositoryImp(
     private val dataManagerDataTable: DataManagerDataTable,
 ) : DataTableRepository {
 
-    override suspend fun getDataTable(tableName: String?): Flow<DataState<List<DataTableEntity>>> {
-        return dataManagerDataTable.getDataTable(tableName).asDataStateFlow()
+    override suspend fun getDataTable(tableName: String?): Flow<List<DataTableEntity>> {
+        return dataManagerDataTable.getDataTable(tableName)
     }
 }

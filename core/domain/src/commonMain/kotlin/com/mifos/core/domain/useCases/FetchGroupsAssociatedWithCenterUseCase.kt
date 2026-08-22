@@ -9,8 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.GenerateCollectionSheetRepository
 import com.mifos.room.entities.group.CenterWithAssociations
 import kotlinx.coroutines.flow.Flow
@@ -20,8 +18,8 @@ class FetchGroupsAssociatedWithCenterUseCase(
     private val repository: GenerateCollectionSheetRepository,
 ) {
 
-    operator fun invoke(centerId: Int): Flow<DataState<CenterWithAssociations>> =
+    operator fun invoke(centerId: Int): Flow<CenterWithAssociations> =
         flow {
             emit(repository.fetchGroupsAssociatedWithCenter(centerId))
-        }.asDataStateFlow()
+        }
 }

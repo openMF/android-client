@@ -9,21 +9,21 @@
  */
 package com.mifos.feature.groups.createNewGroup
 
-import androidclient.feature.groups.generated.resources.Res
-import androidclient.feature.groups.generated.resources.feature_groups_activation_date
-import androidclient.feature.groups.generated.resources.feature_groups_active
-import androidclient.feature.groups.generated.resources.feature_groups_create_new_group
-import androidclient.feature.groups.generated.resources.feature_groups_dismiss
-import androidclient.feature.groups.generated.resources.feature_groups_error_group_name_cannot_be_empty
-import androidclient.feature.groups.generated.resources.feature_groups_error_group_name_must_be_at_least_four_characters_long
-import androidclient.feature.groups.generated.resources.feature_groups_error_group_name_should_contain_only_alphabets
-import androidclient.feature.groups.generated.resources.feature_groups_error_office_not_selected
-import androidclient.feature.groups.generated.resources.feature_groups_external_id
-import androidclient.feature.groups.generated.resources.feature_groups_name
-import androidclient.feature.groups.generated.resources.feature_groups_office_name_mandatory
-import androidclient.feature.groups.generated.resources.feature_groups_select_date
-import androidclient.feature.groups.generated.resources.feature_groups_submit
-import androidclient.feature.groups.generated.resources.feature_groups_submit_date
+import kpt.feature.groups.generated.resources.Res
+import kpt.feature.groups.generated.resources.feature_groups_activation_date
+import kpt.feature.groups.generated.resources.feature_groups_active
+import kpt.feature.groups.generated.resources.feature_groups_create_new_group
+import kpt.feature.groups.generated.resources.feature_groups_dismiss
+import kpt.feature.groups.generated.resources.feature_groups_error_group_name_cannot_be_empty
+import kpt.feature.groups.generated.resources.feature_groups_error_group_name_must_be_at_least_four_characters_long
+import kpt.feature.groups.generated.resources.feature_groups_error_group_name_should_contain_only_alphabets
+import kpt.feature.groups.generated.resources.feature_groups_error_office_not_selected
+import kpt.feature.groups.generated.resources.feature_groups_external_id
+import kpt.feature.groups.generated.resources.feature_groups_name
+import kpt.feature.groups.generated.resources.feature_groups_office_name_mandatory
+import kpt.feature.groups.generated.resources.feature_groups_select_date
+import kpt.feature.groups.generated.resources.feature_groups_submit
+import kpt.feature.groups.generated.resources.feature_groups_submit_date
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -86,7 +86,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -279,7 +280,7 @@ private fun CreateNewGroupContent(
             .fillMaxSize()
             .verticalScroll(scrollState),
     ) {
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             value = groupName,
@@ -290,7 +291,7 @@ private fun CreateNewGroupContent(
             label = stringResource(Res.string.feature_groups_name),
             error = groupValidationError?.let { stringResource(it) },
         )
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosTextFieldDropdown(
             value = selectedOffice,
@@ -309,7 +310,7 @@ private fun CreateNewGroupContent(
             readOnly = true,
             errorMessage = officeValidationError?.let { stringResource(it) },
         )
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosDatePickerTextField(
             value = DateHelper.getDateAsStringFromLong(submittedOnDate),
@@ -318,7 +319,7 @@ private fun CreateNewGroupContent(
                 submitDatePicker = true
             },
         )
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             value = externalId,
@@ -326,13 +327,13 @@ private fun CreateNewGroupContent(
             label = stringResource(Res.string.feature_groups_external_id),
             error = null,
         )
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Checkbox(
-                modifier = Modifier.padding(start = KptTheme.spacing.sm),
+                modifier = Modifier.padding(start = LocalKptSpacing.current.sm),
                 checked = isActive,
                 onCheckedChange = { isActive = !isActive },
             )
@@ -350,7 +351,7 @@ private fun CreateNewGroupContent(
             ),
             exit = slideOutVertically() + shrinkVertically() + fadeOut(),
         ) {
-            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
             MifosDatePickerTextField(
                 value = DateHelper.getDateAsStringFromLong(activationDate),
@@ -360,12 +361,12 @@ private fun CreateNewGroupContent(
                 },
             )
         }
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = KptTheme.spacing.md)
+                .padding(horizontal = LocalKptSpacing.current.md)
                 .heightIn(DesignToken.spacing.dp46),
             onClick = {
                 groupValidationError = validateGroupField(groupName)

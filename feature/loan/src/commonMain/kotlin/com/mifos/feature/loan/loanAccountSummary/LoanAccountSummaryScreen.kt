@@ -9,38 +9,38 @@
  */
 package com.mifos.feature.loan.loanAccountSummary
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan
-import androidclient.feature.loan.generated.resources.feature_loan_amount_paid
-import androidclient.feature.loan.generated.resources.feature_loan_approve_loan
-import androidclient.feature.loan.generated.resources.feature_loan_arrears
-import androidclient.feature.loan.generated.resources.feature_loan_balance
-import androidclient.feature.loan.generated.resources.feature_loan_closed
-import androidclient.feature.loan.generated.resources.feature_loan_copy
-import androidclient.feature.loan.generated.resources.feature_loan_date
-import androidclient.feature.loan.generated.resources.feature_loan_disburse
-import androidclient.feature.loan.generated.resources.feature_loan_disbursed_date
-import androidclient.feature.loan.generated.resources.feature_loan_documents
-import androidclient.feature.loan.generated.resources.feature_loan_info
-import androidclient.feature.loan.generated.resources.feature_loan_loan_account_summary
-import androidclient.feature.loan.generated.resources.feature_loan_loan_amount_disbursed
-import androidclient.feature.loan.generated.resources.feature_loan_loan_charges
-import androidclient.feature.loan.generated.resources.feature_loan_loan_fees
-import androidclient.feature.loan.generated.resources.feature_loan_loan_id
-import androidclient.feature.loan.generated.resources.feature_loan_loan_id_copied
-import androidclient.feature.loan.generated.resources.feature_loan_loan_in_arrears
-import androidclient.feature.loan.generated.resources.feature_loan_loan_interest
-import androidclient.feature.loan.generated.resources.feature_loan_loan_overview
-import androidclient.feature.loan.generated.resources.feature_loan_loan_penalty
-import androidclient.feature.loan.generated.resources.feature_loan_loan_principal
-import androidclient.feature.loan.generated.resources.feature_loan_make_Repayment
-import androidclient.feature.loan.generated.resources.feature_loan_outstanding_balance
-import androidclient.feature.loan.generated.resources.feature_loan_repayment_schedule
-import androidclient.feature.loan.generated.resources.feature_loan_staff
-import androidclient.feature.loan.generated.resources.feature_loan_summary
-import androidclient.feature.loan.generated.resources.feature_loan_total_loan
-import androidclient.feature.loan.generated.resources.feature_loan_transactions
-import androidclient.feature.loan.generated.resources.feature_loan_transfer_funds
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan
+import kpt.feature.loan.generated.resources.feature_loan_amount_paid
+import kpt.feature.loan.generated.resources.feature_loan_approve_loan
+import kpt.feature.loan.generated.resources.feature_loan_arrears
+import kpt.feature.loan.generated.resources.feature_loan_balance
+import kpt.feature.loan.generated.resources.feature_loan_closed
+import kpt.feature.loan.generated.resources.feature_loan_copy
+import kpt.feature.loan.generated.resources.feature_loan_date
+import kpt.feature.loan.generated.resources.feature_loan_disburse
+import kpt.feature.loan.generated.resources.feature_loan_disbursed_date
+import kpt.feature.loan.generated.resources.feature_loan_documents
+import kpt.feature.loan.generated.resources.feature_loan_info
+import kpt.feature.loan.generated.resources.feature_loan_loan_account_summary
+import kpt.feature.loan.generated.resources.feature_loan_loan_amount_disbursed
+import kpt.feature.loan.generated.resources.feature_loan_loan_charges
+import kpt.feature.loan.generated.resources.feature_loan_loan_fees
+import kpt.feature.loan.generated.resources.feature_loan_loan_id
+import kpt.feature.loan.generated.resources.feature_loan_loan_id_copied
+import kpt.feature.loan.generated.resources.feature_loan_loan_in_arrears
+import kpt.feature.loan.generated.resources.feature_loan_loan_interest
+import kpt.feature.loan.generated.resources.feature_loan_loan_overview
+import kpt.feature.loan.generated.resources.feature_loan_loan_penalty
+import kpt.feature.loan.generated.resources.feature_loan_loan_principal
+import kpt.feature.loan.generated.resources.feature_loan_make_Repayment
+import kpt.feature.loan.generated.resources.feature_loan_outstanding_balance
+import kpt.feature.loan.generated.resources.feature_loan_repayment_schedule
+import kpt.feature.loan.generated.resources.feature_loan_staff
+import kpt.feature.loan.generated.resources.feature_loan_summary
+import kpt.feature.loan.generated.resources.feature_loan_total_loan
+import kpt.feature.loan.generated.resources.feature_loan_transactions
+import kpt.feature.loan.generated.resources.feature_loan_transfer_funds
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -103,7 +103,11 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptShapes
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import com.mifos.feature.loan.utils.UiLoanStatus as UiLoanStatus
 
 @Composable
@@ -215,7 +219,7 @@ internal fun LoanAccountSummaryScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
-                .background(KptTheme.colorScheme.background),
+                .background(LocalKptColors.current.background),
         ) {
             MifosBreadcrumbNavBar(navController)
 
@@ -256,14 +260,14 @@ private fun LoanAccountSummaryContent(
             modifier = Modifier.fillMaxWidth(),
         ) {
             Column(
-                modifier = Modifier.padding(KptTheme.spacing.md),
+                modifier = Modifier.padding(LocalKptSpacing.current.md),
                 verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.mediumSmall),
             ) {
                 Text(
                     modifier = Modifier
                         .fillMaxWidth(),
                     text = loanWithAssociations.clientName ?: "",
-                    style = KptTheme.typography.headlineSmall,
+                    style = LocalKptTypography.current.headlineSmall,
                     fontWeight = FontWeight.Bold,
                 )
 
@@ -288,7 +292,7 @@ private fun LoanAccountSummaryContent(
                     Text(
                         text = loanWithAssociations.loanProductName ?: "",
                         style = MifosTypography.bodyLarge,
-                        color = KptTheme.colorScheme.onSurface,
+                        color = LocalKptColors.current.onSurface,
                     )
                 }
 
@@ -298,10 +302,10 @@ private fun LoanAccountSummaryContent(
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_loan_loan_id) + (loanWithAssociations.accountNo ?: ""),
-                        color = KptTheme.colorScheme.onSurfaceVariant,
+                        color = LocalKptColors.current.onSurfaceVariant,
                         style = MifosTypography.bodyMedium,
                     )
-                    Spacer(modifier = Modifier.width(KptTheme.spacing.xs))
+                    Spacer(modifier = Modifier.width(LocalKptSpacing.current.xs))
                     IconButton(
                         onClick = {
                             clipboardManager.setText(AnnotatedString(loanWithAssociations.accountNo ?: ""))
@@ -313,7 +317,7 @@ private fun LoanAccountSummaryContent(
                             imageVector = MifosIcons.Copy,
                             contentDescription = stringResource(Res.string.feature_loan_copy),
                             modifier = Modifier.size(DesignToken.sizes.iconSmall),
-                            tint = KptTheme.colorScheme.onSurfaceVariant,
+                            tint = LocalKptColors.current.onSurfaceVariant,
                         )
                     }
                 }
@@ -341,13 +345,13 @@ private fun LoanAccountSummaryContent(
 
         MifosCard {
             Column(
-                modifier = Modifier.padding(KptTheme.spacing.md),
+                modifier = Modifier.padding(LocalKptSpacing.current.md),
             ) {
                 Text(
                     text = stringResource(Res.string.feature_loan_loan_overview),
                     style = MifosTypography.bodyLarge,
                     fontWeight = FontWeight.Bold,
-                    color = KptTheme.colorScheme.onSurface,
+                    color = LocalKptColors.current.onSurface,
                 )
                 Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
                 Row(
@@ -432,7 +436,7 @@ private fun LoanAccountSummaryContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(DesignToken.sizes.buttonHeightMedium),
-            shape = KptTheme.shapes.small,
+            shape = LocalKptShapes.current.small,
             onClick = {
                 when (primaryAction) {
                     LoanPrimaryAction.MAKE_REPAYMENT -> onAction(LoanAccountSummaryAction.OnMakeRepayment)
@@ -442,10 +446,10 @@ private fun LoanAccountSummaryContent(
                     LoanPrimaryAction.CLOSED -> { }
                 }
             },
-            colors = ButtonDefaults.buttonColors(containerColor = KptTheme.colorScheme.primary),
+            colors = ButtonDefaults.buttonColors(containerColor = LocalKptColors.current.primary),
         ) {
             Text(
-                color = KptTheme.colorScheme.onPrimary,
+                color = LocalKptColors.current.onPrimary,
                 text = buttonText,
             )
         }
@@ -464,7 +468,7 @@ private fun LoanSummaryDataTable(
             amountColumnValue = stringResource(Res.string.feature_loan_amount_paid),
             balanceColumnValue = stringResource(Res.string.feature_loan_balance),
             isHeader = true,
-            color = KptTheme.colorScheme.primary.copy(
+            color = LocalKptColors.current.primary.copy(
                 alpha = 0.3f,
             ),
         )
@@ -510,21 +514,21 @@ private fun LoanSummaryFarApartTextItem(title: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(KptTheme.spacing.sm),
+            .padding(LocalKptSpacing.current.sm),
     ) {
         Text(
-            style = KptTheme.typography.bodyMedium,
+            style = LocalKptTypography.current.bodyMedium,
             fontWeight = FontWeight.Bold,
             text = "$title:",
-            color = KptTheme.colorScheme.onSurface,
+            color = LocalKptColors.current.onSurface,
         )
 
-        Spacer(modifier = Modifier.width(KptTheme.spacing.xs))
+        Spacer(modifier = Modifier.width(LocalKptSpacing.current.xs))
 
         Text(
-            style = KptTheme.typography.bodyMedium,
+            style = LocalKptTypography.current.bodyMedium,
             text = value,
-            color = KptTheme.colorScheme.onSurfaceVariant,
+            color = LocalKptColors.current.onSurfaceVariant,
         )
     }
 }
@@ -539,18 +543,18 @@ private fun InfoCard(
         modifier = modifier,
     ) {
         Column(
-            modifier = Modifier.padding(KptTheme.spacing.md),
+            modifier = Modifier.padding(LocalKptSpacing.current.md),
         ) {
             Text(
                 text = titleText,
                 style = MifosTypography.bodyLarge,
-                color = KptTheme.colorScheme.onSurface,
+                color = LocalKptColors.current.onSurface,
             )
             Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
             Text(
                 text = infoText,
                 style = MifosTypography.headlineSmallEmphasized,
-                color = KptTheme.colorScheme.onSurfaceVariant,
+                color = LocalKptColors.current.onSurfaceVariant,
             )
         }
     }
@@ -563,7 +567,7 @@ private fun DataTableRow(
     amountColumnValue: String,
     balanceColumnValue: String,
     isHeader: Boolean = false,
-    color: Color = KptTheme.colorScheme.surface,
+    color: Color = LocalKptColors.current.surface,
 ) {
     Row(
         modifier = Modifier
@@ -576,43 +580,43 @@ private fun DataTableRow(
             text = summaryColumnTitle,
             modifier = Modifier
                 .weight(1f)
-                .padding(KptTheme.spacing.sm),
-            style = KptTheme.typography.bodyMedium,
+                .padding(LocalKptSpacing.current.sm),
+            style = LocalKptTypography.current.bodyMedium,
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
-            color = KptTheme.colorScheme.onSurface,
+            color = LocalKptColors.current.onSurface,
         )
 
         Text(
             text = loanColumnValue,
             modifier = Modifier
                 .weight(1f)
-                .padding(KptTheme.spacing.sm),
-            style = KptTheme.typography.bodyMedium,
+                .padding(LocalKptSpacing.current.sm),
+            style = LocalKptTypography.current.bodyMedium,
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
             textAlign = TextAlign.End,
-            color = KptTheme.colorScheme.onSurfaceVariant,
+            color = LocalKptColors.current.onSurfaceVariant,
         )
 
         Text(
             text = amountColumnValue,
             modifier = Modifier
                 .weight(1f)
-                .padding(KptTheme.spacing.sm),
-            style = KptTheme.typography.bodyMedium,
+                .padding(LocalKptSpacing.current.sm),
+            style = LocalKptTypography.current.bodyMedium,
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
             textAlign = TextAlign.End,
-            color = KptTheme.colorScheme.onSurfaceVariant,
+            color = LocalKptColors.current.onSurfaceVariant,
         )
 
         Text(
             text = balanceColumnValue,
             modifier = Modifier
                 .weight(1f)
-                .padding(KptTheme.spacing.sm),
-            style = KptTheme.typography.bodyMedium,
+                .padding(LocalKptSpacing.current.sm),
+            style = LocalKptTypography.current.bodyMedium,
             fontWeight = if (isHeader) FontWeight.Bold else FontWeight.Normal,
             textAlign = TextAlign.End,
-            color = KptTheme.colorScheme.onSurfaceVariant,
+            color = LocalKptColors.current.onSurfaceVariant,
         )
     }
 }

@@ -9,25 +9,25 @@
  */
 package com.mifos.feature.loan.loanReschedules
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_add_reschedule_cd
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_approve_confirm
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_approve_message
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_approve_title
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_cancel
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_delete_confirm
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_delete_message
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_delete_title
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_failure_title
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_label_actions
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_label_from_date
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_label_na
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_label_number
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_label_reason
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_label_status
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_ok
-import androidclient.feature.loan.generated.resources.feature_loan_reschedules_empty
-import androidclient.feature.loan.generated.resources.feature_loan_reschedules_title
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_add_reschedule_cd
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_approve_confirm
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_approve_message
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_approve_title
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_cancel
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_delete_confirm
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_delete_message
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_delete_title
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_failure_title
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_label_actions
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_label_from_date
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_label_na
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_label_number
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_label_reason
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_label_status
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_ok
+import kpt.feature.loan.generated.resources.feature_loan_reschedules_empty
+import kpt.feature.loan.generated.resources.feature_loan_reschedules_title
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -80,7 +80,11 @@ import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.loan.createLoanReschedules.navigateToLoanRescheduleFormScreen
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptShapes
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun LoanReschedulesScreenRoute(
@@ -156,11 +160,11 @@ internal fun RescheduleListContent(
             Text(
                 modifier = Modifier.padding(
                     top = DesignToken.padding.medium,
-                    start = KptTheme.spacing.md,
-                    end = KptTheme.spacing.md,
+                    start = LocalKptSpacing.current.md,
+                    end = LocalKptSpacing.current.md,
                 ),
                 text = stringResource(Res.string.feature_loan_reschedules_title),
-                style = KptTheme.typography.labelLarge,
+                style = LocalKptTypography.current.labelLarge,
             )
 
             Spacer(Modifier.height(DesignToken.spacing.medium))
@@ -172,7 +176,7 @@ internal fun RescheduleListContent(
                         .verticalScroll(rememberScrollState()),
                 ) {
                     val scrollState = rememberScrollState()
-                    val textColor = KptTheme.colorScheme.onBackground
+                    val textColor = LocalKptColors.current.onBackground
                     val colWidths = listOf(
                         DesignToken.sizes.tableCellWidthExtraSmall,
                         DesignToken.sizes.tableCellWidthMediumLarge,
@@ -192,7 +196,7 @@ internal fun RescheduleListContent(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = KptTheme.spacing.md)
+                            .padding(horizontal = LocalKptSpacing.current.md)
                             .horizontalScroll(scrollState),
                     ) {
                         MifosTableRow(
@@ -200,7 +204,7 @@ internal fun RescheduleListContent(
                                 {
                                     RescheduleTableCell(
                                         text = label,
-                                        style = KptTheme.typography.titleSmall,
+                                        style = LocalKptTypography.current.titleSmall,
                                         fontWeight = FontWeight.Bold,
                                         textColor = textColor,
                                     )
@@ -208,8 +212,8 @@ internal fun RescheduleListContent(
                             },
                             widths = colWidths,
                             backgroundColor = lerp(
-                                KptTheme.colorScheme.surface,
-                                KptTheme.colorScheme.primary,
+                                LocalKptColors.current.surface,
+                                LocalKptColors.current.primary,
                                 0.3f,
                             ),
                             edgeOffset = DesignToken.padding.medium,
@@ -236,7 +240,7 @@ internal fun RescheduleListContent(
                                     add {
                                         RescheduleTableCell(
                                             (index + 1).toString(),
-                                            KptTheme.typography.bodySmall,
+                                            LocalKptTypography.current.bodySmall,
                                             FontWeight.Normal,
                                             textColor,
                                         )
@@ -244,7 +248,7 @@ internal fun RescheduleListContent(
                                     add {
                                         RescheduleTableCell(
                                             formattedDate,
-                                            KptTheme.typography.bodySmall,
+                                            LocalKptTypography.current.bodySmall,
                                             FontWeight.Normal,
                                             textColor,
                                         )
@@ -252,7 +256,7 @@ internal fun RescheduleListContent(
                                     add {
                                         RescheduleTableCell(
                                             reasonText,
-                                            KptTheme.typography.bodySmall,
+                                            LocalKptTypography.current.bodySmall,
                                             FontWeight.Normal,
                                             textColor,
                                         )
@@ -261,7 +265,7 @@ internal fun RescheduleListContent(
                                         RescheduleStatusCell(
                                             statusText,
                                             statusEnum,
-                                            KptTheme.typography.bodySmall,
+                                            LocalKptTypography.current.bodySmall,
                                         )
                                     }
                                     add {
@@ -273,14 +277,14 @@ internal fun RescheduleListContent(
                                     }
                                 },
                                 widths = colWidths,
-                                backgroundColor = KptTheme.colorScheme.surface,
+                                backgroundColor = LocalKptColors.current.surface,
                                 edgeOffset = DesignToken.padding.medium,
                                 cornerShape = if (isLast) DesignToken.shapes.bottomMedium else RectangleShape,
                                 showBottomBorder = !isLast,
                             )
                         }
                     }
-                    Spacer(Modifier.height(KptTheme.spacing.xl))
+                    Spacer(Modifier.height(LocalKptSpacing.current.xl))
                 }
             } else {
                 Box(
@@ -291,10 +295,10 @@ internal fun RescheduleListContent(
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_loan_reschedules_empty),
-                        style = KptTheme.typography.bodyMedium,
-                        color = KptTheme.colorScheme.onSurfaceVariant,
+                        style = LocalKptTypography.current.bodyMedium,
+                        color = LocalKptColors.current.onSurfaceVariant,
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(KptTheme.spacing.md),
+                        modifier = Modifier.padding(LocalKptSpacing.current.md),
                     )
                 }
             }
@@ -305,7 +309,7 @@ internal fun RescheduleListContent(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(DesignToken.padding.largeIncreased),
-            containerColor = KptTheme.colorScheme.primary,
+            containerColor = LocalKptColors.current.primary,
         ) {
             Icon(
                 imageVector = MifosIcons.Add,
@@ -385,7 +389,7 @@ private fun RescheduleTableCell(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = KptTheme.spacing.sm, horizontal = KptTheme.spacing.xs),
+            .padding(vertical = LocalKptSpacing.current.sm, horizontal = LocalKptSpacing.current.xs),
         contentAlignment = Alignment.CenterStart,
     ) {
         Text(
@@ -408,8 +412,8 @@ private fun RescheduleStatusCell(
 ) {
     val statusColor = when (status) {
         RescheduleStatusCode.PENDING -> AppColors.loanPendingStatus
-        RescheduleStatusCode.APPROVED -> KptTheme.colorScheme.primary
-        RescheduleStatusCode.REJECTED -> KptTheme.colorScheme.error
+        RescheduleStatusCode.APPROVED -> LocalKptColors.current.primary
+        RescheduleStatusCode.REJECTED -> LocalKptColors.current.error
         RescheduleStatusCode.UNKNOWN -> AppColors.loanUnknownStatus
     }
 
@@ -417,7 +421,7 @@ private fun RescheduleStatusCell(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = KptTheme.spacing.sm, horizontal = KptTheme.spacing.xs),
+            .padding(vertical = LocalKptSpacing.current.sm, horizontal = LocalKptSpacing.current.xs),
     ) {
         Box(
             modifier = Modifier
@@ -425,7 +429,7 @@ private fun RescheduleStatusCell(
                 .clip(DesignToken.shapes.dp2)
                 .background(statusColor),
         )
-        Spacer(modifier = Modifier.width(KptTheme.spacing.sm))
+        Spacer(modifier = Modifier.width(LocalKptSpacing.current.sm))
         Text(
             text = statusText,
             color = statusColor,
@@ -443,18 +447,18 @@ private fun RescheduleActionsCell(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
+        horizontalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.sm),
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = KptTheme.spacing.sm, horizontal = KptTheme.spacing.xs),
+            .padding(vertical = LocalKptSpacing.current.sm, horizontal = LocalKptSpacing.current.xs),
     ) {
         if (isPending) {
             Box(
                 modifier = Modifier
                     .size(DesignToken.sizes.iconLarge)
-                    .clip(KptTheme.shapes.extraSmall)
-                    .background(KptTheme.colorScheme.error)
+                    .clip(LocalKptShapes.current.extraSmall)
+                    .background(LocalKptColors.current.error)
                     .clickable { onDeleteClick() },
                 contentAlignment = Alignment.Center,
             ) {
@@ -469,8 +473,8 @@ private fun RescheduleActionsCell(
             Box(
                 modifier = Modifier
                     .size(DesignToken.sizes.iconLarge)
-                    .clip(KptTheme.shapes.extraSmall)
-                    .background(KptTheme.colorScheme.primary)
+                    .clip(LocalKptShapes.current.extraSmall)
+                    .background(LocalKptColors.current.primary)
                     .clickable { onApproveClick() },
                 contentAlignment = Alignment.Center,
             ) {
@@ -484,9 +488,9 @@ private fun RescheduleActionsCell(
         } else {
             Text(
                 text = stringResource(Res.string.feature_loan_reschedule_label_na),
-                style = KptTheme.typography.bodySmall,
-                color = KptTheme.colorScheme.outline,
-                modifier = Modifier.padding(start = KptTheme.spacing.sm),
+                style = LocalKptTypography.current.bodySmall,
+                color = LocalKptColors.current.outline,
+                modifier = Modifier.padding(start = LocalKptSpacing.current.sm),
             )
         }
     }

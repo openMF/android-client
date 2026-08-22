@@ -9,10 +9,10 @@
  */
 package com.mifos.feature.client
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.default_preview_pdf_name
-import androidclient.feature.client.generated.resources.error_document_not_found
-import androidclient.feature.client.generated.resources.error_failed_to_get_document_type
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.default_preview_pdf_name
+import kpt.feature.client.generated.resources.error_document_not_found
+import kpt.feature.client.generated.resources.error_failed_to_get_document_type
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileKitUtil
 import com.mifos.core.data.repository.DocumentCreateUpdateRepository
@@ -33,11 +33,14 @@ class DocumentSelectAndUploadRepositoryImpl(
 ) : DocumentSelectAndUploadRepository {
     override val entityDocumentStateMutableStateFlow = MutableStateFlow(EntityDocumentState())
 
+    // dialogTitle: kept on the interface (DocumentSelectAndUploadRepository) for the caller
+    // contract, but no longer forwarded — FileKit 0.14.2 dropped `openFilePicker`'s `title` param
+    // (see FileKitUtil's offline-first-template-migration T-AC3-merge note).
     override fun selectImageFromGallery(
         dialogTitle: String,
-    ) = FileKitUtil.pickImage(dialogTitle)
+    ) = FileKitUtil.pickImage()
 
-    override fun selectDocumentFromFile(dialogTitle: String) = FileKitUtil.pickFile(dialogTitle)
+    override fun selectDocumentFromFile(dialogTitle: String) = FileKitUtil.pickFile()
 
     override fun downloadDocumentAndCache() = flow {
         emit(DataState.Loading)

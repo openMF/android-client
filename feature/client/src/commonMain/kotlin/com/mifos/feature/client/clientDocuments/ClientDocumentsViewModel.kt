@@ -9,10 +9,10 @@
  */
 package com.mifos.feature.client.clientDocuments
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.client_documents_failed_to_delete
-import androidclient.feature.client.generated.resources.no_internet_message
-import androidclient.feature.client.generated.resources.unknown_error
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.client_documents_failed_to_delete
+import kpt.feature.client.generated.resources.no_internet_message
+import kpt.feature.client.generated.resources.unknown_error
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -20,7 +20,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.model.objects.noncoreobjects.Document
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.feature.client.DocumentSelectAndUploadRepository
 import com.mifos.feature.client.EntityDocumentState
 import com.mifos.feature.client.EntityDocumentState.EntityType

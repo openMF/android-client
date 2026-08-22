@@ -9,15 +9,15 @@
  */
 package com.mifos.feature.searchrecord
 
-import androidclient.feature.search_record.generated.resources.Res
-import androidclient.feature.search_record.generated.resources.error_searching_records
+import kpt.feature.search_record.generated.resources.Res
+import kpt.feature.search_record.generated.resources.error_searching_records
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.data.repository.SearchRecordRepository
 import com.mifos.core.model.objects.searchrecord.GenericSearchRecord
 import com.mifos.core.model.objects.searchrecord.RecordType
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.feature.searchrecord.navigation.SearchRecordRoute
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

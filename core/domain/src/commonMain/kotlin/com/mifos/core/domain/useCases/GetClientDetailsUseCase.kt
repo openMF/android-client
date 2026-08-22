@@ -9,8 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.room.entities.zipmodels.ClientAndClientAccounts
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +22,7 @@ class GetClientDetailsUseCase(
     private val repository: ClientDetailsRepository,
 ) {
 
-    operator fun invoke(clientId: Int): Flow<DataState<ClientAndClientAccounts>> = flow {
+    operator fun invoke(clientId: Int): Flow<ClientAndClientAccounts> = flow {
         val client = repository.getClient(clientId)
         val accounts = repository.getClientAccounts(clientId)
 
@@ -33,5 +31,5 @@ class GetClientDetailsUseCase(
             this.clientAccounts = accounts
         }
         emit(clientAndClientAccounts)
-    }.asDataStateFlow()
+    }
 }

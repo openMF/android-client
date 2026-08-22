@@ -20,7 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import com.mifos.core.designsystem.component.MifosCard
 import com.mifos.core.designsystem.theme.MifosTypography
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun MifosDetailsCard(
@@ -30,12 +31,12 @@ fun MifosDetailsCard(
     MifosCard(
         modifier = modifier.fillMaxWidth(),
     ) {
-        Column(modifier = Modifier.padding(KptTheme.spacing.md)) {
+        Column(modifier = Modifier.padding(LocalKptSpacing.current.md)) {
             details.forEach { (heading, value) ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = KptTheme.spacing.sm),
+                        .padding(vertical = LocalKptSpacing.current.sm),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(

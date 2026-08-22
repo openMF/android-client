@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.account.share.ShareAccounts
 import com.mifos.core.network.model.ClientCloseTemplateResponse
 import com.mifos.core.network.model.CollateralItem
@@ -38,40 +37,40 @@ interface ClientDetailsRepository {
 
     suspend fun getClientStaffOptions(clientId: Int): List<StaffOption>
 
-    suspend fun getClientCloseTemplate(): DataState<ClientCloseTemplateResponse>
+    suspend fun getClientCloseTemplate(): ClientCloseTemplateResponse
 
-    suspend fun getCollateralItems(): DataState<List<CollateralItem>>
+    suspend fun getCollateralItems(): List<CollateralItem>
 
-    suspend fun getClientCollaterals(clientId: Int): DataState<List<CollateralItemResult>>
+    suspend fun getClientCollaterals(clientId: Int): List<CollateralItemResult>
 
     suspend fun getClient(clientId: Int): ClientEntity
 
-    fun getImage(clientId: Int): Flow<DataState<String>>
+    fun getImage(clientId: Int): Flow<String>
 
-    suspend fun assignStaff(clientId: Int, staffId: Int): DataState<Unit>
+    suspend fun assignStaff(clientId: Int, staffId: Int): Unit
 
-    suspend fun unassignStaff(clientId: Int, staffId: Int): DataState<Unit>
+    suspend fun unassignStaff(clientId: Int, staffId: Int): Unit
 
     suspend fun proposeTransfer(
         clientId: Int,
         destinationOfficeId: Int,
         transferDate: String,
         note: String,
-    ): DataState<Unit>
+    ): Unit
 
-    suspend fun updateDefaultSavingsAccount(clientId: Int, accountId: Long): DataState<Unit>
+    suspend fun updateDefaultSavingsAccount(clientId: Int, accountId: Long): Unit
 
     suspend fun closeClient(
         clientId: Int,
         closureDate: String,
         closureReasonId: Int,
-    ): DataState<Unit>
+    ): Unit
 
     suspend fun createCollateral(
         clientId: Int,
         collateralId: Int,
         quantity: String,
-    ): DataState<Unit>
+    ): Unit
 
     val clientUpdateEvents: Flow<Unit>
     suspend fun triggerClientUpdate()

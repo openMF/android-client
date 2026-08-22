@@ -9,22 +9,22 @@
  */
 package com.mifos.feature.settings.syncSurvey
 
-import androidclient.feature.settings.generated.resources.Res
-import androidclient.feature.settings.generated.resources.feature_settings_cancel
-import androidclient.feature.settings.generated.resources.feature_settings_error_network_not_available
-import androidclient.feature.settings.generated.resources.feature_settings_failed_sync
-import androidclient.feature.settings.generated.resources.feature_settings_hide
-import androidclient.feature.settings.generated.resources.feature_settings_name
-import androidclient.feature.settings.generated.resources.feature_settings_slash
-import androidclient.feature.settings.generated.resources.feature_settings_space
-import androidclient.feature.settings.generated.resources.feature_settings_surveys
-import androidclient.feature.settings.generated.resources.feature_settings_sync_success
-import androidclient.feature.settings.generated.resources.feature_settings_sync_surveys_full_information
-import androidclient.feature.settings.generated.resources.feature_settings_syncing_question
-import androidclient.feature.settings.generated.resources.feature_settings_syncing_response
-import androidclient.feature.settings.generated.resources.feature_settings_syncing_survey
-import androidclient.feature.settings.generated.resources.feature_settings_total
-import androidclient.feature.settings.generated.resources.feature_settings_total_sync_progress
+import kpt.feature.settings.generated.resources.Res
+import kpt.feature.settings.generated.resources.feature_settings_cancel
+import kpt.feature.settings.generated.resources.feature_settings_error_network_not_available
+import kpt.feature.settings.generated.resources.feature_settings_failed_sync
+import kpt.feature.settings.generated.resources.feature_settings_hide
+import kpt.feature.settings.generated.resources.feature_settings_name
+import kpt.feature.settings.generated.resources.feature_settings_slash
+import kpt.feature.settings.generated.resources.feature_settings_space
+import kpt.feature.settings.generated.resources.feature_settings_surveys
+import kpt.feature.settings.generated.resources.feature_settings_sync_success
+import kpt.feature.settings.generated.resources.feature_settings_sync_surveys_full_information
+import kpt.feature.settings.generated.resources.feature_settings_syncing_question
+import kpt.feature.settings.generated.resources.feature_settings_syncing_response
+import kpt.feature.settings.generated.resources.feature_settings_syncing_survey
+import kpt.feature.settings.generated.resources.feature_settings_total
+import kpt.feature.settings.generated.resources.feature_settings_total_sync_progress
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -61,7 +61,10 @@ import com.mifos.core.ui.util.DevicePreview
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptShapes
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun SyncSurveysDialog(
@@ -226,9 +229,9 @@ private fun SyncSurveysDialogContent(
     Dialog(onDismissRequest = { closeDialog.invoke() }) {
         Box(
             modifier = Modifier
-                .clip(KptTheme.shapes.large)
-                .background(KptTheme.colorScheme.surface)
-                .padding(KptTheme.spacing.md),
+                .clip(LocalKptShapes.current.large)
+                .background(LocalKptColors.current.surface)
+                .padding(LocalKptSpacing.current.md),
             contentAlignment = Alignment.Center,
         ) {
             Column(
@@ -246,12 +249,12 @@ private fun SyncSurveysDialogContent(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(KptTheme.spacing.sm),
+                        .padding(LocalKptSpacing.current.sm),
                 ) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = KptTheme.spacing.sm),
+                            .padding(vertical = LocalKptSpacing.current.sm),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(text = stringResource(Res.string.feature_settings_name))
@@ -261,7 +264,7 @@ private fun SyncSurveysDialogContent(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = KptTheme.spacing.sm),
+                            .padding(vertical = LocalKptSpacing.current.sm),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(text = stringResource(Res.string.feature_settings_total))
@@ -271,7 +274,7 @@ private fun SyncSurveysDialogContent(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = KptTheme.spacing.sm),
+                            .padding(vertical = LocalKptSpacing.current.sm),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(text = stringResource(Res.string.feature_settings_syncing_survey))
@@ -282,13 +285,13 @@ private fun SyncSurveysDialogContent(
                         progress = { surveySyncProgress },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = KptTheme.spacing.sm),
+                            .padding(vertical = LocalKptSpacing.current.sm),
                     )
 
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = KptTheme.spacing.sm),
+                            .padding(vertical = LocalKptSpacing.current.sm),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(text = stringResource(Res.string.feature_settings_syncing_question))
@@ -299,13 +302,13 @@ private fun SyncSurveysDialogContent(
                         progress = { questionSyncProgress },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = KptTheme.spacing.sm),
+                            .padding(vertical = LocalKptSpacing.current.sm),
                     )
 
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = KptTheme.spacing.sm),
+                            .padding(vertical = LocalKptSpacing.current.sm),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(text = stringResource(Res.string.feature_settings_syncing_response))
@@ -316,13 +319,13 @@ private fun SyncSurveysDialogContent(
                         progress = { responseSyncProgress },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = KptTheme.spacing.sm),
+                            .padding(vertical = LocalKptSpacing.current.sm),
                     )
 
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = KptTheme.spacing.sm),
+                            .padding(vertical = LocalKptSpacing.current.sm),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(text = stringResource(Res.string.feature_settings_total_sync_progress))
@@ -333,13 +336,13 @@ private fun SyncSurveysDialogContent(
                         progress = { totalSyncProgress },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = KptTheme.spacing.sm),
+                            .padding(vertical = LocalKptSpacing.current.sm),
                     )
 
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = KptTheme.spacing.sm),
+                            .padding(vertical = LocalKptSpacing.current.sm),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(text = stringResource(Res.string.feature_settings_failed_sync))
@@ -350,13 +353,13 @@ private fun SyncSurveysDialogContent(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = KptTheme.spacing.md),
+                        .padding(vertical = LocalKptSpacing.current.md),
                 ) {
                     SyncSurveyButton(
                         onClick = { closeDialog.invoke() },
                         modifier = Modifier
                             .weight(1f)
-                            .padding(end = KptTheme.spacing.sm),
+                            .padding(end = LocalKptSpacing.current.sm),
                         text = stringResource(Res.string.feature_settings_cancel),
                         isEnabled = showCancelButton,
                     )
@@ -365,7 +368,7 @@ private fun SyncSurveysDialogContent(
                         onClick = { closeDialog.invoke() },
                         modifier = Modifier
                             .weight(1f)
-                            .padding(start = KptTheme.spacing.sm),
+                            .padding(start = LocalKptSpacing.current.sm),
                         text = stringResource(Res.string.feature_settings_hide),
                         isEnabled = true,
                     )

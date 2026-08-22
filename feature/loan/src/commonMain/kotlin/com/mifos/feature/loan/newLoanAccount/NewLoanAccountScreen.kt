@@ -9,26 +9,26 @@
  */
 package com.mifos.feature.loan.newLoanAccount
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.add
-import androidclient.feature.loan.generated.resources.add_new
-import androidclient.feature.loan.generated.resources.add_new_charge
-import androidclient.feature.loan.generated.resources.add_new_collateral
-import androidclient.feature.loan.generated.resources.back
-import androidclient.feature.loan.generated.resources.click_on_add_new
-import androidclient.feature.loan.generated.resources.collateral
-import androidclient.feature.loan.generated.resources.edit_charge
-import androidclient.feature.loan.generated.resources.feature_loan_cancel
-import androidclient.feature.loan.generated.resources.quantity
-import androidclient.feature.loan.generated.resources.step_charges
-import androidclient.feature.loan.generated.resources.step_details
-import androidclient.feature.loan.generated.resources.step_preview
-import androidclient.feature.loan.generated.resources.step_schedule
-import androidclient.feature.loan.generated.resources.step_terms
-import androidclient.feature.loan.generated.resources.total_collateral_value
-import androidclient.feature.loan.generated.resources.total_value
-import androidclient.feature.loan.generated.resources.view_charges
-import androidclient.feature.loan.generated.resources.view_collaterals
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.add
+import kpt.feature.loan.generated.resources.add_new
+import kpt.feature.loan.generated.resources.add_new_charge
+import kpt.feature.loan.generated.resources.add_new_collateral
+import kpt.feature.loan.generated.resources.back
+import kpt.feature.loan.generated.resources.click_on_add_new
+import kpt.feature.loan.generated.resources.collateral
+import kpt.feature.loan.generated.resources.edit_charge
+import kpt.feature.loan.generated.resources.feature_loan_cancel
+import kpt.feature.loan.generated.resources.quantity
+import kpt.feature.loan.generated.resources.step_charges
+import kpt.feature.loan.generated.resources.step_details
+import kpt.feature.loan.generated.resources.step_preview
+import kpt.feature.loan.generated.resources.step_schedule
+import kpt.feature.loan.generated.resources.step_terms
+import kpt.feature.loan.generated.resources.total_collateral_value
+import kpt.feature.loan.generated.resources.total_value
+import kpt.feature.loan.generated.resources.view_charges
+import kpt.feature.loan.generated.resources.view_collaterals
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -80,7 +80,8 @@ import com.mifos.feature.loan.newLoanAccount.pages.SchedulePage
 import com.mifos.feature.loan.newLoanAccount.pages.TermsPage
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.ExperimentalTime
 
 @Composable
@@ -296,7 +297,7 @@ private fun AddNewCollateralDialog(
                         ),
                     ),
                 )
-                Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+                Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
                 MifosOutlinedTextField(
                     value = state.collateralTotal.toString(),
                     onValueChange = {},
@@ -306,7 +307,7 @@ private fun AddNewCollateralDialog(
                         enabled = false,
                     ),
                 )
-                Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+                Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
                 MifosOutlinedTextField(
                     value = state.totalCollateral.toString(),
                     onValueChange = {},
@@ -454,7 +455,7 @@ private fun ShowChargesDialog(
         },
         content = {
             Column(
-                modifier = Modifier.fillMaxWidth().padding(KptTheme.spacing.md),
+                modifier = Modifier.fillMaxWidth().padding(LocalKptSpacing.current.md),
                 verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
             ) {
                 Text(

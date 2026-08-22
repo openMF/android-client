@@ -142,7 +142,11 @@ check(JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)) {
 }
 include(":sync")
 include(":cmp-ios")
-include(":core-base:analytics")
+// core-base:analytics REMOVED (Phase 1 T12 follow-up, 2026-08-21): dead orphaned module
+// from an early template snapshot, zero consumers repo-wide, and its package
+// (template.core.base.analytics) is stale AGP-8 DSL that the current template no longer
+// ships at this path — the current template's equivalent concept is :core-base:observability
+// (already included above), which is the real analyticsModule seam this migration wires.
 include(":feature:about")
 include(":feature:activate")
 include(":feature:auth")

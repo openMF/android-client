@@ -60,7 +60,10 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun MifosOutlinedTextField(
@@ -86,7 +89,7 @@ fun MifosOutlinedTextField(
         },
         modifier = modifier
             .fillMaxWidth()
-            .padding(start = KptTheme.spacing.md, end = KptTheme.spacing.md),
+            .padding(start = LocalKptSpacing.current.md, end = LocalKptSpacing.current.md),
         leadingIcon = if (icon != null) {
             {
                 Icon(
@@ -111,13 +114,13 @@ fun MifosOutlinedTextField(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = error,
-                    color = KptTheme.colorScheme.error,
+                    color = LocalKptColors.current.error,
                 )
             }
         },
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = KptTheme.colorScheme.secondaryContainer,
-            unfocusedBorderColor = KptTheme.colorScheme.secondaryContainer,
+            focusedBorderColor = LocalKptColors.current.secondaryContainer,
+            unfocusedBorderColor = LocalKptColors.current.secondaryContainer,
         ),
     )
 }
@@ -155,8 +158,8 @@ fun MifosOutlinedTextField(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     shape: Shape = OutlinedTextFieldDefaults.shape,
     colors: TextFieldColors = OutlinedTextFieldDefaults.colors(
-        focusedBorderColor = KptTheme.colorScheme.secondaryContainer,
-        unfocusedBorderColor = KptTheme.colorScheme.secondaryContainer,
+        focusedBorderColor = LocalKptColors.current.secondaryContainer,
+        unfocusedBorderColor = LocalKptColors.current.secondaryContainer,
     ),
 ) {
     val isFocused by interactionSource.collectIsFocusedAsState()
@@ -173,7 +176,7 @@ fun MifosOutlinedTextField(
         label = {
             Text(
                 text = label,
-                style = KptTheme.typography.bodySmall,
+                style = LocalKptTypography.current.bodySmall,
                 maxLines = maxLines,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -211,15 +214,15 @@ fun MifosOutlinedTextField(
                 Text(
                     modifier = Modifier.testTag(errorTextTag),
                     text = errorText,
-                    style = KptTheme.typography.labelSmall,
-                    color = KptTheme.colorScheme.error,
+                    style = LocalKptTypography.current.labelSmall,
+                    color = LocalKptColors.current.error,
                 )
             } else if (message != null) {
                 Text(
                     modifier = Modifier.testTag(errorTextTag),
                     text = message,
-                    style = KptTheme.typography.labelSmall,
-                    color = KptTheme.colorScheme.error,
+                    style = LocalKptTypography.current.labelSmall,
+                    color = LocalKptColors.current.error,
                 )
             }
         },
@@ -259,8 +262,8 @@ fun MifosOutlinedTextField(
 ) {
     OutlinedTextField(
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = KptTheme.colorScheme.secondaryContainer,
-            unfocusedBorderColor = KptTheme.colorScheme.secondaryContainer,
+            focusedBorderColor = LocalKptColors.current.secondaryContainer,
+            unfocusedBorderColor = LocalKptColors.current.secondaryContainer,
         ),
         value = value,
         onValueChange = onValueChange,
@@ -283,8 +286,8 @@ fun MifosOutlinedTextField(
         maxLines = maxLines,
         singleLine = singleLine,
         textStyle = TextStyle(
-            color = KptTheme.colorScheme.onSurfaceVariant,
-            fontSize = KptTheme.typography.bodyLarge.fontSize,
+            color = LocalKptColors.current.onSurfaceVariant,
+            fontSize = LocalKptTypography.current.bodyLarge.fontSize,
             lineHeight = 24.sp,
             letterSpacing = 0.5f.sp,
             fontWeight = FontWeight.Normal,
@@ -297,7 +300,7 @@ fun MifosOutlinedTextField(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = error,
-                    color = KptTheme.colorScheme.error,
+                    color = LocalKptColors.current.error,
                 )
             }
         } else {
@@ -324,7 +327,7 @@ private fun PasswordToggleIcon(
             } else {
                 Icons.Filled.Visibility
             },
-            tint = KptTheme.colorScheme.secondary,
+            tint = LocalKptColors.current.secondary,
             contentDescription = if (isPasswordVisible) {
                 "VisibilityOff"
             } else {
@@ -373,8 +376,8 @@ fun MifosDatePickerTextField(
     OutlinedTextField(
         enabled = enabled,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = KptTheme.colorScheme.secondaryContainer,
-            unfocusedBorderColor = KptTheme.colorScheme.secondaryContainer,
+            focusedBorderColor = LocalKptColors.current.secondaryContainer,
+            unfocusedBorderColor = LocalKptColors.current.secondaryContainer,
         ),
         value = value,
         onValueChange = { },
@@ -385,8 +388,8 @@ fun MifosDatePickerTextField(
         maxLines = 1,
         textStyle = LocalDensity.current.run {
             TextStyle(
-                color = KptTheme.colorScheme.onSurfaceVariant,
-                fontSize = KptTheme.typography.bodyLarge.fontSize,
+                color = LocalKptColors.current.onSurfaceVariant,
+                fontSize = LocalKptTypography.current.bodyLarge.fontSize,
                 lineHeight = 24.sp,
                 letterSpacing = 0.5f.sp,
                 fontWeight = FontWeight.Normal,
@@ -403,8 +406,8 @@ fun MifosDatePickerTextField(
             {
                 Text(
                     text = it,
-                    style = KptTheme.typography.bodySmall,
-                    color = KptTheme.colorScheme.error,
+                    style = LocalKptTypography.current.bodySmall,
+                    color = LocalKptColors.current.error,
                 )
             }
         },
@@ -419,9 +422,9 @@ fun MifosOutlinedTextField(
     modifier: Modifier = Modifier,
     shape: Shape = DesignToken.shapes.medium,
     colors: TextFieldColors = OutlinedTextFieldDefaults.colors(
-        focusedBorderColor = KptTheme.colorScheme.secondaryContainer,
-        unfocusedBorderColor = KptTheme.colorScheme.secondaryContainer,
-        errorBorderColor = KptTheme.colorScheme.error,
+        focusedBorderColor = LocalKptColors.current.secondaryContainer,
+        unfocusedBorderColor = LocalKptColors.current.secondaryContainer,
+        errorBorderColor = LocalKptColors.current.error,
     ),
     textStyle: TextStyle = MifosTypography.bodyLarge,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
@@ -478,7 +481,7 @@ fun MifosOutlinedTextField(
                     modifier = Modifier.testTag("errorTag"),
                     text = it,
                     style = MifosTypography.bodySmall,
-                    color = KptTheme.colorScheme.error,
+                    color = LocalKptColors.current.error,
                 )
             }
         },

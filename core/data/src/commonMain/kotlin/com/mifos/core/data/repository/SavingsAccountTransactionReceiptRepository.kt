@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -19,5 +18,5 @@ interface SavingsAccountTransactionReceiptRepository {
 
     suspend fun getSavingsAccountTransactionReceipt(
         transactionId: Int,
-    ): Flow<DataState<ByteArray>>
+    ): Flow<ByteArray>
 }

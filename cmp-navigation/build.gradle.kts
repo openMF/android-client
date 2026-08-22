@@ -29,6 +29,11 @@ kotlin {
             // core/platform re-exports core-base/platform (platformModule, GarbageCollectionManager) —
             // the app-shell reaches those through core/ per G-CORE-BASE-ENCAP.
             implementation(projects.core.platform)
+            // StoreCacheManager (D7 logout cache-clear, offline-first-template-migration
+            // 02-store-infra-screenstate T5) — RootNavViewModel's real fork logout sequence
+            // clears every registered Store5 cache. Fork-added dep; owner:merge protects it
+            // across future syncs (customization-surface.yaml).
+            implementation(projects.core.store)
             // core-base/security is the ONE sanctioned app-shell exception: cmp-navigation is the DI
             // aggregator (KoinModules wires SecurityModule) and reads isReleaseBuild; no core/ wrapper
             // is warranted for a security module the shell itself assembles. Feature modules NEVER

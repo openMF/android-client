@@ -32,6 +32,9 @@ import kpt.core.base.designsystem.theme.KptColorSchemeImpl
 import kpt.core.base.designsystem.theme.KptShapesImpl
 import kpt.core.base.designsystem.theme.KptTheme
 import kpt.core.base.designsystem.theme.KptTypographyImpl
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptSpacing
+import kpt.core.base.designsystem.theme.LocalKptElevation
 
 /**
  * Creates [PaddingValues] using KPT spacing tokens with horizontal and vertical values.
@@ -43,9 +46,9 @@ import kpt.core.base.designsystem.theme.KptTypographyImpl
  * ```
  * Box(
  *     modifier = Modifier.padding(
- *         KptTheme.spacing.paddingValues(
- *             horizontal = KptTheme.spacing.lg,
- *             vertical = KptTheme.spacing.md
+ *         LocalKptSpacing.current.paddingValues(
+ *             horizontal = LocalKptSpacing.current.lg,
+ *             vertical = LocalKptSpacing.current.md
  *         )
  *     )
  * )
@@ -73,11 +76,11 @@ fun KptSpacing.paddingValues(
  * ```
  * Card(
  *     modifier = Modifier.padding(
- *         KptTheme.spacing.paddingValues(
- *             start = KptTheme.spacing.lg,
- *             top = KptTheme.spacing.md,
- *             end = KptTheme.spacing.lg,
- *             bottom = KptTheme.spacing.xl
+ *         LocalKptSpacing.current.paddingValues(
+ *             start = LocalKptSpacing.current.lg,
+ *             top = LocalKptSpacing.current.md,
+ *             end = LocalKptSpacing.current.lg,
+ *             bottom = LocalKptSpacing.current.xl
  *         )
  *     )
  * )
@@ -441,9 +444,9 @@ object KptSpacingDefaults {
      * Best for: Main screen content, page layouts
      */
     @Composable
-    fun screenPadding() = KptTheme.spacing.paddingValues(
-        horizontal = KptTheme.spacing.lg,
-        vertical = KptTheme.spacing.md,
+    fun screenPadding() = LocalKptSpacing.current.paddingValues(
+        horizontal = LocalKptSpacing.current.lg,
+        vertical = LocalKptSpacing.current.md,
     )
 
     /**
@@ -452,9 +455,9 @@ object KptSpacingDefaults {
      * Best for: Content inside cards, list items
      */
     @Composable
-    fun cardPadding() = KptTheme.spacing.paddingValues(
-        horizontal = KptTheme.spacing.md,
-        vertical = KptTheme.spacing.sm,
+    fun cardPadding() = LocalKptSpacing.current.paddingValues(
+        horizontal = LocalKptSpacing.current.md,
+        vertical = LocalKptSpacing.current.sm,
     )
 
     /**
@@ -463,9 +466,9 @@ object KptSpacingDefaults {
      * Best for: Button internal padding, touch targets
      */
     @Composable
-    fun buttonPadding() = KptTheme.spacing.paddingValues(
-        horizontal = KptTheme.spacing.lg,
-        vertical = KptTheme.spacing.sm,
+    fun buttonPadding() = LocalKptSpacing.current.paddingValues(
+        horizontal = LocalKptSpacing.current.lg,
+        vertical = LocalKptSpacing.current.sm,
     )
 }
 
@@ -496,9 +499,9 @@ object KptElevationDefaults {
      * Best for: Regular cards, list items, content containers
      */
     @Composable
-    fun card() = KptTheme.elevation.cardElevation(
-        defaultElevation = KptTheme.elevation.level1,
-        pressedElevation = KptTheme.elevation.level2,
+    fun card() = LocalKptElevation.current.cardElevation(
+        defaultElevation = LocalKptElevation.current.level1,
+        pressedElevation = LocalKptElevation.current.level2,
     )
 
     /**
@@ -507,9 +510,9 @@ object KptElevationDefaults {
      * Best for: Featured content, important cards, floating panels
      */
     @Composable
-    fun raisedCard() = KptTheme.elevation.cardElevation(
-        defaultElevation = KptTheme.elevation.level3,
-        pressedElevation = KptTheme.elevation.level4,
+    fun raisedCard() = LocalKptElevation.current.cardElevation(
+        defaultElevation = LocalKptElevation.current.level3,
+        pressedElevation = LocalKptElevation.current.level4,
     )
 
     /**
@@ -518,8 +521,8 @@ object KptElevationDefaults {
      * Best for: Dialogs, modal bottom sheets, overlays
      */
     @Composable
-    fun dialogCard() = KptTheme.elevation.cardElevation(
-        defaultElevation = KptTheme.elevation.level5,
+    fun dialogCard() = LocalKptElevation.current.cardElevation(
+        defaultElevation = LocalKptElevation.current.level5,
     )
 }
 
@@ -532,7 +535,7 @@ object KptElevationDefaults {
  *
  * Example usage:
  * ```
- * val colors = KptTheme.colorScheme.containerColors
+ * val colors = LocalKptColors.current.containerColors
  *
  * Card(
  *     colors = CardDefaults.cardColors(

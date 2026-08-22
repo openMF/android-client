@@ -9,9 +9,9 @@
  */
 package com.mifos.feature.dataTable.dataTableData
 
-import androidclient.feature.data_table.generated.resources.Res
-import androidclient.feature.data_table.generated.resources.feature_data_table_failed_to_delete_data_table
-import androidclient.feature.data_table.generated.resources.feature_data_table_failed_to_load_data_table_details
+import kpt.feature.data_table.generated.resources.Res
+import kpt.feature.data_table.generated.resources.feature_data_table_failed_to_delete_data_table
+import kpt.feature.data_table.generated.resources.feature_data_table_failed_to_load_data_table_details
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

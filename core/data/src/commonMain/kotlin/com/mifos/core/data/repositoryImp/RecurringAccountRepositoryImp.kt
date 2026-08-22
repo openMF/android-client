@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.RecurringAccountRepository
 import com.mifos.core.model.objects.payloads.RecurringDepositAccountPayload
 import com.mifos.core.network.GenericResponse
@@ -25,18 +23,18 @@ class RecurringAccountRepositoryImp(
     override fun getRecurringAccountTemplate(
         clientId: Int,
         productId: Int?,
-    ): Flow<DataState<RecurringDepositAccountTemplate>> {
+    ): Flow<RecurringDepositAccountTemplate> {
         return dataManagerRecurringAccount.getRecurringDepositAccountTemplate(
             clientId,
             productId,
-        ).asDataStateFlow()
+        )
     }
 
     override fun createRecurringDepositAccount(
         recurringDepositAccountPayload: RecurringDepositAccountPayload?,
-    ): Flow<DataState<GenericResponse>> {
+    ): Flow<GenericResponse> {
         return dataManagerRecurringAccount.createRecurringDepositAccount(
             recurringDepositAccountPayload,
-        ).asDataStateFlow()
+        )
     }
 }

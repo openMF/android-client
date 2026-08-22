@@ -9,8 +9,6 @@
  */
 package com.mifos.core.model.objects.noncoreobjects
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
@@ -18,7 +16,6 @@ import kotlinx.serialization.Serializable
  */
 
 @Serializable
-@Parcelize
 data class IdentifierPayload(
     var documentTypeId: Int? = null,
 
@@ -27,4 +24,4 @@ data class IdentifierPayload(
     var status: String? = null,
 
     var description: String? = null,
-) : Parcelable
+)

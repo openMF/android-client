@@ -9,12 +9,12 @@
  */
 package com.mifos.feature.report.report
 
-import androidclient.feature.report.generated.resources.Res
-import androidclient.feature.report.generated.resources.feature_report_export_csv
-import androidclient.feature.report.generated.resources.feature_report_external_approve_permission_description
-import androidclient.feature.report.generated.resources.feature_report_permission_required
-import androidclient.feature.report.generated.resources.feature_report_proceed
-import androidclient.feature.report.generated.resources.feature_report_title
+import kpt.feature.report.generated.resources.Res
+import kpt.feature.report.generated.resources.feature_report_export_csv
+import kpt.feature.report.generated.resources.feature_report_external_approve_permission_description
+import kpt.feature.report.generated.resources.feature_report_permission_required
+import kpt.feature.report.generated.resources.feature_report_proceed
+import kpt.feature.report.generated.resources.feature_report_title
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
@@ -45,7 +45,8 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun ReportScreen(
@@ -110,7 +111,7 @@ fun ReportScreen(
                 itemsIndexed(report.columnHeaders.map { it.columnName }) { index, columnName ->
                     Column {
                         Text(
-                            modifier = Modifier.padding(KptTheme.spacing.sm),
+                            modifier = Modifier.padding(LocalKptSpacing.current.sm),
                             text = columnName,
                             style = TextStyle(
                                 fontWeight = FontWeight.Bold,
@@ -118,7 +119,7 @@ fun ReportScreen(
                         )
                         report.data.map { it.row }.forEach {
                             if (it[index] != null) {
-                                Text(text = it[index]!!, modifier = Modifier.padding(KptTheme.spacing.sm))
+                                Text(text = it[index]!!, modifier = Modifier.padding(LocalKptSpacing.current.sm))
                             }
                         }
                     }

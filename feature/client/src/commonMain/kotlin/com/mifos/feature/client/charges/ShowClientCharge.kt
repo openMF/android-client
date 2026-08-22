@@ -9,11 +9,11 @@
  */
 package com.mifos.feature.client.charges
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.action_add
-import androidclient.feature.client.generated.resources.btn_back
-import androidclient.feature.client.generated.resources.charges_view_charges
-import androidclient.feature.client.generated.resources.feature_client_failed_to_load_client_charges
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.action_add
+import kpt.feature.client.generated.resources.btn_back
+import kpt.feature.client.generated.resources.charges_view_charges
+import kpt.feature.client.generated.resources.feature_client_failed_to_load_client_charges
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.heightIn

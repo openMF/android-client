@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.CheckerInboxTasksRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -21,32 +20,10 @@ import kotlinx.coroutines.flow.combine
 class GetCheckerInboxBadgesUseCase(
     private val repository: CheckerInboxTasksRepository,
 ) {
-    operator fun invoke(): Flow<DataState<Pair<Int, Int>>> = combine(
+    operator fun invoke(): Flow<Pair<Int, Int>> = combine(
         repository.getCheckerTaskList(),
         repository.getRescheduleLoansTaskList(),
-    ) { checkerTaskState, rescheduleTaskState ->
-        when {
-            checkerTaskState is DataState.Loading || rescheduleTaskState is DataState.Loading -> {
-                DataState.Loading
-            }
-
-            checkerTaskState is DataState.Success && rescheduleTaskState is DataState.Success -> {
-                val checkerTaskSize = checkerTaskState.data.size
-                val rescheduleTaskSize = rescheduleTaskState.data.size
-                DataState.Success(checkerTaskSize to rescheduleTaskSize)
-            }
-
-            else -> {
-                val errors = listOfNotNull(
-                    (checkerTaskState as? DataState.Error)?.exception,
-                    (rescheduleTaskState as? DataState.Error)?.exception,
-                )
-                DataState.Error(combineErrors(errors))
-            }
-        }
-    }
-
-    fun combineErrors(errors: List<Throwable>): Throwable {
-        return Throwable(errors.joinToString("\n") { it.message ?: "Unknown error" })
+    ) { checkerTaskList, rescheduleTaskList ->
+        checkerTaskList.size to rescheduleTaskList.size
     }
 }

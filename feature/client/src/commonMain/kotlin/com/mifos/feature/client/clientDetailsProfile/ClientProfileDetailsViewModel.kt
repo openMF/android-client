@@ -9,19 +9,19 @@
  */
 package com.mifos.feature.client.clientDetailsProfile
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.account_no
-import androidclient.feature.client.generated.resources.activation_date
-import androidclient.feature.client.generated.resources.client_classification
-import androidclient.feature.client.generated.resources.client_type
-import androidclient.feature.client.generated.resources.date_of_birth
-import androidclient.feature.client.generated.resources.external_id
-import androidclient.feature.client.generated.resources.gender
-import androidclient.feature.client.generated.resources.legal_form
-import androidclient.feature.client.generated.resources.office
-import androidclient.feature.client.generated.resources.staff
-import androidclient.feature.client.generated.resources.string_not_available
-import androidclient.feature.client.generated.resources.submission_date
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.account_no
+import kpt.feature.client.generated.resources.activation_date
+import kpt.feature.client.generated.resources.client_classification
+import kpt.feature.client.generated.resources.client_type
+import kpt.feature.client.generated.resources.date_of_birth
+import kpt.feature.client.generated.resources.external_id
+import kpt.feature.client.generated.resources.gender
+import kpt.feature.client.generated.resources.legal_form
+import kpt.feature.client.generated.resources.office
+import kpt.feature.client.generated.resources.staff
+import kpt.feature.client.generated.resources.string_not_available
+import kpt.feature.client.generated.resources.submission_date
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -30,7 +30,7 @@ import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.ui.components.ResultStatus
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.core.ui.util.toDateString
 import com.mifos.feature.client.clientDetailsProfile.components.ClientProfileDetailsActionItem

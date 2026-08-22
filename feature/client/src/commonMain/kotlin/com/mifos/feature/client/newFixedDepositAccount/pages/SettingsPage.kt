@@ -9,24 +9,24 @@
  */
 package com.mifos.feature.client.newFixedDepositAccount.pages
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.btn_back
-import androidclient.feature.client.generated.resources.feature_client_next
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_apply_penal_interest
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_frequency
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_interest_transfer
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_investing_account
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_linked_saving_account
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_linked_saving_account_field
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_lock_in_period
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_maturity_instructions
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_maximum_deposit_term
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_minimum_deposit_term
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_penal_interest
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_period
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_pre_mature_closure
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_thereafter_in_multiples
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_setting_type
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.btn_back
+import kpt.feature.client.generated.resources.feature_client_next
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_apply_penal_interest
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_frequency
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_interest_transfer
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_investing_account
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_linked_saving_account
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_linked_saving_account_field
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_lock_in_period
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_maturity_instructions
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_maximum_deposit_term
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_minimum_deposit_term
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_penal_interest
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_period
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_pre_mature_closure
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_thereafter_in_multiples
+import kpt.feature.client.generated.resources.feature_fixed_deposit_setting_type
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -51,7 +51,8 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountAction
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountState
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun SettingPage(
@@ -59,7 +60,7 @@ fun SettingPage(
     modifier: Modifier = Modifier,
     onAction: (NewFixedDepositAccountAction) -> Unit,
 ) {
-    Column(Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
+    Column(Modifier.fillMaxSize().padding(bottom = LocalKptSpacing.current.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -67,7 +68,7 @@ fun SettingPage(
                 stringResource(Res.string.feature_fixed_deposit_setting_lock_in_period),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosOutlinedTextField(
                 value = state.lockInPeriodFrequency,
@@ -82,7 +83,7 @@ fun SettingPage(
                     ),
                 ),
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
             MifosTextFieldDropdown(
                 value = if (state.lockInPeriodTypeIndex != -1) {
                     state.template.lockinPeriodFrequencyTypeOptions?.get(state.lockInPeriodTypeIndex)?.value.orEmpty()
@@ -100,13 +101,13 @@ fun SettingPage(
                 },
                 label = stringResource(Res.string.feature_fixed_deposit_setting_type),
             )
-            Spacer(Modifier.height(KptTheme.spacing.sm))
+            Spacer(Modifier.height(LocalKptSpacing.current.sm))
 
             Text(
                 stringResource(Res.string.feature_fixed_deposit_setting_minimum_deposit_term),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosOutlinedTextField(
                 value = state.minimumDispositTermFrequency,
@@ -123,7 +124,7 @@ fun SettingPage(
                     ),
                 ),
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
             MifosTextFieldDropdown(
                 value = if (state.minimumDispositTermTypeIndex != -1) {
                     state.template.periodFrequencyTypeOptions?.get(state.minimumDispositTermTypeIndex)?.value.orEmpty()
@@ -144,7 +145,7 @@ fun SettingPage(
                 stringResource(Res.string.feature_fixed_deposit_setting_thereafter_in_multiples),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosOutlinedTextField(
                 value = state.multiplesFrequency,
@@ -159,7 +160,7 @@ fun SettingPage(
                     ),
                 ),
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
             MifosTextFieldDropdown(
                 value = if (state.multiplesTypeIndex != -1) {
                     state.template.periodFrequencyTypeOptions?.get(state.multiplesTypeIndex)?.value.orEmpty()
@@ -182,7 +183,7 @@ fun SettingPage(
                 stringResource(Res.string.feature_fixed_deposit_setting_maximum_deposit_term),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosOutlinedTextField(
                 value = state.maximumDispositFrequency,
@@ -198,7 +199,7 @@ fun SettingPage(
                 ),
                 modifier = Modifier.fillMaxWidth(),
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
             MifosTextFieldDropdown(
                 value = if (state.maximumDispositTypeIndex != -1) {
                     state.template.periodFrequencyTypeOptions?.get(state.maximumDispositTypeIndex)?.value.orEmpty()
@@ -216,13 +217,13 @@ fun SettingPage(
                 },
                 label = stringResource(Res.string.feature_fixed_deposit_setting_type),
             )
-            Spacer(Modifier.height(KptTheme.spacing.sm))
+            Spacer(Modifier.height(LocalKptSpacing.current.sm))
 
             Text(
                 stringResource(Res.string.feature_fixed_deposit_setting_interest_transfer),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
             MifosCheckBox(
                 text = stringResource(Res.string.feature_fixed_deposit_setting_linked_saving_account),
                 checked = state.transferLinkedSavingAccountInterest,
@@ -252,13 +253,13 @@ fun SettingPage(
                     errorMessage = state.linkedSavingAccountError?.let { stringResource(it) },
                 )
             }
-            Spacer(Modifier.height(KptTheme.spacing.sm))
+            Spacer(Modifier.height(LocalKptSpacing.current.sm))
 
             Text(
                 stringResource(Res.string.feature_fixed_deposit_setting_maturity_instructions),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
             MifosTextFieldDropdown(
                 value = if (state.maturityInstructionsIndex != -1) {
                     state.template.maturityInstructionOptions?.get(state.maturityInstructionsIndex)?.value.orEmpty()
@@ -295,13 +296,13 @@ fun SettingPage(
                 label = stringResource(Res.string.feature_fixed_deposit_setting_investing_account),
                 errorMessage = state.investingAccountError?.let { stringResource(it) },
             )
-            Spacer(Modifier.height(KptTheme.spacing.sm))
+            Spacer(Modifier.height(LocalKptSpacing.current.sm))
 
             Text(
                 stringResource(Res.string.feature_fixed_deposit_setting_pre_mature_closure),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
             MifosCheckBox(
                 text = stringResource(Res.string.feature_fixed_deposit_setting_apply_penal_interest),
                 checked = state.applyPenalInterest,
@@ -332,7 +333,7 @@ fun SettingPage(
                         ),
                     )
 
-                    Spacer(Modifier.height(KptTheme.spacing.md))
+                    Spacer(Modifier.height(LocalKptSpacing.current.md))
 
                     MifosTextFieldDropdown(
                         value = if (state.periodIndex != -1) {

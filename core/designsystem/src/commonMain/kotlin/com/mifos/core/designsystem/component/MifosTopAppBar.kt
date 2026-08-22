@@ -35,7 +35,10 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.utils.mirrorIfRtl
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MifosTopAppBar(
@@ -92,11 +95,11 @@ fun MifosTopAppBar(
     }
 
     val topAppBarColors = TopAppBarDefaults.largeTopAppBarColors(
-        containerColor = KptTheme.colorScheme.surface,
-        scrolledContainerColor = KptTheme.colorScheme.surfaceContainer,
-        navigationIconContentColor = KptTheme.colorScheme.onSurface,
-        titleContentColor = KptTheme.colorScheme.onSurface,
-        actionIconContentColor = KptTheme.colorScheme.onSurfaceVariant,
+        containerColor = LocalKptColors.current.surface,
+        scrolledContainerColor = LocalKptColors.current.surfaceContainer,
+        navigationIconContentColor = LocalKptColors.current.onSurface,
+        titleContentColor = LocalKptColors.current.onSurface,
+        actionIconContentColor = LocalKptColors.current.onSurfaceVariant,
     )
 
     if (titleTextHasOverflow) {
@@ -109,7 +112,7 @@ fun MifosTopAppBar(
                 // making adding any arguments for softWrap and minLines superfluous.
                 Text(
                     text = title,
-                    style = KptTheme.typography.titleLarge,
+                    style = LocalKptTypography.current.titleLarge,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.testTag("PageTitleLabel"),
                 )
@@ -125,7 +128,7 @@ fun MifosTopAppBar(
             title = {
                 Text(
                     text = title,
-                    style = KptTheme.typography.titleLarge,
+                    style = LocalKptTypography.current.titleLarge,
                     maxLines = 1,
                     softWrap = false,
                     overflow = TextOverflow.Ellipsis,
@@ -170,11 +173,11 @@ fun MifosTopAppBar(
     }
 
     val topAppBarColors = TopAppBarDefaults.largeTopAppBarColors(
-        containerColor = KptTheme.colorScheme.surface,
-        scrolledContainerColor = KptTheme.colorScheme.surfaceContainer,
-        navigationIconContentColor = KptTheme.colorScheme.onSurface,
-        titleContentColor = KptTheme.colorScheme.onSurface,
-        actionIconContentColor = KptTheme.colorScheme.onSurfaceVariant,
+        containerColor = LocalKptColors.current.surface,
+        scrolledContainerColor = LocalKptColors.current.surfaceContainer,
+        navigationIconContentColor = LocalKptColors.current.onSurface,
+        titleContentColor = LocalKptColors.current.onSurface,
+        actionIconContentColor = LocalKptColors.current.onSurfaceVariant,
     )
 
     LargeTopAppBar(
@@ -183,20 +186,20 @@ fun MifosTopAppBar(
         navigationIcon = navigationIconContent,
         title = {
             Column(
-                verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.xs),
+                verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.xs),
             ) {
                 // The height of the component is controlled and will only allow for 1 extra row,
                 // making adding any arguments for softWrap and minLines superfluous.
                 Text(
                     text = title,
-                    style = KptTheme.typography.titleLarge,
+                    style = LocalKptTypography.current.titleLarge,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.testTag("PageTitleLabel"),
                 )
 
                 Text(
                     text = subtitle,
-                    style = KptTheme.typography.bodyMedium,
+                    style = LocalKptTypography.current.bodyMedium,
                     modifier = Modifier.testTag("PageTitleSubTitle"),
                 )
             }

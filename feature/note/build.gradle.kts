@@ -12,12 +12,12 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-android {
-    namespace = "com.mifos.feature.note"
-}
-
 kotlin {
     sourceSets {
+        androidMain.dependencies {
+            implementation(compose.uiTooling)
+        }
+
         commonMain.dependencies {
             implementation(compose.material3)
             implementation(compose.components.resources)
@@ -31,7 +31,10 @@ kotlin {
     }
 }
 
-dependencies {
-    debugImplementation(compose.uiTooling)
-}
 
+
+compose.resources {
+    publicResClass = true
+    generateResClass = always
+    packageOfResClass = "kpt.feature.note.generated.resources"
+}

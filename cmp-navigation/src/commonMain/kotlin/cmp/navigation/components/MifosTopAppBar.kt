@@ -29,11 +29,11 @@ import com.mifos.core.designsystem.component.MifosCard
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
-import core.designsystem.generated.resources.Res
-import core.designsystem.generated.resources.core_designsystem_app_title
+import kpt.core.designsystem.generated.resources.Res
+import kpt.core.designsystem.generated.resources.core_designsystem_app_title
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.mifos.navigation.generated.resources.topbarlogo
+import cmp.navigation.generated.resources.topbarlogo
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MifosTopAppBar(

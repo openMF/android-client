@@ -9,9 +9,9 @@
  */
 package com.mifos.feature.client.clientCollateralDetails
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.client_profile_general_action_title_collateral_data
-import androidclient.feature.client.generated.resources.client_savings_item
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.client_profile_general_action_title_collateral_data
+import kpt.feature.client.generated.resources.client_savings_item
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,7 +36,8 @@ import com.mifos.core.ui.components.MifosErrorComponent
 import com.mifos.core.ui.components.MifosProgressIndicator
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun ClientCollateralDetailScreen(
@@ -68,7 +69,7 @@ internal fun ClientCollateralDetailScreenContent(
 
         when (state.state) {
             ClientCollateralDetailsState.State.Empty -> {
-                MifosEmptyCard(modifier = Modifier.padding(horizontal = KptTheme.spacing.md))
+                MifosEmptyCard(modifier = Modifier.padding(horizontal = LocalKptSpacing.current.md))
             }
 
             is ClientCollateralDetailsState.State.Error -> {
@@ -90,14 +91,14 @@ internal fun ClientCollateralDetailScreenContent(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = KptTheme.spacing.md),
+                        .padding(horizontal = LocalKptSpacing.current.md),
                 ) {
                     CollateralDetailsScreenHeader(state.collaterals.size.toString())
 
                     LazyColumn(
                         modifier = Modifier.fillMaxSize()
-                            .padding(top = KptTheme.spacing.md),
-                        verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
+                            .padding(top = LocalKptSpacing.current.md),
+                        verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.sm),
                     ) {
                         items(
                             items = state.collaterals,

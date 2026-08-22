@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.NoteRepository
 import com.mifos.core.model.objects.note.UpdateNoteInput
 
@@ -21,6 +20,6 @@ class UpdateNoteUseCase(
         resourceId: Long,
         noteId: Long,
         updateNoteInput: UpdateNoteInput,
-    ): DataState<Unit> =
+    ): Unit =
         repository.updateNote(resourceType, resourceId, noteId, updateNoteInput)
 }

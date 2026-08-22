@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.client.clientsList
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_failed_to_load_client
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_client_failed_to_load_client
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.filter
@@ -19,7 +19,7 @@ import com.mifos.core.common.utils.Page
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.repository.ClientListRepository
 import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.Flow

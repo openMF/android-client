@@ -9,10 +9,10 @@
  */
 package com.mifos.feature.loan.loanReschedules
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_approve_failed
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_delete_failed
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_fetch_failed
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_approve_failed
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_delete_failed
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_fetch_failed
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -23,7 +23,7 @@ import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleAppro
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRejectionRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleResponse
 import com.mifos.core.model.objects.account.loan.reschedules.RescheduleStatus
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update

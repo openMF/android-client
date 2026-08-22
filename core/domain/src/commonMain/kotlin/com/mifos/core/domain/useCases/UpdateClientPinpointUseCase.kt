@@ -9,8 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.PinPointClientRepository
 import com.mifos.core.network.model.PinpointLocationActionResponse
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +22,7 @@ class UpdateClientPinpointUseCase(
         clientId: Int,
         datatableId: Int,
         address: com.mifos.core.model.objects.clients.ClientAddressRequest,
-    ): Flow<DataState<PinpointLocationActionResponse>> = flow {
+    ): Flow<PinpointLocationActionResponse> = flow {
         emit(
             pinPointClientRepository.updateClientPinpointLocation(
                 clientId,
@@ -32,5 +30,5 @@ class UpdateClientPinpointUseCase(
                 address,
             ),
         )
-    }.asDataStateFlow()
+    }
 }

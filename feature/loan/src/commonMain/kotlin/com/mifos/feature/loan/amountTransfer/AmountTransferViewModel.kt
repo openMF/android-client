@@ -9,15 +9,15 @@
  */
 package com.mifos.feature.loan.amountTransfer
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_description_can_not_be_empty
-import androidclient.feature.loan.generated.resources.feature_loan_invalid_amount
-import androidclient.feature.loan.generated.resources.feature_loan_must_select_account
-import androidclient.feature.loan.generated.resources.feature_loan_must_select_account_type
-import androidclient.feature.loan.generated.resources.feature_loan_must_select_client
-import androidclient.feature.loan.generated.resources.feature_loan_must_select_office
-import androidclient.feature.loan.generated.resources.feature_loan_transfer_amount_can_not_be_zero
-import androidclient.feature.loan.generated.resources.feature_loan_transfer_success
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_description_can_not_be_empty
+import kpt.feature.loan.generated.resources.feature_loan_invalid_amount
+import kpt.feature.loan.generated.resources.feature_loan_must_select_account
+import kpt.feature.loan.generated.resources.feature_loan_must_select_account_type
+import kpt.feature.loan.generated.resources.feature_loan_must_select_client
+import kpt.feature.loan.generated.resources.feature_loan_must_select_office
+import kpt.feature.loan.generated.resources.feature_loan_transfer_amount_can_not_be_zero
+import kpt.feature.loan.generated.resources.feature_loan_transfer_success
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -36,7 +36,7 @@ import com.mifos.core.model.objects.account.loan.transfer.AccountTypeOption
 import com.mifos.core.model.objects.account.loan.transfer.ClientOption
 import com.mifos.core.model.objects.account.loan.transfer.OfficeOption
 import com.mifos.core.ui.components.ResultStatus
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update

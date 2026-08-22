@@ -44,6 +44,18 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
             api(libs.cmp.network.monitor)
+
+            // fork-preserved (offline-first-template-migration 02-store-infra-screenstate
+            // T5-merge): dropped by the full core/data/build.gradle.kts template overwrite,
+            // but the fork's real source (paging repositories, RootNavViewModel's passcode/
+            // biometric adapters bound in RepositoryModule.kt, Settings-backed storage
+            // adapters) still needs them.
+            implementation(libs.androidx.paging.common)
+            implementation(libs.mifos.authenticator.passcode)
+            implementation(libs.mifos.authenticator.biometrics)
+            implementation(libs.multiplatform.settings)
+            implementation(libs.multiplatform.settings.serialization)
+            implementation(libs.multiplatform.settings.coroutines)
         }
 
         androidMain.dependencies {

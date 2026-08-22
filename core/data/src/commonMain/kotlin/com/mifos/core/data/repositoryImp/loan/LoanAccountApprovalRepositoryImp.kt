@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp.loan
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.loan.LoanAccountApprovalRepository
 import com.mifos.core.model.objects.account.loan.LoanApproval
 import com.mifos.core.network.DataManager
@@ -27,8 +25,8 @@ class LoanAccountApprovalRepositoryImp(
     override fun approveLoan(
         loanId: Int,
         loanApproval: LoanApproval?,
-    ): Flow<DataState<GenericResponse>> {
+    ): Flow<GenericResponse> {
         return dataManager.approveLoan(loanId, loanApproval)
-            .asDataStateFlow()
+            
     }
 }

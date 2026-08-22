@@ -9,16 +9,13 @@
  */
 package com.mifos.room.entities.navigation
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.client.ClientEntity
 /*
  * Created by Aditya Gupta on 22/7/23.
 */
 
-@Parcelize
 data class ClientListArgs(
     val clientsList: List<ClientEntity> = emptyList(),
 
     val isParentFragment: Boolean = false,
-) : Parcelable
+)

@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.search.components
 
-import androidclient.feature.search.generated.resources.Res
-import androidclient.feature.search.generated.resources.feature_search_no_search_result_found
+import kpt.feature.search.generated.resources.Res
+import kpt.feature.search.generated.resources.feature_search_no_search_result_found
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

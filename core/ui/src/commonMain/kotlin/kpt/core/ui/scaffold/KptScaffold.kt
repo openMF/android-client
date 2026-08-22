@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import kpt.core.base.designsystem.component.KptTopAppBar
 import kpt.core.base.designsystem.core.TopAppBarAction
 import kpt.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,7 +46,7 @@ fun KptScaffold(
     onNavigationIconClick: () -> Unit,
     modifier: Modifier = Modifier,
     title: String? = null,
-    containerColor: Color = KptTheme.colorScheme.background,
+    containerColor: Color = LocalKptColors.current.background,
     floatingActionButtonContent: FloatingActionButtonContent? = null,
     pullToRefreshState: KptPullToRefreshState = rememberKptPullToRefreshState(),
     contentWindowInsets: WindowInsets = ScaffoldDefaults
@@ -119,7 +120,7 @@ fun KptScaffold(
     modifier: Modifier = Modifier,
     onNavigationIconClick: () -> Unit = {},
     title: String? = null,
-    containerColor: Color = KptTheme.colorScheme.background,
+    containerColor: Color = LocalKptColors.current.background,
     floatingActionButtonContent: FloatingActionButtonContent? = null,
     pullToRefreshState: KptPullToRefreshState = rememberKptPullToRefreshState(),
     contentWindowInsets: WindowInsets = ScaffoldDefaults
@@ -197,7 +198,7 @@ fun KptScaffold(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     pullToRefreshState: KptPullToRefreshState = rememberKptPullToRefreshState(),
     floatingActionButtonPosition: FabPosition = FabPosition.End,
-    containerColor: Color = KptTheme.colorScheme.background,
+    containerColor: Color = LocalKptColors.current.background,
     contentColor: Color = contentColorFor(containerColor),
     contentWindowInsets: WindowInsets = ScaffoldDefaults
         .contentWindowInsets

@@ -9,10 +9,10 @@
  */
 package com.mifos.feature.client.clientAddress
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_address_template
-import androidclient.feature.client.generated.resources.feature_client_failed_to_load_address
-import androidclient.feature.client.generated.resources.feature_client_unable_to_create_address_for_client
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_client_failed_to_fetch_address_template
+import kpt.feature.client.generated.resources.feature_client_failed_to_load_address
+import kpt.feature.client.generated.resources.feature_client_unable_to_create_address_for_client
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -21,7 +21,7 @@ import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.model.objects.clients.ClientAddressEntity
 import com.mifos.core.network.model.PostClientAddressRequest
 import com.mifos.core.ui.components.ResultStatus
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.room.entities.client.AddressTemplate
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch

@@ -9,18 +9,15 @@
  */
 package com.mifos.core.model.objects.nav
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 
 /*
  * Created by Aditya Gupta on 22/7/23.
 */
 
-@Parcelize
 data class ClientArgs(
     var clientId: Int? = null,
 
     var savingsAccountNumber: Int? = null,
 
     var loanAccountNumber: Int? = null,
-) : Parcelable
+)

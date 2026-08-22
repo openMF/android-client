@@ -13,29 +13,29 @@ import com.mifos.room.entities.Timeline
 import com.mifos.room.entities.group.GroupDateEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import template.core.base.database.TypeConverter
+import androidx.room3.ColumnTypeConverter
 
 /**
  * Created by Pronay Sarker on 17/02/2025 (7:45 AM)
  */
 class GroupTypeConverters {
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromGroupDate(date: GroupDateEntity?): String? {
         return date?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toGroupDate(json: String?): GroupDateEntity? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromTimeline(timeline: Timeline?): String? {
         return timeline?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toTimeline(json: String?): Timeline? {
         return json?.let { Json.decodeFromString(it) }
     }

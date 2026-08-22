@@ -9,12 +9,12 @@
  */
 package com.mifos.feature.client.documentPreviewScreen
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.error_document_size_exceeded
-import androidclient.feature.client.generated.resources.unknown_error
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.error_document_size_exceeded
+import kpt.feature.client.generated.resources.unknown_error
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.feature.client.DocumentSelectAndUploadRepository
 import com.mifos.feature.client.EntityDocumentState
 import com.mifos.feature.client.utils.openPdfWithDefaultExternalApp

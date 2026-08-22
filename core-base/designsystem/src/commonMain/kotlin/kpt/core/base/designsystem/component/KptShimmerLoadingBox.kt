@@ -35,6 +35,8 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import kpt.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptShapes
 
 /**
  * Animated shimmer placeholder box.
@@ -49,9 +51,9 @@ import kpt.core.base.designsystem.theme.KptTheme
 @Composable
 fun KptShimmerLoadingBox(
     modifier: Modifier = Modifier,
-    shape: Shape = KptTheme.shapes.small,
-    shimmerColor: Color = KptTheme.colorScheme.surfaceVariant,
-    highlightColor: Color = KptTheme.colorScheme.surface,
+    shape: Shape = LocalKptShapes.current.small,
+    shimmerColor: Color = LocalKptColors.current.surfaceVariant,
+    highlightColor: Color = LocalKptColors.current.surface,
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "shimmer")
     val shimmerTranslateAnim by infiniteTransition.animateFloat(

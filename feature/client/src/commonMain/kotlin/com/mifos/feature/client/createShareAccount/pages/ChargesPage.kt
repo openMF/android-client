@@ -9,13 +9,13 @@
  */
 package com.mifos.feature.client.createShareAccount.pages
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_share_account_back
-import androidclient.feature.client.generated.resources.feature_share_account_charge
-import androidclient.feature.client.generated.resources.feature_share_account_charge_active_charge
-import androidclient.feature.client.generated.resources.feature_share_account_charge_add_new
-import androidclient.feature.client.generated.resources.feature_share_account_charge_view
-import androidclient.feature.client.generated.resources.feature_share_account_next
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_share_account_back
+import kpt.feature.client.generated.resources.feature_share_account_charge
+import kpt.feature.client.generated.resources.feature_share_account_charge_active_charge
+import kpt.feature.client.generated.resources.feature_share_account_charge_add_new
+import kpt.feature.client.generated.resources.feature_share_account_charge_view
+import kpt.feature.client.generated.resources.feature_share_account_next
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -41,7 +41,9 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.client.createShareAccount.CreateShareAccountAction
 import com.mifos.feature.client.createShareAccount.CreateShareAccountState
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun ChargesPage(
@@ -49,7 +51,7 @@ fun ChargesPage(
     modifier: Modifier = Modifier,
     onAction: (CreateShareAccountAction) -> Unit,
 ) {
-    Column(modifier = Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = LocalKptSpacing.current.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -57,7 +59,7 @@ fun ChargesPage(
                 stringResource(Res.string.feature_share_account_charge),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -74,19 +76,19 @@ fun ChargesPage(
                     Icon(
                         imageVector = MifosIcons.Add,
                         contentDescription = null,
-                        tint = KptTheme.colorScheme.primary,
+                        tint = LocalKptColors.current.primary,
                         modifier = Modifier.size(DesignToken.sizes.iconSmall),
                     )
 
                     Text(
                         text = stringResource(Res.string.feature_share_account_charge_add_new),
-                        color = KptTheme.colorScheme.primary,
+                        color = LocalKptColors.current.primary,
                         style = MifosTypography.labelLargeEmphasized,
                     )
                 }
             }
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosRowWithTextAndButton(
                 onBtnClick = {
@@ -98,7 +100,7 @@ fun ChargesPage(
                 text = state.addedCharges.size.toString() + " " + stringResource(Res.string.feature_share_account_charge_active_charge),
                 btnEnabled = state.addedCharges.isNotEmpty(),
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
         }
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.feature_share_account_back),
@@ -109,7 +111,7 @@ fun ChargesPage(
             onSecondBtnClick = {
                 onAction(CreateShareAccountAction.NextStep)
             },
-            modifier = Modifier.padding(top = KptTheme.spacing.sm),
+            modifier = Modifier.padding(top = LocalKptSpacing.current.sm),
         )
     }
 }

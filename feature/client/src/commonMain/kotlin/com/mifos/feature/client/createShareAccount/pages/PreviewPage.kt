@@ -9,25 +9,25 @@
  */
 package com.mifos.feature.client.createShareAccount.pages
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_share_account_back
-import androidclient.feature.client.generated.resources.feature_share_account_charge_active_charge
-import androidclient.feature.client.generated.resources.feature_share_account_charge_view
-import androidclient.feature.client.generated.resources.feature_share_account_charges
-import androidclient.feature.client.generated.resources.feature_share_account_detail_external_id
-import androidclient.feature.client.generated.resources.feature_share_account_detail_product_name
-import androidclient.feature.client.generated.resources.feature_share_account_detail_submission_date
-import androidclient.feature.client.generated.resources.feature_share_account_details
-import androidclient.feature.client.generated.resources.feature_share_account_submit
-import androidclient.feature.client.generated.resources.feature_share_account_terms
-import androidclient.feature.client.generated.resources.feature_share_account_terms_allow_dividends
-import androidclient.feature.client.generated.resources.feature_share_account_terms_application_date
-import androidclient.feature.client.generated.resources.feature_share_account_terms_currency
-import androidclient.feature.client.generated.resources.feature_share_account_terms_current_price
-import androidclient.feature.client.generated.resources.feature_share_account_terms_default_savings_account
-import androidclient.feature.client.generated.resources.feature_share_account_terms_lock_in_period
-import androidclient.feature.client.generated.resources.feature_share_account_terms_min_active_period
-import androidclient.feature.client.generated.resources.feature_share_account_terms_total_shares
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_share_account_back
+import kpt.feature.client.generated.resources.feature_share_account_charge_active_charge
+import kpt.feature.client.generated.resources.feature_share_account_charge_view
+import kpt.feature.client.generated.resources.feature_share_account_charges
+import kpt.feature.client.generated.resources.feature_share_account_detail_external_id
+import kpt.feature.client.generated.resources.feature_share_account_detail_product_name
+import kpt.feature.client.generated.resources.feature_share_account_detail_submission_date
+import kpt.feature.client.generated.resources.feature_share_account_details
+import kpt.feature.client.generated.resources.feature_share_account_submit
+import kpt.feature.client.generated.resources.feature_share_account_terms
+import kpt.feature.client.generated.resources.feature_share_account_terms_allow_dividends
+import kpt.feature.client.generated.resources.feature_share_account_terms_application_date
+import kpt.feature.client.generated.resources.feature_share_account_terms_currency
+import kpt.feature.client.generated.resources.feature_share_account_terms_current_price
+import kpt.feature.client.generated.resources.feature_share_account_terms_default_savings_account
+import kpt.feature.client.generated.resources.feature_share_account_terms_lock_in_period
+import kpt.feature.client.generated.resources.feature_share_account_terms_min_active_period
+import kpt.feature.client.generated.resources.feature_share_account_terms_total_shares
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -47,7 +47,8 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.client.createShareAccount.CreateShareAccountAction
 import com.mifos.feature.client.createShareAccount.CreateShareAccountState
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun PreviewPage(
@@ -56,7 +57,7 @@ fun PreviewPage(
     onAction: (CreateShareAccountAction) -> Unit,
 ) {
     Column(
-        Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.sm),
+        Modifier.fillMaxSize().padding(bottom = LocalKptSpacing.current.sm),
     ) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
@@ -90,7 +91,7 @@ fun PreviewPage(
                 text = state.addedCharges.size.toString() + " " + stringResource(Res.string.feature_share_account_charge_active_charge),
                 btnEnabled = state.addedCharges.isNotEmpty(),
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
         }
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.feature_share_account_back),
@@ -120,7 +121,7 @@ private fun TermsCard(
             Res.string.feature_share_account_terms_min_active_period to if (state.minActivePeriodFreqTypeIdx != null) state.minActivePeriodFreq + " " + state.minimumActivePeriodFrequencyTypeOptions[state.minActivePeriodFreqTypeIdx].value else "",
             Res.string.feature_share_account_terms_lock_in_period to if (state.lockInPeriodFreqTypeIdx != null) state.lockInPeriodFreq + " " + state.lockInPeriodFrequencyTypeOptions[state.lockInPeriodFreqTypeIdx].value else "",
         ),
-        verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
+        verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.sm),
     )
 }
 
@@ -134,6 +135,6 @@ private fun DetailsCard(
             Res.string.feature_share_account_detail_submission_date to state.submissionDate,
             Res.string.feature_share_account_detail_external_id to state.externalId.orEmpty(),
         ),
-        verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
+        verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.sm),
     )
 }

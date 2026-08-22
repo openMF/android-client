@@ -9,17 +9,17 @@
  */
 package com.mifos.feature.offline.syncGroupPayloads
 
-import androidclient.feature.offline.generated.resources.Res
-import androidclient.feature.offline.generated.resources.feature_offline_activation_date
-import androidclient.feature.offline.generated.resources.feature_offline_active
-import androidclient.feature.offline.generated.resources.feature_offline_click_to_refresh
-import androidclient.feature.offline.generated.resources.feature_offline_error_not_connected_internet
-import androidclient.feature.offline.generated.resources.feature_offline_external_id
-import androidclient.feature.offline.generated.resources.feature_offline_name
-import androidclient.feature.offline.generated.resources.feature_offline_office_id
-import androidclient.feature.offline.generated.resources.feature_offline_submit_date
-import androidclient.feature.offline.generated.resources.feature_offline_sync
-import androidclient.feature.offline.generated.resources.feature_offline_sync_groups
+import kpt.feature.offline.generated.resources.Res
+import kpt.feature.offline.generated.resources.feature_offline_activation_date
+import kpt.feature.offline.generated.resources.feature_offline_active
+import kpt.feature.offline.generated.resources.feature_offline_click_to_refresh
+import kpt.feature.offline.generated.resources.feature_offline_error_not_connected_internet
+import kpt.feature.offline.generated.resources.feature_offline_external_id
+import kpt.feature.offline.generated.resources.feature_offline_name
+import kpt.feature.offline.generated.resources.feature_offline_office_id
+import kpt.feature.offline.generated.resources.feature_offline_submit_date
+import kpt.feature.offline.generated.resources.feature_offline_sync
+import kpt.feature.offline.generated.resources.feature_offline_sync_groups
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

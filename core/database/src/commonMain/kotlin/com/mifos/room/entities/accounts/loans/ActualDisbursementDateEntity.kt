@@ -9,10 +9,8 @@
  */
 package com.mifos.room.entities.accounts.loans
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
-import template.core.base.database.Entity
-import template.core.base.database.PrimaryKey
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 
 @Entity(
     tableName = "ActualDisbursementDateEntity",
@@ -22,11 +20,10 @@ import template.core.base.database.PrimaryKey
     foreignKeys = [],
     ignoredColumns = [],
 )
-@Parcelize
 data class ActualDisbursementDateEntity(
     @PrimaryKey(autoGenerate = true)
     val loanId: Int? = null,
     val year: Int? = null,
     val month: Int? = null,
     val date: Int? = null,
-) : Parcelable
+)

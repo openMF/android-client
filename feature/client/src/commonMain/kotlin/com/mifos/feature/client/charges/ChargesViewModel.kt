@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.client.charges
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.charges_client_update_not_support_error_msg
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.charges_client_update_not_support_error_msg
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -25,7 +25,7 @@ import com.mifos.core.domain.useCases.GetChargesTemplateUseCase
 import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.model.objects.template.client.ChargeTemplate
 import com.mifos.core.ui.components.ResultStatus
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.core.ui.util.TextFieldsValidator
 import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.update

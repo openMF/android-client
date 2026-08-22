@@ -13,10 +13,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-android {
-    namespace = "com.mifos.feature.loan"
-}
-
 kotlin {
     sourceSets{
         commonMain.dependencies {
@@ -33,6 +29,9 @@ kotlin {
     }
 }
 
-dependencies {
-    debugImplementation(compose.uiTooling)
+
+compose.resources {
+    publicResClass = true
+    generateResClass = always
+    packageOfResClass = "kpt.feature.loan.generated.resources"
 }

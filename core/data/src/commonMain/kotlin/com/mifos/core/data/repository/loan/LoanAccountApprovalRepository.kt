@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository.loan
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.account.loan.LoanApproval
 import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
@@ -19,5 +18,5 @@ import kotlinx.coroutines.flow.Flow
  */
 interface LoanAccountApprovalRepository {
 
-    fun approveLoan(loanId: Int, loanApproval: LoanApproval?): Flow<DataState<GenericResponse>>
+    fun approveLoan(loanId: Int, loanApproval: LoanApproval?): Flow<GenericResponse>
 }

@@ -9,8 +9,6 @@
  */
 package com.mifos.core.model.objects.template.client
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
@@ -18,12 +16,11 @@ import kotlinx.serialization.Serializable
  */
 
 @Serializable
-@Parcelize
 data class ChargePaymentMode(
     val id: Int?,
     val code: String?,
     val value: String?,
-) : Parcelable {
+) {
     override fun toString(): String {
         return "ChargePaymentMode(id=$id, code='$code', value='$value')"
     }

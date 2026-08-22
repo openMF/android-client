@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import kpt.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -48,7 +49,7 @@ fun ColumnScope.KptNavigationRailItem(
                     .height(4.dp)
                     .width(10.dp)
                     .background(
-                        color = KptTheme.colorScheme.primary,
+                        color = LocalKptColors.current.primary,
                         shape = RoundedCornerShape(999.dp),
                     ),
             )
@@ -57,8 +58,8 @@ fun ColumnScope.KptNavigationRailItem(
         alwaysShowLabel = isSelected,
         onClick = onClick,
         colors = NavigationRailItemDefaults.colors(
-            selectedIconColor = KptTheme.colorScheme.primary,
-            unselectedIconColor = KptTheme.colorScheme.primary,
+            selectedIconColor = LocalKptColors.current.primary,
+            unselectedIconColor = LocalKptColors.current.primary,
         ),
         modifier = modifier,
     )

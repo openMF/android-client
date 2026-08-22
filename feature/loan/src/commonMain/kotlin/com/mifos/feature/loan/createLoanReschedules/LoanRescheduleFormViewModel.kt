@@ -9,9 +9,9 @@
  */
 package com.mifos.feature.loan.createLoanReschedules
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_must_select_reason
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_ok
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_must_select_reason
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_ok
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -20,7 +20,7 @@ import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.loan.LoanReschedulesRepository
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRequest
 import com.mifos.core.model.objects.account.loan.reschedules.RescheduleReasonOption
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource

@@ -18,7 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.ui.util.DevicePreview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @Composable
 fun MifosAlertDialog(
@@ -43,13 +44,13 @@ fun MifosAlertDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
             TextButton(onClick = onConfirmation) {
-                Text(text = confirmationText, color = KptTheme.colorScheme.primary)
+                Text(text = confirmationText, color = LocalKptColors.current.primary)
             }
         },
         dismissButton = {
             if (dismissText != null) {
                 TextButton(onClick = onDismissRequest) {
-                    Text(text = dismissText, color = KptTheme.colorScheme.error)
+                    Text(text = dismissText, color = LocalKptColors.current.error)
                 }
             }
         },

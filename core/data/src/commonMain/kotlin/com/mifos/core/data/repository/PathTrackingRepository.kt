@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.users.UserLocation
 import kotlinx.coroutines.flow.Flow
 
@@ -18,5 +17,5 @@ import kotlinx.coroutines.flow.Flow
  */
 interface PathTrackingRepository {
 
-    fun getUserPathTracking(userId: Int): Flow<DataState<List<UserLocation>>>
+    fun getUserPathTracking(userId: Int): Flow<List<UserLocation>>
 }

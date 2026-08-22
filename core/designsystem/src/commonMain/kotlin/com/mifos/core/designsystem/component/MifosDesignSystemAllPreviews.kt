@@ -45,7 +45,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.mifos.core.designsystem.component.MifosTopAppBar
 import org.mifos.core.designsystem.component.NavigationIcon
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Preview
 @Composable
@@ -77,7 +78,7 @@ private fun MifosDialogBoxWithComposableMessage() {
             message = {
                 Column {
                     Text("This is a custom composable inside the dialog.")
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+                    Spacer(modifier = Modifier.height(LocalKptSpacing.current.sm))
                     Text("You can place anything here, like a list or input field.")
                 }
             },
@@ -107,11 +108,11 @@ private fun MifosCustomDialog() {
             onDismiss = {},
             content = {
                 Card(
-                    modifier = Modifier.padding(KptTheme.spacing.md),
+                    modifier = Modifier.padding(LocalKptSpacing.current.md),
                 ) {
-                    Column(modifier = Modifier.padding(KptTheme.spacing.md)) {
+                    Column(modifier = Modifier.padding(LocalKptSpacing.current.md)) {
                         Text("This is a custom dialog.")
-                        Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+                        Spacer(modifier = Modifier.height(LocalKptSpacing.current.sm))
                         Text("You can fully customize this content.")
                     }
                 }
@@ -126,7 +127,7 @@ private fun MifosAndroidClientIcon() {
     MifosTheme {
         MifosAndroidClientIcon(
             imageVector = rememberVectorPainter(Icons.Default.Android),
-            modifier = Modifier.padding(KptTheme.spacing.md),
+            modifier = Modifier.padding(LocalKptSpacing.current.md),
         )
     }
 }
@@ -246,7 +247,7 @@ private fun MifosCard() {
     MifosTheme {
         MifosCard {
             Column(
-                modifier = Modifier.padding(KptTheme.spacing.md),
+                modifier = Modifier.padding(LocalKptSpacing.current.md),
             ) {
                 Text("Simple Mifos Card")
                 Text("This is the card content.")
@@ -479,8 +480,8 @@ private fun MifosPaginationSweetErrorPreview() {
 private fun MifosTabPreview() {
     MifosTheme {
         Column(
-            verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
-            modifier = Modifier.padding(KptTheme.spacing.md),
+            verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.sm),
+            modifier = Modifier.padding(LocalKptSpacing.current.md),
         ) {
             MifosTab(
                 text = "Selected Tab",

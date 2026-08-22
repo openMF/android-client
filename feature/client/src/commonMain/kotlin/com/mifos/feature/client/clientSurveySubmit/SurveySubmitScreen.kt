@@ -9,11 +9,11 @@
  */
 package com.mifos.feature.client.clientSurveySubmit
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_failed_to_submit_survey
-import androidclient.feature.client.generated.resources.feature_client_scorecard_created_successfully
-import androidclient.feature.client.generated.resources.feature_client_submit_survey
-import androidclient.feature.client.generated.resources.feature_client_survey_successfully_submitted
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_client_failed_to_submit_survey
+import kpt.feature.client.generated.resources.feature_client_scorecard_created_successfully
+import kpt.feature.client.generated.resources.feature_client_submit_survey
+import kpt.feature.client.generated.resources.feature_client_survey_successfully_submitted
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -39,7 +39,11 @@ import com.mifos.core.ui.util.DevicePreview
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptShapes
+import kpt.core.base.designsystem.theme.LocalKptSpacing
+import kpt.core.base.designsystem.theme.LocalKptElevation
 
 @Composable
 internal fun SurveySubmitScreen(
@@ -117,21 +121,21 @@ internal fun SurveySubmitContent(
         ) {
             Card(
                 modifier = Modifier.padding(horizontal = DesignToken.padding.dp40),
-                shape = KptTheme.shapes.extraSmall,
+                shape = LocalKptShapes.current.extraSmall,
             ) {
                 Card(
-                    modifier = Modifier.padding(top = KptTheme.spacing.xs),
-                    shape = KptTheme.shapes.extraSmall,
+                    modifier = Modifier.padding(top = LocalKptSpacing.current.xs),
+                    shape = LocalKptShapes.current.extraSmall,
                 ) {
                     Box(
                         modifier = Modifier
-                            .shadow(KptTheme.elevation.level1)
-                            .padding(horizontal = KptTheme.spacing.sm, vertical = KptTheme.spacing.xs),
+                            .shadow(LocalKptElevation.current.level1)
+                            .padding(horizontal = LocalKptSpacing.current.sm, vertical = LocalKptSpacing.current.xs),
                         contentAlignment = Alignment.Center,
                     ) {
                         Text(
                             text = displayText,
-                            style = KptTheme.typography.bodyMedium,
+                            style = LocalKptTypography.current.bodyMedium,
                         )
                     }
                 }

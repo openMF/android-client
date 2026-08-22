@@ -34,11 +34,11 @@ import kpt.core.base.designsystem.theme.LocalKptTypography
  * ```
  * KptTheme {
  *     // All child components can now access:
- *     // KptTheme.colorScheme
- *     // KptTheme.typography
- *     // KptTheme.shapes
- *     // KptTheme.spacing
- *     // KptTheme.elevation
+ *     // LocalKptColors.current
+ *     // LocalKptTypography.current
+ *     // LocalKptShapes.current
+ *     // LocalKptSpacing.current
+ *     // LocalKptElevation.current
  *     MyScreen()
  * }
  * ```

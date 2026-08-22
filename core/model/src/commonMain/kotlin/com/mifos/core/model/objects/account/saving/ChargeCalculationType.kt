@@ -9,14 +9,11 @@
  */
 package com.mifos.core.model.objects.account.saving
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 
-@Parcelize
 data class ChargeCalculationType(
     var id: Int? = null,
 
     var code: String? = null,
 
     var value: String? = null,
-) : Parcelable
+)

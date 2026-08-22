@@ -9,14 +9,10 @@
  */
 package com.mifos.room.entities.accounts.savings
 
-import com.mifos.core.model.utils.IgnoredOnParcel
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.client.ChargeCalculationTypeEntity
 import com.mifos.room.entities.client.ChargeTimeTypeEntity
 import kotlinx.serialization.Serializable
 
-@Parcelize
 @Serializable
 data class Charge(
     val id: Int? = null,
@@ -27,10 +23,8 @@ data class Charge(
 
     val name: String? = null,
 
-    @IgnoredOnParcel
     val chargeTimeType: ChargeTimeTypeEntity? = null,
 
-    @IgnoredOnParcel
     val chargeCalculationType: ChargeCalculationTypeEntity? = null,
 
     val percentage: Int? = null,
@@ -54,7 +48,7 @@ data class Charge(
     val penalty: Boolean? = null,
 
     val additionalProperties: MutableMap<String, String> = HashMap(),
-) : Parcelable {
+) {
 
     fun setAdditionalProperty(name: String, value: String) {
         additionalProperties[name] = value

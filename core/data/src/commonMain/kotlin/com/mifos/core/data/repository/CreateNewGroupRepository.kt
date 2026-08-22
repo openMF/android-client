@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.room.entities.group.GroupPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity
@@ -20,7 +19,7 @@ import kotlinx.coroutines.flow.Flow
  */
 interface CreateNewGroupRepository {
 
-    fun offices(): Flow<DataState<List<OfficeEntity>>>
+    fun offices(): Flow<List<OfficeEntity>>
 
     suspend fun createGroup(groupPayload: GroupPayloadEntity): SaveResponse
 }

@@ -9,12 +9,12 @@
  */
 package com.mifos.feature.search.components
 
-import androidclient.feature.search.generated.resources.Res
-import androidclient.feature.search.generated.resources.feature_search_all
-import androidclient.feature.search.generated.resources.feature_search_empty_input_field
-import androidclient.feature.search.generated.resources.feature_search_exact_match
-import androidclient.feature.search.generated.resources.feature_search_search_hint
-import androidclient.feature.search.generated.resources.feature_search_title
+import kpt.feature.search.generated.resources.Res
+import kpt.feature.search.generated.resources.feature_search_all
+import kpt.feature.search.generated.resources.feature_search_empty_input_field
+import kpt.feature.search.generated.resources.feature_search_exact_match
+import kpt.feature.search.generated.resources.feature_search_search_hint
+import kpt.feature.search.generated.resources.feature_search_title
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -50,7 +50,10 @@ import com.mifos.feature.search.FilterOption
 import com.mifos.feature.search.SearchScreenEvent
 import com.mifos.feature.search.SearchScreenState
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun SearchBox(
@@ -66,7 +69,7 @@ internal fun SearchBox(
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
+            verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.sm),
         ) {
             // Title And Filter Icon
             Row(
@@ -76,7 +79,7 @@ internal fun SearchBox(
             ) {
                 Text(
                     text = stringResource(Res.string.feature_search_title),
-                    style = KptTheme.typography.headlineSmall,
+                    style = LocalKptTypography.current.headlineSmall,
                 )
 
                 AssistChip(
@@ -87,7 +90,7 @@ internal fun SearchBox(
                         Text(
                             text = state.selectedFilter?.let { stringResource(it.labelRes) }
                                 ?: stringResource(Res.string.feature_search_all),
-                            style = KptTheme.typography.bodyLarge,
+                            style = LocalKptTypography.current.bodyLarge,
                         )
                     },
                     leadingIcon = {
@@ -103,7 +106,7 @@ internal fun SearchBox(
                         )
                     },
                     colors = AssistChipDefaults.assistChipColors().copy(
-                        leadingIconContentColor = KptTheme.colorScheme.tertiary,
+                        leadingIconContentColor = LocalKptColors.current.tertiary,
                     ),
                 )
             }
@@ -141,7 +144,7 @@ internal fun SearchBox(
 
                 Text(
                     text = stringResource(Res.string.feature_search_title),
-                    style = KptTheme.typography.bodyLarge,
+                    style = LocalKptTypography.current.bodyLarge,
                 )
             }
 
@@ -156,7 +159,7 @@ internal fun SearchBox(
                     }
                     .padding(vertical = DesignToken.padding.medium),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm, Alignment.Start),
+                horizontalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.sm, Alignment.Start),
             ) {
                 Checkbox(
                     checked = state.exactMatch ?: false,

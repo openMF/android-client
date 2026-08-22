@@ -9,11 +9,8 @@
  */
 package com.mifos.core.model.objects
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
-@Parcelize
 @Serializable
 data class Changes(
     val transactionDate: String? = null,
@@ -35,4 +32,4 @@ data class Changes(
     val receiptNumber: String? = null,
 
     val bankNumber: String? = null,
-) : Parcelable
+)

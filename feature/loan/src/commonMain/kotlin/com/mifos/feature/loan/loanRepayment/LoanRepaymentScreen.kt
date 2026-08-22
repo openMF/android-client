@@ -9,27 +9,27 @@
  */
 package com.mifos.feature.loan.loanRepayment
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_account_number
-import androidclient.feature.loan.generated.resources.feature_loan_additional_payment
-import androidclient.feature.loan.generated.resources.feature_loan_amount
-import androidclient.feature.loan.generated.resources.feature_loan_cancel
-import androidclient.feature.loan.generated.resources.feature_loan_dialog_action_ok
-import androidclient.feature.loan.generated.resources.feature_loan_dialog_action_pay_now
-import androidclient.feature.loan.generated.resources.feature_loan_dialog_message_sync_transaction
-import androidclient.feature.loan.generated.resources.feature_loan_failed_to_load_loan_repayment
-import androidclient.feature.loan.generated.resources.feature_loan_loan_amount_due
-import androidclient.feature.loan.generated.resources.feature_loan_loan_fees
-import androidclient.feature.loan.generated.resources.feature_loan_loan_in_arrears
-import androidclient.feature.loan.generated.resources.feature_loan_loan_repayment
-import androidclient.feature.loan.generated.resources.feature_loan_payment_success_title
-import androidclient.feature.loan.generated.resources.feature_loan_payment_success_transaction_label
-import androidclient.feature.loan.generated.resources.feature_loan_payment_type
-import androidclient.feature.loan.generated.resources.feature_loan_repayment_date
-import androidclient.feature.loan.generated.resources.feature_loan_review_payment
-import androidclient.feature.loan.generated.resources.feature_loan_select_date
-import androidclient.feature.loan.generated.resources.feature_loan_sync_previous_transaction
-import androidclient.feature.loan.generated.resources.feature_loan_total
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_account_number
+import kpt.feature.loan.generated.resources.feature_loan_additional_payment
+import kpt.feature.loan.generated.resources.feature_loan_amount
+import kpt.feature.loan.generated.resources.feature_loan_cancel
+import kpt.feature.loan.generated.resources.feature_loan_dialog_action_ok
+import kpt.feature.loan.generated.resources.feature_loan_dialog_action_pay_now
+import kpt.feature.loan.generated.resources.feature_loan_dialog_message_sync_transaction
+import kpt.feature.loan.generated.resources.feature_loan_failed_to_load_loan_repayment
+import kpt.feature.loan.generated.resources.feature_loan_loan_amount_due
+import kpt.feature.loan.generated.resources.feature_loan_loan_fees
+import kpt.feature.loan.generated.resources.feature_loan_loan_in_arrears
+import kpt.feature.loan.generated.resources.feature_loan_loan_repayment
+import kpt.feature.loan.generated.resources.feature_loan_payment_success_title
+import kpt.feature.loan.generated.resources.feature_loan_payment_success_transaction_label
+import kpt.feature.loan.generated.resources.feature_loan_payment_type
+import kpt.feature.loan.generated.resources.feature_loan_repayment_date
+import kpt.feature.loan.generated.resources.feature_loan_review_payment
+import kpt.feature.loan.generated.resources.feature_loan_select_date
+import kpt.feature.loan.generated.resources.feature_loan_sync_previous_transaction
+import kpt.feature.loan.generated.resources.feature_loan_total
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -95,7 +95,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -206,7 +209,7 @@ internal fun LoanRepaymentScreen(
                         title = {
                             Text(
                                 text = stringResource(Res.string.feature_loan_sync_previous_transaction),
-                                style = KptTheme.typography.titleLarge,
+                                style = LocalKptTypography.current.titleLarge,
                             )
                         },
                         text = { Text(text = stringResource(Res.string.feature_loan_dialog_message_sync_transaction)) },
@@ -326,8 +329,8 @@ private fun LoanRepaymentContent(
         Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
 
         Text(
-            style = KptTheme.typography.bodyLarge,
-            color = KptTheme.colorScheme.onBackground,
+            style = LocalKptTypography.current.bodyLarge,
+            color = LocalKptColors.current.onBackground,
             text = clientName,
             fontWeight = FontWeight.Bold,
         )
@@ -458,17 +461,17 @@ private fun FarApartTextItem(title: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = KptTheme.spacing.sm),
+            .padding(bottom = LocalKptSpacing.current.sm),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
-            style = KptTheme.typography.bodyLarge,
+            style = LocalKptTypography.current.bodyLarge,
             text = title,
             color = Black,
         )
 
         Text(
-            style = KptTheme.typography.bodyLarge,
+            style = LocalKptTypography.current.bodyLarge,
             text = value,
             color = DarkGray,
             fontWeight = FontWeight.Medium,
@@ -497,15 +500,15 @@ private fun ConfirmationBottomSheet(
     ) {
         Column(
             modifier = Modifier
-                .padding(horizontal = KptTheme.spacing.md)
-                .padding(bottom = KptTheme.spacing.lg)
+                .padding(horizontal = LocalKptSpacing.current.md)
+                .padding(bottom = LocalKptSpacing.current.lg)
                 .navigationBarsPadding(),
         ) {
             Text(
                 text = stringResource(Res.string.feature_loan_review_payment),
-                style = KptTheme.typography.headlineSmall,
+                style = LocalKptTypography.current.headlineSmall,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = KptTheme.spacing.md),
+                modifier = Modifier.padding(bottom = LocalKptSpacing.current.md),
             )
 
             ReviewItem(stringResource(Res.string.feature_loan_account_number), loanAccountNumber)
@@ -514,7 +517,7 @@ private fun ConfirmationBottomSheet(
                 DateHelper.getDateAsStringFromLong(repaymentDate),
             )
             ReviewItem(stringResource(Res.string.feature_loan_payment_type), paymentType)
-            HorizontalDivider(modifier = Modifier.padding(vertical = KptTheme.spacing.sm))
+            HorizontalDivider(modifier = Modifier.padding(vertical = LocalKptSpacing.current.sm))
             ReviewItem(
                 stringResource(Res.string.feature_loan_amount),
                 formatCurrency(amount.toDoubleOrNull(), currencyCode, decimalPlaces),
@@ -528,27 +531,27 @@ private fun ConfirmationBottomSheet(
                 formatCurrency(fees.toDoubleOrNull(), currencyCode, decimalPlaces),
             )
 
-            HorizontalDivider(modifier = Modifier.padding(vertical = KptTheme.spacing.sm))
+            HorizontalDivider(modifier = Modifier.padding(vertical = LocalKptSpacing.current.sm))
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = KptTheme.spacing.xs),
+                    .padding(vertical = LocalKptSpacing.current.xs),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
                     text = stringResource(Res.string.feature_loan_total),
-                    style = KptTheme.typography.titleMedium,
+                    style = LocalKptTypography.current.titleMedium,
                     fontWeight = FontWeight.Bold,
                 )
                 Text(
                     text = formatCurrency(total.toDoubleOrNull(), currencyCode, decimalPlaces),
-                    style = KptTheme.typography.titleMedium,
+                    style = LocalKptTypography.current.titleMedium,
                     fontWeight = FontWeight.Bold,
-                    color = KptTheme.colorScheme.primary,
+                    color = LocalKptColors.current.primary,
                 )
             }
 
-            Spacer(modifier = Modifier.height(KptTheme.spacing.lg))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.lg))
 
             MifosTwoButtonRow(
                 firstBtnText = stringResource(Res.string.feature_loan_cancel),
@@ -577,11 +580,11 @@ private fun ReviewItem(label: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = KptTheme.spacing.xs),
+            .padding(vertical = LocalKptSpacing.current.xs),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Text(text = label, style = KptTheme.typography.bodyMedium, color = KptTheme.colorScheme.surfaceVariant)
-        Text(text = value, style = KptTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
+        Text(text = label, style = LocalKptTypography.current.bodyMedium, color = LocalKptColors.current.surfaceVariant)
+        Text(text = value, style = LocalKptTypography.current.bodyMedium, fontWeight = FontWeight.SemiBold)
     }
 }
 
@@ -596,7 +599,7 @@ private fun SuccessBottomSheet(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(KptTheme.spacing.lg)
+                .padding(LocalKptSpacing.current.lg)
                 .navigationBarsPadding(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -607,24 +610,24 @@ private fun SuccessBottomSheet(
                 modifier = Modifier.size(DesignToken.sizes.avatarLarge),
             )
 
-            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
             Text(
                 text = stringResource(Res.string.feature_loan_payment_success_title),
-                style = KptTheme.typography.headlineSmall,
+                style = LocalKptTypography.current.headlineSmall,
                 fontWeight = FontWeight.Bold,
             )
 
-            Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.sm))
 
             Text(
                 text = stringResource(Res.string.feature_loan_payment_success_transaction_label, response.resourceId.toString()),
-                style = KptTheme.typography.bodyMedium,
+                style = LocalKptTypography.current.bodyMedium,
                 textAlign = TextAlign.Center,
-                color = KptTheme.colorScheme.onSurfaceVariant,
+                color = LocalKptColors.current.onSurfaceVariant,
             )
 
-            Spacer(modifier = Modifier.height(KptTheme.spacing.lg))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.lg))
 
             Button(
                 onClick = onDismiss,

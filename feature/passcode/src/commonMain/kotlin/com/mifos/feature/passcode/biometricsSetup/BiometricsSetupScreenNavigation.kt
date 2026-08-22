@@ -14,7 +14,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import kotlinx.serialization.Serializable
-import template.core.base.ui.composableWithSlideTransitions
+import kpt.core.base.ui.nav.composableWithSlideTransitions
 
 /** Navigation destination for the first-time biometric setup screen. */
 @Serializable

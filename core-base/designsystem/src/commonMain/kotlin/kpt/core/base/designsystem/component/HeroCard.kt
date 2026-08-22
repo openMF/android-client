@@ -26,6 +26,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kpt.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
+import kpt.core.base.designsystem.theme.LocalKptElevation
 
 /**
  * Hero card — the dashboard's first impression. Renders a vertical gradient from
@@ -39,8 +41,8 @@ import kpt.core.base.designsystem.theme.KptTheme
 @Composable
 fun HeroCard(
     modifier: Modifier = Modifier,
-    // KptTheme.spacing.lg == 24.dp — value-equivalent to the legacy MaterialTheme.spacing.xl (24dp).
-    contentPadding: PaddingValues = PaddingValues(KptTheme.spacing.lg),
+    // LocalKptSpacing.current.lg == 24.dp — value-equivalent to the legacy MaterialTheme.spacing.xl (24dp).
+    contentPadding: PaddingValues = PaddingValues(LocalKptSpacing.current.lg),
     gradientStart: Color = MaterialTheme.colorScheme.primary,
     gradientEnd: Color = MaterialTheme.colorScheme.primaryContainer,
     content: @Composable () -> Unit,
@@ -49,8 +51,8 @@ fun HeroCard(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.elevatedCardElevation(
-            // KptTheme.elevation.level2 == 3.dp — value-equivalent to the legacy MaterialTheme.elevation.medium (3dp).
-            defaultElevation = KptTheme.elevation.level2,
+            // LocalKptElevation.current.level2 == 3.dp — value-equivalent to the legacy MaterialTheme.elevation.medium (3dp).
+            defaultElevation = LocalKptElevation.current.level2,
         ),
     ) {
         Column(

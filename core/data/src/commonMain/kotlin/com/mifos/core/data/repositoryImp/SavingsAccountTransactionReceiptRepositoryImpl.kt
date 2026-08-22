@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.SavingsAccountTransactionReceiptRepository
 import com.mifos.core.network.datamanager.DataManagerRunReport
 import kotlinx.coroutines.flow.Flow
@@ -22,7 +20,7 @@ class SavingsAccountTransactionReceiptRepositoryImpl(
     private val dataManagerSavings: DataManagerRunReport,
 ) : SavingsAccountTransactionReceiptRepository {
 
-    override suspend fun getSavingsAccountTransactionReceipt(transactionId: Int): Flow<DataState<ByteArray>> {
-        return dataManagerSavings.getSavingAccountTransactionReceipt(transactionId).asDataStateFlow()
+    override suspend fun getSavingsAccountTransactionReceipt(transactionId: Int): Flow<ByteArray> {
+        return dataManagerSavings.getSavingAccountTransactionReceipt(transactionId)
     }
 }

@@ -10,7 +10,6 @@
 package com.mifos.core.data.repository
 
 import androidx.paging.PagingData
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.Page
 import com.mifos.room.entities.group.CenterEntity
 import com.mifos.room.entities.group.CenterWithAssociations
@@ -25,5 +24,5 @@ interface CenterListRepository {
 
     suspend fun getCentersGroupAndMeeting(id: Int): CenterWithAssociations
 
-    fun allDatabaseCenters(): Flow<DataState<Page<CenterEntity>>>
+    fun allDatabaseCenters(): Flow<Page<CenterEntity>>
 }

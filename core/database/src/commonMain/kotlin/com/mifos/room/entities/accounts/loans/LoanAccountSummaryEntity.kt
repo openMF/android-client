@@ -9,13 +9,10 @@
  */
 package com.mifos.room.entities.accounts.loans
 
-import com.mifos.core.model.utils.IgnoredOnParcel
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
 import kotlinx.serialization.Serializable
-import template.core.base.database.Entity
-import template.core.base.database.PrimaryKey
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 
 @Entity(
     indices = [],
@@ -26,12 +23,10 @@ import template.core.base.database.PrimaryKey
     tableName = "LoansAccountSummary",
 )
 @Serializable
-@Parcelize
 data class LoanAccountSummaryEntity(
     @PrimaryKey(autoGenerate = true)
     val loanId: Int? = null,
 
-    @IgnoredOnParcel
     val currency: SavingAccountCurrencyEntity? = null,
 
     val principalDisbursed: Double? = null,
@@ -101,4 +96,4 @@ data class LoanAccountSummaryEntity(
     val totalOverdue: Double? = null,
 
     val overdueSinceDate: List<Int>? = null,
-) : Parcelable
+)

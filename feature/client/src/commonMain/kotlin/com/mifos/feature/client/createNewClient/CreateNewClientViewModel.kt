@@ -9,15 +9,15 @@
  */
 package com.mifos.feature.client.createNewClient
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_Image_Upload_Successful
-import androidclient.feature.client.generated.resources.feature_client_client_created_successfully
-import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_address_configuration
-import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_address_template
-import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_client_template
-import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_offices
-import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_staffs
-import androidclient.feature.client.generated.resources.feature_client_waiting_for_checker_approval
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_client_Image_Upload_Successful
+import kpt.feature.client.generated.resources.feature_client_client_created_successfully
+import kpt.feature.client.generated.resources.feature_client_failed_to_fetch_address_configuration
+import kpt.feature.client.generated.resources.feature_client_failed_to_fetch_address_template
+import kpt.feature.client.generated.resources.feature_client_failed_to_fetch_client_template
+import kpt.feature.client.generated.resources.feature_client_failed_to_fetch_offices
+import kpt.feature.client.generated.resources.feature_client_failed_to_fetch_staffs
+import kpt.feature.client.generated.resources.feature_client_waiting_for_checker_approval
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState

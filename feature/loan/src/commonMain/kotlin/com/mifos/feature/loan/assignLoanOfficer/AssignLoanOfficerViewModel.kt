@@ -9,11 +9,11 @@
  */
 package com.mifos.feature.loan.assignLoanOfficer
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_assign_officer_failed_to_load
-import androidclient.feature.loan.generated.resources.feature_loan_assign_officer_failure
-import androidclient.feature.loan.generated.resources.feature_loan_assign_officer_success
-import androidclient.feature.loan.generated.resources.feature_loan_message_field_required
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_assign_officer_failed_to_load
+import kpt.feature.loan.generated.resources.feature_loan_assign_officer_failure
+import kpt.feature.loan.generated.resources.feature_loan_assign_officer_success
+import kpt.feature.loan.generated.resources.feature_loan_message_field_required
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -24,7 +24,7 @@ import com.mifos.core.domain.useCases.assignLoanOfficer.GetLoanOfficerOptionsUse
 import com.mifos.core.model.objects.account.loan.assignLoanOfficer.AssignLoanOfficerInput
 import com.mifos.core.model.objects.account.loan.assignLoanOfficer.AssignLoanOfficerResponse
 import com.mifos.core.model.objects.template.loan.LoanOfficerOption
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource

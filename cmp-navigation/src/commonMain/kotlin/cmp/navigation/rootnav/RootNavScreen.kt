@@ -106,14 +106,12 @@ fun RootNavScreen(
     }
 
     val targetRoute = when (state) {
-        // SetLanguageRoute
-        RootNavState.ShowOnboarding -> ""
-        // AuthGraphRoute
-        RootNavState.Auth -> ""
         RootNavState.Splash -> SplashRoute
-        // UserUnlockRoute.Standard
-        RootNavState.UserLocked -> ""
-        is RootNavState.UserUnlocked -> AuthenticatedGraphRoute
+        // AuthGraphRoute — field-officer's fork auth (feature/auth + feature/passcode) gates
+        // access before RootNavState ever reaches UserAuthenticated; no separate auth-graph
+        // route is wired at the RootNav level (offline-first-template-migration T5).
+        RootNavState.AuthenticateUser -> ""
+        RootNavState.UserAuthenticated -> AuthenticatedGraphRoute
     }
     val currentRoute = navController.currentDestination?.rootLevelRoute()
 
@@ -150,13 +148,9 @@ fun RootNavScreen(
     LaunchedEffect(state) {
         when (state) {
             RootNavState.Splash -> navController.navigateToSplash(rootNavOptions)
-            // navController.navigateToAuthGraph(rootNavOptions)
-            RootNavState.Auth -> {}
-            // navController.navigateToSetLanguage(rootNavOptions)
-            RootNavState.ShowOnboarding -> {}
-            // navController.navigateToUserUnlock(rootNavOptions)
-            RootNavState.UserLocked -> {}
-            is RootNavState.UserUnlocked -> navController.navigateToAuthenticatedGraph(
+            // No separate auth-graph route at the RootNav level — see targetRoute comment above.
+            RootNavState.AuthenticateUser -> {}
+            RootNavState.UserAuthenticated -> navController.navigateToAuthenticatedGraph(
                 navOptions = rootNavOptions,
             )
         }

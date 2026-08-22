@@ -10,7 +10,6 @@
 plugins {
     alias(libs.plugins.kmp.library.convention)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.mifos.kmp.room)
 }
 

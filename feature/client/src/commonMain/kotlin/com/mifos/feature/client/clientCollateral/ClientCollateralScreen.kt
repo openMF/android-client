@@ -9,24 +9,24 @@
  */
 package com.mifos.feature.client.clientCollateral
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.btn_back
-import androidclient.feature.client.generated.resources.btn_submit
-import androidclient.feature.client.generated.resources.client_collateral_base_price
-import androidclient.feature.client.generated.resources.client_collateral_choose_type
-import androidclient.feature.client.generated.resources.client_collateral_failure_title
-import androidclient.feature.client.generated.resources.client_collateral_name
-import androidclient.feature.client.generated.resources.client_collateral_no_options
-import androidclient.feature.client.generated.resources.client_collateral_pct_to_base
-import androidclient.feature.client.generated.resources.client_collateral_quality
-import androidclient.feature.client.generated.resources.client_collateral_quantity
-import androidclient.feature.client.generated.resources.client_collateral_success_message
-import androidclient.feature.client.generated.resources.client_collateral_success_title
-import androidclient.feature.client.generated.resources.client_collateral_title
-import androidclient.feature.client.generated.resources.client_collateral_total
-import androidclient.feature.client.generated.resources.client_collateral_total_collateral
-import androidclient.feature.client.generated.resources.client_collateral_unit_type
-import androidclient.feature.client.generated.resources.dialog_continue
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.btn_back
+import kpt.feature.client.generated.resources.btn_submit
+import kpt.feature.client.generated.resources.client_collateral_base_price
+import kpt.feature.client.generated.resources.client_collateral_choose_type
+import kpt.feature.client.generated.resources.client_collateral_failure_title
+import kpt.feature.client.generated.resources.client_collateral_name
+import kpt.feature.client.generated.resources.client_collateral_no_options
+import kpt.feature.client.generated.resources.client_collateral_pct_to_base
+import kpt.feature.client.generated.resources.client_collateral_quality
+import kpt.feature.client.generated.resources.client_collateral_quantity
+import kpt.feature.client.generated.resources.client_collateral_success_message
+import kpt.feature.client.generated.resources.client_collateral_success_title
+import kpt.feature.client.generated.resources.client_collateral_title
+import kpt.feature.client.generated.resources.client_collateral_total
+import kpt.feature.client.generated.resources.client_collateral_total_collateral
+import kpt.feature.client.generated.resources.client_collateral_unit_type
+import kpt.feature.client.generated.resources.dialog_continue
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -56,7 +56,8 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun ClientCollateralScreen(
@@ -98,7 +99,7 @@ private fun ClientCollateralContent(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .padding(bottom = KptTheme.spacing.md),
+                .padding(bottom = LocalKptSpacing.current.md),
         ) {
             MifosBreadcrumbNavBar(
                 navController = navController,
@@ -107,7 +108,7 @@ private fun ClientCollateralContent(
             Text(
                 text = stringResource(Res.string.client_collateral_title),
                 style = MifosTypography.labelLargeEmphasized,
-                modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
+                modifier = Modifier.padding(horizontal = LocalKptSpacing.current.md),
             )
 
             Spacer(modifier = Modifier.height(DesignToken.spacing.medium))
@@ -118,7 +119,7 @@ private fun ClientCollateralContent(
                         .fillMaxWidth()
                         .weight(1f)
                         .verticalScroll(rememberScrollState())
-                        .padding(horizontal = KptTheme.spacing.md),
+                        .padding(horizontal = LocalKptSpacing.current.md),
                 ) {
                     MifosTextFieldDropdown(
                         value = state.collaterals[state.currentSelectedIndex].name,
@@ -206,7 +207,7 @@ private fun ClientCollateralContent(
                     secondBtnText = stringResource(Res.string.btn_submit),
                     onFirstBtnClick = { onAction(ClientCollateralAction.NavigateBack) },
                     onSecondBtnClick = { onAction(ClientCollateralAction.OnSave) },
-                    modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
+                    modifier = Modifier.padding(horizontal = LocalKptSpacing.current.md),
                 )
             } else {
                 Text(stringResource(Res.string.client_collateral_no_options))

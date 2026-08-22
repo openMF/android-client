@@ -9,17 +9,14 @@
  */
 package com.mifos.core.model.objects.account.loan
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 
 /**
  * Created by nellyk on 2/21/2016.
  */
-@Parcelize
 data class RepaymentFrequencyNthDayType(
     var id: Int = 0,
 
     var code: Int = 0,
 
     var value: Int = 0,
-) : Parcelable
+)

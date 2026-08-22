@@ -9,9 +9,9 @@
  */
 package com.mifos.core.ui.components
 
-import androidclient.core.ui.generated.resources.Res
-import androidclient.core.ui.generated.resources.ic_icon_error
-import androidclient.core.ui.generated.resources.ic_icon_success
+import kpt.core.ui.generated.resources.Res
+import kpt.core.ui.generated.resources.ic_icon_error
+import kpt.core.ui.generated.resources.ic_icon_success
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,7 +33,8 @@ import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @Composable
 fun MifosStatusDialog(
@@ -125,7 +126,7 @@ fun MifosStatusDialog(
             onDismissRequest = onDismissRequest,
             confirmButton = {},
             text = content,
-            containerColor = KptTheme.colorScheme.surfaceContainerHigh,
+            containerColor = LocalKptColors.current.surfaceContainerHigh,
             modifier = modifier,
         )
     } else {

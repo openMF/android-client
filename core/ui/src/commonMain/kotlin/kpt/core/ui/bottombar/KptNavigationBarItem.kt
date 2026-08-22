@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import kpt.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -51,7 +52,7 @@ fun RowScope.KptNavigationBarItem(
                     .height(4.dp)
                     .width(10.dp)
                     .background(
-                        color = KptTheme.colorScheme.primary,
+                        color = LocalKptColors.current.primary,
                         shape = RoundedCornerShape(7.dp),
                     )
                     .animateContentSize(),
@@ -62,8 +63,8 @@ fun RowScope.KptNavigationBarItem(
         onClick = onClick,
         modifier = modifier,
         colors = NavigationBarItemDefaults.colors(
-            selectedIconColor = KptTheme.colorScheme.primary,
-            unselectedIconColor = KptTheme.colorScheme.primary,
+            selectedIconColor = LocalKptColors.current.primary,
+            unselectedIconColor = LocalKptColors.current.primary,
             indicatorColor = Color.Transparent,
         ),
     )

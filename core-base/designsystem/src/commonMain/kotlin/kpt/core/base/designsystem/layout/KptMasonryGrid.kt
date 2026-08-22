@@ -16,12 +16,13 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.util.fastMap
 import kpt.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun KptMasonryGrid(
     columns: Int,
     modifier: Modifier = Modifier,
-    spacing: Dp = KptTheme.spacing.sm,
+    spacing: Dp = LocalKptSpacing.current.sm,
     content: @Composable () -> Unit,
 ) {
     Layout(

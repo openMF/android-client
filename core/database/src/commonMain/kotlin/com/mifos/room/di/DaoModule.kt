@@ -20,8 +20,10 @@ val DaoModule = module {
     single { get<MifosDatabase>().columnValueDao }
     single { get<MifosDatabase>().groupsDao }
     single { get<MifosDatabase>().loanDao }
+    single { get<MifosDatabase>().loanTransactionDao }
     single { get<MifosDatabase>().officeDao }
     single { get<MifosDatabase>().savingsDao }
+    single { get<MifosDatabase>().savingsAccountTransactionDao }
     single { get<MifosDatabase>().staffDao }
     single { get<MifosDatabase>().surveyDao }
 }

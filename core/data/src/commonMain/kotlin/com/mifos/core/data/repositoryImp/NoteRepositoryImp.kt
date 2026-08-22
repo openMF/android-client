@@ -9,13 +9,11 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.mappers.client.note.toDomain
 import com.mifos.core.data.mappers.client.note.toDto
 import com.mifos.core.data.repository.NoteRepository
 import com.mifos.core.data.util.NetworkMonitor
-import com.mifos.core.data.util.runAsDataState
+import com.mifos.core.data.util.runSuspendCall
 import com.mifos.core.data.util.withNetworkCheck
 import com.mifos.core.model.objects.note.CreateNoteInput
 import com.mifos.core.model.objects.note.Note
@@ -24,7 +22,7 @@ import com.mifos.core.network.datamanager.DataManagerNote
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import template.core.base.common.manager.DispatcherManager
+import kpt.core.base.common.manager.DispatcherManager
 
 class NoteRepositoryImp(
     private val dataManagerNote: DataManagerNote,
@@ -36,8 +34,8 @@ class NoteRepositoryImp(
         resourceType: String,
         resourceId: Long,
         createNoteInput: CreateNoteInput,
-    ): DataState<Unit> {
-        return runAsDataState(
+    ): Unit {
+        return runSuspendCall(
             networkMonitor,
             dispatcher.io,
         ) {
@@ -49,8 +47,8 @@ class NoteRepositoryImp(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-    ): DataState<Unit> {
-        return runAsDataState(
+    ): Unit {
+        return runSuspendCall(
             networkMonitor,
             dispatcher.io,
         ) {
@@ -62,16 +60,16 @@ class NoteRepositoryImp(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-    ): Flow<DataState<Note>> =
+    ): Flow<Note> =
         networkMonitor.withNetworkCheck(
             dataManagerNote.retrieveNote(resourceType, resourceId, noteId).map { it.toDomain() }
-                .asDataStateFlow(),
+                ,
         ).flowOn(dispatcher.io)
 
     override fun retrieveListNotes(
         resourceType: String,
         resourceId: Long,
-    ): Flow<DataState<List<Note>>> =
+    ): Flow<List<Note>> =
         networkMonitor.withNetworkCheck(
             dataManagerNote
                 .retrieveListNotes(resourceType, resourceId)
@@ -80,7 +78,7 @@ class NoteRepositoryImp(
                         dto.toDomain()
                     }
                 }
-                .asDataStateFlow(),
+                ,
         ).flowOn(dispatcher.io)
 
     override suspend fun updateNote(
@@ -88,8 +86,8 @@ class NoteRepositoryImp(
         resourceId: Long,
         noteId: Long,
         updateNoteInput: UpdateNoteInput,
-    ): DataState<Unit> {
-        return runAsDataState(
+    ): Unit {
+        return runSuspendCall(
             networkMonitor,
             dispatcher.io,
         ) {

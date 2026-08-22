@@ -50,7 +50,8 @@ import androidx.compose.ui.zIndex
 import com.mifos.core.designsystem.component.MifosNavigationRail
 import com.mifos.core.designsystem.component.MifosPullToRefreshState
 import com.mifos.core.designsystem.component.rememberMifosPullToRefreshState
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
 @Suppress("LongMethod")
@@ -65,7 +66,7 @@ fun MifosScaffold(
     floatingActionButtonPosition: FabPosition = FabPosition.End,
     navigationData: ScaffoldNavigationData? = null,
     pullToRefreshState: MifosPullToRefreshState = rememberMifosPullToRefreshState(),
-    containerColor: Color = KptTheme.colorScheme.background,
+    containerColor: Color = LocalKptColors.current.background,
     contentColor: Color = contentColorFor(containerColor),
     contentWindowInsets: WindowInsets = ScaffoldDefaults
         .contentWindowInsets

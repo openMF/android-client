@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp.loan
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.loan.LoanTransactionsRepository
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.network.DataManager
@@ -25,8 +23,8 @@ class LoanTransactionsRepositoryImp(
     private val dataManager: DataManager,
 ) : LoanTransactionsRepository {
 
-    override fun getLoanTransactions(loan: Int): Flow<DataState<LoanWithAssociations>> {
+    override fun getLoanTransactions(loan: Int): Flow<LoanWithAssociations> {
         return dataManager.getLoanTransactions(loan).map { it.toDomain() }
-            .asDataStateFlow()
+            
     }
 }

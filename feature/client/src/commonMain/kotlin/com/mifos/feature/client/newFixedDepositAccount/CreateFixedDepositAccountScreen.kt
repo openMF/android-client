@@ -9,13 +9,13 @@
  */
 package com.mifos.feature.client.newFixedDepositAccount
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.step_charges
-import androidclient.feature.client.generated.resources.step_details
-import androidclient.feature.client.generated.resources.step_interest
-import androidclient.feature.client.generated.resources.step_preview
-import androidclient.feature.client.generated.resources.step_settings
-import androidclient.feature.client.generated.resources.step_terms
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.step_charges
+import kpt.feature.client.generated.resources.step_details
+import kpt.feature.client.generated.resources.step_interest
+import kpt.feature.client.generated.resources.step_preview
+import kpt.feature.client.generated.resources.step_settings
+import kpt.feature.client.generated.resources.step_terms
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.savings.savingsAccountTransactionReceipt
 
-import androidclient.feature.savings.generated.resources.Res
-import androidclient.feature.savings.generated.resources.feature_savings_transaction_view_receipt
+import kpt.feature.savings.generated.resources.Res
+import kpt.feature.savings.generated.resources.feature_savings_transaction_view_receipt
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -24,7 +24,8 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosProgressIndicator
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptTypography
 
 /**
  * Created by Arin Yadav on 20/08/2025
@@ -45,7 +46,7 @@ fun SavingsAccountTransactionReceiptScreen(
                     Text(
                         modifier = Modifier.padding(horizontal = DesignToken.padding.largeIncreased),
                         text = stringResource(Res.string.feature_savings_transaction_view_receipt),
-                        style = KptTheme.typography.bodyLarge,
+                        style = LocalKptTypography.current.bodyLarge,
                     )
                 },
             )

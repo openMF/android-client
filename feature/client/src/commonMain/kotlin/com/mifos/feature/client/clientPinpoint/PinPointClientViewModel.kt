@@ -9,14 +9,14 @@
  */
 package com.mifos.feature.client.clientPinpoint
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_failed_to_add_pinpoint
-import androidclient.feature.client.generated.resources.feature_client_failed_to_delete_pinpoint
-import androidclient.feature.client.generated.resources.feature_client_failed_to_load_pinpoint
-import androidclient.feature.client.generated.resources.feature_client_failed_to_update_pinpoint
-import androidclient.feature.client.generated.resources.feature_client_pinpoint_location_added
-import androidclient.feature.client.generated.resources.feature_client_pinpoint_location_deleted
-import androidclient.feature.client.generated.resources.feature_client_pinpoint_location_updated
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_client_failed_to_add_pinpoint
+import kpt.feature.client.generated.resources.feature_client_failed_to_delete_pinpoint
+import kpt.feature.client.generated.resources.feature_client_failed_to_load_pinpoint
+import kpt.feature.client.generated.resources.feature_client_failed_to_update_pinpoint
+import kpt.feature.client.generated.resources.feature_client_pinpoint_location_added
+import kpt.feature.client.generated.resources.feature_client_pinpoint_location_deleted
+import kpt.feature.client.generated.resources.feature_client_pinpoint_location_updated
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

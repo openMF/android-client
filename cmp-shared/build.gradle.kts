@@ -106,6 +106,16 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(compose.desktop.common)
         }
+
+        androidUnitTest.dependencies {
+            // offline-first-template-migration 02-store-infra-screenstate T8 — Koin checkModules
+            // smoke test asserting KoinModules.allModules assembles without a missing binding.
+            // koin-test's checkModules()/verify() are JVM-only (koin-test-jvm) — androidUnitTest
+            // (Robolectric-backed, `testDebugUnitTest`) is the sanctioned host, matching the
+            // Acceptance boundary's `./gradlew :cmp-shared:testDebugUnitTest` row.
+            implementation(libs.kotlin.test)
+            implementation(libs.koin.test)
+        }
     }
 
     // NOTE — the flavor-aware `{flavor}{BuildType}` → Kotlin/Native build-type mapping

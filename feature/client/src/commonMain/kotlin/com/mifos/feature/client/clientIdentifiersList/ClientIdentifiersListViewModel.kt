@@ -20,7 +20,7 @@ import com.mifos.core.domain.useCases.DeleteIdentifierUseCase
 import com.mifos.core.domain.useCases.GetDocumentsListUseCase
 import com.mifos.core.domain.useCases.RemoveDocumentUseCase
 import com.mifos.core.model.objects.noncoreobjects.Identifier
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.feature.client.clientIdentifiersAddUpdate.Feature
 import com.mifos.feature.client.clientIdentifiersList.ClientIdentifiersListEvent.AddNewClientIdentity
 import kotlinx.coroutines.flow.update

@@ -12,9 +12,7 @@ package com.mifos.core.data.repositoryImp
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.Page
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.pagingSource.CenterListPagingSource
 import com.mifos.core.data.repository.CenterListRepository
 import com.mifos.core.network.datamanager.DataManagerCenter
@@ -44,8 +42,8 @@ class CenterListRepositoryImp(
         return dataManagerCenter.getCentersGroupAndMeeting(id)
     }
 
-    override fun allDatabaseCenters(): Flow<DataState<Page<CenterEntity>>> {
+    override fun allDatabaseCenters(): Flow<Page<CenterEntity>> {
         return dataManagerCenter.allDatabaseCenters
-            .asDataStateFlow()
+            
     }
 }

@@ -23,7 +23,9 @@ import androidx.compose.ui.graphics.Color
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptElevation
 
 /**
  * Now in Android navigation bar item with icon and label content slots. Wraps Material 3
@@ -76,8 +78,8 @@ fun MifosNavigationBar(
 ) {
     NavigationBar(
         modifier = modifier,
-        containerColor = KptTheme.colorScheme.background,
-        tonalElevation = KptTheme.elevation.level0,
+        containerColor = LocalKptColors.current.background,
+        tonalElevation = LocalKptElevation.current.level0,
         content = content,
     )
 }
@@ -235,11 +237,11 @@ fun MifosNavigationRailPreview() {
  */
 object MifosNavigationDefaults {
     @Composable
-    fun navigationContentColor() = KptTheme.colorScheme.onSurfaceVariant
+    fun navigationContentColor() = LocalKptColors.current.onSurfaceVariant
 
     @Composable
-    fun navigationSelectedItemColor() = KptTheme.colorScheme.onPrimaryContainer
+    fun navigationSelectedItemColor() = LocalKptColors.current.onPrimaryContainer
 
     @Composable
-    fun navigationIndicatorColor() = KptTheme.colorScheme.primaryContainer
+    fun navigationIndicatorColor() = LocalKptColors.current.primaryContainer
 }

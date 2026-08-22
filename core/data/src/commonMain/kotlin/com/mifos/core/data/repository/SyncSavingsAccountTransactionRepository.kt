@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
@@ -20,20 +19,20 @@ import kotlinx.coroutines.flow.Flow
  */
 interface SyncSavingsAccountTransactionRepository {
 
-    fun allSavingsAccountTransactions(): Flow<DataState<List<SavingsAccountTransactionRequestEntity>>>
+    fun allSavingsAccountTransactions(): Flow<List<SavingsAccountTransactionRequestEntity>>
 
-    fun paymentTypeOption(): Flow<DataState<List<PaymentTypeOptionEntity>>>
+    fun paymentTypeOption(): Flow<List<PaymentTypeOptionEntity>>
 
     fun processTransaction(
         savingsAccountType: String,
         savingsAccountId: Int,
         transactionType: String?,
         request: SavingsAccountTransactionRequestEntity,
-    ): Flow<DataState<SavingsAccountTransactionResponse?>>
+    ): Flow<SavingsAccountTransactionResponse?>
 
     fun deleteAndUpdateTransactions(
         savingsAccountId: Int,
-    ): Flow<DataState<List<SavingsAccountTransactionRequestEntity>>>
+    ): Flow<List<SavingsAccountTransactionRequestEntity>>
 
     suspend fun updateLoanRepaymentTransaction(savingsAccountTransactionRequest: SavingsAccountTransactionRequestEntity)
 }

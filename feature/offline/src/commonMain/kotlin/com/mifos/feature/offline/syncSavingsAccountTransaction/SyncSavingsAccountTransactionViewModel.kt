@@ -9,14 +9,14 @@
  */
 package com.mifos.feature.offline.syncSavingsAccountTransaction
 
-import androidclient.feature.offline.generated.resources.Res
-import androidclient.feature.offline.generated.resources.feature_offline_error_fix_before_sync
-import androidclient.feature.offline.generated.resources.feature_offline_failed_to_load_paymentoptions
-import androidclient.feature.offline.generated.resources.feature_offline_failed_to_load_savingaccounttransaction
-import androidclient.feature.offline.generated.resources.feature_offline_failed_to_update_list
-import androidclient.feature.offline.generated.resources.feature_offline_failed_to_update_savingsaccount
-import androidclient.feature.offline.generated.resources.feature_offline_no_transaction_to_sync
-import androidclient.feature.offline.generated.resources.feature_offline_nothing_to_sync
+import kpt.feature.offline.generated.resources.Res
+import kpt.feature.offline.generated.resources.feature_offline_error_fix_before_sync
+import kpt.feature.offline.generated.resources.feature_offline_failed_to_load_paymentoptions
+import kpt.feature.offline.generated.resources.feature_offline_failed_to_load_savingaccounttransaction
+import kpt.feature.offline.generated.resources.feature_offline_failed_to_update_list
+import kpt.feature.offline.generated.resources.feature_offline_failed_to_update_savingsaccount
+import kpt.feature.offline.generated.resources.feature_offline_no_transaction_to_sync
+import kpt.feature.offline.generated.resources.feature_offline_nothing_to_sync
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.DataState

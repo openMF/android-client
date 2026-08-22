@@ -9,13 +9,12 @@
  */
 package com.mifos.core.data.repository.loan
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.account.loan.ChargeOffReasonOption
 import com.mifos.core.model.objects.account.loan.LoanChargeOffInput
 
 interface LoanChargeOffRepository {
 
-    suspend fun chargeOff(loanId: Int, loanChargeOffInput: LoanChargeOffInput): DataState<Unit>
+    suspend fun chargeOff(loanId: Int, loanChargeOffInput: LoanChargeOffInput): Unit
 
-    suspend fun getChargeOffTemplate(loanId: Int): DataState<List<ChargeOffReasonOption>>
+    suspend fun getChargeOffTemplate(loanId: Int): List<ChargeOffReasonOption>
 }

@@ -9,19 +9,19 @@
  */
 package com.mifos.feature.individualCollectionSheet.paymentDetails
 
-import androidclient.feature.collectionsheet.generated.resources.Res
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_account_number
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_add_payment_detail
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_bank_number
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_cancel
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_cheque_number
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_no_payment_added
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_payment_type
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_receipt_number
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_routing_code
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_save
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_total_charges
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_total_due
+import kpt.feature.collectionsheet.generated.resources.Res
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_account_number
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_add_payment_detail
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_bank_number
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_cancel
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_cheque_number
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_no_payment_added
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_payment_type
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_receipt_number
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_routing_code
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_save
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_total_charges
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_total_due
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -60,7 +60,10 @@ import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.noncore.BulkRepaymentTransactions
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun PaymentDetailsScreenRoute(
@@ -201,34 +204,34 @@ internal fun PaymentsDetailsScreen(
         OutlinedCard(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(KptTheme.spacing.md),
+                .padding(LocalKptSpacing.current.md),
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(KptTheme.spacing.md),
+                    .padding(LocalKptSpacing.current.md),
                 verticalAlignment = Alignment.CenterVertically,
 
             ) {
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(end = KptTheme.spacing.md),
+                        .padding(end = LocalKptSpacing.current.md),
                 ) {
                     Text(
                         text = loanAndClientNameItem.clientName ?: "This is Tv name",
-                        style = KptTheme.typography.titleLarge,
+                        style = LocalKptTypography.current.titleLarge,
                     )
 
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+                    Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
                     Text(
                         text = "${loanCollectionSheetItem?.productShortName} (#${loanCollectionSheetItem?.accountId})",
                         color = Color.DarkGray.copy(alpha = .7f),
-                        style = KptTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                        style = LocalKptTypography.current.titleMedium.copy(fontWeight = FontWeight.Bold),
                     )
 
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+                    Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
                     MifosOutlinedTextField(
                         modifier = Modifier.fillMaxWidth(),
@@ -239,11 +242,11 @@ internal fun PaymentsDetailsScreen(
                         keyboardType = KeyboardType.Number,
                     )
 
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+                    Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
                     Text(
                         text = stringResource(Res.string.feature_collection_sheet_total_charges) + " : " + loanCollectionSheetItem?.chargesDue,
-                        style = KptTheme.typography.bodyLarge,
+                        style = LocalKptTypography.current.bodyLarge,
                         fontWeight = FontWeight.Bold,
                     )
                 }
@@ -264,7 +267,7 @@ internal fun PaymentsDetailsScreen(
         MifosButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = KptTheme.spacing.md)
+                .padding(horizontal = LocalKptSpacing.current.md)
                 .height(DesignToken.spacing.dp50),
             onClick = {
                 showAdditionalDetails = !showAdditionalDetails
@@ -276,24 +279,24 @@ internal fun PaymentsDetailsScreen(
         if (noPaymentVisibility) {
             Text(
                 text = stringResource(Res.string.feature_collection_sheet_no_payment_added),
-                style = KptTheme.typography.bodyMedium,
+                style = LocalKptTypography.current.bodyMedium,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(vertical = KptTheme.spacing.md),
+                    .padding(vertical = LocalKptSpacing.current.md),
                 color = Color.Gray,
             )
         }
 
         if (showAdditionalDetails) {
             OutlinedCard(
-                modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
+                modifier = Modifier.padding(horizontal = LocalKptSpacing.current.md),
                 colors = CardDefaults.cardColors(
-                    containerColor = KptTheme.colorScheme.surface,
+                    containerColor = LocalKptColors.current.surface,
                 ),
             ) {
                 Column(
-                    modifier = Modifier.padding(vertical = KptTheme.spacing.md),
-                    verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.md),
+                    modifier = Modifier.padding(vertical = LocalKptSpacing.current.md),
+                    verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.md),
                 ) {
                     MifosTextFieldDropdown(
                         label = stringResource(Res.string.feature_collection_sheet_payment_type),
@@ -360,7 +363,7 @@ private fun MifosButtonRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = KptTheme.spacing.md),
+            .padding(horizontal = LocalKptSpacing.current.md),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         MifosButton(

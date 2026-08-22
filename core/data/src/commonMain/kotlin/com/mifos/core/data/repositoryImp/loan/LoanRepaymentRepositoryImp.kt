@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp.loan
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.loan.LoanRepaymentRepository
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
@@ -25,9 +23,9 @@ class LoanRepaymentRepositoryImp(
     private val dataManagerLoan: DataManagerLoan,
 ) : LoanRepaymentRepository {
 
-    override fun getLoanRepayTemplate(loanId: Int): Flow<DataState<LoanRepaymentTemplateEntity?>> {
+    override fun getLoanRepayTemplate(loanId: Int): Flow<LoanRepaymentTemplateEntity?> {
         return dataManagerLoan.getLoanRepayTemplate(loanId)
-            .asDataStateFlow()
+            
     }
 
     override suspend fun submitPayment(
@@ -37,8 +35,8 @@ class LoanRepaymentRepositoryImp(
         return dataManagerLoan.submitPayment(loanId, request)
     }
 
-    override fun getDatabaseLoanRepaymentByLoanId(loanId: Int): Flow<DataState<LoanRepaymentRequestEntity?>> {
+    override fun getDatabaseLoanRepaymentByLoanId(loanId: Int): Flow<LoanRepaymentRequestEntity?> {
         return dataManagerLoan.getDatabaseLoanRepaymentByLoanId(loanId)
-            .asDataStateFlow()
+            
     }
 }

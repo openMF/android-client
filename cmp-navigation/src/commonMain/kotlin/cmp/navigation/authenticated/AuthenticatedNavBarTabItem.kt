@@ -17,11 +17,11 @@ import com.mifos.feature.client.navigation.ClientListScreenRoute
 import com.mifos.feature.groups.navigation.GroupListRoute
 import com.mifos.feature.search.navigation.SearchScreenRoute
 import org.jetbrains.compose.resources.StringResource
-import org.mifos.navigation.generated.resources.Res
-import org.mifos.navigation.generated.resources.cmp_navigation_center
-import org.mifos.navigation.generated.resources.cmp_navigation_clients
-import org.mifos.navigation.generated.resources.cmp_navigation_groups
-import org.mifos.navigation.generated.resources.cmp_navigation_search
+import cmp.navigation.generated.resources.Res
+import cmp.navigation.generated.resources.cmp_navigation_center
+import cmp.navigation.generated.resources.cmp_navigation_clients
+import cmp.navigation.generated.resources.cmp_navigation_groups
+import cmp.navigation.generated.resources.cmp_navigation_search
 
 sealed class AuthenticatedNavBarTabItem : NavigationItem {
 

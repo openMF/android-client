@@ -35,7 +35,8 @@ import com.mifos.core.ui.util.DevicePreview
 import com.mifos.feature.search.components.SearchBox
 import com.mifos.feature.search.components.SearchScreenResult
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun SearchScreen(
@@ -107,7 +108,7 @@ internal fun SearchScreenContent(
         ) {
             SearchBox(
                 modifier = Modifier
-                    .padding(horizontal = KptTheme.spacing.md),
+                    .padding(horizontal = LocalKptSpacing.current.md),
                 state = state,
                 onEvent = onEvent,
             )

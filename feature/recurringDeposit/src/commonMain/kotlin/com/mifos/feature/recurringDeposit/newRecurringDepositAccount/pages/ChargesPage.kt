@@ -9,18 +9,18 @@
  */
 package com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages
 
-import androidclient.feature.recurringdeposit.generated.resources.Res
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_active_charge
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_add_new_charge
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_back
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_btn_add
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_btn_add_new
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_click_on_add_new
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_edit_charge
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_next
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_charges
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_view
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_view_charge
+import kpt.feature.recurringdeposit.generated.resources.Res
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_active_charge
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_add_new_charge
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_back
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_btn_add
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_btn_add_new
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_click_on_add_new
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_edit_charge
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_next
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_charges
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_view
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_view_charge
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -55,7 +55,9 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountAction
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountState
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun ChargesPage(
@@ -63,7 +65,7 @@ fun ChargesPage(
     modifier: Modifier = Modifier,
     onAction: (RecurringAccountAction) -> Unit,
 ) {
-    Column(modifier = Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = LocalKptSpacing.current.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -71,7 +73,7 @@ fun ChargesPage(
                 stringResource(Res.string.feature_recurring_deposit_step_charges),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -88,19 +90,19 @@ fun ChargesPage(
                     Icon(
                         imageVector = MifosIcons.Add,
                         contentDescription = null,
-                        tint = KptTheme.colorScheme.primary,
+                        tint = LocalKptColors.current.primary,
                         modifier = Modifier.size(DesignToken.sizes.iconSmall),
                     )
 
                     Text(
                         text = stringResource(Res.string.feature_recurring_deposit_btn_add_new),
-                        color = KptTheme.colorScheme.primary,
+                        color = LocalKptColors.current.primary,
                         style = MifosTypography.labelLargeEmphasized,
                     )
                 }
             }
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosRowWithTextAndButton(
                 onBtnClick = {
@@ -112,7 +114,7 @@ fun ChargesPage(
                 text = state.addedCharges.size.toString() + " " + stringResource(Res.string.feature_recurring_deposit_active_charge),
                 btnEnabled = state.addedCharges.isNotEmpty(),
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
         }
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.feature_recurring_deposit_back),
@@ -197,7 +199,7 @@ internal fun ShowChargesDialog(
         },
         content = {
             Column(
-                modifier = Modifier.fillMaxWidth().padding(KptTheme.spacing.md),
+                modifier = Modifier.fillMaxWidth().padding(LocalKptSpacing.current.md),
                 verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
             ) {
                 Text(

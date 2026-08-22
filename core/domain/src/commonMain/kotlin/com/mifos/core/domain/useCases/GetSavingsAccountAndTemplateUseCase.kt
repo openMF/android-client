@@ -10,7 +10,6 @@
 package com.mifos.core.domain.useCases
 
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SyncGroupsDialogRepository
 import com.mifos.room.entities.zipmodels.SavingsAccountAndTransactionTemplate
 import kotlinx.coroutines.flow.Flow
@@ -22,7 +21,7 @@ class GetSavingsAccountAndTemplateUseCase(
     operator fun invoke(
         savingsAccountType: String,
         savingsAccountId: Int,
-    ): Flow<DataState<SavingsAccountAndTransactionTemplate>> =
+    ): Flow<SavingsAccountAndTransactionTemplate> =
         combine(
             repository.syncSavingsAccount(
                 savingsAccountType,
@@ -35,20 +34,9 @@ class GetSavingsAccountAndTemplateUseCase(
                 Constants.SAVINGS_ACCOUNT_TRANSACTION_DEPOSIT,
             ),
         ) { savings, template ->
-            if (savings is DataState.Success && template is DataState.Success) {
-                DataState.Success(
-                    SavingsAccountAndTransactionTemplate(
-                        savingsAccountWithAssociations = savings.data,
-                        savingsAccountTransactionTemplate = template.data,
-                    ),
-                )
-            } else if (savings is DataState.Error || template is DataState.Error) {
-                val exception = (savings as? DataState.Error)?.exception
-                    ?: (template as? DataState.Error)?.exception
-                    ?: Exception("Unknown error")
-                DataState.Error(exception)
-            } else {
-                DataState.Loading
-            }
+            SavingsAccountAndTransactionTemplate(
+                savingsAccountWithAssociations = savings,
+                savingsAccountTransactionTemplate = template,
+            )
         }
 }

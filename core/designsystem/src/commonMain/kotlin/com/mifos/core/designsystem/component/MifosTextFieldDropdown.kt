@@ -34,7 +34,8 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,7 +65,7 @@ fun MifosTextFieldDropdown(
                 errorMessage?.let {
                     Text(
                         text = it,
-                        color = KptTheme.colorScheme.error,
+                        color = LocalKptColors.current.error,
                     )
                 }
             },
@@ -82,8 +83,8 @@ fun MifosTextFieldDropdown(
                 .clickable(enabled = readOnly && enabled) { isExpanded = true },
             shape = DesignToken.shapes.medium,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = KptTheme.colorScheme.secondaryContainer,
-                unfocusedBorderColor = KptTheme.colorScheme.secondaryContainer,
+                focusedBorderColor = LocalKptColors.current.secondaryContainer,
+                unfocusedBorderColor = LocalKptColors.current.secondaryContainer,
             ),
             maxLines = 1,
             textStyle = MifosTypography.bodyLarge,

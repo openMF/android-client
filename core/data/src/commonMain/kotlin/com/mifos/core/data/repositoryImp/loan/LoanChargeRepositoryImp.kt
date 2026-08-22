@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp.loan
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.loan.LoanChargeRepository
 import com.mifos.core.network.DataManager
 import com.mifos.room.entities.client.ChargesEntity
@@ -23,8 +21,8 @@ class LoanChargeRepositoryImp(
     private val dataManager: DataManager,
 ) : LoanChargeRepository {
 
-    override fun getListOfLoanCharges(loanId: Int): Flow<DataState<List<ChargesEntity>>> {
+    override fun getListOfLoanCharges(loanId: Int): Flow<List<ChargesEntity>> {
         return dataManager.getListOfLoanCharges(loanId)
-            .asDataStateFlow()
+            
     }
 }

@@ -9,14 +9,14 @@
  */
 package com.mifos.feature.path.tracking
 
-import androidclient.feature.path_tracking.generated.resources.Res
-import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_approve_permission_description_location
-import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_dismiss
-import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_failed_to_load_path_tracking
-import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_no_path_tracking_found
-import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_permission_required
-import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_proceed
-import androidclient.feature.path_tracking.generated.resources.feature_path_tracking_track_my_path
+import kpt.feature.path_tracking.generated.resources.Res
+import kpt.feature.path_tracking.generated.resources.feature_path_tracking_approve_permission_description_location
+import kpt.feature.path_tracking.generated.resources.feature_path_tracking_dismiss
+import kpt.feature.path_tracking.generated.resources.feature_path_tracking_failed_to_load_path_tracking
+import kpt.feature.path_tracking.generated.resources.feature_path_tracking_no_path_tracking_found
+import kpt.feature.path_tracking.generated.resources.feature_path_tracking_permission_required
+import kpt.feature.path_tracking.generated.resources.feature_path_tracking_proceed
+import kpt.feature.path_tracking.generated.resources.feature_path_tracking_track_my_path
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -57,7 +57,10 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 expect fun PathTrackingScreen(
@@ -185,22 +188,22 @@ private fun PathTrackingItem(
         }
     }
     OutlinedCard(
-        modifier = modifier.padding(KptTheme.spacing.sm),
+        modifier = modifier.padding(LocalKptSpacing.current.sm),
         onClick = { onPathTrackingClick(latLngList) },
-        colors = CardDefaults.outlinedCardColors(KptTheme.colorScheme.surface),
+        colors = CardDefaults.outlinedCardColors(LocalKptColors.current.surface),
     ) {
         PathTrackingMapView(latLngList = latLngList)
 
         Text(
-            modifier = Modifier.padding(vertical = KptTheme.spacing.xs, horizontal = KptTheme.spacing.sm),
+            modifier = Modifier.padding(vertical = LocalKptSpacing.current.xs, horizontal = LocalKptSpacing.current.sm),
             text = "${pathTracking.startAddress ?: startAdd} to ${pathTracking.endAddress ?: endAdd}",
-            style = KptTheme.typography.bodyMedium,
+            style = LocalKptTypography.current.bodyMedium,
             fontWeight = FontWeight.Medium,
         )
         Text(
-            modifier = Modifier.padding(KptTheme.spacing.sm),
+            modifier = Modifier.padding(LocalKptSpacing.current.sm),
             text = "${pathTracking.date} from ${pathTracking.startTime} to ${pathTracking.stopTime}",
-            style = KptTheme.typography.bodySmall,
+            style = LocalKptTypography.current.bodySmall,
         )
     }
 }

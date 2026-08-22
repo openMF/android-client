@@ -12,10 +12,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-android {
-    namespace = "com.mifos.feature.client"
-}
-
 kotlin {
     sourceSets {
         commonMain.dependencies {
@@ -52,6 +48,7 @@ kotlin {
         }
         
         androidMain.dependencies {
+            implementation(compose.uiTooling)
             implementation(libs.maps.compose)
             implementation(libs.accompanist.permission)
             implementation(libs.ktor.client.android)
@@ -68,6 +65,9 @@ kotlin {
     }
 }
 
-dependencies {
-    debugImplementation(compose.uiTooling)
+
+compose.resources {
+    publicResClass = true
+    generateResClass = always
+    packageOfResClass = "kpt.feature.client.generated.resources"
 }

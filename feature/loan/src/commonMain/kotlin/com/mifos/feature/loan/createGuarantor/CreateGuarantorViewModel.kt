@@ -9,14 +9,14 @@
  */
 package com.mifos.feature.loan.createGuarantor
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_create_guarantor_missing_configuration
-import androidclient.feature.loan.generated.resources.feature_loan_create_guarantor_submit_failure
-import androidclient.feature.loan.generated.resources.feature_loan_create_guarantor_submit_success
-import androidclient.feature.loan.generated.resources.feature_loan_get_guarantor_account_template_failure
-import androidclient.feature.loan.generated.resources.feature_loan_get_guarantor_template_failure
-import androidclient.feature.loan.generated.resources.feature_loan_load_clients_failure
-import androidclient.feature.loan.generated.resources.feature_loan_message_field_required
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_create_guarantor_missing_configuration
+import kpt.feature.loan.generated.resources.feature_loan_create_guarantor_submit_failure
+import kpt.feature.loan.generated.resources.feature_loan_create_guarantor_submit_success
+import kpt.feature.loan.generated.resources.feature_loan_get_guarantor_account_template_failure
+import kpt.feature.loan.generated.resources.feature_loan_get_guarantor_template_failure
+import kpt.feature.loan.generated.resources.feature_loan_load_clients_failure
+import kpt.feature.loan.generated.resources.feature_loan_message_field_required
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -31,7 +31,7 @@ import com.mifos.core.model.objects.account.loan.guarantor.CreateGuarantorInput
 import com.mifos.core.model.objects.account.loan.guarantor.GuarantorAccountTemplate
 import com.mifos.core.model.objects.account.loan.guarantor.GuarantorRelationshipOption
 import com.mifos.core.model.objects.account.loan.guarantor.GuarantorTemplate
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest

@@ -9,11 +9,11 @@
  */
 package com.mifos.feature.client.clientEditDetails
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.client_details_update_failure_title
-import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_client_template
-import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_offices
-import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_staffs
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.client_details_update_failure_title
+import kpt.feature.client.generated.resources.feature_client_failed_to_fetch_client_template
+import kpt.feature.client.generated.resources.feature_client_failed_to_fetch_offices
+import kpt.feature.client.generated.resources.feature_client_failed_to_fetch_staffs
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -23,7 +23,7 @@ import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.ui.components.ResultStatus
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.organisation.OfficeEntity

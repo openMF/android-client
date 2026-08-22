@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.SavingsAccountTransactionRepository
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.network.datamanager.DataManagerSavings
@@ -29,12 +27,12 @@ class SavingsAccountTransactionRepositoryImp(
         type: String,
         savingsAccountId: Int,
         transactionType: String?,
-    ): Flow<DataState<SavingsAccountTransactionTemplateEntity?>> {
+    ): Flow<SavingsAccountTransactionTemplateEntity?> {
         return dataManagerSavings.getSavingsAccountTransactionTemplate(
             type,
             savingsAccountId,
             transactionType,
-        ).asDataStateFlow()
+        )
     }
 
     override fun processTransaction(
@@ -42,19 +40,19 @@ class SavingsAccountTransactionRepositoryImp(
         savingsAccountId: Int,
         transactionType: String?,
         request: SavingsAccountTransactionRequestEntity,
-    ): Flow<DataState<SavingsAccountTransactionResponse?>> {
+    ): Flow<SavingsAccountTransactionResponse?> {
         return dataManagerSavings.processTransaction(
             savingsAccountType,
             savingsAccountId,
             transactionType,
             request,
-        ).asDataStateFlow()
+        )
     }
 
     override fun getSavingsAccountTransaction(
         savingAccountId: Int,
-    ): Flow<DataState<SavingsAccountTransactionRequestEntity?>> {
+    ): Flow<SavingsAccountTransactionRequestEntity?> {
         return dataManagerSavings.getSavingsAccountTransaction(savingAccountId)
-            .asDataStateFlow()
+            
     }
 }

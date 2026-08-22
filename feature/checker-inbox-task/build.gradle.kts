@@ -12,10 +12,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-android {
-    namespace = "com.mifos.feature.checker.inbox.task"
-}
-
 kotlin {
     sourceSets{
         commonMain.dependencies {
@@ -36,6 +32,9 @@ kotlin {
     }
 }
 
-dependencies {
-    debugImplementation(compose.uiTooling)
+
+compose.resources {
+    publicResClass = true
+    generateResClass = always
+    packageOfResClass = "kpt.feature.checker_inbox_task.generated.resources"
 }

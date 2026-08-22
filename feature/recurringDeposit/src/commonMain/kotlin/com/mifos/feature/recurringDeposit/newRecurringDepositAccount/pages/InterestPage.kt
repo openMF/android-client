@@ -9,22 +9,22 @@
  */
 package com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages
 
-import androidclient.feature.recurringdeposit.generated.resources.Res
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_back
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_description
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_empty_date
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_end_date
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_grouping_by_amount
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_interest_rate_chart
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_name
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_next
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_no
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_no_interest_chart
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_rate_chart
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_interest
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_valid_from_date
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_view
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_yes
+import kpt.feature.recurringdeposit.generated.resources.Res
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_back
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_description
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_empty_date
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_end_date
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_grouping_by_amount
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_interest_rate_chart
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_name
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_next
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_no
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_no_interest_chart
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_rate_chart
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_interest
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_valid_from_date
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_view
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_yes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -51,7 +51,8 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountAction
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountState
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun InterestPage(
@@ -59,7 +60,7 @@ fun InterestPage(
     modifier: Modifier = Modifier,
     onAction: (RecurringAccountAction) -> Unit,
 ) {
-    Column(Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
+    Column(Modifier.fillMaxSize().padding(bottom = LocalKptSpacing.current.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -67,7 +68,7 @@ fun InterestPage(
                 text = stringResource(Res.string.feature_recurring_deposit_step_interest),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosDefaultListingComponentFromStringResources(
                 data = mapOf(
@@ -91,10 +92,10 @@ fun InterestPage(
                         stringResource(Res.string.feature_recurring_deposit_no)
                     },
                 ),
-                verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
+                verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.sm),
             )
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosRowWithTextAndButton(
                 onBtnClick = {
@@ -110,7 +111,7 @@ fun InterestPage(
                 },
                 btnEnabled = state.isRateChartEmpty,
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
         }
 
         MifosTwoButtonRow(
@@ -133,7 +134,7 @@ fun RateChart(
         },
         content = {
             Column(
-                modifier = Modifier.fillMaxWidth().padding(KptTheme.spacing.md),
+                modifier = Modifier.fillMaxWidth().padding(LocalKptSpacing.current.md),
                 verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
             ) {
                 Text(

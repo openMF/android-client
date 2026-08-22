@@ -9,12 +9,9 @@
  */
 package com.mifos.core.model.objects.template.client
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 @Serializable
-@Parcelize
 data class Currency(
     val code: String? = null,
     val name: String? = null,
@@ -23,4 +20,4 @@ data class Currency(
     val displaySymbol: String? = null,
     val nameCode: String? = null,
     val displayLabel: String? = null,
-) : Parcelable
+)

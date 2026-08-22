@@ -9,20 +9,20 @@
  */
 package com.mifos.feature.client.syncClientDialog
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_cancel
-import androidclient.feature.client.generated.resources.feature_client_clients
-import androidclient.feature.client.generated.resources.feature_client_dialog_action_ok
-import androidclient.feature.client.generated.resources.feature_client_failed_sync
-import androidclient.feature.client.generated.resources.feature_client_hide
-import androidclient.feature.client.generated.resources.feature_client_name
-import androidclient.feature.client.generated.resources.feature_client_slash
-import androidclient.feature.client.generated.resources.feature_client_something_went_wrong
-import androidclient.feature.client.generated.resources.feature_client_space
-import androidclient.feature.client.generated.resources.feature_client_sync_clients_full_information
-import androidclient.feature.client.generated.resources.feature_client_syncing_client
-import androidclient.feature.client.generated.resources.feature_client_total
-import androidclient.feature.client.generated.resources.feature_client_total_sync_progress
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_client_cancel
+import kpt.feature.client.generated.resources.feature_client_clients
+import kpt.feature.client.generated.resources.feature_client_dialog_action_ok
+import kpt.feature.client.generated.resources.feature_client_failed_sync
+import kpt.feature.client.generated.resources.feature_client_hide
+import kpt.feature.client.generated.resources.feature_client_name
+import kpt.feature.client.generated.resources.feature_client_slash
+import kpt.feature.client.generated.resources.feature_client_something_went_wrong
+import kpt.feature.client.generated.resources.feature_client_space
+import kpt.feature.client.generated.resources.feature_client_sync_clients_full_information
+import kpt.feature.client.generated.resources.feature_client_syncing_client
+import kpt.feature.client.generated.resources.feature_client_total
+import kpt.feature.client.generated.resources.feature_client_total_sync_progress
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -51,7 +51,10 @@ import com.mifos.core.ui.util.DevicePreview
 import com.mifos.room.entities.client.ClientEntity
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun SyncClientsDialogScreen(
@@ -123,8 +126,8 @@ private fun SyncClientsDialogContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(KptTheme.spacing.sm)
-            .background(KptTheme.colorScheme.surface),
+            .padding(LocalKptSpacing.current.sm)
+            .background(LocalKptColors.current.surface),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
@@ -216,17 +219,17 @@ private fun PayloadField(label: String, value: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = KptTheme.spacing.xs),
+            .padding(vertical = LocalKptSpacing.current.xs),
     ) {
         Text(
             text = label,
-            style = KptTheme.typography.bodyMedium,
+            style = LocalKptTypography.current.bodyMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
         )
         Text(
             text = value,
-            style = KptTheme.typography.bodyMedium,
+            style = LocalKptTypography.current.bodyMedium,
             modifier = Modifier.weight(1f),
         )
     }

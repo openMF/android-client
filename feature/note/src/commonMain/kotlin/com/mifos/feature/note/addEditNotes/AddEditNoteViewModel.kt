@@ -9,13 +9,13 @@
  */
 package com.mifos.feature.note.addEditNotes
 
-import androidclient.feature.note.generated.resources.Res
-import androidclient.feature.note.generated.resources.feature_note_add_note
-import androidclient.feature.note.generated.resources.feature_note_button_add
-import androidclient.feature.note.generated.resources.feature_note_button_update
-import androidclient.feature.note.generated.resources.feature_note_edit_note_label
-import androidclient.feature.note.generated.resources.feature_note_update_note
-import androidclient.feature.note.generated.resources.feature_note_write_note_label
+import kpt.feature.note.generated.resources.Res
+import kpt.feature.note.generated.resources.feature_note_add_note
+import kpt.feature.note.generated.resources.feature_note_button_add
+import kpt.feature.note.generated.resources.feature_note_button_update
+import kpt.feature.note.generated.resources.feature_note_edit_note_label
+import kpt.feature.note.generated.resources.feature_note_update_note
+import kpt.feature.note.generated.resources.feature_note_write_note_label
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
@@ -25,7 +25,7 @@ import com.mifos.core.domain.useCases.AddNoteUseCase
 import com.mifos.core.domain.useCases.UpdateNoteUseCase
 import com.mifos.core.model.objects.note.CreateNoteInput
 import com.mifos.core.model.objects.note.UpdateNoteInput
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource

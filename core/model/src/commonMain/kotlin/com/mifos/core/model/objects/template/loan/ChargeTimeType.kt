@@ -9,14 +9,11 @@
  */
 package com.mifos.core.model.objects.template.loan
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Created by Rajan Maurya on 16/07/16.
  */
-@Parcelize
 @Serializable
 data class ChargeTimeType(
     var id: Int? = null,
@@ -24,4 +21,4 @@ data class ChargeTimeType(
     var code: String? = null,
 
     var value: String? = null,
-) : Parcelable
+)

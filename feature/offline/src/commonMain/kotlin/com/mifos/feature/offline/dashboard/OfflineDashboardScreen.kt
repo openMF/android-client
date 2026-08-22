@@ -9,14 +9,14 @@
  */
 package com.mifos.feature.offline.dashboard
 
-import androidclient.feature.offline.generated.resources.Res
-import androidclient.feature.offline.generated.resources.feature_offline_nothing_to_sync
-import androidclient.feature.offline.generated.resources.feature_offline_offline_Sync
-import androidclient.feature.offline.generated.resources.feature_offline_sync_centers
-import androidclient.feature.offline.generated.resources.feature_offline_sync_clients
-import androidclient.feature.offline.generated.resources.feature_offline_sync_groups
-import androidclient.feature.offline.generated.resources.feature_offline_sync_loanRepayments
-import androidclient.feature.offline.generated.resources.feature_offline_sync_savingsAccountTransactions
+import kpt.feature.offline.generated.resources.Res
+import kpt.feature.offline.generated.resources.feature_offline_nothing_to_sync
+import kpt.feature.offline.generated.resources.feature_offline_offline_Sync
+import kpt.feature.offline.generated.resources.feature_offline_sync_centers
+import kpt.feature.offline.generated.resources.feature_offline_sync_clients
+import kpt.feature.offline.generated.resources.feature_offline_sync_groups
+import kpt.feature.offline.generated.resources.feature_offline_sync_loanRepayments
+import kpt.feature.offline.generated.resources.feature_offline_sync_savingsAccountTransactions
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,7 +45,9 @@ import com.mifos.core.ui.util.DevicePreview
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 /**
  * Created by Pronay Sarker on 27/08/2024 (12:09 AM)
@@ -176,21 +178,21 @@ private fun OfflineDashboardItemCard(
     OutlinedCard(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = KptTheme.spacing.md, vertical = KptTheme.spacing.sm),
+            .padding(horizontal = LocalKptSpacing.current.md, vertical = LocalKptSpacing.current.sm),
         onClick = onClick,
     ) {
         Column(
-            modifier = Modifier.padding(KptTheme.spacing.md),
+            modifier = Modifier.padding(LocalKptSpacing.current.md),
             verticalArrangement = Arrangement.Center,
         ) {
             Text(
                 text = stringResource(paymentItem),
-                style = KptTheme.typography.bodyLarge,
+                style = LocalKptTypography.current.bodyLarge,
             )
 
             Text(
                 text = "$count",
-                style = KptTheme.typography.bodyLarge,
+                style = LocalKptTypography.current.bodyLarge,
             )
         }
     }

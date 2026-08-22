@@ -9,23 +9,23 @@
  */
 package com.mifos.feature.groups.groupDetails
 
-import androidclient.feature.groups.generated.resources.Res
-import androidclient.feature.groups.generated.resources.feature_groups_accounts
-import androidclient.feature.groups.generated.resources.feature_groups_activate_group
-import androidclient.feature.groups.generated.resources.feature_groups_activation_date
-import androidclient.feature.groups.generated.resources.feature_groups_add_loan_account
-import androidclient.feature.groups.generated.resources.feature_groups_add_savings_account
-import androidclient.feature.groups.generated.resources.feature_groups_documents
-import androidclient.feature.groups.generated.resources.feature_groups_external_id
-import androidclient.feature.groups.generated.resources.feature_groups_failed_to_fetch_group_and_account
-import androidclient.feature.groups.generated.resources.feature_groups_group
-import androidclient.feature.groups.generated.resources.feature_groups_group_clients
-import androidclient.feature.groups.generated.resources.feature_groups_loan_account
-import androidclient.feature.groups.generated.resources.feature_groups_more_group_info
-import androidclient.feature.groups.generated.resources.feature_groups_notes
-import androidclient.feature.groups.generated.resources.feature_groups_office
-import androidclient.feature.groups.generated.resources.feature_groups_savings_account
-import androidclient.feature.groups.generated.resources.feature_groups_staff
+import kpt.feature.groups.generated.resources.Res
+import kpt.feature.groups.generated.resources.feature_groups_accounts
+import kpt.feature.groups.generated.resources.feature_groups_activate_group
+import kpt.feature.groups.generated.resources.feature_groups_activation_date
+import kpt.feature.groups.generated.resources.feature_groups_add_loan_account
+import kpt.feature.groups.generated.resources.feature_groups_add_savings_account
+import kpt.feature.groups.generated.resources.feature_groups_documents
+import kpt.feature.groups.generated.resources.feature_groups_external_id
+import kpt.feature.groups.generated.resources.feature_groups_failed_to_fetch_group_and_account
+import kpt.feature.groups.generated.resources.feature_groups_group
+import kpt.feature.groups.generated.resources.feature_groups_group_clients
+import kpt.feature.groups.generated.resources.feature_groups_loan_account
+import kpt.feature.groups.generated.resources.feature_groups_more_group_info
+import kpt.feature.groups.generated.resources.feature_groups_notes
+import kpt.feature.groups.generated.resources.feature_groups_office
+import kpt.feature.groups.generated.resources.feature_groups_savings_account
+import kpt.feature.groups.generated.resources.feature_groups_staff
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -92,7 +92,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun GroupDetailsScreen(
@@ -231,11 +233,11 @@ internal fun GroupDetailsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(DesignToken.spacing.dp44)
-                        .padding(start = KptTheme.spacing.md, end = KptTheme.spacing.md),
+                        .padding(start = LocalKptSpacing.current.md, end = LocalKptSpacing.current.md),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_groups_activate_group),
-                        style = KptTheme.typography.bodyLarge,
+                        style = LocalKptTypography.current.bodyLarge,
                     )
                 }
             }
@@ -286,7 +288,7 @@ fun GroupDetailsContent(
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(KptTheme.spacing.md),
+                    .padding(LocalKptSpacing.current.md),
                 text = it,
                 style = TextStyle(
                     fontSize = 24.sp,
@@ -322,10 +324,10 @@ fun GroupDetailsContent(
                 value = it,
             )
         }
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
         if (loanAccounts.isNotEmpty() || savingsAccounts.isNotEmpty()) {
             Text(
-                modifier = Modifier.padding(start = KptTheme.spacing.md),
+                modifier = Modifier.padding(start = LocalKptSpacing.current.md),
                 text = stringResource(Res.string.feature_groups_accounts),
                 style = TextStyle(
                     fontSize = 21.sp,
@@ -335,7 +337,7 @@ fun GroupDetailsContent(
                 color = Black,
                 textAlign = TextAlign.Start,
             )
-            HorizontalDivider(modifier = Modifier.padding(start = KptTheme.spacing.md, end = KptTheme.spacing.md))
+            HorizontalDivider(modifier = Modifier.padding(start = LocalKptSpacing.current.md, end = LocalKptSpacing.current.md))
         }
         if (loanAccounts.isNotEmpty()) {
             MifosLoanAccountExpendableCard(
@@ -364,8 +366,8 @@ fun MifosCenterDetailsText(
     Row(
         modifier = modifier
             .padding(
-                horizontal = KptTheme.spacing.md,
-                vertical = KptTheme.spacing.sm,
+                horizontal = LocalKptSpacing.current.md,
+                vertical = LocalKptSpacing.current.sm,
             )
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -379,7 +381,7 @@ fun MifosCenterDetailsText(
         Text(
             modifier = Modifier
                 .weight(1f)
-                .padding(start = KptTheme.spacing.md),
+                .padding(start = LocalKptSpacing.current.md),
             text = field,
             style = TextStyle(
                 fontSize = 18.sp,
@@ -419,7 +421,7 @@ fun MifosLoanAccountExpendableCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(KptTheme.spacing.sm)
+            .padding(LocalKptSpacing.current.sm)
             .animateContentSize(
                 animationSpec = tween(
                     durationMillis = 300,
@@ -440,7 +442,7 @@ fun MifosLoanAccountExpendableCard(
                 Text(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(start = KptTheme.spacing.sm),
+                        .padding(start = LocalKptSpacing.current.sm),
                     text = accountType,
                     style = TextStyle(
                         fontSize = 18.sp,
@@ -483,7 +485,7 @@ fun MifosLoanAccountsLazyColumn(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(KptTheme.spacing.sm),
+            .padding(LocalKptSpacing.current.sm),
         shape = DesignToken.shapes.dp22,
         colors = CardDefaults.cardColors(White),
     ) {
@@ -510,7 +512,7 @@ fun MifosLoanAccountsLazyColumn(
                     Canvas(
                         modifier = Modifier
                             .size(DesignToken.sizes.dp20)
-                            .padding(KptTheme.spacing.xs),
+                            .padding(LocalKptSpacing.current.xs),
                         onDraw = {
                             drawCircle(
                                 color = when {
@@ -540,7 +542,7 @@ fun MifosLoanAccountsLazyColumn(
                     Column(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(start = KptTheme.spacing.xs),
+                            .padding(start = LocalKptSpacing.current.xs),
                     ) {
                         loanAccount.productName?.let {
                             Text(
@@ -599,7 +601,7 @@ private fun MifosSavingsAccountExpendableCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(KptTheme.spacing.sm)
+            .padding(LocalKptSpacing.current.sm)
             .animateContentSize(
                 animationSpec = tween(
                     durationMillis = 300,
@@ -619,7 +621,7 @@ private fun MifosSavingsAccountExpendableCard(
                 Text(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(start = KptTheme.spacing.sm),
+                        .padding(start = LocalKptSpacing.current.sm),
                     text = accountType,
                     style = TextStyle(
                         fontSize = 18.sp,
@@ -662,7 +664,7 @@ private fun MifosSavingsAccountsLazyColumn(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(KptTheme.spacing.sm),
+            .padding(LocalKptSpacing.current.sm),
         shape = DesignToken.shapes.dp22,
         colors = CardDefaults.cardColors(White),
     ) {
@@ -692,7 +694,7 @@ private fun MifosSavingsAccountsLazyColumn(
                     Canvas(
                         modifier = Modifier
                             .size(DesignToken.sizes.dp20)
-                            .padding(KptTheme.spacing.xs),
+                            .padding(LocalKptSpacing.current.xs),
                         onDraw = {
                             drawCircle(
                                 color = when {
@@ -718,7 +720,7 @@ private fun MifosSavingsAccountsLazyColumn(
                     Column(
                         modifier = Modifier
                             .weight(1f)
-                            .padding(start = KptTheme.spacing.xs),
+                            .padding(start = LocalKptSpacing.current.xs),
                     ) {
                         savingsAccount.productName?.let {
                             Text(

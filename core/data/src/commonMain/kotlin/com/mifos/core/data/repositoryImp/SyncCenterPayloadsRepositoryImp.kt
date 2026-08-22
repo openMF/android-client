@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.SyncCenterPayloadsRepository
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.room.entities.center.CenterPayloadEntity
@@ -23,17 +21,17 @@ class SyncCenterPayloadsRepositoryImp(
     private val dataManagerCenter: DataManagerCenter,
 ) : SyncCenterPayloadsRepository {
 
-    override fun getAllDatabaseCenterPayload(): Flow<DataState<List<CenterPayloadEntity>>> {
+    override fun getAllDatabaseCenterPayload(): Flow<List<CenterPayloadEntity>> {
         return dataManagerCenter.getAllDatabaseCenterPayload
-            .asDataStateFlow()
+            
     }
 
     override suspend fun createCenter(centerPayload: CenterPayloadEntity?) {
         dataManagerCenter.createCenter(centerPayload)
     }
 
-    override fun deleteAndUpdateCenterPayloads(id: Int): Flow<DataState<List<CenterPayloadEntity>>> {
-        return dataManagerCenter.deleteAndUpdateCenterPayloads(id).asDataStateFlow()
+    override fun deleteAndUpdateCenterPayloads(id: Int): Flow<List<CenterPayloadEntity>> {
+        return dataManagerCenter.deleteAndUpdateCenterPayloads(id)
     }
 
     override suspend fun updateCenterPayload(centerPayload: CenterPayloadEntity) {

@@ -13,11 +13,11 @@ import android.content.Intent
 import android.content.Intent.ACTION_VIEW
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.client_documents_failed_to_open
-import androidclient.feature.client.generated.resources.default_preview_pdf_name
-import androidclient.feature.client.generated.resources.returned_invalid_data_after_caching
-import androidclient.feature.client.generated.resources.unexpected_loading
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.client_documents_failed_to_open
+import kpt.feature.client.generated.resources.default_preview_pdf_name
+import kpt.feature.client.generated.resources.returned_invalid_data_after_caching
+import kpt.feature.client.generated.resources.unexpected_loading
 import androidx.core.content.FileProvider
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.asDataStateFlow

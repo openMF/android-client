@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.savings.savingsAccount
 
-import androidclient.feature.savings.generated.resources.Res
-import androidclient.feature.savings.generated.resources.feature_savings_failed_to_load_savings_products_and_template
+import kpt.feature.savings.generated.resources.Res
+import kpt.feature.savings.generated.resources.feature_savings_failed_to_load_savings_products_and_template
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -10,12 +10,9 @@
 package com.mifos.room.entities.accounts.loans
 
 import com.mifos.core.model.objects.Changes
-import com.mifos.core.model.utils.IgnoredOnParcel
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
-import template.core.base.database.Entity
-import template.core.base.database.PrimaryKey
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 
 @Serializable
 @Entity(
@@ -26,7 +23,6 @@ import template.core.base.database.PrimaryKey
     foreignKeys = [],
     ignoredColumns = [],
 )
-@Parcelize
 data class LoanRepaymentResponseEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
@@ -34,6 +30,5 @@ data class LoanRepaymentResponseEntity(
     val clientId: Int? = null,
     val loanId: Int? = null,
     val resourceId: Int? = null,
-    @IgnoredOnParcel
     val changes: Changes? = null,
-) : Parcelable
+)

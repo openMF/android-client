@@ -29,7 +29,9 @@ import com.mifos.core.designsystem.component.MifosOutlinedButton
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
 
 @Composable
 fun MifosRowWithTextAndButton(
@@ -45,7 +47,7 @@ fun MifosRowWithTextAndButton(
             .clip(shape = DesignToken.shapes.medium)
             .border(
                 DesignToken.strokes.thin,
-                color = KptTheme.colorScheme.secondaryContainer,
+                color = LocalKptColors.current.secondaryContainer,
                 shape = DesignToken.shapes.medium,
             ),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -53,7 +55,7 @@ fun MifosRowWithTextAndButton(
     ) {
         Text(
             text = text,
-            style = KptTheme.typography.bodyLarge,
+            style = LocalKptTypography.current.bodyLarge,
             fontFamily = FontFamily.SansSerif,
             modifier = Modifier.padding(
                 start = DesignToken.padding.large,
@@ -70,13 +72,13 @@ fun MifosRowWithTextAndButton(
                 onBtnClick()
             },
             colors = ButtonDefaults.outlinedButtonColors(
-                containerColor = KptTheme.colorScheme.onPrimary,
-                contentColor = KptTheme.colorScheme.primary,
+                containerColor = LocalKptColors.current.onPrimary,
+                contentColor = LocalKptColors.current.primary,
             ),
             shape = DesignToken.shapes.small,
             border = BorderStroke(
                 DesignToken.strokes.thin,
-                color = KptTheme.colorScheme.secondaryContainer,
+                color = LocalKptColors.current.secondaryContainer,
             ),
             modifier = Modifier
                 .padding(end = DesignToken.padding.large)
@@ -86,7 +88,7 @@ fun MifosRowWithTextAndButton(
         ) {
             Text(
                 text = btnText,
-                style = KptTheme.typography.labelLarge,
+                style = LocalKptTypography.current.labelLarge,
                 fontFamily = FontFamily.SansSerif,
             )
         }

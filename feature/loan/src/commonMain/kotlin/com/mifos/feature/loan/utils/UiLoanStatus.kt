@@ -9,17 +9,17 @@
  */
 package com.mifos.feature.loan.utils
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_active
-import androidclient.feature.loan.generated.resources.feature_loan_approved
-import androidclient.feature.loan.generated.resources.feature_loan_closed_obligations_met
-import androidclient.feature.loan.generated.resources.feature_loan_closed_overpaid
-import androidclient.feature.loan.generated.resources.feature_loan_closed_rescheduled
-import androidclient.feature.loan.generated.resources.feature_loan_closed_written_off
-import androidclient.feature.loan.generated.resources.feature_loan_pending_approval
-import androidclient.feature.loan.generated.resources.feature_loan_rejected
-import androidclient.feature.loan.generated.resources.feature_loan_unknown
-import androidclient.feature.loan.generated.resources.feature_loan_withdrawn_by_applicant
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_active
+import kpt.feature.loan.generated.resources.feature_loan_approved
+import kpt.feature.loan.generated.resources.feature_loan_closed_obligations_met
+import kpt.feature.loan.generated.resources.feature_loan_closed_overpaid
+import kpt.feature.loan.generated.resources.feature_loan_closed_rescheduled
+import kpt.feature.loan.generated.resources.feature_loan_closed_written_off
+import kpt.feature.loan.generated.resources.feature_loan_pending_approval
+import kpt.feature.loan.generated.resources.feature_loan_rejected
+import kpt.feature.loan.generated.resources.feature_loan_unknown
+import kpt.feature.loan.generated.resources.feature_loan_withdrawn_by_applicant
 import androidx.compose.ui.graphics.Color
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanStatus

@@ -37,7 +37,8 @@ import com.mifos.core.ui.util.TextUtil
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -114,7 +115,7 @@ fun MifosRowCard(
                 modifier = Modifier
                     .size(DesignToken.sizes.iconExtraLarge)
                     .background(
-                        color = KptTheme.colorScheme.surfaceBright,
+                        color = LocalKptColors.current.surfaceBright,
                         shape = CircleShape,
                     )
                     .padding(DesignToken.padding.small),
@@ -130,7 +131,7 @@ fun MifosRowCard(
                 TextUtil(
                     text = title,
                     style = MifosTypography.titleSmallEmphasized,
-                    color = KptTheme.colorScheme.onSurface,
+                    color = LocalKptColors.current.onSurface,
                 ),
             )
             leftValues.forEach {
@@ -196,7 +197,7 @@ fun MifosRowTextWithButton(
                 Text(
                     text = btnText,
                     style = MifosTypography.labelMediumEmphasized,
-                    color = KptTheme.colorScheme.primary,
+                    color = LocalKptColors.current.primary,
                 )
             }
         }

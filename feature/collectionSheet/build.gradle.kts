@@ -13,10 +13,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-android {
-    namespace = "com.mifos.feature.collection_sheet"
-}
-
 kotlin {
     sourceSets{
         commonMain.dependencies {
@@ -34,6 +30,9 @@ kotlin {
     }
 }
 
-dependencies {
-    debugImplementation(compose.uiTooling)
+
+compose.resources {
+    publicResClass = true
+    generateResClass = always
+    packageOfResClass = "kpt.feature.collectionsheet.generated.resources"
 }

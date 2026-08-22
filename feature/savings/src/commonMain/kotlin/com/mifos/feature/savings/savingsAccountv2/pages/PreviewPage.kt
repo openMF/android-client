@@ -9,31 +9,31 @@
  */
 package com.mifos.feature.savings.savingsAccountv2.pages
 
-import androidclient.feature.savings.generated.resources.Res
-import androidclient.feature.savings.generated.resources.feature_savings_back
-import androidclient.feature.savings.generated.resources.feature_savings_charges_active_count
-import androidclient.feature.savings.generated.resources.feature_savings_currency
-import androidclient.feature.savings.generated.resources.feature_savings_days_in_year
-import androidclient.feature.savings.generated.resources.feature_savings_external_id
-import androidclient.feature.savings.generated.resources.feature_savings_field_officer
-import androidclient.feature.savings.generated.resources.feature_savings_interest_calc
-import androidclient.feature.savings.generated.resources.feature_savings_interest_comp
-import androidclient.feature.savings.generated.resources.feature_savings_interest_p_period
-import androidclient.feature.savings.generated.resources.feature_savings_no
-import androidclient.feature.savings.generated.resources.feature_savings_product_name
-import androidclient.feature.savings.generated.resources.feature_savings_submission_date
-import androidclient.feature.savings.generated.resources.feature_savings_submit
-import androidclient.feature.savings.generated.resources.feature_savings_yes
-import androidclient.feature.savings.generated.resources.step_charges
-import androidclient.feature.savings.generated.resources.step_charges_view
-import androidclient.feature.savings.generated.resources.step_details
-import androidclient.feature.savings.generated.resources.step_terms
-import androidclient.feature.savings.generated.resources.step_terms_apply_withdrawal_fee
-import androidclient.feature.savings.generated.resources.step_terms_decimal_places
-import androidclient.feature.savings.generated.resources.step_terms_is_allowed_overdraft
-import androidclient.feature.savings.generated.resources.step_terms_lock_in_period
-import androidclient.feature.savings.generated.resources.step_terms_min_opening_balance
-import androidclient.feature.savings.generated.resources.step_terms_minimum_balance
+import kpt.feature.savings.generated.resources.Res
+import kpt.feature.savings.generated.resources.feature_savings_back
+import kpt.feature.savings.generated.resources.feature_savings_charges_active_count
+import kpt.feature.savings.generated.resources.feature_savings_currency
+import kpt.feature.savings.generated.resources.feature_savings_days_in_year
+import kpt.feature.savings.generated.resources.feature_savings_external_id
+import kpt.feature.savings.generated.resources.feature_savings_field_officer
+import kpt.feature.savings.generated.resources.feature_savings_interest_calc
+import kpt.feature.savings.generated.resources.feature_savings_interest_comp
+import kpt.feature.savings.generated.resources.feature_savings_interest_p_period
+import kpt.feature.savings.generated.resources.feature_savings_no
+import kpt.feature.savings.generated.resources.feature_savings_product_name
+import kpt.feature.savings.generated.resources.feature_savings_submission_date
+import kpt.feature.savings.generated.resources.feature_savings_submit
+import kpt.feature.savings.generated.resources.feature_savings_yes
+import kpt.feature.savings.generated.resources.step_charges
+import kpt.feature.savings.generated.resources.step_charges_view
+import kpt.feature.savings.generated.resources.step_details
+import kpt.feature.savings.generated.resources.step_terms
+import kpt.feature.savings.generated.resources.step_terms_apply_withdrawal_fee
+import kpt.feature.savings.generated.resources.step_terms_decimal_places
+import kpt.feature.savings.generated.resources.step_terms_is_allowed_overdraft
+import kpt.feature.savings.generated.resources.step_terms_lock_in_period
+import kpt.feature.savings.generated.resources.step_terms_min_opening_balance
+import kpt.feature.savings.generated.resources.step_terms_minimum_balance
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,7 +50,8 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.savings.savingsAccountv2.SavingsAccountAction
 import com.mifos.feature.savings.savingsAccountv2.SavingsAccountState
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.collections.mapOf
 
 @Composable
@@ -129,21 +130,21 @@ fun PreviewPage(
 
     )
 
-    Column(modifier = Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = LocalKptSpacing.current.md)) {
         LazyColumn(modifier = modifier.weight(1f)) {
             item {
                 Text(
                     stringResource(Res.string.step_details),
                     style = MifosTypography.labelLargeEmphasized,
                 )
-                Spacer(Modifier.height(KptTheme.spacing.md))
+                Spacer(Modifier.height(LocalKptSpacing.current.md))
             }
 
             item {
                 MifosGeneralCard(
                     contentMap = previewDetailsMap,
                 )
-                Spacer(Modifier.height(KptTheme.spacing.md))
+                Spacer(Modifier.height(LocalKptSpacing.current.md))
             }
 
             item {
@@ -151,14 +152,14 @@ fun PreviewPage(
                     stringResource(Res.string.step_terms),
                     style = MifosTypography.labelLargeEmphasized,
                 )
-                Spacer(Modifier.height(KptTheme.spacing.md))
+                Spacer(Modifier.height(LocalKptSpacing.current.md))
             }
 
             item {
                 MifosGeneralCard(
                     contentMap = termsDetailsMap,
                 )
-                Spacer(Modifier.height(KptTheme.spacing.md))
+                Spacer(Modifier.height(LocalKptSpacing.current.md))
             }
 
             item {
@@ -166,7 +167,7 @@ fun PreviewPage(
                     stringResource(Res.string.step_charges),
                     style = MifosTypography.labelLargeEmphasized,
                 )
-                Spacer(Modifier.height(KptTheme.spacing.md))
+                Spacer(Modifier.height(LocalKptSpacing.current.md))
             }
 
             item {
@@ -181,7 +182,7 @@ fun PreviewPage(
                     ),
                     btnEnabled = state.addedCharges.isNotEmpty(),
                 )
-                Spacer(Modifier.height(KptTheme.spacing.md))
+                Spacer(Modifier.height(LocalKptSpacing.current.md))
             }
         }
         MifosTwoButtonRow(

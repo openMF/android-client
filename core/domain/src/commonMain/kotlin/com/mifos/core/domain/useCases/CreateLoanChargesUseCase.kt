@@ -9,8 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.loan.LoanChargeFormRepository
 import com.mifos.core.model.objects.clients.ChargeCreationResponse
 import com.mifos.core.model.objects.payloads.ChargesPayload
@@ -25,7 +23,7 @@ class CreateLoanChargesUseCase(
         resourceType: String,
         resourceId: Int,
         chargesPayload: ChargesPayload,
-    ): Flow<DataState<ChargeCreationResponse>> = flow {
+    ): Flow<ChargeCreationResponse> = flow {
         emit(repository.createCharges(resourceType, resourceId, chargesPayload))
-    }.asDataStateFlow()
+    }
 }

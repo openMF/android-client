@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.client.syncClientDialog
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_error_network_not_available
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_client_error_network_not_available
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants

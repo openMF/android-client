@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 import kotlinx.coroutines.flow.Flow
@@ -20,6 +19,6 @@ class GetClientSavingsAccountTemplateByProductUseCase(
     private val repository: SavingsAccountRepository,
 ) {
 
-    operator fun invoke(clientId: Int, productId: Int): Flow<DataState<SavingProductsTemplate?>> =
+    operator fun invoke(clientId: Int, productId: Int): Flow<SavingProductsTemplate?> =
         repository.getClientSavingsAccountTemplateByProduct(clientId, productId)
 }

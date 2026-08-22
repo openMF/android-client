@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.clients.ClientAddressEntity
 import com.mifos.core.network.model.PostClientAddressRequest
 import com.mifos.core.network.model.PostClientAddressResponse
@@ -27,11 +26,11 @@ import kotlinx.coroutines.flow.Flow
  */
 interface CreateNewClientRepository {
 
-    fun clientTemplate(): Flow<DataState<ClientsTemplateEntity>>
+    fun clientTemplate(): Flow<ClientsTemplateEntity>
 
-    fun offices(): Flow<DataState<List<OfficeEntity>>>
+    fun offices(): Flow<List<OfficeEntity>>
 
-    fun getStaffInOffice(officeId: Int): Flow<DataState<List<StaffEntity>>>
+    fun getStaffInOffice(officeId: Int): Flow<List<StaffEntity>>
 
     suspend fun createClient(clientPayload: ClientPayloadEntity): Int?
 

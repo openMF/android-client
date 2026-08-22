@@ -40,13 +40,14 @@ import androidx.compose.ui.unit.dp
 import cmp.navigation.authenticated.NavigationItem
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
-import core.designsystem.generated.resources.Res
-import core.designsystem.generated.resources.core_designsystem_app_title
+import kpt.core.designsystem.generated.resources.Res
+import kpt.core.designsystem.generated.resources.core_designsystem_app_title
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.mifos.navigation.generated.resources.powered_by
-import org.mifos.navigation.generated.resources.topbarlogo
-import template.core.base.designsystem.theme.KptTheme
+import cmp.navigation.generated.resources.powered_by
+import cmp.navigation.generated.resources.topbarlogo
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @Composable
 fun MifosBottomBar(
@@ -60,7 +61,7 @@ fun MifosBottomBar(
         windowInsets = windowInsets,
         modifier = modifier
             .fillMaxWidth()
-            .background(KptTheme.colorScheme.surface),
+            .background(LocalKptColors.current.surface),
         tonalElevation = 0.dp,
     ) {
         navigationItems.forEach { navigationItem ->

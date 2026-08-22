@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.CheckerInboxRepository
 import com.mifos.core.model.objects.checkerinboxtask.CheckerInboxSearchTemplate
 import com.mifos.core.model.objects.checkerinboxtask.CheckerTask
@@ -26,8 +24,8 @@ class CheckerInboxRepositoryImp(
         actionName: String?,
         entityName: String?,
         resourceId: Int?,
-    ): Flow<DataState<List<CheckerTask>>> {
-        return dataManagerCheckerInbox.getCheckerTaskList().asDataStateFlow()
+    ): Flow<List<CheckerTask>> {
+        return dataManagerCheckerInbox.getCheckerTaskList()
     }
 
     override suspend fun approveCheckerEntry(auditId: Int): GenericResponse {

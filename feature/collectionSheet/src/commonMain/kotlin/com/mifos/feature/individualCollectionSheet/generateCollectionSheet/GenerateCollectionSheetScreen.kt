@@ -11,21 +11,21 @@
 
 package com.mifos.feature.individualCollectionSheet.generateCollectionSheet
 
-import androidclient.feature.collectionsheet.generated.resources.Res
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_attendance_type
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_cancel
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_center
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_collection_sheet_submitted
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_generate_collection_sheet
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_group
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_office
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_payment_type
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_productive_collection_sheet
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_productive_sheet_submitted
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_repayment_date
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_select
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_staff
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_submit_collection_sheet
+import kpt.feature.collectionsheet.generated.resources.Res
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_attendance_type
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_cancel
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_center
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_collection_sheet_submitted
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_generate_collection_sheet
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_group
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_office
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_payment_type
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_productive_collection_sheet
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_productive_sheet_submitted
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_repayment_date
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_select
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_staff
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_submit_collection_sheet
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -77,7 +77,9 @@ import com.mifos.room.entities.organisation.StaffEntity
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -301,7 +303,7 @@ private fun GenerateCollectionSheetContent(
     }
 
     Column(modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosTextFieldDropdown(
             value = selectedOffice,
@@ -319,7 +321,7 @@ private fun GenerateCollectionSheetContent(
             label = stringResource(Res.string.feature_collection_sheet_office),
             readOnly = true,
         )
-        Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.sm))
 
         MifosDatePickerTextField(
             value = DateHelper.getDateAsStringFromLong(repaymentDate),
@@ -328,7 +330,7 @@ private fun GenerateCollectionSheetContent(
                 showDatePicker = true
             },
         )
-        Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.sm))
 
         MifosTextFieldDropdown(
             value = selectedStaff,
@@ -347,7 +349,7 @@ private fun GenerateCollectionSheetContent(
             readOnly = true,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosButton(
             onClick = {
@@ -361,7 +363,7 @@ private fun GenerateCollectionSheetContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(DesignToken.spacing.dp44)
-                .padding(horizontal = KptTheme.spacing.md),
+                .padding(horizontal = LocalKptSpacing.current.md),
             contentPadding = PaddingValues(),
         ) {
             Text(
@@ -369,10 +371,10 @@ private fun GenerateCollectionSheetContent(
                     Res.string
                         .feature_collection_sheet_productive_collection_sheet,
                 ),
-                style = KptTheme.typography.bodyLarge,
+                style = LocalKptTypography.current.bodyLarge,
             )
         }
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosTextFieldDropdown(
             value = selectedCenter,
@@ -389,7 +391,7 @@ private fun GenerateCollectionSheetContent(
             label = stringResource(Res.string.feature_collection_sheet_center),
             readOnly = true,
         )
-        Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.sm))
 
         MifosTextFieldDropdown(
             value = selectedGroup,
@@ -406,7 +408,7 @@ private fun GenerateCollectionSheetContent(
             label = stringResource(Res.string.feature_collection_sheet_group),
             readOnly = true,
         )
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosButton(
             onClick = {
@@ -420,7 +422,7 @@ private fun GenerateCollectionSheetContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(DesignToken.spacing.dp44)
-                .padding(horizontal = KptTheme.spacing.md),
+                .padding(horizontal = LocalKptSpacing.current.md),
             contentPadding = PaddingValues(),
         ) {
             Text(
@@ -428,7 +430,7 @@ private fun GenerateCollectionSheetContent(
                     Res.string
                         .feature_collection_sheet_generate_collection_sheet,
                 ),
-                style = KptTheme.typography.bodyLarge,
+                style = LocalKptTypography.current.bodyLarge,
             )
         }
 
@@ -500,7 +502,7 @@ private fun GenerateCollectionSheetContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(DesignToken.spacing.dp44)
-                    .padding(horizontal = KptTheme.spacing.md),
+                    .padding(horizontal = LocalKptSpacing.current.md),
                 contentPadding = PaddingValues(),
             ) {
                 Text(
@@ -508,7 +510,7 @@ private fun GenerateCollectionSheetContent(
                         Res.string
                             .feature_collection_sheet_submit_collection_sheet,
                     ),
-                    style = KptTheme.typography.bodyLarge,
+                    style = LocalKptTypography.current.bodyLarge,
                 )
             }
         }

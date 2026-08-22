@@ -9,33 +9,33 @@
  */
 package com.mifos.feature.loan.loanTransaction
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_break_down
-import androidclient.feature.loan.generated.resources.feature_loan_cancel
-import androidclient.feature.loan.generated.resources.feature_loan_export_to_pdf
-import androidclient.feature.loan.generated.resources.feature_loan_from_date
-import androidclient.feature.loan.generated.resources.feature_loan_generate_report
-import androidclient.feature.loan.generated.resources.feature_loan_invalid_date_range
-import androidclient.feature.loan.generated.resources.feature_loan_loan_transactions
-import androidclient.feature.loan.generated.resources.feature_loan_no_transactions
-import androidclient.feature.loan.generated.resources.feature_loan_select
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_amount
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_external_id
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_fees
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_interest
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_loan_balance
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_number
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_office
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_penalties
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_principal_due
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_transaction_date
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_transaction_id
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_transaction_type
-import androidclient.feature.loan.generated.resources.feature_loan_to_date
-import androidclient.feature.loan.generated.resources.feature_loan_transaction_action_undo
-import androidclient.feature.loan.generated.resources.feature_loan_transaction_action_view_details
-import androidclient.feature.loan.generated.resources.feature_loan_transaction_action_view_journal_entries
-import androidclient.feature.loan.generated.resources.feature_loan_transaction_action_view_receipts
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_break_down
+import kpt.feature.loan.generated.resources.feature_loan_cancel
+import kpt.feature.loan.generated.resources.feature_loan_export_to_pdf
+import kpt.feature.loan.generated.resources.feature_loan_from_date
+import kpt.feature.loan.generated.resources.feature_loan_generate_report
+import kpt.feature.loan.generated.resources.feature_loan_invalid_date_range
+import kpt.feature.loan.generated.resources.feature_loan_loan_transactions
+import kpt.feature.loan.generated.resources.feature_loan_no_transactions
+import kpt.feature.loan.generated.resources.feature_loan_select
+import kpt.feature.loan.generated.resources.feature_loan_table_header_amount
+import kpt.feature.loan.generated.resources.feature_loan_table_header_external_id
+import kpt.feature.loan.generated.resources.feature_loan_table_header_fees
+import kpt.feature.loan.generated.resources.feature_loan_table_header_interest
+import kpt.feature.loan.generated.resources.feature_loan_table_header_loan_balance
+import kpt.feature.loan.generated.resources.feature_loan_table_header_number
+import kpt.feature.loan.generated.resources.feature_loan_table_header_office
+import kpt.feature.loan.generated.resources.feature_loan_table_header_penalties
+import kpt.feature.loan.generated.resources.feature_loan_table_header_principal_due
+import kpt.feature.loan.generated.resources.feature_loan_table_header_transaction_date
+import kpt.feature.loan.generated.resources.feature_loan_table_header_transaction_id
+import kpt.feature.loan.generated.resources.feature_loan_table_header_transaction_type
+import kpt.feature.loan.generated.resources.feature_loan_to_date
+import kpt.feature.loan.generated.resources.feature_loan_transaction_action_undo
+import kpt.feature.loan.generated.resources.feature_loan_transaction_action_view_details
+import kpt.feature.loan.generated.resources.feature_loan_transaction_action_view_journal_entries
+import kpt.feature.loan.generated.resources.feature_loan_transaction_action_view_receipts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -94,7 +94,11 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptShapes
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -288,18 +292,18 @@ internal fun ExportTransactionsDialog(
         onDismiss = { onAction(LoanTransactionsAction.DismissExportDialog) },
     ) {
         Surface(
-            shape = KptTheme.shapes.medium,
-            color = KptTheme.colorScheme.surface,
+            shape = LocalKptShapes.current.medium,
+            color = LocalKptColors.current.surface,
             modifier = Modifier.fillMaxWidth(0.95f),
         ) {
-            Column(modifier = Modifier.padding(KptTheme.spacing.lg)) {
+            Column(modifier = Modifier.padding(LocalKptSpacing.current.lg)) {
                 Text(
                     text = stringResource(Res.string.feature_loan_export_to_pdf),
-                    style = KptTheme.typography.titleLarge,
+                    style = LocalKptTypography.current.titleLarge,
                     modifier = Modifier.fillMaxWidth(),
                 )
 
-                Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+                Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
                 MifosDatePickerTextField(
                     value = state.fromDate?.let {
@@ -311,7 +315,7 @@ internal fun ExportTransactionsDialog(
                     },
                 )
 
-                Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+                Spacer(modifier = Modifier.height(LocalKptSpacing.current.sm))
 
                 MifosDatePickerTextField(
                     value = state.toDate?.let {
@@ -328,7 +332,7 @@ internal fun ExportTransactionsDialog(
                     },
                 )
 
-                Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+                Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -340,12 +344,12 @@ internal fun ExportTransactionsDialog(
                     ) {
                         Text(
                             text = stringResource(Res.string.feature_loan_cancel),
-                            style = KptTheme.typography.labelLarge,
+                            style = LocalKptTypography.current.labelLarge,
                             maxLines = 1,
                         )
                     }
 
-                    Spacer(modifier = Modifier.width(KptTheme.spacing.md))
+                    Spacer(modifier = Modifier.width(LocalKptSpacing.current.md))
 
                     MifosButton(
                         onClick = {
@@ -356,7 +360,7 @@ internal fun ExportTransactionsDialog(
                     ) {
                         Text(
                             text = stringResource(Res.string.feature_loan_generate_report),
-                            style = KptTheme.typography.labelLarge,
+                            style = LocalKptTypography.current.labelLarge,
                             maxLines = 1,
                         )
                     }
@@ -468,13 +472,13 @@ private fun LoanTransactionsTableContent(
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .padding(
-                                        vertical = KptTheme.spacing.sm,
-                                        horizontal = KptTheme.spacing.xs,
+                                        vertical = LocalKptSpacing.current.sm,
+                                        horizontal = LocalKptSpacing.current.xs,
                                     ),
                             ) {
                                 Text(
                                     text = stringResource(headerId),
-                                    style = KptTheme.typography.titleSmall,
+                                    style = LocalKptTypography.current.titleSmall,
                                     modifier = Modifier.fillMaxSize(),
                                     textAlign = if (index == 6) TextAlign.Center else TextAlign.Left,
                                 )
@@ -483,8 +487,8 @@ private fun LoanTransactionsTableContent(
                     },
                     widths = headerWidthsRow1,
                     backgroundColor = lerp(
-                        KptTheme.colorScheme.surface,
-                        KptTheme.colorScheme.primary,
+                        LocalKptColors.current.surface,
+                        LocalKptColors.current.primary,
                         0.3f,
                     ),
                     edgeOffset = DesignToken.padding.medium,
@@ -500,22 +504,22 @@ private fun LoanTransactionsTableContent(
                                     .background(
                                         if (headerTitle.isNotBlank()) {
                                             lerp(
-                                                KptTheme.colorScheme.surface,
-                                                KptTheme.colorScheme.primary,
+                                                LocalKptColors.current.surface,
+                                                LocalKptColors.current.primary,
                                                 0.08f,
                                             )
                                         } else {
-                                            KptTheme.colorScheme.background
+                                            LocalKptColors.current.background
                                         },
                                     )
                                     .padding(
-                                        vertical = KptTheme.spacing.sm,
-                                        horizontal = KptTheme.spacing.xs,
+                                        vertical = LocalKptSpacing.current.sm,
+                                        horizontal = LocalKptSpacing.current.xs,
                                     ),
                             ) {
                                 Text(
                                     text = headerTitle,
-                                    style = KptTheme.typography.titleSmall,
+                                    style = LocalKptTypography.current.titleSmall,
                                 )
                             }
                         }
@@ -566,11 +570,11 @@ private fun TransactionRow(
         row.loanBalance,
     )
 
-    val commonTextStyle = KptTheme.typography.bodySmall
+    val commonTextStyle = LocalKptTypography.current.bodySmall
     val commonModifier = Modifier.fillMaxSize()
     val commonTextAlign = TextAlign.Left
     val textColor =
-        if (row.manuallyReversed) KptTheme.colorScheme.error else KptTheme.colorScheme.onBackground
+        if (row.manuallyReversed) LocalKptColors.current.error else LocalKptColors.current.onBackground
     val textDecoration = if (row.manuallyReversed) TextDecoration.LineThrough else null
 
     val cells: List<@Composable () -> Unit> = textValues.mapIndexed { index, value ->
@@ -581,17 +585,17 @@ private fun TransactionRow(
                     .background(
                         if (index in 6..10) {
                             lerp(
-                                KptTheme.colorScheme.surface,
-                                KptTheme.colorScheme.primary,
+                                LocalKptColors.current.surface,
+                                LocalKptColors.current.primary,
                                 0.08f,
                             )
                         } else {
-                            KptTheme.colorScheme.surface
+                            LocalKptColors.current.surface
                         },
                     )
                     .padding(
-                        vertical = KptTheme.spacing.sm,
-                        horizontal = KptTheme.spacing.xs,
+                        vertical = LocalKptSpacing.current.sm,
+                        horizontal = LocalKptSpacing.current.xs,
                     ),
             ) {
                 Text(
@@ -667,7 +671,7 @@ private fun TransactionActionsBottomSheet(
         onDismiss = onDismissRequest,
         content = {
             Column(
-                modifier = Modifier.padding(KptTheme.spacing.md),
+                modifier = Modifier.padding(LocalKptSpacing.current.md),
             ) {
                 actions.forEach { action ->
                     Row(
@@ -676,7 +680,7 @@ private fun TransactionActionsBottomSheet(
                             .clickable {
                                 onAction(action)
                             }
-                            .padding(KptTheme.spacing.sm),
+                            .padding(LocalKptSpacing.current.sm),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
