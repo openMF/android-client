@@ -12,10 +12,10 @@ package com.mifos.feature.checker.inbox.task.checkerInboxTasks
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.GetCheckerInboxBadgesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 /**
@@ -40,27 +40,19 @@ class CheckerInboxTasksViewModel(
     }
 
     fun loadCheckerTasksBadges() = viewModelScope.launch {
-        getCheckerInboxBadgesUseCase().collect { result ->
+        _checkerInboxTasksUiState.value = CheckerInboxTasksUiState.Loading
+        getCheckerInboxBadgesUseCase()
+            .catch { throwable ->
+                Logger.e("CheckerInbox: ${throwable.message}", throwable)
 
-            when (result) {
-                is DataState.Error -> {
-                    Logger.e("CheckerInbox: ${result.exception.message}", result.exception)
-
-                    _checkerInboxTasksUiState.value =
-                        CheckerInboxTasksUiState.Error(result.message)
-                }
-
-                is DataState.Loading -> {
-                    _checkerInboxTasksUiState.value = CheckerInboxTasksUiState.Loading
-                }
-
-                is DataState.Success -> {
-                    _checkerInboxTasksUiState.value = CheckerInboxTasksUiState.Success(
-                        result.data.first.toString(),
-                        result.data.second.toString(),
-                    )
-                }
+                _checkerInboxTasksUiState.value =
+                    CheckerInboxTasksUiState.Error(throwable.message ?: "")
             }
-        }
+            .collect { badges ->
+                _checkerInboxTasksUiState.value = CheckerInboxTasksUiState.Success(
+                    badges.first.toString(),
+                    badges.second.toString(),
+                )
+            }
     }
 }

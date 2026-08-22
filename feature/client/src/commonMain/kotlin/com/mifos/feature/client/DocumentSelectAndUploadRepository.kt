@@ -9,7 +9,6 @@
  */
 package com.mifos.feature.client
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.network.GenericResponse
 import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.coroutines.flow.Flow
@@ -20,23 +19,23 @@ interface DocumentSelectAndUploadRepository {
 
     fun selectImageFromGallery(
         dialogTitle: String = "",
-    ): Flow<DataState<PlatformFile?>>
+    ): Flow<PlatformFile?>
 
-    fun selectDocumentFromFile(dialogTitle: String = ""): Flow<DataState<PlatformFile?>>
+    fun selectDocumentFromFile(dialogTitle: String = ""): Flow<PlatformFile?>
 
-    fun downloadDocumentAndCache(): Flow<DataState<PlatformFile>>
+    fun downloadDocumentAndCache(): Flow<PlatformFile>
 
     suspend fun deleteDocument(): Result<GenericResponse>
 
     fun uploadDocument(
         documentName: String,
         description: String,
-    ): Flow<DataState<GenericResponse>>
+    ): Flow<GenericResponse>
 
     fun updateDocument(
         documentName: String,
         description: String,
-    ): Flow<DataState<GenericResponse>>
+    ): Flow<GenericResponse>
 
     fun resetStateAndRefresh()
 

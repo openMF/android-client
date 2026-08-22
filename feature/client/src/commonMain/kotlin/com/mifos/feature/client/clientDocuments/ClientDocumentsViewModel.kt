@@ -16,7 +16,6 @@ import kpt.feature.client.generated.resources.unknown_error
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.model.objects.noncoreobjects.Document
@@ -190,30 +189,25 @@ class ClientDocumentsViewModel(
                     entityDocumentStateFlow.update {
                         it.copy(documentId = documentId)
                     }
-                    documentSelectAndUploadRepository.downloadDocumentAndCache().collect { dataState ->
-                        when (dataState) {
-                            is DataState.Error<*> -> {
-                                errorDialogState(dataState.message)
-                            }
-                            DataState.Loading -> {
-                                loadingDialogState()
-                            }
-                            is DataState.Success -> {
-                                documentSelectAndUploadRepository.updateEntityDocument(platformFile = dataState.data)
-                                nullDialogState()
-                                if (dataState.data.extension == "pdf") {
-                                    sendAction(ClientDocumentsActions.OpenExternalPdfViewer(dataState.data))
-                                } else {
-                                    // Uncomment them when you want to enable document update on backend.
-                                    // And also enable the button on the UI Screen, for SubmitMode.UPDATE.
-                                    // ( do this after uncommenting these line)
-                                    //                                documentSelectAndUploadRepository.updateStep(step = EntityDocumentState.Step.UPDATE_PREVIEW)
-                                    //                                documentSelectAndUploadRepository.changeSubmitMode(EntityDocumentState.SubmitMode.UPDATE)
-                                    sendEvent(ClientDocumentsEvents.OnViewDocument)
-                                }
+                    loadingDialogState()
+                    documentSelectAndUploadRepository.downloadDocumentAndCache()
+                        .catch { error ->
+                            errorDialogState(error.message ?: getString(Res.string.unknown_error))
+                        }
+                        .collect { platformFile ->
+                            documentSelectAndUploadRepository.updateEntityDocument(platformFile = platformFile)
+                            nullDialogState()
+                            if (platformFile.extension == "pdf") {
+                                sendAction(ClientDocumentsActions.OpenExternalPdfViewer(platformFile))
+                            } else {
+                                // Uncomment them when you want to enable document update on backend.
+                                // And also enable the button on the UI Screen, for SubmitMode.UPDATE.
+                                // ( do this after uncommenting these line)
+                                //                                documentSelectAndUploadRepository.updateStep(step = EntityDocumentState.Step.UPDATE_PREVIEW)
+                                //                                documentSelectAndUploadRepository.changeSubmitMode(EntityDocumentState.SubmitMode.UPDATE)
+                                sendEvent(ClientDocumentsEvents.OnViewDocument)
                             }
                         }
-                    }
                 }
                 false -> {
                     errorDialogState(getString(Res.string.no_internet_message))

@@ -35,46 +35,46 @@ actual fun platformWriteFileToCache(
     fileName: String,
     fileExtension: String,
     filesByteArray: ByteArray,
-): Flow<DataState<PlatformFile>> = flow {
+): Flow<PlatformFile> = flow {
     val filePath = appCache / "$fileName.$fileExtension"
     filePath.write(filesByteArray)
     emit(filePath)
-}.asDataStateFlow()
+}
 
 actual fun platformWriteFileToApplicationPrivateInternalStorage(
     fileName: String,
     fileExtension: String,
     filesByteArray: ByteArray,
-): Flow<DataState<PlatformFile?>> = flow {
+): Flow<PlatformFile?> = flow {
     val privateInternalStorage = appPrivateInternalStorage / "$fileName.$fileExtension"
     privateInternalStorage.write(filesByteArray)
     emit(privateInternalStorage)
-}.asDataStateFlow()
+}
 
 actual fun platformWriteFileToApplicationInternalStorage(
     fileName: String,
     fileExtension: String,
     filesByteArray: ByteArray,
-): Flow<DataState<PlatformFile?>> = flow {
+): Flow<PlatformFile?> = flow {
     val internalStorage = appInternalStorage / "$fileName.$fileExtension"
     internalStorage.write(filesByteArray)
     emit(internalStorage)
-}.asDataStateFlow()
+}
 
 actual fun platformWriteToSelectedDirectory(
     filesByteArray: ByteArray,
     platformFile: PlatformFile,
-): Flow<DataState<Unit>> = flow {
+): Flow<Unit> = flow {
     emit(platformFile.write(filesByteArray))
-}.asDataStateFlow()
+}
 
 actual suspend fun platformDeleteFile(file: PlatformFile) {
     file.delete(false)
 }
 
-actual fun platformTakePhoto(): Flow<DataState<PlatformFile?>> = flow {
+actual fun platformTakePhoto(): Flow<PlatformFile?> = flow {
     val result = FileKit.openCameraPicker(
         FileKitCameraType.Photo,
     )
     emit(result)
-}.asDataStateFlow()
+}

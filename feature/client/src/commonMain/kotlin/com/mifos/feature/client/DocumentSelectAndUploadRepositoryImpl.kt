@@ -13,7 +13,6 @@ import kpt.feature.client.generated.resources.Res
 import kpt.feature.client.generated.resources.default_preview_pdf_name
 import kpt.feature.client.generated.resources.error_document_not_found
 import kpt.feature.client.generated.resources.error_failed_to_get_document_type
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileKitUtil
 import com.mifos.core.data.repository.DocumentCreateUpdateRepository
 import com.mifos.core.data.repository.DocumentListRepository
@@ -22,7 +21,6 @@ import io.github.vinceglb.filekit.PlatformFile
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.statement.readRawBytes
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
@@ -44,7 +42,6 @@ class DocumentSelectAndUploadRepositoryImpl(
     override fun selectDocumentFromFile(dialogTitle: String) = FileKitUtil.pickFile()
 
     override fun downloadDocumentAndCache() = flow {
-        emit(DataState.Loading)
         val state = entityDocumentStateMutableStateFlow.first()
         val httpResponse = documentsRepository.downloadDocument(
             entityType = when (state.entityType) {
@@ -62,12 +59,10 @@ class DocumentSelectAndUploadRepositoryImpl(
             getString(Res.string.default_preview_pdf_name),
             extension,
             byte,
-        ).collect { writeState ->
-            if (writeState !is DataState.Loading) {
-                emit(writeState)
-            }
+        ).collect { platformFile ->
+            emit(platformFile)
         }
-    }.catch { emit(DataState.Error(Exception(it))) }
+    }
 
     override suspend fun deleteDocument() = runCatching {
         val state = entityDocumentStateMutableStateFlow.first()
@@ -86,53 +81,43 @@ class DocumentSelectAndUploadRepositoryImpl(
         documentName: String,
         description: String,
     ) = flow {
-        emit(DataState.Loading)
-        try {
-            val state = entityDocumentStateMutableStateFlow.first()
+        val state = entityDocumentStateMutableStateFlow.first()
 
-            val multiPartFormDataContent = getMultiPartFormDataContent(
-                documentName,
-                description,
-            )
-            val result = documentDialogRepository.createDocument(
-                entityType = when (state.entityType) {
-                    EntityDocumentState.EntityType.Clients -> "clients"
-                    EntityDocumentState.EntityType.Loans -> "loans"
-                },
-                entityId = state.entityId,
-                file = multiPartFormDataContent,
-            ).first()
-            emit(DataState.Success(result))
-        } catch (e: Exception) {
-            emit(DataState.Error(e))
-        }
+        val multiPartFormDataContent = getMultiPartFormDataContent(
+            documentName,
+            description,
+        )
+        val result = documentDialogRepository.createDocument(
+            entityType = when (state.entityType) {
+                EntityDocumentState.EntityType.Clients -> "clients"
+                EntityDocumentState.EntityType.Loans -> "loans"
+            },
+            entityId = state.entityId,
+            file = multiPartFormDataContent,
+        ).first()
+        emit(result)
     }
 
     override fun updateDocument(
         documentName: String,
         description: String,
     ) = flow {
-        emit(DataState.Loading)
-        try {
-            val state = entityDocumentStateMutableStateFlow.first()
+        val state = entityDocumentStateMutableStateFlow.first()
 
-            val multiPartFormDataContent = getMultiPartFormDataContent(
-                documentName,
-                description,
-            )
-            val result = documentDialogRepository.updateDocument(
-                entityType = when (state.entityType) {
-                    EntityDocumentState.EntityType.Clients -> "clients"
-                    EntityDocumentState.EntityType.Loans -> "loans"
-                },
-                entityId = state.entityId,
-                documentId = state.documentId,
-                file = multiPartFormDataContent,
-            ).first()
-            emit(DataState.Success(result))
-        } catch (e: Exception) {
-            emit(DataState.Error(e))
-        }
+        val multiPartFormDataContent = getMultiPartFormDataContent(
+            documentName,
+            description,
+        )
+        val result = documentDialogRepository.updateDocument(
+            entityType = when (state.entityType) {
+                EntityDocumentState.EntityType.Clients -> "clients"
+                EntityDocumentState.EntityType.Loans -> "loans"
+            },
+            entityId = state.entityId,
+            documentId = state.documentId,
+            file = multiPartFormDataContent,
+        ).first()
+        emit(result)
     }
 
     private suspend fun getMultiPartFormDataContent(

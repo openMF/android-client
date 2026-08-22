@@ -19,8 +19,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.CurrencyFormatter
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.DataState.Loading
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.loan.LoanRepaymentScheduleRepository
 import com.mifos.core.model.objects.account.loan.Period
@@ -89,7 +87,7 @@ class LoanRepaymentScheduleViewModel(
 
     private fun loadLoanRepaySchedule() {
         mutableStateFlow.update {
-            it.copy(dataState = DataState.Loading)
+            it.copy(viewState = LoanRepaymentScheduleState.ViewState.Loading)
         }
 
         viewModelScope.launch {
@@ -97,8 +95,8 @@ class LoanRepaymentScheduleViewModel(
                 .catch {
                     mutableStateFlow.update {
                         it.copy(
-                            dataState = DataState.Error(
-                                exception = Exception(getString(Res.string.feature_loan_error_fetching_repayment_schedule)),
+                            viewState = LoanRepaymentScheduleState.ViewState.Error(
+                                message = getString(Res.string.feature_loan_error_fetching_repayment_schedule),
                             ),
                         )
                     }
@@ -114,7 +112,7 @@ class LoanRepaymentScheduleViewModel(
                                 getString(Res.string.principal_paid_off) to tableData.principalPaid,
                                 getString(Res.string.total_installments) to "${tableData.installmentsPaid} / ${tableData.totalInstallments}",
                             ),
-                            dataState = DataState.Success(loan),
+                            viewState = LoanRepaymentScheduleState.ViewState.Success,
                         )
                     }
                 }
@@ -275,14 +273,24 @@ class LoanRepaymentScheduleViewModel(
  * @property basicDetails A map of basic details about the loan.
  * @property repaymentScheduleTableData The repayment schedule data.
  * @property dialogState The state of the dialog to display.
+ * @property viewState The load state of the repayment schedule.
  */
 data class LoanRepaymentScheduleState(
     val loanId: Int = 0,
     val basicDetails: Map<String, String?> = emptyMap(),
     val repaymentScheduleTableData: RepaymentScheduleTableData? = null,
     val dialogState: DialogState? = null,
-    val dataState: DataState<LoanWithAssociations> = Loading,
+    val viewState: ViewState = ViewState.Loading,
 ) {
+    /**
+     * Represents the load state of the repayment schedule screen.
+     */
+    sealed interface ViewState {
+        data object Loading : ViewState
+        data class Error(val message: String) : ViewState
+        data object Success : ViewState
+    }
+
     /**
      * Represents the possible dialog states.
      */

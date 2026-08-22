@@ -16,11 +16,7 @@ import android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION
 import kpt.feature.client.generated.resources.Res
 import kpt.feature.client.generated.resources.client_documents_failed_to_open
 import kpt.feature.client.generated.resources.default_preview_pdf_name
-import kpt.feature.client.generated.resources.returned_invalid_data_after_caching
-import kpt.feature.client.generated.resources.unexpected_loading
 import androidx.core.content.FileProvider
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.ui.util.getMimeTypeFromPlatformFile
 import io.github.vinceglb.filekit.FileKit
 import io.github.vinceglb.filekit.PlatformFile
@@ -70,20 +66,11 @@ private suspend fun ensurePdfIsInCache(platformFile: PlatformFile): PlatformFile
         return inputFile
     }
 
-    val finalState = writeFileToCache(
+    return writeFileToCache(
         getString(Res.string.default_preview_pdf_name),
         "pdf",
         platformFile.readBytes(),
     ).last()
-
-    return when (finalState) {
-        is DataState.Success<*> ->
-            finalState.data
-                ?: throw IllegalStateException(getString(Res.string.returned_invalid_data_after_caching))
-        is DataState.Error<*> ->
-            throw Exception(finalState.exception)
-        DataState.Loading -> throw IllegalStateException(getString(Res.string.unexpected_loading))
-    }
 }
 
 fun writeFileToCache(
@@ -94,4 +81,4 @@ fun writeFileToCache(
     val filePath = FileKit.cacheDir / "$fileName.$fileExtension"
     filePath.write(filesByteArray)
     emit(filePath)
-}.asDataStateFlow()
+}

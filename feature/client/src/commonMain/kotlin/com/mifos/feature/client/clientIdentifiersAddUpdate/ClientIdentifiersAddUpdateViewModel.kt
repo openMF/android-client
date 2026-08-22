@@ -13,7 +13,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileKitUtil
 import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.data.repository.DocumentCreateUpdateRepository
@@ -408,34 +407,28 @@ class ClientIdentifiersAddUpdateViewModel(
                 }
 
                 viewModelScope.launch {
-                    FileKitUtil.pickFile().collect { dataState ->
-                        when (dataState) {
-                            is DataState.Success -> {
-                                mutableStateFlow.update {
-                                    it.copy(
-                                        documentImageFile = dataState.data?.readBytes(),
-                                        imageFileName = dataState.data?.name,
-                                        fileExtension = dataState.data?.extension,
-                                        dialogState = null,
-                                        feature = Feature.VIEW_DOCUMENT,
-                                        previewButtonHandle = PreviewButtonHandle.Submit,
-                                    )
-                                }
+                    FileKitUtil.pickFile()
+                        .catch { error ->
+                            mutableStateFlow.update {
+                                it.copy(
+                                    dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
+                                        error.message ?: "",
+                                    ),
+                                )
                             }
-
-                            is DataState.Error -> {
-                                mutableStateFlow.update {
-                                    it.copy(
-                                        dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
-                                            dataState.message,
-                                        ),
-                                    )
-                                }
-                            }
-
-                            DataState.Loading -> {}
                         }
-                    }
+                        .collect { platformFile ->
+                            mutableStateFlow.update {
+                                it.copy(
+                                    documentImageFile = platformFile?.readBytes(),
+                                    imageFileName = platformFile?.name,
+                                    fileExtension = platformFile?.extension,
+                                    dialogState = null,
+                                    feature = Feature.VIEW_DOCUMENT,
+                                    previewButtonHandle = PreviewButtonHandle.Submit,
+                                )
+                            }
+                        }
                 }
             }
 
@@ -447,34 +440,28 @@ class ClientIdentifiersAddUpdateViewModel(
                 }
 
                 viewModelScope.launch {
-                    FileKitUtil.pickImage().collect { dataState ->
-                        when (dataState) {
-                            is DataState.Success -> {
-                                mutableStateFlow.update {
-                                    it.copy(
-                                        documentImageFile = dataState.data?.readBytes(),
-                                        imageFileName = dataState.data?.name,
-                                        fileExtension = dataState.data?.extension,
-                                        dialogState = null,
-                                        feature = Feature.VIEW_DOCUMENT,
-                                        previewButtonHandle = PreviewButtonHandle.Submit,
-                                    )
-                                }
+                    FileKitUtil.pickImage()
+                        .catch { error ->
+                            mutableStateFlow.update {
+                                it.copy(
+                                    dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
+                                        error.message ?: "",
+                                    ),
+                                )
                             }
-
-                            is DataState.Error -> {
-                                mutableStateFlow.update {
-                                    it.copy(
-                                        dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
-                                            dataState.message,
-                                        ),
-                                    )
-                                }
-                            }
-
-                            DataState.Loading -> {}
                         }
-                    }
+                        .collect { platformFile ->
+                            mutableStateFlow.update {
+                                it.copy(
+                                    documentImageFile = platformFile?.readBytes(),
+                                    imageFileName = platformFile?.name,
+                                    fileExtension = platformFile?.extension,
+                                    dialogState = null,
+                                    feature = Feature.VIEW_DOCUMENT,
+                                    previewButtonHandle = PreviewButtonHandle.Submit,
+                                )
+                            }
+                        }
                 }
             }
 

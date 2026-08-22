@@ -66,7 +66,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.designsystem.component.BasicDialogState
 import com.mifos.core.designsystem.component.MifosBasicDialog
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -76,7 +75,6 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
-import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.ui.components.MifosDetailsCard
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.pdf.Orientation
@@ -170,15 +168,15 @@ internal fun LoanRepaymentScheduleScreenContent(
         },
     ) {
         Box(modifier = Modifier.padding(it)) {
-            when (state.dataState) {
-                is DataState.Error -> {
+            when (state.viewState) {
+                is LoanRepaymentScheduleState.ViewState.Error -> {
                     MifosSweetError(
-                        message = state.dataState.message,
+                        message = state.viewState.message,
                         onclick = { onAction(LoanRepaymentScheduleAction.Retry) },
                     )
                 }
 
-                is DataState.Success<LoanWithAssociations> -> {
+                LoanRepaymentScheduleState.ViewState.Success -> {
                     state.repaymentScheduleTableData?.let { data ->
                         LoanRepaymentScheduleContent(
                             tableData = data,
@@ -187,7 +185,7 @@ internal fun LoanRepaymentScheduleScreenContent(
                     }
                 }
 
-                DataState.Loading -> {
+                LoanRepaymentScheduleState.ViewState.Loading -> {
                     MifosProgressIndicator()
                 }
             }

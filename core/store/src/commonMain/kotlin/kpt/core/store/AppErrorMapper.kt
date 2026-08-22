@@ -47,7 +47,7 @@ fun mapErrorToUserMessage(error: Throwable): String = when (val cat = categorize
     is ErrorCategory.ClientError -> error.message ?: "Request failed (${cat.httpCode})."
     ErrorCategory.Generic -> error.message ?: "Something went wrong."
     // TODO(fork): add branches above for field-officer-specific exception types as they
-    //   surface during the Phase 3 DataState -> ScreenState cutover.
+    //   surface during the Phase 3 ScreenState cutover.
 }
 
 /**

@@ -26,39 +26,39 @@ actual fun platformWriteFileToCache(
     fileName: String,
     fileExtension: String,
     filesByteArray: ByteArray,
-): Flow<DataState<PlatformFile>> = flow {
-    emit(DataState.Error(IllegalStateException("Platform not supported")))
+): Flow<PlatformFile> = flow {
+    throw IllegalStateException("Platform not supported")
 }
 
 actual fun platformWriteFileToApplicationPrivateInternalStorage(
     fileName: String,
     fileExtension: String,
     filesByteArray: ByteArray,
-): Flow<DataState<PlatformFile?>> = flow {
+): Flow<PlatformFile?> = flow {
     FileKit.download(bytes = filesByteArray, fileName = "$fileName.$fileExtension")
     emit(null)
-}.asDataStateFlow()
+}
 
 actual fun platformWriteFileToApplicationInternalStorage(
     fileName: String,
     fileExtension: String,
     filesByteArray: ByteArray,
-): Flow<DataState<PlatformFile?>> = flow {
+): Flow<PlatformFile?> = flow {
     FileKit.download(bytes = filesByteArray, fileName = "$fileName.$fileExtension")
     emit(null)
-}.asDataStateFlow()
+}
 
 actual fun platformWriteToSelectedDirectory(
     filesByteArray: ByteArray,
     platformFile: PlatformFile,
-): Flow<DataState<Unit>> = flow {
+): Flow<Unit> = flow {
     emit(FileKit.download(bytes = filesByteArray, fileName = "${platformFile.name}.${platformFile.extension}"))
-}.asDataStateFlow()
+}
 
 actual suspend fun platformDeleteFile(file: PlatformFile) {
     // not support in JS.
 }
 
-actual fun platformTakePhoto(): Flow<DataState<PlatformFile?>> = flow {
-    emit(DataState.Error(IllegalStateException("Platform not supported")))
+actual fun platformTakePhoto(): Flow<PlatformFile?> = flow {
+    throw IllegalStateException("Platform not supported")
 }

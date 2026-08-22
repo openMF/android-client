@@ -35,35 +35,35 @@ class OfflineDashboardViewModel(
         _offlineDashboardUiState.asStateFlow()
 
     fun loadDatabaseClientPayload() {
-        handleDataState(
+        handleSyncFlow(
             flow = repository.allDatabaseClientPayload(),
             type = Type.SYNC_CLIENTS,
         )
     }
 
     fun loadDatabaseGroupPayload() {
-        handleDataState(
+        handleSyncFlow(
             flow = repository.allDatabaseGroupPayload(),
             type = Type.SYNC_GROUPS,
         )
     }
 
     fun loadDatabaseCenterPayload() {
-        handleDataState(
+        handleSyncFlow(
             flow = repository.allDatabaseCenterPayload(),
             type = Type.SYNC_CENTERS,
         )
     }
 
     fun loadDatabaseLoanRepaymentTransactions() {
-        handleDataState(
+        handleSyncFlow(
             flow = repository.databaseLoanRepayments(),
             type = Type.SYNC_LOAN_REPAYMENTS,
         )
     }
 
     fun loadDatabaseSavingsAccountTransactions() {
-        handleDataState(
+        handleSyncFlow(
             flow = repository.allSavingsAccountTransactions(),
             type = Type.SYNC_SAVINGS_ACCOUNT_TRANSACTION,
         )
@@ -91,7 +91,7 @@ class OfflineDashboardViewModel(
         _offlineDashboardUiState.value = OfflineDashboardUiState.SyncUiState(updatedList)
     }
 
-    private fun <T> handleDataState(
+    private fun <T> handleSyncFlow(
         flow: Flow<List<T>>,
         type: Type,
     ) {
