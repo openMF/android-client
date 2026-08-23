@@ -18,6 +18,7 @@ import androidx.room3.ColumnTypeConverters
 import com.mifos.room.dao.CenterDao
 import com.mifos.room.dao.ChargeDao
 import com.mifos.room.dao.ClientDao
+import com.mifos.room.dao.ClientListCacheDao
 import com.mifos.room.dao.ColumnValueDao
 import com.mifos.room.dao.GroupsDao
 import com.mifos.room.dao.LoanDao
@@ -64,6 +65,7 @@ import com.mifos.room.entities.client.ClientChargeCurrencyEntity
 import com.mifos.room.entities.client.ClientDateEntity
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.client.ClientIdentifierEntity
+import com.mifos.room.entities.client.ClientListCacheEntity
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.client.ClientStatusEntity
 import com.mifos.room.entities.group.CenterDateEntity
@@ -134,6 +136,7 @@ import com.mifos.room.typeconverters.CustomTypeConverters
         ClientStatusEntity::class,
         ClientAddressEntity::class,
         ClientIdentifierEntity::class,
+        ClientListCacheEntity::class,
         // group package
         CenterEntity::class,
         CenterDateEntity::class,
@@ -176,6 +179,9 @@ import com.mifos.room.typeconverters.CustomTypeConverters
         AutoMigration(from = 3, to = 4),
         AutoMigration(from = 4, to = 5),
         AutoMigration(from = 5, to = 6),
+        // v7: purely-additive `client_list_cache` table (new FK-free entity, no destructive
+        // column edits) — Room3 auto-migration handles a brand-new table with no spec.
+        AutoMigration(from = 6, to = 7),
     ],
 )
 @ColumnTypeConverters(
@@ -186,6 +192,7 @@ actual abstract class MifosDatabase : RoomDatabase() {
     actual abstract val centerDao: CenterDao
     actual abstract val chargeDao: ChargeDao
     actual abstract val clientDao: ClientDao
+    actual abstract val clientListCacheDao: ClientListCacheDao
     actual abstract val columnValueDao: ColumnValueDao
     actual abstract val groupsDao: GroupsDao
     actual abstract val loanDao: LoanDao
@@ -201,7 +208,7 @@ actual abstract class MifosDatabase : RoomDatabase() {
     actual abstract val surveyDao: SurveyDao
 
     companion object {
-        const val VERSION = 6
+        const val VERSION = 7
     }
 }
 

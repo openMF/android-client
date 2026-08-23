@@ -11,9 +11,21 @@ package com.mifos.core.data.repository
 
 import com.mifos.core.common.utils.Page
 import com.mifos.room.entities.group.GroupEntity
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kpt.core.base.store.paging.PagingScreenStream
 
 interface GroupsListRepository {
+
+    /**
+     * Offline-first paged group-list stream — the native Store5 paging idiom that
+     * replaces the online-Paging3 read path (`GroupsListPagingDataSource`). Backed by
+     * `Store<PageKey, List<GroupEntity>>.asPagingScreenStream(...)`.
+     */
+    fun groupListPagingStream(
+        scope: CoroutineScope,
+        pageSize: Int = 10,
+    ): PagingScreenStream<GroupEntity>
 
     suspend fun getAllGroups(paged: Boolean, offset: Int, limit: Int): List<GroupEntity>
 

@@ -50,6 +50,7 @@ kotlin {
             implementation(projects.feature.settings)
             // loan feature — first business feature wired via FeatureRegistry (pilot 04/04b).
             implementation(projects.feature.loan)
+            implementation(projects.feature.client)
             // passcode/auth feature — MifosAuthenticatorModule binds PasscodeManager +
             // Passcode/Biometric adapters that RootNavViewModel's fork logout/auth sequence needs.
             implementation(projects.feature.passcode)

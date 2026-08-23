@@ -12,6 +12,7 @@ package com.mifos.room
 import com.mifos.room.dao.CenterDao
 import com.mifos.room.dao.ChargeDao
 import com.mifos.room.dao.ClientDao
+import com.mifos.room.dao.ClientListCacheDao
 import com.mifos.room.dao.ColumnValueDao
 import com.mifos.room.dao.GroupsDao
 import com.mifos.room.dao.LoanDao
@@ -31,6 +32,7 @@ expect abstract class MifosDatabase {
     abstract val centerDao: CenterDao
     abstract val chargeDao: ChargeDao
     abstract val clientDao: ClientDao
+    abstract val clientListCacheDao: ClientListCacheDao
     abstract val columnValueDao: ColumnValueDao
     abstract val groupsDao: GroupsDao
     abstract val loanDao: LoanDao

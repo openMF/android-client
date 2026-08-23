@@ -205,7 +205,17 @@ val RepositoryModule = module {
     singleOf(::CenterDetailsRepositoryImp) bind CenterDetailsRepository::class
     singleOf(::CenterListRepositoryImp) bind CenterListRepository::class
     singleOf(::CreateNewCenterRepositoryImp) bind CreateNewCenterRepository::class
-    singleOf(::GroupsListRepositoryImpl) bind GroupsListRepository::class
+    // Offline-first paged group list: read through the qualified Store5 paged store
+    // (GroupListPage) via asPagingScreenStream. singleOf can't resolve the qualified store
+    // arg, so this one is wired explicitly (mirrors ClientListRepository above).
+    single<GroupsListRepository> {
+        GroupsListRepositoryImpl(
+            groupListPageStore = get(AppStoreRegistry.GroupListPage),
+            networkMonitor = get(),
+            fetchedAtRepository = get(),
+            dataManager = get(),
+        )
+    }
 
     // Group
     // Offline-first: read through the Store5 group store (cache-first).

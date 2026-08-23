@@ -11,27 +11,23 @@ package com.mifos.feature.groups.groupList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.cachedIn
 import com.mifos.core.data.repository.GroupsListRepository
-import com.mifos.core.domain.useCases.GroupsListPagingDataSource
-
-const val PAGE_SIZE = 10
+import com.mifos.room.entities.group.GroupEntity
+import kpt.core.base.store.paging.PagingScreenStream
 
 class GroupsListViewModel(
     repository: GroupsListRepository,
 ) : ViewModel() {
 
-    val data = Pager(
-        config = PagingConfig(
-            pageSize = PAGE_SIZE,
-            initialLoadSize = PAGE_SIZE,
-            enablePlaceholders = false,
-            prefetchDistance = 1,
-        ),
-        pagingSourceFactory = {
-            GroupsListPagingDataSource(repository, PAGE_SIZE)
-        },
-    ).flow.cachedIn(viewModelScope)
+    /**
+     * Offline-first paged group-list stream — the native Store5 paging idiom that drives the
+     * list body ([GroupsListScreen]'s `PagingScreenContent`). Replaces the previous online
+     * Paging3 `Pager` (`GroupsListPagingDataSource`). The surrounding selection-mode toolbar /
+     * sync dialog / FAB state is unchanged and still lives in the Route/Screen.
+     */
+    val pagingStream: PagingScreenStream<GroupEntity> =
+        repository.groupListPagingStream(scope = viewModelScope)
+
+    /** Pull-to-refresh / retry for the paged list. Resets the paging cursor to page 0. */
+    fun retry() = pagingStream.refresh()
 }

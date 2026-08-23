@@ -11,7 +11,9 @@ package cmp.navigation.registry
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import com.mifos.feature.client.di.ClientModule
 import com.mifos.feature.loan.di.LoanModule
+import com.mifos.feature.client.navigation.clientListScreenRoute
 import com.mifos.feature.loan.navigation.loanDestination
 import org.koin.core.module.Module
 
@@ -52,6 +54,9 @@ object FeatureRegistry {
         // Its LoanTransaction vertical (Store5 ledger) is device-proven here; the remaining
         // features land per-sub-plan (05-21).
         LoanModule,
+        // client feature — its ViewModels (incl. ClientListViewModel for the offline-first
+        // Store5 paged list) must be in the DI graph for the home Clients tile to render.
+        ClientModule,
     )
 
     /**
@@ -69,6 +74,13 @@ object FeatureRegistry {
             onNotesClicked = { _, _ -> },
             onMoreInfoClicked = { _, _ -> },
             onLoanCreated = { },
+        )
+        // Client list — reachable from the home Clients tile. The offline-first Store5 paged list
+        // (PagingScreenContent). Per-client drill-down (clientDetailRoute) is part of the broader
+        // client-graph wiring; the list itself renders + paginates offline here.
+        clientListScreenRoute(
+            onClientSelect = { },
+            createNewClient = { },
         )
     }
 }

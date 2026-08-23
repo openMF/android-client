@@ -37,15 +37,6 @@ interface ClientDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE, entity = ClientEntity::class)
     suspend fun insertClient(client: ClientEntity)
 
-    // Offline-first paged client-list source-of-truth (ClientListPage Store5 read path).
-    // No `page` column on ClientEntity, so pages are windowed by LIMIT/OFFSET over the
-    // full Client table (ordered by primary key) — no schema change.
-    @Query("SELECT * FROM Client ORDER BY id LIMIT :limit OFFSET :offset")
-    fun getPageClients(limit: Int, offset: Int): Flow<List<ClientEntity>>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = ClientEntity::class)
-    suspend fun insertClients(clients: List<ClientEntity>)
-
     @Query("DELETE FROM Client")
     suspend fun deleteAllClients()
 
