@@ -162,6 +162,7 @@ import com.mifos.core.data.repositoryImp.loan.LoanReschedulesRepositoryImpl
 import com.mifos.core.data.repositoryImp.loan.LoanTransactionsRepositoryImp
 import com.mifos.core.data.util.NetworkMonitor
 import kotlinx.coroutines.CoroutineDispatcher
+import kpt.core.store.AppStoreRegistry
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.bind
@@ -205,7 +206,14 @@ val RepositoryModule = module {
     singleOf(::LoanChargeRepositoryImp) bind LoanChargeRepository::class
     singleOf(::LoanRepaymentRepositoryImp) bind LoanRepaymentRepository::class
     singleOf(::LoanRepaymentScheduleRepositoryImp) bind LoanRepaymentScheduleRepository::class
-    singleOf(::LoanTransactionsRepositoryImp) bind LoanTransactionsRepository::class
+    // Offline-first: inject the qualified Store5 loan-transaction store (cache-first read path)
+    // rather than the raw DataManager — see LoanTransactionsRepositoryImp. singleOf can't resolve a
+    // qualified constructor arg, so this one is wired explicitly.
+    single<LoanTransactionsRepository> {
+        LoanTransactionsRepositoryImp(
+            loanTransactionStore = get(AppStoreRegistry.LoanTransactions),
+        )
+    }
     singleOf(::LoanReschedulesRepositoryImpl) bind LoanReschedulesRepository::class
     singleOf(::LoanChargeOffRepositoryImpl) bind LoanChargeOffRepository::class
     singleOf(::LoanDisburseRepositoryImpl) bind LoanDisburseRepository::class

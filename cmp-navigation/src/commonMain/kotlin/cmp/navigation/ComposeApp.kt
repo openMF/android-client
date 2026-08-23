@@ -17,7 +17,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmp.navigation.rootnav.RootNavScreen
 import kpt.core.base.ui.effects.EventsEffect
 import kpt.core.designsystem.theme.KptTheme
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
+import org.mifos.authenticator.biometrics.BiometricStorageAdapter
+import org.mifos.authenticator.biometrics.PlatformAuthenticatorCompositionProvider
 
 @Composable
 fun ComposeApp(
@@ -50,14 +53,24 @@ fun ComposeApp(
     // saved-instance-state Bundle. No app-root SaveableStateRegistry override — the
     // platform default is used, so Navigation's Bundle-typed back-stack state is
     // never rejected. Feature modules carry zero retention code.
-    KptTheme(
-        darkTheme = uiState.darkTheme,
-        androidTheme = uiState.isAndroidTheme,
-        useDynamicColor = uiState.isDynamicColorsEnabled,
+    // Wrap the nav graph in [PlatformAuthenticatorCompositionProvider] so every descendant can
+    // resolve the `platformAuthenticationProvider` / `platformAvailableAuthenticationOption`
+    // CompositionLocals the passcode + biometric screens consume. The template's ComposeApp
+    // dropped this wrapper during the offline-first migration; restored here (matches origin/dev)
+    // so the passcode screen no longer crashes with "CompositionLocal … not provided" after login.
+    // The [BiometricStorageAdapter] is Koin-bound (RepositoryModule) and injected once here.
+    PlatformAuthenticatorCompositionProvider(
+        biometricStorageAdapter = koinInject<BiometricStorageAdapter>(),
     ) {
-        RootNavScreen(
-            modifier = modifier,
-            onSplashScreenRemoved = onSplashScreenRemoved,
-        )
+        KptTheme(
+            darkTheme = uiState.darkTheme,
+            androidTheme = uiState.isAndroidTheme,
+            useDynamicColor = uiState.isDynamicColorsEnabled,
+        ) {
+            RootNavScreen(
+                modifier = modifier,
+                onSplashScreenRemoved = onSplashScreenRemoved,
+            )
+        }
     }
 }

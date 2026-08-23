@@ -28,7 +28,7 @@ data class ServerConfig(
             endPoint = "apis.mifos.community",
             apiPath = "/1.0/field/v1/",
             port = "443",
-            tenant = "mifos-bank-1",
+            tenant = "mifos-bank-2",
         )
 
         val LOCALHOST = ServerConfig(
