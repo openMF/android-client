@@ -53,6 +53,15 @@ interface GroupsDao {
     @Query("SELECT * FROM GroupTable WHERE id = :groupId")
     fun getGroupById(groupId: Int): Flow<GroupEntity>
 
+    // Offline-first Store5 source-of-truth delete hooks (getGroup ledger pilot). deleteGroup
+    // backs SourceOfTruth.delete(key); deleteAllGroups backs SourceOfTruth.deleteAll() which
+    // Store.clear() invokes on logout via StoreCacheManager (D7 cache hygiene).
+    @Query("DELETE FROM GroupTable WHERE id = :groupId")
+    suspend fun deleteGroup(groupId: Int)
+
+    @Query("DELETE FROM GroupTable")
+    suspend fun deleteAllGroups()
+
     @Query("SELECT * FROM LoanAccountEntity WHERE groupId = :groupId")
     fun getLoanAccountsByGroupId(groupId: Int): Flow<List<LoanAccountEntity>>
 

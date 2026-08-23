@@ -9,6 +9,9 @@
  */
 package kpt.core.store.di
 
+import com.mifos.core.store.provideCheckerTaskStore
+import com.mifos.core.store.provideClientStore
+import com.mifos.core.store.provideGroupStore
 import com.mifos.core.store.provideLoanTransactionStore
 import com.mifos.core.store.provideSavingsAccountTransactionStore
 import kpt.core.base.store.infra.DraftInventory
@@ -62,10 +65,24 @@ val appStoreModule: Module = module {
         provideSavingsAccountTransactionStore(api = get(), dao = get())
     }
 
-    // Register the ledger Stores for logout cache clearing (D7).
+    // Read-cache read-only offline-first Stores (Store5 adoption completion).
+    single(AppStoreRegistry.Clients) {
+        provideClientStore(api = get(), dao = get())
+    }
+    single(AppStoreRegistry.Groups) {
+        provideGroupStore(api = get(), dao = get())
+    }
+    single(AppStoreRegistry.CheckerTasks) {
+        provideCheckerTaskStore(api = get(), dao = get())
+    }
+
+    // Register the read-cache Stores for logout cache clearing (D7).
     single(createdAtStart = true) {
         val mgr = get<StoreCacheManager>() as StoreCacheManagerImpl
         mgr.register(get(AppStoreRegistry.LoanTransactions))
         mgr.register(get(AppStoreRegistry.SavingsAccountTransactions))
+        mgr.register(get(AppStoreRegistry.Clients))
+        mgr.register(get(AppStoreRegistry.Groups))
+        mgr.register(get(AppStoreRegistry.CheckerTasks))
     }
 }

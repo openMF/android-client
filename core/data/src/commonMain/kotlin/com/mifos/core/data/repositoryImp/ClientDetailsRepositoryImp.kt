@@ -25,12 +25,30 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import org.mobilenativefoundation.store.store5.Store
+import org.mobilenativefoundation.store.store5.StoreReadRequest
+import org.mobilenativefoundation.store.store5.StoreReadResponse
 
 /**
  * Created by Aditya Gupta on 06/08/23.
+ *
+ * `getClient` is served through the Store5 [ClientStore][com.mifos.core.store.provideClientStore]
+ * (qualifier [AppStoreRegistry.Clients][kpt.core.store.AppStoreRegistry.Clients]) instead of a raw
+ * `DataManagerClient.getClient` network call. `StoreReadRequest.cached(refresh = true)` emits the
+ * Room-persisted client immediately (so the details screen renders offline from cache) AND triggers
+ * a background network refresh when connectivity is available (SWR). The `suspend fun ... :
+ * ClientEntity` interface shape is preserved (Option B) — 4 callers across the loan + client
+ * features consume it as a plain suspend value, so widening it to a `Flow` would ripple far — and
+ * the store's cached-then-fresh stream is bridged back to a single value with `.first()` over the
+ * Data responses. Every other method here (uploadClientImage, assignStaff, closeClient, …) is a
+ * WRITE op and continues to hit [dataManagerClient] unchanged.
  */
 class ClientDetailsRepositoryImp(
     private val dataManagerClient: DataManagerClient,
+    private val clientStore: Store<Int, ClientEntity>,
 ) : ClientDetailsRepository {
 
     private val _clientUpdateEvents = MutableSharedFlow<Unit>(replay = 0, extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
@@ -78,17 +96,16 @@ class ClientDetailsRepositoryImp(
     }
 
     override suspend fun getClient(clientId: Int): ClientEntity {
-        val client = dataManagerClient.getClient(clientId)
-
-        if (client.groupName.isNullOrBlank() && !client.groups.isNullOrEmpty()) {
-            client.groups?.firstOrNull()?.let { firstGroup ->
-                return client.copy(
-                    groupName = firstGroup.name,
-                    groupId = firstGroup.id,
-                )
-            }
-        }
-        return client
+        // Offline-first read: stream the Store5 client store cache-first (refresh in background)
+        // and return the first Data value. With a previously-cached client the SoT reader emits
+        // the Room row immediately, so the details screen renders offline from cache instead of
+        // erroring. The group-name back-fill that used to live here now runs inside the store's
+        // fetcher (see provideClientStore#resolveGroup), so the persisted row already carries it.
+        return clientStore
+            .stream(StoreReadRequest.cached(key = clientId, refresh = true))
+            .filterIsInstance<StoreReadResponse.Data<ClientEntity>>()
+            .map { it.value }
+            .first()
     }
 
     override fun getImage(clientId: Int): Flow<String> {

@@ -177,7 +177,13 @@ val RepositoryModule = module {
     singleOf(::SearchRepositoryImp) bind SearchRepository::class
 
     // Client
-    singleOf(::ClientDetailsRepositoryImp) bind ClientDetailsRepository::class
+    // Offline-first: read through the Store5 client store (cache-first) — singleOf can't resolve a qualified arg.
+    single<ClientDetailsRepository> {
+        ClientDetailsRepositoryImp(
+            dataManagerClient = get(),
+            clientStore = get(AppStoreRegistry.Clients),
+        )
+    }
     singleOf(::ClientListRepositoryImp) bind ClientListRepository::class
     singleOf(::ChargeRepositoryImp) bind ChargeRepository::class
     singleOf(::ClientIdentifiersRepositoryImp) bind ClientIdentifiersRepository::class
@@ -192,7 +198,13 @@ val RepositoryModule = module {
     singleOf(::GroupsListRepositoryImpl) bind GroupsListRepository::class
 
     // Group
-    singleOf(::GroupDetailsRepositoryImp) bind GroupDetailsRepository::class
+    // Offline-first: read through the Store5 group store (cache-first).
+    single<GroupDetailsRepository> {
+        GroupDetailsRepositoryImp(
+            groupStore = get(AppStoreRegistry.Groups),
+            dataManagerGroups = get(),
+        )
+    }
     singleOf(::GroupListRepositoryImp) bind GroupListRepository::class
     singleOf(::GroupLoanAccountRepositoryImp) bind GroupLoanAccountRepository::class
     singleOf(::CreateNewGroupRepositoryImp) bind CreateNewGroupRepository::class
@@ -244,7 +256,13 @@ val RepositoryModule = module {
 
     // Others
     singleOf(::ActivateRepositoryImp) bind ActivateRepository::class
-    singleOf(::CheckerInboxRepositoryImp) bind CheckerInboxRepository::class
+    // Offline-first: read through the Store5 checker-task store (cache-first).
+    single<CheckerInboxRepository> {
+        CheckerInboxRepositoryImp(
+            checkerTaskStore = get(AppStoreRegistry.CheckerTasks),
+            dataManagerCheckerInbox = get(),
+        )
+    }
     singleOf(::CheckerInboxTasksRepositoryImp) bind CheckerInboxTasksRepository::class
     singleOf(::DataTableDataRepositoryImp) bind DataTableDataRepository::class
     singleOf(::DataTableListRepositoryImp) bind DataTableListRepository::class

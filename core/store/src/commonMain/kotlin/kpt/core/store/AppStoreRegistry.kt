@@ -43,4 +43,13 @@ object AppStoreRegistry : StoreRegistry() {
 
     /** Read-only offline-first ledger of a savings account's transactions (Phase 4 pilot). */
     val SavingsAccountTransactions = store("savingsAccountTransaction")
+
+    /** Read-only offline-first single-client details (client-details read-cache). */
+    val Clients = store("clients")
+
+    /** Read-only offline-first single-group details (getGroup read-cache). */
+    val Groups = store("groups")
+
+    /** Read-only offline-first checker-inbox task list (single global list, keyed by Unit). */
+    val CheckerTasks = store("checkerTasks")
 }

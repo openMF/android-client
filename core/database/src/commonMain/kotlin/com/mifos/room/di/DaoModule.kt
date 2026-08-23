@@ -26,4 +26,5 @@ val DaoModule = module {
     single { get<MifosDatabase>().savingsAccountTransactionDao }
     single { get<MifosDatabase>().staffDao }
     single { get<MifosDatabase>().surveyDao }
+    single { get<MifosDatabase>().checkerTaskDao }
 }
