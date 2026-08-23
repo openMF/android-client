@@ -26,7 +26,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun MifosErrorContent(
@@ -51,7 +52,7 @@ fun MifosErrorContent(
         if (isRefreshEnabled) {
             Text(
                 text = message,
-                modifier = Modifier.padding(vertical = KptTheme.spacing.md),
+                modifier = Modifier.padding(vertical = LocalKptSpacing.current.md),
             )
             Button(onClick = onRefresh) {
                 Text(text = refreshButtonText)

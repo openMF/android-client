@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SavingsAccountRepository
 import com.mifos.room.entities.zipmodels.SavingProductsAndTemplate
 import kotlinx.coroutines.flow.Flow
@@ -22,26 +21,17 @@ class LoadSavingsAccountsAndTemplateUseCase(
     private val repository: SavingsAccountRepository,
 ) {
 
-    operator fun invoke(): Flow<DataState<SavingProductsAndTemplate>> =
+    // offline-first-template-migration 03-core-datastate-removal (D18): the two upstream Flows
+    // are now plain — `combine` propagates either's exception through this Flow's own exception
+    // channel automatically, so no manual Success/Error/Loading branching is needed.
+    operator fun invoke(): Flow<SavingProductsAndTemplate> =
         combine(
             repository.getSavingsAccounts(),
             repository.getSavingsAccountTemplate(),
         ) { savingsAccount, template ->
-
-            if (savingsAccount is DataState.Success && template is DataState.Success) {
-                DataState.Success(
-                    SavingProductsAndTemplate(
-                        mProductSavings = savingsAccount.data,
-                        mSavingProductsTemplate = template.data,
-                    ),
-                )
-            } else if (savingsAccount is DataState.Error || template is DataState.Error) {
-                val exception = (savingsAccount as? DataState.Error)?.exception
-                    ?: (template as? DataState.Error)?.exception
-                    ?: Exception("Unknown error")
-                DataState.Error(exception)
-            } else {
-                DataState.Loading
-            }
+            SavingProductsAndTemplate(
+                mProductSavings = savingsAccount,
+                mSavingProductsTemplate = template,
+            )
         }
 }

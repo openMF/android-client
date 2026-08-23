@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.SyncCentersDialogRepository
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.network.datamanager.DataManagerCenter
@@ -42,33 +40,33 @@ class SyncCentersDialogRepositoryImp(
     private val dataManagerClient: DataManagerClient,
 ) : SyncCentersDialogRepository {
 
-    override fun syncCenterAccounts(centerId: Int): Flow<DataState<CenterAccounts>> {
+    override fun syncCenterAccounts(centerId: Int): Flow<CenterAccounts> {
         return dataManagerCenter.syncCenterAccounts(centerId)
-            .asDataStateFlow()
+            
     }
 
-    override fun syncLoanById(loanId: Int): Flow<DataState<LoanWithAssociations>> {
-        return dataManagerLoan.syncLoanById(loanId).asDataStateFlow()
+    override fun syncLoanById(loanId: Int): Flow<LoanWithAssociations> {
+        return dataManagerLoan.syncLoanById(loanId)
     }
 
-    override fun syncLoanRepaymentTemplate(loanId: Int): Flow<DataState<LoanRepaymentTemplateEntity>> {
+    override fun syncLoanRepaymentTemplate(loanId: Int): Flow<LoanRepaymentTemplateEntity> {
         return dataManagerLoan.syncLoanRepaymentTemplate(loanId)
-            .asDataStateFlow()
+            
     }
 
-    override fun getCenterWithAssociations(centerId: Int): Flow<DataState<CenterWithAssociations>> {
+    override fun getCenterWithAssociations(centerId: Int): Flow<CenterWithAssociations> {
         return dataManagerCenter.getCenterWithAssociations(centerId)
-            .asDataStateFlow()
+            
     }
 
-    override fun getGroupWithAssociations(groupId: Int): Flow<DataState<GroupWithAssociations>> {
+    override fun getGroupWithAssociations(groupId: Int): Flow<GroupWithAssociations> {
         return dataManagerGroups.getGroupWithAssociations(groupId)
-            .asDataStateFlow()
+            
     }
 
-    override fun syncGroupAccounts(groupId: Int): Flow<DataState<GroupAccounts>> {
+    override fun syncGroupAccounts(groupId: Int): Flow<GroupAccounts> {
         return dataManagerGroups.syncGroupAccounts(groupId)
-            .asDataStateFlow()
+            
     }
 
     override suspend fun syncClientAccounts(clientId: Int): ClientAccounts {
@@ -91,20 +89,20 @@ class SyncCentersDialogRepositoryImp(
         type: String,
         savingsAccountId: Int,
         association: String?,
-    ): Flow<DataState<SavingsAccountWithAssociationsEntity>> {
+    ): Flow<SavingsAccountWithAssociationsEntity> {
         return dataManagerSavings.syncSavingsAccount(type, savingsAccountId, association)
-            .asDataStateFlow()
+            
     }
 
     override fun syncSavingsAccountTransactionTemplate(
         savingsAccountType: String,
         savingsAccountId: Int,
         transactionType: String?,
-    ): Flow<DataState<SavingsAccountTransactionTemplateEntity>> {
+    ): Flow<SavingsAccountTransactionTemplateEntity> {
         return dataManagerSavings.syncSavingsAccountTransactionTemplate(
             savingsAccountType,
             savingsAccountId,
             transactionType,
-        ).asDataStateFlow()
+        )
     }
 }

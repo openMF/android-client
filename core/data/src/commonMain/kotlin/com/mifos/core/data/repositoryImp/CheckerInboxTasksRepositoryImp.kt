@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.CheckerInboxTasksRepository
 import com.mifos.core.model.objects.checkerinboxtask.CheckerTask
 import com.mifos.core.model.objects.checkerinboxtask.RescheduleLoansTask
@@ -25,16 +23,16 @@ class CheckerInboxTasksRepositoryImp(
     private val dataManagerCheckerInbox: DataManagerCheckerInbox,
 ) : CheckerInboxTasksRepository {
 
-    override fun getRescheduleLoansTaskList(): Flow<DataState<List<RescheduleLoansTask>>> {
+    override fun getRescheduleLoansTaskList(): Flow<List<RescheduleLoansTask>> {
         return dataManagerCheckerInbox.getRescheduleLoansTaskList()
-            .asDataStateFlow()
+            
     }
 
     override fun getCheckerTaskList(
         actionName: String?,
         entityName: String?,
         resourceId: Int?,
-    ): Flow<DataState<List<CheckerTask>>> {
-        return dataManagerCheckerInbox.getCheckerTaskList().asDataStateFlow()
+    ): Flow<List<CheckerTask>> {
+        return dataManagerCheckerInbox.getCheckerTaskList()
     }
 }

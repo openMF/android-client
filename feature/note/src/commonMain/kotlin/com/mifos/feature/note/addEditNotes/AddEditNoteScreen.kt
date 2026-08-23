@@ -9,11 +9,11 @@
  */
 package com.mifos.feature.note.addEditNotes
 
-import androidclient.feature.note.generated.resources.Res
-import androidclient.feature.note.generated.resources.feature_note_button_back
-import androidclient.feature.note.generated.resources.feature_note_button_confirm
-import androidclient.feature.note.generated.resources.feature_note_dialog_warning
-import androidclient.feature.note.generated.resources.feature_note_dialog_warning_message
+import kpt.feature.note.generated.resources.Res
+import kpt.feature.note.generated.resources.feature_note_button_back
+import kpt.feature.note.generated.resources.feature_note_button_confirm
+import kpt.feature.note.generated.resources.feature_note_dialog_warning
+import kpt.feature.note.generated.resources.feature_note_dialog_warning_message
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -42,7 +42,11 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptShapes
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun AddEditNoteScreen(
@@ -149,22 +153,22 @@ private fun AddEditNote(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                horizontal = KptTheme.spacing.md,
-                vertical = KptTheme.spacing.sm,
+                horizontal = LocalKptSpacing.current.md,
+                vertical = LocalKptSpacing.current.sm,
             ),
-        verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.md),
+        verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.md),
     ) {
         Text(
             text = stringResource(state.title),
             style = MifosTypography.labelLargeEmphasized,
-            color = KptTheme.colorScheme.onSurface,
+            color = LocalKptColors.current.onSurface,
         )
 
         Column(
             modifier = Modifier
                 .weight(1f)
                 .verticalScroll(scrollState),
-            verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.md),
+            verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.md),
         ) {
             MifosOutlinedTextField(
                 value = state.textFieldNotesPayload ?: "",
@@ -177,14 +181,14 @@ private fun AddEditNote(
                 },
                 maxLines = 18,
                 singleLine = false,
-                shape = KptTheme.shapes.large,
+                shape = LocalKptShapes.current.large,
                 label = stringResource(state.label),
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(min = DesignToken.spacing.half),
-                textStyle = KptTheme.typography.bodyLarge.copy(textAlign = TextAlign.Start),
+                textStyle = LocalKptTypography.current.bodyLarge.copy(textAlign = TextAlign.Start),
                 colors = OutlinedTextFieldDefaults.colors(
-                    unfocusedBorderColor = KptTheme.colorScheme.secondaryContainer,
+                    unfocusedBorderColor = LocalKptColors.current.secondaryContainer,
                 ),
             )
         }
@@ -201,7 +205,7 @@ private fun AddEditNote(
                     onAction(AddEditNoteAction.AddNote(state.textFieldNotesPayload))
                 }
             },
-            modifier = Modifier.padding(bottom = KptTheme.spacing.md),
+            modifier = Modifier.padding(bottom = LocalKptSpacing.current.md),
         )
     }
 }

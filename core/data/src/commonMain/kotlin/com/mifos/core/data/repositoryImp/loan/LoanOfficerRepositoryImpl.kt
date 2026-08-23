@@ -9,12 +9,11 @@
  */
 package com.mifos.core.data.repositoryImp.loan
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.mappers.loan.toDomain
 import com.mifos.core.data.mappers.loan.toDto
 import com.mifos.core.data.repository.loan.LoanOfficerRepository
 import com.mifos.core.data.util.NetworkMonitor
-import com.mifos.core.data.util.runAsDataState
+import com.mifos.core.data.util.runSuspendCall
 import com.mifos.core.model.objects.account.loan.assignLoanOfficer.AssignLoanOfficerInput
 import com.mifos.core.model.objects.account.loan.assignLoanOfficer.AssignLoanOfficerResponse
 import com.mifos.core.model.objects.template.loan.LoanOfficerOption
@@ -27,8 +26,8 @@ class LoanOfficerRepositoryImpl(
     private val networkMonitor: NetworkMonitor,
 ) : LoanOfficerRepository {
 
-    override suspend fun getLoanOfficerOptions(loanId: Int): DataState<List<LoanOfficerOption>> {
-        return runAsDataState(
+    override suspend fun getLoanOfficerOptions(loanId: Int): List<LoanOfficerOption> {
+        return runSuspendCall(
             networkMonitor,
             ioDispatcher,
         ) {
@@ -39,8 +38,8 @@ class LoanOfficerRepositoryImpl(
     override suspend fun assignLoanOfficer(
         loanId: Int,
         input: AssignLoanOfficerInput,
-    ): DataState<AssignLoanOfficerResponse> {
-        return runAsDataState(
+    ): AssignLoanOfficerResponse {
+        return runSuspendCall(
             networkMonitor,
             ioDispatcher,
         ) {

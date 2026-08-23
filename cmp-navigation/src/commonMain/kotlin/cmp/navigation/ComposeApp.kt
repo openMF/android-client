@@ -5,65 +5,67 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
+ * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
 package cmp.navigation
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cmp.navigation.rootnav.RootNavScreen
-import com.mifos.core.datastore.model.DarkThemeConfig
-import com.mifos.core.designsystem.theme.MifosTheme
-import com.mifos.core.ui.util.EventsEffect
+import kpt.core.base.ui.effects.EventsEffect
+import kpt.core.designsystem.theme.KptTheme
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.mifos.authenticator.biometrics.BiometricStorageAdapter
 import org.mifos.authenticator.biometrics.PlatformAuthenticatorCompositionProvider
 
-/**
- * App-level composition entry point.
- *
- * Wraps the nav graph in [PlatformAuthenticatorCompositionProvider] so every
- * descendant can resolve the `platformAuthenticationProvider` /
- * `platformAvailableAuthenticationOption` CompositionLocals used by
- * `MifosPasscode`, `BiometricsKey`, `BiometricSetupScreen`, and the Settings
- * biometric toggles. The [BiometricStorageAdapter] is injected here once so
- * the library can build a single scoped `PlatformAuthenticationProvider`.
- */
 @Composable
 fun ComposeApp(
+    updateScreenCapture: (isScreenCaptureAllowed: Boolean) -> Unit,
+    handleRecreate: () -> Unit,
     handleThemeMode: (osValue: Int) -> Unit,
     handleAppLocale: (locale: String?) -> Unit,
     onSplashScreenRemoved: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ComposeAppViewModel = koinViewModel(),
+    viewModel: AppViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.stateFlow.collectAsStateWithLifecycle()
+
+    LaunchedEffect(uiState.isScreenCaptureAllowed) {
+        updateScreenCapture(uiState.isScreenCaptureAllowed)
+    }
 
     EventsEffect(eventFlow = viewModel.eventFlow) { event ->
         when (event) {
             is AppEvent.ShowToast -> {}
             is AppEvent.UpdateAppLocale -> handleAppLocale(event.localeName)
             is AppEvent.UpdateAppTheme -> handleThemeMode(event.osValue)
+            is AppEvent.Recreate -> handleRecreate()
         }
     }
 
-    val darkTheme = when (uiState.darkThemeConfig) {
-        DarkThemeConfig.DARK -> true
-        DarkThemeConfig.LIGHT -> false
-        DarkThemeConfig.FOLLOW_SYSTEM -> isSystemInDarkTheme()
-    }
-
+    // Bottom-nav tab-switch retention (per-tab back-stack + scroll) is handled by
+    // Navigation's own `saveState = true` / `restoreState = true` in the bottom-nav
+    // NavHost; rotation and system-initiated process death ride Android's standard
+    // saved-instance-state Bundle. No app-root SaveableStateRegistry override — the
+    // platform default is used, so Navigation's Bundle-typed back-stack state is
+    // never rejected. Feature modules carry zero retention code.
+    // Wrap the nav graph in [PlatformAuthenticatorCompositionProvider] so every descendant can
+    // resolve the `platformAuthenticationProvider` / `platformAvailableAuthenticationOption`
+    // CompositionLocals the passcode + biometric screens consume. The template's ComposeApp
+    // dropped this wrapper during the offline-first migration; restored here (matches origin/dev)
+    // so the passcode screen no longer crashes with "CompositionLocal … not provided" after login.
+    // The [BiometricStorageAdapter] is Koin-bound (RepositoryModule) and injected once here.
     PlatformAuthenticatorCompositionProvider(
         biometricStorageAdapter = koinInject<BiometricStorageAdapter>(),
     ) {
-        MifosTheme(
-            darkTheme = darkTheme,
+        KptTheme(
+            darkTheme = uiState.darkTheme,
             androidTheme = uiState.isAndroidTheme,
-            shouldDisplayDynamicTheming = uiState.isDynamicColorsEnabled,
+            useDynamicColor = uiState.isDynamicColorsEnabled,
         ) {
             RootNavScreen(
                 modifier = modifier,

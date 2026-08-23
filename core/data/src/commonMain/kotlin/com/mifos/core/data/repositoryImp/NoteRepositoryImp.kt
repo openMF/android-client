@@ -9,25 +9,41 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.mappers.client.note.toDomain
 import com.mifos.core.data.mappers.client.note.toDto
 import com.mifos.core.data.repository.NoteRepository
 import com.mifos.core.data.util.NetworkMonitor
-import com.mifos.core.data.util.runAsDataState
+import com.mifos.core.data.util.runSuspendCall
 import com.mifos.core.data.util.withNetworkCheck
 import com.mifos.core.model.objects.note.CreateNoteInput
 import com.mifos.core.model.objects.note.Note
 import com.mifos.core.model.objects.note.UpdateNoteInput
 import com.mifos.core.network.datamanager.DataManagerNote
+import com.mifos.core.store.NoteKey
+import com.mifos.room.entities.noncore.NoteEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import template.core.base.common.manager.DispatcherManager
+import kotlinx.coroutines.flow.mapNotNull
+import kpt.core.base.common.manager.DispatcherManager
+import org.mobilenativefoundation.store.store5.Store
+import org.mobilenativefoundation.store.store5.StoreReadRequest
+import org.mobilenativefoundation.store.store5.StoreReadResponse
 
+/**
+ * Offline-first read path for a parent's note list (Store5, mirrors
+ * [CheckerInboxRepositoryImp]). [retrieveListNotes] is served through the Store5 note store
+ * (qualifier [AppStoreRegistry.Notes][kpt.core.store.AppStoreRegistry.Notes]) keyed by
+ * [NoteKey] instead of a raw `DataManagerNote.retrieveListNotes()` network call:
+ * `StoreReadRequest.cached(refresh = true)` emits the Room-persisted rows immediately (so the
+ * notes list renders offline from cache) AND triggers a background network refresh when
+ * connectivity is available (SWR). The write/single-read methods (addNewNote / deleteNote /
+ * retrieveNote / updateNote) stay on the raw [DataManagerNote] path — the store is a
+ * read-only list cache; callers re-collect [retrieveListNotes] (refresh = true) after a write.
+ */
 class NoteRepositoryImp(
     private val dataManagerNote: DataManagerNote,
+    private val noteStore: Store<NoteKey, List<NoteEntity>>,
     private val networkMonitor: NetworkMonitor,
     private val dispatcher: DispatcherManager,
 ) : NoteRepository {
@@ -36,8 +52,8 @@ class NoteRepositoryImp(
         resourceType: String,
         resourceId: Long,
         createNoteInput: CreateNoteInput,
-    ): DataState<Unit> {
-        return runAsDataState(
+    ): Unit {
+        return runSuspendCall(
             networkMonitor,
             dispatcher.io,
         ) {
@@ -49,8 +65,8 @@ class NoteRepositoryImp(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-    ): DataState<Unit> {
-        return runAsDataState(
+    ): Unit {
+        return runSuspendCall(
             networkMonitor,
             dispatcher.io,
         ) {
@@ -62,34 +78,40 @@ class NoteRepositoryImp(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-    ): Flow<DataState<Note>> =
+    ): Flow<Note> =
         networkMonitor.withNetworkCheck(
             dataManagerNote.retrieveNote(resourceType, resourceId, noteId).map { it.toDomain() }
-                .asDataStateFlow(),
+                ,
         ).flowOn(dispatcher.io)
 
     override fun retrieveListNotes(
         resourceType: String,
         resourceId: Long,
-    ): Flow<DataState<List<Note>>> =
-        networkMonitor.withNetworkCheck(
-            dataManagerNote
-                .retrieveListNotes(resourceType, resourceId)
-                .map { dtoList ->
-                    dtoList.map { dto ->
-                        dto.toDomain()
-                    }
+    ): Flow<List<Note>> =
+        noteStore
+            .stream(
+                StoreReadRequest.cached(
+                    key = NoteKey(resourceType, resourceId),
+                    refresh = true,
+                ),
+            )
+            .mapNotNull { response ->
+                when (response) {
+                    is StoreReadResponse.Data -> response.value.map { it.toDomain() }
+                    // Offline-first: fetch error is non-fatal — the SoT reader emits the cached
+                    // (possibly empty) list as a separate Data response.
+                    else -> null
                 }
-                .asDataStateFlow(),
-        ).flowOn(dispatcher.io)
+            }
+            .flowOn(dispatcher.io)
 
     override suspend fun updateNote(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
         updateNoteInput: UpdateNoteInput,
-    ): DataState<Unit> {
-        return runAsDataState(
+    ): Unit {
+        return runSuspendCall(
             networkMonitor,
             dispatcher.io,
         ) {

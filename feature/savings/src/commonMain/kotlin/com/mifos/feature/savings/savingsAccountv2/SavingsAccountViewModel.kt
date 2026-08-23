@@ -9,16 +9,15 @@
  */
 package com.mifos.feature.savings.savingsAccountv2
 
-import androidclient.feature.savings.generated.resources.Res
-import androidclient.feature.savings.generated.resources.feature_savings_error_not_connected_internet
-import androidclient.feature.savings.generated.resources.feature_savings_new_savings_account_created_successfully
-import androidclient.feature.savings.generated.resources.field_empty_msg
-import androidclient.feature.savings.generated.resources.step_terms_decimal_places_error
+import kpt.feature.savings.generated.resources.Res
+import kpt.feature.savings.generated.resources.feature_savings_error_not_connected_internet
+import kpt.feature.savings.generated.resources.feature_savings_new_savings_account_created_successfully
+import kpt.feature.savings.generated.resources.field_empty_msg
+import kpt.feature.savings.generated.resources.step_terms_decimal_places_error
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.ApiDateFormatter
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.CreateSavingsAccountUseCase
@@ -26,11 +25,12 @@ import com.mifos.core.domain.useCases.GetClientTemplateUseCase
 import com.mifos.core.domain.useCases.GetSavingsProductTemplateUseCase
 import com.mifos.core.model.objects.payloads.ChargesPayload
 import com.mifos.core.model.objects.payloads.SavingsPayload
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.room.entities.templates.clients.ClientsTemplateEntity
 import com.mifos.room.entities.templates.clients.SavingProductOptionsEntity
 import com.mifos.room.entities.templates.clients.StaffOptionsEntity
 import com.mifos.room.entities.templates.savings.SavingProductsTemplate
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -180,52 +180,45 @@ internal class SavingsAccountViewModel(
 
         viewModelScope.launch {
             isOnline {
-                createSavingsAccountUseCase(savingsPayload).collect { result ->
-                    when (result) {
-                        is DataState.Loading -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        isOverLayLoadingActive = true,
+                    )
+                }
+                createSavingsAccountUseCase(savingsPayload)
+                    .catch { error ->
+                        if (error is IllegalStateException) {
                             mutableStateFlow.update {
                                 it.copy(
-                                    isOverLayLoadingActive = true,
-                                )
-                            }
-                        }
-
-                        is DataState.Success -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    isOverLayLoadingActive = false,
                                     dialogState = SavingsAccountState.DialogState.SuccessResponseStatus(
-                                        successStatus = true,
-                                        msg = getString(Res.string.feature_savings_new_savings_account_created_successfully),
+                                        successStatus = false,
+                                        msg = error.message ?: "",
                                     ),
                                     launchEffectKey = Random.nextInt(),
+                                    isOverLayLoadingActive = false,
                                 )
                             }
-                        }
-
-                        is DataState.Error -> {
-                            if (result.exception is IllegalStateException) {
-                                mutableStateFlow.update {
-                                    it.copy(
-                                        dialogState = SavingsAccountState.DialogState.SuccessResponseStatus(
-                                            successStatus = false,
-                                            msg = result.message,
-                                        ),
-                                        launchEffectKey = Random.nextInt(),
-                                        isOverLayLoadingActive = false,
-                                    )
-                                }
-                            } else {
-                                mutableStateFlow.update {
-                                    it.copy(
-                                        screenState = SavingsAccountState.ScreenState.Error(result.message),
-                                        isOverLayLoadingActive = false,
-                                    )
-                                }
+                        } else {
+                            mutableStateFlow.update {
+                                it.copy(
+                                    screenState = SavingsAccountState.ScreenState.Error(error.message ?: ""),
+                                    isOverLayLoadingActive = false,
+                                )
                             }
                         }
                     }
-                }
+                    .collect { _ ->
+                        mutableStateFlow.update {
+                            it.copy(
+                                isOverLayLoadingActive = false,
+                                dialogState = SavingsAccountState.DialogState.SuccessResponseStatus(
+                                    successStatus = true,
+                                    msg = getString(Res.string.feature_savings_new_savings_account_created_successfully),
+                                ),
+                                launchEffectKey = Random.nextInt(),
+                            )
+                        }
+                    }
             }
         }
     }
@@ -438,41 +431,27 @@ internal class SavingsAccountViewModel(
         }
     }
 
-    private fun handleSavingsProductTemplate(result: DataState<SavingProductsTemplate>) {
-        when (result) {
-            is DataState.Loading -> mutableStateFlow.update {
-                it.copy(
-                    screenState = SavingsAccountState.ScreenState.Loading,
-                )
-            }
-
-            is DataState.Error -> mutableStateFlow.update {
-                it.copy(
-                    screenState = SavingsAccountState.ScreenState.Error(result.message),
-                )
-            }
-
-            is DataState.Success -> mutableStateFlow.update {
-                it.copy(
-                    dialogState = null,
-                    screenState = SavingsAccountState.ScreenState.Success,
-                    savingsProductTemplate = result.data,
-                    currencyIndex = result.data.currencyOptions?.indexOf(result.data.currency)
-                        ?: -1,
-                    decimalPlaces = result.data.currency?.decimalPlaces?.toInt().toString(),
-                    interestPostingPeriodIndex = result.data.interestPostingPeriodTypeOptions?.indexOf(
-                        result.data.interestPostingPeriodType,
-                    ) ?: -1,
-                    interestCalcIndex = result.data.interestCalculationTypeOptions?.indexOf(result.data.interestCalculationType)
-                        ?: -1,
-                    interestCompPeriodIndex = result.data.interestCompoundingPeriodTypeOptions?.indexOf(
-                        result.data.interestCompoundingPeriodType,
-                    ) ?: -1,
-                    daysInYearIndex = result.data.interestCalculationDaysInYearTypeOptions?.indexOf(
-                        result.data.interestCalculationDaysInYearType,
-                    ) ?: -1,
-                )
-            }
+    private fun handleSavingsProductTemplate(result: SavingProductsTemplate) {
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = null,
+                screenState = SavingsAccountState.ScreenState.Success,
+                savingsProductTemplate = result,
+                currencyIndex = result.currencyOptions?.indexOf(result.currency)
+                    ?: -1,
+                decimalPlaces = result.currency?.decimalPlaces?.toInt().toString(),
+                interestPostingPeriodIndex = result.interestPostingPeriodTypeOptions?.indexOf(
+                    result.interestPostingPeriodType,
+                ) ?: -1,
+                interestCalcIndex = result.interestCalculationTypeOptions?.indexOf(result.interestCalculationType)
+                    ?: -1,
+                interestCompPeriodIndex = result.interestCompoundingPeriodTypeOptions?.indexOf(
+                    result.interestCompoundingPeriodType,
+                ) ?: -1,
+                daysInYearIndex = result.interestCalculationDaysInYearTypeOptions?.indexOf(
+                    result.interestCalculationDaysInYearType,
+                ) ?: -1,
+            )
         }
     }
 
@@ -517,28 +496,14 @@ internal class SavingsAccountViewModel(
         }
     }
 
-    private fun handleClientTemplateResponse(result: DataState<ClientsTemplateEntity>) {
-        when (result) {
-            is DataState.Loading -> mutableStateFlow.update {
-                it.copy(
-                    screenState = SavingsAccountState.ScreenState.Loading,
-                )
-            }
-
-            is DataState.Error -> mutableStateFlow.update {
-                it.copy(
-                    screenState = SavingsAccountState.ScreenState.Error(result.message),
-                )
-            }
-
-            is DataState.Success -> mutableStateFlow.update {
-                it.copy(
-                    dialogState = null,
-                    screenState = SavingsAccountState.ScreenState.Success,
-                    savingProductOptions = result.data.savingProductOptions ?: emptyList(),
-                    fieldOfficerOptions = result.data.staffOptions ?: emptyList(),
-                )
-            }
+    private fun handleClientTemplateResponse(result: ClientsTemplateEntity) {
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = null,
+                screenState = SavingsAccountState.ScreenState.Success,
+                savingProductOptions = result.savingProductOptions ?: emptyList(),
+                fieldOfficerOptions = result.staffOptions ?: emptyList(),
+            )
         }
     }
 
@@ -569,17 +534,35 @@ internal class SavingsAccountViewModel(
 
     private fun loadClientTemplate() = viewModelScope.launch {
         isOnline {
-            getClientTemplateUseCase().collect { result ->
-                sendAction(SavingsAccountAction.Internal.OnReceivingClientTemplate(result))
+            mutableStateFlow.update {
+                it.copy(screenState = SavingsAccountState.ScreenState.Loading)
             }
+            getClientTemplateUseCase()
+                .catch { error ->
+                    mutableStateFlow.update {
+                        it.copy(screenState = SavingsAccountState.ScreenState.Error(error.message ?: ""))
+                    }
+                }
+                .collect { result ->
+                    sendAction(SavingsAccountAction.Internal.OnReceivingClientTemplate(result))
+                }
         }
     }
 
     private fun loadSavingsProductTemplate() = viewModelScope.launch {
         isOnline {
-            getSavingsProductTemplateUseCase().collect { result ->
-                sendAction(SavingsAccountAction.Internal.OnReceivingSavingsProductTemplate(result))
+            mutableStateFlow.update {
+                it.copy(screenState = SavingsAccountState.ScreenState.Loading)
             }
+            getSavingsProductTemplateUseCase()
+                .catch { error ->
+                    mutableStateFlow.update {
+                        it.copy(screenState = SavingsAccountState.ScreenState.Error(error.message ?: ""))
+                    }
+                }
+                .collect { result ->
+                    sendAction(SavingsAccountAction.Internal.OnReceivingSavingsProductTemplate(result))
+                }
             loadClientTemplate()
         }
     }
@@ -718,10 +701,10 @@ sealed interface SavingsAccountAction {
     data object OnTermSubmit : SavingsAccountAction
 
     sealed interface Internal : SavingsAccountAction {
-        data class OnReceivingClientTemplate(val clientTemplate: DataState<ClientsTemplateEntity>) :
+        data class OnReceivingClientTemplate(val clientTemplate: ClientsTemplateEntity) :
             Internal
 
-        data class OnReceivingSavingsProductTemplate(val savingsProductTemplate: DataState<SavingProductsTemplate>) :
+        data class OnReceivingSavingsProductTemplate(val savingsProductTemplate: SavingProductsTemplate) :
             Internal
     }
 }

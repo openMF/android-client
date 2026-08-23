@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.FixedDepositRepository
 import com.mifos.core.network.datamanager.DataManagerFixedDeposit
 import com.mifos.core.network.model.fixedDeposit.FixedDepositPayload
@@ -23,12 +21,12 @@ class FixedDepositRepositoryImpl(private val dataManagerFixedDeposit: DataManage
     override fun getFixedDepositTemplate(
         clientId: Int,
         productId: Int?,
-    ): Flow<DataState<FixedDepositTemplate>> {
+    ): Flow<FixedDepositTemplate> {
         return dataManagerFixedDeposit.getFixedDepositTemplate(clientId, productId)
-            .asDataStateFlow()
+            
     }
 
-    override fun createFixedDepositAccount(fixedDepositPayload: FixedDepositPayload): Flow<DataState<Unit>> {
-        return dataManagerFixedDeposit.createFixedDepositAccount(fixedDepositPayload).asDataStateFlow()
+    override fun createFixedDepositAccount(fixedDepositPayload: FixedDepositPayload): Flow<Unit> {
+        return dataManagerFixedDeposit.createFixedDepositAccount(fixedDepositPayload)
     }
 }

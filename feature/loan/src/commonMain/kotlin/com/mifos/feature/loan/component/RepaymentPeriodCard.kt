@@ -9,10 +9,10 @@
  */
 package com.mifos.feature.loan.component
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_due_short
-import androidclient.feature.loan.generated.resources.feature_loan_paid_short
-import androidclient.feature.loan.generated.resources.installment
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_due_short
+import kpt.feature.loan.generated.resources.feature_loan_paid_short
+import kpt.feature.loan.generated.resources.installment
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -41,7 +41,10 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.model.objects.account.loan.Period
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptSpacing
+import kpt.core.base.designsystem.theme.LocalKptElevation
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -65,19 +68,19 @@ fun RepaymentPeriodCard(
             .fillMaxWidth()
             .border(
                 DesignToken.spacing.dp1,
-                KptTheme.colorScheme.secondaryContainer,
+                LocalKptColors.current.secondaryContainer,
                 DesignToken.shapes.medium,
             ),
         shape = DesignToken.shapes.medium,
-        elevation = KptTheme.elevation.level0,
+        elevation = LocalKptElevation.current.level0,
         colors = CardDefaults.cardColors(
-            KptTheme.colorScheme.surface,
+            LocalKptColors.current.surface,
         ),
-        borderStroke = BorderStroke(DesignToken.spacing.dp1, KptTheme.colorScheme.secondaryContainer),
+        borderStroke = BorderStroke(DesignToken.spacing.dp1, LocalKptColors.current.secondaryContainer),
     ) {
         Row(
             modifier = Modifier
-                .padding(KptTheme.spacing.md)
+                .padding(LocalKptSpacing.current.md)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -86,12 +89,12 @@ fun RepaymentPeriodCard(
                 modifier = Modifier
                     .size(DesignToken.sizes.iconExtraLarge)
                     .clip(CircleShape)
-                    .background(KptTheme.colorScheme.primary),
+                    .background(LocalKptColors.current.primary),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = period.period?.toString() ?: "-",
-                    color = KptTheme.colorScheme.onPrimary,
+                    color = LocalKptColors.current.onPrimary,
                     style = MifosTypography.labelMedium,
                 )
             }
@@ -118,14 +121,14 @@ fun RepaymentPeriodCard(
                             }"
                         } ?: "-",
                     ),
-                    color = KptTheme.colorScheme.outline,
+                    color = LocalKptColors.current.outline,
                     style = MifosTypography.labelMediumEmphasized,
                 )
 
                 Text(
                     text = dueDate,
                     style = MifosTypography.labelLargeEmphasized,
-                    color = KptTheme.colorScheme.onSurface,
+                    color = LocalKptColors.current.onSurface,
                 )
             }
             Column(
@@ -139,13 +142,13 @@ fun RepaymentPeriodCard(
                         stringResource(Res.string.feature_loan_due_short)
                     },
                     style = MifosTypography.labelSmall.copy(
-                        color = if (isPaid) AppColors.customEnable else KptTheme.colorScheme.error,
+                        color = if (isPaid) AppColors.customEnable else LocalKptColors.current.error,
                     ),
                 )
                 Text(
                     text = amount,
                     style = MifosTypography.titleSmallEmphasized,
-                    color = if (isPaid) AppColors.customEnable else KptTheme.colorScheme.error,
+                    color = if (isPaid) AppColors.customEnable else LocalKptColors.current.error,
                 )
             }
         }

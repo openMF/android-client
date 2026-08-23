@@ -9,8 +9,8 @@
  */
 package com.mifos.core.ui.components
 
-import androidclient.core.ui.generated.resources.Res
-import androidclient.core.ui.generated.resources.core_ui_ic_group_black_24dp
+import kpt.core.ui.generated.resources.Res
+import kpt.core.ui.generated.resources.core_ui_ic_group_black_24dp
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape

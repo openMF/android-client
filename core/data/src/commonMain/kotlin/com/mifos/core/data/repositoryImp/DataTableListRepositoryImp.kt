@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.DataTableListRepository
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.network.DataManager
@@ -31,14 +29,14 @@ class DataTableListRepositoryImp(
     private val dataManagerClient: DataManagerClient,
 ) : DataTableListRepository {
 
-    override fun createLoansAccount(loansPayload: LoansPayload?): Flow<DataState<HttpResponse>> {
+    override fun createLoansAccount(loansPayload: LoansPayload?): Flow<HttpResponse> {
         return dataManagerLoan.createLoansAccount(loansPayload)
-            .asDataStateFlow()
+            
     }
 
-    override fun createGroupLoansAccount(loansPayload: GroupLoanPayload?): Flow<DataState<Loan>> {
+    override fun createGroupLoansAccount(loansPayload: GroupLoanPayload?): Flow<Loan> {
         return dataManager.createGroupLoansAccount(loansPayload)
-            .asDataStateFlow()
+            
     }
 
     override suspend fun createClient(clientPayload: ClientPayloadEntity): Int? {

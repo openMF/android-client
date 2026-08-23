@@ -9,22 +9,22 @@
  */
 package com.mifos.feature.client.createShareAccount.pages
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_share_account_back
-import androidclient.feature.client.generated.resources.feature_share_account_detail_date_cancel
-import androidclient.feature.client.generated.resources.feature_share_account_detail_date_select
-import androidclient.feature.client.generated.resources.feature_share_account_next
-import androidclient.feature.client.generated.resources.feature_share_account_terms
-import androidclient.feature.client.generated.resources.feature_share_account_terms_allow_dividends
-import androidclient.feature.client.generated.resources.feature_share_account_terms_application_date
-import androidclient.feature.client.generated.resources.feature_share_account_terms_currency
-import androidclient.feature.client.generated.resources.feature_share_account_terms_current_price
-import androidclient.feature.client.generated.resources.feature_share_account_terms_default_savings_account
-import androidclient.feature.client.generated.resources.feature_share_account_terms_frequency
-import androidclient.feature.client.generated.resources.feature_share_account_terms_lock_in_period
-import androidclient.feature.client.generated.resources.feature_share_account_terms_min_active_period
-import androidclient.feature.client.generated.resources.feature_share_account_terms_total_shares
-import androidclient.feature.client.generated.resources.feature_share_account_terms_type
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_share_account_back
+import kpt.feature.client.generated.resources.feature_share_account_detail_date_cancel
+import kpt.feature.client.generated.resources.feature_share_account_detail_date_select
+import kpt.feature.client.generated.resources.feature_share_account_next
+import kpt.feature.client.generated.resources.feature_share_account_terms
+import kpt.feature.client.generated.resources.feature_share_account_terms_allow_dividends
+import kpt.feature.client.generated.resources.feature_share_account_terms_application_date
+import kpt.feature.client.generated.resources.feature_share_account_terms_currency
+import kpt.feature.client.generated.resources.feature_share_account_terms_current_price
+import kpt.feature.client.generated.resources.feature_share_account_terms_default_savings_account
+import kpt.feature.client.generated.resources.feature_share_account_terms_frequency
+import kpt.feature.client.generated.resources.feature_share_account_terms_lock_in_period
+import kpt.feature.client.generated.resources.feature_share_account_terms_min_active_period
+import kpt.feature.client.generated.resources.feature_share_account_terms_total_shares
+import kpt.feature.client.generated.resources.feature_share_account_terms_type
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -54,7 +54,8 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.client.createShareAccount.CreateShareAccountAction
 import com.mifos.feature.client.createShareAccount.CreateShareAccountState
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -105,7 +106,7 @@ fun TermsPage(
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = LocalKptSpacing.current.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -113,7 +114,7 @@ fun TermsPage(
                 text = stringResource(Res.string.feature_share_account_terms),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosTextFieldDropdown(
                 value = state.currency.orEmpty(),
@@ -131,7 +132,7 @@ fun TermsPage(
                     enabled = false,
                 ),
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosOutlinedTextField(
                 value = state.totalShares,
@@ -147,7 +148,7 @@ fun TermsPage(
                     errorText = state.totalSharesError?.let { stringResource(it) },
                 ),
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosTextFieldDropdown(
                 value = if (state.savingsAccountIdx == null) {
@@ -182,13 +183,13 @@ fun TermsPage(
                     onAction(CreateShareAccountAction.OnIsDividendAllowedClicked)
                 },
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             Text(
                 text = stringResource(Res.string.feature_share_account_terms_min_active_period),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosOutlinedTextField(
                 value = state.minActivePeriodFreq,
@@ -204,7 +205,7 @@ fun TermsPage(
                     errorText = state.minActivePeriodFreqError?.let { stringResource(it) },
                 ),
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosTextFieldDropdown(
                 value = if (state.minActivePeriodFreqTypeIdx == null) {
@@ -224,13 +225,13 @@ fun TermsPage(
                 errorMessage = state.minActivePeriodFreqTypeError?.let { stringResource(it) },
             )
 
-            Spacer(Modifier.height(KptTheme.spacing.sm))
+            Spacer(Modifier.height(LocalKptSpacing.current.sm))
 
             Text(
                 text = stringResource(Res.string.feature_share_account_terms_lock_in_period),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosOutlinedTextField(
                 value = state.lockInPeriodFreq,
@@ -246,7 +247,7 @@ fun TermsPage(
                     errorText = state.lockInPeriodFreqError?.let { stringResource(it) },
                 ),
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosTextFieldDropdown(
                 value = if (state.lockInPeriodFreqTypeIdx == null) {
@@ -265,7 +266,7 @@ fun TermsPage(
                 label = stringResource(Res.string.feature_share_account_terms_type),
                 errorMessage = state.lockInPeriodFreqTypeError?.let { stringResource(it) },
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
         }
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.feature_share_account_back),

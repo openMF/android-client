@@ -9,20 +9,20 @@
  */
 package com.mifos.feature.savings.savingsAccountSummary
 
-import androidclient.feature.savings.generated.resources.Res
-import androidclient.feature.savings.generated.resources.feature_savings_failed_to_fetch_savingsaccount
+import kpt.feature.savings.generated.resources.Res
+import kpt.feature.savings.generated.resources.feature_savings_failed_to_fetch_savingsaccount
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SavingsAccountSummaryRepository
 import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
 import com.mifos.room.entities.accounts.savings.SavingsSummaryData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
@@ -45,28 +45,21 @@ class SavingsAccountSummaryViewModel(
     fun loadSavingAccount(type: String?, accountId: Int) {
         viewModelScope.launch {
             if (type != null) {
+                _savingsAccountSummaryUiState.value =
+                    SavingsAccountSummaryUiState.ShowProgressbar
                 repository.getSavingsAccount(
                     type,
                     accountId,
                     Constants.TRANSACTIONS,
-                ).collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> {
-                            Logger.e("Error: ${dataState.message}")
-                            _savingsAccountSummaryUiState.value =
-                                SavingsAccountSummaryUiState.ShowFetchingError(Res.string.feature_savings_failed_to_fetch_savingsaccount)
-                        }
-
-                        DataState.Loading ->
-                            _savingsAccountSummaryUiState.value =
-                                SavingsAccountSummaryUiState.ShowProgressbar
-
-                        is DataState.Success ->
-                            _savingsAccountSummaryUiState.value =
-                                SavingsAccountSummaryUiState.ShowSavingAccount(
-                                    dataState.data ?: SavingsAccountWithAssociationsEntity(),
-                                )
-                    }
+                ).catch { error ->
+                    Logger.e("Error: ${error.message}")
+                    _savingsAccountSummaryUiState.value =
+                        SavingsAccountSummaryUiState.ShowFetchingError(Res.string.feature_savings_failed_to_fetch_savingsaccount)
+                }.collect { savingsAccount ->
+                    _savingsAccountSummaryUiState.value =
+                        SavingsAccountSummaryUiState.ShowSavingAccount(
+                            savingsAccount ?: SavingsAccountWithAssociationsEntity(),
+                        )
                 }
             }
         }

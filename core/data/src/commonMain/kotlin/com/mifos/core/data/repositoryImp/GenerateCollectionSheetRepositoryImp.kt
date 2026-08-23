@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.GenerateCollectionSheetRepository
 import com.mifos.core.model.objects.collectionsheets.CollectionSheetRequestPayload
 import com.mifos.core.network.DataManager
@@ -36,16 +34,16 @@ class GenerateCollectionSheetRepositoryImp(
     override fun getCentersInOffice(
         id: Int,
         params: Map<String, String>,
-    ): Flow<DataState<List<CenterEntity>>> {
-        return dataManager.getCentersInOffice(id, params).asDataStateFlow()
+    ): Flow<List<CenterEntity>> {
+        return dataManager.getCentersInOffice(id, params)
     }
 
     override fun getGroupsByOffice(
         office: Int,
         params: Map<String, String>,
-    ): Flow<DataState<List<GroupEntity>>> {
+    ): Flow<List<GroupEntity>> {
         return dataManager.getGroupsByOffice(office, params)
-            .asDataStateFlow()
+            
     }
 
     override suspend fun fetchGroupsAssociatedWithCenter(centerId: Int): CenterWithAssociations {
@@ -58,14 +56,14 @@ class GenerateCollectionSheetRepositoryImp(
         meetingDate: String?,
         officeId: Int,
         staffId: Int,
-    ): Flow<DataState<List<CenterDetail>>> {
+    ): Flow<List<CenterDetail>> {
         return collectionDataManager.fetchCenterDetails(
             format,
             locale,
             meetingDate,
             officeId,
             staffId,
-        ).asDataStateFlow()
+        )
     }
 
     override suspend fun fetchProductiveCollectionSheet(

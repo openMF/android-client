@@ -10,13 +10,10 @@
 package com.mifos.core.network.model
 
 import com.mifos.core.model.objects.clients.ClientAddressResponse
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 @Serializable
-@Parcelize
 data class PinpointLocationActionResponse(
     val resourceId: Int? = null,
     val changes: ClientAddressResponse? = null,
-) : Parcelable
+)

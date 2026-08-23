@@ -9,14 +9,14 @@
  */
 package com.mifos.feature.client.clientDocuments
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.client_identifiers_click_on_plus_button_to_add_an_item
-import androidclient.feature.client.generated.resources.client_profile_documents_title
-import androidclient.feature.client.generated.resources.client_savings_item
-import androidclient.feature.client.generated.resources.confirm_text
-import androidclient.feature.client.generated.resources.delete_dialog_title
-import androidclient.feature.client.generated.resources.dismiss_text
-import androidclient.feature.client.generated.resources.document_delete_dialog_message
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.client_identifiers_click_on_plus_button_to_add_an_item
+import kpt.feature.client.generated.resources.client_profile_documents_title
+import kpt.feature.client.generated.resources.client_savings_item
+import kpt.feature.client.generated.resources.confirm_text
+import kpt.feature.client.generated.resources.delete_dialog_title
+import kpt.feature.client.generated.resources.dismiss_text
+import kpt.feature.client.generated.resources.document_delete_dialog_message
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -56,7 +56,8 @@ import com.mifos.core.ui.components.MifosSearchBar
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun ClientDocumentScreen(
@@ -169,7 +170,7 @@ private fun ClientDocumentsContent(
                 Column(
                     Modifier.fillMaxSize()
                         .padding(
-                            horizontal = KptTheme.spacing.md,
+                            horizontal = LocalKptSpacing.current.md,
                         ),
                 ) {
                     ClientDocumentsHeader(
@@ -197,7 +198,7 @@ private fun ClientDocumentsContent(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.lg))
+                    Spacer(modifier = Modifier.height(LocalKptSpacing.current.lg))
 
                     if (state.clientDocuments.isEmpty()) {
                         MifosEmptyCard(msg = stringResource(Res.string.client_identifiers_click_on_plus_button_to_add_an_item))
@@ -251,7 +252,7 @@ private fun ClientDocumentsContent(
                                         else -> null
                                     }
                                 }
-                                Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+                                Spacer(modifier = Modifier.height(LocalKptSpacing.current.sm))
                             }
                         }
                     }

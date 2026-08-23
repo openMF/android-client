@@ -9,8 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.ActivateRepository
 import com.mifos.core.model.objects.clients.ActivatePayload
 import com.mifos.core.network.model.PostClientsClientIdResponse
@@ -24,7 +22,7 @@ class ActivateClientUseCase(
     operator fun invoke(
         clientId: Int,
         clientPayload: ActivatePayload,
-    ): Flow<DataState<PostClientsClientIdResponse>> = flow {
+    ): Flow<PostClientsClientIdResponse> = flow {
         emit(activateRepository.activateClient(clientId, clientPayload))
-    }.asDataStateFlow()
+    }
 }

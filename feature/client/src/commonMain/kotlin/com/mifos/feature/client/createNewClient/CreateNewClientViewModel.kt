@@ -9,18 +9,17 @@
  */
 package com.mifos.feature.client.createNewClient
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_Image_Upload_Successful
-import androidclient.feature.client.generated.resources.feature_client_client_created_successfully
-import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_address_configuration
-import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_address_template
-import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_client_template
-import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_offices
-import androidclient.feature.client.generated.resources.feature_client_failed_to_fetch_staffs
-import androidclient.feature.client.generated.resources.feature_client_waiting_for_checker_approval
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_client_Image_Upload_Successful
+import kpt.feature.client.generated.resources.feature_client_client_created_successfully
+import kpt.feature.client.generated.resources.feature_client_failed_to_fetch_address_configuration
+import kpt.feature.client.generated.resources.feature_client_failed_to_fetch_address_template
+import kpt.feature.client.generated.resources.feature_client_failed_to_fetch_client_template
+import kpt.feature.client.generated.resources.feature_client_failed_to_fetch_offices
+import kpt.feature.client.generated.resources.feature_client_failed_to_fetch_staffs
+import kpt.feature.client.generated.resources.feature_client_waiting_for_checker_approval
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.MFErrorParser
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.ui.util.ImageUtil.compressImage
@@ -87,7 +86,7 @@ class CreateNewClientViewModel(
                 loadAddressConfiguration()
                 _createNewClientUiState.value =
                     CreateNewClientUiState.ShowClientTemplate(
-                        clientsTemplate = it.data ?: ClientsTemplateEntity(),
+                        clientsTemplate = it,
                         isAddressEnabled = isAddressEnabled.value,
                         addressTemplate = addressTemplate.value ?: AddressTemplate(),
                     )
@@ -102,23 +101,21 @@ class CreateNewClientViewModel(
                     _createNewClientUiState.value =
                         CreateNewClientUiState.ShowError(Res.string.feature_client_failed_to_fetch_offices)
                 }.collect { offices ->
-                    _showOffices.value = offices.data ?: emptyList()
+                    _showOffices.value = offices
                 }
         }
     }
 
     fun loadStaffInOffices(officeId: Int) {
         viewModelScope.launch {
-            repository.getStaffInOffice(officeId).collect { result ->
-                when (result) {
-                    is DataState.Error ->
-                        _createNewClientUiState.value =
-                            CreateNewClientUiState.ShowError(Res.string.feature_client_failed_to_fetch_staffs)
-
-                    DataState.Loading -> Unit
-                    is DataState.Success -> _staffInOffices.value = result.data
+            repository.getStaffInOffice(officeId)
+                .catch {
+                    _createNewClientUiState.value =
+                        CreateNewClientUiState.ShowError(Res.string.feature_client_failed_to_fetch_staffs)
                 }
-            }
+                .collect { staffList ->
+                    _staffInOffices.value = staffList
+                }
         }
     }
 

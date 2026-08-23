@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases.assignLoanOfficer
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.loan.LoanOfficerRepository
 import com.mifos.core.model.objects.account.loan.assignLoanOfficer.AssignLoanOfficerInput
 import com.mifos.core.model.objects.account.loan.assignLoanOfficer.AssignLoanOfficerResponse
@@ -20,5 +19,5 @@ class AssignLoanOfficerUseCase(
     suspend operator fun invoke(
         loanId: Int,
         input: AssignLoanOfficerInput,
-    ): DataState<AssignLoanOfficerResponse> = repository.assignLoanOfficer(loanId, input)
+    ): AssignLoanOfficerResponse = repository.assignLoanOfficer(loanId, input)
 }

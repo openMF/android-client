@@ -9,22 +9,22 @@
  */
 package com.mifos.feature.client.clientIdentifiersList
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.add_icon
-import androidclient.feature.client.generated.resources.cancel
-import androidclient.feature.client.generated.resources.client_identifiers_click_on_plus_button_to_add_an_item
-import androidclient.feature.client.generated.resources.client_identifiers_error_text
-import androidclient.feature.client.generated.resources.client_identifiers_identities_client_identifier_deletion_success
-import androidclient.feature.client.generated.resources.client_identifiers_identities_success_text
-import androidclient.feature.client.generated.resources.client_identifiers_not_available
-import androidclient.feature.client.generated.resources.client_identifiers_retry
-import androidclient.feature.client.generated.resources.client_savings_item
-import androidclient.feature.client.generated.resources.delete_dialog_identifier_message
-import androidclient.feature.client.generated.resources.delete_dialog_title
-import androidclient.feature.client.generated.resources.feature_client_error_not_connected_internet
-import androidclient.feature.client.generated.resources.feature_client_identifiers
-import androidclient.feature.client.generated.resources.remove
-import androidclient.feature.client.generated.resources.search
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.add_icon
+import kpt.feature.client.generated.resources.cancel
+import kpt.feature.client.generated.resources.client_identifiers_click_on_plus_button_to_add_an_item
+import kpt.feature.client.generated.resources.client_identifiers_error_text
+import kpt.feature.client.generated.resources.client_identifiers_identities_client_identifier_deletion_success
+import kpt.feature.client.generated.resources.client_identifiers_identities_success_text
+import kpt.feature.client.generated.resources.client_identifiers_not_available
+import kpt.feature.client.generated.resources.client_identifiers_retry
+import kpt.feature.client.generated.resources.client_savings_item
+import kpt.feature.client.generated.resources.delete_dialog_identifier_message
+import kpt.feature.client.generated.resources.delete_dialog_title
+import kpt.feature.client.generated.resources.feature_client_error_not_connected_internet
+import kpt.feature.client.generated.resources.feature_client_identifiers
+import kpt.feature.client.generated.resources.remove
+import kpt.feature.client.generated.resources.search
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -58,7 +58,8 @@ import com.mifos.feature.client.utils.getClientIdentifierStatus
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun ClientIdentifiersListScreen(
@@ -112,14 +113,14 @@ internal fun ClientIdentifiersListScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = KptTheme.spacing.md),
+                .padding(horizontal = LocalKptSpacing.current.md),
         ) {
             ClientIdentifiersHeader(
                 totalItem = state.clientIdentitiesList.size.toString(),
                 onAction = onAction,
             )
 
-            Spacer(modifier = Modifier.height(KptTheme.spacing.lg))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.lg))
 
             if (state.clientIdentitiesList.isEmpty()) {
                 MifosEmptyCard(stringResource(Res.string.client_identifiers_click_on_plus_button_to_add_an_item))
@@ -196,7 +197,7 @@ internal fun ClientIdentifiersListScreen(
                                 isExpanded = (index == state.currentExpandedItem) && state.expandClientIdentity,
                             )
 
-                            Spacer(Modifier.height(KptTheme.spacing.sm))
+                            Spacer(Modifier.height(LocalKptSpacing.current.sm))
                         }
                     }
                 }

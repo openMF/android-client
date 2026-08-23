@@ -23,7 +23,9 @@ import androidx.compose.ui.graphics.Color
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun MifosTab(
@@ -31,8 +33,8 @@ fun MifosTab(
     selected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    selectedColor: Color = KptTheme.colorScheme.primary,
-    unselectedColor: Color = KptTheme.colorScheme.primaryContainer,
+    selectedColor: Color = LocalKptColors.current.primary,
+    unselectedColor: Color = LocalKptColors.current.primaryContainer,
 ) {
     Tab(
         text = {
@@ -54,8 +56,8 @@ fun MifosTab(
 private fun MifosTabPreview() {
     MifosTheme {
         Column(
-            verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
-            modifier = Modifier.padding(KptTheme.spacing.md),
+            verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.sm),
+            modifier = Modifier.padding(LocalKptSpacing.current.md),
         ) {
             MifosTab(
                 text = "Selected Tab",

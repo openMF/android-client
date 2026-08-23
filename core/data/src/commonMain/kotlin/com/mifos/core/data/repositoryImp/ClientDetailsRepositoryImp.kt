@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.model.objects.account.share.ShareAccounts
@@ -26,12 +25,30 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import org.mobilenativefoundation.store.store5.Store
+import org.mobilenativefoundation.store.store5.StoreReadRequest
+import org.mobilenativefoundation.store.store5.StoreReadResponse
 
 /**
  * Created by Aditya Gupta on 06/08/23.
+ *
+ * `getClient` is served through the Store5 [ClientStore][com.mifos.core.store.provideClientStore]
+ * (qualifier [AppStoreRegistry.Clients][kpt.core.store.AppStoreRegistry.Clients]) instead of a raw
+ * `DataManagerClient.getClient` network call. `StoreReadRequest.cached(refresh = true)` emits the
+ * Room-persisted client immediately (so the details screen renders offline from cache) AND triggers
+ * a background network refresh when connectivity is available (SWR). The `suspend fun ... :
+ * ClientEntity` interface shape is preserved (Option B) — 4 callers across the loan + client
+ * features consume it as a plain suspend value, so widening it to a `Flow` would ripple far — and
+ * the store's cached-then-fresh stream is bridged back to a single value with `.first()` over the
+ * Data responses. Every other method here (uploadClientImage, assignStaff, closeClient, …) is a
+ * WRITE op and continues to hit [dataManagerClient] unchanged.
  */
 class ClientDetailsRepositoryImp(
     private val dataManagerClient: DataManagerClient,
+    private val clientStore: Store<Int, ClientEntity>,
 ) : ClientDetailsRepository {
 
     private val _clientUpdateEvents = MutableSharedFlow<Unit>(replay = 0, extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
@@ -66,82 +83,52 @@ class ClientDetailsRepositoryImp(
         return dataManagerClient.getClientAccounts(clientId).shareAccounts
     }
 
-    override suspend fun getClientCloseTemplate(): DataState<ClientCloseTemplateResponse> {
-        return try {
-            val res = dataManagerClient.getClientCloseTemplate()
-            return DataState.Success(res)
-        } catch (e: Exception) {
-            DataState.Error(e)
-        }
+    override suspend fun getClientCloseTemplate(): ClientCloseTemplateResponse {
+        return dataManagerClient.getClientCloseTemplate()
     }
 
-    override suspend fun getCollateralItems(): DataState<List<CollateralItem>> {
-        return try {
-            val res = dataManagerClient.getCollateralItems()
-            return DataState.Success(res)
-        } catch (e: Exception) {
-            DataState.Error(e)
-        }
+    override suspend fun getCollateralItems(): List<CollateralItem> {
+        return dataManagerClient.getCollateralItems()
     }
 
-    override suspend fun getClientCollaterals(clientId: Int): DataState<List<CollateralItemResult>> {
-        return try {
-            val res = dataManagerClient.getClientCollateralItems(clientId)
-            return DataState.Success(res)
-        } catch (e: Exception) {
-            DataState.Error(e)
-        }
+    override suspend fun getClientCollaterals(clientId: Int): List<CollateralItemResult> {
+        return dataManagerClient.getClientCollateralItems(clientId)
     }
 
     override suspend fun getClient(clientId: Int): ClientEntity {
-        val client = dataManagerClient.getClient(clientId)
-
-        if (client.groupName.isNullOrBlank() && !client.groups.isNullOrEmpty()) {
-            client.groups?.firstOrNull()?.let { firstGroup ->
-                return client.copy(
-                    groupName = firstGroup.name,
-                    groupId = firstGroup.id,
-                )
-            }
-        }
-        return client
+        // Offline-first read: stream the Store5 client store cache-first (refresh in background)
+        // and return the first Data value. With a previously-cached client the SoT reader emits
+        // the Room row immediately, so the details screen renders offline from cache instead of
+        // erroring. The group-name back-fill that used to live here now runs inside the store's
+        // fetcher (see provideClientStore#resolveGroup), so the persisted row already carries it.
+        return clientStore
+            .stream(StoreReadRequest.cached(key = clientId, refresh = true))
+            .filterIsInstance<StoreReadResponse.Data<ClientEntity>>()
+            .map { it.value }
+            .first()
     }
 
-    override fun getImage(clientId: Int): Flow<DataState<String>> {
+    override fun getImage(clientId: Int): Flow<String> {
         return dataManagerClient.getClientImage(clientId)
     }
 
     override suspend fun assignStaff(
         clientId: Int,
         staffId: Int,
-    ): DataState<Unit> {
-        return try {
-            val res = dataManagerClient.assignClientStaff(clientId, staffId)
-            if (res.status.value == 200) {
-                DataState.Success(Unit)
-            } else {
-                val errorBody = extractErrorMessage(res)
-                DataState.Error(Exception(errorBody))
-            }
-        } catch (e: Exception) {
-            DataState.Error(e)
+    ) {
+        val res = dataManagerClient.assignClientStaff(clientId, staffId)
+        if (res.status.value != 200) {
+            throw Exception(extractErrorMessage(res))
         }
     }
 
     override suspend fun unassignStaff(
         clientId: Int,
         staffId: Int,
-    ): DataState<Unit> {
-        return try {
-            val res = dataManagerClient.unAssignClientStaff(clientId, staffId)
-            if (res.status.value == 200) {
-                DataState.Success(Unit)
-            } else {
-                val errorBody = extractErrorMessage(res)
-                DataState.Error(Exception(errorBody))
-            }
-        } catch (e: Exception) {
-            DataState.Error(e)
+    ) {
+        val res = dataManagerClient.unAssignClientStaff(clientId, staffId)
+        if (res.status.value != 200) {
+            throw Exception(extractErrorMessage(res))
         }
     }
 
@@ -150,42 +137,28 @@ class ClientDetailsRepositoryImp(
         destinationOfficeId: Int,
         transferDate: String,
         note: String,
-    ): DataState<Unit> {
-        return try {
-            val res = dataManagerClient.proposeClientTransfer(
-                clientId = clientId,
-                destinationOfficeId = destinationOfficeId,
-                transferDate = transferDate,
-                note = note,
-            )
-            if (res.status.value == 200) {
-                DataState.Success(Unit)
-            } else {
-                val errorBody = extractErrorMessage(res)
-                DataState.Error(Exception(errorBody))
-            }
-        } catch (e: Exception) {
-            DataState.Error(e)
+    ) {
+        val res = dataManagerClient.proposeClientTransfer(
+            clientId = clientId,
+            destinationOfficeId = destinationOfficeId,
+            transferDate = transferDate,
+            note = note,
+        )
+        if (res.status.value != 200) {
+            throw Exception(extractErrorMessage(res))
         }
     }
 
     override suspend fun updateDefaultSavingsAccount(
         clientId: Int,
         accountId: Long,
-    ): DataState<Unit> {
-        return try {
-            val res = dataManagerClient.updateDefaultSavingsAccount(
-                clientId = clientId,
-                savingsId = accountId,
-            )
-            if (res.status.value == 200) {
-                DataState.Success(Unit)
-            } else {
-                val errorBody = extractErrorMessage(res)
-                DataState.Error(Exception(errorBody))
-            }
-        } catch (e: Exception) {
-            DataState.Error(e)
+    ) {
+        val res = dataManagerClient.updateDefaultSavingsAccount(
+            clientId = clientId,
+            savingsId = accountId,
+        )
+        if (res.status.value != 200) {
+            throw Exception(extractErrorMessage(res))
         }
     }
 
@@ -193,21 +166,14 @@ class ClientDetailsRepositoryImp(
         clientId: Int,
         closureDate: String,
         closureReasonId: Int,
-    ): DataState<Unit> {
-        return try {
-            val res = dataManagerClient.closeClient(
-                clientId = clientId,
-                closureDate = closureDate,
-                closureReasonId = closureReasonId,
-            )
-            if (res.status.value == 200) {
-                DataState.Success(Unit)
-            } else {
-                val errorBody = extractErrorMessage(res)
-                DataState.Error(Exception(errorBody))
-            }
-        } catch (e: Exception) {
-            DataState.Error(e)
+    ) {
+        val res = dataManagerClient.closeClient(
+            clientId = clientId,
+            closureDate = closureDate,
+            closureReasonId = closureReasonId,
+        )
+        if (res.status.value != 200) {
+            throw Exception(extractErrorMessage(res))
         }
     }
 
@@ -215,21 +181,14 @@ class ClientDetailsRepositoryImp(
         clientId: Int,
         collateralId: Int,
         quantity: String,
-    ): DataState<Unit> {
-        return try {
-            val res = dataManagerClient.createCollateral(
-                clientId = clientId,
-                collateralId = collateralId,
-                quantity = quantity,
-            )
-            if (res.status.value == 200) {
-                DataState.Success(Unit)
-            } else {
-                val errorBody = extractErrorMessage(res)
-                DataState.Error(Exception(errorBody))
-            }
-        } catch (e: Exception) {
-            DataState.Error(e)
+    ) {
+        val res = dataManagerClient.createCollateral(
+            clientId = clientId,
+            collateralId = collateralId,
+            quantity = quantity,
+        )
+        if (res.status.value != 200) {
+            throw Exception(extractErrorMessage(res))
         }
     }
 }

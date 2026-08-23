@@ -9,24 +9,24 @@
  */
 package com.mifos.feature.client.clientDetailsProfile
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.arrow_downward
-import androidclient.feature.client.generated.resources.arrow_up
-import androidclient.feature.client.generated.resources.client_profile_actions
-import androidclient.feature.client.generated.resources.confirm_text
-import androidclient.feature.client.generated.resources.dialog_continue
-import androidclient.feature.client.generated.resources.dialog_unassign_message
-import androidclient.feature.client.generated.resources.dismiss_text
-import androidclient.feature.client.generated.resources.pen_icon
-import androidclient.feature.client.generated.resources.scroll_for_more_options
-import androidclient.feature.client.generated.resources.staff_unassign_failure_title
-import androidclient.feature.client.generated.resources.staff_unassign_success_message
-import androidclient.feature.client.generated.resources.staff_unassign_success_title
-import androidclient.feature.client.generated.resources.title_unassign_staff
-import androidclient.feature.client.generated.resources.update_details
-import androidclient.feature.client.generated.resources.update_photo
-import androidclient.feature.client.generated.resources.update_signature
-import androidclient.feature.client.generated.resources.warning_amber
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.arrow_downward
+import kpt.feature.client.generated.resources.arrow_up
+import kpt.feature.client.generated.resources.client_profile_actions
+import kpt.feature.client.generated.resources.confirm_text
+import kpt.feature.client.generated.resources.dialog_continue
+import kpt.feature.client.generated.resources.dialog_unassign_message
+import kpt.feature.client.generated.resources.dismiss_text
+import kpt.feature.client.generated.resources.pen_icon
+import kpt.feature.client.generated.resources.scroll_for_more_options
+import kpt.feature.client.generated.resources.staff_unassign_failure_title
+import kpt.feature.client.generated.resources.staff_unassign_success_message
+import kpt.feature.client.generated.resources.staff_unassign_success_title
+import kpt.feature.client.generated.resources.title_unassign_staff
+import kpt.feature.client.generated.resources.update_details
+import kpt.feature.client.generated.resources.update_photo
+import kpt.feature.client.generated.resources.update_signature
+import kpt.feature.client.generated.resources.warning_amber
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -67,7 +67,9 @@ import com.mifos.feature.client.clientDetailsProfile.components.clientsDetailsAc
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun ClientProfileDetailsScreen(
@@ -193,7 +195,7 @@ private fun ClientProfileDetailsContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .padding(horizontal = KptTheme.spacing.md),
+                    .padding(horizontal = LocalKptSpacing.current.md),
             ) {
                 ClientDetailsProfile(
                     image = state.profileImage,
@@ -224,7 +226,7 @@ private fun ClientProfileDetailsContent(
                         },
                         modifier = Modifier.weight(1f),
                     )
-                    Spacer(Modifier.width(KptTheme.spacing.sm))
+                    Spacer(Modifier.width(LocalKptSpacing.current.sm))
                     MifosTextButton(
                         onClick = {
                             onAction(ClientProfileDetailsAction.OnUpdateSignatureClick)
@@ -246,11 +248,11 @@ private fun ClientProfileDetailsContent(
                     )
                 }
 
-                Spacer(Modifier.height(KptTheme.spacing.md))
+                Spacer(Modifier.height(LocalKptSpacing.current.md))
 
                 state.details.forEach { list ->
                     MifosDefaultListingComponentFromStringResources(data = list)
-                    Spacer(Modifier.height(KptTheme.spacing.md))
+                    Spacer(Modifier.height(LocalKptSpacing.current.md))
                 }
 
                 Row(
@@ -265,16 +267,16 @@ private fun ClientProfileDetailsContent(
                             painterResource(Res.drawable.arrow_downward),
                             contentDescription = null,
                             modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                            tint = KptTheme.colorScheme.secondary.copy(alpha = 0.5f),
+                            tint = LocalKptColors.current.secondary.copy(alpha = 0.5f),
                         )
-                        Spacer(Modifier.width(KptTheme.spacing.sm))
+                        Spacer(Modifier.width(LocalKptSpacing.current.sm))
                         Text(
                             text = stringResource(Res.string.scroll_for_more_options),
                             style = MifosTypography.tag,
-                            color = KptTheme.colorScheme.secondary.copy(alpha = 0.5f),
+                            color = LocalKptColors.current.secondary.copy(alpha = 0.5f),
                         )
                     }
-                    Spacer(Modifier.width(KptTheme.spacing.sm))
+                    Spacer(Modifier.width(LocalKptSpacing.current.sm))
                     MifosTextButton(
                         onClick = {
                             onAction(ClientProfileDetailsAction.OnUpdateDetailsClick)
@@ -295,13 +297,13 @@ private fun ClientProfileDetailsContent(
                         modifier = Modifier.weight(1f),
                     )
                 }
-                Spacer(Modifier.height(KptTheme.spacing.md))
+                Spacer(Modifier.height(LocalKptSpacing.current.md))
                 Text(
                     text = stringResource(Res.string.client_profile_actions),
                     style = MifosTypography.labelLargeEmphasized,
                 )
 
-                Spacer(Modifier.height(KptTheme.spacing.md))
+                Spacer(Modifier.height(LocalKptSpacing.current.md))
                 clientsDetailsActionItems.forEach {
                     MifosRowCard(
                         title = stringResource(it.title),
@@ -310,7 +312,7 @@ private fun ClientProfileDetailsContent(
                             TextUtil(
                                 text = stringResource(it.subTitle),
                                 style = MifosTypography.bodySmall,
-                                color = KptTheme.colorScheme.secondary,
+                                color = LocalKptColors.current.secondary,
                             ),
                         ),
                         rightValues = emptyList(),

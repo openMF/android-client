@@ -9,8 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.ReportDetailRepository
 import com.mifos.core.model.objects.runreport.FullParameterListResponse
 import kotlinx.coroutines.flow.Flow
@@ -23,7 +21,7 @@ class GetRunReportWithQueryUseCase(
     operator fun invoke(
         reportName: String,
         options: Map<String, String>,
-    ): Flow<DataState<FullParameterListResponse>> = flow {
+    ): Flow<FullParameterListResponse> = flow {
         emit(repository.getRunReportWithQuery(reportName, options))
-    }.asDataStateFlow()
+    }
 }

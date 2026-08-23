@@ -9,17 +9,17 @@
  */
 package com.mifos.feature.savings.savingsAccountv2
 
-import androidclient.feature.savings.generated.resources.Res
-import androidclient.feature.savings.generated.resources.feature_savings_back
-import androidclient.feature.savings.generated.resources.feature_savings_charges_click_on_add_new
-import androidclient.feature.savings.generated.resources.step_charges
-import androidclient.feature.savings.generated.resources.step_charges_add
-import androidclient.feature.savings.generated.resources.step_charges_add_new
-import androidclient.feature.savings.generated.resources.step_charges_edit_charge
-import androidclient.feature.savings.generated.resources.step_charges_view
-import androidclient.feature.savings.generated.resources.step_details
-import androidclient.feature.savings.generated.resources.step_preview
-import androidclient.feature.savings.generated.resources.step_terms
+import kpt.feature.savings.generated.resources.Res
+import kpt.feature.savings.generated.resources.feature_savings_back
+import kpt.feature.savings.generated.resources.feature_savings_charges_click_on_add_new
+import kpt.feature.savings.generated.resources.step_charges
+import kpt.feature.savings.generated.resources.step_charges_add
+import kpt.feature.savings.generated.resources.step_charges_add_new
+import kpt.feature.savings.generated.resources.step_charges_edit_charge
+import kpt.feature.savings.generated.resources.step_charges_view
+import kpt.feature.savings.generated.resources.step_details
+import kpt.feature.savings.generated.resources.step_preview
+import kpt.feature.savings.generated.resources.step_terms
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -64,7 +64,8 @@ import com.mifos.feature.savings.savingsAccountv2.pages.TermsPage
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -311,7 +312,7 @@ private fun ShowChargesDialog(
         },
         content = {
             Column(
-                modifier = Modifier.fillMaxWidth().padding(KptTheme.spacing.md),
+                modifier = Modifier.fillMaxWidth().padding(LocalKptSpacing.current.md),
                 verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
             ) {
                 Text(

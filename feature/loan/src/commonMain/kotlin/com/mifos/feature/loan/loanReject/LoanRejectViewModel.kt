@@ -9,17 +9,16 @@
  */
 package com.mifos.feature.loan.loanReject
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_reject_failed
-import androidclient.feature.loan.generated.resources.feature_loan_reject_success
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_reject_failed
+import kpt.feature.loan.generated.resources.feature_loan_reject_success
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.domain.useCases.loanReject.RejectLoanUseCase
 import com.mifos.core.model.objects.account.loan.RejectLoanInput
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -39,14 +38,10 @@ internal class LoanRejectViewModel(
                 rejectedOnDate = DateHelper.getDateAsStringFromLong(currentState.rejectedOnDate),
                 note = currentState.note.ifBlank { null },
             )
-            val result = rejectLoanUseCase(route.loanId, request)
-            sendAction(LoanRejectAction.Internal.ReceiveRejectResult(result))
-        }
-    }
-
-    private fun handleRejectResult(result: DataState<Unit>) {
-        when (result) {
-            is DataState.Error -> {
+            try {
+                rejectLoanUseCase(route.loanId, request)
+                sendAction(LoanRejectAction.Internal.ReceiveRejectResult)
+            } catch (e: Exception) {
                 mutableStateFlow.update {
                     it.copy(
                         isSubmitting = false,
@@ -54,18 +49,16 @@ internal class LoanRejectViewModel(
                     )
                 }
             }
+        }
+    }
 
-            DataState.Loading -> Unit
-
-            is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        isSubmitting = false,
-                        dialogMessage = Res.string.feature_loan_reject_success,
-                        isRejectSuccessful = true,
-                    )
-                }
-            }
+    private fun handleRejectResult() {
+        mutableStateFlow.update {
+            it.copy(
+                isSubmitting = false,
+                dialogMessage = Res.string.feature_loan_reject_success,
+                isRejectSuccessful = true,
+            )
         }
     }
 
@@ -92,7 +85,7 @@ internal class LoanRejectViewModel(
                 )
             }
 
-            is LoanRejectAction.Internal.ReceiveRejectResult -> handleRejectResult(action.result)
+            LoanRejectAction.Internal.ReceiveRejectResult -> handleRejectResult()
         }
     }
 }
@@ -112,8 +105,6 @@ sealed interface LoanRejectAction {
     data class RejectedOnDateChanged(val dateMillis: Long) : LoanRejectAction
 
     sealed interface Internal : LoanRejectAction {
-        data class ReceiveRejectResult(
-            val result: DataState<Unit>,
-        ) : Internal
+        data object ReceiveRejectResult : Internal
     }
 }

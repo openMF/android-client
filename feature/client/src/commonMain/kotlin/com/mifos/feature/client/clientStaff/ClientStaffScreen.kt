@@ -9,16 +9,16 @@
  */
 package com.mifos.feature.client.clientStaff
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.btn_back
-import androidclient.feature.client.generated.resources.btn_submit
-import androidclient.feature.client.generated.resources.dialog_continue
-import androidclient.feature.client.generated.resources.label_assign_staff
-import androidclient.feature.client.generated.resources.label_choose_staff
-import androidclient.feature.client.generated.resources.msg_cannot_assign_staff
-import androidclient.feature.client.generated.resources.staff_assign_failure_title
-import androidclient.feature.client.generated.resources.staff_assign_success_message
-import androidclient.feature.client.generated.resources.staff_assign_success_title
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.btn_back
+import kpt.feature.client.generated.resources.btn_submit
+import kpt.feature.client.generated.resources.dialog_continue
+import kpt.feature.client.generated.resources.label_assign_staff
+import kpt.feature.client.generated.resources.label_choose_staff
+import kpt.feature.client.generated.resources.msg_cannot_assign_staff
+import kpt.feature.client.generated.resources.staff_assign_failure_title
+import kpt.feature.client.generated.resources.staff_assign_success_message
+import kpt.feature.client.generated.resources.staff_assign_success_title
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -48,7 +48,9 @@ import com.mifos.core.ui.components.MifosStatusDialog
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun ClientStaffScreen(
@@ -96,7 +98,7 @@ private fun ClientStaffContent(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = KptTheme.spacing.md),
+                    .padding(horizontal = LocalKptSpacing.current.md),
             ) {
                 if (state.staffOptions.isNotEmpty()) {
                     Text(
@@ -127,19 +129,19 @@ private fun ClientStaffContent(
                                     imageVector = MifosIcons.ChevronLeft,
                                     contentDescription = null,
                                     modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                                    tint = KptTheme.colorScheme.primary,
+                                    tint = LocalKptColors.current.primary,
                                 )
                             },
                             text = {
                                 Text(
                                     text = stringResource(Res.string.btn_back),
-                                    color = KptTheme.colorScheme.primary,
+                                    color = LocalKptColors.current.primary,
                                     style = MifosTypography.labelLarge,
                                 )
                             },
                             modifier = Modifier.weight(1f),
                         )
-                        Spacer(Modifier.padding(KptTheme.spacing.sm))
+                        Spacer(Modifier.padding(LocalKptSpacing.current.sm))
                         MifosTextButton(
                             onClick = {
                                 onAction(ClientStaffAction.OnSubmit)

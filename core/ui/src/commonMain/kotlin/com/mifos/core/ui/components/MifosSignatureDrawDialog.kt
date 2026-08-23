@@ -35,7 +35,8 @@ import com.niyajali.compose.sign.SignatureConfig
 import com.niyajali.compose.sign.exportSignature
 import com.niyajali.compose.sign.isNotEmpty
 import com.niyajali.compose.sign.rememberSignatureState
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @Composable
 fun MifosSignatureDrawDialog(
@@ -110,7 +111,7 @@ fun MifosSignatureDrawDialog(
 
                 HorizontalDivider(
                     thickness = DesignToken.strokes.thin,
-                    color = KptTheme.colorScheme.outlineVariant,
+                    color = LocalKptColors.current.outlineVariant,
                 )
 
                 ComposeSign(

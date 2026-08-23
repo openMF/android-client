@@ -9,16 +9,16 @@
  */
 package com.mifos.feature.offline.syncLoanRepaymentTransaction
 
-import androidclient.feature.offline.generated.resources.Res
-import androidclient.feature.offline.generated.resources.feature_offline_account_number
-import androidclient.feature.offline.generated.resources.feature_offline_click_to_refresh
-import androidclient.feature.offline.generated.resources.feature_offline_error_not_connected_internet
-import androidclient.feature.offline.generated.resources.feature_offline_failed_to_load_loanrepayment
-import androidclient.feature.offline.generated.resources.feature_offline_loan_id
-import androidclient.feature.offline.generated.resources.feature_offline_loan_transaction_date
-import androidclient.feature.offline.generated.resources.feature_offline_payment_type
-import androidclient.feature.offline.generated.resources.feature_offline_sync_loanrepayment
-import androidclient.feature.offline.generated.resources.feature_offline_transaction_amount
+import kpt.feature.offline.generated.resources.Res
+import kpt.feature.offline.generated.resources.feature_offline_account_number
+import kpt.feature.offline.generated.resources.feature_offline_click_to_refresh
+import kpt.feature.offline.generated.resources.feature_offline_error_not_connected_internet
+import kpt.feature.offline.generated.resources.feature_offline_failed_to_load_loanrepayment
+import kpt.feature.offline.generated.resources.feature_offline_loan_id
+import kpt.feature.offline.generated.resources.feature_offline_loan_transaction_date
+import kpt.feature.offline.generated.resources.feature_offline_payment_type
+import kpt.feature.offline.generated.resources.feature_offline_sync_loanrepayment
+import kpt.feature.offline.generated.resources.feature_offline_transaction_amount
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -63,7 +63,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun SyncLoanRepaymentTransactionScreenRoute(
@@ -203,7 +206,7 @@ private fun LoanRepaymentTransactionItem(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(KptTheme.spacing.sm),
+                .padding(LocalKptSpacing.current.sm),
         ) {
             TransactionRow(
                 stringResource(Res.string.feature_offline_loan_id),
@@ -230,9 +233,9 @@ private fun LoanRepaymentTransactionItem(
             if (request.errorMessage != null) {
                 Text(
                     text = request.errorMessage!!,
-                    style = KptTheme.typography.bodyMedium,
-                    color = KptTheme.colorScheme.error,
-                    modifier = Modifier.padding(top = KptTheme.spacing.xs),
+                    style = LocalKptTypography.current.bodyMedium,
+                    color = LocalKptColors.current.error,
+                    modifier = Modifier.padding(top = LocalKptSpacing.current.xs),
                 )
             }
         }
@@ -248,17 +251,17 @@ private fun TransactionRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = KptTheme.spacing.xs),
+            .padding(vertical = LocalKptSpacing.current.xs),
     ) {
         Text(
             text = label,
-            style = KptTheme.typography.bodyMedium,
+            style = LocalKptTypography.current.bodyMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
         )
         Text(
             text = value,
-            style = KptTheme.typography.bodyMedium,
+            style = LocalKptTypography.current.bodyMedium,
             modifier = Modifier.weight(1f),
         )
     }
@@ -295,7 +298,7 @@ private fun EmptyLoanRepaymentsScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(KptTheme.spacing.md),
+            .padding(LocalKptSpacing.current.md),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
@@ -303,14 +306,14 @@ private fun EmptyLoanRepaymentsScreen(
             imageVector = MifosIcons.AssignmentTurnedIn,
             contentDescription = null,
             modifier = Modifier.size(DesignToken.sizes.dp72),
-            tint = KptTheme.colorScheme.primary,
+            tint = LocalKptColors.current.primary,
         )
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
         Text(
             text = message,
-            style = KptTheme.typography.bodyLarge,
+            style = LocalKptTypography.current.bodyLarge,
             textAlign = TextAlign.Center,
-            color = KptTheme.colorScheme.onSurface,
+            color = LocalKptColors.current.onSurface,
         )
     }
 }

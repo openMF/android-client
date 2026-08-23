@@ -25,7 +25,8 @@ import org.mifos.authenticator.biometrics.platformAuthenticator.PlatformAuthOpti
 import org.mifos.authenticator.biometrics.platformAuthenticator.PlatformAvailableAuthenticationOption
 import org.mifos.authenticator.passcode.components.PasscodeKey
 import org.mifos.authenticator.passcode.screen.PasscodeKeyConfig
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 /**
  * Platform-aware biometric unlock button for use inside the passcode screen's
@@ -58,10 +59,10 @@ fun BiometricsKey(
     val passcodeKeyConfig = PasscodeKeyConfig(
         shouldShuffleKeys = true,
         keyTextStyle = null,
-        keyColor = KptTheme.colorScheme.primary,
+        keyColor = LocalKptColors.current.primary,
         keyShape = CircleShape,
         keyElevation = null,
-        keyContainerColor = KptTheme.colorScheme.surface,
+        keyContainerColor = LocalKptColors.current.surface,
         keySize = 60.dp,
     )
 

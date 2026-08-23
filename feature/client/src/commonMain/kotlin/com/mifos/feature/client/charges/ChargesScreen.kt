@@ -11,23 +11,23 @@
 
 package com.mifos.feature.client.charges
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.action_add
-import androidclient.feature.client.generated.resources.action_view
-import androidclient.feature.client.generated.resources.add_charge_title
-import androidclient.feature.client.generated.resources.btn_back
-import androidclient.feature.client.generated.resources.charges_update
-import androidclient.feature.client.generated.resources.charges_view_charges
-import androidclient.feature.client.generated.resources.dialog_continue
-import androidclient.feature.client.generated.resources.feature_client_charge_amount
-import androidclient.feature.client.generated.resources.feature_client_charge_cancel
-import androidclient.feature.client.generated.resources.feature_client_charge_select
-import androidclient.feature.client.generated.resources.feature_client_charges
-import androidclient.feature.client.generated.resources.feature_client_choose_charge
-import androidclient.feature.client.generated.resources.feature_client_created_charge_failure_title
-import androidclient.feature.client.generated.resources.feature_client_created_charge_success_message
-import androidclient.feature.client.generated.resources.feature_client_created_charge_success_title
-import androidclient.feature.client.generated.resources.feature_client_due_date
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.action_add
+import kpt.feature.client.generated.resources.action_view
+import kpt.feature.client.generated.resources.add_charge_title
+import kpt.feature.client.generated.resources.btn_back
+import kpt.feature.client.generated.resources.charges_update
+import kpt.feature.client.generated.resources.charges_view_charges
+import kpt.feature.client.generated.resources.dialog_continue
+import kpt.feature.client.generated.resources.feature_client_charge_amount
+import kpt.feature.client.generated.resources.feature_client_charge_cancel
+import kpt.feature.client.generated.resources.feature_client_charge_select
+import kpt.feature.client.generated.resources.feature_client_charges
+import kpt.feature.client.generated.resources.feature_client_choose_charge
+import kpt.feature.client.generated.resources.feature_client_created_charge_failure_title
+import kpt.feature.client.generated.resources.feature_client_created_charge_success_message
+import kpt.feature.client.generated.resources.feature_client_created_charge_success_title
+import kpt.feature.client.generated.resources.feature_client_due_date
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -88,7 +88,9 @@ import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -133,7 +135,7 @@ fun ChargesContent(
             MifosBreadcrumbNavBar(navController)
 
             Column(
-                modifier = Modifier.fillMaxWidth().padding(KptTheme.spacing.md),
+                modifier = Modifier.fillMaxWidth().padding(LocalKptSpacing.current.md),
                 verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
             ) {
                 ChargeAddFields(
@@ -188,7 +190,7 @@ private fun ChargesDialog(
                 successMessage = stringResource(Res.string.feature_client_created_charge_success_message),
                 failureTitle = stringResource(Res.string.feature_client_created_charge_failure_title),
                 failureMessage = state.dialogState.message,
-                modifier = Modifier.fillMaxSize().background(KptTheme.colorScheme.surface),
+                modifier = Modifier.fillMaxSize().background(LocalKptColors.current.surface),
             )
         }
 
@@ -219,7 +221,7 @@ fun ShowChargeBottomSheet(
                     .heightIn(max = DesignToken.spacing.half),
             ) {
                 Column(
-                    modifier = Modifier.padding(KptTheme.spacing.md),
+                    modifier = Modifier.padding(LocalKptSpacing.current.md),
                     verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
                 ) {
                     Text(
@@ -338,7 +340,7 @@ private fun ChargeAddFields(
         ) {
             Text(
                 text = stringResource(Res.string.feature_client_charges),
-                color = KptTheme.colorScheme.primary,
+                color = LocalKptColors.current.primary,
                 style = MifosTypography.labelLargeEmphasized,
             )
             Spacer(modifier = Modifier.height(DesignToken.padding.medium))
@@ -423,13 +425,13 @@ private fun ChargeAddFields(
                         Icon(
                             imageVector = MifosIcons.Add,
                             contentDescription = null,
-                            tint = KptTheme.colorScheme.primary,
+                            tint = LocalKptColors.current.primary,
                             modifier = Modifier.size(DesignToken.sizes.iconSmall),
                         )
 
                         Text(
                             text = stringResource(Res.string.add_charge_title),
-                            color = KptTheme.colorScheme.primary,
+                            color = LocalKptColors.current.primary,
                             style = MifosTypography.labelLargeEmphasized,
                         )
                     }

@@ -9,8 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.ChargeRepository
 import com.mifos.core.model.objects.template.client.ChargeTemplate
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +18,7 @@ class GetChargesTemplateUseCase(
     private val repository: ChargeRepository,
 ) {
 
-    operator fun invoke(resourceType: String, resourceId: Int): Flow<DataState<ChargeTemplate>> = flow {
+    operator fun invoke(resourceType: String, resourceId: Int): Flow<ChargeTemplate> = flow {
         emit(repository.getChargeTemplate(resourceType, resourceId))
-    }.asDataStateFlow()
+    }
 }

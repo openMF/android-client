@@ -11,20 +11,20 @@
 
 package com.mifos.feature.loan.loanChargeForm
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_amount
-import androidclient.feature.loan.generated.resources.feature_loan_charge_calculation
-import androidclient.feature.loan.generated.resources.feature_loan_charge_cancel
-import androidclient.feature.loan.generated.resources.feature_loan_charge_dialog
-import androidclient.feature.loan.generated.resources.feature_loan_charge_due_date
-import androidclient.feature.loan.generated.resources.feature_loan_charge_failed_to_create_loan_charge
-import androidclient.feature.loan.generated.resources.feature_loan_charge_failed_to_load_charge_types
-import androidclient.feature.loan.generated.resources.feature_loan_charge_name
-import androidclient.feature.loan.generated.resources.feature_loan_charge_no_charge_types_available
-import androidclient.feature.loan.generated.resources.feature_loan_charge_select
-import androidclient.feature.loan.generated.resources.feature_loan_charge_submit
-import androidclient.feature.loan.generated.resources.feature_loan_charge_time
-import androidclient.feature.loan.generated.resources.feature_loan_message_field_required
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_amount
+import kpt.feature.loan.generated.resources.feature_loan_charge_calculation
+import kpt.feature.loan.generated.resources.feature_loan_charge_cancel
+import kpt.feature.loan.generated.resources.feature_loan_charge_dialog
+import kpt.feature.loan.generated.resources.feature_loan_charge_due_date
+import kpt.feature.loan.generated.resources.feature_loan_charge_failed_to_create_loan_charge
+import kpt.feature.loan.generated.resources.feature_loan_charge_failed_to_load_charge_types
+import kpt.feature.loan.generated.resources.feature_loan_charge_name
+import kpt.feature.loan.generated.resources.feature_loan_charge_no_charge_types_available
+import kpt.feature.loan.generated.resources.feature_loan_charge_select
+import kpt.feature.loan.generated.resources.feature_loan_charge_submit
+import kpt.feature.loan.generated.resources.feature_loan_charge_time
+import kpt.feature.loan.generated.resources.feature_loan_message_field_required
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

@@ -9,10 +9,10 @@
  */
 package com.mifos.core.ui.components
 
-import androidclient.core.ui.generated.resources.Res
-import androidclient.core.ui.generated.resources.file_picker_bottom_sheet_files
-import androidclient.core.ui.generated.resources.file_picker_bottom_sheet_gallery
-import androidclient.core.ui.generated.resources.file_picker_bottom_sheet_more
+import kpt.core.ui.generated.resources.Res
+import kpt.core.ui.generated.resources.file_picker_bottom_sheet_files
+import kpt.core.ui.generated.resources.file_picker_bottom_sheet_gallery
+import kpt.core.ui.generated.resources.file_picker_bottom_sheet_more
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -23,8 +23,9 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.KptTheme
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @Composable
 fun MifosFilePickerBottomSheet(
@@ -37,7 +38,7 @@ fun MifosFilePickerBottomSheet(
     MifosBottomSheet(
         onDismiss = onDismiss,
         modifier = modifier,
-        containerColor = KptTheme.colorScheme.onPrimary,
+        containerColor = LocalKptColors.current.onPrimary,
     ) {
         Row(
             modifier = Modifier

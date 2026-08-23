@@ -11,13 +11,13 @@
 
 package com.mifos.feature.loan.loanReject
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.cancel
-import androidclient.feature.loan.generated.resources.feature_loan_note_optional
-import androidclient.feature.loan.generated.resources.feature_loan_reject
-import androidclient.feature.loan.generated.resources.feature_loan_reject_date
-import androidclient.feature.loan.generated.resources.feature_loan_reject_submit
-import androidclient.feature.loan.generated.resources.ok
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.cancel
+import kpt.feature.loan.generated.resources.feature_loan_note_optional
+import kpt.feature.loan.generated.resources.feature_loan_reject
+import kpt.feature.loan.generated.resources.feature_loan_reject_date
+import kpt.feature.loan.generated.resources.feature_loan_reject_submit
+import kpt.feature.loan.generated.resources.ok
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -51,7 +51,8 @@ import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -150,7 +151,7 @@ private fun LoanRejectForm(
             modifier = Modifier
                 .fillMaxWidth()
                 .verticalScroll(scrollState)
-                .padding(KptTheme.spacing.md),
+                .padding(LocalKptSpacing.current.md),
         ) {
             MifosDatePickerTextField(
                 value = state.rejectedOnDateText,

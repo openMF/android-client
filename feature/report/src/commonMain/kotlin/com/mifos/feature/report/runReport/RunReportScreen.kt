@@ -11,16 +11,16 @@
 
 package com.mifos.feature.report.runReport
 
-import androidclient.feature.report.generated.resources.Res
-import androidclient.feature.report.generated.resources.feature_report_accounting
-import androidclient.feature.report.generated.resources.feature_report_all
-import androidclient.feature.report.generated.resources.feature_report_client
-import androidclient.feature.report.generated.resources.feature_report_failed_to_fetch_reports
-import androidclient.feature.report.generated.resources.feature_report_fund
-import androidclient.feature.report.generated.resources.feature_report_ic_report_item
-import androidclient.feature.report.generated.resources.feature_report_loan
-import androidclient.feature.report.generated.resources.feature_report_savings
-import androidclient.feature.report.generated.resources.feature_report_xbrl
+import kpt.feature.report.generated.resources.Res
+import kpt.feature.report.generated.resources.feature_report_accounting
+import kpt.feature.report.generated.resources.feature_report_all
+import kpt.feature.report.generated.resources.feature_report_client
+import kpt.feature.report.generated.resources.feature_report_failed_to_fetch_reports
+import kpt.feature.report.generated.resources.feature_report_fund
+import kpt.feature.report.generated.resources.feature_report_ic_report_item
+import kpt.feature.report.generated.resources.feature_report_loan
+import kpt.feature.report.generated.resources.feature_report_savings
+import kpt.feature.report.generated.resources.feature_report_xbrl
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -72,7 +72,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun RunReportScreen(
@@ -154,7 +157,7 @@ internal fun RunReportScreen(
                             ),
                             textAlign = TextAlign.Start,
                         )
-                        Spacer(modifier = Modifier.width(KptTheme.spacing.sm))
+                        Spacer(modifier = Modifier.width(LocalKptSpacing.current.sm))
                         Icon(
                             imageVector = if (showMenu) MifosIcons.ArrowUp else MifosIcons.ArrowDown,
                             contentDescription = null,
@@ -163,7 +166,7 @@ internal fun RunReportScreen(
                     DropdownMenu(
                         expanded = showMenu,
                         onDismissRequest = { showMenu = false },
-                        containerColor = KptTheme.colorScheme.surface,
+                        containerColor = LocalKptColors.current.surface,
                     ) {
                         MifosMenuDropDownItem(
                             option = stringResource(Res.string.feature_report_client),
@@ -267,7 +270,7 @@ private fun RunReportCardItem(
 ) {
     OutlinedCard(
         modifier = modifier
-            .padding(KptTheme.spacing.sm)
+            .padding(LocalKptSpacing.current.sm)
             .clickable {
                 onReportClick(report)
             },
@@ -275,7 +278,7 @@ private fun RunReportCardItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(KptTheme.spacing.md),
+                .padding(LocalKptSpacing.current.md),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
@@ -292,18 +295,18 @@ private fun RunReportCardItem(
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = KptTheme.spacing.md),
+                    .padding(start = LocalKptSpacing.current.md),
             ) {
                 report.reportName?.let {
                     Text(
                         text = it,
-                        style = KptTheme.typography.bodyLarge,
+                        style = LocalKptTypography.current.bodyLarge,
                     )
                 }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = KptTheme.spacing.sm),
+                        .padding(top = LocalKptSpacing.current.sm),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(

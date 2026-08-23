@@ -9,21 +9,21 @@
  */
 package com.mifos.feature.groups.syncGroupDialog
 
-import androidclient.feature.groups.generated.resources.Res
-import androidclient.feature.groups.generated.resources.feature_groups_cancel
-import androidclient.feature.groups.generated.resources.feature_groups_dialog_action_ok
-import androidclient.feature.groups.generated.resources.feature_groups_failed_sync
-import androidclient.feature.groups.generated.resources.feature_groups_groups
-import androidclient.feature.groups.generated.resources.feature_groups_hide
-import androidclient.feature.groups.generated.resources.feature_groups_name
-import androidclient.feature.groups.generated.resources.feature_groups_slash
-import androidclient.feature.groups.generated.resources.feature_groups_something_went_wrong
-import androidclient.feature.groups.generated.resources.feature_groups_space
-import androidclient.feature.groups.generated.resources.feature_groups_sync_groups_full_information
-import androidclient.feature.groups.generated.resources.feature_groups_syncing_client
-import androidclient.feature.groups.generated.resources.feature_groups_syncing_group
-import androidclient.feature.groups.generated.resources.feature_groups_total
-import androidclient.feature.groups.generated.resources.feature_groups_total_sync_progress
+import kpt.feature.groups.generated.resources.Res
+import kpt.feature.groups.generated.resources.feature_groups_cancel
+import kpt.feature.groups.generated.resources.feature_groups_dialog_action_ok
+import kpt.feature.groups.generated.resources.feature_groups_failed_sync
+import kpt.feature.groups.generated.resources.feature_groups_groups
+import kpt.feature.groups.generated.resources.feature_groups_hide
+import kpt.feature.groups.generated.resources.feature_groups_name
+import kpt.feature.groups.generated.resources.feature_groups_slash
+import kpt.feature.groups.generated.resources.feature_groups_something_went_wrong
+import kpt.feature.groups.generated.resources.feature_groups_space
+import kpt.feature.groups.generated.resources.feature_groups_sync_groups_full_information
+import kpt.feature.groups.generated.resources.feature_groups_syncing_client
+import kpt.feature.groups.generated.resources.feature_groups_syncing_group
+import kpt.feature.groups.generated.resources.feature_groups_total
+import kpt.feature.groups.generated.resources.feature_groups_total_sync_progress
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -51,7 +51,10 @@ import com.mifos.core.ui.components.MifosProgressIndicator
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun SyncGroupDialogScreen(
@@ -121,8 +124,8 @@ private fun SyncGroupDialogContent(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(KptTheme.spacing.sm)
-            .background(color = KptTheme.colorScheme.surface),
+            .padding(LocalKptSpacing.current.sm)
+            .background(color = LocalKptColors.current.surface),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
@@ -226,17 +229,17 @@ private fun GroupPayloadField(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = KptTheme.spacing.xs),
+            .padding(vertical = LocalKptSpacing.current.xs),
     ) {
         Text(
             text = label,
-            style = KptTheme.typography.bodyMedium,
+            style = LocalKptTypography.current.bodyMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
         )
         Text(
             text = value,
-            style = KptTheme.typography.bodyMedium,
+            style = LocalKptTypography.current.bodyMedium,
             modifier = Modifier.weight(1f),
         )
     }

@@ -9,54 +9,54 @@
  */
 package com.mifos.feature.loan.loanDashboard
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_account_approve
-import androidclient.feature.loan.generated.resources.feature_loan_account_credit_balance_refund
-import androidclient.feature.loan.generated.resources.feature_loan_account_disburse
-import androidclient.feature.loan.generated.resources.feature_loan_account_make_repayment
-import androidclient.feature.loan.generated.resources.feature_loan_account_reject
-import androidclient.feature.loan.generated.resources.feature_loan_account_undo_approval
-import androidclient.feature.loan.generated.resources.feature_loan_amount
-import androidclient.feature.loan.generated.resources.feature_loan_approved_amount
-import androidclient.feature.loan.generated.resources.feature_loan_dashboard
-import androidclient.feature.loan.generated.resources.feature_loan_disbursed_amount
-import androidclient.feature.loan.generated.resources.feature_loan_due_date
-import androidclient.feature.loan.generated.resources.feature_loan_expected_next_payment
-import androidclient.feature.loan.generated.resources.feature_loan_failed_to_load_loan
-import androidclient.feature.loan.generated.resources.feature_loan_interest
-import androidclient.feature.loan.generated.resources.feature_loan_interest_charged
-import androidclient.feature.loan.generated.resources.feature_loan_next_payment
-import androidclient.feature.loan.generated.resources.feature_loan_outstanding
-import androidclient.feature.loan.generated.resources.feature_loan_payment_schedule
-import androidclient.feature.loan.generated.resources.feature_loan_period
-import androidclient.feature.loan.generated.resources.feature_loan_principal
-import androidclient.feature.loan.generated.resources.feature_loan_projected_payment_schedule
-import androidclient.feature.loan.generated.resources.feature_loan_recent_transactions
-import androidclient.feature.loan.generated.resources.feature_loan_remaining_balance
-import androidclient.feature.loan.generated.resources.feature_loan_repaid
-import androidclient.feature.loan.generated.resources.feature_loan_repayment_progress
-import androidclient.feature.loan.generated.resources.feature_loan_requested_amount
-import androidclient.feature.loan.generated.resources.feature_loan_rescheduled_amount
-import androidclient.feature.loan.generated.resources.feature_loan_status_active
-import androidclient.feature.loan.generated.resources.feature_loan_status_closed_met
-import androidclient.feature.loan.generated.resources.feature_loan_status_closed_rescheduled
-import androidclient.feature.loan.generated.resources.feature_loan_status_closed_written_off
-import androidclient.feature.loan.generated.resources.feature_loan_status_overpaid
-import androidclient.feature.loan.generated.resources.feature_loan_status_pending_approval
-import androidclient.feature.loan.generated.resources.feature_loan_status_rejected
-import androidclient.feature.loan.generated.resources.feature_loan_status_waiting_for_disbursal
-import androidclient.feature.loan.generated.resources.feature_loan_status_withdrawn_by_applicant
-import androidclient.feature.loan.generated.resources.feature_loan_surplus_balance
-import androidclient.feature.loan.generated.resources.feature_loan_timeline
-import androidclient.feature.loan.generated.resources.feature_loan_total_interest
-import androidclient.feature.loan.generated.resources.feature_loan_total_outstanding
-import androidclient.feature.loan.generated.resources.feature_loan_total_payment_received
-import androidclient.feature.loan.generated.resources.feature_loan_total_repaid
-import androidclient.feature.loan.generated.resources.feature_loan_transaction_charge_payment
-import androidclient.feature.loan.generated.resources.feature_loan_transaction_disbursement
-import androidclient.feature.loan.generated.resources.feature_loan_transaction_repayment
-import androidclient.feature.loan.generated.resources.feature_loan_view_all
-import androidclient.feature.loan.generated.resources.feature_loan_written_off_amount
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_account_approve
+import kpt.feature.loan.generated.resources.feature_loan_account_credit_balance_refund
+import kpt.feature.loan.generated.resources.feature_loan_account_disburse
+import kpt.feature.loan.generated.resources.feature_loan_account_make_repayment
+import kpt.feature.loan.generated.resources.feature_loan_account_reject
+import kpt.feature.loan.generated.resources.feature_loan_account_undo_approval
+import kpt.feature.loan.generated.resources.feature_loan_amount
+import kpt.feature.loan.generated.resources.feature_loan_approved_amount
+import kpt.feature.loan.generated.resources.feature_loan_dashboard
+import kpt.feature.loan.generated.resources.feature_loan_disbursed_amount
+import kpt.feature.loan.generated.resources.feature_loan_due_date
+import kpt.feature.loan.generated.resources.feature_loan_expected_next_payment
+import kpt.feature.loan.generated.resources.feature_loan_failed_to_load_loan
+import kpt.feature.loan.generated.resources.feature_loan_interest
+import kpt.feature.loan.generated.resources.feature_loan_interest_charged
+import kpt.feature.loan.generated.resources.feature_loan_next_payment
+import kpt.feature.loan.generated.resources.feature_loan_outstanding
+import kpt.feature.loan.generated.resources.feature_loan_payment_schedule
+import kpt.feature.loan.generated.resources.feature_loan_period
+import kpt.feature.loan.generated.resources.feature_loan_principal
+import kpt.feature.loan.generated.resources.feature_loan_projected_payment_schedule
+import kpt.feature.loan.generated.resources.feature_loan_recent_transactions
+import kpt.feature.loan.generated.resources.feature_loan_remaining_balance
+import kpt.feature.loan.generated.resources.feature_loan_repaid
+import kpt.feature.loan.generated.resources.feature_loan_repayment_progress
+import kpt.feature.loan.generated.resources.feature_loan_requested_amount
+import kpt.feature.loan.generated.resources.feature_loan_rescheduled_amount
+import kpt.feature.loan.generated.resources.feature_loan_status_active
+import kpt.feature.loan.generated.resources.feature_loan_status_closed_met
+import kpt.feature.loan.generated.resources.feature_loan_status_closed_rescheduled
+import kpt.feature.loan.generated.resources.feature_loan_status_closed_written_off
+import kpt.feature.loan.generated.resources.feature_loan_status_overpaid
+import kpt.feature.loan.generated.resources.feature_loan_status_pending_approval
+import kpt.feature.loan.generated.resources.feature_loan_status_rejected
+import kpt.feature.loan.generated.resources.feature_loan_status_waiting_for_disbursal
+import kpt.feature.loan.generated.resources.feature_loan_status_withdrawn_by_applicant
+import kpt.feature.loan.generated.resources.feature_loan_surplus_balance
+import kpt.feature.loan.generated.resources.feature_loan_timeline
+import kpt.feature.loan.generated.resources.feature_loan_total_interest
+import kpt.feature.loan.generated.resources.feature_loan_total_outstanding
+import kpt.feature.loan.generated.resources.feature_loan_total_payment_received
+import kpt.feature.loan.generated.resources.feature_loan_total_repaid
+import kpt.feature.loan.generated.resources.feature_loan_transaction_charge_payment
+import kpt.feature.loan.generated.resources.feature_loan_transaction_disbursement
+import kpt.feature.loan.generated.resources.feature_loan_transaction_repayment
+import kpt.feature.loan.generated.resources.feature_loan_view_all
+import kpt.feature.loan.generated.resources.feature_loan_written_off_amount
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -120,7 +120,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanStatus as DomainLoanStatus
 
 @Composable
@@ -174,7 +177,7 @@ internal fun LoanDashboardScreenContent(
         Box(
             modifier = modifier
                 .fillMaxSize()
-                .background(KptTheme.colorScheme.background)
+                .background(LocalKptColors.current.background)
                 .padding(it),
         ) {
             when (state.viewState) {
@@ -334,7 +337,7 @@ internal fun LoanHeroSummaryCard(
         modifier = modifier
             .fillMaxWidth()
             .border(
-                BorderStroke(DesignToken.strokes.dpPoint5, KptTheme.colorScheme.outlineVariant),
+                BorderStroke(DesignToken.strokes.dpPoint5, LocalKptColors.current.outlineVariant),
                 DesignToken.shapes.medium,
             )
             .padding(DesignToken.padding.medium),
@@ -346,8 +349,8 @@ internal fun LoanHeroSummaryCard(
         ) {
             Text(
                 text = productName,
-                style = KptTheme.typography.labelMedium,
-                color = KptTheme.colorScheme.onSurfaceVariant,
+                style = LocalKptTypography.current.labelMedium,
+                color = LocalKptColors.current.onSurfaceVariant,
             )
 
             status?.let {
@@ -359,23 +362,23 @@ internal fun LoanHeroSummaryCard(
             text = "#$accountNumber",
             style = MifosTypography.titleMediumEmphasized,
             fontWeight = FontWeight.Medium,
-            color = KptTheme.colorScheme.onSurface,
+            color = LocalKptColors.current.onSurface,
         )
 
         Spacer(modifier = Modifier.height(DesignToken.padding.medium))
 
         Text(
             text = heroLabel,
-            style = KptTheme.typography.labelMedium,
-            color = KptTheme.colorScheme.onSurfaceVariant,
+            style = LocalKptTypography.current.labelMedium,
+            color = LocalKptColors.current.onSurfaceVariant,
             maxLines = 1,
         )
 
         Text(
             text = heroValue,
-            style = KptTheme.typography.headlineMedium,
+            style = LocalKptTypography.current.headlineMedium,
             fontWeight = FontWeight.SemiBold,
-            color = KptTheme.colorScheme.primary,
+            color = LocalKptColors.current.primary,
         )
     }
 }
@@ -416,7 +419,7 @@ private fun LoanStatusBadge(
     ) {
         Text(
             text = statusText,
-            style = KptTheme.typography.labelMedium,
+            style = LocalKptTypography.current.labelMedium,
             color = AppColors.customWhite,
         )
     }
@@ -453,7 +456,7 @@ internal fun NextRepaymentCard(
                 stringResource(Res.string.feature_loan_next_payment)
             },
             style = MifosTypography.titleMediumEmphasized,
-            color = KptTheme.colorScheme.onBackground,
+            color = LocalKptColors.current.onBackground,
         )
 
         Spacer(modifier = Modifier.height(DesignToken.padding.extraSmall))
@@ -462,7 +465,7 @@ internal fun NextRepaymentCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .border(
-                    BorderStroke(DesignToken.strokes.dpPoint5, KptTheme.colorScheme.outlineVariant),
+                    BorderStroke(DesignToken.strokes.dpPoint5, LocalKptColors.current.outlineVariant),
                     DesignToken.shapes.medium,
                 )
                 .padding(DesignToken.padding.medium),
@@ -475,11 +478,11 @@ internal fun NextRepaymentCard(
                     modifier = Modifier
                         .size(DesignToken.sizes.iconExtraLarge)
                         .background(
-                            color = KptTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
+                            color = LocalKptColors.current.primaryContainer.copy(alpha = 0.5f),
                             shape = DesignToken.shapes.circle,
                         )
                         .padding(DesignToken.padding.small),
-                    tint = KptTheme.colorScheme.primary,
+                    tint = LocalKptColors.current.primary,
                     contentDescription = null,
                 )
 
@@ -488,14 +491,14 @@ internal fun NextRepaymentCard(
                 Column {
                     Text(
                         text = stringResource(Res.string.feature_loan_due_date),
-                        style = KptTheme.typography.titleSmall,
-                        color = KptTheme.colorScheme.onSurfaceVariant,
+                        style = LocalKptTypography.current.titleSmall,
+                        color = LocalKptColors.current.onSurfaceVariant,
                     )
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.xs))
+                    Spacer(modifier = Modifier.height(LocalKptSpacing.current.xs))
                     Text(
                         text = dueDate,
-                        style = KptTheme.typography.labelMedium,
-                        color = KptTheme.colorScheme.onSurface,
+                        style = LocalKptTypography.current.labelMedium,
+                        color = LocalKptColors.current.onSurface,
                     )
                 }
             }
@@ -503,14 +506,14 @@ internal fun NextRepaymentCard(
             Column(horizontalAlignment = Alignment.End) {
                 Text(
                     text = stringResource(Res.string.feature_loan_amount),
-                    style = KptTheme.typography.titleSmall,
-                    color = KptTheme.colorScheme.onSurfaceVariant,
+                    style = LocalKptTypography.current.titleSmall,
+                    color = LocalKptColors.current.onSurfaceVariant,
                 )
-                Spacer(modifier = Modifier.height(KptTheme.spacing.xs))
+                Spacer(modifier = Modifier.height(LocalKptSpacing.current.xs))
                 Text(
                     text = amount,
-                    style = KptTheme.typography.labelMedium,
-                    color = KptTheme.colorScheme.onSurface,
+                    style = LocalKptTypography.current.labelMedium,
+                    color = LocalKptColors.current.onSurface,
                 )
             }
         }
@@ -537,13 +540,13 @@ internal fun RecentTransactionsSection(
             Text(
                 text = stringResource(Res.string.feature_loan_recent_transactions),
                 style = MifosTypography.titleMediumEmphasized,
-                color = KptTheme.colorScheme.onBackground,
+                color = LocalKptColors.current.onBackground,
             )
 
             Text(
                 text = stringResource(Res.string.feature_loan_view_all),
-                style = KptTheme.typography.labelMedium,
-                color = KptTheme.colorScheme.primary,
+                style = LocalKptTypography.current.labelMedium,
+                color = LocalKptColors.current.primary,
                 modifier = Modifier
                     .clickable { onViewAll() }
                     .padding(vertical = DesignToken.padding.extraExtraSmall),
@@ -556,7 +559,7 @@ internal fun RecentTransactionsSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .border(
-                    BorderStroke(DesignToken.strokes.dpPoint5, KptTheme.colorScheme.outlineVariant),
+                    BorderStroke(DesignToken.strokes.dpPoint5, LocalKptColors.current.outlineVariant),
                     DesignToken.shapes.medium,
                 )
                 .padding(DesignToken.padding.medium),
@@ -570,7 +573,7 @@ internal fun RecentTransactionsSection(
                             .fillMaxWidth()
                             .padding(vertical = DesignToken.padding.small),
                         thickness = DesignToken.strokes.dpPoint5,
-                        color = KptTheme.colorScheme.outlineVariant.copy(.6f),
+                        color = LocalKptColors.current.outlineVariant.copy(.6f),
                     )
                 }
             }
@@ -590,18 +593,18 @@ private fun TransactionItemCard(
     }
     val iconBgColor = when (transaction.isIncreasingDebt) {
         true -> AppColors.customEnable.copy(.15f)
-        false -> KptTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
-        else -> KptTheme.colorScheme.surfaceVariant
+        false -> LocalKptColors.current.primaryContainer.copy(alpha = 0.5f)
+        else -> LocalKptColors.current.surfaceVariant
     }
     val iconTintColor = when (transaction.isIncreasingDebt) {
         true -> AppColors.customEnable
-        false -> KptTheme.colorScheme.primary
-        else -> KptTheme.colorScheme.onSurfaceVariant
+        false -> LocalKptColors.current.primary
+        else -> LocalKptColors.current.onSurfaceVariant
     }
     val amountColor = when (transaction.isIncreasingDebt) {
         true -> AppColors.customEnable
-        false -> KptTheme.colorScheme.onSurface
-        else -> KptTheme.colorScheme.onSurfaceVariant
+        false -> LocalKptColors.current.onSurface
+        else -> LocalKptColors.current.onSurfaceVariant
     }
     val amountPrefix = when (transaction.isIncreasingDebt) {
         true -> "+"
@@ -634,23 +637,23 @@ private fun TransactionItemCard(
             Column {
                 Text(
                     text = stringResource(transaction.type),
-                    style = KptTheme.typography.titleSmall,
-                    color = KptTheme.colorScheme.onSurface,
+                    style = LocalKptTypography.current.titleSmall,
+                    color = LocalKptColors.current.onSurface,
                 )
 
-                Spacer(modifier = Modifier.height(KptTheme.spacing.xs))
+                Spacer(modifier = Modifier.height(LocalKptSpacing.current.xs))
 
                 Text(
                     text = transaction.date,
-                    style = KptTheme.typography.labelMedium,
-                    color = KptTheme.colorScheme.onSurfaceVariant,
+                    style = LocalKptTypography.current.labelMedium,
+                    color = LocalKptColors.current.onSurfaceVariant,
                 )
             }
         }
 
         Text(
             text = "$amountPrefix${transaction.amount}",
-            style = KptTheme.typography.titleSmall,
+            style = LocalKptTypography.current.titleSmall,
             color = amountColor,
         )
     }
@@ -689,8 +692,8 @@ internal fun LoanSummaryGridSection(
 private fun PrincipalCard(amount: String, modifier: Modifier) {
     SummaryMetricCard(
         icon = MifosIcons.AttachMoney,
-        iconBgColor = KptTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
-        iconTintColor = KptTheme.colorScheme.primary,
+        iconBgColor = LocalKptColors.current.primaryContainer.copy(alpha = 0.5f),
+        iconTintColor = LocalKptColors.current.primary,
         title = stringResource(Res.string.feature_loan_principal),
         amount = amount,
         subtitle = stringResource(Res.string.feature_loan_disbursed_amount),
@@ -728,8 +731,8 @@ private fun RepaidCard(amount: String, modifier: Modifier) {
 private fun OutstandingCard(amount: String, modifier: Modifier) {
     SummaryMetricCard(
         icon = MifosIcons.AccountBalanceWallet,
-        iconBgColor = KptTheme.colorScheme.errorContainer,
-        iconTintColor = KptTheme.colorScheme.error,
+        iconBgColor = LocalKptColors.current.errorContainer,
+        iconTintColor = LocalKptColors.current.error,
         title = stringResource(Res.string.feature_loan_outstanding),
         amount = amount,
         subtitle = stringResource(Res.string.feature_loan_remaining_balance),
@@ -753,7 +756,7 @@ private fun SummaryMetricCard(
             .border(
                 BorderStroke(
                     DesignToken.strokes.dpPoint5,
-                    KptTheme.colorScheme.outlineVariant,
+                    LocalKptColors.current.outlineVariant,
                 ),
                 DesignToken.shapes.medium,
             )
@@ -777,8 +780,8 @@ private fun SummaryMetricCard(
 
             Text(
                 text = title.uppercase(),
-                style = KptTheme.typography.labelMedium,
-                color = KptTheme.colorScheme.onSurfaceVariant,
+                style = LocalKptTypography.current.labelMedium,
+                color = LocalKptColors.current.onSurfaceVariant,
             )
         }
 
@@ -787,15 +790,15 @@ private fun SummaryMetricCard(
         Text(
             text = amount,
             style = MifosTypography.titleMediumEmphasized,
-            color = KptTheme.colorScheme.onSurface,
+            color = LocalKptColors.current.onSurface,
         )
 
         Spacer(modifier = Modifier.height(DesignToken.padding.extraSmall))
 
         Text(
             text = subtitle,
-            style = KptTheme.typography.labelMedium,
-            color = KptTheme.colorScheme.onSurfaceVariant,
+            style = LocalKptTypography.current.labelMedium,
+            color = LocalKptColors.current.onSurfaceVariant,
         )
     }
 }
@@ -808,7 +811,7 @@ internal fun RepaymentProgressCard(
     Text(
         text = stringResource(Res.string.feature_loan_repayment_progress),
         style = MifosTypography.titleMediumEmphasized,
-        color = KptTheme.colorScheme.onBackground,
+        color = LocalKptColors.current.onBackground,
     )
 
     Spacer(modifier = Modifier.height(DesignToken.padding.extraSmall))
@@ -817,7 +820,7 @@ internal fun RepaymentProgressCard(
         modifier = modifier
             .fillMaxWidth()
             .border(
-                BorderStroke(DesignToken.strokes.dpPoint5, KptTheme.colorScheme.outlineVariant),
+                BorderStroke(DesignToken.strokes.dpPoint5, LocalKptColors.current.outlineVariant),
                 DesignToken.shapes.medium,
             )
             .padding(DesignToken.padding.large),
@@ -855,7 +858,7 @@ internal fun LoanTimelineCard(
     Text(
         text = stringResource(Res.string.feature_loan_timeline),
         style = MifosTypography.titleMediumEmphasized,
-        color = KptTheme.colorScheme.onBackground,
+        color = LocalKptColors.current.onBackground,
     )
 
     Spacer(modifier = Modifier.height(DesignToken.padding.extraSmall))
@@ -864,7 +867,7 @@ internal fun LoanTimelineCard(
         modifier = modifier
             .fillMaxWidth()
             .border(
-                BorderStroke(DesignToken.strokes.dpPoint5, KptTheme.colorScheme.outlineVariant),
+                BorderStroke(DesignToken.strokes.dpPoint5, LocalKptColors.current.outlineVariant),
                 DesignToken.shapes.medium,
             )
             .padding(DesignToken.padding.medium),
@@ -918,16 +921,16 @@ private fun TimelineStepRow(
         ) {
             Text(
                 text = stringResource(step.title),
-                style = KptTheme.typography.bodyMedium,
-                color = if (step.state == TimelineStepState.CURRENT) KptTheme.colorScheme.primary else KptTheme.colorScheme.onSurface,
+                style = LocalKptTypography.current.bodyMedium,
+                color = if (step.state == TimelineStepState.CURRENT) LocalKptColors.current.primary else LocalKptColors.current.onSurface,
             )
 
             if (step.date.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(KptTheme.spacing.xs))
+                Spacer(modifier = Modifier.height(LocalKptSpacing.current.xs))
                 Text(
                     text = step.date,
-                    style = KptTheme.typography.bodySmall,
-                    color = KptTheme.colorScheme.onSurfaceVariant,
+                    style = LocalKptTypography.current.bodySmall,
+                    color = LocalKptColors.current.onSurfaceVariant,
                 )
             }
         }
@@ -961,7 +964,7 @@ private fun TimelineIndicator(
                 modifier = modifier
                     .size(DesignToken.sizes.iconMedium)
                     .background(
-                        color = KptTheme.colorScheme.primary,
+                        color = LocalKptColors.current.primary,
                         shape = DesignToken.shapes.circle,
                     )
                     .padding(DesignToken.padding.extraSmall),
@@ -1055,7 +1058,7 @@ internal fun LoanRepaymentGraphSection(
             stringResource(Res.string.feature_loan_payment_schedule)
         },
         style = MifosTypography.titleMediumEmphasized,
-        color = KptTheme.colorScheme.onBackground,
+        color = LocalKptColors.current.onBackground,
     )
 
     Spacer(modifier = Modifier.height(DesignToken.padding.extraSmall))
@@ -1064,7 +1067,7 @@ internal fun LoanRepaymentGraphSection(
         modifier = modifier
             .fillMaxWidth()
             .border(
-                BorderStroke(DesignToken.strokes.dpPoint5, KptTheme.colorScheme.outlineVariant),
+                BorderStroke(DesignToken.strokes.dpPoint5, LocalKptColors.current.outlineVariant),
                 DesignToken.shapes.medium,
             )
             .padding(DesignToken.padding.medium),

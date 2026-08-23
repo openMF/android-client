@@ -9,20 +9,20 @@
  */
 package com.mifos.feature.offline.dashboard
 
-import androidclient.feature.offline.generated.resources.Res
-import androidclient.feature.offline.generated.resources.feature_offline_sync_centers
-import androidclient.feature.offline.generated.resources.feature_offline_sync_clients
-import androidclient.feature.offline.generated.resources.feature_offline_sync_groups
-import androidclient.feature.offline.generated.resources.feature_offline_sync_loanRepayments
-import androidclient.feature.offline.generated.resources.feature_offline_sync_savingsAccountTransactions
+import kpt.feature.offline.generated.resources.Res
+import kpt.feature.offline.generated.resources.feature_offline_sync_centers
+import kpt.feature.offline.generated.resources.feature_offline_sync_clients
+import kpt.feature.offline.generated.resources.feature_offline_sync_groups
+import kpt.feature.offline.generated.resources.feature_offline_sync_loanRepayments
+import kpt.feature.offline.generated.resources.feature_offline_sync_savingsAccountTransactions
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.OfflineDashboardRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class OfflineDashboardViewModel(
@@ -35,35 +35,35 @@ class OfflineDashboardViewModel(
         _offlineDashboardUiState.asStateFlow()
 
     fun loadDatabaseClientPayload() {
-        handleDataState(
+        handleSyncFlow(
             flow = repository.allDatabaseClientPayload(),
             type = Type.SYNC_CLIENTS,
         )
     }
 
     fun loadDatabaseGroupPayload() {
-        handleDataState(
+        handleSyncFlow(
             flow = repository.allDatabaseGroupPayload(),
             type = Type.SYNC_GROUPS,
         )
     }
 
     fun loadDatabaseCenterPayload() {
-        handleDataState(
+        handleSyncFlow(
             flow = repository.allDatabaseCenterPayload(),
             type = Type.SYNC_CENTERS,
         )
     }
 
     fun loadDatabaseLoanRepaymentTransactions() {
-        handleDataState(
+        handleSyncFlow(
             flow = repository.databaseLoanRepayments(),
             type = Type.SYNC_LOAN_REPAYMENTS,
         )
     }
 
     fun loadDatabaseSavingsAccountTransactions() {
-        handleDataState(
+        handleSyncFlow(
             flow = repository.allSavingsAccountTransactions(),
             type = Type.SYNC_SAVINGS_ACCOUNT_TRANSACTION,
         )
@@ -91,19 +91,15 @@ class OfflineDashboardViewModel(
         _offlineDashboardUiState.value = OfflineDashboardUiState.SyncUiState(updatedList)
     }
 
-    private fun <T> handleDataState(
-        flow: Flow<DataState<List<T>>>,
+    private fun <T> handleSyncFlow(
+        flow: Flow<List<T>>,
         type: Type,
     ) {
         viewModelScope.launch {
-            flow.collect { state ->
-                when (state) {
-                    is DataState.Success -> setCountOfSyncData(type, state.data.size)
-                    is DataState.Error -> setError(type, state.message)
-                    is DataState.Loading -> {
-                        /* handle loading if needed */
-                    }
-                }
+            flow.catch { error ->
+                setError(type, error.message ?: "")
+            }.collect { list ->
+                setCountOfSyncData(type, list.size)
             }
         }
     }

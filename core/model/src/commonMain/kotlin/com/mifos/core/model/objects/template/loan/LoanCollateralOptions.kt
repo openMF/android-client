@@ -9,15 +9,12 @@
  */
 package com.mifos.core.model.objects.template.loan
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Created by Rajan Maurya on 16/07/16.
  */
 @Serializable
-@Parcelize
 data class LoanCollateralOptions(
     var id: Int? = null,
 
@@ -28,4 +25,4 @@ data class LoanCollateralOptions(
     var description: String? = null,
 
     var isActive: Boolean? = null,
-) : Parcelable
+)

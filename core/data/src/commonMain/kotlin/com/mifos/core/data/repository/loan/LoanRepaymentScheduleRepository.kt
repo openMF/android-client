@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository.loan
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import kotlinx.coroutines.flow.Flow
 
@@ -18,5 +17,5 @@ import kotlinx.coroutines.flow.Flow
  */
 interface LoanRepaymentScheduleRepository {
 
-    fun getLoanRepaySchedule(loanId: Int): Flow<DataState<LoanWithAssociations>>
+    fun getLoanRepaySchedule(loanId: Int): Flow<LoanWithAssociations>
 }

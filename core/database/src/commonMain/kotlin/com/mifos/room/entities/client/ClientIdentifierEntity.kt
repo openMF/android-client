@@ -9,8 +9,8 @@
  */
 package com.mifos.room.entities.client
 
-import template.core.base.database.Entity
-import template.core.base.database.PrimaryKey
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 
 @Entity(
     tableName = "ClientIdentifier",

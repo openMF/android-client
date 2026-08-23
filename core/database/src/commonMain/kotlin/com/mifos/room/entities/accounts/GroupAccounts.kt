@@ -9,19 +9,16 @@
  */
 package com.mifos.room.entities.accounts
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import kotlinx.serialization.Serializable
 
-@Parcelize
 @Serializable
 data class GroupAccounts(
     var loanAccounts: List<LoanAccountEntity> = emptyList(),
 
     var savingsAccounts: List<SavingsAccountEntity> = emptyList(),
-) : Parcelable {
+) {
 
     private fun getSavingsAccounts(wantRecurring: Boolean): List<SavingsAccountEntity> {
         val result: MutableList<SavingsAccountEntity> = ArrayList()

@@ -9,8 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.IndividualCollectionSheetDetailsRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.model.IndividualCollectionSheetPayload
@@ -21,8 +19,8 @@ class SaveIndividualCollectionSheetUseCase(
     private val repository: IndividualCollectionSheetDetailsRepository,
 ) {
 
-    operator fun invoke(payload: IndividualCollectionSheetPayload): Flow<DataState<GenericResponse>> =
+    operator fun invoke(payload: IndividualCollectionSheetPayload): Flow<GenericResponse> =
         flow {
             emit(repository.saveIndividualCollectionSheet(payload))
-        }.asDataStateFlow()
+        }
 }

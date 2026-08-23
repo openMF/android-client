@@ -9,10 +9,7 @@
  */
 package com.mifos.core.model.objects.account.saving
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 
-@Parcelize
 // @Generated("org.jsonschema2pojo")
 data class ChargeTimeType(
     var id: Int? = null,
@@ -20,4 +17,4 @@ data class ChargeTimeType(
     var code: String? = null,
 
     var value: String? = null,
-) : Parcelable
+)

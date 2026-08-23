@@ -9,15 +9,15 @@
  */
 package com.mifos.feature.offline.syncCenterPayloads
 
-import androidclient.feature.offline.generated.resources.Res
-import androidclient.feature.offline.generated.resources.feature_offline_activation_date
-import androidclient.feature.offline.generated.resources.feature_offline_active
-import androidclient.feature.offline.generated.resources.feature_offline_error_not_connected_internet
-import androidclient.feature.offline.generated.resources.feature_offline_name
-import androidclient.feature.offline.generated.resources.feature_offline_no_center_payload_to_sync
-import androidclient.feature.offline.generated.resources.feature_offline_office_id
-import androidclient.feature.offline.generated.resources.feature_offline_sync_centers
-import androidclient.feature.offline.generated.resources.feature_offline_sync_centers_payloads
+import kpt.feature.offline.generated.resources.Res
+import kpt.feature.offline.generated.resources.feature_offline_activation_date
+import kpt.feature.offline.generated.resources.feature_offline_active
+import kpt.feature.offline.generated.resources.feature_offline_error_not_connected_internet
+import kpt.feature.offline.generated.resources.feature_offline_name
+import kpt.feature.offline.generated.resources.feature_offline_no_center_payload_to_sync
+import kpt.feature.offline.generated.resources.feature_offline_office_id
+import kpt.feature.offline.generated.resources.feature_offline_sync_centers
+import kpt.feature.offline.generated.resources.feature_offline_sync_centers_payloads
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -54,7 +54,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun SyncCenterPayloadsScreenRoute(
@@ -181,10 +184,10 @@ private fun CenterPayloadItem(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(KptTheme.spacing.sm),
+            .padding(LocalKptSpacing.current.sm),
         elevation = CardDefaults.cardElevation(defaultElevation = DesignToken.elevation.dp2),
     ) {
-        Column(modifier = Modifier.padding(KptTheme.spacing.md)) {
+        Column(modifier = Modifier.padding(LocalKptSpacing.current.md)) {
             PayloadField(
                 label = stringResource(Res.string.feature_offline_name),
                 value = payload.name ?: "",
@@ -204,8 +207,8 @@ private fun CenterPayloadItem(
             payload.errorMessage?.let {
                 Text(
                     text = it,
-                    color = KptTheme.colorScheme.error,
-                    modifier = Modifier.padding(top = KptTheme.spacing.sm),
+                    color = LocalKptColors.current.error,
+                    modifier = Modifier.padding(top = LocalKptSpacing.current.sm),
                 )
             }
         }
@@ -221,16 +224,16 @@ private fun PayloadField(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = KptTheme.spacing.xs),
+            .padding(vertical = LocalKptSpacing.current.xs),
     ) {
         Text(
             text = label,
-            style = KptTheme.typography.bodyMedium,
+            style = LocalKptTypography.current.bodyMedium,
             modifier = Modifier.weight(1f),
         )
         Text(
             text = value,
-            style = KptTheme.typography.bodyMedium,
+            style = LocalKptTypography.current.bodyMedium,
             modifier = Modifier.weight(1f),
         )
     }

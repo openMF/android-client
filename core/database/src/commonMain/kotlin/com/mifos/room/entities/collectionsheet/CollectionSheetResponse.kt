@@ -11,14 +11,11 @@ package com.mifos.room.entities.collectionsheet
 
 import com.mifos.core.model.objects.collectionsheets.AttendanceTypeOption
 import com.mifos.core.model.objects.collectionsheets.SavingsProduct
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.PaymentTypeOptionEntity
 
 /**
  * Created by Tarun on 25-07-2017.
  */
-@Parcelize
 data class CollectionSheetResponse(
     var attendanceTypeOptions: List<AttendanceTypeOption> = ArrayList(),
 
@@ -31,4 +28,4 @@ data class CollectionSheetResponse(
     var paymentTypeOptions: List<PaymentTypeOptionEntity> = ArrayList(),
 
     var savingsProducts: List<SavingsProduct> = ArrayList(),
-) : Parcelable
+)

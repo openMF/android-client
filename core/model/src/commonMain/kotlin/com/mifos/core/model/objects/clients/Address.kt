@@ -9,14 +9,11 @@
  */
 package com.mifos.core.model.objects.clients
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Created by Rajan Maurya on 15/12/16.
  */
-@Parcelize
 @Serializable
 data class Address(
     val addressTypeId: Int? = null,
@@ -36,4 +33,4 @@ data class Address(
     val countryId: Int? = null,
 
     val postalCode: String? = null,
-) : Parcelable
+)

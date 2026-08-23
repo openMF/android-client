@@ -9,10 +9,10 @@
  */
 package com.mifos.feature.client.clientSurveyQuestion
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_next
-import androidclient.feature.client.generated.resources.feature_client_scorecard_created_successfully
-import androidclient.feature.client.generated.resources.feature_client_survey
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_client_next
+import kpt.feature.client.generated.resources.feature_client_scorecard_created_successfully
+import kpt.feature.client.generated.resources.feature_client_survey
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -67,7 +67,10 @@ import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun SurveyQuestionScreen(
@@ -231,11 +234,11 @@ private fun SurveyQuestionContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(KptTheme.spacing.lg),
+                .padding(LocalKptSpacing.current.lg),
         ) {
             Text(
                 text = questionData,
-                style = KptTheme.typography.bodyMedium,
+                style = LocalKptTypography.current.bodyMedium,
                 modifier = Modifier
                     .align(Alignment.Start),
             )
@@ -272,11 +275,11 @@ private fun RadioGroup(options: List<String>, selectedOptionIndex: Int, onOption
                 RadioButton(
                     selected = index == selectedOptionIndex,
                     onClick = { onOptionSelected(index) },
-                    colors = RadioButtonDefaults.colors(KptTheme.colorScheme.primary),
+                    colors = RadioButtonDefaults.colors(LocalKptColors.current.primary),
                 )
                 Text(
                     text = option,
-                    modifier = Modifier.padding(start = KptTheme.spacing.xs),
+                    modifier = Modifier.padding(start = LocalKptSpacing.current.xs),
                 )
             }
         }
@@ -291,7 +294,7 @@ private fun SurveyQuestionTopBar(
     showSubmitScreen: Boolean,
 ) {
     TopAppBar(
-        colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = KptTheme.colorScheme.surface),
+        colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = LocalKptColors.current.surface),
         navigationIcon = {
             IconButton(
                 onClick = { onBackPressed() },
@@ -299,7 +302,7 @@ private fun SurveyQuestionTopBar(
                 Icon(
                     imageVector = MifosIcons.ArrowBack,
                     contentDescription = null,
-                    tint = KptTheme.colorScheme.onBackground,
+                    tint = LocalKptColors.current.onBackground,
                 )
             }
         },
@@ -307,15 +310,15 @@ private fun SurveyQuestionTopBar(
             Column {
                 Text(
                     text = stringResource(Res.string.feature_client_survey),
-                    style = KptTheme.typography.titleMedium,
+                    style = LocalKptTypography.current.titleMedium,
                     textAlign = TextAlign.Start,
                 )
-                Spacer(modifier = Modifier.height(KptTheme.spacing.xs))
+                Spacer(modifier = Modifier.height(LocalKptSpacing.current.xs))
 
                 if (!showSubmitScreen) {
                     Text(
                         text = title,
-                        style = KptTheme.typography.bodyLarge,
+                        style = LocalKptTypography.current.bodyLarge,
                         textAlign = TextAlign.Start,
                     )
                 }

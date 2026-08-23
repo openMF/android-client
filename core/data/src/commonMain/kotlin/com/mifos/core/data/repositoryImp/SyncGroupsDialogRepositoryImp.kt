@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.SyncGroupsDialogRepository
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.network.datamanager.DataManagerClient
@@ -37,45 +35,45 @@ class SyncGroupsDialogRepositoryImp(
     private val dataManagerClient: DataManagerClient,
 ) : SyncGroupsDialogRepository {
 
-    override fun syncGroupAccounts(groupId: Int): Flow<DataState<GroupAccounts>> {
+    override fun syncGroupAccounts(groupId: Int): Flow<GroupAccounts> {
         return dataManagerGroups.syncGroupAccounts(groupId)
-            .asDataStateFlow()
+            
     }
 
-    override fun syncLoanById(loanId: Int): Flow<DataState<LoanWithAssociations>> {
+    override fun syncLoanById(loanId: Int): Flow<LoanWithAssociations> {
         return dataManagerLoan.syncLoanById(loanId)
-            .asDataStateFlow()
+            
     }
 
-    override fun syncLoanRepaymentTemplate(loanId: Int): Flow<DataState<LoanRepaymentTemplateEntity>> {
+    override fun syncLoanRepaymentTemplate(loanId: Int): Flow<LoanRepaymentTemplateEntity> {
         return dataManagerLoan.syncLoanRepaymentTemplate(loanId)
-            .asDataStateFlow()
+            
     }
 
     override fun syncSavingsAccount(
         type: String,
         savingsAccountId: Int,
         association: String?,
-    ): Flow<DataState<SavingsAccountWithAssociationsEntity>> {
+    ): Flow<SavingsAccountWithAssociationsEntity> {
         return dataManagerSavings.syncSavingsAccount(type, savingsAccountId, association)
-            .asDataStateFlow()
+            
     }
 
     override fun syncSavingsAccountTransactionTemplate(
         savingsAccountType: String,
         savingsAccountId: Int,
         transactionType: String?,
-    ): Flow<DataState<SavingsAccountTransactionTemplateEntity?>> {
+    ): Flow<SavingsAccountTransactionTemplateEntity?> {
         return dataManagerSavings.getSavingsAccountTransactionTemplate(
             savingsAccountType,
             savingsAccountId,
             transactionType,
-        ).asDataStateFlow()
+        )
     }
 
-    override fun getGroupWithAssociations(groupId: Int): Flow<DataState<GroupWithAssociations>> {
+    override fun getGroupWithAssociations(groupId: Int): Flow<GroupWithAssociations> {
         return dataManagerGroups.getGroupWithAssociations(groupId)
-            .asDataStateFlow()
+            
     }
 
     override suspend fun syncClientInDatabase(client: ClientEntity) {

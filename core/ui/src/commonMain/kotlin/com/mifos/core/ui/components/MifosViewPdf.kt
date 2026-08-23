@@ -26,7 +26,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.mifos.core.designsystem.theme.DesignToken
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @Composable
 fun <T> MifosViewPdf(
@@ -40,7 +41,7 @@ fun <T> MifosViewPdf(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(KptTheme.colorScheme.onPrimary),
+                    .background(LocalKptColors.current.onPrimary),
             ) {
                 AsyncImage(
                     model = bmp,

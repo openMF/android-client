@@ -9,7 +9,6 @@
  */
 package com.mifos.core.datastore
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.ServerConfig
 import com.mifos.core.datastore.model.AppSettings
 import com.mifos.core.datastore.model.DarkThemeConfig
@@ -27,15 +26,15 @@ interface UserPreferencesRepository {
     val appTheme: StateFlow<DarkThemeConfig>
     val getServerConfig: StateFlow<ServerConfig>
 
-    suspend fun updateUser(user: User): DataState<Unit>
-    suspend fun updateUserStatus(status: Boolean): DataState<Unit>
-    suspend fun updateSettings(appSettings: AppSettings): DataState<Unit>
+    suspend fun updateUser(user: User)
+    suspend fun updateUserStatus(status: Boolean)
+    suspend fun updateSettings(appSettings: AppSettings)
 
-    suspend fun logOut(): Unit
+    suspend fun logOut()
 
-    suspend fun updateServerConfig(serverConfig: ServerConfig): DataState<Unit>
+    suspend fun updateServerConfig(serverConfig: ServerConfig)
 
-    suspend fun updateUserInfo(user: UserData): DataState<Unit>
+    suspend fun updateUserInfo(user: UserData)
 
-    suspend fun updateTheme(theme: DarkThemeConfig): DataState<Unit>
+    suspend fun updateTheme(theme: DarkThemeConfig)
 }

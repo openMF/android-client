@@ -9,15 +9,15 @@
  */
 package com.mifos.feature.passcode.biometricsSetup
 
-import androidclient.feature.passcode.generated.resources.Res
-import androidclient.feature.passcode.generated.resources.feature_authenticator_biometrics_usage_message
-import androidclient.feature.passcode.generated.resources.feature_authenticator_error
-import androidclient.feature.passcode.generated.resources.feature_authenticator_fingerprint_icon
-import androidclient.feature.passcode.generated.resources.feature_authenticator_ok
-import androidclient.feature.passcode.generated.resources.feature_authenticator_secure_your_app
-import androidclient.feature.passcode.generated.resources.feature_authenticator_setup_biometrics
-import androidclient.feature.passcode.generated.resources.feature_authenticator_skip_for_now
-import androidclient.feature.passcode.generated.resources.fingerprint
+import kpt.feature.passcode.generated.resources.Res
+import kpt.feature.passcode.generated.resources.feature_authenticator_biometrics_usage_message
+import kpt.feature.passcode.generated.resources.feature_authenticator_error
+import kpt.feature.passcode.generated.resources.feature_authenticator_fingerprint_icon
+import kpt.feature.passcode.generated.resources.feature_authenticator_ok
+import kpt.feature.passcode.generated.resources.feature_authenticator_secure_your_app
+import kpt.feature.passcode.generated.resources.feature_authenticator_setup_biometrics
+import kpt.feature.passcode.generated.resources.feature_authenticator_skip_for_now
+import kpt.feature.passcode.generated.resources.fingerprint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -53,7 +53,9 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import org.mifos.authenticator.biometrics.platformAuthenticationProvider
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
 
 /** Navigation-event info marker for the biometric-setup destination. */
 internal object BiometricSetupScreenCurrentInfo : NavigationEventInfo()
@@ -147,7 +149,7 @@ internal fun BiometricSetupContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(KptTheme.colorScheme.background)
+                .background(LocalKptColors.current.background)
                 .padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
@@ -162,15 +164,15 @@ internal fun BiometricSetupContent(
 
             Text(
                 text = stringResource(Res.string.feature_authenticator_secure_your_app),
-                style = KptTheme.typography.headlineSmall,
+                style = LocalKptTypography.current.headlineSmall,
             )
 
             Spacer(Modifier.height(16.dp))
 
             Text(
                 text = stringResource(Res.string.feature_authenticator_biometrics_usage_message),
-                style = KptTheme.typography.bodyLarge,
-                color = KptTheme.colorScheme.inverseSurface,
+                style = LocalKptTypography.current.bodyLarge,
+                color = LocalKptColors.current.inverseSurface,
                 modifier = Modifier.padding(horizontal = 16.dp),
                 textAlign = TextAlign.Center,
             )
@@ -184,7 +186,7 @@ internal fun BiometricSetupContent(
             ) {
                 Text(
                     text = stringResource(Res.string.feature_authenticator_setup_biometrics),
-                    color = KptTheme.colorScheme.onPrimary,
+                    color = LocalKptColors.current.onPrimary,
                 )
             }
 

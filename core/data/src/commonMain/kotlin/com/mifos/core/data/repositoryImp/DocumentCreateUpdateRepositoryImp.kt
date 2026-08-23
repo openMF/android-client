@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.DocumentCreateUpdateRepository
 import com.mifos.core.network.GenericResponse
 import com.mifos.core.network.datamanager.DataManagerDocument
@@ -29,18 +27,18 @@ class DocumentCreateUpdateRepositoryImp(
         entityType: String,
         entityId: Int,
         file: MultiPartFormDataContent,
-    ): Flow<DataState<GenericResponse>> = flow {
+    ): Flow<GenericResponse> = flow {
         emit(
             dataManagerDocument.createDocument(entityType, entityId, file),
         )
-    }.asDataStateFlow()
+    }
 
     override suspend fun updateDocument(
         entityType: String,
         entityId: Int,
         documentId: Int,
         file: MultiPartFormDataContent,
-    ): Flow<DataState<GenericResponse>> = flow {
+    ): Flow<GenericResponse> = flow {
         emit(
             dataManagerDocument.updateDocument(
                 entityType,
@@ -49,5 +47,5 @@ class DocumentCreateUpdateRepositoryImp(
                 file,
             ),
         )
-    }.asDataStateFlow()
+    }
 }

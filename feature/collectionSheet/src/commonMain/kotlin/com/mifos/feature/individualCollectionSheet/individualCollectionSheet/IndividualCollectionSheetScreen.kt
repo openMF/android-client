@@ -11,8 +11,8 @@
 
 package com.mifos.feature.individualCollectionSheet.individualCollectionSheet
 
-import androidclient.feature.collectionsheet.generated.resources.Res
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_individual_collection_sheet
+import kpt.feature.collectionsheet.generated.resources.Res
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_individual_collection_sheet
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding

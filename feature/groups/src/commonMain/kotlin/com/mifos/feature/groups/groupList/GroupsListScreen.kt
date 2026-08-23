@@ -9,10 +9,9 @@
  */
 package com.mifos.feature.groups.groupList
 
-import androidclient.feature.groups.generated.resources.Res
-import androidclient.feature.groups.generated.resources.feature_groups_failed_to_fetch_groups
-import androidclient.feature.groups.generated.resources.feature_groups_no_more_groups_available
-import androidclient.feature.groups.generated.resources.feature_groups_sync
+import kpt.feature.groups.generated.resources.Res
+import kpt.feature.groups.generated.resources.feature_groups_no_more_groups_available
+import kpt.feature.groups.generated.resources.feature_groups_sync
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -29,10 +28,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
@@ -57,29 +53,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import com.mifos.core.designsystem.component.MifosPaginationSweetError
-import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.ui.components.MifosEmptyUi
 import com.mifos.core.ui.components.MifosFAB
-import com.mifos.core.ui.components.MifosPagingAppendProgress
-import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.SelectionModeTopAppBar
 import com.mifos.feature.groups.syncGroupDialog.SyncGroupDialogScreen
 import com.mifos.room.entities.group.GroupEntity
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptShapes
+import kpt.core.base.designsystem.theme.LocalKptSpacing
+import kpt.core.base.store.paging.PagingScreenStream
+import kpt.core.base.ui.paging.PagingScreenContent
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -89,9 +80,6 @@ internal fun GroupsListRoute(
     onGroupClick: (groupId: Int) -> Unit,
     viewModel: GroupsListViewModel = koinViewModel(),
 ) {
-    val data = viewModel.data.collectAsLazyPagingItems()
-    val lazyListState = rememberLazyListState()
-
     val selectedItems = remember {
         mutableStateListOf<GroupEntity>()
     }
@@ -106,9 +94,9 @@ internal fun GroupsListRoute(
         modifier = Modifier
             .fillMaxSize()
             .padding(paddingValues),
-        lazyListState = lazyListState,
         selectedItems = selectedItems,
-        data = data,
+        pagingStream = viewModel.pagingStream,
+        onRetry = viewModel::retry,
         onAddGroupClick = onAddGroupClick,
         onGroupClick = onGroupClick,
         onSelectItem = {
@@ -127,9 +115,9 @@ internal fun GroupsListRoute(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GroupsListScreen(
-    lazyListState: LazyListState,
     selectedItems: List<GroupEntity>,
-    data: LazyPagingItems<GroupEntity>,
+    pagingStream: PagingScreenStream<GroupEntity>,
+    onRetry: () -> Unit,
     onAddGroupClick: () -> Unit,
     onGroupClick: (groupId: Int) -> Unit,
     onSelectItem: (GroupEntity) -> Unit,
@@ -198,116 +186,39 @@ fun GroupsListScreen(
                 },
                 state = pullRefreshState,
                 isRefreshing = isRefreshing,
-                onRefresh = { data.refresh() },
+                onRefresh = onRetry,
             ) {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    state = lazyListState,
-                    verticalArrangement = if (data.itemCount < 1) Arrangement.Center else Arrangement.Top,
-                ) {
-                    refreshState(data)
-
-                    successState(
-                        pagingItems = data,
-                        isInSelectionMode = selectedItems.isNotEmpty(),
-                        isSelected = selectedItems::contains,
-                        onGroupClick = onGroupClick,
-                        onSelectItem = onSelectItem,
-                    )
-
-                    appendState(data)
+                // List body — native Store5 offline-first paging. The framework
+                // PagingScreenContent owns the LazyColumn, load-more trigger, footer,
+                // and the loading / no-network / error+retry / empty transitions.
+                PagingScreenContent(
+                    pagingStream = pagingStream,
+                    onRetry = onRetry,
+                    endMessage = stringResource(Res.string.feature_groups_no_more_groups_available),
+                    empty = {
+                        MifosEmptyUi(
+                            text = stringResource(Res.string.feature_groups_no_more_groups_available),
+                        )
+                    },
+                ) { groups ->
+                    items(
+                        items = groups,
+                        key = { it.id ?: 0 },
+                    ) { group ->
+                        GroupItem(
+                            group = group,
+                            doesSelected = selectedItems.contains(group),
+                            inSelectionMode = selectedItems.isNotEmpty(),
+                            onGroupClick = {
+                                group.id?.let { onGroupClick(it) }
+                            },
+                            onSelectItem = {
+                                onSelectItem(group)
+                            },
+                        )
+                    }
                 }
             }
-        }
-    }
-}
-
-private fun LazyListScope.refreshState(data: LazyPagingItems<GroupEntity>) {
-    when (data.loadState.refresh) {
-        is LoadState.Error -> {
-            item {
-                MifosSweetError(
-                    message = stringResource(Res.string.feature_groups_failed_to_fetch_groups),
-                    onclick = { data.refresh() },
-                )
-            }
-        }
-
-        is LoadState.Loading -> {
-            item {
-                MifosProgressIndicator()
-            }
-        }
-
-        is LoadState.NotLoading -> {
-            if (data.itemCount < 1) {
-                item {
-                    MifosEmptyUi(
-                        text = stringResource(Res.string.feature_groups_no_more_groups_available),
-                    )
-                }
-            }
-        }
-    }
-}
-
-private fun LazyListScope.appendState(data: LazyPagingItems<GroupEntity>) {
-    when (data.loadState.append) {
-        is LoadState.Loading -> {
-            item {
-                MifosPagingAppendProgress()
-            }
-        }
-
-        is LoadState.Error -> {
-            item {
-                MifosPaginationSweetError {
-                    data.retry()
-                }
-            }
-        }
-
-        is LoadState.NotLoading -> {
-            if (data.loadState.append.endOfPaginationReached && data.itemCount > 0) {
-                item {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(KptTheme.spacing.sm),
-                        text = stringResource(Res.string.feature_groups_no_more_groups_available),
-                        style = KptTheme.typography.labelLarge,
-                        color = DarkGray,
-                        textAlign = TextAlign.Center,
-                    )
-                }
-            }
-        }
-    }
-}
-
-private fun LazyListScope.successState(
-    pagingItems: LazyPagingItems<GroupEntity>,
-    isInSelectionMode: Boolean,
-    isSelected: (GroupEntity) -> Boolean,
-    onGroupClick: (groupId: Int) -> Unit,
-    onSelectItem: (GroupEntity) -> Unit,
-) {
-    items(
-        count = pagingItems.itemCount,
-    ) { index ->
-        pagingItems[index]?.let { group ->
-            GroupItem(
-                group = group,
-                doesSelected = isSelected(group),
-                inSelectionMode = isInSelectionMode,
-                onGroupClick = {
-                    group.id?.let { onGroupClick(it) }
-                },
-                onSelectItem = {
-                    onSelectItem(group)
-                },
-            )
         }
     }
 }
@@ -328,24 +239,24 @@ fun GroupItem(
         CardDefaults.outlinedCardBorder()
     }
     val containerColor = if (doesSelected) {
-        KptTheme.colorScheme.secondaryContainer
+        LocalKptColors.current.secondaryContainer
     } else {
         Color.Unspecified
     }
     // TODO: replace primary with Green after we define Theme colours of mockups
     val indicatorColor = if (group.active == true) {
-        KptTheme.colorScheme.primary
+        LocalKptColors.current.primary
     } else {
-        KptTheme.colorScheme.error
+        LocalKptColors.current.error
     }
 
     group.name?.let {
         OutlinedCard(
             modifier = modifier
                 .testTag(it)
-                .padding(KptTheme.spacing.sm)
+                .padding(LocalKptSpacing.current.sm)
                 .fillMaxWidth()
-                .clip(KptTheme.shapes.small)
+                .clip(LocalKptShapes.current.small)
                 .combinedClickable(
                     onClick = {
                         if (inSelectionMode) {
@@ -356,7 +267,7 @@ fun GroupItem(
                     },
                     onLongClick = onSelectItem,
                 ),
-            shape = KptTheme.shapes.small,
+            shape = LocalKptShapes.current.small,
             colors = CardDefaults.outlinedCardColors(
                 containerColor = containerColor,
             ),
@@ -387,7 +298,7 @@ fun GroupItem(
                 trailingContent = {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(KptTheme.spacing.xs),
+                        horizontalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.xs),
                     ) {
                         if (group.sync) {
                             Icon(imageVector = MifosIcons.DoneAll, contentDescription = "Sync")

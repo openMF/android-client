@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.SyncSavingsAccountTransactionRepository
 import com.mifos.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import com.mifos.core.network.datamanager.DataManagerLoan
@@ -27,14 +25,14 @@ class SyncSavingsAccountTransactionRepositoryImp(
     private val dataManagerLoan: DataManagerLoan,
 ) : SyncSavingsAccountTransactionRepository {
 
-    override fun allSavingsAccountTransactions(): Flow<DataState<List<SavingsAccountTransactionRequestEntity>>> {
+    override fun allSavingsAccountTransactions(): Flow<List<SavingsAccountTransactionRequestEntity>> {
         return dataManagerSavings.allSavingsAccountTransactions
-            .asDataStateFlow()
+            
     }
 
-    override fun paymentTypeOption(): Flow<DataState<List<PaymentTypeOptionEntity>>> {
+    override fun paymentTypeOption(): Flow<List<PaymentTypeOptionEntity>> {
         return dataManagerLoan.paymentTypeOption
-            .asDataStateFlow()
+            
     }
 
     override fun processTransaction(
@@ -42,20 +40,20 @@ class SyncSavingsAccountTransactionRepositoryImp(
         savingsAccountId: Int,
         transactionType: String?,
         request: SavingsAccountTransactionRequestEntity,
-    ): Flow<DataState<SavingsAccountTransactionResponse?>> {
+    ): Flow<SavingsAccountTransactionResponse?> {
         return dataManagerSavings.processTransaction(
             savingsAccountType,
             savingsAccountId,
             transactionType,
             request,
-        ).asDataStateFlow()
+        )
     }
 
     override fun deleteAndUpdateTransactions(
         savingsAccountId: Int,
-    ): Flow<DataState<List<SavingsAccountTransactionRequestEntity>>> {
+    ): Flow<List<SavingsAccountTransactionRequestEntity>> {
         return dataManagerSavings.deleteAndUpdateTransactions(savingsAccountId)
-            .asDataStateFlow()
+            
     }
 
     override suspend fun updateLoanRepaymentTransaction(savingsAccountTransactionRequest: SavingsAccountTransactionRequestEntity) {

@@ -9,68 +9,26 @@
  */
 package com.mifos.feature.center.centerList.ui
 
-import androidclient.feature.center.generated.resources.Res
-import androidclient.feature.center.generated.resources.feature_center_failed_to_load_db_centers
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.CenterListRepository
-import com.mifos.core.datastore.UserPreferencesRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+import com.mifos.room.entities.group.CenterEntity
+import kpt.core.base.store.paging.PagingScreenStream
 
 class CenterListViewModel(
-    private val prefManager: UserPreferencesRepository,
-    private val repository: CenterListRepository,
+    repository: CenterListRepository,
 ) : ViewModel() {
 
-    // for refresh feature
-    private val _isRefreshing = MutableStateFlow(false)
-    val isRefreshing = _isRefreshing.asStateFlow()
+    /**
+     * Offline-first paged center-list stream — the native Store5 paging idiom that drives the
+     * list body ([CenterListScreen]'s `PagingScreenContent`). Replaces the previous dual
+     * online-Paging3 / offline-DB read paths (`CenterListPagingSource` + `allDatabaseCenters`).
+     * The surrounding selection-mode toolbar / sync dialog / FAB state is unchanged and still
+     * lives in the Screen.
+     */
+    val pagingStream: PagingScreenStream<CenterEntity> =
+        repository.centerListPagingStream(scope = viewModelScope)
 
-    fun refreshCenterList() {
-        _isRefreshing.value = true
-        getCenterList()
-        _isRefreshing.value = false
-    }
-
-    private val _centerListUiState = MutableStateFlow<CenterListUiState>(CenterListUiState.Loading)
-    val centerListUiState = _centerListUiState.asStateFlow()
-
-    init {
-        getCenterList()
-    }
-
-    fun getCenterList() {
-        viewModelScope.launch {
-            val userStatus = prefManager.userInfo.first().userStatus
-            if (userStatus) {
-                loadCentersFromDb()
-            } else {
-                loadCentersFromApi()
-            }
-        }
-    }
-
-    private fun loadCentersFromApi() = viewModelScope.launch {
-        val response = repository.getAllCenters()
-        _centerListUiState.value = CenterListUiState.CenterList(response)
-    }
-
-    private fun loadCentersFromDb() {
-        viewModelScope.launch {
-            _centerListUiState.value = CenterListUiState.Loading
-
-            repository.allDatabaseCenters()
-                .catch {
-                    _centerListUiState.value =
-                        CenterListUiState.Error(Res.string.feature_center_failed_to_load_db_centers)
-                }.collect {
-                    _centerListUiState.value =
-                        CenterListUiState.CenterListDb(it.data?.pageItems)
-                }
-        }
-    }
+    /** Pull-to-refresh / retry for the paged list. Resets the paging cursor to page 0. */
+    fun retry() = pagingStream.refresh()
 }

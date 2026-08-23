@@ -13,16 +13,16 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.DeleteIdentifierUseCase
 import com.mifos.core.domain.useCases.GetDocumentsListUseCase
 import com.mifos.core.domain.useCases.RemoveDocumentUseCase
 import com.mifos.core.model.objects.noncoreobjects.Identifier
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.feature.client.clientIdentifiersAddUpdate.Feature
 import com.mifos.feature.client.clientIdentifiersList.ClientIdentifiersListEvent.AddNewClientIdentity
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -135,158 +135,131 @@ class ClientIdentifiersListViewModel(
     }
 
     private suspend fun deleteDocument(documentId: Int) {
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = ClientIdentifiersListState.DialogState.Loading,
+                isOverlayLoading = true,
+            )
+        }
         removeDocumentUseCase(
             Constants.ENTITY_TYPE_CLIENT_IDENTIFIERS,
             route.clientId,
             documentId,
         )
-            .collect { dataState ->
-                when (dataState) {
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientIdentifiersListState.DialogState.Error(
-                                    dataState.message,
-                                ),
-                            )
-                        }
-                    }
-
-                    DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientIdentifiersListState.DialogState.Loading,
-                                isOverlayLoading = true,
-                            )
-                        }
-                    }
-
-                    is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = null,
-                                isOverlayLoading = false,
-                            )
-                        }
-                    }
+            .catch { error ->
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = ClientIdentifiersListState.DialogState.Error(
+                            error.message ?: "",
+                        ),
+                    )
+                }
+            }
+            .collect { _ ->
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = null,
+                        isOverlayLoading = false,
+                    )
                 }
             }
     }
 
     private suspend fun getDocumentId(documentKey: String?) {
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = ClientIdentifiersListState.DialogState.Loading,
+            )
+        }
         getDocumentListUseCase(Constants.ENTITY_TYPE_CLIENT_IDENTIFIERS, route.clientId)
-            .collect { dataState ->
-                when (dataState) {
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientIdentifiersListState.DialogState.Error(
-                                    dataState.message,
-                                ),
-                            )
-                        }
-                    }
+            .catch { error ->
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = ClientIdentifiersListState.DialogState.Error(
+                            error.message ?: "",
+                        ),
+                    )
+                }
+            }
+            .collect { documents ->
+                val deleteDocument =
+                    documents.firstOrNull { it.description == documentKey }?.id
 
-                    DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientIdentifiersListState.DialogState.Loading,
-                            )
-                        }
-                    }
-
-                    is DataState.Success -> {
-                        val deleteDocument =
-                            dataState.data.firstOrNull { it.description == documentKey }?.id
-
-                        if (deleteDocument != null) {
-                            deleteDocument(deleteDocument)
-                        }
-                    }
+                if (deleteDocument != null) {
+                    deleteDocument(deleteDocument)
                 }
             }
     }
 
     private suspend fun getClientListIdentities(clientId: Long) {
-        repository.getClientListIdentifiers(clientId).collect { dataState ->
-            when (dataState) {
-                is DataState.Error -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = ClientIdentifiersListState.DialogState.Error(
-                                (dataState.message),
-                            ),
-                        )
-                    }
-                }
-
-                DataState.Loading -> mutableStateFlow.update {
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = ClientIdentifiersListState.DialogState.Loading,
+            )
+        }
+        repository.getClientListIdentifiers(clientId)
+            .catch { error ->
+                mutableStateFlow.update {
                     it.copy(
-                        dialogState = ClientIdentifiersListState.DialogState.Loading,
-                    )
-                }
-
-                is DataState.Success -> {
-                    val sortedList = dataState.data.sortedWith(
-                        compareBy(
-                            { identifier ->
-                                val s = identifier.status?.lowercase() ?: ""
-                                if (s.contains("active") && !s.contains("inactive")) 0 else 1
-                            },
-                            { identifier ->
-                                identifier.description?.lowercase() ?: ""
-                            },
+                        dialogState = ClientIdentifiersListState.DialogState.Error(
+                            (error.message ?: ""),
                         ),
                     )
-
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = null,
-                            clientIdentitiesList = sortedList,
-                        )
-                    }
                 }
             }
-        }
+            .collect { identifiers ->
+                val sortedList = identifiers.sortedWith(
+                    compareBy(
+                        { identifier ->
+                            val s = identifier.status?.lowercase() ?: ""
+                            if (s.contains("active") && !s.contains("inactive")) 0 else 1
+                        },
+                        { identifier ->
+                            identifier.description?.lowercase() ?: ""
+                        },
+                    ),
+                )
+
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = null,
+                        clientIdentitiesList = sortedList,
+                    )
+                }
+            }
     }
 
     private fun deleteClientIdentity(clientId: Int, identifierId: Int, documentKey: String?) {
         viewModelScope.launch {
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ClientIdentifiersListState.DialogState.Loading,
+                    isOverlayLoading = true,
+                )
+            }
             deleteClientIdentifierUseCase.invoke(clientId.toLong(), identifierId.toLong())
-                .collect { state ->
-                    when (state) {
-                        is DataState.Error -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = ClientIdentifiersListState.DialogState.Error(
-                                        state.message,
-                                    ),
-                                )
-                            }
-                        }
-
-                        DataState.Loading -> mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientIdentifiersListState.DialogState.Loading,
-                                isOverlayLoading = true,
-                            )
-                        }
-
-                        is DataState.Success -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = ClientIdentifiersListState.DialogState.DeletedSuccessfully(
-                                        identifierId,
-                                    ),
-                                )
-                            }
-
-                            // it call first take document id then delete document
-                            getDocumentId(documentKey)
-
-                            getClientListIdentities(route.clientId.toLong())
-                        }
+                .catch { error ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ClientIdentifiersListState.DialogState.Error(
+                                error.message ?: "",
+                            ),
+                        )
                     }
+                }
+                .collect { _ ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ClientIdentifiersListState.DialogState.DeletedSuccessfully(
+                                identifierId,
+                            ),
+                        )
+                    }
+
+                    // it call first take document id then delete document
+                    getDocumentId(documentKey)
+
+                    getClientListIdentities(route.clientId.toLong())
                 }
         }
     }

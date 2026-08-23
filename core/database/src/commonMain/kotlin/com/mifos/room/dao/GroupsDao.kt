@@ -14,11 +14,11 @@ import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 import com.mifos.room.entities.group.GroupEntity
 import com.mifos.room.entities.group.GroupPayloadEntity
 import kotlinx.coroutines.flow.Flow
-import template.core.base.database.Dao
-import template.core.base.database.Insert
-import template.core.base.database.OnConflictStrategy
-import template.core.base.database.Query
-import template.core.base.database.Update
+import androidx.room3.Dao
+import androidx.room3.Insert
+import androidx.room3.OnConflictStrategy
+import androidx.room3.Query
+import androidx.room3.Update
 
 /**
  * Created by Pronay Sarker on 15/02/2025 (1:07 PM)
@@ -52,6 +52,15 @@ interface GroupsDao {
 
     @Query("SELECT * FROM GroupTable WHERE id = :groupId")
     fun getGroupById(groupId: Int): Flow<GroupEntity>
+
+    // Offline-first Store5 source-of-truth delete hooks (getGroup ledger pilot). deleteGroup
+    // backs SourceOfTruth.delete(key); deleteAllGroups backs SourceOfTruth.deleteAll() which
+    // Store.clear() invokes on logout via StoreCacheManager (D7 cache hygiene).
+    @Query("DELETE FROM GroupTable WHERE id = :groupId")
+    suspend fun deleteGroup(groupId: Int)
+
+    @Query("DELETE FROM GroupTable")
+    suspend fun deleteAllGroups()
 
     @Query("SELECT * FROM LoanAccountEntity WHERE groupId = :groupId")
     fun getLoanAccountsByGroupId(groupId: Int): Flow<List<LoanAccountEntity>>

@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.loan.loanAccountAction.payments
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_header_payments
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_header_payments
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -34,7 +34,9 @@ import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.util.TextUtil
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun LoanPaymentsActionScreen(
@@ -78,7 +80,7 @@ private fun LoanPaymentsActionContent(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = KptTheme.spacing.md),
+            .padding(horizontal = LocalKptSpacing.current.md),
     ) {
         item {
             Text(
@@ -100,7 +102,7 @@ private fun LoanPaymentsActionContent(
                     TextUtil(
                         text = stringResource(item.subTitle),
                         style = MifosTypography.bodySmall,
-                        color = KptTheme.colorScheme.secondary,
+                        color = LocalKptColors.current.secondary,
                     ),
                 ),
                 rightValues = emptyList(),
@@ -115,7 +117,7 @@ private fun LoanPaymentsActionContent(
         }
 
         item {
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
         }
     }
 }

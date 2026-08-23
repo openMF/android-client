@@ -9,7 +9,7 @@
  */
 package com.mifos.core.ui.components
 
-import androidclient.core.ui.generated.resources.Res
+import kpt.core.ui.generated.resources.Res
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -35,8 +35,10 @@ import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
 import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import io.github.alexzhirkevich.compottie.rememberLottiePainter
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.KptTheme
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun MifosProgressIndicator(
@@ -54,7 +56,7 @@ fun MifosProgressIndicator(
 
     Box(
         modifier = modifier
-            .background(KptTheme.colorScheme.background),
+            .background(LocalKptColors.current.background),
         contentAlignment = Alignment.Center,
     ) {
         Image(
@@ -83,7 +85,7 @@ fun MifosProgressIndicatorOverlay(
 
     Box(
         modifier = modifier
-            .background(KptTheme.colorScheme.surface.copy(alpha = 0.7f))
+            .background(LocalKptColors.current.surface.copy(alpha = 0.7f))
             .clickable(
                 enabled = false,
                 indication = null,
@@ -113,7 +115,7 @@ fun MifosPagingAppendProgress(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .width(DesignToken.sizes.imageDp40)
                 .height(DesignToken.sizes.imageDp40)
-                .padding(KptTheme.spacing.sm),
+                .padding(LocalKptSpacing.current.sm),
             strokeWidth = DesignToken.strokes.dp4,
         )
     }

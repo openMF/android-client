@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.SyncClientPayloadsRepository
 import com.mifos.core.network.datamanager.DataManagerClient
 import com.mifos.room.entities.client.ClientPayloadEntity
@@ -20,9 +18,9 @@ class SyncClientPayloadsRepositoryImp(
     private val dataManagerClient: DataManagerClient,
 ) : SyncClientPayloadsRepository {
 
-    override fun allDatabaseClientPayload(): Flow<DataState<List<ClientPayloadEntity>>> {
+    override fun allDatabaseClientPayload(): Flow<List<ClientPayloadEntity>> {
         return dataManagerClient.allDatabaseClientPayload
-            .asDataStateFlow()
+            
     }
 
     override suspend fun createClient(clientPayload: ClientPayloadEntity): Int? {
@@ -32,9 +30,9 @@ class SyncClientPayloadsRepositoryImp(
     override fun deleteAndUpdatePayloads(
         id: Int,
         clientCreationTIme: Long,
-    ): Flow<DataState<List<ClientPayloadEntity>>> {
+    ): Flow<List<ClientPayloadEntity>> {
         return dataManagerClient.deleteAndUpdatePayloads(id, clientCreationTIme)
-            .asDataStateFlow()
+            
     }
 
     override suspend fun updateClientPayload(clientPayload: ClientPayloadEntity) {

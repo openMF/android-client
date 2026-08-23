@@ -9,38 +9,38 @@
  */
 package com.mifos.feature.loan.loanRepaymentSchedule
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_account_number
-import androidclient.feature.loan.generated.resources.feature_loan_amount_and_balance
-import androidclient.feature.loan.generated.resources.feature_loan_client_name_label
-import androidclient.feature.loan.generated.resources.feature_loan_disbursed_date
-import androidclient.feature.loan.generated.resources.feature_loan_export_pdf_error
-import androidclient.feature.loan.generated.resources.feature_loan_export_pdf_error_title
-import androidclient.feature.loan.generated.resources.feature_loan_export_to_pdf
-import androidclient.feature.loan.generated.resources.feature_loan_installment_totals
-import androidclient.feature.loan.generated.resources.feature_loan_loan_repayment_schedule
-import androidclient.feature.loan.generated.resources.feature_loan_paid_label
-import androidclient.feature.loan.generated.resources.feature_loan_period_details
-import androidclient.feature.loan.generated.resources.feature_loan_repayment_schedule_pdf_title
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_date
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_days
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_due
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_fees
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_in_advance
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_interest
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_late
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_loan_balance
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_number
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_outstanding
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_paid
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_paid_date
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_penalties
-import androidclient.feature.loan.generated.resources.feature_loan_table_header_principal_due
-import androidclient.feature.loan.generated.resources.feature_loan_table_total
-import androidclient.feature.loan.generated.resources.feature_loan_total_cost_of_loan
-import androidclient.feature.loan.generated.resources.feature_loan_total_label
-import androidclient.feature.loan.generated.resources.principal_paid_off
-import androidclient.feature.loan.generated.resources.total_installments
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_account_number
+import kpt.feature.loan.generated.resources.feature_loan_amount_and_balance
+import kpt.feature.loan.generated.resources.feature_loan_client_name_label
+import kpt.feature.loan.generated.resources.feature_loan_disbursed_date
+import kpt.feature.loan.generated.resources.feature_loan_export_pdf_error
+import kpt.feature.loan.generated.resources.feature_loan_export_pdf_error_title
+import kpt.feature.loan.generated.resources.feature_loan_export_to_pdf
+import kpt.feature.loan.generated.resources.feature_loan_installment_totals
+import kpt.feature.loan.generated.resources.feature_loan_loan_repayment_schedule
+import kpt.feature.loan.generated.resources.feature_loan_paid_label
+import kpt.feature.loan.generated.resources.feature_loan_period_details
+import kpt.feature.loan.generated.resources.feature_loan_repayment_schedule_pdf_title
+import kpt.feature.loan.generated.resources.feature_loan_table_header_date
+import kpt.feature.loan.generated.resources.feature_loan_table_header_days
+import kpt.feature.loan.generated.resources.feature_loan_table_header_due
+import kpt.feature.loan.generated.resources.feature_loan_table_header_fees
+import kpt.feature.loan.generated.resources.feature_loan_table_header_in_advance
+import kpt.feature.loan.generated.resources.feature_loan_table_header_interest
+import kpt.feature.loan.generated.resources.feature_loan_table_header_late
+import kpt.feature.loan.generated.resources.feature_loan_table_header_loan_balance
+import kpt.feature.loan.generated.resources.feature_loan_table_header_number
+import kpt.feature.loan.generated.resources.feature_loan_table_header_outstanding
+import kpt.feature.loan.generated.resources.feature_loan_table_header_paid
+import kpt.feature.loan.generated.resources.feature_loan_table_header_paid_date
+import kpt.feature.loan.generated.resources.feature_loan_table_header_penalties
+import kpt.feature.loan.generated.resources.feature_loan_table_header_principal_due
+import kpt.feature.loan.generated.resources.feature_loan_table_total
+import kpt.feature.loan.generated.resources.feature_loan_total_cost_of_loan
+import kpt.feature.loan.generated.resources.feature_loan_total_label
+import kpt.feature.loan.generated.resources.principal_paid_off
+import kpt.feature.loan.generated.resources.total_installments
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -66,7 +66,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.designsystem.component.BasicDialogState
 import com.mifos.core.designsystem.component.MifosBasicDialog
 import com.mifos.core.designsystem.component.MifosScaffold
@@ -76,7 +75,6 @@ import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.theme.MifosTypography
-import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.ui.components.MifosDetailsCard
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.util.pdf.Orientation
@@ -90,7 +88,8 @@ import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun LoanRepaymentScheduleScreen(
@@ -169,15 +168,15 @@ internal fun LoanRepaymentScheduleScreenContent(
         },
     ) {
         Box(modifier = Modifier.padding(it)) {
-            when (state.dataState) {
-                is DataState.Error -> {
+            when (state.viewState) {
+                is LoanRepaymentScheduleState.ViewState.Error -> {
                     MifosSweetError(
-                        message = state.dataState.message,
+                        message = state.viewState.message,
                         onclick = { onAction(LoanRepaymentScheduleAction.Retry) },
                     )
                 }
 
-                is DataState.Success<LoanWithAssociations> -> {
+                LoanRepaymentScheduleState.ViewState.Success -> {
                     state.repaymentScheduleTableData?.let { data ->
                         LoanRepaymentScheduleContent(
                             tableData = data,
@@ -186,7 +185,7 @@ internal fun LoanRepaymentScheduleScreenContent(
                     }
                 }
 
-                DataState.Loading -> {
+                LoanRepaymentScheduleState.ViewState.Loading -> {
                     MifosProgressIndicator()
                 }
             }
@@ -286,7 +285,7 @@ private fun LoanRepaymentScheduleContent(
                 details = basicDetails,
                 modifier = Modifier.padding(horizontal = DesignToken.padding.medium),
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
         }
 
         stickyHeader {

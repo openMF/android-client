@@ -9,13 +9,12 @@
  */
 package com.mifos.core.data.repository.loan
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.account.loan.loanDisburse.LoanDisburseInput
 import com.mifos.core.model.objects.account.loan.loanDisburse.LoanDisburseTemplate
 
 interface LoanDisburseRepository {
 
-    suspend fun getDisburseTemplate(loanId: Int): DataState<LoanDisburseTemplate>
+    suspend fun getDisburseTemplate(loanId: Int): LoanDisburseTemplate
 
-    suspend fun disburse(loanId: Int, loanDisburseInput: LoanDisburseInput): DataState<Unit>
+    suspend fun disburse(loanId: Int, loanDisburseInput: LoanDisburseInput): Unit
 }

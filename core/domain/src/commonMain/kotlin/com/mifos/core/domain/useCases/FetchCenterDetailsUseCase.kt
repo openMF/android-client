@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.GenerateCollectionSheetRepository
 import com.mifos.room.entities.collectionsheet.CenterDetail
 import kotlinx.coroutines.flow.Flow
@@ -24,6 +23,6 @@ class FetchCenterDetailsUseCase(
         meetingDate: String?,
         officeId: Int,
         staffId: Int,
-    ): Flow<DataState<List<CenterDetail>>> =
+    ): Flow<List<CenterDetail>> =
         repository.fetchCenterDetails(format, locale, meetingDate, officeId, staffId)
 }

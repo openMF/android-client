@@ -9,16 +9,15 @@
  */
 package com.mifos.core.data.repositoryImp.loan
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.mappers.loan.toDto
 import com.mifos.core.data.mappers.loan.toModel
 import com.mifos.core.data.repository.loan.LoanChargeOffRepository
 import com.mifos.core.data.util.NetworkMonitor
-import com.mifos.core.data.util.runAsDataState
+import com.mifos.core.data.util.runSuspendCall
 import com.mifos.core.model.objects.account.loan.ChargeOffReasonOption
 import com.mifos.core.model.objects.account.loan.LoanChargeOffInput
 import com.mifos.core.network.datamanager.DataManagerLoan
-import template.core.base.common.manager.DispatcherManager
+import kpt.core.base.common.manager.DispatcherManager
 
 class LoanChargeOffRepositoryImpl(
     private val dataManagerLoan: DataManagerLoan,
@@ -28,8 +27,8 @@ class LoanChargeOffRepositoryImpl(
     override suspend fun chargeOff(
         loanId: Int,
         loanChargeOffInput: LoanChargeOffInput,
-    ): DataState<Unit> {
-        return runAsDataState(
+    ): Unit {
+        return runSuspendCall(
             networkMonitor = networkMonitor,
             context = dispatcher.io,
         ) {
@@ -37,8 +36,8 @@ class LoanChargeOffRepositoryImpl(
         }
     }
 
-    override suspend fun getChargeOffTemplate(loanId: Int): DataState<List<ChargeOffReasonOption>> {
-        return runAsDataState(
+    override suspend fun getChargeOffTemplate(loanId: Int): List<ChargeOffReasonOption> {
+        return runSuspendCall(
             networkMonitor = networkMonitor,
             context = dispatcher.io,
         ) {

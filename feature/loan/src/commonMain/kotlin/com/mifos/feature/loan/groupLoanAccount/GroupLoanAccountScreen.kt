@@ -11,32 +11,32 @@
 
 package com.mifos.feature.loan.groupLoanAccount
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_account_created_successfully
-import androidclient.feature.loan.generated.resources.feature_loan_amortization
-import androidclient.feature.loan.generated.resources.feature_loan_application
-import androidclient.feature.loan.generated.resources.feature_loan_calculate_interest_for_exact_days_in
-import androidclient.feature.loan.generated.resources.feature_loan_cancel
-import androidclient.feature.loan.generated.resources.feature_loan_disbursed_date
-import androidclient.feature.loan.generated.resources.feature_loan_external_id
-import androidclient.feature.loan.generated.resources.feature_loan_failed_to_create_loan_account
-import androidclient.feature.loan.generated.resources.feature_loan_fund
-import androidclient.feature.loan.generated.resources.feature_loan_interest_calculation_period
-import androidclient.feature.loan.generated.resources.feature_loan_interest_type_method
-import androidclient.feature.loan.generated.resources.feature_loan_loan_terms
-import androidclient.feature.loan.generated.resources.feature_loan_nominal
-import androidclient.feature.loan.generated.resources.feature_loan_number_of_repayments
-import androidclient.feature.loan.generated.resources.feature_loan_officer
-import androidclient.feature.loan.generated.resources.feature_loan_per_month
-import androidclient.feature.loan.generated.resources.feature_loan_principal
-import androidclient.feature.loan.generated.resources.feature_loan_product
-import androidclient.feature.loan.generated.resources.feature_loan_purpose
-import androidclient.feature.loan.generated.resources.feature_loan_repaid_every
-import androidclient.feature.loan.generated.resources.feature_loan_repayment_strategy
-import androidclient.feature.loan.generated.resources.feature_loan_select
-import androidclient.feature.loan.generated.resources.feature_loan_submission_date
-import androidclient.feature.loan.generated.resources.feature_loan_submit
-import androidclient.feature.loan.generated.resources.feature_loan_term
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_account_created_successfully
+import kpt.feature.loan.generated.resources.feature_loan_amortization
+import kpt.feature.loan.generated.resources.feature_loan_application
+import kpt.feature.loan.generated.resources.feature_loan_calculate_interest_for_exact_days_in
+import kpt.feature.loan.generated.resources.feature_loan_cancel
+import kpt.feature.loan.generated.resources.feature_loan_disbursed_date
+import kpt.feature.loan.generated.resources.feature_loan_external_id
+import kpt.feature.loan.generated.resources.feature_loan_failed_to_create_loan_account
+import kpt.feature.loan.generated.resources.feature_loan_fund
+import kpt.feature.loan.generated.resources.feature_loan_interest_calculation_period
+import kpt.feature.loan.generated.resources.feature_loan_interest_type_method
+import kpt.feature.loan.generated.resources.feature_loan_loan_terms
+import kpt.feature.loan.generated.resources.feature_loan_nominal
+import kpt.feature.loan.generated.resources.feature_loan_number_of_repayments
+import kpt.feature.loan.generated.resources.feature_loan_officer
+import kpt.feature.loan.generated.resources.feature_loan_per_month
+import kpt.feature.loan.generated.resources.feature_loan_principal
+import kpt.feature.loan.generated.resources.feature_loan_product
+import kpt.feature.loan.generated.resources.feature_loan_purpose
+import kpt.feature.loan.generated.resources.feature_loan_repaid_every
+import kpt.feature.loan.generated.resources.feature_loan_repayment_strategy
+import kpt.feature.loan.generated.resources.feature_loan_select
+import kpt.feature.loan.generated.resources.feature_loan_submission_date
+import kpt.feature.loan.generated.resources.feature_loan_submit
+import kpt.feature.loan.generated.resources.feature_loan_term
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -91,7 +91,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -423,7 +425,7 @@ private fun GroupLoanAccountContent(
             MifosOutlinedTextField(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = KptTheme.spacing.md),
+                    .padding(start = LocalKptSpacing.current.md),
                 value = nominal,
                 label = stringResource(Res.string.feature_loan_nominal),
                 onValueChange = {
@@ -433,7 +435,7 @@ private fun GroupLoanAccountContent(
                 keyboardType = KeyboardType.Number,
             )
             Text(
-                modifier = Modifier.padding(KptTheme.spacing.md),
+                modifier = Modifier.padding(LocalKptSpacing.current.md),
                 text = stringResource(Res.string.feature_loan_per_month),
             )
         }
@@ -442,7 +444,7 @@ private fun GroupLoanAccountContent(
             MifosOutlinedTextField(
                 modifier = Modifier
                     .weight(2f)
-                    .padding(start = KptTheme.spacing.md),
+                    .padding(start = LocalKptSpacing.current.md),
                 value = repaidEvery,
                 label = stringResource(Res.string.feature_loan_repaid_every),
                 onValueChange = {
@@ -456,7 +458,7 @@ private fun GroupLoanAccountContent(
                 MifosTextFieldDropdown(
                     modifier = Modifier
                         .width(DesignToken.spacing.dp164)
-                        .padding(start = KptTheme.spacing.sm, end = KptTheme.spacing.md),
+                        .padding(start = LocalKptSpacing.current.sm, end = LocalKptSpacing.current.md),
                     value = repaidEveryType,
                     onValueChanged = { repaidEveryType = it },
                     onOptionSelected = { index, value ->
@@ -475,7 +477,7 @@ private fun GroupLoanAccountContent(
             MifosOutlinedTextField(
                 modifier = Modifier
                     .weight(2f)
-                    .padding(start = KptTheme.spacing.md),
+                    .padding(start = LocalKptSpacing.current.md),
                 value = loanTerms,
                 label = stringResource(Res.string.feature_loan_loan_terms),
                 onValueChange = {
@@ -489,7 +491,7 @@ private fun GroupLoanAccountContent(
                 MifosTextFieldDropdown(
                     modifier = Modifier
                         .width(DesignToken.spacing.dp164)
-                        .padding(start = KptTheme.spacing.sm, end = KptTheme.spacing.md),
+                        .padding(start = LocalKptSpacing.current.sm, end = LocalKptSpacing.current.md),
                     value = loanTermsType,
                     onValueChanged = { loanTermsType = it },
                     onOptionSelected = { index, value ->
@@ -578,7 +580,7 @@ private fun GroupLoanAccountContent(
                 readOnly = true,
             )
         }
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         Button(
             onClick = {
@@ -615,15 +617,15 @@ private fun GroupLoanAccountContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(DesignToken.spacing.dp44)
-                .padding(start = KptTheme.spacing.md, end = KptTheme.spacing.md),
+                .padding(start = LocalKptSpacing.current.md, end = LocalKptSpacing.current.md),
             contentPadding = PaddingValues(),
         ) {
             Text(
                 text = stringResource(Res.string.feature_loan_submit),
-                style = KptTheme.typography.bodyLarge,
+                style = LocalKptTypography.current.bodyLarge,
             )
         }
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
     }
 }
 

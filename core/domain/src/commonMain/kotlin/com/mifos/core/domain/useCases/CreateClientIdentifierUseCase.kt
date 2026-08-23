@@ -9,8 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import io.ktor.client.statement.HttpResponse
@@ -23,7 +21,7 @@ class CreateClientIdentifierUseCase(
     operator fun invoke(
         clientId: Long,
         identifierPayload: IdentifierPayload,
-    ): Flow<DataState<HttpResponse>> = flow {
+    ): Flow<HttpResponse> = flow {
         emit(repository.createClientIdentifier(clientId, identifierPayload))
-    }.asDataStateFlow()
+    }
 }

@@ -30,12 +30,15 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
-import core.designsystem.generated.resources.Res
-import core.designsystem.generated.resources.core_designsystem_try_again
-import core.designsystem.generated.resources.core_designsystem_unable_to_load
+import kpt.core.designsystem.generated.resources.Res
+import kpt.core.designsystem.generated.resources.core_designsystem_try_again
+import kpt.core.designsystem.generated.resources.core_designsystem_unable_to_load
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun MifosSweetError(
@@ -57,14 +60,14 @@ fun MifosSweetError(
         if (isShowLoadMsg) {
             Text(
                 text = stringResource(Res.string.core_designsystem_unable_to_load),
-                style = KptTheme.typography.bodyMedium,
-                color = KptTheme.colorScheme.secondary,
+                style = LocalKptTypography.current.bodyMedium,
+                color = LocalKptColors.current.secondary,
             )
         }
         Text(
             text = message,
-            style = KptTheme.typography.bodyMedium.copy(textAlign = TextAlign.Center),
-            color = KptTheme.colorScheme.secondary,
+            style = LocalKptTypography.current.bodyMedium.copy(textAlign = TextAlign.Center),
+            color = LocalKptColors.current.secondary,
         )
         if (isRetryEnabled) {
             Spacer(modifier = Modifier.height(DesignToken.spacing.largeIncreased))
@@ -75,7 +78,7 @@ fun MifosSweetError(
                 Text(
                     modifier = Modifier.padding(start = DesignToken.spacing.largeIncreased, end = DesignToken.spacing.largeIncreased),
                     text = buttonText,
-                    style = KptTheme.typography.labelLarge,
+                    style = LocalKptTypography.current.labelLarge,
                 )
             }
         }
@@ -91,7 +94,7 @@ fun MifosPaginationSweetError(
         modifier = modifier
             .fillMaxWidth()
             .padding(DesignToken.padding.dp18),
-        verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.xs),
+        verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.xs),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(
@@ -100,8 +103,8 @@ fun MifosPaginationSweetError(
         )
         Text(
             text = stringResource(Res.string.core_designsystem_unable_to_load),
-            style = KptTheme.typography.bodyMedium,
-            color = KptTheme.colorScheme.secondary,
+            style = LocalKptTypography.current.bodyMedium,
+            color = LocalKptColors.current.secondary,
         )
         Button(
             onClick = { onclick() },
@@ -111,7 +114,7 @@ fun MifosPaginationSweetError(
                 modifier = Modifier
                     .padding(start = DesignToken.padding.largeIncreased, end = DesignToken.padding.largeIncreased),
                 text = stringResource(Res.string.core_designsystem_try_again),
-                style = KptTheme.typography.bodyLarge,
+                style = LocalKptTypography.current.bodyLarge,
             )
         }
     }

@@ -9,15 +9,12 @@
  */
 package com.mifos.core.model.objects.clients
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Created by Tarun on 13-08-17.
  */
 @Serializable
-@Parcelize
 data class ChargeCreationResponse(
     var clientId: Int = 0,
 
@@ -26,4 +23,4 @@ data class ChargeCreationResponse(
     var resourceId: Int = 0,
 
     var loanId: Int = 0,
-) : Parcelable
+)

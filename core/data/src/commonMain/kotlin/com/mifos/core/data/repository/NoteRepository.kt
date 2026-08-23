@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.note.CreateNoteInput
 import com.mifos.core.model.objects.note.Note
 import com.mifos.core.model.objects.note.UpdateNoteInput
@@ -24,29 +23,29 @@ interface NoteRepository {
         resourceType: String,
         resourceId: Long,
         createNoteInput: CreateNoteInput,
-    ): DataState<Unit>
+    ): Unit
 
     suspend fun deleteNote(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-    ): DataState<Unit>
+    ): Unit
 
     fun retrieveNote(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
-    ): Flow<DataState<Note>>
+    ): Flow<Note>
 
     fun retrieveListNotes(
         resourceType: String,
         resourceId: Long,
-    ): Flow<DataState<List<Note>>>
+    ): Flow<List<Note>>
 
     suspend fun updateNote(
         resourceType: String,
         resourceId: Long,
         noteId: Long,
         updateNoteInput: UpdateNoteInput,
-    ): DataState<Unit>
+    ): Unit
 }

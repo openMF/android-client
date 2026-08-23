@@ -9,13 +9,13 @@
  */
 package com.mifos.feature.client.clientProfile
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.client_profile_actions
-import androidclient.feature.client.generated.resources.client_profile_profile
-import androidclient.feature.client.generated.resources.group_na
-import androidclient.feature.client.generated.resources.name_na
-import androidclient.feature.client.generated.resources.office_na
-import androidclient.feature.client.generated.resources.string_not_available
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.client_profile_actions
+import kpt.feature.client.generated.resources.client_profile_profile
+import kpt.feature.client.generated.resources.group_na
+import kpt.feature.client.generated.resources.name_na
+import kpt.feature.client.generated.resources.office_na
+import kpt.feature.client.generated.resources.string_not_available
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -44,7 +44,9 @@ import com.mifos.feature.client.clientProfile.components.ProfileCard
 import com.mifos.feature.client.clientProfile.components.clientsActionItems
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun ClientProfileScreen(
@@ -143,7 +145,7 @@ private fun ClientProfileContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .padding(horizontal = KptTheme.spacing.md),
+                    .padding(horizontal = LocalKptSpacing.current.md),
             ) {
                 Text(
                     text = stringResource(Res.string.client_profile_profile),
@@ -168,7 +170,7 @@ private fun ClientProfileContent(
                         )
                     },
                 )
-                Spacer(Modifier.height(KptTheme.spacing.md))
+                Spacer(Modifier.height(LocalKptSpacing.current.md))
                 Text(
                     text = stringResource(Res.string.client_profile_actions),
                     style = MifosTypography.labelLargeEmphasized,
@@ -182,7 +184,7 @@ private fun ClientProfileContent(
                             TextUtil(
                                 text = stringResource(it.subTitle),
                                 style = MifosTypography.bodySmall,
-                                color = KptTheme.colorScheme.secondary,
+                                color = LocalKptColors.current.secondary,
                             ),
                         ),
                         rightValues = emptyList(),

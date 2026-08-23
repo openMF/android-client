@@ -10,21 +10,16 @@
 package com.mifos.room.entities.collectionsheet
 
 import com.mifos.core.model.objects.account.loan.PaymentTypeOptions
-import com.mifos.core.model.utils.IgnoredOnParcel
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Created by Tarun on 06-07-2017.
  */
-@Parcelize
 @Serializable
 data class IndividualCollectionSheet(
     var dueDate: String? = null,
 
     var clients: ArrayList<ClientCollectionSheet>? = null,
 
-    @IgnoredOnParcel
     var paymentTypeOptions: ArrayList<PaymentTypeOptions>? = null,
-) : Parcelable
+)

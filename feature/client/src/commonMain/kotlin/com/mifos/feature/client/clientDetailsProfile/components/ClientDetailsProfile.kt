@@ -9,10 +9,10 @@
  */
 package com.mifos.feature.client.clientDetailsProfile.components
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.email_na
-import androidclient.feature.client.generated.resources.mobile_na
-import androidclient.feature.client.generated.resources.name_na
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.email_na
+import kpt.feature.client.generated.resources.mobile_na
+import kpt.feature.client.generated.resources.name_na
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,7 +31,9 @@ import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosUserImage
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun ClientDetailsProfile(
@@ -44,7 +46,7 @@ fun ClientDetailsProfile(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                top = KptTheme.spacing.lg,
+                top = LocalKptSpacing.current.lg,
                 bottom = DesignToken.padding.medium,
             ),
         verticalAlignment = Alignment.CenterVertically,
@@ -65,12 +67,12 @@ fun ClientDetailsProfile(
             Text(
                 text = mobile ?: stringResource(Res.string.mobile_na),
                 style = MifosTypography.bodySmall,
-                color = KptTheme.colorScheme.secondary,
+                color = LocalKptColors.current.secondary,
             )
             Text(
                 text = email ?: stringResource(Res.string.email_na),
                 style = MifosTypography.bodySmall,
-                color = KptTheme.colorScheme.secondary,
+                color = LocalKptColors.current.secondary,
             )
         }
     }

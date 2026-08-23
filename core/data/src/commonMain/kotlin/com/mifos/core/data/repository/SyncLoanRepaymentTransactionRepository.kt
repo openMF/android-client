@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
@@ -17,9 +16,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface SyncLoanRepaymentTransactionRepository {
 
-    fun databaseLoanRepayments(): Flow<DataState<List<LoanRepaymentRequestEntity>>>
+    fun databaseLoanRepayments(): Flow<List<LoanRepaymentRequestEntity>>
 
-    fun paymentTypeOption(): Flow<DataState<List<PaymentTypeOptionEntity>>>
+    fun paymentTypeOption(): Flow<List<PaymentTypeOptionEntity>>
 
     suspend fun submitPayment(
         loanId: Int,
@@ -28,9 +27,9 @@ interface SyncLoanRepaymentTransactionRepository {
 
     fun deleteAndUpdateLoanRepayments(
         loanId: Int,
-    ): Flow<DataState<List<LoanRepaymentRequestEntity>>>
+    ): Flow<List<LoanRepaymentRequestEntity>>
 
     fun updateLoanRepaymentTransaction(
         loanRepaymentRequest: LoanRepaymentRequestEntity,
-    ): Flow<DataState<LoanRepaymentRequestEntity?>>
+    ): Flow<LoanRepaymentRequestEntity?>
 }

@@ -9,19 +9,18 @@
  */
 package com.mifos.feature.search
 
-import androidclient.feature.search.generated.resources.Res
-import androidclient.feature.search.generated.resources.feature_search_filter_options_clients_label
-import androidclient.feature.search.generated.resources.feature_search_filter_options_clients_value
-import androidclient.feature.search.generated.resources.feature_search_filter_options_groups_label
-import androidclient.feature.search.generated.resources.feature_search_filter_options_groups_value
-import androidclient.feature.search.generated.resources.feature_search_filter_options_loans_label
-import androidclient.feature.search.generated.resources.feature_search_filter_options_loans_value
-import androidclient.feature.search.generated.resources.feature_search_filter_options_savings_label
-import androidclient.feature.search.generated.resources.feature_search_filter_options_savings_value
+import kpt.feature.search.generated.resources.Res
+import kpt.feature.search.generated.resources.feature_search_filter_options_clients_label
+import kpt.feature.search.generated.resources.feature_search_filter_options_clients_value
+import kpt.feature.search.generated.resources.feature_search_filter_options_groups_label
+import kpt.feature.search.generated.resources.feature_search_filter_options_groups_value
+import kpt.feature.search.generated.resources.feature_search_filter_options_loans_label
+import kpt.feature.search.generated.resources.feature_search_filter_options_loans_value
+import kpt.feature.search.generated.resources.feature_search_filter_options_savings_label
+import kpt.feature.search.generated.resources.feature_search_filter_options_savings_value
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SearchRepository
 import com.mifos.core.model.objects.SearchedEntity
 import kotlinx.coroutines.Job
@@ -114,24 +113,11 @@ class SearchViewModel(
             }.catch { throwable ->
                 searchResultState.update { SearchResultState.Error(throwable.message.toString()) }
             }
-                .onEach { resultState ->
-                    when (resultState) {
-                        is DataState.Success -> {
-                            val results = resultState.data
-                            if (results.isEmpty()) {
-                                searchResultState.update { SearchResultState.Empty(false) }
-                            } else {
-                                searchResultState.update { SearchResultState.Success(results) }
-                            }
-                        }
-
-                        is DataState.Error -> {
-                            searchResultState.update { SearchResultState.Error(resultState.message) }
-                        }
-
-                        is DataState.Loading -> {
-                            searchResultState.update { SearchResultState.Loading }
-                        }
+                .onEach { results ->
+                    if (results.isEmpty()) {
+                        searchResultState.update { SearchResultState.Empty(false) }
+                    } else {
+                        searchResultState.update { SearchResultState.Success(results) }
                     }
                 }
                 .launchIn(viewModelScope)

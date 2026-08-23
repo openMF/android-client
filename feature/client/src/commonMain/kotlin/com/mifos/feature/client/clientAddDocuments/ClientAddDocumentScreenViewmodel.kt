@@ -9,14 +9,13 @@
  */
 package com.mifos.feature.client.clientAddDocuments
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.error_document_size_exceeded
-import androidclient.feature.client.generated.resources.no_internet_message
-import androidclient.feature.client.generated.resources.unknown_error
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.error_document_size_exceeded
+import kpt.feature.client.generated.resources.no_internet_message
+import kpt.feature.client.generated.resources.unknown_error
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.util.NetworkMonitor
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.feature.client.DocumentSelectAndUploadRepository
 import com.mifos.feature.client.EntityDocumentState
 import com.mifos.feature.client.utils.openPdfWithDefaultExternalApp
@@ -24,6 +23,7 @@ import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.extension
 import io.github.vinceglb.filekit.name
 import io.github.vinceglb.filekit.size
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -108,44 +108,38 @@ class ClientAddDocumentScreenViewmodel(
 
     private fun pickFromGallery() {
         viewModelScope.launch {
+            loadingDialogState()
             documentSelectAndUploadRepository.selectImageFromGallery()
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> {
+                .catch { error ->
+                    mutableStateFlow.update {
+                        it.copy(showBottomSheet = false)
+                    }
+                    errorDialogState(error.message ?: getString(Res.string.unknown_error))
+                }
+                .collect { platformFile ->
+                    nullDialogState()
+                    platformFile?.let { file ->
+                        mutableStateFlow.update {
+                            it.copy(showBottomSheet = false)
+                        }
+                        if (file.size() > 1048576L) {
                             mutableStateFlow.update {
-                                it.copy(showBottomSheet = false)
+                                it.copy(
+                                    dialogState = ClientAddDocumentScreenState
+                                        .DialogState.Error(
+                                            getString(Res.string.error_document_size_exceeded),
+                                        ),
+                                )
                             }
-                            errorDialogState(dataState.message)
-                        }
-                        DataState.Loading -> {
-                            loadingDialogState()
-                        }
-                        is DataState.Success -> {
-                            nullDialogState()
-                            dataState.data?.let { platformFile ->
-                                mutableStateFlow.update {
-                                    it.copy(showBottomSheet = false)
-                                }
-                                if (platformFile.size() > 1048576L) {
-                                    mutableStateFlow.update {
-                                        it.copy(
-                                            dialogState = ClientAddDocumentScreenState
-                                                .DialogState.Error(
-                                                    getString(Res.string.error_document_size_exceeded),
-                                                ),
-                                        )
-                                    }
-                                } else {
-                                    mutableStateFlow.update {
-                                        it.copy(dialogState = null)
-                                    }
-                                    documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
-                                    documentSelectAndUploadRepository.updateEntityDocument(
-                                        platformFile,
-                                    )
-                                    sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
-                                }
+                        } else {
+                            mutableStateFlow.update {
+                                it.copy(dialogState = null)
                             }
+                            documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
+                            documentSelectAndUploadRepository.updateEntityDocument(
+                                file,
+                            )
+                            sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
                         }
                     }
                 }
@@ -154,47 +148,41 @@ class ClientAddDocumentScreenViewmodel(
 
     private fun pickFromFiles() {
         viewModelScope.launch {
+            loadingDialogState()
             documentSelectAndUploadRepository.selectDocumentFromFile()
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> {
+                .catch { error ->
+                    mutableStateFlow.update {
+                        it.copy(showBottomSheet = false)
+                    }
+                    errorDialogState(error.message ?: getString(Res.string.unknown_error))
+                }
+                .collect { platformFile ->
+                    nullDialogState()
+                    platformFile?.let { file ->
+                        mutableStateFlow.update {
+                            it.copy(showBottomSheet = false)
+                        }
+                        if (file.size() > 1048576L) {
                             mutableStateFlow.update {
-                                it.copy(showBottomSheet = false)
+                                it.copy(
+                                    dialogState = ClientAddDocumentScreenState
+                                        .DialogState.Error(
+                                            getString(Res.string.error_document_size_exceeded),
+                                        ),
+                                )
                             }
-                            errorDialogState(dataState.message)
-                        }
-                        DataState.Loading -> {
-                            loadingDialogState()
-                        }
-                        is DataState.Success -> {
-                            nullDialogState()
-                            dataState.data?.let { platformFile ->
-                                mutableStateFlow.update {
-                                    it.copy(showBottomSheet = false)
-                                }
-                                if (platformFile.size() > 1048576L) {
-                                    mutableStateFlow.update {
-                                        it.copy(
-                                            dialogState = ClientAddDocumentScreenState
-                                                .DialogState.Error(
-                                                    getString(Res.string.error_document_size_exceeded),
-                                                ),
-                                        )
-                                    }
-                                } else {
-                                    mutableStateFlow.update {
-                                        it.copy(dialogState = null)
-                                    }
-                                    documentSelectAndUploadRepository.updateEntityDocument(
-                                        platformFile,
-                                    )
-                                    if (platformFile.extension == "pdf") {
-                                        documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.VIEW)
-                                    } else {
-                                        documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
-                                        sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
-                                    }
-                                }
+                        } else {
+                            mutableStateFlow.update {
+                                it.copy(dialogState = null)
+                            }
+                            documentSelectAndUploadRepository.updateEntityDocument(
+                                file,
+                            )
+                            if (file.extension == "pdf") {
+                                documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.VIEW)
+                            } else {
+                                documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
+                                sendEvent(ClientAddDocumentScreenEvents.OnNavigateToPreviewScreen)
                             }
                         }
                     }
@@ -207,24 +195,19 @@ class ClientAddDocumentScreenViewmodel(
             val isConnected = observerNetwork()
             when (isConnected) {
                 true -> {
+                    loadingDialogState()
                     documentSelectAndUploadRepository.uploadDocument(
                         state.enteredFileName,
                         state.enteredDocumentDescription,
-                    ).collect { dataState ->
-                        when (dataState) {
-                            is DataState.Error -> {
-                                errorDialogState(dataState.message)
-                            }
-                            DataState.Loading -> {
-                                loadingDialogState()
-                            }
-                            is DataState.Success -> {
-                                nullDialogState()
-                                documentSelectAndUploadRepository.resetStateAndRefresh()
-                                sendEvent(ClientAddDocumentScreenEvents.OnNavigateBack)
-                            }
+                    )
+                        .catch { error ->
+                            errorDialogState(error.message ?: getString(Res.string.unknown_error))
                         }
-                    }
+                        .collect { _ ->
+                            nullDialogState()
+                            documentSelectAndUploadRepository.resetStateAndRefresh()
+                            sendEvent(ClientAddDocumentScreenEvents.OnNavigateBack)
+                        }
                 }
                 false -> {
                     errorDialogState(getString(Res.string.no_internet_message))
@@ -238,24 +221,19 @@ class ClientAddDocumentScreenViewmodel(
             val isConnected = observerNetwork()
             when (isConnected) {
                 true -> {
+                    loadingDialogState()
                     documentSelectAndUploadRepository.updateDocument(
                         state.enteredFileName,
                         state.enteredDocumentDescription,
-                    ).collect { dataState ->
-                        when (dataState) {
-                            is DataState.Error -> {
-                                errorDialogState(dataState.message)
-                            }
-                            DataState.Loading -> {
-                                loadingDialogState()
-                            }
-                            is DataState.Success -> {
-                                nullDialogState()
-                                documentSelectAndUploadRepository.resetStateAndRefresh()
-                                sendEvent(ClientAddDocumentScreenEvents.OnNavigateBack)
-                            }
+                    )
+                        .catch { error ->
+                            errorDialogState(error.message ?: getString(Res.string.unknown_error))
                         }
-                    }
+                        .collect { _ ->
+                            nullDialogState()
+                            documentSelectAndUploadRepository.resetStateAndRefresh()
+                            sendEvent(ClientAddDocumentScreenEvents.OnNavigateBack)
+                        }
                 }
                 false -> {
                     errorDialogState(getString(Res.string.no_internet_message))

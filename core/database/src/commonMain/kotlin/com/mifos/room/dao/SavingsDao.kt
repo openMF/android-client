@@ -15,11 +15,11 @@ import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequest
 import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
 import com.mifos.room.entities.templates.savings.SavingsAccountTransactionTemplateEntity
 import kotlinx.coroutines.flow.Flow
-import template.core.base.database.Dao
-import template.core.base.database.Insert
-import template.core.base.database.OnConflictStrategy
-import template.core.base.database.Query
-import template.core.base.database.Update
+import androidx.room3.Dao
+import androidx.room3.Insert
+import androidx.room3.OnConflictStrategy
+import androidx.room3.Query
+import androidx.room3.Update
 
 @Dao
 interface SavingsDao {
@@ -59,6 +59,15 @@ interface SavingsDao {
 
     @Query("SELECT * FROM SavingsAccountWithAssociations where id = :savingsAccountId")
     fun getSavingsAccountWithAssociations(savingsAccountId: Int): Flow<SavingsAccountWithAssociationsEntity?>
+
+    // Business key for SavingsAccountWithAssociations is the `id` column (the autoGenerate PK
+    // holds the real savings-account id, stamped by provideSavingsAccountSummaryStore). The Store5
+    // SoT writer deletes-then-inserts per this key so an SWR refresh REPLACES (never duplicates).
+    @Query("DELETE FROM SavingsAccountWithAssociations WHERE id = :savingsAccountId")
+    suspend fun deleteSavingsAccountWithAssociations(savingsAccountId: Int)
+
+    @Query("DELETE FROM SavingsAccountWithAssociations")
+    suspend fun deleteAllSavingsAccountWithAssociations()
 
     @Query("SELECT * FROM PaymentTypeOption")
     fun getAllPaymentTypeOption(): Flow<List<PaymentTypeOptionEntity>>

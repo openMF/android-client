@@ -9,14 +9,11 @@
  */
 package com.mifos.core.model.objects.organisations
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Created by Rajan Maurya on 15/07/16.
  */
-@Parcelize
 @Serializable
 data class InterestType(
     var id: Int? = null,
@@ -24,4 +21,4 @@ data class InterestType(
     var code: String? = null,
 
     var value: String? = null,
-) : Parcelable
+)

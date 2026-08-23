@@ -9,8 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.GenerateCollectionSheetRepository
 import com.mifos.core.model.objects.collectionsheets.CollectionSheetRequestPayload
 import com.mifos.room.entities.collectionsheet.CollectionSheetResponse
@@ -24,7 +22,7 @@ class FetchProductiveCollectionSheetUseCase(
     operator fun invoke(
         centerId: Int,
         payload: CollectionSheetRequestPayload?,
-    ): Flow<DataState<CollectionSheetResponse>> = flow {
+    ): Flow<CollectionSheetResponse> = flow {
         emit(repository.fetchProductiveCollectionSheet(centerId, payload))
-    }.asDataStateFlow()
+    }
 }

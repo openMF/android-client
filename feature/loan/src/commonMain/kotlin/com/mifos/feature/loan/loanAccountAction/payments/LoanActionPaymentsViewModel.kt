@@ -9,7 +9,7 @@
  */
 package com.mifos.feature.loan.loanAccountAction.payments
 
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.feature.loan.loanAccountAction.LoanAccountActionItem
 import kotlinx.coroutines.flow.update
 internal class LoanPaymentsActionViewModel() : BaseViewModel<LoanPaymentsActionState, LoanPaymentsActionEvent, LoanPaymentsAction>(

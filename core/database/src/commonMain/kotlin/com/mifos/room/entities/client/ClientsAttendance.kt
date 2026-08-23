@@ -9,13 +9,10 @@
  */
 package com.mifos.room.entities.client
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
-@Parcelize
 @Serializable
 data class ClientsAttendance(
     val attendanceType: Int,
     val clientId: Int,
-) : Parcelable
+)

@@ -52,7 +52,9 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
 import kotlin.math.absoluteValue
 import kotlin.math.floor
 import kotlin.math.log10
@@ -82,7 +84,7 @@ fun LegendToggleItem(
         Text(
             text = stringResource(legend.title),
             style = MifosTypography.labelMedium,
-            color = KptTheme.colorScheme.onSurfaceVariant,
+            color = LocalKptColors.current.onSurfaceVariant,
             textDecoration = if (legend.isVisible) TextDecoration.None else TextDecoration.LineThrough,
         )
     }
@@ -115,7 +117,7 @@ fun StackedBarChart(
                 Text(
                     text = formatGraphValue(step).substringBefore('.'),
                     style = MifosTypography.labelSmall,
-                    color = KptTheme.colorScheme.onSurfaceVariant,
+                    color = LocalKptColors.current.onSurfaceVariant,
                     modifier = Modifier.height(DesignToken.padding.large),
                 )
             }
@@ -218,8 +220,8 @@ fun StackedBarChart(
                         Spacer(modifier = Modifier.height(DesignToken.padding.dp14))
                         Text(
                             text = bar.xLabel,
-                            style = KptTheme.typography.labelSmall,
-                            color = KptTheme.colorScheme.onSurfaceVariant,
+                            style = LocalKptTypography.current.labelSmall,
+                            color = LocalKptColors.current.onSurfaceVariant,
                             maxLines = 1,
                             modifier = Modifier
                                 .wrapContentWidth(unbounded = true)
@@ -250,7 +252,7 @@ fun ChartTooltip(
                 text = info.xLabel,
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
-                style = KptTheme.typography.bodyMedium,
+                style = LocalKptTypography.current.bodyMedium,
             )
             Spacer(modifier = Modifier.height(DesignToken.padding.extraSmall))
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -263,7 +265,7 @@ fun ChartTooltip(
                 Text(
                     text = "${info.segmentName}: ${formatGraphValue(info.segmentValue)}",
                     color = Color.White,
-                    style = KptTheme.typography.bodySmall,
+                    style = LocalKptTypography.current.bodySmall,
                 )
             }
         }

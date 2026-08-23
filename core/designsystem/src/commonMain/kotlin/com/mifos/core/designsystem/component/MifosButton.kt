@@ -36,7 +36,8 @@ import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 /**
  * Mifos button with generic content slot. Wraps Material 3 [Button].
@@ -58,10 +59,10 @@ fun MifosButton(
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
     colors: ButtonColors = ButtonDefaults.buttonColors(
-        containerColor = KptTheme.colorScheme.primary,
-        contentColor = KptTheme.colorScheme.onPrimary,
-        disabledContainerColor = KptTheme.colorScheme.onSurface.copy(alpha = 0.12f),
-        disabledContentColor = KptTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+        containerColor = LocalKptColors.current.primary,
+        contentColor = LocalKptColors.current.onPrimary,
+        disabledContainerColor = LocalKptColors.current.onSurface.copy(alpha = 0.12f),
+        disabledContentColor = LocalKptColors.current.onSurface.copy(alpha = 0.38f),
     ),
     content: @Composable RowScope.() -> Unit = {},
 ) {
@@ -98,7 +99,7 @@ fun MifosButton(
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     elevation: ButtonElevation? = ButtonDefaults.buttonElevation(),
     colors: ButtonColors = ButtonDefaults.buttonColors(
-        containerColor = KptTheme.colorScheme.primary,
+        containerColor = LocalKptColors.current.primary,
         contentColor = AppColors.customWhite,
     ),
 ) {
@@ -171,10 +172,10 @@ fun MifosOutlinedButton(
     shape: Shape = DesignToken.shapes.medium,
     border: BorderStroke = BorderStroke(
         width = MifosButtonDefaults.OutlinedButtonBorderWidth,
-        color = KptTheme.colorScheme.secondaryContainer,
+        color = LocalKptColors.current.secondaryContainer,
     ),
     colors: ButtonColors = ButtonDefaults.outlinedButtonColors(
-        contentColor = KptTheme.colorScheme.primary,
+        contentColor = LocalKptColors.current.primary,
     ),
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
 ) {
@@ -215,12 +216,12 @@ fun MifosTextButton(
         modifier = modifier.height(DesignToken.sizes.imageDp48),
         enabled = enabled,
         colors = ButtonDefaults.textButtonColors(
-            containerColor = KptTheme.colorScheme.primary,
-            contentColor = KptTheme.colorScheme.onPrimary,
-            disabledContainerColor = KptTheme.colorScheme.onSurface.copy(
+            containerColor = LocalKptColors.current.primary,
+            contentColor = LocalKptColors.current.onPrimary,
+            disabledContainerColor = LocalKptColors.current.onSurface.copy(
                 alpha = .12f,
             ),
-            disabledContentColor = KptTheme.colorScheme.onSurface.copy(
+            disabledContentColor = LocalKptColors.current.onSurface.copy(
                 .5f,
             ),
         ),

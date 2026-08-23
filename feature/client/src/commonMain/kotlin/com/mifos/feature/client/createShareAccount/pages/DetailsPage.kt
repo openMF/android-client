@@ -9,15 +9,15 @@
  */
 package com.mifos.feature.client.createShareAccount.pages
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_share_account_back
-import androidclient.feature.client.generated.resources.feature_share_account_detail_date_cancel
-import androidclient.feature.client.generated.resources.feature_share_account_detail_date_select
-import androidclient.feature.client.generated.resources.feature_share_account_detail_external_id
-import androidclient.feature.client.generated.resources.feature_share_account_detail_product_name
-import androidclient.feature.client.generated.resources.feature_share_account_detail_submission_date
-import androidclient.feature.client.generated.resources.feature_share_account_details
-import androidclient.feature.client.generated.resources.feature_share_account_next
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_share_account_back
+import kpt.feature.client.generated.resources.feature_share_account_detail_date_cancel
+import kpt.feature.client.generated.resources.feature_share_account_detail_date_select
+import kpt.feature.client.generated.resources.feature_share_account_detail_external_id
+import kpt.feature.client.generated.resources.feature_share_account_detail_product_name
+import kpt.feature.client.generated.resources.feature_share_account_detail_submission_date
+import kpt.feature.client.generated.resources.feature_share_account_details
+import kpt.feature.client.generated.resources.feature_share_account_next
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,7 +43,8 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.client.createShareAccount.CreateShareAccountAction
 import com.mifos.feature.client.createShareAccount.CreateShareAccountState
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -94,7 +95,7 @@ fun DetailsPage(
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = LocalKptSpacing.current.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -102,7 +103,7 @@ fun DetailsPage(
                 text = stringResource(Res.string.feature_share_account_details),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosTextFieldDropdown(
                 value = if (state.shareProductIndex == null) {
@@ -127,7 +128,7 @@ fun DetailsPage(
                     onAction(CreateShareAccountAction.OnOpenSubmissionDatePicker(true))
                 },
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
             MifosOutlinedTextField(
                 value = state.externalId ?: "",
                 onValueChange = {
@@ -135,7 +136,7 @@ fun DetailsPage(
                 },
                 label = stringResource(Res.string.feature_share_account_detail_external_id),
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
         }
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.feature_share_account_back),

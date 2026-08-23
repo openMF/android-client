@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.room.entities.accounts.GroupAccounts
 import com.mifos.room.entities.group.GroupEntity
 import com.mifos.room.entities.group.GroupWithAssociations
@@ -20,9 +19,9 @@ import kotlinx.coroutines.flow.Flow
  */
 interface GroupDetailsRepository {
 
-    fun getGroup(groupId: Int): Flow<DataState<GroupEntity>>
+    fun getGroup(groupId: Int): Flow<GroupEntity>
 
-    fun getGroupAccounts(groupId: Int): Flow<DataState<GroupAccounts>>
+    fun getGroupAccounts(groupId: Int): Flow<GroupAccounts>
 
-    fun getGroupWithAssociations(groupId: Int): Flow<DataState<GroupWithAssociations>>
+    fun getGroupWithAssociations(groupId: Int): Flow<GroupWithAssociations>
 }

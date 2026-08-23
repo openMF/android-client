@@ -9,32 +9,32 @@
  */
 package com.mifos.feature.client.clientDetailsProfile
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.account_no
-import androidclient.feature.client.generated.resources.activation_date
-import androidclient.feature.client.generated.resources.client_classification
-import androidclient.feature.client.generated.resources.client_type
-import androidclient.feature.client.generated.resources.date_of_birth
-import androidclient.feature.client.generated.resources.external_id
-import androidclient.feature.client.generated.resources.gender
-import androidclient.feature.client.generated.resources.legal_form
-import androidclient.feature.client.generated.resources.office
-import androidclient.feature.client.generated.resources.staff
-import androidclient.feature.client.generated.resources.string_not_available
-import androidclient.feature.client.generated.resources.submission_date
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.account_no
+import kpt.feature.client.generated.resources.activation_date
+import kpt.feature.client.generated.resources.client_classification
+import kpt.feature.client.generated.resources.client_type
+import kpt.feature.client.generated.resources.date_of_birth
+import kpt.feature.client.generated.resources.external_id
+import kpt.feature.client.generated.resources.gender
+import kpt.feature.client.generated.resources.legal_form
+import kpt.feature.client.generated.resources.office
+import kpt.feature.client.generated.resources.staff
+import kpt.feature.client.generated.resources.string_not_available
+import kpt.feature.client.generated.resources.submission_date
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.ui.components.ResultStatus
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.core.ui.util.toDateString
 import com.mifos.feature.client.clientDetailsProfile.components.ClientProfileDetailsActionItem
 import com.mifos.room.entities.client.ClientEntity
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
@@ -86,47 +86,39 @@ internal class ClientProfileDetailsViewModel(
     private fun loadClientDetailsAndImage(clientId: Int) {
         // Fetch client details
         viewModelScope.launch {
-            getClientDetailsUseCase(clientId).collect { result ->
-                when (result) {
-                    is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                client = result.data.client,
-                                details = buildClientDetails(result.data.client),
-                                dialogState = null,
-                            )
-                        }
-                    }
-
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientProfileDetailsState.DialogState.Error(result.message),
-                            )
-                        }
-                    }
-
-                    DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientProfileDetailsState.DialogState.Loading,
-                            )
-                        }
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ClientProfileDetailsState.DialogState.Loading,
+                )
+            }
+            getClientDetailsUseCase(clientId)
+                .catch { error ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ClientProfileDetailsState.DialogState.Error(error.message ?: ""),
+                        )
                     }
                 }
-            }
+                .collect { clientAndClientAccounts ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            client = clientAndClientAccounts.client,
+                            details = buildClientDetails(clientAndClientAccounts.client),
+                            dialogState = null,
+                        )
+                    }
+                }
         }
 
         // Fetch profile image
         viewModelScope.launch {
-            clientDetailsRepo.getImage(clientId).collect { result ->
-                when (result) {
-                    is DataState.Success -> mutableStateFlow.update {
-                        it.copy(profileImage = imageToByteArray(result.data))
+            clientDetailsRepo.getImage(clientId)
+                .catch { }
+                .collect { image ->
+                    mutableStateFlow.update {
+                        it.copy(profileImage = imageToByteArray(image))
                     }
-                    else -> Unit
                 }
-            }
         }
     }
 
@@ -259,23 +251,20 @@ internal class ClientProfileDetailsViewModel(
                 dialogState = ClientProfileDetailsState.DialogState.Loading,
             )
         }
-        val result = clientDetailsRepo.unassignStaff(route.id, state.client!!.staffId)
-        when {
-            result is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = ClientProfileDetailsState.DialogState
-                            .ShowStatusDialog(ResultStatus.SUCCESS),
-                    )
-                }
+        try {
+            clientDetailsRepo.unassignStaff(route.id, state.client!!.staffId)
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ClientProfileDetailsState.DialogState
+                        .ShowStatusDialog(ResultStatus.SUCCESS),
+                )
             }
-            result is DataState.Error -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = ClientProfileDetailsState.DialogState
-                            .ShowStatusDialog(ResultStatus.FAILURE, result.message),
-                    )
-                }
+        } catch (e: Exception) {
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ClientProfileDetailsState.DialogState
+                        .ShowStatusDialog(ResultStatus.FAILURE, e.message ?: ""),
+                )
             }
         }
     }

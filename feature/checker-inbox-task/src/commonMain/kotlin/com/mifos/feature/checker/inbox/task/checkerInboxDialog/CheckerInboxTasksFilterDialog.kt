@@ -9,19 +9,19 @@
  */
 package com.mifos.feature.checker.inbox.task.checkerInboxDialog
 
-import androidclient.feature.checker_inbox_task.generated.resources.Res
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_all
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_apply_filter
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_cancel
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_clear_filter
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_filter_checkers
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_invalid_date_range
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_resourceId
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_select
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_select_action
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_select_entity
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_select_from_date
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_select_to_date
+import kpt.feature.checker_inbox_task.generated.resources.Res
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_all
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_apply_filter
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_cancel
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_clear_filter
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_filter_checkers
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_invalid_date_range
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_resourceId
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_select
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_select_action
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_select_entity
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_select_from_date
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_select_to_date
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -70,7 +70,11 @@ import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptShapes
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
@@ -228,8 +232,8 @@ private fun CheckerInboxTasksFilterDialog(
         onDismissRequest = { closeDialog.invoke() },
     ) {
         Surface(
-            shape = KptTheme.shapes.large,
-            color = KptTheme.colorScheme.surface,
+            shape = LocalKptShapes.current.large,
+            color = LocalKptColors.current.surface,
         ) {
             Box(
                 contentAlignment = Alignment.Center,
@@ -238,25 +242,25 @@ private fun CheckerInboxTasksFilterDialog(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = KptTheme.spacing.md),
+                            .padding(bottom = LocalKptSpacing.current.md),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
                             text = stringResource(Res.string.feature_checker_inbox_task_filter_checkers),
-                            style = KptTheme.typography.titleLarge,
+                            style = LocalKptTypography.current.titleLarge,
                         )
                         Icon(
                             imageVector = MifosIcons.Cancel,
                             contentDescription = "",
-                            tint = KptTheme.colorScheme.outline,
+                            tint = LocalKptColors.current.outline,
                             modifier = Modifier
                                 .size(DesignToken.sizes.dp30)
                                 .clickable { closeDialog.invoke() },
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+                    Spacer(modifier = Modifier.height(LocalKptSpacing.current.sm))
 
                     MifosDatePickerTextField(
                         value = if (fromDate == 0L) {
@@ -279,7 +283,7 @@ private fun CheckerInboxTasksFilterDialog(
                         },
                     )
 
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+                    Spacer(modifier = Modifier.height(LocalKptSpacing.current.sm))
 
                     MifosDatePickerTextField(
                         value = if (toDate == 0L) {
@@ -302,7 +306,7 @@ private fun CheckerInboxTasksFilterDialog(
                         },
                     )
 
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+                    Spacer(modifier = Modifier.height(LocalKptSpacing.current.sm))
 
                     MifosTextFieldDropdown(
                         value = action,
@@ -317,7 +321,7 @@ private fun CheckerInboxTasksFilterDialog(
                         options = actionList,
                     )
 
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+                    Spacer(modifier = Modifier.height(LocalKptSpacing.current.sm))
 
                     MifosTextFieldDropdown(
                         value = entity,
@@ -332,7 +336,7 @@ private fun CheckerInboxTasksFilterDialog(
                         options = entityList,
                     )
 
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+                    Spacer(modifier = Modifier.height(LocalKptSpacing.current.sm))
 
                     MifosOutlinedTextField(
                         value = resourceId,
@@ -352,14 +356,14 @@ private fun CheckerInboxTasksFilterDialog(
                     if (showInvalidDateRangeError) {
                         Text(
                             text = invalidDateRangeMessage,
-                            color = KptTheme.colorScheme.error,
+                            color = LocalKptColors.current.error,
                             textAlign = TextAlign.Start,
                             modifier = Modifier
-                                .padding(top = KptTheme.spacing.sm, start = KptTheme.spacing.md),
+                                .padding(top = LocalKptSpacing.current.sm, start = LocalKptSpacing.current.md),
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.sm))
+                    Spacer(modifier = Modifier.height(LocalKptSpacing.current.sm))
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -371,15 +375,15 @@ private fun CheckerInboxTasksFilterDialog(
                             },
                             modifier = Modifier.height(DesignToken.spacing.dp40),
                             colors = ButtonColors(
-                                containerColor = KptTheme.colorScheme.primary,
-                                contentColor = KptTheme.colorScheme.onPrimary,
-                                disabledContainerColor = KptTheme.colorScheme.primaryContainer,
-                                disabledContentColor = KptTheme.colorScheme.onPrimaryContainer,
+                                containerColor = LocalKptColors.current.primary,
+                                contentColor = LocalKptColors.current.onPrimary,
+                                disabledContainerColor = LocalKptColors.current.primaryContainer,
+                                disabledContentColor = LocalKptColors.current.onPrimaryContainer,
                             ),
                         ) {
                             Text(
                                 text = stringResource(Res.string.feature_checker_inbox_task_clear_filter),
-                                style = KptTheme.typography.bodyMedium,
+                                style = LocalKptTypography.current.bodyMedium,
                             )
                         }
 
@@ -398,15 +402,15 @@ private fun CheckerInboxTasksFilterDialog(
                             },
                             modifier = Modifier.height(DesignToken.spacing.dp40),
                             colors = ButtonColors(
-                                containerColor = KptTheme.colorScheme.primary,
-                                contentColor = KptTheme.colorScheme.onPrimary,
-                                disabledContainerColor = KptTheme.colorScheme.primaryContainer,
-                                disabledContentColor = KptTheme.colorScheme.onPrimaryContainer,
+                                containerColor = LocalKptColors.current.primary,
+                                contentColor = LocalKptColors.current.onPrimary,
+                                disabledContainerColor = LocalKptColors.current.primaryContainer,
+                                disabledContentColor = LocalKptColors.current.onPrimaryContainer,
                             ),
                         ) {
                             Text(
                                 text = stringResource(Res.string.feature_checker_inbox_task_apply_filter),
-                                style = KptTheme.typography.bodyMedium,
+                                style = LocalKptTypography.current.bodyMedium,
                             )
                         }
                     }

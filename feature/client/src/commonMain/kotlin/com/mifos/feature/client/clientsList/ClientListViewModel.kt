@@ -9,20 +9,21 @@
  */
 package com.mifos.feature.client.clientsList
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_failed_to_load_client
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_client_failed_to_load_client
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.filter
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.Page
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.repository.ClientListRepository
 import com.mifos.core.datastore.UserPreferencesRepository
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.store.paging.PagingScreenStream
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.room.entities.client.ClientEntity
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -43,10 +44,22 @@ internal class ClientListViewModel(
     ),
 ) {
 
+    /**
+     * Offline-first paged client-list stream — the native Store5 paging idiom that drives the
+     * list body ([ClientListContentScreen]'s `PagingScreenContent`). Replaces the previous dual
+     * online-Paging3 / offline-DB read paths. The surrounding toolbar / search / filter / FAB
+     * state still lives in [ClientListState] and is unchanged.
+     */
+    val pagingStream: PagingScreenStream<ClientEntity> =
+        repository.clientListPagingStream(scope = viewModelScope)
+
     init {
         // load initial data
         loadClients()
     }
+
+    /** Pull-to-refresh / retry for the paged list. Resets the paging cursor to page 0. */
+    fun retry() = pagingStream.refresh()
 
     override fun handleAction(action: ClientListAction) {
         when (action) {
@@ -57,14 +70,14 @@ internal class ClientListViewModel(
             is ClientListAction.Internal.ReceiveClientResultFromDb -> handleClientResultFromDb(action.result)
             is ClientListAction.FetchImage -> fetchClientImage(action.clientId)
             ClientListAction.ActivateSearch -> {
-                updateState {
+                mutableStateFlow.update {
                     it.copy(
                         isSearchActive = true,
                     )
                 }
             }
             ClientListAction.DismissSearch -> {
-                updateState {
+                mutableStateFlow.update {
                     it.copy(
                         isSearchActive = false,
                     )
@@ -72,7 +85,7 @@ internal class ClientListViewModel(
             }
             ClientListAction.NavigateToCreateClient -> sendEvent(ClientListEvent.NavigateToCreateClient)
             is ClientListAction.OnQueryChange -> {
-                updateState {
+                mutableStateFlow.update {
                     it.copy(
                         searchQuery = action.query,
                     )
@@ -87,15 +100,16 @@ internal class ClientListViewModel(
         }
     }
 
-    private fun updateState(update: (ClientListState) -> ClientListState) {
-        mutableStateFlow.update(update)
-    }
-
     private fun dismissDialog() {
-        updateState { it.copy(dialogState = null) }
+        mutableStateFlow.update { it.copy(dialogState = null) }
     }
 
-    private fun refreshClients() = loadClients()
+    private fun refreshClients() {
+        // Refresh the paged list body (page 0, force-network) and keep the legacy state.clients
+        // load alive so filter/sort/office-name state stays populated.
+        pagingStream.refresh()
+        loadClients()
+    }
 
     private fun loadClients() {
         viewModelScope.launch {
@@ -110,13 +124,13 @@ internal class ClientListViewModel(
 
     private fun processClientsFromApi() {
         viewModelScope.launch {
-            updateState { it.copy(dialogState = ClientListState.DialogState.Loading) }
+            mutableStateFlow.update { it.copy(dialogState = ClientListState.DialogState.Loading) }
             runCatching {
                 repository.getAllClients()
             }.onSuccess { result ->
                 sendAction(ClientListAction.Internal.ReceiveClientResult(result))
             }.onFailure { throwable ->
-                updateState {
+                mutableStateFlow.update {
                     it.copy(
                         dialogState = ClientListState.DialogState.Error(
                             throwable.message ?: "An error occurred while loading clients",
@@ -129,39 +143,36 @@ internal class ClientListViewModel(
 
     private fun processClientsFromDb() {
         viewModelScope.launch {
-            repository.allDatabaseClients().collect { result ->
-                sendAction(ClientListAction.Internal.ReceiveClientResultFromDb(result))
-            }
+            mutableStateFlow.update { it.copy(dialogState = ClientListState.DialogState.Loading) }
+            repository.allDatabaseClients()
+                .catch { error ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ClientListState.DialogState.Error(
+                                error.message ?: Res.string.feature_client_failed_to_load_client.toString(),
+                            ),
+                        )
+                    }
+                }
+                .collect { result ->
+                    sendAction(ClientListAction.Internal.ReceiveClientResultFromDb(result))
+                }
         }
     }
 
-    private fun handleClientResultFromDb(result: DataState<Page<ClientEntity>>) {
-        when (result) {
-            is DataState.Loading -> updateState {
-                it.copy(dialogState = ClientListState.DialogState.Loading)
-            }
-
-            is DataState.Error -> updateState {
-                it.copy(
-                    dialogState = ClientListState.DialogState.Error(
-                        result.exception.message ?: Res.string.feature_client_failed_to_load_client.toString(),
-                    ),
-                )
-            }
-
-            is DataState.Success -> updateState {
-                val data = result.data.pageItems
-                if (data.isEmpty()) {
-                    it.copy(isEmpty = true, dialogState = null)
-                } else {
-                    it.copy(clients = data, dialogState = null, unfilteredClients = data)
-                }
+    private fun handleClientResultFromDb(result: Page<ClientEntity>) {
+        mutableStateFlow.update {
+            val data = result.pageItems
+            if (data.isEmpty()) {
+                it.copy(isEmpty = true, dialogState = null)
+            } else {
+                it.copy(clients = data, dialogState = null, unfilteredClients = data)
             }
         }
     }
 
     private fun handleClientResult(result: Flow<PagingData<ClientEntity>>) {
-        updateState {
+        mutableStateFlow.update {
             state.copy(
                 clientsFlow = result,
                 dialogState = null,
@@ -172,25 +183,21 @@ internal class ClientListViewModel(
 
     private fun fetchClientImage(clientId: Int) {
         viewModelScope.launch {
-            clientDetailsRepo.getImage(clientId).collect { result ->
-                when (result) {
-                    is DataState.Error -> {}
-                    DataState.Loading -> {}
-                    is DataState.Success -> {
-                        val imageBytes = imageToByteArray(result.data)
-                        updateState { state ->
-                            state.copy(
-                                clientImages = state.clientImages + (clientId to imageBytes),
-                            )
-                        }
+            clientDetailsRepo.getImage(clientId)
+                .catch { }
+                .collect { image ->
+                    val imageBytes = imageToByteArray(image)
+                    mutableStateFlow.update { state ->
+                        state.copy(
+                            clientImages = state.clientImages + (clientId to imageBytes),
+                        )
                     }
                 }
-            }
         }
     }
 
     private fun handleSortClick(sort: SortTypes?) {
-        updateState {
+        mutableStateFlow.update {
             val sortedList = when (sort) {
                 SortTypes.NAME -> it.clients.sortedBy { it.displayName?.lowercase() }
                 SortTypes.ACCOUNT_NUMBER -> it.clients.sortedBy { it.accountNo }
@@ -206,7 +213,7 @@ internal class ClientListViewModel(
     }
 
     private fun toggleFilterVisibility() {
-        updateState {
+        mutableStateFlow.update {
             it.copy(
                 isFilterVisible = !it.isFilterVisible,
             )
@@ -214,7 +221,7 @@ internal class ClientListViewModel(
     }
 
     private fun onUpdateOffice(offices: List<String?>) {
-        updateState {
+        mutableStateFlow.update {
             it.copy(
                 officeNames = (offices + it.officeNames).distinct().sortedBy { it },
             )
@@ -222,7 +229,7 @@ internal class ClientListViewModel(
     }
 
     private fun handleFilterClick(filter: String, filterType: FilterType) {
-        updateState {
+        mutableStateFlow.update {
             val newSelectedStatus = if (filterType == FilterType.STATUS) {
                 if (filter in it.selectedStatus) {
                     it.selectedStatus - filter
@@ -267,7 +274,7 @@ internal class ClientListViewModel(
     }
 
     private fun clearFilters() {
-        updateState {
+        mutableStateFlow.update {
             it.copy(
                 clients = it.unfilteredClients,
                 clientsFlow = it.unfilteredClientsFlow,
@@ -344,6 +351,6 @@ sealed interface ClientListAction {
 
     sealed class Internal : ClientListAction {
         data class ReceiveClientResult(val result: Flow<PagingData<ClientEntity>>) : Internal()
-        data class ReceiveClientResultFromDb(val result: DataState<Page<ClientEntity>>) : Internal()
+        data class ReceiveClientResultFromDb(val result: Page<ClientEntity>) : Internal()
     }
 }

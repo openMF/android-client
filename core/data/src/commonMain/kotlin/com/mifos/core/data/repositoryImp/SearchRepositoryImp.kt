@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.SearchRepository
 import com.mifos.core.model.objects.SearchedEntity
 import com.mifos.core.network.datamanager.DataManagerSearch
@@ -26,8 +24,8 @@ class SearchRepositoryImp(
         query: String,
         resources: String?,
         exactMatch: Boolean?,
-    ): Flow<DataState<List<SearchedEntity>>> {
+    ): Flow<List<SearchedEntity>> {
         return dataManagerSearch.searchResources(query, resources, exactMatch)
-            .asDataStateFlow()
+            
     }
 }

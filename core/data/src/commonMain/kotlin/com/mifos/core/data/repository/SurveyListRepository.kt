@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.room.entities.survey.QuestionDatasEntity
 import com.mifos.room.entities.survey.ResponseDatasEntity
 import com.mifos.room.entities.survey.SurveyEntity
@@ -20,11 +19,11 @@ import kotlinx.coroutines.flow.Flow
  */
 interface SurveyListRepository {
 
-    fun allSurvey(): Flow<DataState<List<SurveyEntity>>>
+    fun allSurvey(): Flow<List<SurveyEntity>>
 
-    fun databaseSurveys(): Flow<DataState<List<SurveyEntity>>>
+    fun databaseSurveys(): Flow<List<SurveyEntity>>
 
-    fun getDatabaseQuestionData(surveyId: Int): Flow<DataState<List<QuestionDatasEntity>>>
+    fun getDatabaseQuestionData(surveyId: Int): Flow<List<QuestionDatasEntity>>
 
-    fun getDatabaseResponseDatas(questionId: Int): Flow<DataState<List<ResponseDatasEntity>>>
+    fun getDatabaseResponseDatas(questionId: Int): Flow<List<ResponseDatasEntity>>
 }

@@ -9,20 +9,20 @@
  */
 package com.mifos.feature.client.clientTransfer
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.btn_back
-import androidclient.feature.client.generated.resources.btn_submit
-import androidclient.feature.client.generated.resources.client_transfer_add_note_here
-import androidclient.feature.client.generated.resources.client_transfer_add_notes
-import androidclient.feature.client.generated.resources.client_transfer_choose_office
-import androidclient.feature.client.generated.resources.client_transfer_expected_date
-import androidclient.feature.client.generated.resources.client_transfer_failure_title
-import androidclient.feature.client.generated.resources.client_transfer_success_message
-import androidclient.feature.client.generated.resources.client_transfer_success_title
-import androidclient.feature.client.generated.resources.client_transfer_title
-import androidclient.feature.client.generated.resources.dialog_continue
-import androidclient.feature.client.generated.resources.feature_client_charge_cancel
-import androidclient.feature.client.generated.resources.feature_client_charge_select
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.btn_back
+import kpt.feature.client.generated.resources.btn_submit
+import kpt.feature.client.generated.resources.client_transfer_add_note_here
+import kpt.feature.client.generated.resources.client_transfer_add_notes
+import kpt.feature.client.generated.resources.client_transfer_choose_office
+import kpt.feature.client.generated.resources.client_transfer_expected_date
+import kpt.feature.client.generated.resources.client_transfer_failure_title
+import kpt.feature.client.generated.resources.client_transfer_success_message
+import kpt.feature.client.generated.resources.client_transfer_success_title
+import kpt.feature.client.generated.resources.client_transfer_title
+import kpt.feature.client.generated.resources.dialog_continue
+import kpt.feature.client.generated.resources.feature_client_charge_cancel
+import kpt.feature.client.generated.resources.feature_client_charge_select
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -65,7 +65,9 @@ import com.mifos.core.ui.components.ResultStatus
 import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -133,7 +135,7 @@ private fun ClientTransferContent(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = KptTheme.spacing.md),
+                    .padding(horizontal = LocalKptSpacing.current.md),
             ) {
                 if (state.offices.isNotEmpty()) {
                     Text(
@@ -216,19 +218,19 @@ private fun ClientTransferContent(
                                     imageVector = MifosIcons.ChevronLeft,
                                     contentDescription = null,
                                     modifier = Modifier.size(DesignToken.sizes.iconAverage),
-                                    tint = KptTheme.colorScheme.primary,
+                                    tint = LocalKptColors.current.primary,
                                 )
                             },
                             text = {
                                 Text(
                                     text = stringResource(Res.string.btn_back),
-                                    color = KptTheme.colorScheme.primary,
+                                    color = LocalKptColors.current.primary,
                                     style = MifosTypography.labelLarge,
                                 )
                             },
                             modifier = Modifier.weight(1f),
                         )
-                        Spacer(Modifier.width(KptTheme.spacing.sm))
+                        Spacer(Modifier.width(LocalKptSpacing.current.sm))
                         MifosTextButton(
                             onClick = {
                                 onAction(ClientTransferAction.OnSubmit)

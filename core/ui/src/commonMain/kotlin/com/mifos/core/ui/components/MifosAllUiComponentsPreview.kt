@@ -9,11 +9,11 @@
  */
 package com.mifos.core.ui.components
 
-import androidclient.core.ui.generated.resources.Res
-import androidclient.core.ui.generated.resources.core_ui_core_common_working
-import androidclient.core.ui.generated.resources.core_ui_ic_centers_24dp
-import androidclient.core.ui.generated.resources.core_ui_ic_group_black_24dp
-import androidclient.core.ui.generated.resources.core_ui_no_internet
+import kpt.core.ui.generated.resources.Res
+import kpt.core.ui.generated.resources.core_ui_core_common_working
+import kpt.core.ui.generated.resources.core_ui_ic_centers_24dp
+import kpt.core.ui.generated.resources.core_ui_ic_group_black_24dp
+import kpt.core.ui.generated.resources.core_ui_no_internet
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -34,8 +34,9 @@ import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.util.DevicePreview
 import com.mifos.core.ui.util.TextUtil
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.KptTheme
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptTypography
 
 @DevicePreview
 @Composable
@@ -769,7 +770,7 @@ private fun MifosTextTitleDescDoubleLinePreview(
         MifosTextTitleDescDoubleLine(
             title = "MifosTextTitleDescDoubleLine Title",
             description = "MifosTextTitleDescDoubleLine Description",
-            descriptionStyle = KptTheme.typography.bodyMedium,
+            descriptionStyle = LocalKptTypography.current.bodyMedium,
             modifier = modifier,
         )
     }

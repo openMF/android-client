@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.AmountTransferRepository
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRequest
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferResponse
@@ -33,7 +31,7 @@ class AmountTransferRepositoryImp(
         toOfficeId: Int?,
         toClientId: Int?,
         toAccountType: Int?,
-    ): Flow<DataState<AccountTransferTemplate>> {
+    ): Flow<AccountTransferTemplate> {
         return dataManagerLoan.getAccountTransferTemplate(
             fromOfficeId = fromOfficeId,
             fromClientId = fromClientId,
@@ -42,17 +40,12 @@ class AmountTransferRepositoryImp(
             toOfficeId = toOfficeId,
             toClientId = toClientId,
             toAccountType = toAccountType,
-        ).asDataStateFlow()
+        )
     }
 
     override suspend fun submitAccountTransfer(
         request: AccountTransferRequest,
-    ): DataState<AccountTransferResponse> {
-        return try {
-            val response = dataManagerLoan.submitAccountTransfer(request)
-            DataState.Success(response)
-        } catch (e: Exception) {
-            DataState.Error(e)
-        }
+    ): AccountTransferResponse {
+        return dataManagerLoan.submitAccountTransfer(request)
     }
 }

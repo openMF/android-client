@@ -11,15 +11,15 @@ package com.mifos.room.typeconverters
 
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import template.core.base.database.TypeConverter
+import androidx.room3.ColumnTypeConverter
 
 class OfficeTypeConverters {
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromOpeningDateList(list: List<Int?>?): String {
         return Json.encodeToString(list ?: emptyList())
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toOpeningDateList(json: String?): List<Int?>? {
         return json?.let { Json.decodeFromString(it) }
     }

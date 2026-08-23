@@ -35,9 +35,6 @@ import com.mifos.core.model.objects.template.loan.TermFrequencyTypeOptions
 import com.mifos.core.model.objects.template.loan.TermPeriodFrequencyType
 import com.mifos.core.model.objects.template.loan.Timeline
 import com.mifos.core.model.objects.template.loan.TransactionProcessingStrategyOptions
-import com.mifos.core.model.utils.IgnoredOnParcel
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.client.ChargesEntity
 import com.mifos.room.entities.noncore.DataTableEntity
 import kotlinx.serialization.Serializable
@@ -46,7 +43,6 @@ import kotlinx.serialization.Serializable
  * Created by Rajan Maurya on 15/07/16.
  */
 @Serializable
-@Parcelize
 data class LoanTemplate(
     val clientId: Int? = null,
 
@@ -66,7 +62,6 @@ data class LoanTemplate(
 
     val fundName: String? = null,
 
-    @IgnoredOnParcel
     val currency: Currency? = null,
 
     val principal: Double? = null,
@@ -77,32 +72,26 @@ data class LoanTemplate(
 
     val termFrequency: Int? = null,
 
-    @IgnoredOnParcel
     val termPeriodFrequencyType: TermPeriodFrequencyType? = null,
 
     val numberOfRepayments: Int? = null,
 
     val repaymentEvery: Int? = null,
 
-    @IgnoredOnParcel
     val repaymentFrequencyType: RepaymentFrequencyType? = null,
 
     val interestRatePerPeriod: Double? = null,
 
-    @IgnoredOnParcel
     val interestRateFrequencyType: InterestRateFrequencyType? = null,
 
     val annualInterestRate: Double? = null,
 
     val isFloatingInterestRate: Boolean? = null,
 
-    @IgnoredOnParcel
     val amortizationType: AmortizationType? = null,
 
-    @IgnoredOnParcel
     val interestType: InterestType? = null,
 
-    @IgnoredOnParcel
     val interestCalculationPeriodType: InterestCalculationPeriodType? = null,
 
     val allowPartialPeriodInterestCalculation: Boolean? = null,
@@ -111,54 +100,38 @@ data class LoanTemplate(
 
     val graceOnArrearsAgeing: Int? = null,
 
-    @IgnoredOnParcel
     val timeline: Timeline? = null,
 
-    @IgnoredOnParcel
     val productOptions: List<ProductOptions> = emptyList(),
 
     val dataTables: ArrayList<DataTableEntity> = ArrayList(),
 
-    @IgnoredOnParcel
     val loanOfficerOptions: List<LoanOfficerOption> = emptyList(),
 
-    @IgnoredOnParcel
     val loanPurposeOptions: List<LoanPurposeOptions> = emptyList(),
 
-    @IgnoredOnParcel
     val fundOptions: List<FundOptions> = emptyList(),
 
-    @IgnoredOnParcel
     val termFrequencyTypeOptions: List<TermFrequencyTypeOptions> = emptyList(),
 
-    @IgnoredOnParcel
     val repaymentFrequencyTypeOptions: List<RepaymentFrequencyTypeOptions> = emptyList(),
 
-    @IgnoredOnParcel
     val repaymentFrequencyNthDayTypeOptions: List<RepaymentFrequencyNthDayTypeOptions> = emptyList(),
 
-    @IgnoredOnParcel
     val repaymentFrequencyDaysOfWeekTypeOptions: List<RepaymentFrequencyDaysOfWeekTypeOptions> = emptyList(),
 
-    @IgnoredOnParcel
     val interestRateFrequencyTypeOptions: List<InterestRateFrequencyTypeOptions> = emptyList(),
 
-    @IgnoredOnParcel
     val amortizationTypeOptions: List<AmortizationTypeOptions> = emptyList(),
 
-    @IgnoredOnParcel
     val interestTypeOptions: List<InterestTypeOptions> = emptyList(),
 
-    @IgnoredOnParcel
     val interestCalculationPeriodTypeOptions: List<InterestCalculationPeriodType> = emptyList(),
 
-    @IgnoredOnParcel
     val transactionProcessingStrategyOptions: List<TransactionProcessingStrategyOptions> = emptyList(),
 
-    @IgnoredOnParcel
     val chargeOptions: List<ChargeOptions> = emptyList(),
 
-    @IgnoredOnParcel
     val loanCollateralOptions: List<LoanCollateralOptions> = emptyList(),
 
     val multiDisburseLoan: Boolean? = null,
@@ -169,13 +142,10 @@ data class LoanTemplate(
 
     val canDisburse: Boolean? = null,
 
-    @IgnoredOnParcel
     val product: Product? = null,
 
-    @IgnoredOnParcel
     val daysInMonthType: DaysInMonthType? = null,
 
-    @IgnoredOnParcel
     val daysInYearType: DaysInYearType? = null,
 
     val isInterestRecalculationEnabled: Boolean? = null,
@@ -186,11 +156,10 @@ data class LoanTemplate(
 
     val maximumGap: Int? = null,
 
-    @IgnoredOnParcel
     val accountLinkingOptions: List<AccountLinkingOptions> = emptyList(),
 
     val loanScheduleType: TermFrequencyTypeOptions? = null,
 
     val overdueCharges: List<ChargesEntity> = emptyList(),
 
-) : Parcelable
+)

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2026 Mifos Initiative
+
+    This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+    If a copy of the MPL was not distributed with this file,
+    You can obtain one at https://mozilla.org/MPL/2.0/.
+
+    See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+-->
+<resources>
+    <!-- ============================================================
+         RULE-IMPL-NO-HARDCODED-STRING-001 — feature/profile i18n surface
+         Authored by W2-6 of plan-layer/active/store5-superbrain-v2/.
+         ============================================================ -->
+
+    <string name="screens_profile_local_title">Local profile</string>
+    <string name="screens_profile_local_message">%1$s runs entirely on-device. No account required.</string>
+</resources>

@@ -36,7 +36,10 @@ import androidx.compose.ui.text.style.TextAlign
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun MifosOtpTextField(
@@ -50,7 +53,7 @@ fun MifosOtpTextField(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(KptTheme.spacing.md),
+            .padding(LocalKptSpacing.current.md),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         BasicTextField(
@@ -88,7 +91,7 @@ fun MifosOtpTextField(
                             index = index,
                             text = otpText,
                         )
-                        Spacer(modifier = Modifier.width(KptTheme.spacing.sm))
+                        Spacer(modifier = Modifier.width(LocalKptSpacing.current.sm))
                     }
                 }
             },
@@ -97,10 +100,10 @@ fun MifosOtpTextField(
             // display error message in text
             Text(
                 text = "Invalid OTP",
-                style = KptTheme.typography.bodyMedium,
-                color = KptTheme.colorScheme.error,
+                style = LocalKptTypography.current.bodyMedium,
+                color = LocalKptColors.current.error,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = KptTheme.spacing.sm),
+                modifier = Modifier.padding(top = LocalKptSpacing.current.sm),
             )
         }
     }
@@ -123,11 +126,11 @@ private fun CharView(
             .width(DesignToken.sizes.textDp40)
             .wrapContentHeight(align = Alignment.CenterVertically),
         text = char,
-        style = KptTheme.typography.headlineSmall,
+        style = LocalKptTypography.current.headlineSmall,
         color = if (isFocused) {
-            KptTheme.colorScheme.secondary
+            LocalKptColors.current.secondary
         } else {
-            KptTheme.colorScheme.tertiary
+            LocalKptColors.current.tertiary
         },
         textAlign = TextAlign.Center,
     )

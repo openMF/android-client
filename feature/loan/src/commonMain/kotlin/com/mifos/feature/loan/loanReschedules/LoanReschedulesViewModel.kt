@@ -9,22 +9,22 @@
  */
 package com.mifos.feature.loan.loanReschedules
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_approve_failed
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_delete_failed
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_fetch_failed
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_approve_failed
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_delete_failed
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_fetch_failed
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.ApiDateFormatter
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.loan.LoanReschedulesRepository
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRejectionRequest
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleResponse
 import com.mifos.core.model.objects.account.loan.reschedules.RescheduleStatus
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -82,15 +82,12 @@ class LoanReschedulesViewModel(
     private fun fetchRescheduleHistory() {
         fetchHistoryJob?.cancel()
         fetchHistoryJob = viewModelScope.launch {
-            repository.getLoanReschedules(route.loanId).collectLatest { dataState ->
-                when (dataState) {
-                    is DataState.Loading -> mutableStateFlow.update {
-                        it.copy(dialogState = LoanReschedulesUiState.DialogState.Loading)
-                    }
-                    is DataState.Success -> mutableStateFlow.update {
-                        it.copy(dialogState = null, history = dataState.data)
-                    }
-                    is DataState.Error -> mutableStateFlow.update {
+            mutableStateFlow.update {
+                it.copy(dialogState = LoanReschedulesUiState.DialogState.Loading)
+            }
+            repository.getLoanReschedules(route.loanId)
+                .catch {
+                    mutableStateFlow.update {
                         it.copy(
                             dialogState = LoanReschedulesUiState.DialogState.FetchingFailed(
                                 messageRes = Res.string.feature_loan_reschedule_fetch_failed,
@@ -98,7 +95,11 @@ class LoanReschedulesViewModel(
                         )
                     }
                 }
-            }
+                .collectLatest { history ->
+                    mutableStateFlow.update {
+                        it.copy(dialogState = null, history = history)
+                    }
+                }
         }
     }
 
@@ -115,19 +116,18 @@ class LoanReschedulesViewModel(
                 locale = ApiDateFormatter.LOCALE,
             )
 
-            when (val result = repository.approveReschedule(rescheduleId, request)) {
-                is DataState.Success -> {
-                    mutableStateFlow.update { it.copy(dialogState = null) }
-                    fetchRescheduleHistory()
-                }
-                is DataState.Error -> mutableStateFlow.update {
+            try {
+                repository.approveReschedule(rescheduleId, request)
+                mutableStateFlow.update { it.copy(dialogState = null) }
+                fetchRescheduleHistory()
+            } catch (error: Exception) {
+                mutableStateFlow.update {
                     it.copy(
                         dialogState = LoanReschedulesUiState.DialogState.ActionError(
                             messageRes = Res.string.feature_loan_reschedule_approve_failed,
                         ),
                     )
                 }
-                DataState.Loading -> Unit
             }
         }
     }
@@ -145,19 +145,18 @@ class LoanReschedulesViewModel(
                 locale = ApiDateFormatter.LOCALE,
             )
 
-            when (val result = repository.deleteReschedule(rescheduleId, request)) {
-                is DataState.Success -> {
-                    mutableStateFlow.update { it.copy(dialogState = null) }
-                    fetchRescheduleHistory()
-                }
-                is DataState.Error -> mutableStateFlow.update {
+            try {
+                repository.deleteReschedule(rescheduleId, request)
+                mutableStateFlow.update { it.copy(dialogState = null) }
+                fetchRescheduleHistory()
+            } catch (error: Exception) {
+                mutableStateFlow.update {
                     it.copy(
                         dialogState = LoanReschedulesUiState.DialogState.ActionError(
                             messageRes = Res.string.feature_loan_reschedule_delete_failed,
                         ),
                     )
                 }
-                DataState.Loading -> Unit
             }
         }
     }

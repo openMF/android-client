@@ -9,14 +9,14 @@
  */
 package com.mifos.feature.loan.assignLoanOfficer
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.cancel
-import androidclient.feature.loan.generated.resources.feature_loan_assign_officer_assignment_date
-import androidclient.feature.loan.generated.resources.feature_loan_assign_officer_select_officer
-import androidclient.feature.loan.generated.resources.feature_loan_assign_officer_title
-import androidclient.feature.loan.generated.resources.feature_loan_cancel
-import androidclient.feature.loan.generated.resources.feature_loan_submit
-import androidclient.feature.loan.generated.resources.ok
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.cancel
+import kpt.feature.loan.generated.resources.feature_loan_assign_officer_assignment_date
+import kpt.feature.loan.generated.resources.feature_loan_assign_officer_select_officer
+import kpt.feature.loan.generated.resources.feature_loan_assign_officer_title
+import kpt.feature.loan.generated.resources.feature_loan_cancel
+import kpt.feature.loan.generated.resources.feature_loan_submit
+import kpt.feature.loan.generated.resources.ok
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -52,7 +52,8 @@ import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 
 @Composable
@@ -162,7 +163,7 @@ private fun AssignLoanOfficerForm(
             modifier = Modifier
                 .fillMaxWidth()
                 .verticalScroll(scrollState)
-                .padding(KptTheme.spacing.md),
+                .padding(LocalKptSpacing.current.md),
         ) {
             MifosTextFieldDropdown(
                 value = state.loanOfficerOptions.getOrNull(state.selectedOfficerIndex)?.displayName.orEmpty(),

@@ -9,15 +9,15 @@
  */
 package com.mifos.feature.client.clientGeneral
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.client_performance_history_active_loans_count_label
-import androidclient.feature.client.generated.resources.client_performance_history_active_savings_label
-import androidclient.feature.client.generated.resources.client_performance_history_last_loan_amount_label
-import androidclient.feature.client.generated.resources.client_performance_history_loan_cycle_count_label
-import androidclient.feature.client.generated.resources.client_performance_history_total_savings_label
-import androidclient.feature.client.generated.resources.client_profile_general_header_actions
-import androidclient.feature.client.generated.resources.client_profile_general_header_performance_history
-import androidclient.feature.client.generated.resources.client_savings_not_available
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.client_performance_history_active_loans_count_label
+import kpt.feature.client.generated.resources.client_performance_history_active_savings_label
+import kpt.feature.client.generated.resources.client_performance_history_last_loan_amount_label
+import kpt.feature.client.generated.resources.client_performance_history_loan_cycle_count_label
+import kpt.feature.client.generated.resources.client_performance_history_total_savings_label
+import kpt.feature.client.generated.resources.client_profile_general_header_actions
+import kpt.feature.client.generated.resources.client_profile_general_header_performance_history
+import kpt.feature.client.generated.resources.client_savings_not_available
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -53,7 +53,11 @@ import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.util.TextUtil
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptShapes
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun ClientProfileGeneralScreen(
@@ -164,11 +168,11 @@ internal fun ClientProfileGeneralContent(
             Column(
                 modifier = Modifier.fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .padding(horizontal = KptTheme.spacing.md),
+                    .padding(horizontal = LocalKptSpacing.current.md),
             ) {
                 Text(
                     stringResource(Res.string.client_profile_general_header_performance_history),
-                    style = KptTheme.typography.labelLarge,
+                    style = LocalKptTypography.current.labelLarge,
                 )
 
                 Spacer(Modifier.height(DesignToken.spacing.medium))
@@ -181,10 +185,10 @@ internal fun ClientProfileGeneralContent(
 
                 Text(
                     stringResource(Res.string.client_profile_general_header_actions),
-                    style = KptTheme.typography.labelLarge,
+                    style = LocalKptTypography.current.labelLarge,
                 )
 
-                Spacer(Modifier.height(KptTheme.spacing.sm))
+                Spacer(Modifier.height(LocalKptSpacing.current.sm))
 
                 clientProfileGeneralActions.forEach {
                     MifosRowCard(
@@ -194,7 +198,7 @@ internal fun ClientProfileGeneralContent(
                             TextUtil(
                                 text = stringResource(it.subTitle),
                                 style = MifosTypography.bodySmall,
-                                color = KptTheme.colorScheme.secondary,
+                                color = LocalKptColors.current.secondary,
                             ),
                         ),
                         rightValues = listOf(
@@ -224,13 +228,13 @@ internal fun ClientProfileGeneralContent(
 fun PerformanceHistoryCard(state: ClientProfileGeneralState) {
     Box(
         modifier = Modifier.fillMaxWidth().wrapContentHeight().clip(
-            KptTheme.shapes.medium,
-        ).background(KptTheme.colorScheme.primary)
-            .padding(KptTheme.spacing.lg),
+            LocalKptShapes.current.medium,
+        ).background(LocalKptColors.current.primary)
+            .padding(LocalKptSpacing.current.lg),
         contentAlignment = Alignment.Center,
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
+            verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.sm),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             val performanceHistory = state.performanceHistory
@@ -279,8 +283,8 @@ fun PerformanceHistoryRows(
     value: String,
     modifier: Modifier = Modifier,
     textStyle: TextStyle = TextStyle(
-        color = KptTheme.colorScheme.onPrimary,
-        fontStyle = KptTheme.typography.labelMedium.fontStyle,
+        color = LocalKptColors.current.onPrimary,
+        fontStyle = LocalKptTypography.current.labelMedium.fontStyle,
     ),
 ) {
     Row(

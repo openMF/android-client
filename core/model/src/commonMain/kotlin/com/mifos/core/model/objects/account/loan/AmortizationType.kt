@@ -9,11 +9,8 @@
  */
 package com.mifos.core.model.objects.account.loan
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
-@Parcelize
 @Serializable
 class AmortizationType(
     var id: Int? = null,
@@ -21,4 +18,4 @@ class AmortizationType(
     var code: String? = null,
 
     var value: String? = null,
-) : Parcelable
+)

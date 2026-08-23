@@ -9,21 +9,21 @@
  */
 package com.mifos.feature.loan.loanAccountAction
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_action_error_details_not_found
-import androidclient.feature.loan.generated.resources.feature_loan_action_failed_to_load_loan_actions
-import androidclient.feature.loan.generated.resources.feature_loan_profile_error_network_not_available
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_action_error_details_not_found
+import kpt.feature.loan.generated.resources.feature_loan_action_failed_to_load_loan_actions
+import kpt.feature.loan.generated.resources.feature_loan_profile_error_network_not_available
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.loan.LoanAccountSummaryRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.feature.loan.utils.UiLoanStatus
 import com.mifos.feature.loan.utils.getLoanStatus
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -63,45 +63,37 @@ internal class LoanAccountActionsViewModel(
     private fun loadLoanAccountDetails(loanId: Int) {
         loadJob?.cancel()
         loadJob = viewModelScope.launch {
-            loanRepository.getLoanById(loanId).collect { result ->
-                when (result) {
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                viewState = LoanAccountActionsState.ViewState.Error(Res.string.feature_loan_action_failed_to_load_loan_actions),
-                            )
-                        }
-                    }
-
-                    DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                viewState = LoanAccountActionsState.ViewState.Loading,
-                            )
-                        }
-                    }
-
-                    is DataState.Success -> {
-                        val loan = result.data
-                        if (loan == null) {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    viewState = LoanAccountActionsState.ViewState.Error(Res.string.feature_loan_action_error_details_not_found),
-                                )
-                            }
-                            return@collect
-                        }
-                        val status = loan.status?.getLoanStatus() ?: UiLoanStatus.UNKNOWN
-                        val flags = calculateFlags(loan, status)
-                        val actions = generateActions(status, flags)
-                        mutableStateFlow.update {
-                            it.copy(
-                                viewState = LoanAccountActionsState.ViewState.Content(actions),
-                            )
-                        }
+            mutableStateFlow.update {
+                it.copy(
+                    viewState = LoanAccountActionsState.ViewState.Loading,
+                )
+            }
+            loanRepository.getLoanById(loanId)
+                .catch {
+                    mutableStateFlow.update {
+                        it.copy(
+                            viewState = LoanAccountActionsState.ViewState.Error(Res.string.feature_loan_action_failed_to_load_loan_actions),
+                        )
                     }
                 }
-            }
+                .collect { loan ->
+                    if (loan == null) {
+                        mutableStateFlow.update {
+                            it.copy(
+                                viewState = LoanAccountActionsState.ViewState.Error(Res.string.feature_loan_action_error_details_not_found),
+                            )
+                        }
+                        return@collect
+                    }
+                    val status = loan.status?.getLoanStatus() ?: UiLoanStatus.UNKNOWN
+                    val flags = calculateFlags(loan, status)
+                    val actions = generateActions(status, flags)
+                    mutableStateFlow.update {
+                        it.copy(
+                            viewState = LoanAccountActionsState.ViewState.Content(actions),
+                        )
+                    }
+                }
         }
     }
 

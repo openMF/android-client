@@ -9,21 +9,21 @@
  */
 package com.mifos.feature.offline.syncClientPayloads
 
-import androidclient.feature.offline.generated.resources.Res
-import androidclient.feature.offline.generated.resources.feature_offline_activation_date
-import androidclient.feature.offline.generated.resources.feature_offline_active
-import androidclient.feature.offline.generated.resources.feature_offline_click_to_refresh
-import androidclient.feature.offline.generated.resources.feature_offline_dob
-import androidclient.feature.offline.generated.resources.feature_offline_error_not_connected_internet
-import androidclient.feature.offline.generated.resources.feature_offline_external_id
-import androidclient.feature.offline.generated.resources.feature_offline_first_name
-import androidclient.feature.offline.generated.resources.feature_offline_gender
-import androidclient.feature.offline.generated.resources.feature_offline_last_name
-import androidclient.feature.offline.generated.resources.feature_offline_middle_name
-import androidclient.feature.offline.generated.resources.feature_offline_mobile_no
-import androidclient.feature.offline.generated.resources.feature_offline_office_id
-import androidclient.feature.offline.generated.resources.feature_offline_sync_clients
-import androidclient.feature.offline.generated.resources.feature_offline_sync_clients_payloads
+import kpt.feature.offline.generated.resources.Res
+import kpt.feature.offline.generated.resources.feature_offline_activation_date
+import kpt.feature.offline.generated.resources.feature_offline_active
+import kpt.feature.offline.generated.resources.feature_offline_click_to_refresh
+import kpt.feature.offline.generated.resources.feature_offline_dob
+import kpt.feature.offline.generated.resources.feature_offline_error_not_connected_internet
+import kpt.feature.offline.generated.resources.feature_offline_external_id
+import kpt.feature.offline.generated.resources.feature_offline_first_name
+import kpt.feature.offline.generated.resources.feature_offline_gender
+import kpt.feature.offline.generated.resources.feature_offline_last_name
+import kpt.feature.offline.generated.resources.feature_offline_middle_name
+import kpt.feature.offline.generated.resources.feature_offline_mobile_no
+import kpt.feature.offline.generated.resources.feature_offline_office_id
+import kpt.feature.offline.generated.resources.feature_offline_sync_clients
+import kpt.feature.offline.generated.resources.feature_offline_sync_clients_payloads
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -64,7 +64,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun SyncClientPayloadsScreenRoute(
@@ -188,10 +191,10 @@ private fun ClientPayloadItem(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(KptTheme.spacing.sm),
+            .padding(LocalKptSpacing.current.sm),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
-        Column(modifier = Modifier.padding(KptTheme.spacing.md)) {
+        Column(modifier = Modifier.padding(LocalKptSpacing.current.md)) {
             val payloadStatus: String = if (payload.active == true) {
                 "true"
             } else {
@@ -250,9 +253,9 @@ private fun ClientPayloadItem(
             if (payload.errorMessage != null) {
                 Text(
                     text = payload.errorMessage!!,
-                    style = KptTheme.typography.bodyMedium,
-                    color = KptTheme.colorScheme.error,
-                    modifier = Modifier.padding(top = KptTheme.spacing.sm),
+                    style = LocalKptTypography.current.bodyMedium,
+                    color = LocalKptColors.current.error,
+                    modifier = Modifier.padding(top = LocalKptSpacing.current.sm),
                 )
             }
         }
@@ -268,17 +271,17 @@ private fun PayloadField(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = KptTheme.spacing.xs),
+            .padding(vertical = LocalKptSpacing.current.xs),
     ) {
         Text(
             text = label,
-            style = KptTheme.typography.bodyMedium,
+            style = LocalKptTypography.current.bodyMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.weight(1f),
         )
         Text(
             text = value,
-            style = KptTheme.typography.bodyMedium,
+            style = LocalKptTypography.current.bodyMedium,
             modifier = Modifier.weight(1f),
         )
     }
@@ -300,7 +303,7 @@ private fun ErrorStateScreen(
             contentDescription = null,
             modifier = Modifier.size(DesignToken.sizes.dp48),
         )
-        Text(text = message, modifier = Modifier.padding(vertical = KptTheme.spacing.md))
+        Text(text = message, modifier = Modifier.padding(vertical = LocalKptSpacing.current.md))
         Button(onClick = onRefresh) {
             Text(stringResource(Res.string.feature_offline_click_to_refresh))
         }

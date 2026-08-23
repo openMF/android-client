@@ -19,7 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptElevation
 
 /**
  * The main background for the app.
@@ -37,10 +38,10 @@ fun MifosBackground(
     val tonalElevation = LocalBackgroundTheme.current.tonalElevation
     Surface(
         color = if (color == Color.Unspecified) Color.Transparent else color,
-        tonalElevation = if (tonalElevation == Dp.Unspecified) KptTheme.elevation.level0 else tonalElevation,
+        tonalElevation = if (tonalElevation == Dp.Unspecified) LocalKptElevation.current.level0 else tonalElevation,
         modifier = modifier.fillMaxSize(),
     ) {
-        CompositionLocalProvider(LocalAbsoluteTonalElevation provides KptTheme.elevation.level0) {
+        CompositionLocalProvider(LocalAbsoluteTonalElevation provides LocalKptElevation.current.level0) {
             content()
         }
     }

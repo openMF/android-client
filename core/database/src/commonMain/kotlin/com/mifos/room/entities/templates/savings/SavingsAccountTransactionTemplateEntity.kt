@@ -9,15 +9,12 @@
  */
 package com.mifos.room.entities.templates.savings
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import kotlinx.serialization.Serializable
-import template.core.base.database.Entity
-import template.core.base.database.PrimaryKey
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 
 @Serializable
-@Parcelize
 @Entity(
     indices = [],
     inheritSuperIndices = false,
@@ -37,7 +34,7 @@ data class SavingsAccountTransactionTemplateEntity(
     val reversed: Boolean? = null,
 
     val paymentTypeOptions: List<PaymentTypeOptionEntity> = emptyList(),
-) : Parcelable {
+) {
 
     fun isReversed(): Boolean? {
         return reversed

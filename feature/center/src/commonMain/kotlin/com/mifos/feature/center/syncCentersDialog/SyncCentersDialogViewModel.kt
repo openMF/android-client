@@ -152,13 +152,13 @@ class SyncCentersDialogViewModel(
                     onAccountSyncFailed(e)
                 }.collect { centerAccounts ->
                     mLoanAccountList = getActiveLoanAccounts(
-                        centerAccounts.data?.loanAccounts,
+                        centerAccounts.loanAccounts,
                     )
                     mSavingsAccountList = getActiveSavingsAccounts(
-                        centerAccounts.data?.savingsAccounts,
+                        centerAccounts.savingsAccounts,
                     )
                     mMemberLoanAccountsList = getActiveLoanAccounts(
-                        centerAccounts.data?.memberLoanAccounts,
+                        centerAccounts.memberLoanAccounts,
                     )
                     // Updating UI
                     maxSingleSyncCenterProgressBar = (
@@ -345,8 +345,8 @@ class SyncCentersDialogViewModel(
             repository.syncLoanRepaymentTemplate(loanId),
         ) { loanWithAssociations, loanRepaymentTemplate ->
             LoanAndLoanRepayment(
-                loanWithAssociations.data,
-                loanRepaymentTemplate.data,
+                loanWithAssociations,
+                loanRepaymentTemplate,
             )
         }
     }
@@ -375,8 +375,8 @@ class SyncCentersDialogViewModel(
             ),
         ) { savingsAccountWithAssociations, savingsAccountTransactionTemplate ->
             SavingsAccountAndTransactionTemplate(
-                savingsAccountWithAssociations.data,
-                savingsAccountTransactionTemplate.data,
+                savingsAccountWithAssociations,
+                savingsAccountTransactionTemplate,
             )
         }
     }
@@ -394,7 +394,7 @@ class SyncCentersDialogViewModel(
                 .catch {
                     onAccountSyncFailed(it)
                 }.collect { centerWithAssociations ->
-                    mGroups = centerWithAssociations.data?.groupMembers ?: emptyList()
+                    mGroups = centerWithAssociations.groupMembers
                     mGroupSyncIndex = 0
                     resetIndexes()
                     if (mGroups.isNotEmpty()) {
@@ -419,7 +419,7 @@ class SyncCentersDialogViewModel(
                 .catch {
                     onAccountSyncFailed(it)
                 }.collect { groupWithAssociations ->
-                    mClients = getActiveClients(groupWithAssociations.data?.clientMembers)
+                    mClients = getActiveClients(groupWithAssociations.clientMembers)
                     mClientSyncIndex = 0
                     resetIndexes()
                     if (mClients.isNotEmpty()) {
@@ -453,10 +453,10 @@ class SyncCentersDialogViewModel(
                 }
                 .collect { groupAccounts ->
                     mLoanAccountList = getActiveLoanAccounts(
-                        groupAccounts.data?.loanAccounts,
+                        groupAccounts.loanAccounts,
                     )
                     mSavingsAccountList = getActiveSavingsAccounts(
-                        groupAccounts.data?.savingsAccounts,
+                        groupAccounts.savingsAccounts,
                     )
                     checkAccountsSyncStatusAndSyncGroupAccounts()
                 }

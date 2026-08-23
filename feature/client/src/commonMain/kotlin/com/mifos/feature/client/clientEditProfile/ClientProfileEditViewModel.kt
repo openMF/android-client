@@ -9,9 +9,9 @@
  */
 package com.mifos.feature.client.clientEditProfile
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.client_profile_photo_updated_failure
-import androidclient.feature.client.generated.resources.client_profile_photo_updated_success
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.client_profile_photo_updated_failure
+import kpt.feature.client.generated.resources.client_profile_photo_updated_success
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -21,12 +21,11 @@ import com.attafitamim.krop.core.crop.CropResult
 import com.attafitamim.krop.core.crop.ImageCropper
 import com.attafitamim.krop.core.crop.crop
 import com.attafitamim.krop.core.crop.imageCropper
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.domain.useCases.UploadClientImageUseCase
 import com.mifos.core.ui.components.ResultStatus
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.core.ui.util.multipartRequestBody
 import io.github.vinceglb.filekit.FileKit
@@ -38,6 +37,7 @@ import io.github.vinceglb.filekit.dialogs.compose.util.encodeToByteArray
 import io.github.vinceglb.filekit.dialogs.compose.util.toImageBitmap
 import io.github.vinceglb.filekit.dialogs.openFilePicker
 import io.github.vinceglb.filekit.name
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -190,30 +190,16 @@ internal class ClientProfileEditViewModel(
 
     private fun loadImage(clientId: Int) {
         viewModelScope.launch {
-            clientDetailsRepo.getImage(clientId).collect { result ->
-                when (result) {
-                    is DataState.Success -> mutableStateFlow.update {
-                        val newDialogState =
-                            if (state.dialogState is ClientProfileEditState.DialogState.ShowStatusDialog) {
-                                state.dialogState
-                            } else {
-                                null
-                            }
-                        state.copy(
-                            profileImage = imageToByteArray(result.data),
-                            dialogState = newDialogState,
-                        )
-                    }
-
-                    is DataState.Loading -> mutableStateFlow.update {
-                        if (it.dialogState !is ClientProfileEditState.DialogState.ShowStatusDialog) {
-                            it.copy(dialogState = ClientProfileEditState.DialogState.Loading)
-                        } else {
-                            it
-                        }
-                    }
-
-                    is DataState.Error -> mutableStateFlow.update {
+            mutableStateFlow.update {
+                if (it.dialogState !is ClientProfileEditState.DialogState.ShowStatusDialog) {
+                    it.copy(dialogState = ClientProfileEditState.DialogState.Loading)
+                } else {
+                    it
+                }
+            }
+            clientDetailsRepo.getImage(clientId)
+                .catch {
+                    mutableStateFlow.update {
                         if (it.dialogState is ClientProfileEditState.DialogState.ShowStatusDialog) {
                             it
                         } else {
@@ -221,7 +207,20 @@ internal class ClientProfileEditViewModel(
                         }
                     }
                 }
-            }
+                .collect { image ->
+                    mutableStateFlow.update {
+                        val newDialogState =
+                            if (state.dialogState is ClientProfileEditState.DialogState.ShowStatusDialog) {
+                                state.dialogState
+                            } else {
+                                null
+                            }
+                        state.copy(
+                            profileImage = imageToByteArray(image),
+                            dialogState = newDialogState,
+                        )
+                    }
+                }
         }
     }
 
@@ -234,45 +233,33 @@ internal class ClientProfileEditViewModel(
                     name = fileName,
                     extension = ImageFormat.PNG.name,
                 ),
-            ).collect { result ->
-                when (result) {
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientProfileEditState.DialogState.Error(result.message),
-                            )
-                        }
-                    }
-
-                    is DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientProfileEditState.DialogState.Loading,
-                            )
-                        }
-                    }
-
-                    is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientProfileEditState.DialogState.Loading,
-                                openImagePicker = false,
-                            )
-                        }
-                        clientDetailsRepo.triggerClientUpdate()
-                        loadImage(route.id)
-                        mutableStateFlow.update {
-                            it.copy(
-                                openImagePicker = false,
-                                dialogState = ClientProfileEditState.DialogState.ShowStatusDialog(
-                                    status = ResultStatus.SUCCESS,
-                                    msg = getString(Res.string.client_profile_photo_updated_success),
-                                ),
-                            )
-                        }
+            )
+                .catch { error ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ClientProfileEditState.DialogState.Error(error.message ?: ""),
+                        )
                     }
                 }
-            }
+                .collect { _ ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ClientProfileEditState.DialogState.Loading,
+                            openImagePicker = false,
+                        )
+                    }
+                    clientDetailsRepo.triggerClientUpdate()
+                    loadImage(route.id)
+                    mutableStateFlow.update {
+                        it.copy(
+                            openImagePicker = false,
+                            dialogState = ClientProfileEditState.DialogState.ShowStatusDialog(
+                                status = ResultStatus.SUCCESS,
+                                msg = getString(Res.string.client_profile_photo_updated_success),
+                            ),
+                        )
+                    }
+                }
         }
 
     fun deleteClientImage() {

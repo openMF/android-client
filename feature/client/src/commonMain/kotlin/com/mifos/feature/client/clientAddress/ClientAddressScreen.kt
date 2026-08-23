@@ -9,19 +9,19 @@
  */
 package com.mifos.feature.client.clientAddress
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.client_savings_item
-import androidclient.feature.client.generated.resources.feature_client_address
-import androidclient.feature.client.generated.resources.feature_client_address_line_1
-import androidclient.feature.client.generated.resources.feature_client_address_line_2
-import androidclient.feature.client.generated.resources.feature_client_address_line_3
-import androidclient.feature.client.generated.resources.feature_client_city
-import androidclient.feature.client.generated.resources.feature_client_country
-import androidclient.feature.client.generated.resources.feature_client_empty_address_card_message
-import androidclient.feature.client.generated.resources.feature_client_empty_address_card_title
-import androidclient.feature.client.generated.resources.feature_client_postal_code
-import androidclient.feature.client.generated.resources.feature_client_province
-import androidclient.feature.client.generated.resources.search
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.client_savings_item
+import kpt.feature.client.generated.resources.feature_client_address
+import kpt.feature.client.generated.resources.feature_client_address_line_1
+import kpt.feature.client.generated.resources.feature_client_address_line_2
+import kpt.feature.client.generated.resources.feature_client_address_line_3
+import kpt.feature.client.generated.resources.feature_client_city
+import kpt.feature.client.generated.resources.feature_client_country
+import kpt.feature.client.generated.resources.feature_client_empty_address_card_message
+import kpt.feature.client.generated.resources.feature_client_empty_address_card_title
+import kpt.feature.client.generated.resources.feature_client_postal_code
+import kpt.feature.client.generated.resources.feature_client_province
+import kpt.feature.client.generated.resources.search
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -55,7 +55,8 @@ import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun ClientAddressScreen(
@@ -126,14 +127,14 @@ private fun ClientAddressContent(
                 MifosBreadcrumbNavBar(navController)
                 Column(
                     modifier = Modifier.padding(
-                        horizontal = KptTheme.spacing.md,
+                        horizontal = LocalKptSpacing.current.md,
                     ),
                 ) {
                     ClientAddressHeader(
                         totalItem = state.address.size.toString(),
                         onAction = onAction,
                     )
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+                    Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
                     if (state.address.isEmpty()) {
                         EmptyAddressCard()
                     } else {
@@ -227,7 +228,7 @@ private fun EmptyAddressCard() {
         ),
     ) {
         Column(
-            modifier = Modifier.padding(KptTheme.spacing.md),
+            modifier = Modifier.padding(LocalKptSpacing.current.md),
         ) {
             Text(
                 text = stringResource(Res.string.feature_client_empty_address_card_title),

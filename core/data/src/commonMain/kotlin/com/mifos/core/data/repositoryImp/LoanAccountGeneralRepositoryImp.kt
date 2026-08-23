@@ -9,10 +9,9 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanAccountGeneralRepository
 import com.mifos.core.data.util.NetworkMonitor
-import com.mifos.core.data.util.runAsDataState
+import com.mifos.core.data.util.runSuspendCall
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.core.network.datamanager.DataManagerLoan
 import kotlinx.coroutines.CoroutineDispatcher
@@ -24,8 +23,8 @@ class LoanAccountGeneralRepositoryImp(
     private val ioDispatcher: CoroutineDispatcher,
 ) : LoanAccountGeneralRepository {
 
-    override suspend fun getLoanById(loanId: Int): DataState<LoanWithAssociations?> {
-        return runAsDataState(
+    override suspend fun getLoanById(loanId: Int): LoanWithAssociations? {
+        return runSuspendCall(
             networkMonitor = networkMonitor,
             context = ioDispatcher,
         ) {

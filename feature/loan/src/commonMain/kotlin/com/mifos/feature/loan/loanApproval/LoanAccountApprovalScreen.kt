@@ -9,17 +9,17 @@
  */
 package com.mifos.feature.loan.loanApproval
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_approval_note
-import androidclient.feature.loan.generated.resources.feature_loan_approve_loan
-import androidclient.feature.loan.generated.resources.feature_loan_approved_amount
-import androidclient.feature.loan.generated.resources.feature_loan_approved_on
-import androidclient.feature.loan.generated.resources.feature_loan_cancel
-import androidclient.feature.loan.generated.resources.feature_loan_expected_disbursement_on
-import androidclient.feature.loan.generated.resources.feature_loan_loan_approved
-import androidclient.feature.loan.generated.resources.feature_loan_select_date
-import androidclient.feature.loan.generated.resources.feature_loan_submit
-import androidclient.feature.loan.generated.resources.feature_loan_transaction_amount
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_approval_note
+import kpt.feature.loan.generated.resources.feature_loan_approve_loan
+import kpt.feature.loan.generated.resources.feature_loan_approved_amount
+import kpt.feature.loan.generated.resources.feature_loan_approved_on
+import kpt.feature.loan.generated.resources.feature_loan_cancel
+import kpt.feature.loan.generated.resources.feature_loan_expected_disbursement_on
+import kpt.feature.loan.generated.resources.feature_loan_loan_approved
+import kpt.feature.loan.generated.resources.feature_loan_select_date
+import kpt.feature.loan.generated.resources.feature_loan_submit
+import kpt.feature.loan.generated.resources.feature_loan_transaction_amount
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -66,7 +66,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -140,7 +142,7 @@ internal fun LoanAccountApprovalScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(
-                                color = KptTheme.colorScheme.background.copy(
+                                color = LocalKptColors.current.background.copy(
                                     alpha = .7f,
                                 ),
                             ),
@@ -251,7 +253,7 @@ private fun LoanAccountApprovalContent(
             .fillMaxSize()
             .verticalScroll(scrollState),
     ) {
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosDatePickerTextField(
             value = DateHelper.getDateAsStringFromLong(
@@ -262,7 +264,7 @@ private fun LoanAccountApprovalContent(
                 pickApproveDate = true
             },
         )
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosDatePickerTextField(
             value = disbursementDate ?: "null",
@@ -271,7 +273,7 @@ private fun LoanAccountApprovalContent(
                 pickDisbursementDate = true
             },
         )
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             value = approvedAmount,
@@ -280,7 +282,7 @@ private fun LoanAccountApprovalContent(
             keyboardType = KeyboardType.Number,
             error = null,
         )
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             value = transactionAmount,
@@ -289,7 +291,7 @@ private fun LoanAccountApprovalContent(
             keyboardType = KeyboardType.Number,
             error = null,
         )
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             value = note,
@@ -298,12 +300,12 @@ private fun LoanAccountApprovalContent(
             keyboardType = KeyboardType.Text,
             error = null,
         )
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = KptTheme.spacing.md)
+                .padding(horizontal = LocalKptSpacing.current.md)
                 .heightIn(DesignToken.spacing.dp46),
             onClick = {
                 if (isFieldValid(amount = approvedAmount) &&

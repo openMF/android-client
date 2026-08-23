@@ -9,49 +9,49 @@
  */
 package com.mifos.feature.client.createNewClient
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_Image_Upload_Successful
-import androidclient.feature.client.generated.resources.feature_client_address
-import androidclient.feature.client.generated.resources.feature_client_address_active
-import androidclient.feature.client.generated.resources.feature_client_address_line_1
-import androidclient.feature.client.generated.resources.feature_client_address_line_2
-import androidclient.feature.client.generated.resources.feature_client_address_line_3
-import androidclient.feature.client.generated.resources.feature_client_address_type
-import androidclient.feature.client.generated.resources.feature_client_cancel
-import androidclient.feature.client.generated.resources.feature_client_center_submission_date
-import androidclient.feature.client.generated.resources.feature_client_city
-import androidclient.feature.client.generated.resources.feature_client_client
-import androidclient.feature.client.generated.resources.feature_client_client_active
-import androidclient.feature.client.generated.resources.feature_client_client_classification
-import androidclient.feature.client.generated.resources.feature_client_client_created_successfully
-import androidclient.feature.client.generated.resources.feature_client_country
-import androidclient.feature.client.generated.resources.feature_client_dob
-import androidclient.feature.client.generated.resources.feature_client_error_address_type_is_required
-import androidclient.feature.client.generated.resources.feature_client_error_first_name_can_not_be_empty
-import androidclient.feature.client.generated.resources.feature_client_error_first_name_should_contain_only_alphabets
-import androidclient.feature.client.generated.resources.feature_client_error_last_name_can_not_be_empty
-import androidclient.feature.client.generated.resources.feature_client_error_last_name_should_contain_only_alphabets
-import androidclient.feature.client.generated.resources.feature_client_error_middle_name_should_contain_only_alphabets
-import androidclient.feature.client.generated.resources.feature_client_external_id
-import androidclient.feature.client.generated.resources.feature_client_first_name_mandatory
-import androidclient.feature.client.generated.resources.feature_client_gender
-import androidclient.feature.client.generated.resources.feature_client_go_back
-import androidclient.feature.client.generated.resources.feature_client_ic_dp_placeholder
-import androidclient.feature.client.generated.resources.feature_client_last_name_mandatory
-import androidclient.feature.client.generated.resources.feature_client_middle_name
-import androidclient.feature.client.generated.resources.feature_client_no_staff_associated_with_office
-import androidclient.feature.client.generated.resources.feature_client_office_name_mandatory
-import androidclient.feature.client.generated.resources.feature_client_phone_no
-import androidclient.feature.client.generated.resources.feature_client_please_select_action
-import androidclient.feature.client.generated.resources.feature_client_postal_code
-import androidclient.feature.client.generated.resources.feature_client_remove_existing_photo
-import androidclient.feature.client.generated.resources.feature_client_select_date
-import androidclient.feature.client.generated.resources.feature_client_staff
-import androidclient.feature.client.generated.resources.feature_client_state_province
-import androidclient.feature.client.generated.resources.feature_client_submit
-import androidclient.feature.client.generated.resources.feature_client_take_a_photo
-import androidclient.feature.client.generated.resources.feature_client_upload_photo
-import androidclient.feature.client.generated.resources.feature_client_waiting_for_checker_approval
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_client_Image_Upload_Successful
+import kpt.feature.client.generated.resources.feature_client_address
+import kpt.feature.client.generated.resources.feature_client_address_active
+import kpt.feature.client.generated.resources.feature_client_address_line_1
+import kpt.feature.client.generated.resources.feature_client_address_line_2
+import kpt.feature.client.generated.resources.feature_client_address_line_3
+import kpt.feature.client.generated.resources.feature_client_address_type
+import kpt.feature.client.generated.resources.feature_client_cancel
+import kpt.feature.client.generated.resources.feature_client_center_submission_date
+import kpt.feature.client.generated.resources.feature_client_city
+import kpt.feature.client.generated.resources.feature_client_client
+import kpt.feature.client.generated.resources.feature_client_client_active
+import kpt.feature.client.generated.resources.feature_client_client_classification
+import kpt.feature.client.generated.resources.feature_client_client_created_successfully
+import kpt.feature.client.generated.resources.feature_client_country
+import kpt.feature.client.generated.resources.feature_client_dob
+import kpt.feature.client.generated.resources.feature_client_error_address_type_is_required
+import kpt.feature.client.generated.resources.feature_client_error_first_name_can_not_be_empty
+import kpt.feature.client.generated.resources.feature_client_error_first_name_should_contain_only_alphabets
+import kpt.feature.client.generated.resources.feature_client_error_last_name_can_not_be_empty
+import kpt.feature.client.generated.resources.feature_client_error_last_name_should_contain_only_alphabets
+import kpt.feature.client.generated.resources.feature_client_error_middle_name_should_contain_only_alphabets
+import kpt.feature.client.generated.resources.feature_client_external_id
+import kpt.feature.client.generated.resources.feature_client_first_name_mandatory
+import kpt.feature.client.generated.resources.feature_client_gender
+import kpt.feature.client.generated.resources.feature_client_go_back
+import kpt.feature.client.generated.resources.feature_client_ic_dp_placeholder
+import kpt.feature.client.generated.resources.feature_client_last_name_mandatory
+import kpt.feature.client.generated.resources.feature_client_middle_name
+import kpt.feature.client.generated.resources.feature_client_no_staff_associated_with_office
+import kpt.feature.client.generated.resources.feature_client_office_name_mandatory
+import kpt.feature.client.generated.resources.feature_client_phone_no
+import kpt.feature.client.generated.resources.feature_client_please_select_action
+import kpt.feature.client.generated.resources.feature_client_postal_code
+import kpt.feature.client.generated.resources.feature_client_remove_existing_photo
+import kpt.feature.client.generated.resources.feature_client_select_date
+import kpt.feature.client.generated.resources.feature_client_staff
+import kpt.feature.client.generated.resources.feature_client_state_province
+import kpt.feature.client.generated.resources.feature_client_submit
+import kpt.feature.client.generated.resources.feature_client_take_a_photo
+import kpt.feature.client.generated.resources.feature_client_upload_photo
+import kpt.feature.client.generated.resources.feature_client_waiting_for_checker_approval
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -143,7 +143,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -481,7 +484,7 @@ private fun CreateNewClientContent(
             onExternalIdChange = { externalId = it },
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         clientTemplate.genderOptions?.let { list ->
             MifosTextFieldDropdown(
@@ -497,7 +500,7 @@ private fun CreateNewClientContent(
             )
         }
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosDatePickerTextField(
             value = dateOfBirth?.let { DateHelper.getDateAsStringFromLong(it) } ?: "",
@@ -505,7 +508,7 @@ private fun CreateNewClientContent(
             openDatePicker = { showDateOfBirthDatepicker = !showDateOfBirthDatepicker },
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         clientTemplate.clientTypeOptions?.let { list ->
             MifosTextFieldDropdown(
@@ -521,7 +524,7 @@ private fun CreateNewClientContent(
             )
         }
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
         clientTemplate.clientClassificationOptions?.let { list ->
             MifosTextFieldDropdown(
                 value = clientClassification,
@@ -537,7 +540,7 @@ private fun CreateNewClientContent(
             )
         }
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosTextFieldDropdown(
             value = selectedOffice,
@@ -557,7 +560,7 @@ private fun CreateNewClientContent(
             readOnly = true,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosTextFieldDropdown(
             value = staff,
@@ -572,7 +575,7 @@ private fun CreateNewClientContent(
             enabled = staffInOffices.isNotEmpty(),
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -596,7 +599,7 @@ private fun CreateNewClientContent(
             ),
             exit = slideOutVertically() + shrinkVertically() + fadeOut(),
         ) {
-            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
             MifosDatePickerTextField(
                 value = DateHelper.getDateAsStringFromLong(activationDate),
@@ -610,14 +613,14 @@ private fun CreateNewClientContent(
             val sortedCountryOptions = addressTemplate.countryIdOptions.sortedBy { it.name }
             val sortedStateOptions = addressTemplate.stateProvinceIdOptions.sortedBy { it.name }
 
-            HorizontalDivider(modifier = Modifier.padding(KptTheme.spacing.md))
+            HorizontalDivider(modifier = Modifier.padding(LocalKptSpacing.current.md))
 
             Text(
                 stringResource(Res.string.feature_client_address),
-                Modifier.padding(horizontal = KptTheme.spacing.md),
+                Modifier.padding(horizontal = LocalKptSpacing.current.md),
             )
 
-            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
             AddressInputTextFields(
                 addressLine1 = addressLine1,
@@ -657,12 +660,12 @@ private fun CreateNewClientContent(
                 onAddressActiveChange = { isAddressActive = it },
             )
         }
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = KptTheme.spacing.md)
+                .padding(horizontal = LocalKptSpacing.current.md)
                 .heightIn(DesignToken.spacing.dp46),
             onClick = {
                 val clientNames = Name(firstName, lastName, middleName)
@@ -895,7 +898,7 @@ private fun ClientInputTextFields(
     onExternalIdChange: (String) -> Unit,
 ) {
     Column {
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             value = firstName,
@@ -904,7 +907,7 @@ private fun ClientInputTextFields(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             value = middleName,
@@ -913,7 +916,7 @@ private fun ClientInputTextFields(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             value = lastName,
@@ -932,7 +935,7 @@ private fun ClientInputTextFields(
             keyboardType = KeyboardType.Number,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             value = externalId,
@@ -941,7 +944,7 @@ private fun ClientInputTextFields(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
     }
 }
 
@@ -950,7 +953,7 @@ private fun ClientImageSection(selectedImage: PlatformFile?, onImageClick: () ->
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = KptTheme.spacing.md),
+            .padding(vertical = LocalKptSpacing.current.md),
     ) {
         Image(
             painter = if (selectedImage != null) {
@@ -963,7 +966,7 @@ private fun ClientImageSection(selectedImage: PlatformFile?, onImageClick: () ->
                 .align(Alignment.Center)
                 .clickable { onImageClick() }
                 .border(
-                    color = KptTheme.colorScheme.outline,
+                    color = LocalKptColors.current.outline,
                     width = DesignToken.strokes.dp2,
                     shape = CircleShape,
                 )
@@ -988,7 +991,7 @@ private fun MifosSelectImageDialog(
         ),
     ) {
         Card(
-            colors = CardDefaults.cardColors(KptTheme.colorScheme.surface),
+            colors = CardDefaults.cardColors(LocalKptColors.current.surface),
             shape = DesignToken.shapes.largeIncreased,
         ) {
             Column(
@@ -1000,41 +1003,41 @@ private fun MifosSelectImageDialog(
                 Text(
                     text = stringResource(Res.string.feature_client_please_select_action),
                     modifier = Modifier.fillMaxWidth(),
-                    style = KptTheme.typography.bodyLarge,
+                    style = LocalKptTypography.current.bodyLarge,
                     textAlign = TextAlign.Center,
                 )
                 Spacer(modifier = Modifier.height(DesignToken.spacing.largeIncreased))
 
                 Button(
                     onClick = { takeImage() },
-                    colors = ButtonDefaults.buttonColors(KptTheme.colorScheme.secondary),
+                    colors = ButtonDefaults.buttonColors(LocalKptColors.current.secondary),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_client_take_a_photo),
                         modifier = Modifier.fillMaxWidth(),
-                        style = KptTheme.typography.bodyLarge,
+                        style = LocalKptTypography.current.bodyLarge,
                         textAlign = TextAlign.Center,
                     )
                 }
                 Button(
                     onClick = { uploadImage() },
-                    colors = ButtonDefaults.buttonColors(KptTheme.colorScheme.secondary),
+                    colors = ButtonDefaults.buttonColors(LocalKptColors.current.secondary),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_client_upload_photo),
                         modifier = Modifier.fillMaxWidth(),
-                        style = KptTheme.typography.bodyLarge,
+                        style = LocalKptTypography.current.bodyLarge,
                         textAlign = TextAlign.Center,
                     )
                 }
                 Button(
                     onClick = { removeImage() },
-                    colors = ButtonDefaults.buttonColors(KptTheme.colorScheme.secondary),
+                    colors = ButtonDefaults.buttonColors(LocalKptColors.current.secondary),
                 ) {
                     Text(
                         text = stringResource(Res.string.feature_client_remove_existing_photo),
                         modifier = Modifier.fillMaxWidth(),
-                        style = KptTheme.typography.bodyLarge,
+                        style = LocalKptTypography.current.bodyLarge,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -1080,7 +1083,7 @@ private fun AddressInputTextFields(
             readOnly = true,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             value = addressLine1,
@@ -1089,7 +1092,7 @@ private fun AddressInputTextFields(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             value = addressLine2,
@@ -1098,7 +1101,7 @@ private fun AddressInputTextFields(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             value = addressLine3,
@@ -1107,7 +1110,7 @@ private fun AddressInputTextFields(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             value = city,
@@ -1116,7 +1119,7 @@ private fun AddressInputTextFields(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             value = postalCode,
@@ -1126,7 +1129,7 @@ private fun AddressInputTextFields(
             keyboardType = KeyboardType.Number,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosTextFieldDropdown(
             value = selectedStateName,
@@ -1137,7 +1140,7 @@ private fun AddressInputTextFields(
             readOnly = true,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosTextFieldDropdown(
             value = selectedCountryName,
@@ -1148,7 +1151,7 @@ private fun AddressInputTextFields(
             readOnly = true,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         Row(
             modifier = Modifier.fillMaxWidth(),

@@ -9,26 +9,26 @@
  */
 package com.mifos.feature.savings.savingsAccount
 
-import androidclient.feature.savings.generated.resources.Res
-import androidclient.feature.savings.generated.resources.feature_savings_create_savings_account
-import androidclient.feature.savings.generated.resources.feature_savings_days_in_year
-import androidclient.feature.savings.generated.resources.feature_savings_external_id
-import androidclient.feature.savings.generated.resources.feature_savings_failed_to_fetch_savings_template
-import androidclient.feature.savings.generated.resources.feature_savings_field_officer
-import androidclient.feature.savings.generated.resources.feature_savings_go_back
-import androidclient.feature.savings.generated.resources.feature_savings_interest_calc
-import androidclient.feature.savings.generated.resources.feature_savings_interest_comp
-import androidclient.feature.savings.generated.resources.feature_savings_interest_p_period
-import androidclient.feature.savings.generated.resources.feature_savings_maxoverdraft
-import androidclient.feature.savings.generated.resources.feature_savings_min_overdraft
-import androidclient.feature.savings.generated.resources.feature_savings_min_required_balance
-import androidclient.feature.savings.generated.resources.feature_savings_nominal
-import androidclient.feature.savings.generated.resources.feature_savings_nominal_overdraft
-import androidclient.feature.savings.generated.resources.feature_savings_overdraft_allowed
-import androidclient.feature.savings.generated.resources.feature_savings_product
-import androidclient.feature.savings.generated.resources.feature_savings_savings_account_submitted_for_approval
-import androidclient.feature.savings.generated.resources.feature_savings_submit
-import androidclient.feature.savings.generated.resources.feature_savings_submitted_on
+import kpt.feature.savings.generated.resources.Res
+import kpt.feature.savings.generated.resources.feature_savings_create_savings_account
+import kpt.feature.savings.generated.resources.feature_savings_days_in_year
+import kpt.feature.savings.generated.resources.feature_savings_external_id
+import kpt.feature.savings.generated.resources.feature_savings_failed_to_fetch_savings_template
+import kpt.feature.savings.generated.resources.feature_savings_field_officer
+import kpt.feature.savings.generated.resources.feature_savings_go_back
+import kpt.feature.savings.generated.resources.feature_savings_interest_calc
+import kpt.feature.savings.generated.resources.feature_savings_interest_comp
+import kpt.feature.savings.generated.resources.feature_savings_interest_p_period
+import kpt.feature.savings.generated.resources.feature_savings_maxoverdraft
+import kpt.feature.savings.generated.resources.feature_savings_min_overdraft
+import kpt.feature.savings.generated.resources.feature_savings_min_required_balance
+import kpt.feature.savings.generated.resources.feature_savings_nominal
+import kpt.feature.savings.generated.resources.feature_savings_nominal_overdraft
+import kpt.feature.savings.generated.resources.feature_savings_overdraft_allowed
+import kpt.feature.savings.generated.resources.feature_savings_product
+import kpt.feature.savings.generated.resources.feature_savings_savings_account_submitted_for_approval
+import kpt.feature.savings.generated.resources.feature_savings_submit
+import kpt.feature.savings.generated.resources.feature_savings_submitted_on
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -87,7 +87,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -267,7 +268,7 @@ private fun SavingsAccountContent(
             .fillMaxSize()
             .verticalScroll(scrollState),
     ) {
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosTextFieldDropdown(
             value = selectedSavingsProduct,
@@ -286,7 +287,7 @@ private fun SavingsAccountContent(
             readOnly = true,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosTextFieldDropdown(
             value = selectedFieldOfficer,
@@ -304,7 +305,7 @@ private fun SavingsAccountContent(
             readOnly = true,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             value = externalId,
@@ -313,7 +314,7 @@ private fun SavingsAccountContent(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosDatePickerTextField(
             enabled = false,
@@ -322,7 +323,7 @@ private fun SavingsAccountContent(
             openDatePicker = { },
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             value = nominalAnnualInterest.toString(),
@@ -332,7 +333,7 @@ private fun SavingsAccountContent(
             keyboardType = KeyboardType.Number,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             value = savingProductsTemplate.mSavingProductsTemplate.interestCalculationType?.value.toString(),
@@ -342,7 +343,7 @@ private fun SavingsAccountContent(
             readOnly = true,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             value = savingProductsTemplate.mSavingProductsTemplate.interestCompoundingPeriodType?.value.toString(),
@@ -352,7 +353,7 @@ private fun SavingsAccountContent(
             readOnly = true,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             value = savingProductsTemplate.mSavingProductsTemplate.interestPostingPeriodType?.value.toString(),
@@ -362,7 +363,7 @@ private fun SavingsAccountContent(
             readOnly = true,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             value = savingProductsTemplate.mSavingProductsTemplate.interestCalculationDaysInYearType?.value.toString(),
@@ -372,7 +373,7 @@ private fun SavingsAccountContent(
             readOnly = true,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -397,7 +398,7 @@ private fun SavingsAccountContent(
             ),
             exit = slideOutVertically() + shrinkVertically() + fadeOut(),
         ) {
-            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
             MifosOutlinedTextField(
                 value = minimumRequiredBalance,
@@ -408,7 +409,7 @@ private fun SavingsAccountContent(
             )
         }
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -434,7 +435,7 @@ private fun SavingsAccountContent(
             exit = slideOutVertically() + shrinkVertically() + fadeOut(),
         ) {
             Column {
-                Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+                Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
                 MifosOutlinedTextField(
                     value = maximumOverdraftAmount,
@@ -444,7 +445,7 @@ private fun SavingsAccountContent(
                     keyboardType = KeyboardType.Number,
                 )
 
-                Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+                Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
                 MifosOutlinedTextField(
                     value = nominalAnnualInterestOverdraft,
@@ -454,7 +455,7 @@ private fun SavingsAccountContent(
                     keyboardType = KeyboardType.Number,
                 )
 
-                Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+                Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
                 MifosOutlinedTextField(
                     value = minimumOverdraftAmount,
@@ -466,13 +467,13 @@ private fun SavingsAccountContent(
             }
         }
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         Button(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(DesignToken.spacing.dp44)
-                .padding(horizontal = KptTheme.spacing.md),
+                .padding(horizontal = LocalKptSpacing.current.md),
             contentPadding = PaddingValues(),
             onClick = {
 //                if (Network.isOnline(context)) {

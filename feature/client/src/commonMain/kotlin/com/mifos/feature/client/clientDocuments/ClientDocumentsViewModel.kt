@@ -9,24 +9,24 @@
  */
 package com.mifos.feature.client.clientDocuments
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.client_documents_failed_to_delete
-import androidclient.feature.client.generated.resources.no_internet_message
-import androidclient.feature.client.generated.resources.unknown_error
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.client_documents_failed_to_delete
+import kpt.feature.client.generated.resources.no_internet_message
+import kpt.feature.client.generated.resources.unknown_error
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.DocumentListRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.model.objects.noncoreobjects.Document
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.feature.client.DocumentSelectAndUploadRepository
 import com.mifos.feature.client.EntityDocumentState
 import com.mifos.feature.client.EntityDocumentState.EntityType
 import com.mifos.feature.client.utils.openPdfWithDefaultExternalApp
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.extension
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -127,37 +127,32 @@ class ClientDocumentsViewModel(
             updateNetworkState(isConnected)
             when (isConnected) {
                 true -> {
+                    loadingDialogState()
                     documentsRepository.getDocumentsList(
                         entityType = entityType,
                         route.clientId,
-                    ).collect { dataState ->
-                        when (dataState) {
-                            is DataState.Error<*> -> {
-                                errorDialogState(dataState.message)
-                                mutableStateFlow.update {
-                                    it.copy(
-                                        pullDownRefresh = false,
-                                    )
-                                }
-                            }
-                            DataState.Loading -> {
-                                loadingDialogState()
-                            }
-                            is DataState.Success -> {
-                                updateEntityDocumentState()
-                                nullDialogState()
-                                mutableStateFlow.update {
-                                    it.copy(
-                                        clientDocuments = dataState.data.reversed()
-                                            .filter { document ->
-                                                document.fileName?.contains(state.searchText) ?: false
-                                            },
-                                        pullDownRefresh = false,
-                                    )
-                                }
+                    )
+                        .catch { error ->
+                            errorDialogState(error.message ?: getString(Res.string.unknown_error))
+                            mutableStateFlow.update {
+                                it.copy(
+                                    pullDownRefresh = false,
+                                )
                             }
                         }
-                    }
+                        .collect { documents ->
+                            updateEntityDocumentState()
+                            nullDialogState()
+                            mutableStateFlow.update {
+                                it.copy(
+                                    clientDocuments = documents.reversed()
+                                        .filter { document ->
+                                            document.fileName?.contains(state.searchText) ?: false
+                                        },
+                                    pullDownRefresh = false,
+                                )
+                            }
+                        }
                 }
                 false -> {
                     errorDialogState(getString(Res.string.no_internet_message))
@@ -194,30 +189,25 @@ class ClientDocumentsViewModel(
                     entityDocumentStateFlow.update {
                         it.copy(documentId = documentId)
                     }
-                    documentSelectAndUploadRepository.downloadDocumentAndCache().collect { dataState ->
-                        when (dataState) {
-                            is DataState.Error<*> -> {
-                                errorDialogState(dataState.message)
-                            }
-                            DataState.Loading -> {
-                                loadingDialogState()
-                            }
-                            is DataState.Success -> {
-                                documentSelectAndUploadRepository.updateEntityDocument(platformFile = dataState.data)
-                                nullDialogState()
-                                if (dataState.data.extension == "pdf") {
-                                    sendAction(ClientDocumentsActions.OpenExternalPdfViewer(dataState.data))
-                                } else {
-                                    // Uncomment them when you want to enable document update on backend.
-                                    // And also enable the button on the UI Screen, for SubmitMode.UPDATE.
-                                    // ( do this after uncommenting these line)
-                                    //                                documentSelectAndUploadRepository.updateStep(step = EntityDocumentState.Step.UPDATE_PREVIEW)
-                                    //                                documentSelectAndUploadRepository.changeSubmitMode(EntityDocumentState.SubmitMode.UPDATE)
-                                    sendEvent(ClientDocumentsEvents.OnViewDocument)
-                                }
+                    loadingDialogState()
+                    documentSelectAndUploadRepository.downloadDocumentAndCache()
+                        .catch { error ->
+                            errorDialogState(error.message ?: getString(Res.string.unknown_error))
+                        }
+                        .collect { platformFile ->
+                            documentSelectAndUploadRepository.updateEntityDocument(platformFile = platformFile)
+                            nullDialogState()
+                            if (platformFile.extension == "pdf") {
+                                sendAction(ClientDocumentsActions.OpenExternalPdfViewer(platformFile))
+                            } else {
+                                // Uncomment them when you want to enable document update on backend.
+                                // And also enable the button on the UI Screen, for SubmitMode.UPDATE.
+                                // ( do this after uncommenting these line)
+                                //                                documentSelectAndUploadRepository.updateStep(step = EntityDocumentState.Step.UPDATE_PREVIEW)
+                                //                                documentSelectAndUploadRepository.changeSubmitMode(EntityDocumentState.SubmitMode.UPDATE)
+                                sendEvent(ClientDocumentsEvents.OnViewDocument)
                             }
                         }
-                    }
                 }
                 false -> {
                     errorDialogState(getString(Res.string.no_internet_message))

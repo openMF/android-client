@@ -49,7 +49,10 @@ import androidx.compose.ui.window.PopupProperties
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import kotlinx.coroutines.launch
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.min
@@ -246,15 +249,15 @@ fun DonutLegendToggleItem(
         Column {
             Text(
                 text = label,
-                style = KptTheme.typography.labelMedium,
-                color = KptTheme.colorScheme.onSurfaceVariant,
+                style = LocalKptTypography.current.labelMedium,
+                color = LocalKptColors.current.onSurfaceVariant,
                 textDecoration = if (isVisible) TextDecoration.None else TextDecoration.LineThrough,
             )
-            Spacer(modifier = Modifier.height(KptTheme.spacing.xs))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.xs))
             Text(
                 text = amount,
-                style = KptTheme.typography.labelLarge,
-                color = KptTheme.colorScheme.onSurface,
+                style = LocalKptTypography.current.labelLarge,
+                color = LocalKptColors.current.onSurface,
                 textDecoration = if (isVisible) TextDecoration.None else TextDecoration.LineThrough,
             )
         }
@@ -354,7 +357,7 @@ private fun DonutChartTooltip(
             Spacer(modifier = Modifier.width(DesignToken.padding.dp6))
             Text(
                 text = "${segmentInfo.label}: ${segmentInfo.valueLabel}",
-                style = KptTheme.typography.bodyMedium,
+                style = LocalKptTypography.current.bodyMedium,
                 color = Color.White,
             )
         }

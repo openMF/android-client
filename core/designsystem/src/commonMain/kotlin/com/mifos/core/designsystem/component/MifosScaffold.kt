@@ -39,7 +39,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import com.mifos.core.designsystem.icon.MifosIcons
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,7 +77,7 @@ fun MifosScaffold(
             }
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        containerColor = KptTheme.colorScheme.background,
+        containerColor = LocalKptColors.current.background,
         content = { paddingValues ->
             val internalPullToRefreshState = rememberPullToRefreshState()
             Box(
@@ -114,8 +116,8 @@ fun MifosScaffold(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     pullToRefreshState: MifosPullToRefreshState = rememberMifosPullToRefreshState(),
     floatingActionButtonPosition: FabPosition = FabPosition.End,
-    containerColor: Color = KptTheme.colorScheme.surface.copy(alpha = 0f),
-    contentColor: Color = KptTheme.colorScheme.onSurface,
+    containerColor: Color = LocalKptColors.current.surface.copy(alpha = 0f),
+    contentColor: Color = LocalKptColors.current.onSurface,
     contentWindowInsets: WindowInsets = ScaffoldDefaults.contentWindowInsets,
     content: @Composable (PaddingValues) -> Unit,
 ) {
@@ -173,7 +175,7 @@ private fun MifosDetailTopBar(
                 text = title,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                style = KptTheme.typography.titleMedium,
+                style = LocalKptTypography.current.titleMedium,
             )
         },
         navigationIcon = {
@@ -186,10 +188,10 @@ private fun MifosDetailTopBar(
         },
         actions = actions,
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = KptTheme.colorScheme.surface,
-            titleContentColor = KptTheme.colorScheme.onSurface,
-            navigationIconContentColor = KptTheme.colorScheme.onSurface,
-            actionIconContentColor = KptTheme.colorScheme.onSurface,
+            containerColor = LocalKptColors.current.surface,
+            titleContentColor = LocalKptColors.current.onSurface,
+            navigationIconContentColor = LocalKptColors.current.onSurface,
+            actionIconContentColor = LocalKptColors.current.onSurface,
         ),
     )
 }

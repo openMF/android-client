@@ -9,10 +9,10 @@
  */
 package com.mifos.core.ui.components
 
-import androidclient.core.ui.generated.resources.Res
-import androidclient.core.ui.generated.resources.core_ui_click_here_to_view_filled_state
-import androidclient.core.ui.generated.resources.core_ui_click_to_add_new
-import androidclient.core.ui.generated.resources.core_ui_no_item_found
+import kpt.core.ui.generated.resources.Res
+import kpt.core.ui.generated.resources.core_ui_click_here_to_view_filled_state
+import kpt.core.ui.generated.resources.core_ui_click_to_add_new
+import kpt.core.ui.generated.resources.core_ui_no_item_found
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth

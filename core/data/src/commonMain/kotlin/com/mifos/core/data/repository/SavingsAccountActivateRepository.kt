@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
 
@@ -21,5 +20,5 @@ interface SavingsAccountActivateRepository {
     fun activateSavings(
         savingsAccountId: Int,
         request: HashMap<String, String>,
-    ): Flow<DataState<GenericResponse>>
+    ): Flow<GenericResponse>
 }

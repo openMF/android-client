@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2025 Mifos Initiative
+
+    This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+    If a copy of the MPL was not distributed with this file,
+    You can obtain one at https://mozilla.org/MPL/2.0/.
+
+    See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- Dev/self-hosted Fineract instances served over cleartext HTTP (e.g. mifos-bank-2). -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">mifos-bank-2.mifos.community</domain>
+        <domain includeSubdomains="true">mifos.community</domain>
+    </domain-config>
+
+    <!-- Allow cleartext + user-added certs for local development only in debug builds -->
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </debug-overrides>
+</network-security-config>

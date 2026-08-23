@@ -13,15 +13,12 @@ plugins {
 
 }
 
-android {
-    namespace = "com.mifos.feature.passcode"
-}
-
 
 kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.data)
+            implementation(projects.core.model)
             implementation(projects.coreBase.ui)
             implementation(projects.core.datastore)
             implementation(compose.material3)
@@ -35,4 +32,9 @@ kotlin {
             implementation(libs.jb.navigationevent)
         }
     }
+}
+compose.resources {
+    publicResClass = true
+    generateResClass = always
+    packageOfResClass = "kpt.feature.passcode.generated.resources"
 }

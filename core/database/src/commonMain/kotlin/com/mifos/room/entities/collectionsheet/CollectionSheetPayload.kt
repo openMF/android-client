@@ -11,9 +11,6 @@ package com.mifos.room.entities.collectionsheet
 
 import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.core.model.objects.collectionsheets.BulkSavingsDueTransaction
-import com.mifos.core.model.utils.IgnoredOnParcel
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.client.ClientsAttendance
 import com.mifos.room.entities.noncore.BulkRepaymentTransactions
 import kotlinx.serialization.Serializable
@@ -21,14 +18,12 @@ import kotlinx.serialization.Serializable
 /**
  * Created by Tarun on 31-07-17.
  */
-@Parcelize
 @Serializable
 data class CollectionSheetPayload(
     var actualDisbursementDate: String? = null,
 
     var bulkRepaymentTransactions: MutableList<BulkRepaymentTransactions> = ArrayList(),
 
-    @IgnoredOnParcel
     var bulkSavingsDueTransactions: MutableList<BulkSavingsDueTransaction> = ArrayList(),
 
     var calendarId: Int? = 0,
@@ -52,4 +47,4 @@ data class CollectionSheetPayload(
     var receiptNumber: String? = null,
 
     var routingCode: String? = null,
-) : Parcelable
+)

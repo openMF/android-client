@@ -9,8 +9,6 @@
  */
 package com.mifos.room.entities.zipmodels
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.accounts.GroupAccounts
 import com.mifos.room.entities.group.GroupEntity
 import kotlinx.serialization.Serializable
@@ -18,9 +16,8 @@ import kotlinx.serialization.Serializable
 /**
  * Created by Rajan Maurya on 11/09/16.
  */
-@Parcelize
 @Serializable
 data class GroupAndGroupAccounts(
     var group: GroupEntity? = null,
     var groupAccounts: GroupAccounts? = null,
-) : Parcelable
+)

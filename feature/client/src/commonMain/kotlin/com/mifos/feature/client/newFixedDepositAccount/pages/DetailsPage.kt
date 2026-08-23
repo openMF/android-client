@@ -9,16 +9,16 @@
  */
 package com.mifos.feature.client.newFixedDepositAccount.pages
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.btn_back
-import androidclient.feature.client.generated.resources.feature_client_charge_cancel
-import androidclient.feature.client.generated.resources.feature_client_charge_select
-import androidclient.feature.client.generated.resources.feature_client_external_id
-import androidclient.feature.client.generated.resources.feature_client_next
-import androidclient.feature.client.generated.resources.field_officer
-import androidclient.feature.client.generated.resources.one_year_fixed_deposit
-import androidclient.feature.client.generated.resources.step_details
-import androidclient.feature.client.generated.resources.submission_on
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.btn_back
+import kpt.feature.client.generated.resources.feature_client_charge_cancel
+import kpt.feature.client.generated.resources.feature_client_charge_select
+import kpt.feature.client.generated.resources.feature_client_external_id
+import kpt.feature.client.generated.resources.feature_client_next
+import kpt.feature.client.generated.resources.field_officer
+import kpt.feature.client.generated.resources.one_year_fixed_deposit
+import kpt.feature.client.generated.resources.step_details
+import kpt.feature.client.generated.resources.submission_on
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -45,7 +45,8 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountAction
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountState
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -95,7 +96,7 @@ fun DetailsPage(
             DatePicker(state = submissionDatePickerState)
         }
     }
-    Column(modifier = Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = LocalKptSpacing.current.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -103,7 +104,7 @@ fun DetailsPage(
                 text = stringResource(Res.string.step_details),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
             MifosTextFieldDropdown(
                 value = if (state.fixedDepositAccountDetail.productSelected == -1) {
                     ""
@@ -130,7 +131,7 @@ fun DetailsPage(
                         onAction(NewFixedDepositAccountAction.OnSubmissionDatePick(true))
                     },
                 )
-                Spacer(Modifier.height(KptTheme.spacing.md))
+                Spacer(Modifier.height(LocalKptSpacing.current.md))
                 MifosTextFieldDropdown(
                     value = if (state.fixedDepositAccountDetail.fieldOfficerIndex == -1) {
                         ""
@@ -165,7 +166,7 @@ fun DetailsPage(
                         },
                     ),
                 )
-                Spacer(Modifier.height(KptTheme.spacing.md))
+                Spacer(Modifier.height(LocalKptSpacing.current.md))
             }
         }
         MifosTwoButtonRow(
@@ -173,7 +174,7 @@ fun DetailsPage(
             secondBtnText = stringResource(Res.string.feature_client_next),
             onFirstBtnClick = { onAction(NewFixedDepositAccountAction.NavigateBack) },
             onSecondBtnClick = { onAction(NewFixedDepositAccountAction.OnDetailNext) },
-            modifier = Modifier.padding(top = KptTheme.spacing.sm),
+            modifier = Modifier.padding(top = LocalKptSpacing.current.sm),
         )
     }
 }

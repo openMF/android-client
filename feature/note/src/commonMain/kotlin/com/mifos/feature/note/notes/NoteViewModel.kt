@@ -12,11 +12,11 @@ package com.mifos.feature.note.notes
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.NoteRepository
 import com.mifos.core.domain.useCases.DeleteNoteUseCase
 import com.mifos.core.model.objects.note.Note
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -43,37 +43,31 @@ class NoteViewModel(
 
     private suspend fun loadNote() {
         route.resourceType?.let { entityType ->
+            if (!state.isRefreshing) {
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = NoteState.DialogState.Loading,
+                        isRefreshing = false,
+                    )
+                }
+            }
             repository.retrieveListNotes(entityType, route.resourceId.toLong())
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> mutableStateFlow.update {
-                            it.copy(
-                                dialogState = NoteState.DialogState.Error(dataState.message),
-                                isRefreshing = false,
-                            )
-                        }
-
-                        is DataState.Loading -> {
-                            if (!state.isRefreshing) {
-                                mutableStateFlow.update {
-                                    it.copy(
-                                        dialogState = NoteState.DialogState.Loading,
-                                        isRefreshing = false,
-                                    )
-                                }
-                            }
-                        }
-
-                        is DataState.Success -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = null,
-                                    notes = dataState.data,
-                                    expandedNoteId = null,
-                                    isRefreshing = false,
-                                )
-                            }
-                        }
+                .catch { error ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = NoteState.DialogState.Error(error.message.orEmpty()),
+                            isRefreshing = false,
+                        )
+                    }
+                }
+                .collect { notes ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = null,
+                            notes = notes,
+                            expandedNoteId = null,
+                            isRefreshing = false,
+                        )
                     }
                 }
         }
@@ -87,35 +81,29 @@ class NoteViewModel(
         }
         route.resourceType?.let { type ->
             id?.let { id ->
-                val result = deleteNoteUseCase(type, route.resourceId.toLong(), id)
-                sendAction(NoteAction.Internal.ReceiveDeleteNoteResult(result))
+                try {
+                    deleteNoteUseCase(type, route.resourceId.toLong(), id)
+                    sendAction(NoteAction.Internal.ReceiveDeleteNoteResult)
+                } catch (e: Exception) {
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = NoteState.DialogState.Error(e.message.orEmpty()),
+                        )
+                    }
+                }
             }
         }
     }
 
-    private fun handleDeleteNoteResult(action: NoteAction.Internal.ReceiveDeleteNoteResult) {
-        when (action.deleteNoteResult) {
-            is DataState.Error -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = NoteState.DialogState.Error(action.deleteNoteResult.message),
-                    )
-                }
-            }
+    private fun handleDeleteNoteResult() {
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = null,
+            )
+        }
 
-            is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = null,
-                    )
-                }
-
-                viewModelScope.launch {
-                    loadNote()
-                }
-            }
-
-            else -> Unit
+        viewModelScope.launch {
+            loadNote()
         }
     }
 
@@ -175,8 +163,8 @@ class NoteViewModel(
                 }
             }
 
-            is NoteAction.Internal.ReceiveDeleteNoteResult -> {
-                handleDeleteNoteResult(action)
+            NoteAction.Internal.ReceiveDeleteNoteResult -> {
+                handleDeleteNoteResult()
             }
         }
     }
@@ -215,8 +203,6 @@ sealed interface NoteAction {
     data object DeleteNote : NoteAction
 
     sealed interface Internal : NoteAction {
-        data class ReceiveDeleteNoteResult(
-            val deleteNoteResult: DataState<Unit>,
-        ) : Internal
+        data object ReceiveDeleteNoteResult : Internal
     }
 }

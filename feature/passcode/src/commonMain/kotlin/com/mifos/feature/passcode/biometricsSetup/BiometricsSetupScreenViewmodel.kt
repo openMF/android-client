@@ -9,9 +9,9 @@
  */
 package com.mifos.feature.passcode.biometricsSetup
 
-import androidclient.feature.passcode.generated.resources.Res
-import androidclient.feature.passcode.generated.resources.feature_authenticator_biometrics_not_available
-import androidclient.feature.passcode.generated.resources.feature_authenticator_biometrics_not_set
+import kpt.feature.passcode.generated.resources.Res
+import kpt.feature.passcode.generated.resources.feature_authenticator_biometrics_not_available
+import kpt.feature.passcode.generated.resources.feature_authenticator_biometrics_not_set
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.datastore.UserPreferencesRepository
 import kotlinx.coroutines.flow.first
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.mifos.authenticator.biometrics.platformAuthenticator.PlatformAuthenticationProvider
 import org.mifos.authenticator.biometrics.platformAuthenticator.RegistrationResult
-import template.core.base.ui.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 
 private const val DEFAULT_USER_ID = "default_user"
 private const val DEFAULT_USER_EMAIL = "default@mifos.org"

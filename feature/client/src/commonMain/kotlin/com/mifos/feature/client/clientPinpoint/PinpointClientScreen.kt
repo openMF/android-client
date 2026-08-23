@@ -11,19 +11,19 @@
 
 package com.mifos.feature.client.clientPinpoint
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_add_location
-import androidclient.feature.client.generated.resources.feature_client_approve_permission_description_location
-import androidclient.feature.client.generated.resources.feature_client_client_locations
-import androidclient.feature.client.generated.resources.feature_client_delete_client_address
-import androidclient.feature.client.generated.resources.feature_client_dismiss
-import androidclient.feature.client.generated.resources.feature_client_failed_to_load_pinpoint
-import androidclient.feature.client.generated.resources.feature_client_no_location_data_found
-import androidclient.feature.client.generated.resources.feature_client_permission_required
-import androidclient.feature.client.generated.resources.feature_client_pinpoint_location_added
-import androidclient.feature.client.generated.resources.feature_client_please_select
-import androidclient.feature.client.generated.resources.feature_client_proceed
-import androidclient.feature.client.generated.resources.feature_client_update_client_address
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_client_add_location
+import kpt.feature.client.generated.resources.feature_client_approve_permission_description_location
+import kpt.feature.client.generated.resources.feature_client_client_locations
+import kpt.feature.client.generated.resources.feature_client_delete_client_address
+import kpt.feature.client.generated.resources.feature_client_dismiss
+import kpt.feature.client.generated.resources.feature_client_failed_to_load_pinpoint
+import kpt.feature.client.generated.resources.feature_client_no_location_data_found
+import kpt.feature.client.generated.resources.feature_client_permission_required
+import kpt.feature.client.generated.resources.feature_client_pinpoint_location_added
+import kpt.feature.client.generated.resources.feature_client_please_select
+import kpt.feature.client.generated.resources.feature_client_proceed
+import kpt.feature.client.generated.resources.feature_client_update_client_address
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -78,7 +78,10 @@ import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun PinpointClientScreen(
@@ -253,7 +256,7 @@ private fun PinPointClientContent(
     onDeleteAddress: (Int, Int) -> Unit,
 ) {
     Column(
-        modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
+        modifier = Modifier.padding(horizontal = LocalKptSpacing.current.md),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -263,7 +266,7 @@ private fun PinPointClientContent(
             Text(
                 text = stringResource(Res.string.feature_client_client_locations),
                 style = MifosTypography.titleMediumEmphasized,
-                color = KptTheme.colorScheme.onSurface,
+                color = LocalKptColors.current.onSurface,
             )
 
             Icon(
@@ -275,7 +278,7 @@ private fun PinPointClientContent(
             )
         }
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         if (pinpointLocations.isEmpty()) {
             MifosEmptyCard(
@@ -325,7 +328,7 @@ internal fun PinPointSelectDialog(
         ),
     ) {
         Card(
-            colors = CardDefaults.cardColors(KptTheme.colorScheme.surface),
+            colors = CardDefaults.cardColors(LocalKptColors.current.surface),
             shape = DesignToken.shapes.largeIncreased,
         ) {
             Column(
@@ -337,7 +340,7 @@ internal fun PinPointSelectDialog(
                 Text(
                     text = stringResource(Res.string.feature_client_please_select),
                     modifier = Modifier.fillMaxWidth(),
-                    style = KptTheme.typography.bodyLarge,
+                    style = LocalKptTypography.current.bodyLarge,
                     textAlign = TextAlign.Center,
                 )
 
@@ -349,7 +352,7 @@ internal fun PinPointSelectDialog(
                     Text(
                         text = stringResource(Res.string.feature_client_update_client_address),
                         modifier = Modifier.fillMaxWidth(),
-                        style = KptTheme.typography.bodyLarge,
+                        style = LocalKptTypography.current.bodyLarge,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -359,7 +362,7 @@ internal fun PinPointSelectDialog(
                     Text(
                         text = stringResource(Res.string.feature_client_delete_client_address),
                         modifier = Modifier.fillMaxWidth(),
-                        style = KptTheme.typography.bodyLarge,
+                        style = LocalKptTypography.current.bodyLarge,
                         textAlign = TextAlign.Center,
                     )
                 }

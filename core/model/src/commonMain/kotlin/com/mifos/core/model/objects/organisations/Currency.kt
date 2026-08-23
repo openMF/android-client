@@ -9,14 +9,11 @@
  */
 package com.mifos.core.model.objects.organisations
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Created by Rajan Maurya on 15/07/16.
  */
-@Parcelize
 @Serializable
 data class Currency(
     var code: String? = null,
@@ -32,4 +29,4 @@ data class Currency(
     var nameCode: String? = null,
 
     var displayLabel: String? = null,
-) : Parcelable
+)

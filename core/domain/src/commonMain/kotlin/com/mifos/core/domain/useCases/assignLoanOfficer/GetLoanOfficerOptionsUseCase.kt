@@ -9,13 +9,12 @@
  */
 package com.mifos.core.domain.useCases.assignLoanOfficer
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.loan.LoanOfficerRepository
 import com.mifos.core.model.objects.template.loan.LoanOfficerOption
 
 class GetLoanOfficerOptionsUseCase(
     private val repository: LoanOfficerRepository,
 ) {
-    suspend operator fun invoke(loanId: Int): DataState<List<LoanOfficerOption>> =
+    suspend operator fun invoke(loanId: Int): List<LoanOfficerOption> =
         repository.getLoanOfficerOptions(loanId)
 }

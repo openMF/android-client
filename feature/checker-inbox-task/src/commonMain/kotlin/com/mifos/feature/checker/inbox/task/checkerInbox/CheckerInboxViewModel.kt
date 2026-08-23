@@ -9,23 +9,23 @@
  */
 package com.mifos.feature.checker.inbox.task.checkerInbox
 
-import androidclient.feature.checker_inbox_task.generated.resources.Res
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_approve_success
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_delete_success
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_failed_to_Load_Checker_Inbox
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_failed_to_approve
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_failed_to_delete
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_failed_to_reject
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_reject_success
+import kpt.feature.checker_inbox_task.generated.resources.Res
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_approve_success
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_delete_success
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_failed_to_Load_Checker_Inbox
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_failed_to_approve
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_failed_to_delete
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_failed_to_reject
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_reject_success
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.ApproveCheckerUseCase
 import com.mifos.core.domain.useCases.DeleteCheckerUseCase
 import com.mifos.core.domain.useCases.GetCheckerTasksUseCase
 import com.mifos.core.domain.useCases.RejectCheckerUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class CheckerInboxViewModel(
@@ -44,72 +44,54 @@ class CheckerInboxViewModel(
         entityName: String? = null,
         resourceId: Int? = null,
     ) = viewModelScope.launch {
-        getCheckerInboxUseCase(actionName, entityName, resourceId).collect { result ->
-            when (result) {
-                is DataState.Error ->
-                    _checkerInboxUiState.value =
-                        CheckerInboxUiState.Error(Res.string.feature_checker_inbox_task_failed_to_Load_Checker_Inbox)
-
-                is DataState.Loading -> _checkerInboxUiState.value = CheckerInboxUiState.Loading
-
-                is DataState.Success ->
-                    _checkerInboxUiState.value =
-                        CheckerInboxUiState.CheckerTasksList(result.data)
+        _checkerInboxUiState.value = CheckerInboxUiState.Loading
+        getCheckerInboxUseCase(actionName, entityName, resourceId)
+            .catch {
+                _checkerInboxUiState.value =
+                    CheckerInboxUiState.Error(Res.string.feature_checker_inbox_task_failed_to_Load_Checker_Inbox)
             }
-        }
+            .collect { checkerTasks ->
+                _checkerInboxUiState.value =
+                    CheckerInboxUiState.CheckerTasksList(checkerTasks)
+            }
     }
 
     fun approveCheckerEntry(auditId: Int) = viewModelScope.launch {
-        approveCheckerUseCase(auditId).collect { result ->
-            when (result) {
-                is DataState.Error ->
-                    _checkerInboxUiState.value =
-                        CheckerInboxUiState.Error(Res.string.feature_checker_inbox_task_failed_to_approve)
-
-                is DataState.Loading -> Unit
-
-                is DataState.Success -> {
-                    loadCheckerTasks()
-                    _checkerInboxUiState.value =
-                        CheckerInboxUiState.SuccessResponse(Res.string.feature_checker_inbox_task_approve_success)
-                }
+        approveCheckerUseCase(auditId)
+            .catch {
+                _checkerInboxUiState.value =
+                    CheckerInboxUiState.Error(Res.string.feature_checker_inbox_task_failed_to_approve)
             }
-        }
+            .collect {
+                loadCheckerTasks()
+                _checkerInboxUiState.value =
+                    CheckerInboxUiState.SuccessResponse(Res.string.feature_checker_inbox_task_approve_success)
+            }
     }
 
     fun rejectCheckerEntry(auditId: Int) = viewModelScope.launch {
-        rejectCheckerUseCase(auditId).collect { result ->
-            when (result) {
-                is DataState.Error ->
-                    _checkerInboxUiState.value =
-                        CheckerInboxUiState.Error(Res.string.feature_checker_inbox_task_failed_to_reject)
-
-                is DataState.Loading -> Unit
-
-                is DataState.Success -> {
-                    loadCheckerTasks()
-                    _checkerInboxUiState.value =
-                        CheckerInboxUiState.SuccessResponse(Res.string.feature_checker_inbox_task_reject_success)
-                }
+        rejectCheckerUseCase(auditId)
+            .catch {
+                _checkerInboxUiState.value =
+                    CheckerInboxUiState.Error(Res.string.feature_checker_inbox_task_failed_to_reject)
             }
-        }
+            .collect {
+                loadCheckerTasks()
+                _checkerInboxUiState.value =
+                    CheckerInboxUiState.SuccessResponse(Res.string.feature_checker_inbox_task_reject_success)
+            }
     }
 
     fun deleteCheckerEntry(auditId: Int) = viewModelScope.launch {
-        deleteCheckerUseCase(auditId).collect { result ->
-            when (result) {
-                is DataState.Error ->
-                    _checkerInboxUiState.value =
-                        CheckerInboxUiState.Error(Res.string.feature_checker_inbox_task_failed_to_delete)
-
-                is DataState.Loading -> Unit
-
-                is DataState.Success -> {
-                    loadCheckerTasks()
-                    _checkerInboxUiState.value =
-                        CheckerInboxUiState.SuccessResponse(Res.string.feature_checker_inbox_task_delete_success)
-                }
+        deleteCheckerUseCase(auditId)
+            .catch {
+                _checkerInboxUiState.value =
+                    CheckerInboxUiState.Error(Res.string.feature_checker_inbox_task_failed_to_delete)
             }
-        }
+            .collect {
+                loadCheckerTasks()
+                _checkerInboxUiState.value =
+                    CheckerInboxUiState.SuccessResponse(Res.string.feature_checker_inbox_task_delete_success)
+            }
     }
 }

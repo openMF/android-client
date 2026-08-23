@@ -12,11 +12,10 @@ package com.mifos.feature.client.clientCollateralDetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.network.model.CollateralItemResult
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -38,41 +37,35 @@ internal class ClientCollateralDetailViewmodel(
     private fun getCollaterals() = viewModelScope.launch {
         val isNetworkAvailable = networkMonitor.isOnline.first()
         if (isNetworkAvailable) {
-            when (val response = repo.getClientCollaterals(clientId = state.id)) {
-                is DataState.Error -> {
+            mutableStateFlow.update {
+                it.copy(
+                    state = ClientCollateralDetailsState.State.Loading,
+                )
+            }
+            try {
+                val response = repo.getClientCollaterals(clientId = state.id)
+                if (response.isEmpty()) {
                     mutableStateFlow.update {
                         it.copy(
-                            state = ClientCollateralDetailsState.State.Error(
-                                isNetworkAvailable,
-                                response.message,
-                            ),
+                            state = ClientCollateralDetailsState.State.Empty,
+                        )
+                    }
+                } else {
+                    mutableStateFlow.update {
+                        it.copy(
+                            collaterals = response,
+                            state = ClientCollateralDetailsState.State.Success,
                         )
                     }
                 }
-
-                DataState.Loading -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            state = ClientCollateralDetailsState.State.Loading,
-                        )
-                    }
-                }
-
-                is DataState.Success -> {
-                    if (response.data.isEmpty()) {
-                        mutableStateFlow.update {
-                            it.copy(
-                                state = ClientCollateralDetailsState.State.Empty,
-                            )
-                        }
-                    } else {
-                        mutableStateFlow.update {
-                            it.copy(
-                                collaterals = response.data,
-                                state = ClientCollateralDetailsState.State.Success,
-                            )
-                        }
-                    }
+            } catch (e: Exception) {
+                mutableStateFlow.update {
+                    it.copy(
+                        state = ClientCollateralDetailsState.State.Error(
+                            isNetworkAvailable,
+                            e.message ?: "",
+                        ),
+                    )
                 }
             }
         } else {

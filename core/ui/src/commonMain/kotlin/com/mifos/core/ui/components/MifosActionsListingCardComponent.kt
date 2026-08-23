@@ -9,48 +9,48 @@
  */
 package com.mifos.core.ui.components
 
-import androidclient.core.ui.generated.resources.Res
-import androidclient.core.ui.generated.resources.client_documents_component_header_subtitle_description
-import androidclient.core.ui.generated.resources.client_documents_component_header_subtitle_file_name
-import androidclient.core.ui.generated.resources.client_share_accounts_approved_shares
-import androidclient.core.ui.generated.resources.client_share_accounts_pending_for_approval_shares
-import androidclient.core.ui.generated.resources.client_share_accounts_share_product
-import androidclient.core.ui.generated.resources.core_ui_account_no
-import androidclient.core.ui.generated.resources.core_ui_amount_paid
-import androidclient.core.ui.generated.resources.core_ui_approve_account
-import androidclient.core.ui.generated.resources.core_ui_balance
-import androidclient.core.ui.generated.resources.core_ui_delete
-import androidclient.core.ui.generated.resources.core_ui_delete_document
-import androidclient.core.ui.generated.resources.core_ui_description
-import androidclient.core.ui.generated.resources.core_ui_document_id
-import androidclient.core.ui.generated.resources.core_ui_document_key
-import androidclient.core.ui.generated.resources.core_ui_due
-import androidclient.core.ui.generated.resources.core_ui_due_as_of
-import androidclient.core.ui.generated.resources.core_ui_edit
-import androidclient.core.ui.generated.resources.core_ui_identify_documents
-import androidclient.core.ui.generated.resources.core_ui_last_active
-import androidclient.core.ui.generated.resources.core_ui_loan_balance
-import androidclient.core.ui.generated.resources.core_ui_loan_product
-import androidclient.core.ui.generated.resources.core_ui_make_repayment
-import androidclient.core.ui.generated.resources.core_ui_note_createdBy
-import androidclient.core.ui.generated.resources.core_ui_note_date
-import androidclient.core.ui.generated.resources.core_ui_note_note
-import androidclient.core.ui.generated.resources.core_ui_original_loan
-import androidclient.core.ui.generated.resources.core_ui_outstanding
-import androidclient.core.ui.generated.resources.core_ui_paid
-import androidclient.core.ui.generated.resources.core_ui_pay_outstanding_amount
-import androidclient.core.ui.generated.resources.core_ui_quantity
-import androidclient.core.ui.generated.resources.core_ui_status
-import androidclient.core.ui.generated.resources.core_ui_total_collateral_value
-import androidclient.core.ui.generated.resources.core_ui_total_value
-import androidclient.core.ui.generated.resources.core_ui_transfer_fund
-import androidclient.core.ui.generated.resources.core_ui_type
-import androidclient.core.ui.generated.resources.core_ui_upload_again
-import androidclient.core.ui.generated.resources.core_ui_view_account
-import androidclient.core.ui.generated.resources.core_ui_view_document
-import androidclient.core.ui.generated.resources.core_ui_waived
-import androidclient.core.ui.generated.resources.listing_component_identifier_not_available
-import androidclient.core.ui.generated.resources.name
+import kpt.core.ui.generated.resources.Res
+import kpt.core.ui.generated.resources.client_documents_component_header_subtitle_description
+import kpt.core.ui.generated.resources.client_documents_component_header_subtitle_file_name
+import kpt.core.ui.generated.resources.client_share_accounts_approved_shares
+import kpt.core.ui.generated.resources.client_share_accounts_pending_for_approval_shares
+import kpt.core.ui.generated.resources.client_share_accounts_share_product
+import kpt.core.ui.generated.resources.core_ui_account_no
+import kpt.core.ui.generated.resources.core_ui_amount_paid
+import kpt.core.ui.generated.resources.core_ui_approve_account
+import kpt.core.ui.generated.resources.core_ui_balance
+import kpt.core.ui.generated.resources.core_ui_delete
+import kpt.core.ui.generated.resources.core_ui_delete_document
+import kpt.core.ui.generated.resources.core_ui_description
+import kpt.core.ui.generated.resources.core_ui_document_id
+import kpt.core.ui.generated.resources.core_ui_document_key
+import kpt.core.ui.generated.resources.core_ui_due
+import kpt.core.ui.generated.resources.core_ui_due_as_of
+import kpt.core.ui.generated.resources.core_ui_edit
+import kpt.core.ui.generated.resources.core_ui_identify_documents
+import kpt.core.ui.generated.resources.core_ui_last_active
+import kpt.core.ui.generated.resources.core_ui_loan_balance
+import kpt.core.ui.generated.resources.core_ui_loan_product
+import kpt.core.ui.generated.resources.core_ui_make_repayment
+import kpt.core.ui.generated.resources.core_ui_note_createdBy
+import kpt.core.ui.generated.resources.core_ui_note_date
+import kpt.core.ui.generated.resources.core_ui_note_note
+import kpt.core.ui.generated.resources.core_ui_original_loan
+import kpt.core.ui.generated.resources.core_ui_outstanding
+import kpt.core.ui.generated.resources.core_ui_paid
+import kpt.core.ui.generated.resources.core_ui_pay_outstanding_amount
+import kpt.core.ui.generated.resources.core_ui_quantity
+import kpt.core.ui.generated.resources.core_ui_status
+import kpt.core.ui.generated.resources.core_ui_total_collateral_value
+import kpt.core.ui.generated.resources.core_ui_total_value
+import kpt.core.ui.generated.resources.core_ui_transfer_fund
+import kpt.core.ui.generated.resources.core_ui_type
+import kpt.core.ui.generated.resources.core_ui_upload_again
+import kpt.core.ui.generated.resources.core_ui_view_account
+import kpt.core.ui.generated.resources.core_ui_view_document
+import kpt.core.ui.generated.resources.core_ui_waived
+import kpt.core.ui.generated.resources.listing_component_identifier_not_available
+import kpt.core.ui.generated.resources.name
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
@@ -97,7 +97,9 @@ import com.mifos.core.ui.util.TextUtil
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
 
 @Composable
 private fun ActionMenuRow(
@@ -121,8 +123,8 @@ private fun ActionMenuRow(
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = stringResource(menuItem.text),
-            color = KptTheme.colorScheme.onSurface,
-            fontSize = KptTheme.typography.bodyLarge.fontSize,
+            color = LocalKptColors.current.onSurface,
+            fontSize = LocalKptTypography.current.bodyLarge.fontSize,
         )
     }
 }
@@ -148,7 +150,7 @@ fun MifosActionsListingComponentOutline(
                     bottomStart = bottomCorner,
                     bottomEnd = bottomCorner,
                 ),
-                color = KptTheme.colorScheme.secondaryContainer,
+                color = LocalKptColors.current.secondaryContainer,
             ),
     ) {
         content()
@@ -225,7 +227,7 @@ fun MifosActionsIdentifierListingComponent(
                     bottomStart = DesignToken.padding.medium,
                     bottomEnd = DesignToken.padding.medium,
                 ),
-                color = KptTheme.colorScheme.surfaceContainer,
+                color = LocalKptColors.current.surfaceContainer,
             ) {
                 Column(
                     modifier = Modifier.padding(
@@ -278,7 +280,7 @@ fun MifosActionsCollateralDataListingComponent(
                 MifosListingRowItem(
                     key = stringResource(Res.string.core_ui_total_collateral_value),
                     value = totalCollateralValue,
-                    valueColor = KptTheme.colorScheme.primary,
+                    valueColor = LocalKptColors.current.primary,
                 )
             }
 
@@ -361,7 +363,7 @@ fun MifosActionsClientDocumentListingComponent(
                     bottomStart = DesignToken.padding.medium,
                     bottomEnd = DesignToken.padding.medium,
                 ),
-                color = KptTheme.colorScheme.surfaceContainer,
+                color = LocalKptColors.current.surfaceContainer,
             ) {
                 Column(
                     modifier = Modifier.padding(
@@ -417,7 +419,7 @@ fun MifosActionsLoanListingComponent(
                     MifosListingRowItem(
                         key = stringResource(Res.string.core_ui_original_loan),
                         value = originalLoan,
-                        valueColor = KptTheme.colorScheme.primary,
+                        valueColor = LocalKptColors.current.primary,
                     )
                     MifosListingRowItem(
                         key = stringResource(Res.string.core_ui_amount_paid),
@@ -449,7 +451,7 @@ fun MifosActionsLoanListingComponent(
                     bottomStart = DesignToken.padding.medium,
                     bottomEnd = DesignToken.padding.medium,
                 ),
-                color = KptTheme.colorScheme.surfaceContainer,
+                color = LocalKptColors.current.surfaceContainer,
             ) {
                 Column(
                     modifier = Modifier.padding(
@@ -521,7 +523,7 @@ fun MifosActionsShareListingComponent(
                         bottomStart = DesignToken.padding.medium,
                         bottomEnd = DesignToken.padding.medium,
                     ),
-                    color = KptTheme.colorScheme.surfaceContainer,
+                    color = LocalKptColors.current.surfaceContainer,
                 ) {
                     Column(
                         modifier = Modifier.padding(
@@ -637,7 +639,7 @@ fun MifosActionsChargeListingComponent(
                     bottomStart = DesignToken.padding.medium,
                     bottomEnd = DesignToken.padding.medium,
                 ),
-                color = KptTheme.colorScheme.surfaceContainer,
+                color = LocalKptColors.current.surfaceContainer,
             ) {
                 Column(
                     modifier = Modifier.padding(
@@ -695,7 +697,7 @@ fun MifosActionsSavingsListingComponent(
                     MifosListingRowItem(
                         key = stringResource(Res.string.core_ui_balance),
                         value = balance,
-                        valueColor = KptTheme.colorScheme.primary,
+                        valueColor = LocalKptColors.current.primary,
                     )
                 }
             }
@@ -708,7 +710,7 @@ fun MifosActionsSavingsListingComponent(
                     bottomStart = DesignToken.padding.medium,
                     bottomEnd = DesignToken.padding.medium,
                 ),
-                color = KptTheme.colorScheme.surfaceContainer,
+                color = LocalKptColors.current.surfaceContainer,
             ) {
                 Column(
                     modifier = Modifier.padding(
@@ -760,7 +762,7 @@ fun MifosActionsClientFeeListingComponent(
                     MifosListingRowItem(
                         key = stringResource(Res.string.core_ui_due),
                         value = due,
-                        valueColor = KptTheme.colorScheme.error,
+                        valueColor = LocalKptColors.current.error,
                     )
                     MifosListingRowItem(
                         key = stringResource(Res.string.core_ui_paid),
@@ -786,7 +788,7 @@ fun MifosActionsClientFeeListingComponent(
                         bottomStart = DesignToken.padding.medium,
                         bottomEnd = DesignToken.padding.medium,
                     ),
-                    color = KptTheme.colorScheme.surfaceContainer,
+                    color = LocalKptColors.current.surfaceContainer,
                 ) {
                     Column(
                         modifier = Modifier.padding(
@@ -889,7 +891,7 @@ fun MifosActionsNoteListingComponent(
                     bottomStart = DesignToken.padding.medium,
                     bottomEnd = DesignToken.padding.medium,
                 ),
-                color = KptTheme.colorScheme.surfaceContainer,
+                color = LocalKptColors.current.surfaceContainer,
             ) {
                 Column(
                     modifier = Modifier.padding(

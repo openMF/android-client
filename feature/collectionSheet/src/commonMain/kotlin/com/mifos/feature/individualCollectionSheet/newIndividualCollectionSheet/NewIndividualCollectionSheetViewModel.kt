@@ -11,7 +11,6 @@ package com.mifos.feature.individualCollectionSheet.newIndividualCollectionSheet
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.core.domain.useCases.GetIndividualCollectionSheetUseCase
 import com.mifos.core.domain.useCases.GetStaffInOfficeUseCase
@@ -42,46 +41,26 @@ class NewIndividualCollectionSheetViewModel(
                 .catch { error ->
                     updateUiState { it.copy(isLoading = false, error = error.message) }
                 }
-                .collect { result ->
-                    when (result) {
-                        is DataState.Loading -> Unit
-                        is DataState.Error -> updateUiState {
-                            it.copy(isLoading = false, error = result.message)
-                        }
-                        is DataState.Success -> updateUiState {
-                            it.copy(isLoading = false, officeList = result.data)
-                        }
-                    }
+                .collect { offices ->
+                    updateUiState { it.copy(isLoading = false, officeList = offices) }
                 }
         }
     }
 
     fun getStaffList(officeId: Int) = viewModelScope.launch {
-        getStaffInOfficeUseCase(officeId).collect { result ->
-            when (result) {
-                is DataState.Loading -> Unit
-                is DataState.Error -> updateUiState {
-                    it.copy(error = result.message)
-                }
-                is DataState.Success -> updateUiState {
-                    it.copy(staffList = result.data)
-                }
+        getStaffInOfficeUseCase(officeId)
+            .catch { error -> updateUiState { it.copy(error = error.message) } }
+            .collect { staff ->
+                updateUiState { it.copy(staffList = staff) }
             }
-        }
     }
 
     fun getIndividualCollectionSheet(payload: RequestCollectionSheetPayload) = viewModelScope.launch {
-        getIndividualCollectionSheetUseCase(payload).collect { result ->
-            when (result) {
-                is DataState.Loading -> Unit
-                is DataState.Error -> updateUiState {
-                    it.copy(error = result.message)
-                }
-                is DataState.Success -> updateUiState {
-                    it.copy(individualCollectionSheet = result.data)
-                }
+        getIndividualCollectionSheetUseCase(payload)
+            .catch { error -> updateUiState { it.copy(error = error.message) } }
+            .collect { sheet ->
+                updateUiState { it.copy(individualCollectionSheet = sheet) }
             }
-        }
     }
 
     private inline fun updateUiState(update: (NewIndividualCollectionSheetUiState) -> NewIndividualCollectionSheetUiState) {

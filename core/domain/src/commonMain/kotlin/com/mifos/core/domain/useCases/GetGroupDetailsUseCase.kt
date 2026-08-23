@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.GroupDetailsRepository
 import com.mifos.room.entities.zipmodels.GroupAndGroupAccounts
 import kotlinx.coroutines.flow.Flow
@@ -18,25 +17,16 @@ import kotlinx.coroutines.flow.combine
 class GetGroupDetailsUseCase(
     private val repository: GroupDetailsRepository,
 ) {
-    operator fun invoke(groupId: Int): Flow<DataState<GroupAndGroupAccounts>> =
+    // offline-first-template-migration 03-core-datastate-removal (D18): plain upstream Flows —
+    // `combine` propagates either's exception automatically.
+    operator fun invoke(groupId: Int): Flow<GroupAndGroupAccounts> =
         combine(
             repository.getGroup(groupId),
             repository.getGroupAccounts(groupId),
         ) { group, groupAccounts ->
-            if (group is DataState.Success && groupAccounts is DataState.Success) {
-                DataState.Success(
-                    GroupAndGroupAccounts(
-                        group = group.data,
-                        groupAccounts = groupAccounts.data,
-                    ),
-                )
-            } else if (group is DataState.Error || groupAccounts is DataState.Error) {
-                val exception = (group as? DataState.Error)?.exception
-                    ?: (groupAccounts as? DataState.Error)?.exception
-                    ?: Exception("Unknown error")
-                DataState.Error(exception)
-            } else {
-                DataState.Loading
-            }
+            GroupAndGroupAccounts(
+                group = group,
+                groupAccounts = groupAccounts,
+            )
         }
 }

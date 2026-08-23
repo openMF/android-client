@@ -9,13 +9,12 @@
  */
 package com.mifos.feature.savings.savingsAccount
 
-import androidclient.feature.savings.generated.resources.Res
-import androidclient.feature.savings.generated.resources.feature_savings_failed_to_load_savings_products_and_template
+import kpt.feature.savings.generated.resources.Res
+import kpt.feature.savings.generated.resources.feature_savings_failed_to_load_savings_products_and_template
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.CreateSavingsAccountUseCase
 import com.mifos.core.domain.useCases.GetClientSavingsAccountTemplateByProductUseCase
 import com.mifos.core.domain.useCases.GetGroupSavingsAccountTemplateByProductUseCase
@@ -27,6 +26,7 @@ import com.mifos.room.entities.templates.savings.SavingProductsTemplate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 /**
@@ -55,24 +55,17 @@ class SavingAccountViewModel(
 
     fun loadSavingsAccountsAndTemplate() =
         viewModelScope.launch {
+            _savingAccountUiState.value = SavingAccountUiState.ShowProgress
             loadSavingsAccountsAndTemplateUseCase()
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error ->
-                            _savingAccountUiState.value =
-                                SavingAccountUiState.ShowFetchingError(
-                                    Res.string.feature_savings_failed_to_load_savings_products_and_template,
-                                )
-
-                        DataState.Loading ->
-                            _savingAccountUiState.value =
-                                SavingAccountUiState.ShowProgress
-
-                        is DataState.Success -> {
-                            _savingAccountUiState.value =
-                                SavingAccountUiState.LoadAllSavings(dataState.data)
-                        }
-                    }
+                .catch {
+                    _savingAccountUiState.value =
+                        SavingAccountUiState.ShowFetchingError(
+                            Res.string.feature_savings_failed_to_load_savings_products_and_template,
+                        )
+                }
+                .collect { savingProductsAndTemplate ->
+                    _savingAccountUiState.value =
+                        SavingAccountUiState.LoadAllSavings(savingProductsAndTemplate)
                 }
         }
 
@@ -81,20 +74,12 @@ class SavingAccountViewModel(
             getClientSavingsAccountTemplateByProductUseCase(
                 route.clientId,
                 productId,
-            ).collect { dataState ->
-                when (dataState) {
-                    is DataState.Error -> {
-                        _savingAccountUiState.value =
-                            SavingAccountUiState.ShowFetchingError(Res.string.feature_savings_failed_to_load_savings_products_and_template)
-                    }
-
-                    DataState.Loading -> Unit
-
-                    is DataState.Success -> {
-                        _savingProductsTemplate.value =
-                            dataState.data ?: SavingProductsTemplate()
-                    }
-                }
+            ).catch {
+                _savingAccountUiState.value =
+                    SavingAccountUiState.ShowFetchingError(Res.string.feature_savings_failed_to_load_savings_products_and_template)
+            }.collect { template ->
+                _savingProductsTemplate.value =
+                    template ?: SavingProductsTemplate()
             }
         }
 
@@ -103,44 +88,30 @@ class SavingAccountViewModel(
             getGroupSavingsAccountTemplateByProductUseCase(
                 route.groupId,
                 productId,
-            ).collect { dataState ->
-                when (dataState) {
-                    is DataState.Error ->
-                        _savingAccountUiState.value =
-                            SavingAccountUiState.ShowFetchingError(
-                                Res.string.feature_savings_failed_to_load_savings_products_and_template,
-                            )
-
-                    is DataState.Loading -> Unit
-
-                    is DataState.Success ->
-                        _savingProductsTemplate.value =
-                            dataState.data ?: SavingProductsTemplate()
-                }
+            ).catch {
+                _savingAccountUiState.value =
+                    SavingAccountUiState.ShowFetchingError(
+                        Res.string.feature_savings_failed_to_load_savings_products_and_template,
+                    )
+            }.collect { template ->
+                _savingProductsTemplate.value =
+                    template ?: SavingProductsTemplate()
             }
         }
 
     fun createSavingsAccount(savingsPayload: SavingsPayload?) =
         viewModelScope.launch {
+            _savingAccountUiState.value = SavingAccountUiState.ShowProgress
             createSavingsAccountUseCase(savingsPayload)
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error ->
-                            _savingAccountUiState.value =
-                                SavingAccountUiState.ShowFetchingErrorString(dataState.message.toString())
-
-                        is DataState.Loading ->
-                            _savingAccountUiState.value =
-                                SavingAccountUiState.ShowProgress
-
-                        is DataState.Success -> {
-                            _savingAccountUiState.value =
-                                SavingAccountUiState.ShowSavingsAccountCreatedSuccessfully(
-                                    Savings(),
-//                                    dataState.data,
-                                )
-                        }
-                    }
+                .catch { error ->
+                    _savingAccountUiState.value =
+                        SavingAccountUiState.ShowFetchingErrorString(error.message.toString())
+                }
+                .collect {
+                    _savingAccountUiState.value =
+                        SavingAccountUiState.ShowSavingsAccountCreatedSuccessfully(
+                            Savings(),
+                        )
                 }
         }
 }

@@ -9,28 +9,28 @@
  */
 package com.mifos.feature.client.clientAddress.addAddress
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.dialog_continue
-import androidclient.feature.client.generated.resources.feature_client_add_address
-import androidclient.feature.client.generated.resources.feature_client_address_city_error
-import androidclient.feature.client.generated.resources.feature_client_address_country_error
-import androidclient.feature.client.generated.resources.feature_client_address_creation_failure_title
-import androidclient.feature.client.generated.resources.feature_client_address_line_1
-import androidclient.feature.client.generated.resources.feature_client_address_line_2
-import androidclient.feature.client.generated.resources.feature_client_address_line_3
-import androidclient.feature.client.generated.resources.feature_client_address_line_error
-import androidclient.feature.client.generated.resources.feature_client_address_postal_code_error
-import androidclient.feature.client.generated.resources.feature_client_address_state_province_error
-import androidclient.feature.client.generated.resources.feature_client_address_type
-import androidclient.feature.client.generated.resources.feature_client_address_type_error
-import androidclient.feature.client.generated.resources.feature_client_cancel
-import androidclient.feature.client.generated.resources.feature_client_city
-import androidclient.feature.client.generated.resources.feature_client_country
-import androidclient.feature.client.generated.resources.feature_client_create_address_success_message
-import androidclient.feature.client.generated.resources.feature_client_postal_code
-import androidclient.feature.client.generated.resources.feature_client_state_province
-import androidclient.feature.client.generated.resources.feature_client_submit
-import androidclient.feature.client.generated.resources.feature_client_success_title
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.dialog_continue
+import kpt.feature.client.generated.resources.feature_client_add_address
+import kpt.feature.client.generated.resources.feature_client_address_city_error
+import kpt.feature.client.generated.resources.feature_client_address_country_error
+import kpt.feature.client.generated.resources.feature_client_address_creation_failure_title
+import kpt.feature.client.generated.resources.feature_client_address_line_1
+import kpt.feature.client.generated.resources.feature_client_address_line_2
+import kpt.feature.client.generated.resources.feature_client_address_line_3
+import kpt.feature.client.generated.resources.feature_client_address_line_error
+import kpt.feature.client.generated.resources.feature_client_address_postal_code_error
+import kpt.feature.client.generated.resources.feature_client_address_state_province_error
+import kpt.feature.client.generated.resources.feature_client_address_type
+import kpt.feature.client.generated.resources.feature_client_address_type_error
+import kpt.feature.client.generated.resources.feature_client_cancel
+import kpt.feature.client.generated.resources.feature_client_city
+import kpt.feature.client.generated.resources.feature_client_country
+import kpt.feature.client.generated.resources.feature_client_create_address_success_message
+import kpt.feature.client.generated.resources.feature_client_postal_code
+import kpt.feature.client.generated.resources.feature_client_state_province
+import kpt.feature.client.generated.resources.feature_client_submit
+import kpt.feature.client.generated.resources.feature_client_success_title
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -90,7 +90,10 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun AddAddressScreen(
@@ -256,16 +259,16 @@ private fun AddAddressScaffold(
                     MifosBreadcrumbNavBar(navController)
                     LazyColumn(
                         modifier = Modifier.padding(
-                            horizontal = KptTheme.spacing.md,
+                            horizontal = LocalKptSpacing.current.md,
                         ),
                     ) {
                         item {
                             Text(
                                 text = stringResource(Res.string.feature_client_add_address),
                                 fontWeight = FontWeight.SemiBold,
-                                fontSize = KptTheme.typography.labelLarge.fontSize,
-                                letterSpacing = KptTheme.typography.labelLarge.letterSpacing,
-                                color = KptTheme.colorScheme.onSurface,
+                                fontSize = LocalKptTypography.current.labelLarge.fontSize,
+                                letterSpacing = LocalKptTypography.current.labelLarge.letterSpacing,
+                                color = LocalKptColors.current.onSurface,
                             )
                             if (isAddressEnabled && state.addressTemplate != null) {
                                 val sortedAddressTypeOptions = state.addressTemplate.addressTypeIdOptions.sortedBy { it.name }
@@ -341,12 +344,12 @@ private fun AddAddressFormBottomBar(
     isSubmitEnabled: Boolean,
 ) {
     Box(
-        modifier = Modifier.background(KptTheme.colorScheme.surface),
+        modifier = Modifier.background(LocalKptColors.current.surface),
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(KptTheme.spacing.sm),
+                .padding(LocalKptSpacing.current.sm),
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
             OutlinedButton(
@@ -355,28 +358,28 @@ private fun AddAddressFormBottomBar(
                     .weight(0.4f)
                     .heightIn(DesignToken.sizes.avatarMedium),
                 colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = KptTheme.colorScheme.onPrimary,
-                    contentColor = KptTheme.colorScheme.primary,
+                    containerColor = LocalKptColors.current.onPrimary,
+                    contentColor = LocalKptColors.current.primary,
                 ),
                 shape = RoundedCornerShape(DesignToken.sizes.iconMinyMiny),
                 border = BorderStroke(
                     width = Dp.Hairline,
-                    color = KptTheme.colorScheme.secondaryContainer,
+                    color = LocalKptColors.current.secondaryContainer,
                 ),
                 onClick = { onCancelClick.invoke() },
             ) {
                 Icon(imageVector = MifosIcons.Close, contentDescription = "")
-                Spacer(modifier = Modifier.width(KptTheme.spacing.sm))
+                Spacer(modifier = Modifier.width(LocalKptSpacing.current.sm))
                 Text(
                     text = stringResource(Res.string.feature_client_cancel),
                     fontWeight = FontWeight.Medium,
-                    fontSize = KptTheme.typography.labelLarge.fontSize,
-                    letterSpacing = KptTheme.typography.labelLarge.letterSpacing,
-                    lineHeight = KptTheme.typography.labelLarge.lineHeight,
+                    fontSize = LocalKptTypography.current.labelLarge.fontSize,
+                    letterSpacing = LocalKptTypography.current.labelLarge.letterSpacing,
+                    lineHeight = LocalKptTypography.current.labelLarge.lineHeight,
                     textAlign = TextAlign.Center,
                 )
             }
-            Spacer(modifier = Modifier.width(KptTheme.spacing.sm))
+            Spacer(modifier = Modifier.width(LocalKptSpacing.current.sm))
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -385,19 +388,19 @@ private fun AddAddressFormBottomBar(
                 shape = RoundedCornerShape(DesignToken.sizes.iconMinyMiny),
                 enabled = isSubmitEnabled,
                 colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = KptTheme.colorScheme.primary,
-                    contentColor = KptTheme.colorScheme.onPrimary,
+                    containerColor = LocalKptColors.current.primary,
+                    contentColor = LocalKptColors.current.onPrimary,
                 ),
                 onClick = { onSubmitClick.invoke() },
             ) {
                 Icon(imageVector = MifosIcons.Check, contentDescription = "")
-                Spacer(modifier = Modifier.width(KptTheme.spacing.sm))
+                Spacer(modifier = Modifier.width(LocalKptSpacing.current.sm))
                 Text(
                     text = stringResource(Res.string.feature_client_submit),
                     fontWeight = FontWeight.Medium,
-                    fontSize = KptTheme.typography.labelLarge.fontSize,
-                    letterSpacing = KptTheme.typography.labelLarge.letterSpacing,
-                    lineHeight = KptTheme.typography.labelLarge.lineHeight,
+                    fontSize = LocalKptTypography.current.labelLarge.fontSize,
+                    letterSpacing = LocalKptTypography.current.labelLarge.letterSpacing,
+                    lineHeight = LocalKptTypography.current.labelLarge.lineHeight,
                     textAlign = TextAlign.Center,
                 )
             }
@@ -454,7 +457,7 @@ private fun AddressInputTextFields(
             error = addressLineError,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             value = addressLine2,
@@ -463,7 +466,7 @@ private fun AddressInputTextFields(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             value = addressLine3,
@@ -472,7 +475,7 @@ private fun AddressInputTextFields(
             error = null,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosOutlinedTextField(
             value = city,
@@ -481,7 +484,7 @@ private fun AddressInputTextFields(
             error = cityError,
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosTextFieldDropdown(
             value = selectedStateName,

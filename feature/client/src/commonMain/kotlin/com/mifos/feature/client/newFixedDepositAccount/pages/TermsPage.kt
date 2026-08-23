@@ -9,18 +9,18 @@
  */
 package com.mifos.feature.client.newFixedDepositAccount.pages
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.btn_back
-import androidclient.feature.client.generated.resources.feature_client_next
-import androidclient.feature.client.generated.resources.feature_fixed_days_in_year
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_deposit_amount
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_deposit_period
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_deposit_period_type
-import androidclient.feature.client.generated.resources.feature_fixed_deposit_terms_page
-import androidclient.feature.client.generated.resources.feature_fixed_interest_calculated_using
-import androidclient.feature.client.generated.resources.feature_fixed_interest_compounding
-import androidclient.feature.client.generated.resources.feature_fixed_interest_compounding_period
-import androidclient.feature.client.generated.resources.feature_fixed_interest_posting_period
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.btn_back
+import kpt.feature.client.generated.resources.feature_client_next
+import kpt.feature.client.generated.resources.feature_fixed_days_in_year
+import kpt.feature.client.generated.resources.feature_fixed_deposit_deposit_amount
+import kpt.feature.client.generated.resources.feature_fixed_deposit_deposit_period
+import kpt.feature.client.generated.resources.feature_fixed_deposit_deposit_period_type
+import kpt.feature.client.generated.resources.feature_fixed_deposit_terms_page
+import kpt.feature.client.generated.resources.feature_fixed_interest_calculated_using
+import kpt.feature.client.generated.resources.feature_fixed_interest_compounding
+import kpt.feature.client.generated.resources.feature_fixed_interest_compounding_period
+import kpt.feature.client.generated.resources.feature_fixed_interest_posting_period
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,7 +43,8 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountAction
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountState
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun TermsPage(
@@ -51,7 +52,7 @@ fun TermsPage(
     modifier: Modifier = Modifier,
     onAction: (NewFixedDepositAccountAction) -> Unit,
 ) {
-    Column(modifier = Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = LocalKptSpacing.current.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -59,7 +60,7 @@ fun TermsPage(
                 text = stringResource(Res.string.feature_fixed_deposit_terms_page),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
             MifosOutlinedTextField(
                 value = state.fixedDepositAccountTerms.depositAmount,
                 onValueChange = {
@@ -86,7 +87,7 @@ fun TermsPage(
                     },
                 ),
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
             MifosOutlinedTextField(
                 value = state.fixedDepositAccountTerms.depositPeriod,
                 onValueChange = {
@@ -106,7 +107,7 @@ fun TermsPage(
                     errorText = state.fixedDepositAccountTerms.depositPeriodError?.let { stringResource(it) },
                 ),
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
             MifosTextFieldDropdown(
                 value = if (state.fixedDepositAccountTerms.depositPeriodTypeIndex != -1) {
                     state.template.periodFrequencyTypeOptions?.getOrNull(state.fixedDepositAccountTerms.depositPeriodTypeIndex)?.value.orEmpty()
@@ -127,12 +128,12 @@ fun TermsPage(
                 label = stringResource(Res.string.feature_fixed_deposit_deposit_period_type) + "*",
                 errorMessage = state.fixedDepositAccountTerms.depositPeriodTypeError?.let { stringResource(it) },
             )
-            Spacer(Modifier.height(KptTheme.spacing.sm))
+            Spacer(Modifier.height(LocalKptSpacing.current.sm))
             Text(
                 text = stringResource(Res.string.feature_fixed_interest_compounding),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
             MifosTextFieldDropdown(
                 value = if (state.fixedDepositAccountTerms.interestCompoundingPeriodTypeIndex != -1) {
                     state.template.interestCompoundingPeriodTypeOptions?.getOrNull(state.fixedDepositAccountTerms.interestCompoundingPeriodTypeIndex)?.value.orEmpty()

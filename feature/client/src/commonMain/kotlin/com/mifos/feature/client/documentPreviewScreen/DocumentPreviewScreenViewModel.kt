@@ -9,12 +9,11 @@
  */
 package com.mifos.feature.client.documentPreviewScreen
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.error_document_size_exceeded
-import androidclient.feature.client.generated.resources.unknown_error
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.error_document_size_exceeded
+import kpt.feature.client.generated.resources.unknown_error
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.feature.client.DocumentSelectAndUploadRepository
 import com.mifos.feature.client.EntityDocumentState
 import com.mifos.feature.client.utils.openPdfWithDefaultExternalApp
@@ -22,6 +21,7 @@ import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.extension
 import io.github.vinceglb.filekit.readBytes
 import io.github.vinceglb.filekit.size
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -81,45 +81,39 @@ class DocumentPreviewScreenViewModel(
 
     private fun pickFromGallery() {
         viewModelScope.launch {
+            loadingDialogState()
             documentSelectAndUploadRepository.selectImageFromGallery()
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> {
+                .catch { error ->
+                    mutableStateFlow.update {
+                        it.copy(showBottomSheet = false)
+                    }
+                    errorDialogState(error.message ?: getString(Res.string.unknown_error))
+                }
+                .collect { platformFile ->
+                    nullDialogState()
+                    platformFile?.let { file ->
+                        mutableStateFlow.update {
+                            it.copy(showBottomSheet = false)
+                        }
+                        // 1MB File size check.
+                        if (file.size() > 1048576L) {
                             mutableStateFlow.update {
-                                it.copy(showBottomSheet = false)
+                                it.copy(
+                                    dialogState = DocumentPreviewState
+                                        .DialogState.Error(getString(Res.string.error_document_size_exceeded)),
+                                )
                             }
-                            errorDialogState(dataState.message)
-                        }
-                        DataState.Loading -> {
-                            loadingDialogState()
-                        }
-                        is DataState.Success -> {
-                            nullDialogState()
-                            dataState.data?.let { platformFile ->
-                                mutableStateFlow.update {
-                                    it.copy(showBottomSheet = false)
-                                }
-                                // 1MB File size check.
-                                if (platformFile.size() > 1048576L) {
-                                    mutableStateFlow.update {
-                                        it.copy(
-                                            dialogState = DocumentPreviewState
-                                                .DialogState.Error(getString(Res.string.error_document_size_exceeded)),
-                                        )
-                                    }
-                                } else {
-                                    documentSelectAndUploadRepository.updateEntityDocument(
-                                        platformFile,
-                                    )
-                                    mutableStateFlow.update {
-                                        it.copy(documentBytes = platformFile.readBytes())
-                                    }
-                                    if (documentSelectAndUploadFlow.first().step == EntityDocumentState.Step.PREVIEW) {
-                                        documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.UPDATE_PREVIEW)
-                                    } else {
-                                        documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
-                                    }
-                                }
+                        } else {
+                            documentSelectAndUploadRepository.updateEntityDocument(
+                                file,
+                            )
+                            mutableStateFlow.update {
+                                it.copy(documentBytes = file.readBytes())
+                            }
+                            if (documentSelectAndUploadFlow.first().step == EntityDocumentState.Step.PREVIEW) {
+                                documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.UPDATE_PREVIEW)
+                            } else {
+                                documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
                             }
                         }
                     }
@@ -129,53 +123,47 @@ class DocumentPreviewScreenViewModel(
 
     private fun pickFromFiles() {
         viewModelScope.launch {
+            loadingDialogState()
             documentSelectAndUploadRepository.selectDocumentFromFile()
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> {
-                            mutableStateFlow.update {
-                                it.copy(showBottomSheet = false)
-                            }
-                            errorDialogState(dataState.message)
+                .catch { error ->
+                    mutableStateFlow.update {
+                        it.copy(showBottomSheet = false)
+                    }
+                    errorDialogState(error.message ?: getString(Res.string.unknown_error))
+                }
+                .collect { platformFile ->
+                    nullDialogState()
+                    platformFile?.let { file ->
+                        mutableStateFlow.update {
+                            it.copy(showBottomSheet = false)
                         }
-                        DataState.Loading -> {
-                            loadingDialogState()
-                        }
-                        is DataState.Success -> {
-                            nullDialogState()
-                            dataState.data?.let { platformFile ->
+                        when {
+                            file.size() > 1048576L -> {
                                 mutableStateFlow.update {
-                                    it.copy(showBottomSheet = false)
+                                    it.copy(
+                                        dialogState = DocumentPreviewState
+                                            .DialogState.Error(getString(Res.string.error_document_size_exceeded)),
+                                    )
                                 }
-                                when {
-                                    platformFile.size() > 1048576L -> {
-                                        mutableStateFlow.update {
-                                            it.copy(
-                                                dialogState = DocumentPreviewState
-                                                    .DialogState.Error(getString(Res.string.error_document_size_exceeded)),
-                                            )
-                                        }
-                                    }
-                                    else -> {
-                                        mutableStateFlow.update {
-                                            it.copy(
-                                                platformFile = platformFile,
-                                                documentBytes = platformFile.readBytes(),
-                                            )
-                                        }
-                                        documentSelectAndUploadRepository.updateEntityDocument(
-                                            platformFile,
-                                        )
-                                        if (platformFile.extension == "pdf") {
-                                            documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.VIEW)
-                                            sendAction(DocumentPreviewScreenAction.SubmitClicked)
-                                        } else {
-                                            if (documentSelectAndUploadFlow.first().step == EntityDocumentState.Step.PREVIEW) {
-                                                documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.UPDATE_PREVIEW)
-                                            } else {
-                                                documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
-                                            }
-                                        }
+                            }
+                            else -> {
+                                mutableStateFlow.update {
+                                    it.copy(
+                                        platformFile = file,
+                                        documentBytes = file.readBytes(),
+                                    )
+                                }
+                                documentSelectAndUploadRepository.updateEntityDocument(
+                                    file,
+                                )
+                                if (file.extension == "pdf") {
+                                    documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.VIEW)
+                                    sendAction(DocumentPreviewScreenAction.SubmitClicked)
+                                } else {
+                                    if (documentSelectAndUploadFlow.first().step == EntityDocumentState.Step.PREVIEW) {
+                                        documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.UPDATE_PREVIEW)
+                                    } else {
+                                        documentSelectAndUploadRepository.updateStep(EntityDocumentState.Step.PREVIEW)
                                     }
                                 }
                             }

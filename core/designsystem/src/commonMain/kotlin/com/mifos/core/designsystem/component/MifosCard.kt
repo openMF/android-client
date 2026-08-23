@@ -26,17 +26,19 @@ import androidx.compose.ui.unit.Dp
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptElevation
 
 @Composable
 fun MifosCard(
     modifier: Modifier = Modifier,
     shape: Shape = DesignToken.shapes.small,
     borderStroke: BorderStroke = BorderStroke(DesignToken.strokes.none, Color.Transparent),
-    elevation: Dp = KptTheme.elevation.level1,
+    elevation: Dp = LocalKptElevation.current.level1,
     onClick: (() -> Unit)? = null,
     colors: CardColors = CardDefaults.cardColors(
-        containerColor = KptTheme.colorScheme.background,
+        containerColor = LocalKptColors.current.background,
     ),
     content: @Composable ColumnScope.() -> Unit,
 ) {

@@ -9,13 +9,10 @@
  */
 package com.mifos.room.entities.client
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
-import template.core.base.database.Entity
-import template.core.base.database.PrimaryKey
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 
-@Parcelize
 @Serializable
 @Entity(
     indices = [],
@@ -30,4 +27,4 @@ data class ClientTypeEntity(
     val id: Int = 0,
 
     val name: String? = null,
-) : Parcelable
+)

@@ -9,12 +9,11 @@
  */
 package com.mifos.core.data.repositoryImp.loan
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.mappers.loan.toDomain
 import com.mifos.core.data.mappers.loan.toDto
 import com.mifos.core.data.repository.loan.LoanCreateGuarantorRepository
 import com.mifos.core.data.util.NetworkMonitor
-import com.mifos.core.data.util.runAsDataState
+import com.mifos.core.data.util.runSuspendCall
 import com.mifos.core.model.objects.account.loan.guarantor.CreateGuarantor
 import com.mifos.core.model.objects.account.loan.guarantor.CreateGuarantorInput
 import com.mifos.core.model.objects.account.loan.guarantor.GuarantorAccountTemplate
@@ -28,8 +27,8 @@ class LoanCreateGuarantorRepositoryImp(
     private val networkMonitor: NetworkMonitor,
 ) : LoanCreateGuarantorRepository {
 
-    override suspend fun getGuarantorTemplate(loanId: Int): DataState<GuarantorTemplate> {
-        return runAsDataState(
+    override suspend fun getGuarantorTemplate(loanId: Int): GuarantorTemplate {
+        return runSuspendCall(
             networkMonitor,
             ioDispatcher,
         ) {
@@ -40,8 +39,8 @@ class LoanCreateGuarantorRepositoryImp(
     override suspend fun createGuarantor(
         loanId: Int,
         createGuarantorInput: CreateGuarantorInput,
-    ): DataState<CreateGuarantor> {
-        return runAsDataState(
+    ): CreateGuarantor {
+        return runSuspendCall(
             networkMonitor,
             ioDispatcher,
         ) {
@@ -52,8 +51,8 @@ class LoanCreateGuarantorRepositoryImp(
     override suspend fun getGuarantorAccountTemplate(
         loanId: Int,
         clientId: Int,
-    ): DataState<GuarantorAccountTemplate> {
-        return runAsDataState(
+    ): GuarantorAccountTemplate {
+        return runSuspendCall(
             networkMonitor,
             ioDispatcher,
         ) {

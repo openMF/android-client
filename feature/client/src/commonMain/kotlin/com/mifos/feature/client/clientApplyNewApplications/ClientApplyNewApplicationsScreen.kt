@@ -9,23 +9,23 @@
  */
 package com.mifos.feature.client.clientApplyNewApplications
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.account_balance_wallet
-import androidclient.feature.client.generated.resources.calendar_month
-import androidclient.feature.client.generated.resources.client_apply_new_applications_apply_fixed_account
-import androidclient.feature.client.generated.resources.client_apply_new_applications_apply_loan_account
-import androidclient.feature.client.generated.resources.client_apply_new_applications_apply_recurring_account
-import androidclient.feature.client.generated.resources.client_apply_new_applications_apply_savings_account
-import androidclient.feature.client.generated.resources.client_apply_new_applications_client_inactive_msg
-import androidclient.feature.client.generated.resources.client_apply_new_applications_fixed_account
-import androidclient.feature.client.generated.resources.client_apply_new_applications_loan_account
-import androidclient.feature.client.generated.resources.client_apply_new_applications_recurring_account
-import androidclient.feature.client.generated.resources.client_apply_new_applications_savings_account
-import androidclient.feature.client.generated.resources.client_apply_new_applications_share_account
-import androidclient.feature.client.generated.resources.client_apply_new_applications_title
-import androidclient.feature.client.generated.resources.savings
-import androidclient.feature.client.generated.resources.shield
-import androidclient.feature.client.generated.resources.stacked_bar_chart
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.account_balance_wallet
+import kpt.feature.client.generated.resources.calendar_month
+import kpt.feature.client.generated.resources.client_apply_new_applications_apply_fixed_account
+import kpt.feature.client.generated.resources.client_apply_new_applications_apply_loan_account
+import kpt.feature.client.generated.resources.client_apply_new_applications_apply_recurring_account
+import kpt.feature.client.generated.resources.client_apply_new_applications_apply_savings_account
+import kpt.feature.client.generated.resources.client_apply_new_applications_client_inactive_msg
+import kpt.feature.client.generated.resources.client_apply_new_applications_fixed_account
+import kpt.feature.client.generated.resources.client_apply_new_applications_loan_account
+import kpt.feature.client.generated.resources.client_apply_new_applications_recurring_account
+import kpt.feature.client.generated.resources.client_apply_new_applications_savings_account
+import kpt.feature.client.generated.resources.client_apply_new_applications_share_account
+import kpt.feature.client.generated.resources.client_apply_new_applications_title
+import kpt.feature.client.generated.resources.savings
+import kpt.feature.client.generated.resources.shield
+import kpt.feature.client.generated.resources.stacked_bar_chart
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -53,7 +53,9 @@ import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun ClientApplyNewApplicationsScreen(
@@ -118,7 +120,7 @@ private fun ClientApplyNewApplicationsContent(
         MifosBreadcrumbNavBar(navController)
         if (state.status == ClientStatusEntity.STATUS_ACTIVE) {
             Column(
-                modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
+                modifier = Modifier.padding(horizontal = LocalKptSpacing.current.md),
             ) {
                 Text(
                     text = stringResource(Res.string.client_apply_new_applications_title),
@@ -133,7 +135,7 @@ private fun ClientApplyNewApplicationsContent(
                             TextUtil(
                                 text = stringResource(it.subTitle),
                                 style = MifosTypography.bodySmall,
-                                color = KptTheme.colorScheme.secondary,
+                                color = LocalKptColors.current.secondary,
                             ),
                         ),
                         rightValues = emptyList(),

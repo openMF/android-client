@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.core.network.DataManager
 import com.mifos.core.network.datamanager.DataManagerCollectionSheet
@@ -32,12 +30,12 @@ class NewIndividualCollectionSheetRepositoryImp(
         return dataManagerCollection.getIndividualCollectionSheet(payload)
     }
 
-    override fun offices(): Flow<DataState<List<OfficeEntity>>> {
-        return dataManager.offices().asDataStateFlow()
+    override fun offices(): Flow<List<OfficeEntity>> {
+        return dataManager.offices()
     }
 
-    override fun getStaffInOffice(officeId: Int): Flow<DataState<List<StaffEntity>>> {
+    override fun getStaffInOffice(officeId: Int): Flow<List<StaffEntity>> {
         return dataManager.getStaffInOffice(officeId)
-            .asDataStateFlow()
+            
     }
 }

@@ -9,32 +9,31 @@
  */
 package com.mifos.feature.loan.loanAccountGeneral
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_general_detail_approved_amount
-import androidclient.feature.loan.generated.resources.feature_loan_general_detail_currency
-import androidclient.feature.loan.generated.resources.feature_loan_general_detail_disbursed_amount
-import androidclient.feature.loan.generated.resources.feature_loan_general_detail_disbursement_date
-import androidclient.feature.loan.generated.resources.feature_loan_general_detail_loan_officer
-import androidclient.feature.loan.generated.resources.feature_loan_general_detail_loan_purpose
-import androidclient.feature.loan.generated.resources.feature_loan_general_detail_proposed_amount
-import androidclient.feature.loan.generated.resources.feature_loan_general_summary_row_fees
-import androidclient.feature.loan.generated.resources.feature_loan_general_summary_row_interest
-import androidclient.feature.loan.generated.resources.feature_loan_general_summary_row_penalties
-import androidclient.feature.loan.generated.resources.feature_loan_general_summary_row_principal
-import androidclient.feature.loan.generated.resources.feature_loan_general_value_unassigned
-import androidclient.feature.loan.generated.resources.feature_loan_profile_error_details_not_found
-import androidclient.feature.loan.generated.resources.feature_loan_profile_error_network_not_available
-import androidclient.feature.loan.generated.resources.feature_loan_value_not_available
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_general_detail_approved_amount
+import kpt.feature.loan.generated.resources.feature_loan_general_detail_currency
+import kpt.feature.loan.generated.resources.feature_loan_general_detail_disbursed_amount
+import kpt.feature.loan.generated.resources.feature_loan_general_detail_disbursement_date
+import kpt.feature.loan.generated.resources.feature_loan_general_detail_loan_officer
+import kpt.feature.loan.generated.resources.feature_loan_general_detail_loan_purpose
+import kpt.feature.loan.generated.resources.feature_loan_general_detail_proposed_amount
+import kpt.feature.loan.generated.resources.feature_loan_general_summary_row_fees
+import kpt.feature.loan.generated.resources.feature_loan_general_summary_row_interest
+import kpt.feature.loan.generated.resources.feature_loan_general_summary_row_penalties
+import kpt.feature.loan.generated.resources.feature_loan_general_summary_row_principal
+import kpt.feature.loan.generated.resources.feature_loan_general_value_unassigned
+import kpt.feature.loan.generated.resources.feature_loan_profile_error_details_not_found
+import kpt.feature.loan.generated.resources.feature_loan_profile_error_network_not_available
+import kpt.feature.loan.generated.resources.feature_loan_value_not_available
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.CurrencyFormatter
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.LoanAccountGeneralRepository
 import com.mifos.core.data.util.NetworkUnavailableException
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -66,39 +65,34 @@ internal class LoanAccountGeneralViewModel(
             mutableStateFlow.update {
                 it.copy(dialogState = LoanAccountGeneralState.DialogState.Loading)
             }
-            when (val dataState = repository.getLoanById(loanId)) {
-                is DataState.Loading -> Unit
-                is DataState.Success -> {
-                    val loan = dataState.data
-                    if (loan != null) {
-                        try {
-                            fillGeneralState(loan)
-                        } catch (e: Exception) {
-                            mutableStateFlow.update {
-                                it.copy(dialogState = LoanAccountGeneralState.DialogState.Error(e.message.toString()))
-                            }
-                        }
-                    } else {
+            try {
+                val loan = repository.getLoanById(loanId)
+                if (loan != null) {
+                    try {
+                        fillGeneralState(loan)
+                    } catch (e: Exception) {
                         mutableStateFlow.update {
-                            it.copy(dialogState = LoanAccountGeneralState.DialogState.Error(getString(Res.string.feature_loan_profile_error_details_not_found)))
+                            it.copy(dialogState = LoanAccountGeneralState.DialogState.Error(e.message.toString()))
                         }
+                    }
+                } else {
+                    mutableStateFlow.update {
+                        it.copy(dialogState = LoanAccountGeneralState.DialogState.Error(getString(Res.string.feature_loan_profile_error_details_not_found)))
                     }
                 }
-
-                is DataState.Error -> {
-                    val isNetworkError = dataState.exception is NetworkUnavailableException
-                    mutableStateFlow.update {
-                        it.copy(
-                            networkConnection = !isNetworkError,
-                            dialogState = LoanAccountGeneralState.DialogState.Error(
-                                if (isNetworkError) {
-                                    getString(Res.string.feature_loan_profile_error_network_not_available)
-                                } else {
-                                    dataState.message
-                                },
-                            ),
-                        )
-                    }
+            } catch (e: Exception) {
+                val isNetworkError = e is NetworkUnavailableException
+                mutableStateFlow.update {
+                    it.copy(
+                        networkConnection = !isNetworkError,
+                        dialogState = LoanAccountGeneralState.DialogState.Error(
+                            if (isNetworkError) {
+                                getString(Res.string.feature_loan_profile_error_network_not_available)
+                            } else {
+                                e.message.toString()
+                            },
+                        ),
+                    )
                 }
             }
         }

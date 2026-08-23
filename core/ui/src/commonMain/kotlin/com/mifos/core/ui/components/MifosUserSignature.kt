@@ -27,7 +27,9 @@ import coil3.compose.rememberAsyncImagePainter
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
 
 @Composable
 fun MifosUserSignatureImage(
@@ -40,13 +42,13 @@ fun MifosUserSignatureImage(
     Box(
         modifier = modifier
             .background(
-                color = KptTheme.colorScheme.surfaceVariant,
+                color = LocalKptColors.current.surfaceVariant,
                 shape = DesignToken.shapes.medium,
             )
             .size(width = DesignToken.sizes.imageDp256, height = DesignToken.sizes.imageDp128)
             .border(
                 width = DesignToken.strokes.thin,
-                color = KptTheme.colorScheme.primary,
+                color = LocalKptColors.current.primary,
                 shape = DesignToken.shapes.medium,
             ),
         contentAlignment = Alignment.Center,
@@ -65,8 +67,8 @@ fun MifosUserSignatureImage(
         } else {
             Text(
                 text = emptyMessage,
-                style = KptTheme.typography.bodySmall,
-                color = KptTheme.colorScheme.secondary,
+                style = LocalKptTypography.current.bodySmall,
+                color = LocalKptColors.current.secondary,
             )
         }
     }

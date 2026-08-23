@@ -9,12 +9,12 @@
  */
 package com.mifos.feature.center.centerGroupList
 
-import androidclient.feature.center.generated.resources.Res
-import androidclient.feature.center.generated.resources.feature_center_active
-import androidclient.feature.center.generated.resources.feature_center_failed_to_load_group_list
-import androidclient.feature.center.generated.resources.feature_center_groups
-import androidclient.feature.center.generated.resources.feature_center_inactive
-import androidclient.feature.center.generated.resources.feature_center_no_group_list_to_show
+import kpt.feature.center.generated.resources.Res
+import kpt.feature.center.generated.resources.feature_center_active
+import kpt.feature.center.generated.resources.feature_center_failed_to_load_group_list
+import kpt.feature.center.generated.resources.feature_center_groups
+import kpt.feature.center.generated.resources.feature_center_inactive
+import kpt.feature.center.generated.resources.feature_center_no_group_list_to_show
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -53,7 +53,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun GroupListScreen(
@@ -153,7 +155,7 @@ private fun GroupItem(
         shape = DesignToken.shapes.none,
         onClick = { group.id?.let { onGroupClick(it) } },
     ) {
-        Column(modifier = Modifier.padding(KptTheme.spacing.sm)) {
+        Column(modifier = Modifier.padding(LocalKptSpacing.current.sm)) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -162,27 +164,27 @@ private fun GroupItem(
             ) {
                 Text(
                     modifier = Modifier
-                        .padding(KptTheme.spacing.sm),
+                        .padding(LocalKptSpacing.current.sm),
                     text = group.name.toString(),
-                    style = KptTheme.typography.bodyMedium,
+                    style = LocalKptTypography.current.bodyMedium,
                 )
                 Text(
-                    modifier = Modifier.padding(KptTheme.spacing.sm),
+                    modifier = Modifier.padding(LocalKptSpacing.current.sm),
                     text = group.officeName.toString(),
-                    style = KptTheme.typography.bodyMedium,
+                    style = LocalKptTypography.current.bodyMedium,
                 )
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    modifier = Modifier.padding(KptTheme.spacing.sm),
-                    style = KptTheme.typography.bodySmall,
+                    modifier = Modifier.padding(LocalKptSpacing.current.sm),
+                    style = LocalKptTypography.current.bodySmall,
                     text = if (group.status?.value?.let { ClientStatusEntity.isActive(it) } == true) {
                         stringResource(Res.string.feature_center_active)
                     } else {
                         stringResource(Res.string.feature_center_inactive)
                     },
                 )
-                Canvas(modifier = Modifier.size(KptTheme.spacing.md)) {
+                Canvas(modifier = Modifier.size(LocalKptSpacing.current.md)) {
                     if (group.status?.value?.let { ClientStatusEntity.isActive(it) } == true) {
                         drawRect(Color.Green)
                     } else {

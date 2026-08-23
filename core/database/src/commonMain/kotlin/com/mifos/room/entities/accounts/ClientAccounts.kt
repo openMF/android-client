@@ -10,12 +10,9 @@
 package com.mifos.room.entities.accounts
 
 import com.mifos.core.model.objects.account.share.ShareAccounts
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.accounts.loans.LoanAccountEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountEntity
 
-@Parcelize
 data class ClientAccounts(
     var loanAccounts: List<LoanAccountEntity> = emptyList(),
 
@@ -23,7 +20,7 @@ data class ClientAccounts(
 
     var shareAccounts: List<ShareAccounts> = emptyList(),
 
-) : Parcelable {
+) {
     private fun getSavingsAccounts(wantRecurring: Boolean): List<SavingsAccountEntity> {
         val result: MutableList<SavingsAccountEntity> = ArrayList()
         for (account in savingsAccounts) {

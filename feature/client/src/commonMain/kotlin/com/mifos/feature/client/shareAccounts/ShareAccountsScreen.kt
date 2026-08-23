@@ -9,14 +9,14 @@
  */
 package com.mifos.feature.client.shareAccounts
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.add_icon
-import androidclient.feature.client.generated.resources.client_product_shares_account
-import androidclient.feature.client.generated.resources.client_savings_item
-import androidclient.feature.client.generated.resources.feature_share_account_empty_list_message
-import androidclient.feature.client.generated.resources.filter
-import androidclient.feature.client.generated.resources.search
-import androidclient.feature.client.generated.resources.string_not_available
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.add_icon
+import kpt.feature.client.generated.resources.client_product_shares_account
+import kpt.feature.client.generated.resources.client_savings_item
+import kpt.feature.client.generated.resources.feature_share_account_empty_list_message
+import kpt.feature.client.generated.resources.filter
+import kpt.feature.client.generated.resources.search
+import kpt.feature.client.generated.resources.string_not_available
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -47,7 +47,8 @@ import com.mifos.core.ui.util.EventsEffect
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun ShareAccountsScreen(
@@ -98,7 +99,7 @@ internal fun ShareAccountsContent(
             false -> {
                 Column(
                     modifier = Modifier.fillMaxSize()
-                        .padding(horizontal = KptTheme.spacing.md),
+                        .padding(horizontal = LocalKptSpacing.current.md),
                 ) {
                     ShareAccountHeader(
                         totalItem = state.accounts.size.toString(),
@@ -106,7 +107,7 @@ internal fun ShareAccountsContent(
                         isShareAccountsEmpty = state.accounts.isEmpty(),
                     )
 
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+                    Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
                     if (state.accounts.isNotEmpty()) {
                         val emptyText = stringResource(Res.string.string_not_available)
@@ -143,7 +144,7 @@ internal fun ShareAccountsContent(
                                         },
                                     )
 
-                                    Spacer(Modifier.height(KptTheme.spacing.sm))
+                                    Spacer(Modifier.height(LocalKptSpacing.current.sm))
                                 }
                             }
                         }
@@ -192,13 +193,13 @@ private fun ShareAccountHeader(
                 painter = painterResource(Res.drawable.search),
                 contentDescription = null,
             )
-            Spacer(modifier = Modifier.width(KptTheme.spacing.lg))
+            Spacer(modifier = Modifier.width(LocalKptSpacing.current.lg))
             Icon(
                 modifier = Modifier.onClick { onAction.invoke(ShareAccountsAction.AddAccount) },
                 painter = painterResource(Res.drawable.add_icon),
                 contentDescription = null,
             )
-            Spacer(modifier = Modifier.width(KptTheme.spacing.lg))
+            Spacer(modifier = Modifier.width(LocalKptSpacing.current.lg))
             Icon(
                 modifier = Modifier.onClick { onAction.invoke(ShareAccountsAction.ToggleFiler) },
                 painter = painterResource(Res.drawable.filter),

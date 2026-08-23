@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.DataTableRowDialogRepository
 import com.mifos.core.network.GenericResponse
 
@@ -20,12 +19,7 @@ class AddDataTableEntryUseCase(
         table: String,
         entityId: Int,
         payload: Map<String, String>,
-    ): DataState<GenericResponse> {
-        return try {
-            val response = repository.addDataTableEntry(table, entityId, payload)
-            DataState.Success(response)
-        } catch (e: Exception) {
-            DataState.Error(e)
-        }
+    ): GenericResponse {
+        return repository.addDataTableEntry(table, entityId, payload)
     }
 }

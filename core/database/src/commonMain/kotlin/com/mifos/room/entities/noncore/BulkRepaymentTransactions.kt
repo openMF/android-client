@@ -9,11 +9,8 @@
  */
 package com.mifos.room.entities.noncore
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
-@Parcelize
 @Serializable
 data class BulkRepaymentTransactions(
 
@@ -33,4 +30,4 @@ data class BulkRepaymentTransactions(
     var receiptNumber: String? = null,
 
     var routingCode: String? = null,
-) : Parcelable
+)

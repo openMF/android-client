@@ -9,14 +9,11 @@
  */
 package com.mifos.core.model.objects.databaseobjects
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 
-@Parcelize
 data class Account(
     var accountId: String? = null,
 
     var accountStatusId: Int = 0,
 
     var loanId: Int = 0,
-) : Parcelable
+)

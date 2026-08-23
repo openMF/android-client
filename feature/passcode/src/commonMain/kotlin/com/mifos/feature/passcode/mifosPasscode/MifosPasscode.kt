@@ -9,9 +9,9 @@
  */
 package com.mifos.feature.passcode.mifosPasscode
 
-import androidclient.feature.passcode.generated.resources.Res
-import androidclient.feature.passcode.generated.resources.feature_authenticator_error
-import androidclient.feature.passcode.generated.resources.feature_authenticator_ok
+import kpt.feature.passcode.generated.resources.Res
+import kpt.feature.passcode.generated.resources.feature_authenticator_error
+import kpt.feature.passcode.generated.resources.feature_authenticator_ok
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -43,7 +43,9 @@ import org.mifos.authenticator.passcode.screen.PasscodeKeyConfig
 import org.mifos.authenticator.passcode.screen.PasscodeLogoConfig
 import org.mifos.authenticator.passcode.screen.PasscodeScreen
 import org.mifos.authenticator.passcode.screen.PasscodeSwitchConfig
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
 
 /** Navigation-event info marker for the passcode destination. */
 internal object MifosPasscodeCurrentInfo : NavigationEventInfo()
@@ -192,39 +194,39 @@ fun MifosPasscode(
             }
         },
         appearanceConfig = PasscodeAppearanceConfig(
-            backgroundColor = KptTheme.colorScheme.background,
-            headerTextStyle = KptTheme.typography.headlineMedium,
+            backgroundColor = LocalKptColors.current.background,
+            headerTextStyle = LocalKptTypography.current.headlineMedium,
         ),
         logoConfig = PasscodeLogoConfig(),
         dotConfig = PasscodeDotConfig(
-            dotColor = KptTheme.colorScheme.primary,
-            inactiveDotColor = KptTheme.colorScheme.onBackground,
-            visiblePasscodeTextStyle = KptTheme.typography.headlineSmall,
+            dotColor = LocalKptColors.current.primary,
+            inactiveDotColor = LocalKptColors.current.onBackground,
+            visiblePasscodeTextStyle = LocalKptTypography.current.headlineSmall,
         ),
         keyConfig = PasscodeKeyConfig(
             shouldShuffleKeys = true,
             keyTextStyle = null,
-            keyColor = KptTheme.colorScheme.primary,
+            keyColor = LocalKptColors.current.primary,
             keyShape = CircleShape,
             keyElevation = null,
-            keyContainerColor = KptTheme.colorScheme.surface,
+            keyContainerColor = LocalKptColors.current.surface,
             keySize = 60.dp,
         ),
         buttonConfig = PasscodeButtonConfig(
-            skipButtonTextStyle = KptTheme.typography.labelLarge,
-            forgotButtonTextStyle = KptTheme.typography.labelLarge,
+            skipButtonTextStyle = LocalKptTypography.current.labelLarge,
+            forgotButtonTextStyle = LocalKptTypography.current.labelLarge,
         ),
         switchConfig = PasscodeSwitchConfig(
-            switchTabColor = KptTheme.colorScheme.primary,
-            switchEnabledColor = KptTheme.colorScheme.surfaceContainerHighest,
-            switchEnabledTextColor = KptTheme.colorScheme.onSurface,
-            switchDisabledTextColor = KptTheme.colorScheme.surface,
+            switchTabColor = LocalKptColors.current.primary,
+            switchEnabledColor = LocalKptColors.current.surfaceContainerHighest,
+            switchEnabledTextColor = LocalKptColors.current.onSurface,
+            switchDisabledTextColor = LocalKptColors.current.surface,
             switchTextStyle = null,
         ),
         dialogConfig = PasscodeDialogConfig(
-            dialogContainerColor = KptTheme.colorScheme.surface,
-            dialogTitleColor = KptTheme.colorScheme.onSurface,
-            dialogButtonTextColor = KptTheme.colorScheme.onSurface,
+            dialogContainerColor = LocalKptColors.current.surface,
+            dialogTitleColor = LocalKptColors.current.onSurface,
+            dialogButtonTextColor = LocalKptColors.current.onSurface,
             dialogShape = null,
         ),
         isExternalAuthEnabled = allowBiometricAuth && isRegistered,

@@ -13,12 +13,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.feature.individualCollectionSheet.navigation.PaymentDetailsArgs
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
@@ -47,14 +47,10 @@ class PaymentDetailsViewModel(
     val paymentTypeOptions = args.paymentTypeOptions
 
     suspend fun getUserProfile() {
-        clientDetailsRepo.getImage(clientId).collect { result ->
-            when (result) {
-                is DataState.Error -> {}
-                DataState.Loading -> {}
-                is DataState.Success -> {
-                    _profileImage.value = imageToByteArray(result.data)
-                }
+        clientDetailsRepo.getImage(clientId)
+            .catch { }
+            .collect { image ->
+                _profileImage.value = imageToByteArray(image)
             }
-        }
     }
 }

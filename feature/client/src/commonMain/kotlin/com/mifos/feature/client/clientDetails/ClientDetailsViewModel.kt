@@ -13,7 +13,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.domain.useCases.GetClientDetailsUseCase
 import com.mifos.core.domain.useCases.UploadClientImageUseCase
@@ -29,6 +28,7 @@ import io.github.vinceglb.filekit.name
 import io.github.vinceglb.filekit.readBytes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 /**
@@ -75,27 +75,19 @@ class ClientDetailsViewModel(
                 extension = extension,
                 name = name,
             ),
-        ).collect { result ->
-            when (result) {
-                is DataState.Error -> {
-                    _clientDetailsUiState.value =
-                        ClientDetailsUiState.ShowError(result.message)
-                    _showLoading.value = false
-                }
-
-                is DataState.Loading -> {
-                    _showLoading.value = true
-                }
-
-                is DataState.Success -> {
-                    _clientDetailsUiState.value = ClientDetailsUiState.ShowUploadImageSuccessfully(
-                        result.data,
-                    )
-                    getUserProfile()
-                    _showLoading.value = false
-                }
+        )
+            .catch { error ->
+                _clientDetailsUiState.value =
+                    ClientDetailsUiState.ShowError(error.message ?: "")
+                _showLoading.value = false
             }
-        }
+            .collect { message ->
+                _clientDetailsUiState.value = ClientDetailsUiState.ShowUploadImageSuccessfully(
+                    message,
+                )
+                getUserProfile()
+                _showLoading.value = false
+            }
     }
 
     fun deleteClientImage(clientId: Int) = viewModelScope.launch {
@@ -115,24 +107,19 @@ class ClientDetailsViewModel(
     }
 
     fun loadClientDetailsAndClientAccounts(clientId: Int) = viewModelScope.launch {
-        getClientDetailsUseCase(clientId).collect { result ->
-            when (result) {
-                is DataState.Error -> {
-                    _clientDetailsUiState.value =
-                        ClientDetailsUiState.ShowError(result.message)
-                    _showLoading.value = false
-                }
-
-                is DataState.Loading -> _showLoading.value = true
-
-                is DataState.Success -> {
-                    _client.value = result.data.client
-                    loanAccounts.value = result.data.clientAccounts?.loanAccounts
-                    _savingsAccounts.value = result.data.clientAccounts?.savingsAccounts
-                    _showLoading.value = false
-                }
+        _showLoading.value = true
+        getClientDetailsUseCase(clientId)
+            .catch { error ->
+                _clientDetailsUiState.value =
+                    ClientDetailsUiState.ShowError(error.message ?: "")
+                _showLoading.value = false
             }
-        }
+            .collect { clientAndClientAccounts ->
+                _client.value = clientAndClientAccounts.client
+                loanAccounts.value = clientAndClientAccounts.clientAccounts?.loanAccounts
+                _savingsAccounts.value = clientAndClientAccounts.clientAccounts?.savingsAccounts
+                _showLoading.value = false
+            }
     }
 
     fun saveClientImage(clientId: Int, imageFile: PlatformFile?) {
@@ -150,14 +137,11 @@ class ClientDetailsViewModel(
     }
 
     suspend fun getUserProfile() {
-        clientDetailsRepo.getImage(clientId.value).collect { result ->
-            when (result) {
-                is DataState.Error -> {}
-                DataState.Loading -> _showLoading.value = true
-                is DataState.Success -> {
-                    _profileImage.value = imageToByteArray(result.data)
-                }
+        _showLoading.value = true
+        clientDetailsRepo.getImage(clientId.value)
+            .catch { }
+            .collect { image ->
+                _profileImage.value = imageToByteArray(image)
             }
-        }
     }
 }

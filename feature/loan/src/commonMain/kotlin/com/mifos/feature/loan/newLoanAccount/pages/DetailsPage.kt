@@ -9,22 +9,22 @@
  */
 package com.mifos.feature.loan.newLoanAccount.pages
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.back
-import androidclient.feature.loan.generated.resources.create_standing_instructions
-import androidclient.feature.loan.generated.resources.expected_disbursement
-import androidclient.feature.loan.generated.resources.external_id
-import androidclient.feature.loan.generated.resources.feature_loan_cancel
-import androidclient.feature.loan.generated.resources.feature_loan_select
-import androidclient.feature.loan.generated.resources.fund
-import androidclient.feature.loan.generated.resources.link_savings
-import androidclient.feature.loan.generated.resources.loan_officer
-import androidclient.feature.loan.generated.resources.loan_purpose
-import androidclient.feature.loan.generated.resources.next
-import androidclient.feature.loan.generated.resources.product_name
-import androidclient.feature.loan.generated.resources.savings_linkage
-import androidclient.feature.loan.generated.resources.step_details
-import androidclient.feature.loan.generated.resources.submission_date
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.back
+import kpt.feature.loan.generated.resources.create_standing_instructions
+import kpt.feature.loan.generated.resources.expected_disbursement
+import kpt.feature.loan.generated.resources.external_id
+import kpt.feature.loan.generated.resources.feature_loan_cancel
+import kpt.feature.loan.generated.resources.feature_loan_select
+import kpt.feature.loan.generated.resources.fund
+import kpt.feature.loan.generated.resources.link_savings
+import kpt.feature.loan.generated.resources.loan_officer
+import kpt.feature.loan.generated.resources.loan_purpose
+import kpt.feature.loan.generated.resources.next
+import kpt.feature.loan.generated.resources.product_name
+import kpt.feature.loan.generated.resources.savings_linkage
+import kpt.feature.loan.generated.resources.step_details
+import kpt.feature.loan.generated.resources.submission_date
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -55,7 +55,8 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountAction
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -142,7 +143,7 @@ fun DetailsPage(
         }
     }
 
-    Column(Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
+    Column(Modifier.fillMaxSize().padding(bottom = LocalKptSpacing.current.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -150,7 +151,7 @@ fun DetailsPage(
                 text = stringResource(Res.string.step_details),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosTextFieldDropdown(
                 value = if (state.loanProductSelected == -1) {
@@ -175,7 +176,7 @@ fun DetailsPage(
                     },
                     label = stringResource(Res.string.external_id),
                 )
-                Spacer(Modifier.height(KptTheme.spacing.md))
+                Spacer(Modifier.height(LocalKptSpacing.current.md))
                 MifosTextFieldDropdown(
                     value = if (state.loanOfficerIndex == -1) {
                         ""
@@ -229,7 +230,7 @@ fun DetailsPage(
                         onAction(NewLoanAccountAction.OnSubmissionDatePick(true))
                     },
                 )
-                Spacer(Modifier.height(KptTheme.spacing.md))
+                Spacer(Modifier.height(LocalKptSpacing.current.md))
                 MifosDatePickerTextField(
                     value = state.expectedDisbursementDate,
                     label = stringResource(Res.string.expected_disbursement),
@@ -237,12 +238,12 @@ fun DetailsPage(
                         onAction(NewLoanAccountAction.OnExpectedDisbursementDatePick(true))
                     },
                 )
-                Spacer(Modifier.height(KptTheme.spacing.md))
+                Spacer(Modifier.height(LocalKptSpacing.current.md))
                 Text(
                     text = stringResource(Res.string.savings_linkage),
                     style = MifosTypography.labelLargeEmphasized,
                 )
-                Spacer(Modifier.height(KptTheme.spacing.md))
+                Spacer(Modifier.height(LocalKptSpacing.current.md))
                 MifosTextFieldDropdown(
                     value = if (state.linkSavingsIndex == -1) {
                         ""
@@ -272,7 +273,7 @@ fun DetailsPage(
                         style = MifosTypography.labelLarge,
                     )
                 }
-                Spacer(Modifier.height(KptTheme.spacing.md))
+                Spacer(Modifier.height(LocalKptSpacing.current.md))
             }
         }
 
@@ -286,7 +287,7 @@ fun DetailsPage(
                 onAction(NewLoanAccountAction.NextStep)
             },
             isSecondButtonEnabled = state.isDetailsNextEnabled,
-            modifier = Modifier.padding(top = KptTheme.spacing.sm),
+            modifier = Modifier.padding(top = LocalKptSpacing.current.sm),
         )
     }
 }

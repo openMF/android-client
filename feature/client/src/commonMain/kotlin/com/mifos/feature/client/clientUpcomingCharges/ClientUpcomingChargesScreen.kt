@@ -9,14 +9,14 @@
  */
 package com.mifos.feature.client.clientUpcomingCharges
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.client_savings_item
-import androidclient.feature.client.generated.resources.client_upcoming_charges_charges_overview
-import androidclient.feature.client.generated.resources.client_upcoming_charges_failed_message
-import androidclient.feature.client.generated.resources.client_upcoming_charges_no_more_charges_available
-import androidclient.feature.client.generated.resources.filter
-import androidclient.feature.client.generated.resources.search
-import androidclient.feature.client.generated.resources.string_not_available
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.client_savings_item
+import kpt.feature.client.generated.resources.client_upcoming_charges_charges_overview
+import kpt.feature.client.generated.resources.client_upcoming_charges_failed_message
+import kpt.feature.client.generated.resources.client_upcoming_charges_no_more_charges_available
+import kpt.feature.client.generated.resources.filter
+import kpt.feature.client.generated.resources.search
+import kpt.feature.client.generated.resources.string_not_available
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -60,7 +60,8 @@ import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun ClientUpcomingChargesScreenRoute(
@@ -107,14 +108,14 @@ fun ClientUpcomingChargesScreen(
             false -> {
                 Column(
                     modifier = Modifier.fillMaxSize()
-                        .padding(horizontal = KptTheme.spacing.md),
+                        .padding(horizontal = LocalKptSpacing.current.md),
                 ) {
                     UpcomingChargesHeader(
                         totalItem = itemCount.toString(),
                         onAction = onAction,
                     )
 
-                    Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+                    Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
                     if (state.chargesFlow == null) {
                         MifosEmptyCard()
@@ -287,7 +288,7 @@ fun ChargesListContent(
                         Text(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(KptTheme.spacing.sm),
+                                .padding(LocalKptSpacing.current.sm),
                             text = stringResource(Res.string.client_upcoming_charges_no_more_charges_available),
                             style = MaterialTheme.typography.bodyMedium,
                             textAlign = TextAlign.Center,

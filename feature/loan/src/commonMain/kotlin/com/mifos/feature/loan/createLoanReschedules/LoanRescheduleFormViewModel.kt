@@ -9,18 +9,18 @@
  */
 package com.mifos.feature.loan.createLoanReschedules
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_must_select_reason
-import androidclient.feature.loan.generated.resources.feature_loan_reschedule_ok
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_must_select_reason
+import kpt.feature.loan.generated.resources.feature_loan_reschedule_ok
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.ApiDateFormatter
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.loan.LoanReschedulesRepository
 import com.mifos.core.model.objects.account.loan.reschedules.LoanRescheduleRequest
 import com.mifos.core.model.objects.account.loan.reschedules.RescheduleReasonOption
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
@@ -115,27 +115,28 @@ class LoanRescheduleFormViewModel(
 
     private fun fetchRescheduleTemplate() {
         viewModelScope.launch {
-            repository.getLoanRescheduleTemplate().collect { dataState ->
-                when (dataState) {
-                    is DataState.Loading -> mutableStateFlow.update {
-                        it.copy(dialogState = LoanRescheduleFormUiState.DialogState.Loading)
-                    }
-                    is DataState.Success -> mutableStateFlow.update {
-                        it.copy(
-                            dialogState = null,
-                            reasons = dataState.data.rescheduleReasons.sortedBy { r -> r.name },
-                        )
-                    }
-                    is DataState.Error -> mutableStateFlow.update {
+            mutableStateFlow.update {
+                it.copy(dialogState = LoanRescheduleFormUiState.DialogState.Loading)
+            }
+            repository.getLoanRescheduleTemplate()
+                .catch { error ->
+                    mutableStateFlow.update {
                         it.copy(
                             dialogState = LoanRescheduleFormUiState.DialogState.Error(
-                                errorMessage = dataState.message,
+                                errorMessage = error.message ?: "",
                                 confirmBtnRes = Res.string.feature_loan_reschedule_ok,
                             ),
                         )
                     }
                 }
-            }
+                .collect { template ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = null,
+                            reasons = template.rescheduleReasons.sortedBy { r -> r.name },
+                        )
+                    }
+                }
         }
     }
 
@@ -173,20 +174,19 @@ class LoanRescheduleFormViewModel(
                 waivePenalties = if (state.waivePenaltiesSelected) true else null,
             )
 
-            when (val result = repository.submitLoanReschedule(request)) {
-                is DataState.Success -> {
-                    mutableStateFlow.update { it.copy(dialogState = null) }
-                    sendEvent(LoanRescheduleFormEvent.NavigateBack)
-                }
-                is DataState.Error -> mutableStateFlow.update {
+            try {
+                repository.submitLoanReschedule(request)
+                mutableStateFlow.update { it.copy(dialogState = null) }
+                sendEvent(LoanRescheduleFormEvent.NavigateBack)
+            } catch (error: Exception) {
+                mutableStateFlow.update {
                     it.copy(
                         dialogState = LoanRescheduleFormUiState.DialogState.Error(
-                            errorMessage = result.message,
+                            errorMessage = error.message ?: "",
                             confirmBtnRes = Res.string.feature_loan_reschedule_ok,
                         ),
                     )
                 }
-                DataState.Loading -> Unit
             }
         }
     }

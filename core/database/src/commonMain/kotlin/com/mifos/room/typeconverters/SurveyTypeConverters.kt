@@ -14,39 +14,39 @@ import com.mifos.room.entities.survey.QuestionDatasEntity
 import com.mifos.room.entities.survey.ResponseDatasEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import template.core.base.database.TypeConverter
+import androidx.room3.ColumnTypeConverter
 
 /**
  * Created by Pronay Sarker on 13/02/2025 (2:53 AM)
  */
 class SurveyTypeConverters {
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromQuestionDatasList(questionDatas: List<QuestionDatasEntity>?): String? {
         return questionDatas?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toQuestionDatasList(json: String?): List<QuestionDatasEntity>? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromComponentDatasList(componentDatas: List<ComponentDatasEntity>?): String? {
         return componentDatas?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toComponentDatasList(json: String?): List<ComponentDatasEntity>? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromResponseDatasList(responseDatas: List<ResponseDatasEntity>?): String? {
         return responseDatas?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toResponseDatasList(json: String?): List<ResponseDatasEntity>? {
         return json?.let { Json.decodeFromString(it) }
     }

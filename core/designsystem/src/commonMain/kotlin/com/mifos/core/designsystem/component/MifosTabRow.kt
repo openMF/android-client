@@ -28,16 +28,17 @@ import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.designsystem.utility.TabContent
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @Composable
 fun MifosTabRow(
     tabContents: List<TabContent>,
     pagerState: PagerState,
     modifier: Modifier = Modifier,
-    containerColor: Color = KptTheme.colorScheme.surface,
-    selectedContentColor: Color = KptTheme.colorScheme.primary,
-    unselectedContentColor: Color = KptTheme.colorScheme.onSurfaceVariant,
+    containerColor: Color = LocalKptColors.current.surface,
+    selectedContentColor: Color = LocalKptColors.current.primary,
+    unselectedContentColor: Color = LocalKptColors.current.onSurfaceVariant,
 ) {
     val scope = rememberCoroutineScope()
 

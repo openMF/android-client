@@ -9,8 +9,8 @@
  */
 package com.mifos.core.ui.components
 
-import androidclient.core.ui.generated.resources.Res
-import androidclient.core.ui.generated.resources.core_ui_ic_centers_24dp
+import kpt.core.ui.generated.resources.Res
+import kpt.core.ui.generated.resources.core_ui_ic_centers_24dp
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,7 +32,8 @@ import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.ui.util.DevicePreview
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptTypography
 
 @Composable
 fun MifosTextTitleDescSingleLine(
@@ -46,14 +47,14 @@ fun MifosTextTitleDescSingleLine(
         modifier = modifier.fillMaxWidth(),
     ) {
         Text(
-            style = KptTheme.typography.labelMedium,
+            style = LocalKptTypography.current.labelMedium,
             text = title,
             modifier = Modifier
                 .alpha(0.7f),
         )
 
         Text(
-            style = KptTheme.typography.bodyMedium,
+            style = LocalKptTypography.current.bodyMedium,
             text = description,
         )
     }
@@ -69,7 +70,7 @@ fun MifosTextTitleDescDoubleLine(
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
             text = title,
-            style = KptTheme.typography.labelMedium,
+            style = LocalKptTypography.current.labelMedium,
             modifier = Modifier
                 .alpha(0.7f)
                 .fillMaxWidth(),
@@ -97,14 +98,14 @@ fun MifosTextTitleDescDrawableSingleLine(
         modifier = modifier.fillMaxWidth(),
     ) {
         Text(
-            style = KptTheme.typography.labelMedium,
+            style = LocalKptTypography.current.labelMedium,
             text = title,
             modifier = Modifier
                 .weight(1f)
                 .alpha(0.7f),
         )
         Text(
-            style = KptTheme.typography.bodyMedium,
+            style = LocalKptTypography.current.bodyMedium,
             text = description,
         )
         Spacer(modifier = Modifier.width(DesignToken.spacing.dp5))
@@ -130,7 +131,7 @@ fun MifosTitleDescSingleLineEqual(
         modifier = modifier.fillMaxWidth(),
     ) {
         Text(
-            style = KptTheme.typography.labelMedium,
+            style = LocalKptTypography.current.labelMedium,
             text = title,
             modifier = Modifier
                 .alpha(0.7f)
@@ -138,7 +139,7 @@ fun MifosTitleDescSingleLineEqual(
         )
 
         Text(
-            style = KptTheme.typography.bodyMedium,
+            style = LocalKptTypography.current.bodyMedium,
             text = description,
             modifier = Modifier.weight(1f),
         )
@@ -168,7 +169,7 @@ private fun MifosTextTitleDescDoubleLinePreview(
         MifosTextTitleDescDoubleLine(
             title = "MifosTextTitleDescDoubleLine Title",
             description = "MifosTextTitleDescDoubleLine Description",
-            descriptionStyle = KptTheme.typography.bodyMedium,
+            descriptionStyle = LocalKptTypography.current.bodyMedium,
             modifier = modifier,
         )
     }

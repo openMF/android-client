@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2026 Mifos Initiative
+
+    This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+    If a copy of the MPL was not distributed with this file,
+    You can obtain one at https://mozilla.org/MPL/2.0/.
+
+    See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+-->
+<resources>
+    <!-- ============================================================
+         RULE-IMPL-NO-HARDCODED-STRING-001 — feature/home i18n surface
+         Naming convention: screens_home_<area>_<role>
+         Field-officer home board (clients / groups / centers /
+         collection sheet / checker inbox / path tracking / search).
+         ============================================================ -->
+
+    <!-- ===== HomeScreen — TopAppBar ===== -->
+    <string name="screens_home_settings_cd">Settings</string>
+
+    <!-- ===== HomeDashboard — Hero greeting ===== -->
+    <string name="screens_home_hero_greeting">Welcome back</string>
+    <string name="screens_home_hero_subtitle">Your field operations at a glance</string>
+
+    <!-- ===== HomeDashboard — Section headers ===== -->
+    <string name="screens_home_section_manage">Manage</string>
+    <string name="screens_home_section_fieldwork">Field work</string>
+
+    <!-- ===== HomeDashboard — Feature tiles ===== -->
+    <string name="screens_home_feature_clients_title">Clients</string>
+    <string name="screens_home_feature_clients_subtitle">Browse and manage client accounts</string>
+    <string name="screens_home_feature_loans_title">Loans</string>
+    <string name="screens_home_feature_loans_subtitle">Open a loan account and view its transactions</string>
+    <string name="screens_home_feature_groups_title">Groups</string>
+    <string name="screens_home_feature_groups_subtitle">Group-lending portfolios</string>
+    <string name="screens_home_feature_centers_title">Centers</string>
+    <string name="screens_home_feature_centers_subtitle">Center meetings and member groups</string>
+    <string name="screens_home_feature_collection_title">Collection Sheet</string>
+    <string name="screens_home_feature_collection_subtitle">Record repayments and savings</string>
+    <string name="screens_home_feature_checker_title">Checker Inbox</string>
+    <string name="screens_home_feature_checker_subtitle">Review and approve pending tasks</string>
+    <string name="screens_home_feature_pathtracking_title">Path Tracking</string>
+    <string name="screens_home_feature_pathtracking_subtitle">Track your field-visit route</string>
+    <string name="screens_home_feature_search_title">Search</string>
+    <string name="screens_home_feature_search_subtitle">Find clients, groups and loans</string>
+
+    <!-- ===== HomeDashboard — accessibility ===== -->
+    <string name="screens_home_feature_open_cd">Open %1$s</string>
+</resources>

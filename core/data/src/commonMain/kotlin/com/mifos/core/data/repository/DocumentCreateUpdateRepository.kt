@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.network.GenericResponse
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import kotlinx.coroutines.flow.Flow
@@ -23,12 +22,12 @@ interface DocumentCreateUpdateRepository {
         entityType: String,
         entityId: Int,
         file: MultiPartFormDataContent,
-    ): Flow<DataState<GenericResponse>>
+    ): Flow<GenericResponse>
 
     suspend fun updateDocument(
         entityType: String,
         entityId: Int,
         documentId: Int,
         file: MultiPartFormDataContent,
-    ): Flow<DataState<GenericResponse>>
+    ): Flow<GenericResponse>
 }

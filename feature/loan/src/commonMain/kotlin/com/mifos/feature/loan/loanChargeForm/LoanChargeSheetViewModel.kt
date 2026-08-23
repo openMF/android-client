@@ -9,18 +9,18 @@
  */
 package com.mifos.feature.loan.loanChargeForm
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_charge_disbursement
-import androidclient.feature.loan.generated.resources.feature_loan_charge_flat
-import androidclient.feature.loan.generated.resources.feature_loan_charge_installment
-import androidclient.feature.loan.generated.resources.feature_loan_charge_specified_due_date
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_charge_disbursement
+import kpt.feature.loan.generated.resources.feature_loan_charge_flat
+import kpt.feature.loan.generated.resources.feature_loan_charge_installment
+import kpt.feature.loan.generated.resources.feature_loan_charge_specified_due_date
 import androidx.lifecycle.viewModelScope
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.domain.useCases.CreateLoanChargesUseCase
 import com.mifos.core.domain.useCases.GetChargeTemplateUseCase
 import com.mifos.core.model.objects.payloads.ChargesPayload
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
@@ -51,60 +51,53 @@ internal class LoanChargeSheetViewModel(
         if (stateFlow.value.chargeTypesState is LoanChargeFormState.ChargeTypesState.Success) return
 
         viewModelScope.launch {
-            getChargesUseCase("loans", loanId).collect { result ->
-                when (result) {
-                    is DataState.Error -> {
-                        sendEvent(LoanChargeFormEvent.FailedToLoadChargeTypes)
-                        mutableStateFlow.update {
-                            it.copy(
-                                chargeTypesState = LoanChargeFormState.ChargeTypesState.Error,
-                            )
-                        }
-                    }
-
-                    is DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                chargeTypesState = LoanChargeFormState.ChargeTypesState.Loading,
-                            )
-                        }
-                    }
-
-                    is DataState.Success -> {
-                        val options = result.data.chargeOptions
-
-                        val validCharges = options.mapNotNull { option ->
-                            val id = option.id
-                            val name = option.name
-                            val amount = option.amount
-                            val chargeTimeType =
-                                ChargeTimeType.fromValue(option.chargeTimeType?.value)
-                            val chargeCalculationType =
-                                ChargeCalculationType.fromValue(option.chargeCalculationType?.value)
-
-                            if (id != null && name != null && amount != null && chargeTimeType != null && chargeCalculationType != null) {
-                                ChargeTypes(
-                                    id = id,
-                                    name = name,
-                                    amount = amount,
-                                    chargeTimeType = chargeTimeType,
-                                    chargeCalculationType = chargeCalculationType,
-                                )
-                            } else {
-                                null
-                            }
-                        }
-
-                        mutableStateFlow.update {
-                            it.copy(
-                                chargeTypesState = LoanChargeFormState.ChargeTypesState.Success(
-                                    validCharges,
-                                ),
-                            )
-                        }
+            mutableStateFlow.update {
+                it.copy(
+                    chargeTypesState = LoanChargeFormState.ChargeTypesState.Loading,
+                )
+            }
+            getChargesUseCase("loans", loanId)
+                .catch {
+                    sendEvent(LoanChargeFormEvent.FailedToLoadChargeTypes)
+                    mutableStateFlow.update {
+                        it.copy(
+                            chargeTypesState = LoanChargeFormState.ChargeTypesState.Error,
+                        )
                     }
                 }
-            }
+                .collect { result ->
+                    val options = result.chargeOptions
+
+                    val validCharges = options.mapNotNull { option ->
+                        val id = option.id
+                        val name = option.name
+                        val amount = option.amount
+                        val chargeTimeType =
+                            ChargeTimeType.fromValue(option.chargeTimeType?.value)
+                        val chargeCalculationType =
+                            ChargeCalculationType.fromValue(option.chargeCalculationType?.value)
+
+                        if (id != null && name != null && amount != null && chargeTimeType != null && chargeCalculationType != null) {
+                            ChargeTypes(
+                                id = id,
+                                name = name,
+                                amount = amount,
+                                chargeTimeType = chargeTimeType,
+                                chargeCalculationType = chargeCalculationType,
+                            )
+                        } else {
+                            null
+                        }
+                    }
+
+                    mutableStateFlow.update {
+                        it.copy(
+                            chargeTypesState = LoanChargeFormState.ChargeTypesState.Success(
+                                validCharges,
+                            ),
+                        )
+                    }
+                }
         }
     }
 
@@ -158,23 +151,16 @@ internal class LoanChargeSheetViewModel(
         }
 
         viewModelScope.launch {
-            createLoanChargesUseCase("loans", loanId, payload).collect { result ->
-                when (result) {
-                    is DataState.Error -> {
-                        sendEvent(LoanChargeFormEvent.ChargeCreationFailed)
-                        mutableStateFlow.update { it.copy(isCreatingCharge = false) }
-                    }
-
-                    is DataState.Loading -> {
-                        mutableStateFlow.update { it.copy(isCreatingCharge = true) }
-                    }
-
-                    is DataState.Success -> {
-                        sendEvent(LoanChargeFormEvent.ChargeCreationSuccess)
-                        mutableStateFlow.update { it.copy(isCreatingCharge = false) }
-                    }
+            mutableStateFlow.update { it.copy(isCreatingCharge = true) }
+            createLoanChargesUseCase("loans", loanId, payload)
+                .catch {
+                    sendEvent(LoanChargeFormEvent.ChargeCreationFailed)
+                    mutableStateFlow.update { it.copy(isCreatingCharge = false) }
                 }
-            }
+                .collect {
+                    sendEvent(LoanChargeFormEvent.ChargeCreationSuccess)
+                    mutableStateFlow.update { it.copy(isCreatingCharge = false) }
+                }
         }
     }
 

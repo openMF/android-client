@@ -9,21 +9,21 @@
  */
 package com.mifos.feature.report.reportDetail
 
-import androidclient.feature.report.generated.resources.Res
-import androidclient.feature.report.generated.resources.feature_report_currency
-import androidclient.feature.report.generated.resources.feature_report_details
-import androidclient.feature.report.generated.resources.feature_report_failed_to_load_report_details
-import androidclient.feature.report.generated.resources.feature_report_fund
-import androidclient.feature.report.generated.resources.feature_report_gl_account
-import androidclient.feature.report.generated.resources.feature_report_ic_report_item
-import androidclient.feature.report.generated.resources.feature_report_loan_officer
-import androidclient.feature.report.generated.resources.feature_report_loan_purpose
-import androidclient.feature.report.generated.resources.feature_report_obligation_date
-import androidclient.feature.report.generated.resources.feature_report_office
-import androidclient.feature.report.generated.resources.feature_report_par_type
-import androidclient.feature.report.generated.resources.feature_report_product
-import androidclient.feature.report.generated.resources.feature_report_run_report
-import androidclient.feature.report.generated.resources.feature_report_saving_account
+import kpt.feature.report.generated.resources.Res
+import kpt.feature.report.generated.resources.feature_report_currency
+import kpt.feature.report.generated.resources.feature_report_details
+import kpt.feature.report.generated.resources.feature_report_failed_to_load_report_details
+import kpt.feature.report.generated.resources.feature_report_fund
+import kpt.feature.report.generated.resources.feature_report_gl_account
+import kpt.feature.report.generated.resources.feature_report_ic_report_item
+import kpt.feature.report.generated.resources.feature_report_loan_officer
+import kpt.feature.report.generated.resources.feature_report_loan_purpose
+import kpt.feature.report.generated.resources.feature_report_obligation_date
+import kpt.feature.report.generated.resources.feature_report_office
+import kpt.feature.report.generated.resources.feature_report_par_type
+import kpt.feature.report.generated.resources.feature_report_product
+import kpt.feature.report.generated.resources.feature_report_run_report
+import kpt.feature.report.generated.resources.feature_report_saving_account
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -73,7 +73,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun ReportDetailScreen(
@@ -375,12 +377,12 @@ private fun RunReportContent(
     ) {
         OutlinedCard(
             modifier = modifier
-                .padding(horizontal = KptTheme.spacing.sm),
+                .padding(horizontal = LocalKptSpacing.current.sm),
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(KptTheme.spacing.md),
+                    .padding(LocalKptSpacing.current.md),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Box(
@@ -398,34 +400,34 @@ private fun RunReportContent(
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(KptTheme.spacing.md),
+                        .padding(LocalKptSpacing.current.md),
                 ) {
                     reportItem.reportName?.let {
                         Text(
                             text = it,
-                            style = KptTheme.typography.bodyLarge,
+                            style = LocalKptTypography.current.bodyLarge,
                         )
                     }
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = KptTheme.spacing.sm),
+                            .padding(top = LocalKptSpacing.current.sm),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(
                             text = reportItem.reportType.toString(),
-                            style = KptTheme.typography.bodyMedium,
+                            style = LocalKptTypography.current.bodyMedium,
                         )
                         Text(
                             text = reportItem.reportCategory.toString(),
-                            style = KptTheme.typography.bodyMedium,
+                            style = LocalKptTypography.current.bodyMedium,
                         )
                     }
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         if (officeList.isNotEmpty()) {
             MifosTextFieldDropdown(
@@ -441,7 +443,7 @@ private fun RunReportContent(
                 options = officeList.mapNotNull { it.row.getOrNull(1) },
                 readOnly = true,
             )
-            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
         }
 
         if (loanPurposeList.isNotEmpty()) {
@@ -458,7 +460,7 @@ private fun RunReportContent(
                 options = loanPurposeList.mapNotNull { it.row.getOrNull(1) },
                 readOnly = true,
             )
-            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
         }
 
         if (reportOffices.isNotEmpty()) {
@@ -475,7 +477,7 @@ private fun RunReportContent(
                 options = reportOffices.mapNotNull { it.row.getOrNull(1) },
                 readOnly = true,
             )
-            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
         }
 
         if (reportProducts.isNotEmpty()) {
@@ -492,7 +494,7 @@ private fun RunReportContent(
                 options = reportProducts.mapNotNull { it.row.getOrNull(1) },
                 readOnly = true,
             )
-            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
         }
 
         if (fundList.isNotEmpty()) {
@@ -509,7 +511,7 @@ private fun RunReportContent(
                 options = fundList.mapNotNull { it.row.getOrNull(1) },
                 readOnly = true,
             )
-            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
         }
 
         if (currencyList.isNotEmpty()) {
@@ -526,7 +528,7 @@ private fun RunReportContent(
                 options = currencyList.mapNotNull { it.row.getOrNull(1) },
                 readOnly = true,
             )
-            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
         }
 
         if (parCalculatorList.isNotEmpty()) {
@@ -543,7 +545,7 @@ private fun RunReportContent(
                 options = parCalculatorList.mapNotNull { it.row.getOrNull(1) },
                 readOnly = true,
             )
-            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
         }
 
         if (savingsAccountDepositList.isNotEmpty()) {
@@ -560,7 +562,7 @@ private fun RunReportContent(
                 options = savingsAccountDepositList.mapNotNull { it.row.getOrNull(1) },
                 readOnly = true,
             )
-            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
         }
 
         if (glAccountList.isNotEmpty()) {
@@ -577,7 +579,7 @@ private fun RunReportContent(
                 options = glAccountList.mapNotNull { it.row.getOrNull(1) },
                 readOnly = true,
             )
-            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
         }
 
         if (obligationDateList.isNotEmpty()) {
@@ -594,7 +596,7 @@ private fun RunReportContent(
                 options = obligationDateList.mapNotNull { it.row.getOrNull(1) },
                 readOnly = true,
             )
-            Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+            Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
         }
     }
 }

@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.SavingsAccountApprovalRepository
 import com.mifos.core.model.objects.account.loan.SavingsApproval
 import com.mifos.core.network.GenericResponse
@@ -27,8 +25,8 @@ class SavingsAccountApprovalRepositoryImp(
     override fun approveSavingsApplication(
         savingsAccountId: Int,
         savingsApproval: SavingsApproval?,
-    ): Flow<DataState<GenericResponse>> {
+    ): Flow<GenericResponse> {
         return dataManagerSavings.approveSavingsApplication(savingsAccountId, savingsApproval)
-            .asDataStateFlow()
+            
     }
 }

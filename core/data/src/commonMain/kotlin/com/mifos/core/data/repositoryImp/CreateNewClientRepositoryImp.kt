@@ -10,8 +10,6 @@
 package com.mifos.core.data.repositoryImp
 
 import co.touchlab.kermit.Logger
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.mappers.client.ClientAddressMapper
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.model.objects.clients.ClientAddressEntity
@@ -41,19 +39,19 @@ class CreateNewClientRepositoryImp(
     private val clientDaoHelper: ClientDaoHelper,
 ) : CreateNewClientRepository {
 
-    override fun clientTemplate(): Flow<DataState<ClientsTemplateEntity>> {
+    override fun clientTemplate(): Flow<ClientsTemplateEntity> {
         return dataManagerClient.clientTemplate
-            .asDataStateFlow()
+            
     }
 
-    override fun offices(): Flow<DataState<List<OfficeEntity>>> {
+    override fun offices(): Flow<List<OfficeEntity>> {
         return dataManagerOffices.fetchOffices()
-            .asDataStateFlow()
+            
     }
 
-    override fun getStaffInOffice(officeId: Int): Flow<DataState<List<StaffEntity>>> {
+    override fun getStaffInOffice(officeId: Int): Flow<List<StaffEntity>> {
         return dataManagerStaff.getStaffInOffice(officeId)
-            .asDataStateFlow()
+            
     }
 
     override suspend fun createClient(clientPayload: ClientPayloadEntity): Int? {

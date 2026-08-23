@@ -9,18 +9,18 @@
  */
 package com.mifos.feature.client.clientAddDocuments
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.action_add
-import androidclient.feature.client.generated.resources.action_go_back
-import androidclient.feature.client.generated.resources.action_view
-import androidclient.feature.client.generated.resources.add_document_title
-import androidclient.feature.client.generated.resources.btn_back
-import androidclient.feature.client.generated.resources.btn_submit
-import androidclient.feature.client.generated.resources.document_name
-import androidclient.feature.client.generated.resources.feature_client_description
-import androidclient.feature.client.generated.resources.hint_description
-import androidclient.feature.client.generated.resources.hint_document_name
-import androidclient.feature.client.generated.resources.no_file_selected
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.action_add
+import kpt.feature.client.generated.resources.action_go_back
+import kpt.feature.client.generated.resources.action_view
+import kpt.feature.client.generated.resources.add_document_title
+import kpt.feature.client.generated.resources.btn_back
+import kpt.feature.client.generated.resources.btn_submit
+import kpt.feature.client.generated.resources.document_name
+import kpt.feature.client.generated.resources.feature_client_description
+import kpt.feature.client.generated.resources.hint_description
+import kpt.feature.client.generated.resources.hint_document_name
+import kpt.feature.client.generated.resources.no_file_selected
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -57,7 +57,11 @@ import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.client.EntityDocumentState
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptShapes
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun ClientAddDocumentsScreen(
@@ -127,7 +131,7 @@ private fun ClientAddDocumentContent(
             Column(
                 Modifier.fillMaxSize()
                     .padding(
-                        horizontal = KptTheme.spacing.md,
+                        horizontal = LocalKptSpacing.current.md,
                     ),
             ) {
                 Text(
@@ -147,7 +151,7 @@ private fun ClientAddDocumentContent(
                     },
                     label = stringResource(Res.string.document_name),
                     maxLines = 1,
-                    shape = KptTheme.shapes.medium,
+                    shape = LocalKptShapes.current.medium,
                 )
 
                 MifosOutlinedTextField(
@@ -160,9 +164,9 @@ private fun ClientAddDocumentContent(
                     },
                     label = stringResource(Res.string.feature_client_description),
                     maxLines = 1,
-                    shape = KptTheme.shapes.medium,
+                    shape = LocalKptShapes.current.medium,
                     modifier = Modifier
-                        .padding(bottom = KptTheme.spacing.sm),
+                        .padding(bottom = LocalKptSpacing.current.sm),
                 )
 
                 MifosRowWithTextAndButton(
@@ -197,14 +201,14 @@ private fun ClientAddDocumentContent(
                             onAction(ClientAddDocumentScreenAction.NavigateBack)
                         },
                         colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = KptTheme.colorScheme.onPrimary,
-                            contentColor = KptTheme.colorScheme.primary,
+                            containerColor = LocalKptColors.current.onPrimary,
+                            contentColor = LocalKptColors.current.primary,
                         ),
                         border = BorderStroke(
                             DesignToken.strokes.thin,
-                            color = KptTheme.colorScheme.secondaryContainer,
+                            color = LocalKptColors.current.secondaryContainer,
                         ),
-                        shape = KptTheme.shapes.medium,
+                        shape = LocalKptShapes.current.medium,
                         modifier = Modifier
                             .height(DesignToken.sizes.iconExtraLarge)
                             .weight(1f),
@@ -213,17 +217,17 @@ private fun ClientAddDocumentContent(
                             imageVector = MifosIcons.ArrowBack,
                             "back button",
                             modifier = Modifier.size(DesignToken.sizes.iconMedium),
-                            tint = KptTheme.colorScheme.primary,
+                            tint = LocalKptColors.current.primary,
                         )
-                        Spacer(Modifier.width(KptTheme.spacing.xs))
+                        Spacer(Modifier.width(LocalKptSpacing.current.xs))
                         Text(
                             stringResource(Res.string.btn_back),
-                            style = KptTheme.typography.labelLarge,
+                            style = LocalKptTypography.current.labelLarge,
                             fontFamily = FontFamily.SansSerif,
                         )
                     }
 
-                    Spacer(Modifier.width(KptTheme.spacing.sm))
+                    Spacer(Modifier.width(LocalKptSpacing.current.sm))
 
                     MifosOutlinedButton(
                         onClick = {
@@ -234,12 +238,12 @@ private fun ClientAddDocumentContent(
                             }
                         },
                         colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = KptTheme.colorScheme.primary,
-                            contentColor = KptTheme.colorScheme.onPrimary,
-                            disabledContainerColor = KptTheme.colorScheme.onSurface.copy(
+                            containerColor = LocalKptColors.current.primary,
+                            contentColor = LocalKptColors.current.onPrimary,
+                            disabledContainerColor = LocalKptColors.current.onSurface.copy(
                                 alpha = .12f,
                             ),
-                            disabledContentColor = KptTheme.colorScheme.onSurface.copy(
+                            disabledContentColor = LocalKptColors.current.onSurface.copy(
                                 .5f,
                             ),
                         ),
@@ -249,9 +253,9 @@ private fun ClientAddDocumentContent(
                             } else {
                                 0.dp
                             },
-                            color = KptTheme.colorScheme.secondaryContainer,
+                            color = LocalKptColors.current.secondaryContainer,
                         ),
-                        shape = KptTheme.shapes.medium,
+                        shape = LocalKptShapes.current.medium,
                         modifier = Modifier
                             .height(DesignToken.sizes.iconExtraLarge)
                             .weight(1f),
@@ -262,10 +266,10 @@ private fun ClientAddDocumentContent(
                             contentDescription = "submit button",
                             modifier = Modifier.size(DesignToken.sizes.iconSmall),
                         )
-                        Spacer(Modifier.width(KptTheme.spacing.sm))
+                        Spacer(Modifier.width(LocalKptSpacing.current.sm))
                         Text(
                             stringResource(Res.string.btn_submit),
-                            style = KptTheme.typography.labelLarge,
+                            style = LocalKptTypography.current.labelLarge,
                             fontFamily = FontFamily.SansSerif,
                         )
                     }

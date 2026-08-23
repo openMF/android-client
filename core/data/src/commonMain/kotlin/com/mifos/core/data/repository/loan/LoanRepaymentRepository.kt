@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository.loan
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
@@ -20,12 +19,12 @@ import kotlinx.coroutines.flow.Flow
  */
 interface LoanRepaymentRepository {
 
-    fun getLoanRepayTemplate(loanId: Int): Flow<DataState<LoanRepaymentTemplateEntity?>>
+    fun getLoanRepayTemplate(loanId: Int): Flow<LoanRepaymentTemplateEntity?>
 
     suspend fun submitPayment(
         loanId: Int,
         request: LoanRepaymentRequestEntity,
     ): LoanRepaymentResponseEntity
 
-    fun getDatabaseLoanRepaymentByLoanId(loanId: Int): Flow<DataState<LoanRepaymentRequestEntity?>>
+    fun getDatabaseLoanRepaymentByLoanId(loanId: Int): Flow<LoanRepaymentRequestEntity?>
 }

@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.network.model.RequestCollectionSheetPayload
 import com.mifos.room.entities.collectionsheet.IndividualCollectionSheet
 import com.mifos.room.entities.organisation.OfficeEntity
@@ -25,7 +24,7 @@ interface NewIndividualCollectionSheetRepository {
         payload: RequestCollectionSheetPayload?,
     ): IndividualCollectionSheet
 
-    fun offices(): Flow<DataState<List<OfficeEntity>>>
+    fun offices(): Flow<List<OfficeEntity>>
 
-    fun getStaffInOffice(officeId: Int): Flow<DataState<List<StaffEntity>>>
+    fun getStaffInOffice(officeId: Int): Flow<List<StaffEntity>>
 }

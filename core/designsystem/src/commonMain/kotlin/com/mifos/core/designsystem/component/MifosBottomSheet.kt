@@ -41,14 +41,15 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MifosBottomSheet(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
-    containerColor: Color = KptTheme.colorScheme.onPrimary,
+    containerColor: Color = LocalKptColors.current.onPrimary,
     contentColor: Color = contentColorFor(containerColor),
     content: @Composable () -> Unit,
 ) {
@@ -91,7 +92,7 @@ fun MifosBottomSheet(
 fun MifosBottomSheetOptionItem(
     label: String,
     icon: ImageVector,
-    iconBackgroundColor: Color = KptTheme.colorScheme.onPrimary,
+    iconBackgroundColor: Color = LocalKptColors.current.onPrimary,
     onClick: () -> Unit,
 ) {
     Column(
@@ -111,7 +112,7 @@ fun MifosBottomSheetOptionItem(
                 modifier = Modifier
                     .padding(DesignToken.padding.medium)
                     .size(DesignToken.sizes.iconMedium),
-                tint = KptTheme.colorScheme.primary,
+                tint = LocalKptColors.current.primary,
             )
         }
         Spacer(Modifier.height(DesignToken.padding.small))
@@ -145,7 +146,7 @@ fun MifosBottomSheetOptionItem(
                 modifier = Modifier
                     .padding(DesignToken.padding.medium)
                     .size(DesignToken.sizes.iconAverage),
-                tint = KptTheme.colorScheme.primary,
+                tint = LocalKptColors.current.primary,
             )
         }
         Spacer(Modifier.height(DesignToken.padding.small))
@@ -175,8 +176,8 @@ fun MifosBottomSheetOptionItem(
                 .clickable(onClick = onClick),
             shape = DesignToken.shapes.small,
             colors = CardDefaults.cardColors(
-                containerColor = KptTheme.colorScheme.onPrimary,
-                contentColor = KptTheme.colorScheme.primary,
+                containerColor = LocalKptColors.current.onPrimary,
+                contentColor = LocalKptColors.current.primary,
             ),
         ) {
             Icon(

@@ -12,14 +12,11 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-android {
-    namespace = "com.mifos.feature.path.tracking"
-}
-
 kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.domain)
+            implementation(projects.core.datastore)
             implementation(projects.core.designsystem)
 
             implementation(compose.ui)
@@ -31,12 +28,16 @@ kotlin {
         }
 
         androidMain.dependencies {
+            implementation(compose.uiTooling)
             implementation(libs.maps.compose)
             implementation(libs.accompanist.permission)
         }
     }
 }
 
-dependencies {
-    debugImplementation(compose.uiTooling)
+
+compose.resources {
+    publicResClass = true
+    generateResClass = always
+    packageOfResClass = "kpt.feature.path_tracking.generated.resources"
 }

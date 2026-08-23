@@ -9,43 +9,43 @@
  */
 package com.mifos.core.ui.components
 
-import androidclient.core.ui.generated.resources.Res
-import androidclient.core.ui.generated.resources.core_ui_account_no
-import androidclient.core.ui.generated.resources.core_ui_action
-import androidclient.core.ui.generated.resources.core_ui_amount_paid
-import androidclient.core.ui.generated.resources.core_ui_balance
-import androidclient.core.ui.generated.resources.core_ui_calculation_type
-import androidclient.core.ui.generated.resources.core_ui_cancelled
-import androidclient.core.ui.generated.resources.core_ui_completed
-import androidclient.core.ui.generated.resources.core_ui_description
-import androidclient.core.ui.generated.resources.core_ui_document_id
-import androidclient.core.ui.generated.resources.core_ui_document_key
-import androidclient.core.ui.generated.resources.core_ui_document_type
-import androidclient.core.ui.generated.resources.core_ui_due
-import androidclient.core.ui.generated.resources.core_ui_due_as_of
-import androidclient.core.ui.generated.resources.core_ui_effective_from
-import androidclient.core.ui.generated.resources.core_ui_end_date
-import androidclient.core.ui.generated.resources.core_ui_identify_documents
-import androidclient.core.ui.generated.resources.core_ui_last_active
-import androidclient.core.ui.generated.resources.core_ui_loan_balance
-import androidclient.core.ui.generated.resources.core_ui_loan_product
-import androidclient.core.ui.generated.resources.core_ui_name
-import androidclient.core.ui.generated.resources.core_ui_original_loan
-import androidclient.core.ui.generated.resources.core_ui_outstanding
-import androidclient.core.ui.generated.resources.core_ui_owner_external_id
-import androidclient.core.ui.generated.resources.core_ui_paid
-import androidclient.core.ui.generated.resources.core_ui_pending
-import androidclient.core.ui.generated.resources.core_ui_purchase_price_ratio
-import androidclient.core.ui.generated.resources.core_ui_quantity
-import androidclient.core.ui.generated.resources.core_ui_savings_product
-import androidclient.core.ui.generated.resources.core_ui_settlement_date
-import androidclient.core.ui.generated.resources.core_ui_start_date
-import androidclient.core.ui.generated.resources.core_ui_status
-import androidclient.core.ui.generated.resources.core_ui_total_collateral_value
-import androidclient.core.ui.generated.resources.core_ui_total_value
-import androidclient.core.ui.generated.resources.core_ui_transfer_external_id
-import androidclient.core.ui.generated.resources.core_ui_type
-import androidclient.core.ui.generated.resources.core_ui_waived
+import kpt.core.ui.generated.resources.Res
+import kpt.core.ui.generated.resources.core_ui_account_no
+import kpt.core.ui.generated.resources.core_ui_action
+import kpt.core.ui.generated.resources.core_ui_amount_paid
+import kpt.core.ui.generated.resources.core_ui_balance
+import kpt.core.ui.generated.resources.core_ui_calculation_type
+import kpt.core.ui.generated.resources.core_ui_cancelled
+import kpt.core.ui.generated.resources.core_ui_completed
+import kpt.core.ui.generated.resources.core_ui_description
+import kpt.core.ui.generated.resources.core_ui_document_id
+import kpt.core.ui.generated.resources.core_ui_document_key
+import kpt.core.ui.generated.resources.core_ui_document_type
+import kpt.core.ui.generated.resources.core_ui_due
+import kpt.core.ui.generated.resources.core_ui_due_as_of
+import kpt.core.ui.generated.resources.core_ui_effective_from
+import kpt.core.ui.generated.resources.core_ui_end_date
+import kpt.core.ui.generated.resources.core_ui_identify_documents
+import kpt.core.ui.generated.resources.core_ui_last_active
+import kpt.core.ui.generated.resources.core_ui_loan_balance
+import kpt.core.ui.generated.resources.core_ui_loan_product
+import kpt.core.ui.generated.resources.core_ui_name
+import kpt.core.ui.generated.resources.core_ui_original_loan
+import kpt.core.ui.generated.resources.core_ui_outstanding
+import kpt.core.ui.generated.resources.core_ui_owner_external_id
+import kpt.core.ui.generated.resources.core_ui_paid
+import kpt.core.ui.generated.resources.core_ui_pending
+import kpt.core.ui.generated.resources.core_ui_purchase_price_ratio
+import kpt.core.ui.generated.resources.core_ui_quantity
+import kpt.core.ui.generated.resources.core_ui_savings_product
+import kpt.core.ui.generated.resources.core_ui_settlement_date
+import kpt.core.ui.generated.resources.core_ui_start_date
+import kpt.core.ui.generated.resources.core_ui_status
+import kpt.core.ui.generated.resources.core_ui_total_collateral_value
+import kpt.core.ui.generated.resources.core_ui_total_value
+import kpt.core.ui.generated.resources.core_ui_transfer_external_id
+import kpt.core.ui.generated.resources.core_ui_type
+import kpt.core.ui.generated.resources.core_ui_waived
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -73,14 +73,15 @@ import com.mifos.core.designsystem.theme.MifosTypography
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.KptTheme
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @Composable
 fun MifosListingComponentOutline(
     modifier: Modifier = Modifier,
-    borderColor: Color = KptTheme.colorScheme.secondaryContainer,
-    backgroundColor: Color = KptTheme.colorScheme.surface,
+    borderColor: Color = LocalKptColors.current.secondaryContainer,
+    backgroundColor: Color = LocalKptColors.current.surface,
     shape: Shape = DesignToken.shapes.medium,
     content: @Composable () -> Unit,
 ) {
@@ -145,9 +146,9 @@ fun MifosListingColumnItem(
     key: String,
     value: String,
     keyStyle: TextStyle = MifosTypography.labelSmall,
-    keyColor: Color = KptTheme.colorScheme.secondary,
+    keyColor: Color = LocalKptColors.current.secondary,
     valueStyle: TextStyle = MifosTypography.bodySmall,
-    valueColor: Color = KptTheme.colorScheme.onSurface,
+    valueColor: Color = LocalKptColors.current.onSurface,
 ) {
     MifosListingColumnItem(
         keyContent = {
@@ -175,7 +176,7 @@ fun MifosListingRowItem(
     value: String,
     keyStyle: TextStyle = MifosTypography.labelMediumEmphasized,
     valueStyle: TextStyle = MifosTypography.labelMedium,
-    valueColor: Color = KptTheme.colorScheme.onSurface,
+    valueColor: Color = LocalKptColors.current.onSurface,
 ) {
     MifosListingRowItem(
         keyContent = {
@@ -221,7 +222,7 @@ fun MifosListingRowItemHeader(
 
 @Composable
 fun MifosDefaultListingComponent(
-    color: Color = KptTheme.colorScheme.primary.copy(alpha = 0.5f),
+    color: Color = LocalKptColors.current.primary.copy(alpha = 0.5f),
     data: Map<String, String>,
 ) {
     MifosListingComponentOutline(
@@ -243,9 +244,9 @@ fun MifosDefaultListingComponent(
 
 @Composable
 fun MifosDefaultListingComponentFromStringResources(
-    borderColor: Color = KptTheme.colorScheme.primary.copy(alpha = 0.5f),
+    borderColor: Color = LocalKptColors.current.primary.copy(alpha = 0.5f),
     verticalArrangement: Arrangement.Vertical = Arrangement.spacedBy(DesignToken.padding.extraExtraSmall),
-    backgroundColor: Color = KptTheme.colorScheme.surface,
+    backgroundColor: Color = LocalKptColors.current.surface,
     data: Map<StringResource, String>,
 ) {
     MifosListingComponentOutline(
@@ -297,7 +298,7 @@ fun MifosClientFeeListingComponent(
                 MifosListingRowItem(
                     key = stringResource(Res.string.core_ui_due),
                     value = due,
-                    valueColor = KptTheme.colorScheme.error,
+                    valueColor = LocalKptColors.current.error,
                 )
                 MifosListingRowItem(
                     key = stringResource(Res.string.core_ui_paid),
@@ -350,7 +351,7 @@ fun MifosLoanListingComponent(
                 MifosListingRowItem(
                     key = stringResource(Res.string.core_ui_original_loan),
                     value = originalLoan,
-                    valueColor = KptTheme.colorScheme.primary,
+                    valueColor = LocalKptColors.current.primary,
                 )
                 MifosListingRowItem(
                     key = stringResource(Res.string.core_ui_amount_paid),
@@ -405,7 +406,7 @@ fun MifosSavingsListingComponent(
                 MifosListingRowItem(
                     key = stringResource(Res.string.core_ui_balance),
                     value = balance,
-                    valueColor = KptTheme.colorScheme.primary,
+                    valueColor = LocalKptColors.current.primary,
                 )
             }
         }
@@ -446,7 +447,7 @@ fun MifosCollateralDataListingComponent(
             MifosListingRowItem(
                 key = stringResource(Res.string.core_ui_total_collateral_value),
                 value = totalCollateralValue,
-                valueColor = KptTheme.colorScheme.primary,
+                valueColor = LocalKptColors.current.primary,
             )
         }
     }

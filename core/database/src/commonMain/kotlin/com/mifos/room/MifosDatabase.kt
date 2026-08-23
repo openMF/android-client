@@ -10,12 +10,21 @@
 package com.mifos.room
 
 import com.mifos.room.dao.CenterDao
+import com.mifos.room.dao.CenterListCacheDao
 import com.mifos.room.dao.ChargeDao
 import com.mifos.room.dao.ClientDao
+import com.mifos.room.dao.ClientListCacheDao
 import com.mifos.room.dao.ColumnValueDao
+import com.mifos.room.dao.GroupListCacheDao
 import com.mifos.room.dao.GroupsDao
 import com.mifos.room.dao.LoanDao
+import com.mifos.room.dao.CheckerTaskDao
+import com.mifos.room.dao.DocumentDao
+import com.mifos.room.dao.LoanTransactionDao
+import com.mifos.room.dao.NoteDao
+import com.mifos.room.dao.ReportCategoryDao
 import com.mifos.room.dao.OfficeDao
+import com.mifos.room.dao.SavingsAccountTransactionDao
 import com.mifos.room.dao.SavingsDao
 import com.mifos.room.dao.StaffDao
 import com.mifos.room.dao.SurveyDao
@@ -23,13 +32,22 @@ import com.mifos.room.dao.SurveyDao
 @Suppress("NO_ACTUAL_FOR_EXPECT")
 expect abstract class MifosDatabase {
     abstract val centerDao: CenterDao
+    abstract val centerListCacheDao: CenterListCacheDao
     abstract val chargeDao: ChargeDao
     abstract val clientDao: ClientDao
+    abstract val clientListCacheDao: ClientListCacheDao
     abstract val columnValueDao: ColumnValueDao
     abstract val groupsDao: GroupsDao
+    abstract val groupListCacheDao: GroupListCacheDao
     abstract val loanDao: LoanDao
+    abstract val loanTransactionDao: LoanTransactionDao
     abstract val officeDao: OfficeDao
     abstract val savingsDao: SavingsDao
+    abstract val savingsAccountTransactionDao: SavingsAccountTransactionDao
+    abstract val checkerTaskDao: CheckerTaskDao
+    abstract val documentDao: DocumentDao
+    abstract val reportCategoryDao: ReportCategoryDao
+    abstract val noteDao: NoteDao
     abstract val staffDao: StaffDao
     abstract val surveyDao: SurveyDao
 }

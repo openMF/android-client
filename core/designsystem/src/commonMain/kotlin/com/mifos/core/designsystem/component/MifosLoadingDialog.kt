@@ -28,7 +28,10 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptShapes
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun MifosLoadingDialog(
@@ -45,9 +48,9 @@ fun MifosLoadingDialog(
                 ),
             ) {
                 Card(
-                    shape = KptTheme.shapes.extraLarge,
+                    shape = LocalKptShapes.current.extraLarge,
                     colors = CardDefaults.cardColors(
-                        containerColor = KptTheme.colorScheme.surfaceContainerHigh,
+                        containerColor = LocalKptColors.current.surfaceContainerHigh,
                     ),
                     modifier = Modifier
                         .semantics {
@@ -66,16 +69,16 @@ fun MifosLoadingDialog(
                             modifier = Modifier
                                 .testTag("AlertTitleText")
                                 .padding(
-                                    top = KptTheme.spacing.lg,
-                                    bottom = KptTheme.spacing.sm,
+                                    top = LocalKptSpacing.current.lg,
+                                    bottom = LocalKptSpacing.current.sm,
                                 ),
                         )
                         CircularProgressIndicator(
                             modifier = Modifier
                                 .testTag("AlertProgressIndicator")
                                 .padding(
-                                    top = KptTheme.spacing.sm,
-                                    bottom = KptTheme.spacing.lg,
+                                    top = LocalKptSpacing.current.sm,
+                                    bottom = LocalKptSpacing.current.lg,
                                 ),
                         )
                     }

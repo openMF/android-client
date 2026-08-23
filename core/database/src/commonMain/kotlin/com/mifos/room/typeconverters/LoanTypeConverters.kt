@@ -28,7 +28,7 @@ import com.mifos.room.entities.accounts.loans.LoanTimelineEntity
 import com.mifos.room.entities.accounts.loans.LoanTypeEntity
 import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
 import kotlinx.serialization.json.Json
-import template.core.base.database.TypeConverter
+import androidx.room3.ColumnTypeConverter
 
 /**
  * Created by Pronay Sarker on 24/01/2025 (3:07 PM)
@@ -36,202 +36,202 @@ import template.core.base.database.TypeConverter
 // TODO remove unused converters
 class LoanTypeConverters {
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromStatus(status: LoanStatusEntity?): String? {
         return status?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toStatus(json: String?): LoanStatusEntity? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromLoanType(type: LoanTypeEntity?): String? {
         return type?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toLoanType(json: String?): LoanTypeEntity? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromCurrency(currency: SavingAccountCurrencyEntity?): String? {
         return currency?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toCurrency(json: String?): SavingAccountCurrencyEntity? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromTermPeriodFrequencyType(type: TermPeriodFrequencyType?): String? {
         return type?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toTermPeriodFrequencyType(json: String?): TermPeriodFrequencyType? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromRepaymentFrequencyType(type: RepaymentFrequencyType?): String? {
         return type?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toRepaymentFrequencyType(json: String?): RepaymentFrequencyType? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromInterestRateFrequencyType(type: InterestRateFrequencyType?): String? {
         return type?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toInterestRateFrequencyType(json: String?): InterestRateFrequencyType? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromSummary(summary: LoanAccountSummaryEntity?): String? {
         return summary?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toSummary(json: String?): LoanAccountSummaryEntity? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromAmortizationType(type: AmortizationType?): String? {
         return type?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toAmortizationType(json: String?): AmortizationType? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromInterestType(type: InterestType?): String? {
         return type?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toInterestType(json: String?): InterestType? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromInterestCalculationPeriodType(type: InterestCalculationPeriodType?): String? {
         return type?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toInterestCalculationPeriodType(json: String?): InterestCalculationPeriodType? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromTimeline(timeline: LoanTimelineEntity?): String? {
         return timeline?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toTimeline(json: String?): LoanTimelineEntity? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromRepaymentSchedule(schedule: RepaymentSchedule?): String? {
         return schedule?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toRepaymentSchedule(json: String?): RepaymentSchedule? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromTransactionList(transactions: List<Transaction>?): String? {
         return transactions?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toTransactionList(json: String?): List<Transaction>? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromType(type: Type?): String? {
         return type?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toType(json: String?): Type? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromListInt(date: List<Int?>?): String? {
         return date?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toListInt(json: String?): List<Int?>? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromActualDisbursementDate(date: ActualDisbursementDateEntity?): String? {
         return date?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toActualDisbursementDate(json: String?): ActualDisbursementDateEntity? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromMutableListInt(date: MutableList<Int>?): String? {
         return date?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toMutableListInt(json: String?): MutableList<Int>? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromMutableListPaymentTypeOptions(type: MutableList<PaymentTypeOptionEntity>?): String? {
         return type?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toMutableListPaymentTypeOptions(json: String?): MutableList<PaymentTypeOptionEntity>? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromPeriodList(json: String?): List<Period>? {
         return json?.let { Json.decodeFromString<List<Period>>(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toPeriodList(periodList: List<Period>?): String? {
         return periodList?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toChanges(changes: Changes?): String {
         return Json.encodeToString(changes)
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromChanges(changes: String?): Changes? {
         return changes?.let { Json.decodeFromString(changes) }
     }

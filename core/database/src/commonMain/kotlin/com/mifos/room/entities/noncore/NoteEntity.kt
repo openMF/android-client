@@ -9,8 +9,8 @@
  */
 package com.mifos.room.entities.noncore
 
-import template.core.base.database.Entity
-import template.core.base.database.PrimaryKey
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 
 @Entity(
     indices = [],
@@ -39,4 +39,12 @@ data class NoteEntity(
     val updatedByUsername: String? = null,
 
     val updatedOn: String? = null,
+
+    // Store5 scoping columns — one `Note` table serves many parents, so a cached row is
+    // scoped by the (entityType, entityId) it was fetched for. Nullable + defaulted so the
+    // schema change is a purely-additive Room AutoMigration (no destructive column edits) and
+    // so pre-existing named/positional NoteEntity construction sites stay source-compatible.
+    val entityType: String? = null,
+
+    val entityId: Long? = null,
 )

@@ -10,13 +10,13 @@
 package com.mifos.room.entities.organisation
 
 import kotlinx.serialization.Serializable
-import template.core.base.database.CollationSequence.UNSPECIFIED
-import template.core.base.database.ColumnInfo
-import template.core.base.database.ColumnInfoTypeAffinity.INHERIT_FIELD_NAME
-import template.core.base.database.ColumnInfoTypeAffinity.UNDEFINED
-import template.core.base.database.ColumnInfoTypeAffinity.VALUE_UNSPECIFIED
-import template.core.base.database.Entity
-import template.core.base.database.PrimaryKey
+import androidx.room3.ColumnInfo.Companion.UNSPECIFIED
+import androidx.room3.ColumnInfo
+import androidx.room3.ColumnInfo.Companion.INHERIT_FIELD_NAME
+import androidx.room3.ColumnInfo.Companion.UNDEFINED
+import androidx.room3.ColumnInfo.Companion.VALUE_UNSPECIFIED
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 
 @Entity(
     indices = [],

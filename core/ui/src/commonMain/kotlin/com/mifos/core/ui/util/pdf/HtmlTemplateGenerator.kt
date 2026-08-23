@@ -9,9 +9,9 @@
  */
 package com.mifos.core.ui.util.pdf
 
-import androidclient.core.ui.generated.resources.Res
-import androidclient.core.ui.generated.resources.feature_pdf_generation_date
-import androidclient.core.ui.generated.resources.powered_by
+import kpt.core.ui.generated.resources.Res
+import kpt.core.ui.generated.resources.feature_pdf_generation_date
+import kpt.core.ui.generated.resources.powered_by
 import kotlinx.datetime.number
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.html.BODY

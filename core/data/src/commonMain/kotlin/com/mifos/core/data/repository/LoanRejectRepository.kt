@@ -9,9 +9,8 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.account.loan.RejectLoanInput
 
 interface LoanRejectRepository {
-    suspend fun rejectLoan(loanId: Int, request: RejectLoanInput): DataState<Unit>
+    suspend fun rejectLoan(loanId: Int, request: RejectLoanInput): Unit
 }

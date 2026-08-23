@@ -9,31 +9,31 @@
  */
 package com.mifos.feature.savings.savingsAccountSummary
 
-import androidclient.feature.savings.generated.resources.Res
-import androidclient.feature.savings.generated.resources.feature_savings_account_balance
-import androidclient.feature.savings.generated.resources.feature_savings_account_number
-import androidclient.feature.savings.generated.resources.feature_savings_activate_savings
-import androidclient.feature.savings.generated.resources.feature_savings_approve_savings
-import androidclient.feature.savings.generated.resources.feature_savings_client_name
-import androidclient.feature.savings.generated.resources.feature_savings_currency
-import androidclient.feature.savings.generated.resources.feature_savings_date
-import androidclient.feature.savings.generated.resources.feature_savings_documents
-import androidclient.feature.savings.generated.resources.feature_savings_failed_to_fetch_savingsaccount
-import androidclient.feature.savings.generated.resources.feature_savings_interest_earned
-import androidclient.feature.savings.generated.resources.feature_savings_make_deposit
-import androidclient.feature.savings.generated.resources.feature_savings_more_savings_account_info
-import androidclient.feature.savings.generated.resources.feature_savings_no_transactions
-import androidclient.feature.savings.generated.resources.feature_savings_product_name
-import androidclient.feature.savings.generated.resources.feature_savings_running_balance
-import androidclient.feature.savings.generated.resources.feature_savings_saving_account_id
-import androidclient.feature.savings.generated.resources.feature_savings_savingsAccountSummary
-import androidclient.feature.savings.generated.resources.feature_savings_savings_account_closed
-import androidclient.feature.savings.generated.resources.feature_savings_total_deposits
-import androidclient.feature.savings.generated.resources.feature_savings_total_withdrawals
-import androidclient.feature.savings.generated.resources.feature_savings_transaction_id
-import androidclient.feature.savings.generated.resources.feature_savings_transaction_type
-import androidclient.feature.savings.generated.resources.feature_savings_transactions
-import androidclient.feature.savings.generated.resources.feature_savings_withdrawal
+import kpt.feature.savings.generated.resources.Res
+import kpt.feature.savings.generated.resources.feature_savings_account_balance
+import kpt.feature.savings.generated.resources.feature_savings_account_number
+import kpt.feature.savings.generated.resources.feature_savings_activate_savings
+import kpt.feature.savings.generated.resources.feature_savings_approve_savings
+import kpt.feature.savings.generated.resources.feature_savings_client_name
+import kpt.feature.savings.generated.resources.feature_savings_currency
+import kpt.feature.savings.generated.resources.feature_savings_date
+import kpt.feature.savings.generated.resources.feature_savings_documents
+import kpt.feature.savings.generated.resources.feature_savings_failed_to_fetch_savingsaccount
+import kpt.feature.savings.generated.resources.feature_savings_interest_earned
+import kpt.feature.savings.generated.resources.feature_savings_make_deposit
+import kpt.feature.savings.generated.resources.feature_savings_more_savings_account_info
+import kpt.feature.savings.generated.resources.feature_savings_no_transactions
+import kpt.feature.savings.generated.resources.feature_savings_product_name
+import kpt.feature.savings.generated.resources.feature_savings_running_balance
+import kpt.feature.savings.generated.resources.feature_savings_saving_account_id
+import kpt.feature.savings.generated.resources.feature_savings_savingsAccountSummary
+import kpt.feature.savings.generated.resources.feature_savings_savings_account_closed
+import kpt.feature.savings.generated.resources.feature_savings_total_deposits
+import kpt.feature.savings.generated.resources.feature_savings_total_withdrawals
+import kpt.feature.savings.generated.resources.feature_savings_transaction_id
+import kpt.feature.savings.generated.resources.feature_savings_transaction_type
+import kpt.feature.savings.generated.resources.feature_savings_transactions
+import kpt.feature.savings.generated.resources.feature_savings_withdrawal
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -93,7 +93,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 /**
  * Created by Pronay Sarker on 10/07/2024 (6:21 PM)
@@ -238,7 +241,7 @@ private fun SavingsAccountSummaryContent(
     }
     Column {
         Box(
-            modifier = modifier.padding(horizontal = KptTheme.spacing.lg),
+            modifier = modifier.padding(horizontal = LocalKptSpacing.current.lg),
         ) {
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -246,10 +249,10 @@ private fun SavingsAccountSummaryContent(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = KptTheme.spacing.sm),
+                        .padding(vertical = LocalKptSpacing.current.sm),
                     text = savingsAccountWithAssociations.clientName
                         ?: stringResource(Res.string.feature_savings_client_name),
-                    style = KptTheme.typography.bodyLarge,
+                    style = LocalKptTypography.current.bodyLarge,
                 )
 
                 HorizontalDivider(color = DarkGray)
@@ -287,7 +290,7 @@ private fun SavingsAccountSummaryContent(
                 )
 
                 HorizontalDivider(
-                    modifier = Modifier.padding(vertical = KptTheme.spacing.sm),
+                    modifier = Modifier.padding(vertical = LocalKptSpacing.current.sm),
                     color = DarkGray,
                 )
 
@@ -295,9 +298,9 @@ private fun SavingsAccountSummaryContent(
                     MifosEmptyUi(text = stringResource(Res.string.feature_savings_no_transactions))
                 } else {
                     Text(
-                        style = KptTheme.typography.bodyLarge,
+                        style = LocalKptTypography.current.bodyLarge,
                         text = stringResource(Res.string.feature_savings_transactions),
-                        color = KptTheme.colorScheme.onBackground,
+                        color = LocalKptColors.current.onBackground,
                     )
 
                     LazyColumn {
@@ -311,20 +314,20 @@ private fun SavingsAccountSummaryContent(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .background(
-                        color = KptTheme.colorScheme.surface,
+                        color = LocalKptColors.current.surface,
                     ),
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = KptTheme.spacing.sm),
+                        .padding(vertical = LocalKptSpacing.current.sm),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     if (isWithdrawalAndDepositButtonVisible) {
                         Button(
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(horizontal = KptTheme.spacing.sm),
+                                .padding(horizontal = LocalKptSpacing.current.sm),
                             onClick = {
                                 onWithdrawButtonClicked.invoke(
                                     savingsAccountWithAssociations,
@@ -337,7 +340,7 @@ private fun SavingsAccountSummaryContent(
                         Button(
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(horizontal = KptTheme.spacing.sm),
+                                .padding(horizontal = LocalKptSpacing.current.sm),
                             onClick = { onDepositButtonClicked.invoke(savingsAccountWithAssociations) },
                         ) {
                             Text(text = stringResource(Res.string.feature_savings_make_deposit))
@@ -348,7 +351,7 @@ private fun SavingsAccountSummaryContent(
                         Button(
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(horizontal = KptTheme.spacing.sm),
+                                .padding(horizontal = LocalKptSpacing.current.sm),
                             onClick = when {
                                 savingsAccountWithAssociations.status?.submittedAndPendingApproval == true -> {
                                     { approveSavings.invoke() }
@@ -399,7 +402,7 @@ private fun TransactionItemRow(
             .fillMaxWidth(),
         onClick = { showTransactionDetails = !showTransactionDetails },
         colors = CardDefaults.cardColors(
-            containerColor = KptTheme.colorScheme.surface,
+            containerColor = LocalKptColors.current.surface,
         ),
         shape = DesignToken.shapes.none,
     ) {
@@ -407,26 +410,26 @@ private fun TransactionItemRow(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = KptTheme.spacing.md),
+                    .padding(vertical = LocalKptSpacing.current.md),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = DateHelper.getDateAsString(transaction.date as List<Int>),
-                    style = KptTheme.typography.bodyLarge,
-                    color = KptTheme.colorScheme.onBackground,
+                    style = LocalKptTypography.current.bodyLarge,
+                    color = LocalKptColors.current.onBackground,
                     modifier = Modifier.weight(4f),
                 )
 
                 Text(
                     text = transaction.transactionType?.value ?: "",
-                    style = KptTheme.typography.bodyLarge,
-                    color = KptTheme.colorScheme.onBackground,
+                    style = LocalKptTypography.current.bodyLarge,
+                    color = LocalKptColors.current.onBackground,
                     modifier = Modifier.weight(3f),
                 )
 
                 Text(
                     text = transaction.currency?.displaySymbol + " " + transaction.amount?.toString(),
-                    style = KptTheme.typography.bodyLarge,
+                    style = LocalKptTypography.current.bodyLarge,
                     modifier = Modifier.weight(3f),
                     textAlign = TextAlign.End,
                     color = when {
@@ -460,7 +463,7 @@ private fun SummaryDialogBox(
             MifosCard {
                 Column(
                     modifier = Modifier.verticalScroll(rememberScrollState())
-                        .padding(KptTheme.spacing.md),
+                        .padding(LocalKptSpacing.current.md),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(DesignToken.spacing.dp5),
                 ) {
@@ -518,24 +521,24 @@ private fun DialogBoxRowItem(
             .fillMaxWidth()
             .border(
                 width = DesignToken.spacing.dp2,
-                color = KptTheme.colorScheme.primary,
+                color = LocalKptColors.current.primary,
                 shape = DesignToken.shapes.none,
             )
-            .padding(horizontal = KptTheme.spacing.sm, vertical = KptTheme.spacing.md),
+            .padding(horizontal = LocalKptSpacing.current.sm, vertical = LocalKptSpacing.current.md),
         verticalAlignment = Alignment.CenterVertically,
 
     ) {
         Text(
             modifier = Modifier.weight(5f),
-            style = KptTheme.typography.bodyMedium,
+            style = LocalKptTypography.current.bodyMedium,
             text = title,
         )
 
         Text(
             modifier = Modifier
                 .weight(5f)
-                .padding(end = KptTheme.spacing.sm),
-            style = KptTheme.typography.bodyMedium,
+                .padding(end = LocalKptSpacing.current.sm),
+            style = LocalKptTypography.current.bodyMedium,
             text = value,
             textAlign = TextAlign.End,
         )
@@ -551,12 +554,12 @@ private fun FarApartTextItem(title: String, value: String) {
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
-            style = KptTheme.typography.bodyLarge,
+            style = LocalKptTypography.current.bodyLarge,
             text = title,
         )
 
         Text(
-            style = KptTheme.typography.bodyLarge,
+            style = LocalKptTypography.current.bodyLarge,
             text = value,
             color = DarkGray,
         )

@@ -9,8 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.network.GenericResponse
@@ -25,7 +23,7 @@ class UpdateClientIdentifierUseCase(
         clientId: Long,
         identifierId: Long,
         identifierPayload: IdentifierPayload,
-    ): Flow<DataState<GenericResponse>> = flow {
+    ): Flow<GenericResponse> = flow {
         emit(
             repository.updateClientIdentifier(
                 clientId = clientId,
@@ -33,5 +31,5 @@ class UpdateClientIdentifierUseCase(
                 identifierPayload = identifierPayload,
             ),
         )
-    }.asDataStateFlow()
+    }
 }

@@ -9,12 +9,12 @@
  */
 package com.mifos.feature.about
 
-import androidclient.feature.about.generated.resources.Res
-import androidclient.feature.about.generated.resources.feature_about
-import androidclient.feature.about.generated.resources.feature_about_app
-import androidclient.feature.about.generated.resources.feature_about_ic_launcher
-import androidclient.feature.about.generated.resources.feature_about_mifos
-import androidclient.feature.about.generated.resources.feature_about_mifos_x_droid
+import kpt.feature.about.generated.resources.Res
+import kpt.feature.about.generated.resources.feature_about
+import kpt.feature.about.generated.resources.feature_about_app
+import kpt.feature.about.generated.resources.feature_about_ic_launcher
+import kpt.feature.about.generated.resources.feature_about_mifos
+import kpt.feature.about.generated.resources.feature_about_mifos_x_droid
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -44,7 +44,11 @@ import com.mifos.core.ui.util.DevicePreview
 import com.mifos.core.ui.util.ShareUtils
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
+import kpt.core.base.designsystem.theme.LocalKptElevation
 
 @Composable
 internal fun AboutScreen(
@@ -72,27 +76,27 @@ internal fun AboutScreen(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(KptTheme.spacing.md),
+                        .padding(LocalKptSpacing.current.md),
                     text = stringResource(Res.string.feature_about_mifos_x_droid),
-                    style = aboutItemTextStyleBold.copy(color = KptTheme.colorScheme.onBackground),
+                    style = aboutItemTextStyleBold.copy(color = LocalKptColors.current.onBackground),
                 )
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = KptTheme.spacing.md),
+                        .padding(horizontal = LocalKptSpacing.current.md),
                     text = stringResource(Res.string.feature_about_app),
-                    style = aboutItemTextStyle.copy(color = KptTheme.colorScheme.onBackground),
+                    style = aboutItemTextStyle.copy(color = LocalKptColors.current.onBackground),
                 )
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(KptTheme.spacing.md)
+                        .padding(LocalKptSpacing.current.md)
                         .clickable {
                             ShareUtils.openUrl("https://github.com/openMF/android-client/graphs/contributors")
                         },
                     text = stringResource(Res.string.feature_about_mifos),
-                    style = KptTheme.typography.bodyMedium,
-                    color = KptTheme.colorScheme.primary,
+                    style = LocalKptTypography.current.bodyMedium,
+                    color = LocalKptColors.current.primary,
                     textAlign = TextAlign.Center,
                 )
             }
@@ -118,42 +122,42 @@ private fun AboutCardItem(
     onOptionClick: (AboutItems) -> Unit,
 ) {
     ElevatedCard(
-        modifier = Modifier.padding(horizontal = KptTheme.spacing.md, vertical = KptTheme.spacing.sm),
-        elevation = CardDefaults.elevatedCardElevation(KptTheme.elevation.level0),
+        modifier = Modifier.padding(horizontal = LocalKptSpacing.current.md, vertical = LocalKptSpacing.current.sm),
+        elevation = CardDefaults.elevatedCardElevation(LocalKptElevation.current.level0),
         colors = CardDefaults.elevatedCardColors(
-            containerColor = KptTheme.colorScheme.surface,
-            contentColor = KptTheme.colorScheme.onSurface,
+            containerColor = LocalKptColors.current.surface,
+            contentColor = LocalKptColors.current.onSurface,
         ),
         onClick = { onOptionClick(about.id) },
     ) {
         Row(
-            modifier = Modifier.padding(KptTheme.spacing.md),
+            modifier = Modifier.padding(LocalKptSpacing.current.md),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             about.icon?.let {
                 Icon(
                     painter = painterResource(it),
                     contentDescription = stringResource(about.title),
-                    tint = KptTheme.colorScheme.onSurfaceVariant,
+                    tint = LocalKptColors.current.onSurfaceVariant,
                 )
             }
             Column {
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = KptTheme.spacing.md),
+                        .padding(horizontal = LocalKptSpacing.current.md),
                     text = stringResource(about.title),
-                    style = KptTheme.typography.titleMedium,
-                    color = KptTheme.colorScheme.onSurface,
+                    style = LocalKptTypography.current.titleMedium,
+                    color = LocalKptColors.current.onSurface,
                 )
                 about.subtitle?.let {
                     Text(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = KptTheme.spacing.md),
+                            .padding(horizontal = LocalKptSpacing.current.md),
                         text = stringResource(it),
-                        style = KptTheme.typography.bodyMedium,
-                        color = KptTheme.colorScheme.onSurfaceVariant,
+                        style = LocalKptTypography.current.bodyMedium,
+                        color = LocalKptColors.current.onSurfaceVariant,
                     )
                 }
             }

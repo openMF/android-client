@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.surveys.Scorecard
 import kotlinx.coroutines.flow.Flow
 
@@ -18,5 +17,5 @@ import kotlinx.coroutines.flow.Flow
  */
 interface SurveySubmitRepository {
 
-    fun submitScore(surveyId: Int, scorecardPayload: Scorecard?): Flow<DataState<Scorecard>>
+    fun submitScore(surveyId: Int, scorecardPayload: Scorecard?): Flow<Scorecard>
 }

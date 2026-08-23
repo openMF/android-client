@@ -21,7 +21,9 @@ import androidx.compose.ui.Modifier
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,7 +37,7 @@ fun MifosTopBar(
         title = {
             Text(
                 text = topBarTitle,
-                style = KptTheme.typography.titleMedium,
+                style = LocalKptTypography.current.titleMedium,
             )
         },
         navigationIcon = {
@@ -49,7 +51,7 @@ fun MifosTopBar(
             }
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = KptTheme.colorScheme.surface.copy(alpha = 0f),
+            containerColor = LocalKptColors.current.surface.copy(alpha = 0f),
         ),
         actions = actions,
         modifier = modifier,

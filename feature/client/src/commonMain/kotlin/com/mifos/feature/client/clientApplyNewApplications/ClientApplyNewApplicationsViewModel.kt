@@ -11,7 +11,7 @@ package com.mifos.feature.client.clientApplyNewApplications
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 
 class ClientApplyNewApplicationsViewModel(
     val savedStateHandle: SavedStateHandle,

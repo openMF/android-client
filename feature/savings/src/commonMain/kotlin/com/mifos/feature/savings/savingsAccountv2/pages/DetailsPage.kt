@@ -9,16 +9,16 @@
  */
 package com.mifos.feature.savings.savingsAccountv2.pages
 
-import androidclient.feature.savings.generated.resources.Res
-import androidclient.feature.savings.generated.resources.feature_savings_back
-import androidclient.feature.savings.generated.resources.feature_savings_cancel
-import androidclient.feature.savings.generated.resources.feature_savings_external_id
-import androidclient.feature.savings.generated.resources.feature_savings_field_officer
-import androidclient.feature.savings.generated.resources.feature_savings_next
-import androidclient.feature.savings.generated.resources.feature_savings_product_name
-import androidclient.feature.savings.generated.resources.feature_savings_select
-import androidclient.feature.savings.generated.resources.feature_savings_submission_date
-import androidclient.feature.savings.generated.resources.step_details
+import kpt.feature.savings.generated.resources.Res
+import kpt.feature.savings.generated.resources.feature_savings_back
+import kpt.feature.savings.generated.resources.feature_savings_cancel
+import kpt.feature.savings.generated.resources.feature_savings_external_id
+import kpt.feature.savings.generated.resources.feature_savings_field_officer
+import kpt.feature.savings.generated.resources.feature_savings_next
+import kpt.feature.savings.generated.resources.feature_savings_product_name
+import kpt.feature.savings.generated.resources.feature_savings_select
+import kpt.feature.savings.generated.resources.feature_savings_submission_date
+import kpt.feature.savings.generated.resources.step_details
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -47,7 +47,8 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.savings.savingsAccountv2.SavingsAccountAction
 import com.mifos.feature.savings.savingsAccountv2.SavingsAccountState
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -98,7 +99,7 @@ fun DetailsPage(
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = LocalKptSpacing.current.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -106,7 +107,7 @@ fun DetailsPage(
                 text = stringResource(Res.string.step_details),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             MifosTextFieldDropdown(
                 value = if (state.savingsProductSelected == -1) {
@@ -132,7 +133,7 @@ fun DetailsPage(
                 },
             )
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
             MifosTextFieldDropdown(
                 value = if (state.fieldOfficerIndex == -1) {
                     ""
@@ -161,7 +162,7 @@ fun DetailsPage(
                     ),
                 ),
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
         }
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.feature_savings_back),

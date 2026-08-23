@@ -9,10 +9,10 @@
  */
 package com.mifos.feature.offline.syncGroupPayloads
 
-import androidclient.feature.offline.generated.resources.Res
-import androidclient.feature.offline.generated.resources.feature_offline_all_groups_synced
-import androidclient.feature.offline.generated.resources.feature_offline_ic_assignment_turned_in_black_24dp
-import androidclient.feature.offline.generated.resources.feature_offline_no_group_payload_to_sync
+import kpt.feature.offline.generated.resources.Res
+import kpt.feature.offline.generated.resources.feature_offline_all_groups_synced
+import kpt.feature.offline.generated.resources.feature_offline_ic_assignment_turned_in_black_24dp
+import kpt.feature.offline.generated.resources.feature_offline_no_group_payload_to_sync
 import com.mifos.core.common.utils.ApiDateFormatter
 import com.mifos.room.entities.group.GroupPayloadEntity
 import org.jetbrains.compose.resources.DrawableResource

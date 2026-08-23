@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.room.entities.noncore.DataTableEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -18,5 +17,5 @@ import kotlinx.coroutines.flow.Flow
  */
 interface DataTableRepository {
 
-    suspend fun getDataTable(tableName: String?): Flow<DataState<List<DataTableEntity>>>
+    suspend fun getDataTable(tableName: String?): Flow<List<DataTableEntity>>
 }

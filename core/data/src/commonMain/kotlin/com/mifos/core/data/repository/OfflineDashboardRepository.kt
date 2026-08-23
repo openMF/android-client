@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.savings.SavingsAccountTransactionRequestEntity
 import com.mifos.room.entities.center.CenterPayloadEntity
@@ -22,13 +21,13 @@ import kotlinx.coroutines.flow.Flow
  */
 interface OfflineDashboardRepository {
 
-    fun allDatabaseClientPayload(): Flow<DataState<List<ClientPayloadEntity>>>
+    fun allDatabaseClientPayload(): Flow<List<ClientPayloadEntity>>
 
-    fun allDatabaseGroupPayload(): Flow<DataState<List<GroupPayloadEntity>>>
+    fun allDatabaseGroupPayload(): Flow<List<GroupPayloadEntity>>
 
-    fun allDatabaseCenterPayload(): Flow<DataState<List<CenterPayloadEntity>>>
+    fun allDatabaseCenterPayload(): Flow<List<CenterPayloadEntity>>
 
-    fun databaseLoanRepayments(): Flow<DataState<List<LoanRepaymentRequestEntity>>>
+    fun databaseLoanRepayments(): Flow<List<LoanRepaymentRequestEntity>>
 
-    fun allSavingsAccountTransactions(): Flow<DataState<List<SavingsAccountTransactionRequestEntity>>>
+    fun allSavingsAccountTransactions(): Flow<List<SavingsAccountTransactionRequestEntity>>
 }

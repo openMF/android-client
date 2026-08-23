@@ -9,17 +9,14 @@
  */
 package com.mifos.core.model.objects.noncoreobjects
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 
 /**
  * Created by Rajan Maurya on 01/10/16.
  */
-@Parcelize
 data class IdentifierType(
     var id: Int? = null,
 
     var name: String? = null,
 
     var position: Int? = null,
-) : Parcelable
+)

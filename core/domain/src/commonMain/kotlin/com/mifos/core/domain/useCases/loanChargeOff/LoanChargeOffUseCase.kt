@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases.loanChargeOff
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.loan.LoanChargeOffRepository
 import com.mifos.core.model.objects.account.loan.LoanChargeOffInput
 
@@ -19,5 +18,5 @@ class LoanChargeOffUseCase(
     suspend operator fun invoke(
         loanId: Int,
         loanChargeOffInput: LoanChargeOffInput,
-    ): DataState<Unit> = repository.chargeOff(loanId, loanChargeOffInput)
+    ): Unit = repository.chargeOff(loanId, loanChargeOffInput)
 }

@@ -9,18 +9,18 @@
  */
 package com.mifos.feature.client.newFixedDepositAccount.pages
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.btn_back
-import androidclient.feature.client.generated.resources.client_identifier_btn_next
-import androidclient.feature.client.generated.resources.client_identifier_btn_view
-import androidclient.feature.client.generated.resources.feature_share_account_charge_active_charge
-import androidclient.feature.client.generated.resources.feature_share_account_charge_add_new
-import androidclient.feature.client.generated.resources.feature_share_account_charge_add_new_charge
-import androidclient.feature.client.generated.resources.feature_share_account_charge_btn_add_new
-import androidclient.feature.client.generated.resources.feature_share_account_charge_click_on_add_new
-import androidclient.feature.client.generated.resources.feature_share_account_charge_edit_charge
-import androidclient.feature.client.generated.resources.feature_share_account_charge_view_charges
-import androidclient.feature.client.generated.resources.step_charges
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.btn_back
+import kpt.feature.client.generated.resources.client_identifier_btn_next
+import kpt.feature.client.generated.resources.client_identifier_btn_view
+import kpt.feature.client.generated.resources.feature_share_account_charge_active_charge
+import kpt.feature.client.generated.resources.feature_share_account_charge_add_new
+import kpt.feature.client.generated.resources.feature_share_account_charge_add_new_charge
+import kpt.feature.client.generated.resources.feature_share_account_charge_btn_add_new
+import kpt.feature.client.generated.resources.feature_share_account_charge_click_on_add_new
+import kpt.feature.client.generated.resources.feature_share_account_charge_edit_charge
+import kpt.feature.client.generated.resources.feature_share_account_charge_view_charges
+import kpt.feature.client.generated.resources.step_charges
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -55,7 +55,9 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountAction
 import com.mifos.feature.client.newFixedDepositAccount.NewFixedDepositAccountState
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun ChargesPage(
@@ -65,7 +67,7 @@ fun ChargesPage(
 ) {
     val chargesState = state.fixedDepositAccountCharges
 
-    Column(modifier = Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = LocalKptSpacing.current.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -73,7 +75,7 @@ fun ChargesPage(
                 stringResource(Res.string.step_charges),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             // Add New Button
             Row(
@@ -92,19 +94,19 @@ fun ChargesPage(
                     Icon(
                         imageVector = MifosIcons.Add,
                         contentDescription = null,
-                        tint = KptTheme.colorScheme.primary,
+                        tint = LocalKptColors.current.primary,
                         modifier = Modifier.size(DesignToken.sizes.iconSmall),
                     )
 
                     Text(
                         text = stringResource(Res.string.feature_share_account_charge_add_new),
-                        color = KptTheme.colorScheme.primary,
+                        color = LocalKptColors.current.primary,
                         style = MifosTypography.labelLargeEmphasized,
                     )
                 }
             }
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             // Active Charges Row
             MifosRowWithTextAndButton(
@@ -117,7 +119,7 @@ fun ChargesPage(
                 text = "${chargesState.addedCharges.size} ${stringResource(Res.string.feature_share_account_charge_active_charge)}",
                 btnEnabled = chargesState.addedCharges.isNotEmpty(),
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
         }
 
         // Back and Next Buttons
@@ -221,7 +223,7 @@ internal fun ShowChargesDialog(
         },
         content = {
             Column(
-                modifier = Modifier.fillMaxWidth().padding(KptTheme.spacing.md),
+                modifier = Modifier.fillMaxWidth().padding(LocalKptSpacing.current.md),
                 verticalArrangement = Arrangement.spacedBy(DesignToken.padding.largeIncreased),
             ) {
                 Text(

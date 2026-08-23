@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.GroupLoanAccountRepository
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.room.entities.accounts.loans.Loan
@@ -21,6 +20,6 @@ class CreateGroupLoansAccountUseCase(
 
     operator fun invoke(
         loansPayload: GroupLoanPayload,
-    ): Flow<DataState<Loan>> =
+    ): Flow<Loan> =
         repository.createGroupLoansAccount(loansPayload)
 }

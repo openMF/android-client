@@ -9,22 +9,20 @@
  */
 package com.mifos.feature.loan.assignLoanOfficer
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_assign_officer_failed_to_load
-import androidclient.feature.loan.generated.resources.feature_loan_assign_officer_failure
-import androidclient.feature.loan.generated.resources.feature_loan_assign_officer_success
-import androidclient.feature.loan.generated.resources.feature_loan_message_field_required
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_assign_officer_failed_to_load
+import kpt.feature.loan.generated.resources.feature_loan_assign_officer_failure
+import kpt.feature.loan.generated.resources.feature_loan_assign_officer_success
+import kpt.feature.loan.generated.resources.feature_loan_message_field_required
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.domain.useCases.assignLoanOfficer.AssignLoanOfficerUseCase
 import com.mifos.core.domain.useCases.assignLoanOfficer.GetLoanOfficerOptionsUseCase
 import com.mifos.core.model.objects.account.loan.assignLoanOfficer.AssignLoanOfficerInput
-import com.mifos.core.model.objects.account.loan.assignLoanOfficer.AssignLoanOfficerResponse
 import com.mifos.core.model.objects.template.loan.LoanOfficerOption
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
@@ -47,8 +45,14 @@ internal class AssignLoanOfficerViewModel(
     private fun loadLoanOfficers() {
         viewModelScope.launch {
             mutableStateFlow.update { it.copy(viewState = AssignLoanOfficerState.ViewState.Loading) }
-            val result = getLoanOfficerOptionsUseCase(state.loanId)
-            sendAction(AssignLoanOfficerAction.Internal.ReceiveOptionsResult(result))
+            try {
+                val result = getLoanOfficerOptionsUseCase(state.loanId)
+                sendAction(AssignLoanOfficerAction.Internal.ReceiveOptionsResult(result))
+            } catch (e: Exception) {
+                mutableStateFlow.update {
+                    it.copy(viewState = AssignLoanOfficerState.ViewState.Error(Res.string.feature_loan_assign_officer_failed_to_load))
+                }
+            }
         }
     }
 
@@ -85,55 +89,37 @@ internal class AssignLoanOfficerViewModel(
             )
 
             viewModelScope.launch {
-                val result = assignLoanOfficerUseCase(state.loanId, request)
-                sendAction(AssignLoanOfficerAction.Internal.ReceiveSubmitResult(result))
+                try {
+                    assignLoanOfficerUseCase(state.loanId, request)
+                    sendAction(AssignLoanOfficerAction.Internal.ReceiveSubmitResult)
+                } catch (e: Exception) {
+                    mutableStateFlow.update {
+                        it.copy(
+                            submitInProgress = false,
+                            dialogMessage = Res.string.feature_loan_assign_officer_failure,
+                        )
+                    }
+                }
             }
         }
     }
 
-    private fun handleOptionsResult(result: DataState<List<LoanOfficerOption>>) {
-        when (result) {
-            is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        viewState = AssignLoanOfficerState.ViewState.Success(result.data),
-                        loanOfficerOptions = result.data,
-                    )
-                }
-            }
-
-            is DataState.Error -> {
-                mutableStateFlow.update {
-                    it.copy(viewState = AssignLoanOfficerState.ViewState.Error(Res.string.feature_loan_assign_officer_failed_to_load))
-                }
-            }
-
-            DataState.Loading -> Unit
+    private fun handleOptionsResult(result: List<LoanOfficerOption>) {
+        mutableStateFlow.update {
+            it.copy(
+                viewState = AssignLoanOfficerState.ViewState.Success(result),
+                loanOfficerOptions = result,
+            )
         }
     }
 
-    private fun handleSubmitResult(result: DataState<AssignLoanOfficerResponse>) {
-        when (result) {
-            is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        submitInProgress = false,
-                        dialogMessage = Res.string.feature_loan_assign_officer_success,
-                        isAssignmentSuccessful = true,
-                    )
-                }
-            }
-
-            is DataState.Error -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        submitInProgress = false,
-                        dialogMessage = Res.string.feature_loan_assign_officer_failure,
-                    )
-                }
-            }
-
-            DataState.Loading -> Unit
+    private fun handleSubmitResult() {
+        mutableStateFlow.update {
+            it.copy(
+                submitInProgress = false,
+                dialogMessage = Res.string.feature_loan_assign_officer_success,
+                isAssignmentSuccessful = true,
+            )
         }
     }
 
@@ -188,7 +174,7 @@ internal class AssignLoanOfficerViewModel(
             AssignLoanOfficerAction.Submit -> submitAssignment()
 
             is AssignLoanOfficerAction.Internal.ReceiveOptionsResult -> handleOptionsResult(action.result)
-            is AssignLoanOfficerAction.Internal.ReceiveSubmitResult -> handleSubmitResult(action.result)
+            AssignLoanOfficerAction.Internal.ReceiveSubmitResult -> handleSubmitResult()
         }
     }
 }
@@ -235,7 +221,7 @@ internal sealed interface AssignLoanOfficerAction {
     data class UpdateAssignmentDate(val millis: Long) : AssignLoanOfficerAction
 
     sealed interface Internal : AssignLoanOfficerAction {
-        data class ReceiveOptionsResult(val result: DataState<List<LoanOfficerOption>>) : Internal
-        data class ReceiveSubmitResult(val result: DataState<AssignLoanOfficerResponse>) : Internal
+        data class ReceiveOptionsResult(val result: List<LoanOfficerOption>) : Internal
+        data object ReceiveSubmitResult : Internal
     }
 }

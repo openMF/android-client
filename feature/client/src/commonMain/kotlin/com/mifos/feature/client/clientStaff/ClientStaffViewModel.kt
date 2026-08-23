@@ -12,12 +12,11 @@ package com.mifos.feature.client.clientStaff
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.network.model.StaffOption
 import com.mifos.core.ui.components.ResultStatus
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -73,21 +72,18 @@ internal class ClientStaffViewModel(
                 dialogState = ClientStaffState.DialogState.Loading,
             )
         }
-        val result = repo.assignStaff(clientId = state.id, staffId = state.staffOptions[state.currentSelectedIndex].id)
-        when {
-            result is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = ClientStaffState.DialogState.ShowStatusDialog(ResultStatus.SUCCESS),
-                    )
-                }
+        try {
+            repo.assignStaff(clientId = state.id, staffId = state.staffOptions[state.currentSelectedIndex].id)
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ClientStaffState.DialogState.ShowStatusDialog(ResultStatus.SUCCESS),
+                )
             }
-            result is DataState.Error -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = ClientStaffState.DialogState.ShowStatusDialog(ResultStatus.FAILURE, result.message),
-                    )
-                }
+        } catch (e: Exception) {
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ClientStaffState.DialogState.ShowStatusDialog(ResultStatus.FAILURE, e.message ?: ""),
+                )
             }
         }
     }

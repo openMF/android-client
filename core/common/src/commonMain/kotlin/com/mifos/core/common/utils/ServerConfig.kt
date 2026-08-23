@@ -9,13 +9,10 @@
  */
 package com.mifos.core.common.utils
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-@Parcelize
 data class ServerConfig(
     val protocol: String,
     @SerialName("end_point")
@@ -24,14 +21,14 @@ data class ServerConfig(
     val apiPath: String,
     val port: String,
     val tenant: String,
-) : Parcelable {
+) {
     companion object {
         val DEFAULT = ServerConfig(
             protocol = "https://",
             endPoint = "apis.mifos.community",
             apiPath = "/1.0/field/v1/",
             port = "443",
-            tenant = "mifos-bank-1",
+            tenant = "mifos-bank-2",
         )
 
         val LOCALHOST = ServerConfig(

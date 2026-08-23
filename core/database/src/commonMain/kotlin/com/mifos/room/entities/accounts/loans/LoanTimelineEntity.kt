@@ -9,19 +9,16 @@
  */
 package com.mifos.room.entities.accounts.loans
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import template.core.base.database.CollationSequence.UNSPECIFIED
-import template.core.base.database.ColumnInfo
-import template.core.base.database.ColumnInfoTypeAffinity.INHERIT_FIELD_NAME
-import template.core.base.database.ColumnInfoTypeAffinity.UNDEFINED
-import template.core.base.database.ColumnInfoTypeAffinity.VALUE_UNSPECIFIED
-import template.core.base.database.Entity
-import template.core.base.database.ForeignKey
-import template.core.base.database.ForeignKeyAction
-import template.core.base.database.PrimaryKey
+import androidx.room3.ColumnInfo.Companion.UNSPECIFIED
+import androidx.room3.ColumnInfo
+import androidx.room3.ColumnInfo.Companion.INHERIT_FIELD_NAME
+import androidx.room3.ColumnInfo.Companion.UNDEFINED
+import androidx.room3.ColumnInfo.Companion.VALUE_UNSPECIFIED
+import androidx.room3.Entity
+import androidx.room3.ForeignKey
+import androidx.room3.PrimaryKey
 
 @Entity(
     tableName = "Timeline",
@@ -30,8 +27,8 @@ import template.core.base.database.PrimaryKey
             entity = ActualDisbursementDateEntity::class,
             parentColumns = ["loanId"],
             childColumns = ["actualDisburseDate"],
-            onDelete = ForeignKeyAction.CASCADE,
-            onUpdate = ForeignKeyAction.NO_ACTION,
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.NO_ACTION,
             deferred = false,
         ),
     ],
@@ -41,7 +38,6 @@ import template.core.base.database.PrimaryKey
     ignoredColumns = [],
 )
 @Serializable
-@Parcelize
 data class LoanTimelineEntity(
     @PrimaryKey(autoGenerate = true)
     @Transient
@@ -83,4 +79,4 @@ data class LoanTimelineEntity(
     val expectedMaturityDate: List<Int>? = null,
 
     val withdrawnOnDate: List<Int>? = null,
-) : Parcelable
+)

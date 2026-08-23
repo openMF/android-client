@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository.loan
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.account.loan.guarantor.CreateGuarantor
 import com.mifos.core.model.objects.account.loan.guarantor.CreateGuarantorInput
 import com.mifos.core.model.objects.account.loan.guarantor.GuarantorAccountTemplate
@@ -17,15 +16,15 @@ import com.mifos.core.model.objects.account.loan.guarantor.GuarantorTemplate
 
 interface LoanCreateGuarantorRepository {
 
-    suspend fun getGuarantorTemplate(loanId: Int): DataState<GuarantorTemplate>
+    suspend fun getGuarantorTemplate(loanId: Int): GuarantorTemplate
 
     suspend fun createGuarantor(
         loanId: Int,
         createGuarantorInput: CreateGuarantorInput,
-    ): DataState<CreateGuarantor>
+    ): CreateGuarantor
 
     suspend fun getGuarantorAccountTemplate(
         loanId: Int,
         clientId: Int,
-    ): DataState<GuarantorAccountTemplate>
+    ): GuarantorAccountTemplate
 }

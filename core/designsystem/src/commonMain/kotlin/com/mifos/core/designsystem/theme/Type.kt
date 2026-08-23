@@ -16,16 +16,16 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.sp
-import core.designsystem.generated.resources.Res
-import core.designsystem.generated.resources.inter_black
-import core.designsystem.generated.resources.inter_bold
-import core.designsystem.generated.resources.inter_extra_bold
-import core.designsystem.generated.resources.inter_extra_light
-import core.designsystem.generated.resources.inter_light
-import core.designsystem.generated.resources.inter_medium
-import core.designsystem.generated.resources.inter_regular
-import core.designsystem.generated.resources.inter_semi_bold
-import core.designsystem.generated.resources.inter_thin
+import kpt.core.designsystem.generated.resources.Res
+import kpt.core.designsystem.generated.resources.inter_black
+import kpt.core.designsystem.generated.resources.inter_bold
+import kpt.core.designsystem.generated.resources.inter_extra_bold
+import kpt.core.designsystem.generated.resources.inter_extra_light
+import kpt.core.designsystem.generated.resources.inter_light
+import kpt.core.designsystem.generated.resources.inter_medium
+import kpt.core.designsystem.generated.resources.inter_regular
+import kpt.core.designsystem.generated.resources.inter_semi_bold
+import kpt.core.designsystem.generated.resources.inter_thin
 import org.jetbrains.compose.resources.Font
 
 @Composable

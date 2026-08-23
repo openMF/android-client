@@ -13,7 +13,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.FileKitUtil
 import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.data.repository.DocumentCreateUpdateRepository
@@ -24,12 +23,13 @@ import com.mifos.core.domain.useCases.GetDocumentsListUseCase
 import com.mifos.core.model.objects.noncoreobjects.DocumentType
 import com.mifos.core.model.objects.noncoreobjects.IdentifierPayload
 import com.mifos.core.ui.components.Status
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.core.ui.util.multipartRequestBody
 import io.github.vinceglb.filekit.extension
 import io.github.vinceglb.filekit.name
 import io.github.vinceglb.filekit.readBytes
 import io.ktor.client.statement.readRawBytes
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -80,125 +80,101 @@ class ClientIdentifiersAddUpdateViewModel(
     }
 
     private suspend fun createClientIdentifier(identifierPayload: IdentifierPayload) {
+        mutableStateFlow.update {
+            it.copy(
+                isOverlayLoading = true,
+                dialogState = ClientIdentifiersAddUpdateState.DialogState.Loading,
+            )
+        }
         createClientIdentifierUseCase(route.clientId.toLong(), identifierPayload)
-            .collect { dataState ->
-                when (dataState) {
-                    is DataState.Error -> {
-                        if (dataState.exception is IllegalStateException) {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
-                                        dataState.message.replace("unique", "document")
-                                            .replace("under", " under"),
-                                    ),
-                                    handleServerResponse = true,
-                                    isOverlayLoading = false,
-                                )
-                            }
-                        } else {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
-                                        dataState.message,
-                                    ),
-                                    isOverlayLoading = false,
-                                )
-                            }
-                        }
+            .catch { error ->
+                if (error is IllegalStateException) {
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
+                                (error.message ?: "").replace("unique", "document")
+                                    .replace("under", " under"),
+                            ),
+                            handleServerResponse = true,
+                            isOverlayLoading = false,
+                        )
                     }
-
-                    DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                isOverlayLoading = true,
-                                dialogState = ClientIdentifiersAddUpdateState.DialogState.Loading,
-                            )
-                        }
+                } else {
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
+                                error.message ?: "",
+                            ),
+                            isOverlayLoading = false,
+                        )
                     }
-
-                    is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = null,
-                                isOverlayLoading = false,
-                                feature = Feature.ADD_UPDATE_DOCUMENT,
-                            )
-                        }
-                    }
+                }
+            }
+            .collect { _ ->
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = null,
+                        isOverlayLoading = false,
+                        feature = Feature.ADD_UPDATE_DOCUMENT,
+                    )
                 }
             }
     }
 
     private suspend fun getIdentifiersTemplate() {
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = ClientIdentifiersAddUpdateState.DialogState.Loading,
+            )
+        }
         clientIdentifiersRepository.getClientIdentifierTemplate(clientId = route.clientId.toLong())
-            .collect { dataState ->
-                when (dataState) {
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
-                                    dataState.message,
-                                ),
-                            )
-                        }
-                    }
-
-                    DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientIdentifiersAddUpdateState.DialogState.Loading,
-                            )
-                        }
-                    }
-
-                    is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = null,
-                                identifierTemplate = dataState.data.allowedDocumentTypes,
-                            )
-                        }
-                    }
+            .catch { error ->
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
+                            error.message ?: "",
+                        ),
+                    )
+                }
+            }
+            .collect { template ->
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = null,
+                        identifierTemplate = template.allowedDocumentTypes,
+                    )
                 }
             }
     }
 
     private suspend fun getDocument(extension: String?) {
         state.documentId?.let { documentId ->
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ClientIdentifiersAddUpdateState.DialogState.Loading,
+                )
+            }
             downloadDocumentUseCase(
                 Constants.ENTITY_TYPE_CLIENT_IDENTIFIERS,
                 route.clientId,
                 documentId,
             )
-                .collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
-                                        dataState.message,
-                                    ),
-                                )
-                            }
-                        }
-
-                        DataState.Loading -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = ClientIdentifiersAddUpdateState.DialogState.Loading,
-                                )
-                            }
-                        }
-
-                        is DataState.Success -> {
-                            mutableStateFlow.update {
-                                it.copy(
-                                    dialogState = null,
-                                    documentImageFile = dataState.data.readRawBytes(),
-                                    fileExtension = extension,
-                                )
-                            }
-                        }
+                .catch { error ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
+                                error.message ?: "",
+                            ),
+                        )
+                    }
+                }
+                .collect { response ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = null,
+                            documentImageFile = response.readRawBytes(),
+                            fileExtension = extension,
+                        )
                     }
                 }
         }
@@ -213,32 +189,26 @@ class ClientIdentifiersAddUpdateViewModel(
      * - If the document ID is found, it will be used to update the state accordingly.
      */
     private suspend fun getDocumentId() {
+        mutableStateFlow.update {
+            it.copy(
+                dialogState = ClientIdentifiersAddUpdateState.DialogState.Loading,
+            )
+        }
         getDocumentListUseCase(Constants.ENTITY_TYPE_CLIENT_IDENTIFIERS, route.clientId)
-            .collect { dataState ->
-                when (dataState) {
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
-                                    dataState.message,
-                                ),
-                            )
-                        }
-                    }
+            .catch { error ->
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
+                            error.message ?: "",
+                        ),
+                    )
+                }
+            }
+            .collect { documents ->
+                val data =
+                    documents.firstOrNull { it.description == route.uniqueKeyForHandleDocument }
 
-                    DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientIdentifiersAddUpdateState.DialogState.Loading,
-                            )
-                        }
-                    }
-
-                    is DataState.Success -> {
-                        val data =
-                            dataState.data.firstOrNull { it.description == route.uniqueKeyForHandleDocument }
-
-                        if (data?.id == null) {
+                if (data?.id == null) {
                             // Handle missing document
                             mutableStateFlow.update {
                                 it.copy(
@@ -263,8 +233,6 @@ class ClientIdentifiersAddUpdateViewModel(
                             val extension = data.type?.substringAfterLast("/", "")
                             getDocument(extension)
                         }
-                    }
-                }
             }
     }
 
@@ -273,6 +241,12 @@ class ClientIdentifiersAddUpdateViewModel(
         name: String?,
         uniqueKeyForHandleDocument: String,
     ) {
+        mutableStateFlow.update {
+            it.copy(
+                isOverlayLoading = true,
+                dialogState = ClientIdentifiersAddUpdateState.DialogState.Loading,
+            )
+        }
         repository.createDocument(
             Constants.ENTITY_TYPE_CLIENT_IDENTIFIERS,
             route.clientId,
@@ -282,37 +256,24 @@ class ClientIdentifiersAddUpdateViewModel(
                 extension = state.fileExtension ?: "",
                 description = uniqueKeyForHandleDocument,
             ),
-        ).collect { state ->
-            when (state) {
-                is DataState.Error -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(state.message),
-                        )
-                    }
-                }
-
-                DataState.Loading -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            isOverlayLoading = true,
-                            dialogState = ClientIdentifiersAddUpdateState.DialogState.Loading,
-                        )
-                    }
-                }
-
-                is DataState.Success -> {
-                    mutableStateFlow.update {
-                        it.copy(
-                            isOverlayLoading = false,
-                            dialogState = null,
-                        )
-                    }
-
-                    sendEvent(ClientIdentifiersAddUpdateEvent.NavigateBackWithUpdatedList)
+        )
+            .catch { error ->
+                mutableStateFlow.update {
+                    it.copy(
+                        dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(error.message ?: ""),
+                    )
                 }
             }
-        }
+            .collect { _ ->
+                mutableStateFlow.update {
+                    it.copy(
+                        isOverlayLoading = false,
+                        dialogState = null,
+                    )
+                }
+
+                sendEvent(ClientIdentifiersAddUpdateEvent.NavigateBackWithUpdatedList)
+            }
     }
 
     private suspend fun updateDocument(
@@ -321,6 +282,11 @@ class ClientIdentifiersAddUpdateViewModel(
         uniqueKeyForHandleDocument: String?,
     ) {
         state.documentId?.let { documentId ->
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ClientIdentifiersAddUpdateState.DialogState.Loading,
+                )
+            }
             repository.updateDocument(
                 entityType = Constants.CLIENTS,
                 entityId = route.clientId,
@@ -331,37 +297,25 @@ class ClientIdentifiersAddUpdateViewModel(
                     extension = state.fileExtension.orEmpty(),
                     description = uniqueKeyForHandleDocument,
                 ),
-            ).collect { dataState ->
-                when (dataState) {
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
-                                    dataState.message,
-                                ),
-                            )
-                        }
-                    }
-
-                    DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = ClientIdentifiersAddUpdateState.DialogState.Loading,
-                            )
-                        }
-                    }
-
-                    is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dialogState = null,
-                            )
-                        }
-
-                        sendEvent(ClientIdentifiersAddUpdateEvent.NavigateBackWithUpdatedList)
+            )
+                .catch { error ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
+                                error.message ?: "",
+                            ),
+                        )
                     }
                 }
-            }
+                .collect { _ ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            dialogState = null,
+                        )
+                    }
+
+                    sendEvent(ClientIdentifiersAddUpdateEvent.NavigateBackWithUpdatedList)
+                }
         }
     }
 
@@ -453,34 +407,28 @@ class ClientIdentifiersAddUpdateViewModel(
                 }
 
                 viewModelScope.launch {
-                    FileKitUtil.pickFile().collect { dataState ->
-                        when (dataState) {
-                            is DataState.Success -> {
-                                mutableStateFlow.update {
-                                    it.copy(
-                                        documentImageFile = dataState.data?.readBytes(),
-                                        imageFileName = dataState.data?.name,
-                                        fileExtension = dataState.data?.extension,
-                                        dialogState = null,
-                                        feature = Feature.VIEW_DOCUMENT,
-                                        previewButtonHandle = PreviewButtonHandle.Submit,
-                                    )
-                                }
+                    FileKitUtil.pickFile()
+                        .catch { error ->
+                            mutableStateFlow.update {
+                                it.copy(
+                                    dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
+                                        error.message ?: "",
+                                    ),
+                                )
                             }
-
-                            is DataState.Error -> {
-                                mutableStateFlow.update {
-                                    it.copy(
-                                        dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
-                                            dataState.message,
-                                        ),
-                                    )
-                                }
-                            }
-
-                            DataState.Loading -> {}
                         }
-                    }
+                        .collect { platformFile ->
+                            mutableStateFlow.update {
+                                it.copy(
+                                    documentImageFile = platformFile?.readBytes(),
+                                    imageFileName = platformFile?.name,
+                                    fileExtension = platformFile?.extension,
+                                    dialogState = null,
+                                    feature = Feature.VIEW_DOCUMENT,
+                                    previewButtonHandle = PreviewButtonHandle.Submit,
+                                )
+                            }
+                        }
                 }
             }
 
@@ -492,34 +440,28 @@ class ClientIdentifiersAddUpdateViewModel(
                 }
 
                 viewModelScope.launch {
-                    FileKitUtil.pickImage().collect { dataState ->
-                        when (dataState) {
-                            is DataState.Success -> {
-                                mutableStateFlow.update {
-                                    it.copy(
-                                        documentImageFile = dataState.data?.readBytes(),
-                                        imageFileName = dataState.data?.name,
-                                        fileExtension = dataState.data?.extension,
-                                        dialogState = null,
-                                        feature = Feature.VIEW_DOCUMENT,
-                                        previewButtonHandle = PreviewButtonHandle.Submit,
-                                    )
-                                }
+                    FileKitUtil.pickImage()
+                        .catch { error ->
+                            mutableStateFlow.update {
+                                it.copy(
+                                    dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
+                                        error.message ?: "",
+                                    ),
+                                )
                             }
-
-                            is DataState.Error -> {
-                                mutableStateFlow.update {
-                                    it.copy(
-                                        dialogState = ClientIdentifiersAddUpdateState.DialogState.Error(
-                                            dataState.message,
-                                        ),
-                                    )
-                                }
-                            }
-
-                            DataState.Loading -> {}
                         }
-                    }
+                        .collect { platformFile ->
+                            mutableStateFlow.update {
+                                it.copy(
+                                    documentImageFile = platformFile?.readBytes(),
+                                    imageFileName = platformFile?.name,
+                                    fileExtension = platformFile?.extension,
+                                    dialogState = null,
+                                    feature = Feature.VIEW_DOCUMENT,
+                                    previewButtonHandle = PreviewButtonHandle.Submit,
+                                )
+                            }
+                        }
                 }
             }
 

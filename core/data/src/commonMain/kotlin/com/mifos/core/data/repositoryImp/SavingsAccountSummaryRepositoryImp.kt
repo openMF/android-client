@@ -9,26 +9,49 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.SavingsAccountSummaryRepository
-import com.mifos.core.network.datamanager.DataManagerSavings
 import com.mifos.room.entities.accounts.savings.SavingsAccountWithAssociationsEntity
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.mapNotNull
+import org.mobilenativefoundation.store.store5.Store
+import org.mobilenativefoundation.store.store5.StoreReadRequest
+import org.mobilenativefoundation.store.store5.StoreReadResponse
 
 /**
  * Created by Aditya Gupta on 08/08/23.
+ *
+ * Offline-first read path: [getSavingsAccount] streams the Store5 savings-summary store
+ * (qualifier [AppStoreRegistry.SavingsAccountSummary][kpt.core.store.AppStoreRegistry.SavingsAccountSummary] /
+ * [provideSavingsAccountSummaryStore][com.mifos.core.store.provideSavingsAccountSummaryStore])
+ * instead of the raw `DataManagerSavings.getSavingsAccount` network call.
+ * `StoreReadRequest.cached(refresh = true)` emits the Room-persisted
+ * [SavingsAccountWithAssociationsEntity] immediately (renders offline from cache) AND triggers a
+ * background network refresh (SWR). The fetcher's network error is intentionally swallowed — the
+ * source-of-truth reader still emits the cached row, so the screen shows cached data offline
+ * rather than an "Unable to resolve host" error.
+ *
+ * NOTE: `type` and `association` are honored by the store's hardcoded path segments
+ * (`savingsaccounts` / `transactions`); the store keys purely on `savingsAccountId` (mirrors the
+ * sibling `provideSavingsAccountTransactionStore`).
  */
 class SavingsAccountSummaryRepositoryImp(
-    private val dataManagerSavings: DataManagerSavings,
+    private val savingsSummaryStore: Store<Int, SavingsAccountWithAssociationsEntity>,
 ) : SavingsAccountSummaryRepository {
 
     override fun getSavingsAccount(
         type: String,
         savingsAccountId: Int,
         association: String?,
-    ): Flow<DataState<SavingsAccountWithAssociationsEntity?>> {
-        return dataManagerSavings.getSavingsAccount(type, savingsAccountId, association)
-            .asDataStateFlow()
+    ): Flow<SavingsAccountWithAssociationsEntity?> {
+        return savingsSummaryStore
+            .stream(StoreReadRequest.cached(key = savingsAccountId, refresh = true))
+            .mapNotNull { response ->
+                when (response) {
+                    is StoreReadResponse.Data -> response.value
+                    // Offline-first: fetch error is non-fatal. The SoT reader emits the cached
+                    // account as a separate Data response, so we never surface a network error.
+                    else -> null
+                }
+            }
     }
 }

@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import com.mifos.room.entities.accounts.ClientAccounts
 import com.mifos.room.entities.accounts.GroupAccounts
@@ -26,25 +25,25 @@ import kotlinx.coroutines.flow.Flow
  */
 interface SyncGroupsDialogRepository {
 
-    fun syncGroupAccounts(groupId: Int): Flow<DataState<GroupAccounts>>
+    fun syncGroupAccounts(groupId: Int): Flow<GroupAccounts>
 
-    fun syncLoanById(loanId: Int): Flow<DataState<LoanWithAssociations>>
+    fun syncLoanById(loanId: Int): Flow<LoanWithAssociations>
 
-    fun syncLoanRepaymentTemplate(loanId: Int): Flow<DataState<LoanRepaymentTemplateEntity>>
+    fun syncLoanRepaymentTemplate(loanId: Int): Flow<LoanRepaymentTemplateEntity>
 
     fun syncSavingsAccount(
         type: String,
         savingsAccountId: Int,
         association: String?,
-    ): Flow<DataState<SavingsAccountWithAssociationsEntity>>
+    ): Flow<SavingsAccountWithAssociationsEntity>
 
     fun syncSavingsAccountTransactionTemplate(
         savingsAccountType: String,
         savingsAccountId: Int,
         transactionType: String?,
-    ): Flow<DataState<SavingsAccountTransactionTemplateEntity?>>
+    ): Flow<SavingsAccountTransactionTemplateEntity?>
 
-    fun getGroupWithAssociations(groupId: Int): Flow<DataState<GroupWithAssociations>>
+    fun getGroupWithAssociations(groupId: Int): Flow<GroupWithAssociations>
 
     suspend fun syncClientInDatabase(client: ClientEntity)
 

@@ -9,16 +9,16 @@
  */
 package com.mifos.feature.loan.loanCharge
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_failed_to_load_loan_charges
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_failed_to_load_loan_charges
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.domain.useCases.GetListOfLoanChargesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class LoanChargeViewModel(
@@ -41,18 +41,15 @@ class LoanChargeViewModel(
     }
 
     fun loadLoanChargesList() = viewModelScope.launch {
-        getListOfLoanChargesUseCase(loanAccountNumber).collect { result ->
-            when (result) {
-                is DataState.Error ->
-                    _loanChargeUiState.value =
-                        LoanChargeUiState.Error(Res.string.feature_loan_failed_to_load_loan_charges)
-
-                is DataState.Loading -> _loanChargeUiState.value = LoanChargeUiState.Loading
-
-                is DataState.Success ->
-                    _loanChargeUiState.value =
-                        LoanChargeUiState.LoanChargesList(result.data)
+        _loanChargeUiState.value = LoanChargeUiState.Loading
+        getListOfLoanChargesUseCase(loanAccountNumber)
+            .catch {
+                _loanChargeUiState.value =
+                    LoanChargeUiState.Error(Res.string.feature_loan_failed_to_load_loan_charges)
             }
-        }
+            .collect { charges ->
+                _loanChargeUiState.value =
+                    LoanChargeUiState.LoanChargesList(charges)
+            }
     }
 }

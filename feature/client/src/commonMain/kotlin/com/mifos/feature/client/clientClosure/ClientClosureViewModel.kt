@@ -12,13 +12,12 @@ package com.mifos.feature.client.clientClosure
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.util.NetworkMonitor
 import com.mifos.core.network.model.Narration
 import com.mifos.core.ui.components.ResultStatus
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.time.Clock
@@ -46,54 +45,42 @@ internal class ClientClosureViewModel(
             it.copy(dialogState = ClientClosureState.DialogState.Loading)
         }
 
-        val result = repo.getClientCloseTemplate()
-        when (result) {
-            is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        reasons = result.data.narrations,
-                        dialogState = null,
-                    )
-                }
+        try {
+            val result = repo.getClientCloseTemplate()
+            mutableStateFlow.update {
+                it.copy(
+                    reasons = result.narrations,
+                    dialogState = null,
+                )
             }
-
-            is DataState.Error -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = ClientClosureState.DialogState.Error(result.message),
-                    )
-                }
+        } catch (e: Exception) {
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ClientClosureState.DialogState.Error(e.message ?: ""),
+                )
             }
-
-            else -> Unit
         }
     }
 
     private suspend fun closeClient() {
         mutableStateFlow.update { it.copy(dialogState = ClientClosureState.DialogState.Loading) }
-        val result = repo.closeClient(
-            clientId = state.id,
-            closureDate = DateHelper.getDateAsStringFromLong(state.date),
-            closureReasonId = state.reasons[state.currentSelectedIndex].id,
-        )
-        when (result) {
-            is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = ClientClosureState.DialogState.ShowStatusDialog(ResultStatus.SUCCESS),
-                    )
-                }
+        try {
+            repo.closeClient(
+                clientId = state.id,
+                closureDate = DateHelper.getDateAsStringFromLong(state.date),
+                closureReasonId = state.reasons[state.currentSelectedIndex].id,
+            )
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ClientClosureState.DialogState.ShowStatusDialog(ResultStatus.SUCCESS),
+                )
             }
-
-            is DataState.Error -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        dialogState = ClientClosureState.DialogState.ShowStatusDialog(ResultStatus.FAILURE, result.message),
-                    )
-                }
+        } catch (e: Exception) {
+            mutableStateFlow.update {
+                it.copy(
+                    dialogState = ClientClosureState.DialogState.ShowStatusDialog(ResultStatus.FAILURE, e.message ?: ""),
+                )
             }
-
-            else -> Unit
         }
     }
 

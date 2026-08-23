@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.PathTrackingRepository
 import com.mifos.core.model.objects.users.UserLocation
 import kotlinx.coroutines.flow.Flow
@@ -18,6 +17,6 @@ class GetUserPathTrackingUseCase(
     private val repository: PathTrackingRepository,
 ) {
 
-    operator fun invoke(userId: Int): Flow<DataState<List<UserLocation>>> =
+    operator fun invoke(userId: Int): Flow<List<UserLocation>> =
         repository.getUserPathTracking(userId)
 }

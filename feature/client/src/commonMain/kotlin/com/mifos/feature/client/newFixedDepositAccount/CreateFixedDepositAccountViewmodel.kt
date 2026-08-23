@@ -9,14 +9,13 @@
  */
 package com.mifos.feature.client.newFixedDepositAccount
 
-import androidclient.feature.client.generated.resources.Res
-import androidclient.feature.client.generated.resources.feature_client_error_network_not_available
-import androidclient.feature.client.generated.resources.feature_fixed_account_created_successfully
+import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_client_error_network_not_available
+import kpt.feature.client.generated.resources.feature_fixed_account_created_successfully
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.Constants
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.FixedDepositRepository
 import com.mifos.core.data.util.NetworkMonitor
@@ -24,9 +23,10 @@ import com.mifos.core.model.objects.payloads.ChargeItem
 import com.mifos.core.model.objects.template.recurring.FieldOfficerOption
 import com.mifos.core.network.model.fixedDeposit.FixedDepositPayload
 import com.mifos.core.network.model.fixedDeposit.FixedDepositTemplate
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.core.ui.util.TextFieldsValidator
 import com.mifos.feature.client.fixedDepositAccount.FixedDepositAccountRoute
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -471,129 +471,108 @@ class CreateFixedDepositAccountViewmodel(
         )
         viewModelScope.launch {
             isOnline {
-                fixedDepositRepository.createFixedDepositAccount(payload).collect { dataState ->
-                    when (dataState) {
-                        is DataState.Error -> {
-                            if (dataState.exception is IllegalStateException) {
-                                mutableStateFlow.update {
-                                    it.copy(
-                                        dialogState = NewFixedDepositAccountState.DialogState.SuccessResponseStatus(
-                                            successStatus = false,
-                                            msg = dataState.message,
-                                        ),
-                                        launchEffectKey = Random.nextInt(),
-                                        isOverlayLoadingActive = false,
-                                    )
-                                }
-                            } else {
-                                mutableStateFlow.update {
-                                    it.copy(
-                                        screenState = NewFixedDepositAccountState.ScreenState.Error(
-                                            dataState.message,
-                                        ),
-                                        isOverlayLoadingActive = false,
-                                    )
-                                }
-                            }
-                        }
-
-                        DataState.Loading -> {
+                mutableStateFlow.update {
+                    it.copy(
+                        isOverlayLoadingActive = true,
+                    )
+                }
+                fixedDepositRepository.createFixedDepositAccount(payload)
+                    .catch { error ->
+                        if (error is IllegalStateException) {
                             mutableStateFlow.update {
                                 it.copy(
-                                    isOverlayLoadingActive = true,
+                                    dialogState = NewFixedDepositAccountState.DialogState.SuccessResponseStatus(
+                                        successStatus = false,
+                                        msg = error.message ?: "",
+                                    ),
+                                    launchEffectKey = Random.nextInt(),
+                                    isOverlayLoadingActive = false,
                                 )
                             }
-                        }
-
-                        is DataState.Success -> {
+                        } else {
                             mutableStateFlow.update {
                                 it.copy(
-                                    isOverlayLoadingActive = false,
-                                    launchEffectKey = Random.nextInt(),
-                                    dialogState = NewFixedDepositAccountState.DialogState.SuccessResponseStatus(
-                                        successStatus = true,
-                                        msg = getString(Res.string.feature_fixed_account_created_successfully),
+                                    screenState = NewFixedDepositAccountState.ScreenState.Error(
+                                        error.message ?: "",
                                     ),
+                                    isOverlayLoadingActive = false,
                                 )
                             }
                         }
                     }
-                }
+                    .collect { _ ->
+                        mutableStateFlow.update {
+                            it.copy(
+                                isOverlayLoadingActive = false,
+                                launchEffectKey = Random.nextInt(),
+                                dialogState = NewFixedDepositAccountState.DialogState.SuccessResponseStatus(
+                                    successStatus = true,
+                                    msg = getString(Res.string.feature_fixed_account_created_successfully),
+                                ),
+                            )
+                        }
+                    }
             }
         }
     }
 
     private fun loadFixedDepositTemplate() = viewModelScope.launch {
         isOnline {
+            mutableStateFlow.update {
+                it.copy(
+                    screenState = NewFixedDepositAccountState.ScreenState.Loading,
+                )
+            }
             fixedDepositRepository.getFixedDepositTemplate(
                 clientId = state.clientId,
-            ).collect { state ->
-                when (state) {
-                    is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                screenState = NewFixedDepositAccountState.ScreenState.Success,
-                                isOverlayLoadingActive = false,
-                                template = state.data,
-                            )
-                        }
-                    }
-
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                screenState = NewFixedDepositAccountState.ScreenState.Error(state.message),
-                            )
-                        }
-                    }
-
-                    DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                screenState = NewFixedDepositAccountState.ScreenState.Loading,
-                            )
-                        }
+            )
+                .catch { error ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            screenState = NewFixedDepositAccountState.ScreenState.Error(error.message ?: ""),
+                        )
                     }
                 }
-            }
+                .collect { template ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            screenState = NewFixedDepositAccountState.ScreenState.Success,
+                            isOverlayLoadingActive = false,
+                            template = template,
+                        )
+                    }
+                }
         }
     }
 
     private fun loadRecurringAccountTemplateWithProduct() = viewModelScope.launch {
         isOnline {
+            mutableStateFlow.update {
+                it.copy(
+                    isOverlayLoadingActive = true,
+                )
+            }
             fixedDepositRepository.getFixedDepositTemplate(
                 clientId = state.clientId,
                 productId = state.template.productOptions?.get(state.fixedDepositAccountDetail.productSelected)?.id,
-            ).collect { state ->
-                when (state) {
-                    is DataState.Success -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                screenState = NewFixedDepositAccountState.ScreenState.Success,
-                                isOverlayLoadingActive = false,
-                                template = state.data,
-                            )
-                        }
-                    }
-
-                    is DataState.Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                screenState = NewFixedDepositAccountState.ScreenState.Error(state.message),
-                                isOverlayLoadingActive = false,
-                            )
-                        }
-                    }
-
-                    DataState.Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                isOverlayLoadingActive = true,
-                            )
-                        }
+            )
+                .catch { error ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            screenState = NewFixedDepositAccountState.ScreenState.Error(error.message ?: ""),
+                            isOverlayLoadingActive = false,
+                        )
                     }
                 }
-            }
+                .collect { template ->
+                    mutableStateFlow.update {
+                        it.copy(
+                            screenState = NewFixedDepositAccountState.ScreenState.Success,
+                            isOverlayLoadingActive = false,
+                            template = template,
+                        )
+                    }
+                }
         }
     }
 

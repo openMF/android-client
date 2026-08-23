@@ -9,8 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.DataTableDataRepository
 import com.mifos.core.network.model.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +22,7 @@ class DeleteDataTableEntryUseCase(
         table: String,
         entity: Int,
         rowId: Int,
-    ): Flow<DataState<DeleteDataTablesDatatableAppTableIdDatatableIdResponse>> = flow {
+    ): Flow<DeleteDataTablesDatatableAppTableIdDatatableIdResponse> = flow {
         emit(repository.deleteDataTableEntry(table, entity, rowId))
-    }.asDataStateFlow()
+    }
 }

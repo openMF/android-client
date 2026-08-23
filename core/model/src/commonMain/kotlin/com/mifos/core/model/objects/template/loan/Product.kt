@@ -9,15 +9,12 @@
  */
 package com.mifos.core.model.objects.template.loan
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Created by Rajan Maurya on 16/07/16.
  */
 @Serializable
-@Parcelize
 data class Product(
     var id: Int? = null,
 
@@ -114,4 +111,4 @@ data class Product(
     var accountMovesOutOfNPAOnlyOnArrearsCompletion: Boolean? = null,
 
     var allowAttributeOverrides: AllowAttributeOverrides? = null,
-) : Parcelable
+)

@@ -9,16 +9,13 @@
  */
 package com.mifos.room.entities.accounts.savings
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Created by Pronay Sarker on 15/08/2024 (9:49 PM)
  */
-@Parcelize
 @Serializable
 data class SavingsSummaryData(
     val id: Int,
     val type: SavingAccountDepositTypeEntity,
-) : Parcelable
+)

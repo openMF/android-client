@@ -13,10 +13,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-android {
-    namespace = "com.mifos.feature.groups"
-}
-
 kotlin{
     sourceSets{
         commonMain.dependencies {
@@ -27,6 +23,7 @@ kotlin{
             implementation(projects.core.model)
             implementation(projects.core.domain)
             implementation(projects.core.data)
+            implementation(projects.core.datastore)
             implementation(projects.core.database)
             implementation(projects.core.designsystem)
 
@@ -37,6 +34,7 @@ kotlin{
         }
 
         androidMain.dependencies {
+            implementation(compose.uiTooling)
             implementation(compose.ui)
             implementation(compose.material3)
             implementation(libs.androidx.compose.foundation)
@@ -44,6 +42,9 @@ kotlin{
     }
 }
 
-dependencies {
-    debugImplementation(compose.uiTooling)
+
+compose.resources {
+    publicResClass = true
+    generateResClass = always
+    packageOfResClass = "kpt.feature.groups.generated.resources"
 }

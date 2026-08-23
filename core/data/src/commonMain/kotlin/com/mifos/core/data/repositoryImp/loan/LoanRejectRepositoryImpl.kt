@@ -9,14 +9,13 @@
  */
 package com.mifos.core.data.repositoryImp.loan
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.LoanRejectRepository
 import com.mifos.core.data.util.NetworkMonitor
-import com.mifos.core.data.util.runAsDataState
+import com.mifos.core.data.util.runSuspendCall
 import com.mifos.core.model.objects.account.loan.RejectLoanInput
 import com.mifos.core.network.datamanager.DataManagerLoan
 import com.mifos.core.network.dto.loans.RejectLoanRequestDto
-import template.core.base.common.manager.DispatcherManager
+import kpt.core.base.common.manager.DispatcherManager
 
 class LoanRejectRepositoryImpl(
     private val dataManagerLoan: DataManagerLoan,
@@ -26,8 +25,8 @@ class LoanRejectRepositoryImpl(
     override suspend fun rejectLoan(
         loanId: Int,
         request: RejectLoanInput,
-    ): DataState<Unit> {
-        return runAsDataState(
+    ): Unit {
+        return runSuspendCall(
             networkMonitor = networkMonitor,
             context = dispatcher.io,
         ) {

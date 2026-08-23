@@ -12,10 +12,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
-android {
-    namespace = "com.mifos.feature.center"
-}
-
 kotlin{
     sourceSets{
         commonMain.dependencies {
@@ -38,6 +34,9 @@ kotlin{
     }
 }
 
-dependencies {
-    debugImplementation(compose.uiTooling)
+
+compose.resources {
+    publicResClass = true
+    generateResClass = always
+    packageOfResClass = "kpt.feature.center.generated.resources"
 }

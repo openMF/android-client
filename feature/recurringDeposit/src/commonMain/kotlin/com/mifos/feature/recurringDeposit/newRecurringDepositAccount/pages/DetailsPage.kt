@@ -9,16 +9,16 @@
  */
 package com.mifos.feature.recurringDeposit.newRecurringDepositAccount.pages
 
-import androidclient.feature.recurringdeposit.generated.resources.Res
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_back
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_cancel
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_external_id
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_field_officer
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_next
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_product_name
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_select
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_details
-import androidclient.feature.recurringdeposit.generated.resources.feature_recurring_deposit_submitted_on
+import kpt.feature.recurringdeposit.generated.resources.Res
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_back
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_cancel
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_external_id
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_field_officer
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_next
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_product_name
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_select
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_step_details
+import kpt.feature.recurringdeposit.generated.resources.feature_recurring_deposit_submitted_on
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -47,7 +47,8 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountAction
 import com.mifos.feature.recurringDeposit.newRecurringDepositAccount.RecurringAccountState
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -110,7 +111,7 @@ fun DetailsPage(
         }
     }
 
-    Column(Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md)) {
+    Column(Modifier.fillMaxSize().padding(bottom = LocalKptSpacing.current.md)) {
         Column(
             modifier = modifier.weight(1f).verticalScroll(rememberScrollState()),
         ) {
@@ -118,7 +119,7 @@ fun DetailsPage(
                 text = stringResource(Res.string.feature_recurring_deposit_step_details),
                 style = MifosTypography.labelLargeEmphasized,
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
             MifosTextFieldDropdown(
                 value = if (state.recurringDepositAccountDetail.loanProductSelected == -1) {
                     ""
@@ -154,7 +155,7 @@ fun DetailsPage(
                     },
                 )
 
-                Spacer(Modifier.height(KptTheme.spacing.md))
+                Spacer(Modifier.height(LocalKptSpacing.current.md))
                 MifosTextFieldDropdown(
                     value = if (state.recurringDepositAccountDetail.fieldOfficerIndex == -1) {
                         ""
@@ -193,7 +194,7 @@ fun DetailsPage(
                         ),
                     ),
                 )
-                Spacer(Modifier.height(KptTheme.spacing.md))
+                Spacer(Modifier.height(LocalKptSpacing.current.md))
             }
         }
 
@@ -202,7 +203,7 @@ fun DetailsPage(
             secondBtnText = stringResource(Res.string.feature_recurring_deposit_next),
             onFirstBtnClick = { onAction(RecurringAccountAction.NavigateBack) },
             onSecondBtnClick = { onAction(RecurringAccountAction.RecurringAccountDetailsAction.OnDetailNext) },
-            modifier = Modifier.padding(top = KptTheme.spacing.sm),
+            modifier = Modifier.padding(top = LocalKptSpacing.current.sm),
         )
     }
 }

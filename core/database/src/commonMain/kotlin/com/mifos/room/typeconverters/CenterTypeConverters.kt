@@ -14,36 +14,36 @@ import com.mifos.room.entities.group.CenterDateEntity
 import com.mifos.room.entities.group.GroupDateEntity
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import template.core.base.database.TypeConverter
+import androidx.room3.ColumnTypeConverter
 
 class CenterTypeConverters {
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromCenterDate(centerDate: CenterDateEntity?): String? {
         return centerDate?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toCenterDate(json: String?): CenterDateEntity? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromDepositType(type: SavingAccountDepositTypeEntity?): String? {
         return type?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toDepositType(json: String?): SavingAccountDepositTypeEntity? {
         return json?.let { Json.decodeFromString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromGroupDate(groupDate: GroupDateEntity?): String? {
         return groupDate?.let { Json.encodeToString(it) }
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun toGroupDate(json: String?): GroupDateEntity? {
         return json?.let { Json.decodeFromString(it) }
     }

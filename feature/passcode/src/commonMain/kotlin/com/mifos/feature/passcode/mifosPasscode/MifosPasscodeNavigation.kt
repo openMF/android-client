@@ -17,7 +17,7 @@ import androidx.navigation.toRoute
 import com.mifos.core.data.repository.UserVerificationRepository
 import kotlinx.serialization.Serializable
 import org.koin.compose.koinInject
-import template.core.base.ui.composableWithSlideTransitions
+import kpt.core.base.ui.nav.composableWithSlideTransitions
 
 /**
  * Root passcode destination — shown when the app launches with an existing

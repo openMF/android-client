@@ -162,6 +162,7 @@ import com.mifos.core.data.repositoryImp.loan.LoanReschedulesRepositoryImpl
 import com.mifos.core.data.repositoryImp.loan.LoanTransactionsRepositoryImp
 import com.mifos.core.data.util.NetworkMonitor
 import kotlinx.coroutines.CoroutineDispatcher
+import kpt.core.store.AppStoreRegistry
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.bind
@@ -176,8 +177,24 @@ val RepositoryModule = module {
     singleOf(::SearchRepositoryImp) bind SearchRepository::class
 
     // Client
-    singleOf(::ClientDetailsRepositoryImp) bind ClientDetailsRepository::class
-    singleOf(::ClientListRepositoryImp) bind ClientListRepository::class
+    // Offline-first: read through the Store5 client store (cache-first) — singleOf can't resolve a qualified arg.
+    single<ClientDetailsRepository> {
+        ClientDetailsRepositoryImp(
+            dataManagerClient = get(),
+            clientStore = get(AppStoreRegistry.Clients),
+        )
+    }
+    // Offline-first paged client list: read through the qualified Store5 paged store
+    // (ClientListPage) via asPagingScreenStream. singleOf can't resolve the qualified store
+    // arg, so this one is wired explicitly.
+    single<ClientListRepository> {
+        ClientListRepositoryImp(
+            clientListPageStore = get(AppStoreRegistry.ClientListPage),
+            networkMonitor = get(),
+            fetchedAtRepository = get(),
+            dataManagerClient = get(),
+        )
+    }
     singleOf(::ChargeRepositoryImp) bind ChargeRepository::class
     singleOf(::ClientIdentifiersRepositoryImp) bind ClientIdentifiersRepository::class
     singleOf(::CreateNewClientRepositoryImp) bind CreateNewClientRepository::class
@@ -186,12 +203,38 @@ val RepositoryModule = module {
 
     // Center
     singleOf(::CenterDetailsRepositoryImp) bind CenterDetailsRepository::class
-    singleOf(::CenterListRepositoryImp) bind CenterListRepository::class
+    // Offline-first paged center list: read through the qualified Store5 paged store
+    // (CenterListPage) via asPagingScreenStream. singleOf can't resolve the qualified store
+    // arg, so this one is wired explicitly (mirrors ClientListRepository / GroupsListRepository).
+    single<CenterListRepository> {
+        CenterListRepositoryImp(
+            centerListPageStore = get(AppStoreRegistry.CenterListPage),
+            networkMonitor = get(),
+            fetchedAtRepository = get(),
+            dataManagerCenter = get(),
+        )
+    }
     singleOf(::CreateNewCenterRepositoryImp) bind CreateNewCenterRepository::class
-    singleOf(::GroupsListRepositoryImpl) bind GroupsListRepository::class
+    // Offline-first paged group list: read through the qualified Store5 paged store
+    // (GroupListPage) via asPagingScreenStream. singleOf can't resolve the qualified store
+    // arg, so this one is wired explicitly (mirrors ClientListRepository above).
+    single<GroupsListRepository> {
+        GroupsListRepositoryImpl(
+            groupListPageStore = get(AppStoreRegistry.GroupListPage),
+            networkMonitor = get(),
+            fetchedAtRepository = get(),
+            dataManager = get(),
+        )
+    }
 
     // Group
-    singleOf(::GroupDetailsRepositoryImp) bind GroupDetailsRepository::class
+    // Offline-first: read through the Store5 group store (cache-first).
+    single<GroupDetailsRepository> {
+        GroupDetailsRepositoryImp(
+            groupStore = get(AppStoreRegistry.Groups),
+            dataManagerGroups = get(),
+        )
+    }
     singleOf(::GroupListRepositoryImp) bind GroupListRepository::class
     singleOf(::GroupLoanAccountRepositoryImp) bind GroupLoanAccountRepository::class
     singleOf(::CreateNewGroupRepositoryImp) bind CreateNewGroupRepository::class
@@ -205,7 +248,14 @@ val RepositoryModule = module {
     singleOf(::LoanChargeRepositoryImp) bind LoanChargeRepository::class
     singleOf(::LoanRepaymentRepositoryImp) bind LoanRepaymentRepository::class
     singleOf(::LoanRepaymentScheduleRepositoryImp) bind LoanRepaymentScheduleRepository::class
-    singleOf(::LoanTransactionsRepositoryImp) bind LoanTransactionsRepository::class
+    // Offline-first: inject the qualified Store5 loan-transaction store (cache-first read path)
+    // rather than the raw DataManager — see LoanTransactionsRepositoryImp. singleOf can't resolve a
+    // qualified constructor arg, so this one is wired explicitly.
+    single<LoanTransactionsRepository> {
+        LoanTransactionsRepositoryImp(
+            loanTransactionStore = get(AppStoreRegistry.LoanTransactions),
+        )
+    }
     singleOf(::LoanReschedulesRepositoryImpl) bind LoanReschedulesRepository::class
     singleOf(::LoanChargeOffRepositoryImpl) bind LoanChargeOffRepository::class
     singleOf(::LoanDisburseRepositoryImpl) bind LoanDisburseRepository::class
@@ -220,7 +270,12 @@ val RepositoryModule = module {
     singleOf(::SavingsAccountRepositoryImp) bind SavingsAccountRepository::class
     singleOf(::SavingsAccountActivateRepositoryImp) bind SavingsAccountActivateRepository::class
     singleOf(::SavingsAccountApprovalRepositoryImp) bind SavingsAccountApprovalRepository::class
-    singleOf(::SavingsAccountSummaryRepositoryImp) bind SavingsAccountSummaryRepository::class
+    // Offline-first: full-entity savings-summary store (cache-first).
+    single<SavingsAccountSummaryRepository> {
+        SavingsAccountSummaryRepositoryImp(
+            savingsSummaryStore = get(AppStoreRegistry.SavingsAccountSummary),
+        )
+    }
     singleOf(::SavingsAccountTransactionRepositoryImp) bind SavingsAccountTransactionRepository::class
     singleOf(::SavingsAccountTransactionReceiptRepositoryImpl) bind SavingsAccountTransactionReceiptRepository::class
 
@@ -236,21 +291,46 @@ val RepositoryModule = module {
 
     // Others
     singleOf(::ActivateRepositoryImp) bind ActivateRepository::class
-    singleOf(::CheckerInboxRepositoryImp) bind CheckerInboxRepository::class
+    // Offline-first: read through the Store5 checker-task store (cache-first).
+    single<CheckerInboxRepository> {
+        CheckerInboxRepositoryImp(
+            checkerTaskStore = get(AppStoreRegistry.CheckerTasks),
+            dataManagerCheckerInbox = get(),
+        )
+    }
     singleOf(::CheckerInboxTasksRepositoryImp) bind CheckerInboxTasksRepository::class
     singleOf(::DataTableDataRepositoryImp) bind DataTableDataRepository::class
     singleOf(::DataTableListRepositoryImp) bind DataTableListRepository::class
     singleOf(::DataTableRepositoryImp) bind DataTableRepository::class
     singleOf(::DataTableRowDialogRepositoryImp) bind DataTableRowDialogRepository::class
     singleOf(::DocumentCreateUpdateRepositoryImp) bind DocumentCreateUpdateRepository::class
-    singleOf(::DocumentListRepositoryImp) bind DocumentListRepository::class
+    // Offline-first: document-list store (cache-first).
+    single<DocumentListRepository> {
+        DocumentListRepositoryImp(
+            documentStore = get(AppStoreRegistry.Documents),
+            dataManagerDocument = get(),
+        )
+    }
     singleOf(::IndividualCollectionSheetDetailsRepositoryImp) bind IndividualCollectionSheetDetailsRepository::class
     singleOf(::NewIndividualCollectionSheetRepositoryImp) bind NewIndividualCollectionSheetRepository::class
     singleOf(::GenerateCollectionSheetRepositoryImp) bind GenerateCollectionSheetRepository::class
-    singleOf(::NoteRepositoryImp) bind NoteRepository::class
+    // Offline-first: note-list store (cache-first).
+    single<NoteRepository> {
+        NoteRepositoryImp(
+            dataManagerNote = get(),
+            noteStore = get(AppStoreRegistry.Notes),
+            networkMonitor = get(),
+            dispatcher = get(),
+        )
+    }
     singleOf(::OfflineDashboardRepositoryImp) bind OfflineDashboardRepository::class
     singleOf(::PathTrackingRepositoryImp) bind PathTrackingRepository::class
-    singleOf(::ReportCategoryRepositoryImp) bind ReportCategoryRepository::class
+    // Offline-first: report-category store (cache-first).
+    single<ReportCategoryRepository> {
+        ReportCategoryRepositoryImp(
+            reportCategoryStore = get(AppStoreRegistry.ReportCategories),
+        )
+    }
     singleOf(::ReportDetailRepositoryImp) bind ReportDetailRepository::class
     singleOf(::SearchRepositoryImp) bind SearchRepository::class
     singleOf(::SignatureRepositoryImp) bind SignatureRepository::class

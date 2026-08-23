@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.passcode.mifosPasscode
 
-import androidclient.feature.passcode.generated.resources.Res
-import androidclient.feature.passcode.generated.resources.feature_authenticator_setup_biometrics_prompt
+import kpt.feature.passcode.generated.resources.Res
+import kpt.feature.passcode.generated.resources.feature_authenticator_setup_biometrics_prompt
 import androidx.lifecycle.viewModelScope
 import com.mifos.core.data.repository.AppLockRepository
 import kotlinx.coroutines.flow.update
@@ -22,7 +22,7 @@ import org.mifos.authenticator.biometrics.platformAuthenticator.PlatformAuthenti
 import org.mifos.authenticator.passcode.PasscodeManager
 import org.mifos.authenticator.passcode.PasscodeResult
 import org.mifos.authenticator.passcode.PasscodeStep
-import template.core.base.ui.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 
 /**
  * ViewModel for [MifosPasscode].

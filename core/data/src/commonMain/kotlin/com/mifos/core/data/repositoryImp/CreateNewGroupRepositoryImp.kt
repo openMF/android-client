@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.CreateNewGroupRepository
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.core.network.datamanager.DataManagerGroups
@@ -27,9 +25,9 @@ class CreateNewGroupRepositoryImp(
     private val dataManagerGroups: DataManagerGroups,
 ) : CreateNewGroupRepository {
 
-    override fun offices(): Flow<DataState<List<OfficeEntity>>> {
+    override fun offices(): Flow<List<OfficeEntity>> {
         return dataManagerOffices.fetchOffices()
-            .asDataStateFlow()
+            
     }
 
     override suspend fun createGroup(groupPayload: GroupPayloadEntity): SaveResponse {

@@ -9,17 +9,17 @@
  */
 package com.mifos.feature.loan.loanAccountProfile
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_profile_account
-import androidclient.feature.loan.generated.resources.feature_loan_profile_action_repayment
-import androidclient.feature.loan.generated.resources.feature_loan_profile_error_details_not_found
-import androidclient.feature.loan.generated.resources.feature_loan_profile_label_arrears
-import androidclient.feature.loan.generated.resources.feature_loan_profile_label_balance
-import androidclient.feature.loan.generated.resources.feature_loan_profile_label_client_name_placeholder
-import androidclient.feature.loan.generated.resources.feature_loan_profile_label_overpaid_by
-import androidclient.feature.loan.generated.resources.feature_loan_profile_open_actions
-import androidclient.feature.loan.generated.resources.feature_loan_profile_section_account_overview
-import androidclient.feature.loan.generated.resources.feature_loan_profile_section_actions_details
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_profile_account
+import kpt.feature.loan.generated.resources.feature_loan_profile_action_repayment
+import kpt.feature.loan.generated.resources.feature_loan_profile_error_details_not_found
+import kpt.feature.loan.generated.resources.feature_loan_profile_label_arrears
+import kpt.feature.loan.generated.resources.feature_loan_profile_label_balance
+import kpt.feature.loan.generated.resources.feature_loan_profile_label_client_name_placeholder
+import kpt.feature.loan.generated.resources.feature_loan_profile_label_overpaid_by
+import kpt.feature.loan.generated.resources.feature_loan_profile_open_actions
+import kpt.feature.loan.generated.resources.feature_loan_profile_section_account_overview
+import kpt.feature.loan.generated.resources.feature_loan_profile_section_actions_details
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -73,7 +73,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptShapes
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun LoanAccountProfileScreen(
@@ -170,7 +173,7 @@ private fun LoanAccountContent(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = KptTheme.spacing.md),
+            .padding(horizontal = LocalKptSpacing.current.md),
     ) {
         Text(
             text = stringResource(Res.string.feature_loan_profile_account),
@@ -185,7 +188,7 @@ private fun LoanAccountContent(
             onArrowClick = { onAction(LoanAccountAction.OnArrowClick) },
         )
 
-        Spacer(Modifier.height(KptTheme.spacing.md))
+        Spacer(Modifier.height(LocalKptSpacing.current.md))
 
         MifosButton(
             onClick = { onAction(LoanAccountAction.OnNextActionClick) },
@@ -194,11 +197,11 @@ private fun LoanAccountContent(
             Text(
                 text = stringResource(state.nextActionButtonRes),
                 style = MifosTypography.labelMediumEmphasized,
-                color = KptTheme.colorScheme.onPrimary,
+                color = LocalKptColors.current.onPrimary,
             )
         }
 
-        Spacer(Modifier.height(KptTheme.spacing.lg))
+        Spacer(Modifier.height(LocalKptSpacing.current.lg))
 
         Text(
             text = stringResource(Res.string.feature_loan_profile_section_actions_details),
@@ -215,7 +218,7 @@ private fun LoanAccountContent(
                     TextUtil(
                         text = stringResource(item.subTitle),
                         style = MifosTypography.bodySmall,
-                        color = KptTheme.colorScheme.secondary,
+                        color = LocalKptColors.current.secondary,
                     ),
                 ),
                 rightValues = emptyList(),
@@ -225,7 +228,7 @@ private fun LoanAccountContent(
             )
         }
 
-        Spacer(Modifier.height(KptTheme.spacing.md))
+        Spacer(Modifier.height(LocalKptSpacing.current.md))
     }
 }
 
@@ -254,16 +257,16 @@ private fun LoanAccountTopCard(
             .fillMaxWidth()
             .clickable { onClick() },
         colors = CardColors(
-            containerColor = KptTheme.colorScheme.primary,
-            contentColor = KptTheme.colorScheme.onPrimary,
-            disabledContainerColor = KptTheme.colorScheme.primary,
-            disabledContentColor = KptTheme.colorScheme.onPrimary,
+            containerColor = LocalKptColors.current.primary,
+            contentColor = LocalKptColors.current.onPrimary,
+            disabledContainerColor = LocalKptColors.current.primary,
+            disabledContentColor = LocalKptColors.current.onPrimary,
         ),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(KptTheme.spacing.lg),
+                .padding(LocalKptSpacing.current.lg),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -275,16 +278,16 @@ private fun LoanAccountTopCard(
                             loanAccount.loanProductName?.uppercase().orEmpty()
                         } ${loanAccount.accountNo}".trim(),
                         style = MifosTypography.titleMediumEmphasized,
-                        color = KptTheme.colorScheme.onPrimary,
+                        color = LocalKptColors.current.onPrimary,
                     )
 
-                    Spacer(Modifier.height(KptTheme.spacing.xs))
+                    Spacer(Modifier.height(LocalKptSpacing.current.xs))
 
                     Text(
                         text = loanAccount.clientName
                             ?: stringResource(Res.string.feature_loan_profile_label_client_name_placeholder),
                         style = MifosTypography.bodyMedium,
-                        color = KptTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
+                        color = LocalKptColors.current.onPrimary.copy(alpha = 0.8f),
                     )
                 }
 
@@ -293,7 +296,7 @@ private fun LoanAccountTopCard(
                     contentDescription = stringResource(Res.string.feature_loan_profile_open_actions),
                     modifier = Modifier.size(DesignToken.sizes.iconSmall)
                         .clickable { onArrowClick() },
-                    tint = KptTheme.colorScheme.onPrimary.copy(alpha = 0.6f),
+                    tint = LocalKptColors.current.onPrimary.copy(alpha = 0.6f),
                 )
             }
 
@@ -301,35 +304,35 @@ private fun LoanAccountTopCard(
 
             Box(
                 modifier = Modifier
-                    .clip(KptTheme.shapes.large)
+                    .clip(LocalKptShapes.current.large)
                     .background(loanAccount.status.getLoanStatus().color)
                     .padding(
                         horizontal = DesignToken.padding.medium,
-                        vertical = KptTheme.spacing.xs,
+                        vertical = LocalKptSpacing.current.xs,
                     ),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = stringResource(loanAccount.status.getLoanStatus().label).uppercase(),
-                    color = KptTheme.colorScheme.onPrimary,
+                    color = LocalKptColors.current.onPrimary,
                     style = MifosTypography.labelSmallEmphasized,
                     fontWeight = FontWeight.Bold,
                 )
             }
 
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
 
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(KptTheme.shapes.medium)
-                    .background(KptTheme.colorScheme.surface.copy(alpha = 0.15f))
-                    .padding(KptTheme.spacing.md),
+                    .clip(LocalKptShapes.current.medium)
+                    .background(LocalKptColors.current.surface.copy(alpha = 0.15f))
+                    .padding(LocalKptSpacing.current.md),
             ) {
                 Text(
                     text = stringResource(Res.string.feature_loan_profile_section_account_overview),
                     style = MifosTypography.labelSmallEmphasized,
-                    color = KptTheme.colorScheme.onSurface.copy(alpha = 0.8f),
+                    color = LocalKptColors.current.onSurface.copy(alpha = 0.8f),
                 )
 
                 Spacer(Modifier.height(DesignToken.padding.medium))
@@ -351,7 +354,7 @@ private fun LoanAccountTopCard(
 private fun OverviewRow(
     label: String,
     value: String,
-    valueColor: Color = KptTheme.colorScheme.onPrimary,
+    valueColor: Color = LocalKptColors.current.onPrimary,
 ) {
     Row(
         modifier = Modifier
@@ -362,7 +365,7 @@ private fun OverviewRow(
         Text(
             text = label,
             style = MifosTypography.bodySmall,
-            color = KptTheme.colorScheme.onPrimary.copy(alpha = 0.9f),
+            color = LocalKptColors.current.onPrimary.copy(alpha = 0.9f),
         )
         Text(
             text = value,

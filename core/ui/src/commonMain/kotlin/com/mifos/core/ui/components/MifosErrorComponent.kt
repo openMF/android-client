@@ -9,11 +9,11 @@
  */
 package com.mifos.core.ui.components
 
-import androidclient.core.ui.generated.resources.Res
-import androidclient.core.ui.generated.resources.core_ui_no_data
-import androidclient.core.ui.generated.resources.core_ui_no_internet
-import androidclient.core.ui.generated.resources.core_ui_retry
-import androidclient.core.ui.generated.resources.core_ui_something_went_wrong
+import kpt.core.ui.generated.resources.Res
+import kpt.core.ui.generated.resources.core_ui_no_data
+import kpt.core.ui.generated.resources.core_ui_no_internet
+import kpt.core.ui.generated.resources.core_ui_retry
+import kpt.core.ui.generated.resources.core_ui_something_went_wrong
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -36,7 +36,8 @@ import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.ui.util.DevicePreview
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @Composable
 fun MifosErrorComponent(
@@ -162,7 +163,7 @@ fun EmptyDataComponentWithModifiedMessageAndIcon(
             text = if (isEmptyData) message else stringResource(Res.string.core_ui_something_went_wrong),
             style = TextStyle(fontSize = 20.sp),
             textAlign = TextAlign.Center,
-            color = KptTheme.colorScheme.error,
+            color = LocalKptColors.current.error,
 
         )
     }

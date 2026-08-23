@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.runreport.client.ClientReportTypeItem
 import kotlinx.coroutines.flow.Flow
 
@@ -22,5 +21,5 @@ interface ReportCategoryRepository {
         reportCategory: String,
         genericResultSet: Boolean,
         parameterType: Boolean,
-    ): Flow<DataState<List<ClientReportTypeItem>>>
+    ): Flow<List<ClientReportTypeItem>>
 }

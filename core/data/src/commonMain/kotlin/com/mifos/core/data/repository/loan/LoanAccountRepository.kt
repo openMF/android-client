@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository.loan
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
 import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.network.model.LoansPayload
@@ -22,15 +21,15 @@ import kotlinx.coroutines.flow.Flow
  */
 interface LoanAccountRepository {
 
-    fun allLoans(): Flow<DataState<List<LoanProducts>>>
+    fun allLoans(): Flow<List<LoanProducts>>
 
-    fun getLoansAccountTemplate(clientId: Int, productId: Int): Flow<DataState<LoanTemplate>>
+    fun getLoansAccountTemplate(clientId: Int, productId: Int): Flow<LoanTemplate>
 
-    fun createLoansAccount(loansPayload: LoansPayload): Flow<DataState<HttpResponse>>
+    fun createLoansAccount(loansPayload: LoansPayload): Flow<HttpResponse>
 
     /**
      * Calculate loan repayment schedule without creating the loan.
      * Used to preview the schedule before submitting the loan application.
      */
-    fun calculateLoanSchedule(loansPayload: LoansPayload): Flow<DataState<RepaymentSchedule>>
+    fun calculateLoanSchedule(loansPayload: LoansPayload): Flow<RepaymentSchedule>
 }

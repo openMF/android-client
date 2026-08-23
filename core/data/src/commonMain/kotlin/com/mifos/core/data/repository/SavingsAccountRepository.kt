@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.organisations.ProductSavings
 import com.mifos.core.model.objects.payloads.SavingsPayload
 import com.mifos.room.entities.client.Savings
@@ -21,19 +20,19 @@ import kotlinx.coroutines.flow.Flow
  */
 interface SavingsAccountRepository {
 
-    fun getSavingsAccounts(): Flow<DataState<List<ProductSavings>>>
+    fun getSavingsAccounts(): Flow<List<ProductSavings>>
 
-    fun getSavingsAccountTemplate(): Flow<DataState<SavingProductsTemplate>>
+    fun getSavingsAccountTemplate(): Flow<SavingProductsTemplate>
 
     fun getClientSavingsAccountTemplateByProduct(
         clientId: Int,
         productId: Int,
-    ): Flow<DataState<SavingProductsTemplate>>
+    ): Flow<SavingProductsTemplate>
 
     fun getGroupSavingsAccountTemplateByProduct(
         groupId: Int,
         productId: Int,
-    ): Flow<DataState<SavingProductsTemplate>>
+    ): Flow<SavingProductsTemplate>
 
-    fun createSavingsAccount(savingsPayload: SavingsPayload?): Flow<DataState<Savings>>
+    fun createSavingsAccount(savingsPayload: SavingsPayload?): Flow<Savings>
 }

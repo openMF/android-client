@@ -9,15 +9,12 @@
  */
 package com.mifos.room.entities.collectionsheet
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.accounts.savings.SavingAccountCurrencyEntity
 import kotlinx.serialization.Serializable
 
 /**
  * Created by Tarun on 31-07-17.
  */
-@Parcelize
 @Serializable
 data class SavingsCollectionSheet(
     // The accountId is of String type only. It's not a mistake.
@@ -36,4 +33,4 @@ data class SavingsCollectionSheet(
     val productName: String? = null,
 
     val savingsId: Int = 0,
-) : Parcelable
+)

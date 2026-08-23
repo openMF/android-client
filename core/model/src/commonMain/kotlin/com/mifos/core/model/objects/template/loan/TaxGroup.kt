@@ -9,17 +9,14 @@
  */
 package com.mifos.core.model.objects.template.loan
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
 
 /**
  * Created by Rajan Maurya on 16/07/16.
  */
 @Serializable
-@Parcelize
 data class TaxGroup(
     var id: Int? = null,
 
     var name: String? = null,
-) : Parcelable
+)

@@ -14,23 +14,44 @@ import com.mifos.core.data.repository.AppLockRepository
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.datastore.model.AppSettings
 import com.mifos.core.model.objects.users.User
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kpt.core.base.store.infra.StoreCacheManager
 import org.mifos.authenticator.biometrics.BiometricStorageAdapter
 import org.mifos.authenticator.passcode.PasscodeManager
 import org.mifos.authenticator.passcode.PasscodeStorageAdapter
 
+/**
+ * offline-first-template-migration 02-store-infra-screenstate T5: this file's real
+ * fork logic (biometric/passcode/session/app-lock logout sequence) was silently replaced
+ * by the 01-template-adoption sync with the template's generic demo `RootNavViewModel`
+ * (which queries `firstTimeUser`/`passcode`/`isUnlocked`/`activeUserId` — fields that don't
+ * exist on the fork's real `User` model at all, since it's wired to the template's own
+ * `kpt.core.data.user.UserDataRepository` demo type, not this app's real auth stack).
+ * Restored here from the fork's pre-sync `dev` content, verified against the CURRENT
+ * (post-Phase-1) shape of every dependency it uses — [PasscodeManager]/[PasscodeStorageAdapter]/
+ * [BiometricStorageAdapter] are external-library types (still resolve unchanged),
+ * [AppLockRepository] and [UserPreferencesRepository] are unchanged fork interfaces — plus
+ * the D7 [StoreCacheManager.clearAll] cache-clear this task adds to the logout sequence.
+ *
+ * [RootNavState] intentionally stays the fork's real 3-case shape (Splash/AuthenticateUser/
+ * UserAuthenticated) rather than the template demo's 5-case shape (which added ShowOnboarding/
+ * UserLocked branches that were dead no-ops in `RootNavScreen.kt` even in the template's own
+ * version) — field-officer-app has no onboarding flow and gates passcode entry inside
+ * `feature/passcode`'s own screens, not via a separate RootNavState.
+ */
 class RootNavViewModel(
     private val userDataRepository: UserPreferencesRepository,
     private val appLockRepository: AppLockRepository,
     private val passcodeManager: PasscodeManager,
     private val biometricStorageAdapter: BiometricStorageAdapter,
     private val passcodeStorageAdapter: PasscodeStorageAdapter,
+    private val storeCacheManager: StoreCacheManager, // D7 — added (offline-first-template-migration T5)
 ) : BaseViewModel<RootNavState, Unit, RootNavAction>(
     initialState = RootNavState.Splash,
 ) {
@@ -83,20 +104,22 @@ class RootNavViewModel(
 
     /**
      * Full-wipe logout. Runs the following in order:
-     *  1. Clears the biometric registration blob (defense-in-depth; the
-     *     library's `isRegistered` flow isn't updated via this path — fine
-     *     because we're logging out and will re-init on next user session).
-     *  2. Clears the saved passcode via [PasscodeManager.logOut].
-     *  3. Clears the user session via `UserPreferencesRepository`.
-     *  4. Clears the app-lock state via [AppLockRepository].
-     *  5. Transitions the root nav back to [RootNavState.AuthenticateUser].
+     *  1. Clears every registered [StoreCacheManager] store (D7 — added here) so cached
+     *     client roster / collection sheets / loan data do NOT leak across officer sessions.
+     *  2. Clears the biometric registration blob (defense-in-depth; the library's
+     *     `isRegistered` flow isn't updated via this path — fine because we're logging
+     *     out and will re-init on next user session).
+     *  3. Clears the saved passcode via [PasscodeManager.logOut].
+     *  4. Clears the user session via `UserPreferencesRepository`.
+     *  5. Clears the app-lock state via [AppLockRepository].
+     *  6. Transitions the root nav back to [RootNavState.AuthenticateUser].
      *
-     * Fires either from the explicit logout button (via
-     * [RootNavAction.LogOutUser]) or from the init-time check that detects an
-     * authenticated user with no passcode set.
+     * Fires either from the explicit logout button (via [RootNavAction.LogOutUser]) or
+     * from the init-time check that detects an authenticated user with no passcode set.
      */
     private fun logOut() {
         viewModelScope.launch {
+            storeCacheManager.clearAll() // D7 — clear cached client/collection/loan data
             biometricStorageAdapter.deleteRegistrationData()
             passcodeManager.logOut()
             userDataRepository.logOut()

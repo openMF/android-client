@@ -9,17 +9,17 @@
  */
 package com.mifos.feature.document.documentList
 
-import androidclient.feature.document.generated.resources.Res
-import androidclient.feature.document.generated.resources.feature_document_download_document
-import androidclient.feature.document.generated.resources.feature_document_download_successful
-import androidclient.feature.document.generated.resources.feature_document_failed_to_load_documents_list
-import androidclient.feature.document.generated.resources.feature_document_no_document
-import androidclient.feature.document.generated.resources.feature_document_remove_document
-import androidclient.feature.document.generated.resources.feature_document_remove_successful
-import androidclient.feature.document.generated.resources.feature_document_select_option
-import androidclient.feature.document.generated.resources.feature_document_title
-import androidclient.feature.document.generated.resources.feature_document_update_document
-import androidclient.feature.document.generated.resources.feature_document_upload_document
+import kpt.feature.document.generated.resources.Res
+import kpt.feature.document.generated.resources.feature_document_download_document
+import kpt.feature.document.generated.resources.feature_document_download_successful
+import kpt.feature.document.generated.resources.feature_document_failed_to_load_documents_list
+import kpt.feature.document.generated.resources.feature_document_no_document
+import kpt.feature.document.generated.resources.feature_document_remove_document
+import kpt.feature.document.generated.resources.feature_document_remove_successful
+import kpt.feature.document.generated.resources.feature_document_select_option
+import kpt.feature.document.generated.resources.feature_document_title
+import kpt.feature.document.generated.resources.feature_document_update_document
+import kpt.feature.document.generated.resources.feature_document_upload_document
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -66,7 +66,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun DocumentListScreen(
@@ -240,28 +242,28 @@ private fun DocumentListContent(
 ) {
     Column(modifier = modifier) {
         Card(
-            modifier = Modifier.fillMaxWidth().padding(KptTheme.spacing.sm),
+            modifier = Modifier.fillMaxWidth().padding(LocalKptSpacing.current.sm),
             shape = RectangleShape,
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(KptTheme.spacing.sm),
+                    .padding(LocalKptSpacing.current.sm),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(start = KptTheme.spacing.md),
+                        .padding(start = LocalKptSpacing.current.md),
                     text = "Name",
-                    style = KptTheme.typography.bodyLarge,
+                    style = LocalKptTypography.current.bodyLarge,
                     textAlign = TextAlign.Start,
                     maxLines = 1,
                 )
                 Text(
                     modifier = Modifier.weight(1f),
                     text = "Description",
-                    style = KptTheme.typography.bodyLarge,
+                    style = LocalKptTypography.current.bodyLarge,
                     textAlign = TextAlign.Start,
                     maxLines = 1,
                 )
@@ -282,30 +284,30 @@ private fun DocumentItem(
     onDocumentClicked: (Document) -> Unit,
 ) {
     Card(
-        modifier = modifier.fillMaxWidth().padding(vertical = KptTheme.spacing.xs, horizontal = KptTheme.spacing.sm),
+        modifier = modifier.fillMaxWidth().padding(vertical = LocalKptSpacing.current.xs, horizontal = LocalKptSpacing.current.sm),
         onClick = {
             onDocumentClicked(document)
         },
     ) {
         Row(
             modifier = Modifier
-                .padding(KptTheme.spacing.md)
+                .padding(LocalKptSpacing.current.md)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = KptTheme.spacing.md),
+                    .padding(start = LocalKptSpacing.current.md),
                 text = document.name.toString(),
-                style = KptTheme.typography.bodyLarge,
+                style = LocalKptTypography.current.bodyLarge,
                 textAlign = TextAlign.Start,
                 maxLines = 1,
             )
             Text(
                 modifier = Modifier.weight(1f),
                 text = document.description ?: "-",
-                style = KptTheme.typography.bodyLarge,
+                style = LocalKptTypography.current.bodyLarge,
                 textAlign = TextAlign.Start,
                 maxLines = 1,
             )
@@ -338,13 +340,13 @@ private fun SelectOptionsDialog(
             Column(
                 modifier = Modifier
                     .padding(DesignToken.padding.dp30),
-                verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.md),
+                verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.md),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = stringResource(Res.string.feature_document_select_option),
                     modifier = Modifier.fillMaxWidth(),
-                    style = KptTheme.typography.bodyLarge,
+                    style = LocalKptTypography.current.bodyLarge,
                     textAlign = TextAlign.Center,
                 )
                 MifosButton(
@@ -353,7 +355,7 @@ private fun SelectOptionsDialog(
                     Text(
                         text = stringResource(Res.string.feature_document_download_document),
                         modifier = Modifier.fillMaxWidth(),
-                        style = KptTheme.typography.bodyLarge,
+                        style = LocalKptTypography.current.bodyLarge,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -363,7 +365,7 @@ private fun SelectOptionsDialog(
                     Text(
                         text = stringResource(Res.string.feature_document_update_document),
                         modifier = Modifier.fillMaxWidth(),
-                        style = KptTheme.typography.bodyLarge,
+                        style = LocalKptTypography.current.bodyLarge,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -373,7 +375,7 @@ private fun SelectOptionsDialog(
                     Text(
                         text = stringResource(Res.string.feature_document_remove_document),
                         modifier = Modifier.fillMaxWidth(),
-                        style = KptTheme.typography.bodyLarge,
+                        style = LocalKptTypography.current.bodyLarge,
                         textAlign = TextAlign.Center,
                     )
                 }

@@ -9,12 +9,12 @@
  */
 package com.mifos.core.ui.util
 
-import androidclient.core.ui.generated.resources.Res
-import androidclient.core.ui.generated.resources.error_digits_only
-import androidclient.core.ui.generated.resources.error_field_empty
-import androidclient.core.ui.generated.resources.error_invalid_characters
-import androidclient.core.ui.generated.resources.error_invalid_number
-import androidclient.core.ui.generated.resources.error_number_zero
+import kpt.core.ui.generated.resources.Res
+import kpt.core.ui.generated.resources.error_digits_only
+import kpt.core.ui.generated.resources.error_field_empty
+import kpt.core.ui.generated.resources.error_invalid_characters
+import kpt.core.ui.generated.resources.error_invalid_number
+import kpt.core.ui.generated.resources.error_number_zero
 import org.jetbrains.compose.resources.StringResource
 
 object TextFieldsValidator {

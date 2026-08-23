@@ -1,75 +1,100 @@
 /*
- * Copyright 2025 Mifos Initiative
+ * Copyright 2024 Mifos Initiative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/mifos-x-field-officer-app/blob/master/LICENSE.md
+ * See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
+
 plugins {
     alias(libs.plugins.kmp.library.convention)
     alias(libs.plugins.cmp.feature.convention)
     alias(libs.plugins.kmp.koin.convention)
-    alias(libs.plugins.kotlin.serialization)
-}
-
-android {
-    namespace = "cmp.navigation"
 }
 
 kotlin {
     sourceSets {
-        commonMain.dependencies{
-            implementation(libs.kotlinx.serialization.json)
-
-            implementation(projects.core.domain)
-            implementation(projects.core.common)
+        commonMain.dependencies {
+            // Core Modules
             implementation(projects.core.data)
-            implementation(projects.core.datastore)
             implementation(projects.core.database)
-            implementation(projects.core.network)
-            implementation(projects.coreBase.common)
+            implementation(projects.core.network) // E1: FeatureRegistry wires the relocated DemoNetworkModule (core/network/demo/di)
+            implementation(projects.core.model)
+            implementation(projects.core.common)
+            implementation(projects.core.datastore)
+            // core/domain — fork use-cases (UseCaseModule) consumed by the fork feature ViewModels
+            // (loan et al). Restored to KoinModules.allModules after a template sync dropped the fork's
+            // own DI modules; the use-cases sit above core/data repositories.
+            implementation(projects.core.domain)
+            // Firebase analytics (firebaseModule + AnalyticsHelper + Compose helpers) via core/firebase.
+            implementation(projects.core.firebase)
+            // core/platform re-exports core-base/platform (platformModule, GarbageCollectionManager) —
+            // the app-shell reaches those through core/ per G-CORE-BASE-ENCAP.
+            implementation(projects.core.platform)
+            // StoreCacheManager (D7 logout cache-clear, offline-first-template-migration
+            // 02-store-infra-screenstate T5) — RootNavViewModel's real fork logout sequence
+            // clears every registered Store5 cache. Fork-added dep; owner:merge protects it
+            // across future syncs (customization-surface.yaml).
+            implementation(projects.core.store)
+            // core-base/security is the ONE sanctioned app-shell exception: cmp-navigation is the DI
+            // aggregator (KoinModules wires SecurityModule) and reads isReleaseBuild; no core/ wrapper
+            // is warranted for a security module the shell itself assembles. Feature modules NEVER
+            // depend on core-base — enforced by the encapsulation gate (Phase A).
+            implementation(projects.coreBase.security)
 
-            implementation(projects.feature.about)
-            implementation(projects.feature.activate)
-            implementation(projects.feature.auth)
-            implementation(projects.feature.center)
-            implementation(projects.feature.checkerInboxTask)
-            implementation(projects.feature.client)
-            implementation(projects.feature.collectionSheet)
-            implementation(projects.feature.dataTable)
-            implementation(projects.feature.groups)
-            implementation(projects.feature.document)
-            implementation(projects.feature.loan)
-            implementation(projects.feature.note)
-            implementation(projects.feature.offline)
-            implementation(projects.feature.pathTracking)
-            implementation(projects.feature.report)
-            implementation(projects.feature.savings)
-            implementation(projects.feature.recurringDeposit)
+            // Backbone shell features (template-owned) — always present in every fork.
+            implementation(projects.feature.home)
+            implementation(projects.feature.profile)
             implementation(projects.feature.settings)
-            implementation(projects.feature.search)
-            implementation(projects.feature.searchRecord)
+            // loan feature — first business feature wired via FeatureRegistry (pilot 04/04b).
+            implementation(projects.feature.loan)
+            implementation(projects.feature.client)
+            implementation(projects.feature.groups)
+            implementation(projects.feature.center)
+            // passcode/auth feature — MifosAuthenticatorModule binds PasscodeManager +
+            // Passcode/Biometric adapters that RootNavViewModel's fork logout/auth sequence needs.
             implementation(projects.feature.passcode)
+            // auth feature — the fork login flow (LoginScreen + authNavGraph) wired into RootNav's
+            // AuthenticateUser state. The template sync left the auth graph commented out.
+            implementation(projects.feature.auth)
+            // Fork feature-module deps come from the fork-owned `feature-deps.gradle.kts` seam
+            // (applied at the bottom of this file, S7/F4). A fork adds a feature there, never here.
+            implementation(projects.sync)
 
+            // Passcode/biometric authenticator libs — RootNavViewModel's real fork logout sequence
+            // consumes org.mifos.authenticator.passcode.{PasscodeManager,PasscodeStorageAdapter} and
+            // org.mifos.authenticator.biometrics.BiometricStorageAdapter (same artifacts core/data and
+            // feature/passcode depend on). Restored after a template sync dropped them from this module.
+            implementation(libs.mifos.authenticator.passcode)
+            implementation(libs.mifos.authenticator.biometrics)
+
+            // put your multiplatform dependencies here
             implementation(compose.material3)
+            implementation(compose.materialIconsExtended)
             implementation(compose.foundation)
             implementation(compose.ui)
             implementation(compose.components.uiToolingPreview)
             implementation(compose.components.resources)
-            implementation(libs.window.size)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
-
-            implementation(libs.mifos.authenticator.passcode)
-            implementation(libs.mifos.authenticator.biometrics)
-            implementation(libs.jb.navigationevent)
+            // Phase 3 (store5-screen-state-persistence 03-vm-scoping) — enables
+            // koinNavViewModel() so nav destinations acquire ViewModels scoped to
+            // NavBackStackEntry (cleared on pop) instead of Activity (cleared on
+            // Activity death). Resolves io.insert-koin:koin-compose-viewmodel-navigation
+            // via gradle/libs.versions.toml:259; version is the shared Koin ref.
+            implementation(libs.koin.compose.navigation)
+            // Provides `com.russhwolf.settings.Settings` referenced by
+            // `saveable/PersistentSaveableStateRegistry.kt` at the app root.
+            // The `named("plain")` binding itself is contributed by
+            // `core-base/datastore/DatastoreBaseModule` (transitively wired in
+            // via `core/datastore/DatastoreModule` in `KoinModules.allModules`).
+            implementation(libs.multiplatform.settings)
         }
-        androidMain.dependencies {
-            implementation(libs.androidx.core.ktx)
-            implementation(libs.androidx.tracing.ktx)
-            implementation(libs.koin.android)
+
+        commonTest.dependencies {
+            implementation(libs.kotlinx.serialization.core)
         }
     }
 }
@@ -77,5 +102,16 @@ kotlin {
 compose.resources {
     publicResClass = true
     generateResClass = always
-    packageOfResClass = "org.mifos.navigation.generated.resources"
+    packageOfResClass = "cmp.navigation.generated.resources"
 }
+
+// Fork-owned feature-module dependencies (S7/F4 white-label seam). Applied AFTER the `kotlin { }` block
+// above so the `commonMainImplementation` configuration it contributes to already exists. A fork edits
+// `feature-deps.gradle.kts`, never this template-owned build file — a template sync full-copies this file.
+//
+// Apply ONLY when the seam file is present. `feature-deps.gradle.kts` is `owner: fork` (never synced), so a
+// fork that adopted the template BEFORE this seam existed — or is mid-adoption — may not have it yet; an
+// unconditional `apply(from = …)` then fails the whole configuration ("Could not read script …feature-deps
+// .gradle.kts as it does not exist"), which blocks even `syncForkConfig`. Guarding the apply keeps
+// cmp-navigation configurable in that window; the fork wires its features by creating the seam file.
+rootProject.file("feature-deps.gradle.kts").takeIf { it.exists() }?.let { apply(from = it) }

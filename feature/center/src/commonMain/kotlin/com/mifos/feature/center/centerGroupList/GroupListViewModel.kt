@@ -9,8 +9,8 @@
  */
 package com.mifos.feature.center.centerGroupList
 
-import androidclient.feature.center.generated.resources.Res
-import androidclient.feature.center.generated.resources.feature_center_failed_to_load_group_list
+import kpt.feature.center.generated.resources.Res
+import kpt.feature.center.generated.resources.feature_center_failed_to_load_group_list
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -45,7 +45,7 @@ class GroupListViewModel(
                 GroupListUiState.Error(Res.string.feature_center_failed_to_load_group_list)
         }.collect {
             _groupListUiState.value =
-                GroupListUiState.GroupList(it.data ?: CenterWithAssociations())
+                GroupListUiState.GroupList(it)
         }
     }
 
@@ -56,7 +56,7 @@ class GroupListViewModel(
                 _groupListUiState.value =
                     GroupListUiState.Error(Res.string.feature_center_failed_to_load_group_list)
             }.collect {
-                _groupAssociationState.value = it.data
+                _groupAssociationState.value = it
             }
         }
     }

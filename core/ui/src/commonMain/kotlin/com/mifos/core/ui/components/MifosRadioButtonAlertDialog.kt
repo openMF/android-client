@@ -9,8 +9,8 @@
  */
 package com.mifos.core.ui.components
 
-import androidclient.core.ui.generated.resources.Res
-import androidclient.core.ui.generated.resources.core_ui_core_common_working
+import kpt.core.ui.generated.resources.Res
+import kpt.core.ui.generated.resources.core_ui_core_common_working
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,7 +32,8 @@ import com.mifos.core.designsystem.theme.MifosTheme
 import com.mifos.core.ui.util.DevicePreview
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,7 +76,7 @@ fun MifosRadioButtonDialog(
                             )
                             Text(
                                 text = item,
-                                modifier = Modifier.padding(start = KptTheme.spacing.xs),
+                                modifier = Modifier.padding(start = LocalKptSpacing.current.xs),
                             )
                         }
                     }

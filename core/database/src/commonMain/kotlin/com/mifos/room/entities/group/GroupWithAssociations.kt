@@ -9,8 +9,6 @@
  */
 package com.mifos.room.entities.group
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.Timeline
 import com.mifos.room.entities.client.ClientEntity
 import com.mifos.room.entities.client.ClientStatusEntity
@@ -20,7 +18,6 @@ import kotlinx.serialization.Serializable
  * Created by ishankhanna on 29/06/14.
  */
 @Serializable
-@Parcelize
 data class GroupWithAssociations(
     val id: Int? = null,
 
@@ -49,4 +46,4 @@ data class GroupWithAssociations(
     val clientMembers: List<ClientEntity> = emptyList(),
 
     val timeline: Timeline? = null,
-) : Parcelable
+)

@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.NewIndividualCollectionSheetRepository
 import com.mifos.room.entities.organisation.StaffEntity
 import kotlinx.coroutines.flow.Flow
@@ -18,6 +17,6 @@ class GetStaffInOfficeUseCase(
     private val repository: NewIndividualCollectionSheetRepository,
 ) {
 
-    operator fun invoke(officeId: Int): Flow<DataState<List<StaffEntity>>> =
+    operator fun invoke(officeId: Int): Flow<List<StaffEntity>> =
         repository.getStaffInOffice(officeId)
 }

@@ -10,15 +10,11 @@
 package com.mifos.room.entities.collectionsheet
 
 import com.mifos.core.model.objects.collectionsheets.CollectionMeetingCalendar
-import com.mifos.core.model.utils.IgnoredOnParcel
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.accounts.loans.LoanStatusEntity
 
 /**
  * Created by Tarun on 25-07-2017.
  */
-@Parcelize
 data class MeetingFallCalendar(
     // It's not a mistake. This AccountNo field DOES expect a String.
     val accountNo: String? = null,
@@ -27,7 +23,6 @@ data class MeetingFallCalendar(
 
     val isActive: Boolean = false,
 
-    @IgnoredOnParcel
     val collectionMeetingCalendar: CollectionMeetingCalendar? = null,
 
     val hierarchy: String? = null,
@@ -51,4 +46,4 @@ data class MeetingFallCalendar(
     val totalOverdue: Int = 0,
 
     val totaldue: Int = 0,
-) : Parcelable
+)

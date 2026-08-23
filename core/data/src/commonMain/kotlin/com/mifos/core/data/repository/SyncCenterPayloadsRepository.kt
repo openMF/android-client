@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.room.entities.center.CenterPayloadEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -18,11 +17,11 @@ import kotlinx.coroutines.flow.Flow
  */
 interface SyncCenterPayloadsRepository {
 
-    fun getAllDatabaseCenterPayload(): Flow<DataState<List<CenterPayloadEntity>>>
+    fun getAllDatabaseCenterPayload(): Flow<List<CenterPayloadEntity>>
 
     suspend fun createCenter(centerPayload: CenterPayloadEntity?)
 
-    fun deleteAndUpdateCenterPayloads(id: Int): Flow<DataState<List<CenterPayloadEntity>>>
+    fun deleteAndUpdateCenterPayloads(id: Int): Flow<List<CenterPayloadEntity>>
 
     suspend fun updateCenterPayload(centerPayload: CenterPayloadEntity)
 }

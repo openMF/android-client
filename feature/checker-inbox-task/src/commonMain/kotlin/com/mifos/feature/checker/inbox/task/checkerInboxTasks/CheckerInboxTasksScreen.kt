@@ -9,18 +9,18 @@
  */
 package com.mifos.feature.checker.inbox.task.checkerInboxTasks
 
-import androidclient.feature.checker_inbox_task.generated.resources.Res
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_checker_Inbox
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_client_Approval
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_failed_to_Load_Checker_Inbox
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_ic_assignment_black_24dp
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_ic_done_all_24dp
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_ic_mail_outline_24dp
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_ic_restore_24dp
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_ic_supervisor_account_24dp
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_loan_Approval
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_loan_Disbursal
-import androidclient.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_reschedule_Loan
+import kpt.feature.checker_inbox_task.generated.resources.Res
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_checker_Inbox
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_client_Approval
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_failed_to_Load_Checker_Inbox
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_ic_assignment_black_24dp
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_ic_done_all_24dp
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_ic_mail_outline_24dp
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_ic_restore_24dp
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_ic_supervisor_account_24dp
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_loan_Approval
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_loan_Disbursal
+import kpt.feature.checker_inbox_task.generated.resources.feature_checker_inbox_task_reschedule_Loan
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -49,7 +49,10 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 /**
  * Created by Aditya Gupta on 21/03/24.
@@ -148,7 +151,7 @@ private fun TaskOptions(
     ) {
         Row(
             modifier = Modifier
-                .padding(KptTheme.spacing.lg)
+                .padding(LocalKptSpacing.current.lg)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -160,14 +163,14 @@ private fun TaskOptions(
             )
             Text(
                 modifier = Modifier
-                    .padding(start = KptTheme.spacing.md)
+                    .padding(start = LocalKptSpacing.current.md)
                     .weight(1f),
                 text = option,
-                style = KptTheme.typography.labelLarge,
+                style = LocalKptTypography.current.labelLarge,
             )
             Card(
                 colors = CardDefaults.cardColors(
-                    containerColor = KptTheme.colorScheme.secondary,
+                    containerColor = LocalKptColors.current.secondary,
                 ),
                 shape = DesignToken.shapes.dp10,
             ) {
@@ -177,7 +180,7 @@ private fun TaskOptions(
                         vertical = DesignToken.padding.extraExtraSmall,
                     ),
                     text = badge,
-                    style = KptTheme.typography.labelLarge,
+                    style = LocalKptTypography.current.labelLarge,
                 )
             }
         }

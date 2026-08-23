@@ -9,12 +9,9 @@
  */
 package com.mifos.core.model.objects.databaseobjects
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 
-@Parcelize
 data class Status(
     var code: String? = null,
 
     var value: String? = null,
-) : Parcelable
+)

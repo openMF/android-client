@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.loan.LoanAccountRepository
 import com.mifos.core.network.model.LoansPayload
 import io.ktor.client.statement.HttpResponse
@@ -19,6 +18,6 @@ class CreateLoanAccountUseCase(
     private val loanAccountRepository: LoanAccountRepository,
 ) {
 
-    operator fun invoke(loansPayload: LoansPayload): Flow<DataState<HttpResponse>> =
+    operator fun invoke(loansPayload: LoansPayload): Flow<HttpResponse> =
         loanAccountRepository.createLoansAccount(loansPayload)
 }

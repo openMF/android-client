@@ -10,8 +10,6 @@
 package com.mifos.core.data.repositoryImp
 
 import co.touchlab.kermit.Logger
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.mappers.client.ClientIdentifierMapper
 import com.mifos.core.data.repository.ClientIdentifiersRepository
 import com.mifos.core.model.objects.noncoreobjects.Identifier
@@ -33,31 +31,28 @@ class ClientIdentifiersRepositoryImp(
     private val clientDaoHelper: ClientDaoHelper,
 ) : ClientIdentifiersRepository {
 
-    override fun getClientListIdentifiers(clientId: Long): Flow<DataState<List<Identifier>>> {
+    override fun getClientListIdentifiers(clientId: Long): Flow<List<Identifier>> {
         return dataManagerIdentifiers.getClientListIdentifiers(clientId)
-            .asDataStateFlow()
-            .onEach { dataState ->
-                if (dataState is DataState.Success) {
-                    val entities = dataState.data.map {
-                        ClientIdentifierMapper.mapFromEntity(it.copy(clientId = clientId.toInt()))
-                    }
-                    try {
-                        clientDaoHelper.insertIdentifiers(entities)
-                    } catch (e: CancellationException) {
-                        throw e
-                    } catch (e: Throwable) {
-                        Logger.e(e) { "Failed to insert identifiers into database" }
-                    }
+            .onEach { identifiers ->
+                val entities = identifiers.map {
+                    ClientIdentifierMapper.mapFromEntity(it.copy(clientId = clientId.toInt()))
+                }
+                try {
+                    clientDaoHelper.insertIdentifiers(entities)
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Throwable) {
+                    Logger.e(e) { "Failed to insert identifiers into database" }
                 }
             }
     }
 
-    override fun getClientIdentifiers(clientId: Long, identifierId: Long): Flow<DataState<Identifier>> {
-        return dataManagerIdentifiers.getClientIdentifiers(clientId, identifierId).asDataStateFlow()
+    override fun getClientIdentifiers(clientId: Long, identifierId: Long): Flow<Identifier> {
+        return dataManagerIdentifiers.getClientIdentifiers(clientId, identifierId)
     }
 
-    override fun getClientIdentifierTemplate(clientId: Long): Flow<DataState<IdentifierTemplate>> {
-        return dataManagerIdentifiers.getClientIdentifierTemplate(clientId).asDataStateFlow()
+    override fun getClientIdentifierTemplate(clientId: Long): Flow<IdentifierTemplate> {
+        return dataManagerIdentifiers.getClientIdentifierTemplate(clientId)
     }
 
     override suspend fun deleteClientIdentifier(clientId: Long, identifierId: Long): GenericResponse {

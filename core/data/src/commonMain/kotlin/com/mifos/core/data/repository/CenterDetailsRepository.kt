@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.model.objects.groups.CenterInfo
 import com.mifos.room.entities.group.CenterWithAssociations
 import kotlinx.coroutines.flow.Flow
@@ -24,5 +23,5 @@ interface CenterDetailsRepository {
     fun getCenterSummaryInfo(
         centerId: Int,
         genericResultSet: Boolean,
-    ): Flow<DataState<List<CenterInfo>>>
+    ): Flow<List<CenterInfo>>
 }

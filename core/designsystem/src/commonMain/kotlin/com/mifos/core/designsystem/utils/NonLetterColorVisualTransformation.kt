@@ -18,12 +18,13 @@ import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
 
 @Composable
 fun nonLetterColorVisualTransformation(): VisualTransformation {
-    val digitColor = KptTheme.colorScheme.primary
-    val specialCharacterColor = KptTheme.colorScheme.error
+    val digitColor = LocalKptColors.current.primary
+    val specialCharacterColor = LocalKptColors.current.error
     return remember(digitColor, specialCharacterColor) {
         NonLetterColorVisualTransformation(
             digitColor = digitColor,

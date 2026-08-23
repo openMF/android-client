@@ -9,20 +9,20 @@
  */
 package com.mifos.feature.loan.loanAccountGeneral
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_general_maturity_date
-import androidclient.feature.loan.generated.resources.feature_loan_general_number_of_repayments
-import androidclient.feature.loan.generated.resources.feature_loan_general_section_loan_details
-import androidclient.feature.loan.generated.resources.feature_loan_general_section_loan_summary
-import androidclient.feature.loan.generated.resources.feature_loan_general_section_performance_history
-import androidclient.feature.loan.generated.resources.feature_loan_general_summary_col_component
-import androidclient.feature.loan.generated.resources.feature_loan_general_summary_col_original
-import androidclient.feature.loan.generated.resources.feature_loan_general_summary_col_outstanding
-import androidclient.feature.loan.generated.resources.feature_loan_general_summary_col_overdue
-import androidclient.feature.loan.generated.resources.feature_loan_general_summary_col_paid
-import androidclient.feature.loan.generated.resources.feature_loan_general_summary_col_waived
-import androidclient.feature.loan.generated.resources.feature_loan_general_summary_col_written_off
-import androidclient.feature.loan.generated.resources.feature_loan_general_summary_row_total
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_general_maturity_date
+import kpt.feature.loan.generated.resources.feature_loan_general_number_of_repayments
+import kpt.feature.loan.generated.resources.feature_loan_general_section_loan_details
+import kpt.feature.loan.generated.resources.feature_loan_general_section_loan_summary
+import kpt.feature.loan.generated.resources.feature_loan_general_section_performance_history
+import kpt.feature.loan.generated.resources.feature_loan_general_summary_col_component
+import kpt.feature.loan.generated.resources.feature_loan_general_summary_col_original
+import kpt.feature.loan.generated.resources.feature_loan_general_summary_col_outstanding
+import kpt.feature.loan.generated.resources.feature_loan_general_summary_col_overdue
+import kpt.feature.loan.generated.resources.feature_loan_general_summary_col_paid
+import kpt.feature.loan.generated.resources.feature_loan_general_summary_col_waived
+import kpt.feature.loan.generated.resources.feature_loan_general_summary_col_written_off
+import kpt.feature.loan.generated.resources.feature_loan_general_summary_row_total
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -60,7 +60,11 @@ import com.mifos.core.ui.components.MifosProgressIndicator
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptShapes
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun LoanAccountGeneralScreen(
@@ -121,23 +125,23 @@ private fun LoanAccountGeneralContent(
             ) {
                 Text(
                     text = stringResource(Res.string.feature_loan_general_section_performance_history),
-                    style = KptTheme.typography.labelLarge,
-                    modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
+                    style = LocalKptTypography.current.labelLarge,
+                    modifier = Modifier.padding(horizontal = LocalKptSpacing.current.md),
                 )
 
                 Spacer(Modifier.height(DesignToken.spacing.medium))
 
                 PerformanceHistoryCard(
                     state = state,
-                    modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
+                    modifier = Modifier.padding(horizontal = LocalKptSpacing.current.md),
                 )
 
                 Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
 
                 Text(
                     text = stringResource(Res.string.feature_loan_general_section_loan_summary),
-                    style = KptTheme.typography.labelLarge,
-                    modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
+                    style = LocalKptTypography.current.labelLarge,
+                    modifier = Modifier.padding(horizontal = LocalKptSpacing.current.md),
                 )
 
                 Spacer(Modifier.height(DesignToken.spacing.medium))
@@ -148,18 +152,18 @@ private fun LoanAccountGeneralContent(
 
                 Text(
                     text = stringResource(Res.string.feature_loan_general_section_loan_details),
-                    style = KptTheme.typography.labelLarge,
-                    modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
+                    style = LocalKptTypography.current.labelLarge,
+                    modifier = Modifier.padding(horizontal = LocalKptSpacing.current.md),
                 )
 
                 Spacer(Modifier.height(DesignToken.spacing.medium))
 
                 LoanDetailsSection(
                     state = state,
-                    modifier = Modifier.padding(horizontal = KptTheme.spacing.md),
+                    modifier = Modifier.padding(horizontal = LocalKptSpacing.current.md),
                 )
 
-                Spacer(Modifier.height(KptTheme.spacing.xl))
+                Spacer(Modifier.height(LocalKptSpacing.current.xl))
             }
         }
     }
@@ -173,13 +177,13 @@ private fun PerformanceHistoryCard(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .clip(KptTheme.shapes.medium)
-            .background(KptTheme.colorScheme.primary)
-            .padding(KptTheme.spacing.lg),
+            .clip(LocalKptShapes.current.medium)
+            .background(LocalKptColors.current.primary)
+            .padding(LocalKptSpacing.current.lg),
         contentAlignment = Alignment.Center,
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
+            verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.sm),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             PerformanceHistoryRow(
@@ -200,8 +204,8 @@ private fun PerformanceHistoryRow(
     value: String,
     modifier: Modifier = Modifier,
     textStyle: TextStyle = TextStyle(
-        color = KptTheme.colorScheme.onPrimary,
-        fontStyle = KptTheme.typography.labelMedium.fontStyle,
+        color = LocalKptColors.current.onPrimary,
+        fontStyle = LocalKptTypography.current.labelMedium.fontStyle,
     ),
 ) {
     Row(
@@ -219,7 +223,7 @@ private fun LoanSummaryTable(
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
-    val textColor = KptTheme.colorScheme.onBackground
+    val textColor = LocalKptColors.current.onBackground
     val mediumWidth = DesignToken.sizes.tableCellWidthMedium
     val colWidths = listOf(
         mediumWidth,
@@ -253,7 +257,7 @@ private fun LoanSummaryTable(
                 {
                     LoanSummaryTableCell(
                         text = label,
-                        style = KptTheme.typography.titleSmall,
+                        style = LocalKptTypography.current.titleSmall,
                         fontWeight = FontWeight.Bold,
                         textColor = textColor,
                     )
@@ -261,11 +265,11 @@ private fun LoanSummaryTable(
             },
             widths = colWidths,
             backgroundColor = lerp(
-                KptTheme.colorScheme.surface,
-                KptTheme.colorScheme.primary,
+                LocalKptColors.current.surface,
+                LocalKptColors.current.primary,
                 0.3f,
             ),
-            edgeOffset = KptTheme.spacing.md,
+            edgeOffset = LocalKptSpacing.current.md,
             cornerShape = DesignToken.shapes.topMedium,
         )
 
@@ -277,7 +281,7 @@ private fun LoanSummaryTable(
                     add {
                         LoanSummaryTableCell(
                             text = row.component,
-                            style = KptTheme.typography.bodySmall,
+                            style = LocalKptTypography.current.bodySmall,
                             fontWeight = FontWeight.Normal,
                             textColor = textColor,
                         )
@@ -286,7 +290,7 @@ private fun LoanSummaryTable(
                         add {
                             LoanSummaryTableCell(
                                 text = amount,
-                                style = KptTheme.typography.bodySmall,
+                                style = LocalKptTypography.current.bodySmall,
                                 fontWeight = FontWeight.Normal,
                                 textColor = textColor,
                             )
@@ -294,8 +298,8 @@ private fun LoanSummaryTable(
                     }
                 },
                 widths = colWidths,
-                backgroundColor = KptTheme.colorScheme.surface,
-                edgeOffset = KptTheme.spacing.md,
+                backgroundColor = LocalKptColors.current.surface,
+                edgeOffset = LocalKptSpacing.current.md,
             )
         }
 
@@ -306,7 +310,7 @@ private fun LoanSummaryTable(
                 add {
                     LoanSummaryTableCell(
                         text = totalLabel,
-                        style = KptTheme.typography.bodyMedium,
+                        style = LocalKptTypography.current.bodyMedium,
                         fontWeight = FontWeight.Bold,
                         textColor = textColor,
                     )
@@ -315,7 +319,7 @@ private fun LoanSummaryTable(
                     add {
                         LoanSummaryTableCell(
                             text = total,
-                            style = KptTheme.typography.bodyMedium,
+                            style = LocalKptTypography.current.bodyMedium,
                             fontWeight = FontWeight.Bold,
                             textColor = textColor,
                         )
@@ -323,8 +327,8 @@ private fun LoanSummaryTable(
                 }
             },
             widths = colWidths,
-            backgroundColor = lerp(KptTheme.colorScheme.surface, KptTheme.colorScheme.primary, 0.15f),
-            edgeOffset = KptTheme.spacing.md,
+            backgroundColor = lerp(LocalKptColors.current.surface, LocalKptColors.current.primary, 0.15f),
+            edgeOffset = LocalKptSpacing.current.md,
             cornerShape = DesignToken.shapes.bottomMedium,
             showBottomBorder = false,
         )
@@ -362,7 +366,7 @@ private fun LoanSummaryTableCell(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = KptTheme.spacing.sm, horizontal = KptTheme.spacing.xs),
+            .padding(vertical = LocalKptSpacing.current.sm, horizontal = LocalKptSpacing.current.xs),
     ) {
         Text(
             text = text,
@@ -407,11 +411,11 @@ private fun LoanAccountGeneralPreview() {
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = KptTheme.spacing.md),
+                .padding(horizontal = LocalKptSpacing.current.md),
         ) {
             Text(
                 text = stringResource(Res.string.feature_loan_general_section_performance_history),
-                style = KptTheme.typography.labelLarge,
+                style = LocalKptTypography.current.labelLarge,
             )
             Spacer(Modifier.height(DesignToken.spacing.medium))
             PerformanceHistoryCard(state = previewState)
@@ -419,7 +423,7 @@ private fun LoanAccountGeneralPreview() {
             Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
             Text(
                 text = stringResource(Res.string.feature_loan_general_section_loan_summary),
-                style = KptTheme.typography.labelLarge,
+                style = LocalKptTypography.current.labelLarge,
             )
             Spacer(Modifier.height(DesignToken.spacing.medium))
             LoanSummaryTable(state = previewState)
@@ -427,12 +431,12 @@ private fun LoanAccountGeneralPreview() {
             Spacer(Modifier.height(DesignToken.spacing.largeIncreased))
             Text(
                 text = stringResource(Res.string.feature_loan_general_section_loan_details),
-                style = KptTheme.typography.labelLarge,
+                style = LocalKptTypography.current.labelLarge,
             )
             Spacer(Modifier.height(DesignToken.spacing.medium))
             LoanDetailsSection(state = previewState)
 
-            Spacer(Modifier.height(KptTheme.spacing.xl))
+            Spacer(Modifier.height(LocalKptSpacing.current.xl))
         }
     }
 }

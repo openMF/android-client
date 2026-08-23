@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SavingsAccountActivateRepository
 import com.mifos.core.network.GenericResponse
 import kotlinx.coroutines.flow.Flow
@@ -24,6 +23,6 @@ class ActivateSavingsUseCase(
     operator fun invoke(
         savingsAccountId: Int,
         request: HashMap<String, String>,
-    ): Flow<DataState<GenericResponse>> =
+    ): Flow<GenericResponse> =
         repository.activateSavings(savingsAccountId, request)
 }

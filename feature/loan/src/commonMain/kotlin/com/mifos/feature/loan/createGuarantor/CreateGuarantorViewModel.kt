@@ -9,18 +9,17 @@
  */
 package com.mifos.feature.loan.createGuarantor
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_create_guarantor_missing_configuration
-import androidclient.feature.loan.generated.resources.feature_loan_create_guarantor_submit_failure
-import androidclient.feature.loan.generated.resources.feature_loan_create_guarantor_submit_success
-import androidclient.feature.loan.generated.resources.feature_loan_get_guarantor_account_template_failure
-import androidclient.feature.loan.generated.resources.feature_loan_get_guarantor_template_failure
-import androidclient.feature.loan.generated.resources.feature_loan_load_clients_failure
-import androidclient.feature.loan.generated.resources.feature_loan_message_field_required
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_create_guarantor_missing_configuration
+import kpt.feature.loan.generated.resources.feature_loan_create_guarantor_submit_failure
+import kpt.feature.loan.generated.resources.feature_loan_create_guarantor_submit_success
+import kpt.feature.loan.generated.resources.feature_loan_get_guarantor_account_template_failure
+import kpt.feature.loan.generated.resources.feature_loan_get_guarantor_template_failure
+import kpt.feature.loan.generated.resources.feature_loan_load_clients_failure
+import kpt.feature.loan.generated.resources.feature_loan_message_field_required
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.SearchRepository
 import com.mifos.core.domain.useCases.createGuarantor.CreateGuarantorUseCase
@@ -31,9 +30,10 @@ import com.mifos.core.model.objects.account.loan.guarantor.CreateGuarantorInput
 import com.mifos.core.model.objects.account.loan.guarantor.GuarantorAccountTemplate
 import com.mifos.core.model.objects.account.loan.guarantor.GuarantorRelationshipOption
 import com.mifos.core.model.objects.account.loan.guarantor.GuarantorTemplate
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -187,67 +187,54 @@ internal class CreateGuarantorViewModel(
     private fun getGuarantorTemplate() {
         viewModelScope.launch {
             mutableStateFlow.update { it.copy(viewState = CreateGuarantorState.ViewState.Loading) }
-            val result = getGuarantorTemplateUseCase(state.loanId)
-            sendAction(CreateGuarantorAction.Internal.ReceiveTemplateResult(result))
-        }
-    }
-
-    private fun handleGuarantorTemplateResult(result: DataState<GuarantorTemplate>) {
-        when (result) {
-            is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        viewState = CreateGuarantorState.ViewState.Success,
-                        guarantorRelationshipOptions = result.data.allowedClientRelationshipTypes,
-                        externalGuarantorTypeId = result.data.guarantorTypeOptions.firstOrNull { guarantorType ->
-                            guarantorType.code == "guarantorType.external"
-                        }?.id,
-                        existingGuarantorTypeId = result.data.guarantorTypeOptions.firstOrNull { guarantorType ->
-                            guarantorType.code == "guarantorType.existing.client"
-                        }?.id,
-                    )
-                }
-            }
-
-            is DataState.Error -> {
+            try {
+                val result = getGuarantorTemplateUseCase(state.loanId)
+                sendAction(CreateGuarantorAction.Internal.ReceiveTemplateResult(result))
+            } catch (error: Exception) {
                 mutableStateFlow.update {
                     it.copy(
                         viewState = CreateGuarantorState.ViewState.Error(Res.string.feature_loan_get_guarantor_template_failure),
                     )
                 }
             }
+        }
+    }
 
-            DataState.Loading -> Unit
+    private fun handleGuarantorTemplateResult(result: GuarantorTemplate) {
+        mutableStateFlow.update {
+            it.copy(
+                viewState = CreateGuarantorState.ViewState.Success,
+                guarantorRelationshipOptions = result.allowedClientRelationshipTypes,
+                externalGuarantorTypeId = result.guarantorTypeOptions.firstOrNull { guarantorType ->
+                    guarantorType.code == "guarantorType.external"
+                }?.id,
+                existingGuarantorTypeId = result.guarantorTypeOptions.firstOrNull { guarantorType ->
+                    guarantorType.code == "guarantorType.existing.client"
+                }?.id,
+            )
         }
     }
 
     private fun loadGuarantorAccountTemplate(clientId: Int) {
         viewModelScope.launch {
             mutableStateFlow.update { it.copy(fetchingGuarantorAccountTemplate = true) }
-            val result = getGuarantorAccountTemplateUseCase(state.loanId, clientId)
-            sendAction(CreateGuarantorAction.Internal.ReceiveAccountTemplateResult(result))
-        }
-    }
-
-    private fun handleGuarantorAccountTemplateResult(result: DataState<GuarantorAccountTemplate>) {
-        when (result) {
-            is DataState.Success -> {
-                val template = result.data
-                mutableStateFlow.update {
-                    it.copy(
-                        fetchingGuarantorAccountTemplate = false,
-                    )
-                }
-            }
-
-            is DataState.Error -> {
+            try {
+                val result = getGuarantorAccountTemplateUseCase(state.loanId, clientId)
+                sendAction(CreateGuarantorAction.Internal.ReceiveAccountTemplateResult(result))
+            } catch (error: Exception) {
                 mutableStateFlow.update { it.copy(fetchingGuarantorAccountTemplate = false) }
                 sendEvent(
                     CreateGuarantorEvent.ShowMessage(Res.string.feature_loan_get_guarantor_account_template_failure),
                 )
             }
+        }
+    }
 
-            DataState.Loading -> Unit
+    private fun handleGuarantorAccountTemplateResult(result: GuarantorAccountTemplate) {
+        mutableStateFlow.update {
+            it.copy(
+                fetchingGuarantorAccountTemplate = false,
+            )
         }
     }
 
@@ -292,8 +279,13 @@ internal class CreateGuarantorViewModel(
         )
 
         viewModelScope.launch {
-            val result = createGuarantorUseCase(state.loanId, request)
-            sendAction(CreateGuarantorAction.Internal.ReceiveSubmitResult(result))
+            try {
+                val result = createGuarantorUseCase(state.loanId, request)
+                sendAction(CreateGuarantorAction.Internal.ReceiveSubmitResult(result))
+            } catch (error: Exception) {
+                mutableStateFlow.update { it.copy(submitInProgress = false) }
+                sendEvent(CreateGuarantorEvent.ShowMessage(Res.string.feature_loan_create_guarantor_submit_failure))
+            }
         }
     }
 
@@ -346,28 +338,17 @@ internal class CreateGuarantorViewModel(
         return true
     }
 
-    private fun handleSubmitResult(result: DataState<*>) {
-        when (result) {
-            is DataState.Success -> {
-                mutableStateFlow.update {
-                    it.copy(
-                        submitInProgress = false,
-                        isCreateSuccessful = true,
-                    )
-                }
-                sendEvent(
-                    CreateGuarantorEvent.ShowMessage(Res.string.feature_loan_create_guarantor_submit_success),
-                )
-                sendEvent(CreateGuarantorEvent.NavigateBack)
-            }
-
-            is DataState.Error -> {
-                mutableStateFlow.update { it.copy(submitInProgress = false) }
-                sendEvent(CreateGuarantorEvent.ShowMessage(Res.string.feature_loan_create_guarantor_submit_failure))
-            }
-
-            DataState.Loading -> Unit
+    private fun handleSubmitResult(result: CreateGuarantor) {
+        mutableStateFlow.update {
+            it.copy(
+                submitInProgress = false,
+                isCreateSuccessful = true,
+            )
         }
+        sendEvent(
+            CreateGuarantorEvent.ShowMessage(Res.string.feature_loan_create_guarantor_submit_success),
+        )
+        sendEvent(CreateGuarantorEvent.NavigateBack)
     }
 
     private suspend fun searchClients(query: String) {
@@ -383,25 +364,17 @@ internal class CreateGuarantorViewModel(
             query = query,
             resources = "clients",
             exactMatch = false,
-        ).collect { dataState ->
-            when (dataState) {
-                is DataState.Success -> {
-                    val clients = dataState.data.map { searchedEntity ->
-                        CreateGuarantorState.ClientOption(
-                            id = searchedEntity.entityId,
-                            name = searchedEntity.entityName ?: "",
-                        )
-                    }
-                    mutableStateFlow.update { it.copy(searchedClientOptions = clients) }
-                }
-
-                is DataState.Error -> {
-                    mutableStateFlow.update { it.copy(searchedClientOptions = emptyList()) }
-                    sendEvent(CreateGuarantorEvent.ShowMessage(Res.string.feature_loan_load_clients_failure))
-                }
-
-                DataState.Loading -> Unit
+        ).catch {
+            mutableStateFlow.update { it.copy(searchedClientOptions = emptyList()) }
+            sendEvent(CreateGuarantorEvent.ShowMessage(Res.string.feature_loan_load_clients_failure))
+        }.collect { searchedEntities ->
+            val clients = searchedEntities.map { searchedEntity ->
+                CreateGuarantorState.ClientOption(
+                    id = searchedEntity.entityId,
+                    name = searchedEntity.entityName ?: "",
+                )
             }
+            mutableStateFlow.update { it.copy(searchedClientOptions = clients) }
         }
     }
 }
@@ -487,15 +460,15 @@ internal sealed interface CreateGuarantorAction {
 
     sealed interface Internal : CreateGuarantorAction {
         data class ReceiveTemplateResult(
-            val result: DataState<GuarantorTemplate>,
+            val result: GuarantorTemplate,
         ) : Internal
 
         data class ReceiveAccountTemplateResult(
-            val result: DataState<GuarantorAccountTemplate>,
+            val result: GuarantorAccountTemplate,
         ) : Internal
 
         data class ReceiveSubmitResult(
-            val result: DataState<CreateGuarantor>,
+            val result: CreateGuarantor,
         ) : Internal
     }
 }

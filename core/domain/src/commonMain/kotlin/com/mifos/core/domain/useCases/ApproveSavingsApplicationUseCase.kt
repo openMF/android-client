@@ -9,7 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.core.data.repository.SavingsAccountApprovalRepository
 import com.mifos.core.model.objects.account.loan.SavingsApproval
 import com.mifos.core.network.GenericResponse
@@ -25,7 +24,7 @@ class ApproveSavingsApplicationUseCase(
     operator fun invoke(
         savingsAccountId: Int,
         savingsApproval: SavingsApproval?,
-    ): Flow<DataState<GenericResponse>> =
+    ): Flow<GenericResponse> =
         repository.approveSavingsApplication(
             savingsAccountId,
             savingsApproval,

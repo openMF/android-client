@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.SyncGroupPayloadsRepository
 import com.mifos.core.model.objects.responses.SaveResponse
 import com.mifos.core.network.datamanager.DataManagerGroups
@@ -21,18 +19,18 @@ class SyncGroupPayloadsRepositoryImp(
     private val dataManagerGroups: DataManagerGroups,
 ) : SyncGroupPayloadsRepository {
 
-    override fun allDatabaseGroupPayload(): Flow<DataState<List<GroupPayloadEntity>>> {
+    override fun allDatabaseGroupPayload(): Flow<List<GroupPayloadEntity>> {
         return dataManagerGroups.allDatabaseGroupPayload
-            .asDataStateFlow()
+            
     }
 
     override suspend fun createGroup(groupPayload: GroupPayloadEntity): SaveResponse {
         return dataManagerGroups.createGroup(groupPayload)
     }
 
-    override fun deleteAndUpdateGroupPayloads(id: Int): Flow<DataState<List<GroupPayloadEntity>>> {
+    override fun deleteAndUpdateGroupPayloads(id: Int): Flow<List<GroupPayloadEntity>> {
         return dataManagerGroups.deleteAndUpdateGroupPayloads(id)
-            .asDataStateFlow()
+            
     }
 
     override suspend fun updateGroupPayload(groupPayload: GroupPayloadEntity) {

@@ -11,15 +11,15 @@ package com.mifos.room.typeconverters
 
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import template.core.base.database.TypeConverter
+import androidx.room3.ColumnTypeConverter
 
 class DueDateConverter {
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromListToString(dueDate: List<Int>): String {
         return Json.encodeToString(dueDate)
     }
 
-    @TypeConverter
+    @ColumnTypeConverter
     fun fromStringToList(dueDateString: String): List<Int> {
         return Json.decodeFromString(dueDateString)
     }

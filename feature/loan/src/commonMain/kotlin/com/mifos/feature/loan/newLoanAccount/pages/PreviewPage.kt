@@ -9,46 +9,46 @@
  */
 package com.mifos.feature.loan.newLoanAccount.pages
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.back
-import androidclient.feature.loan.generated.resources.expected_disbursement
-import androidclient.feature.loan.generated.resources.external_id
-import androidclient.feature.loan.generated.resources.feature_loan_charge_submit
-import androidclient.feature.loan.generated.resources.first_repayment_date
-import androidclient.feature.loan.generated.resources.interest_calculation_period
-import androidclient.feature.loan.generated.resources.interest_charged_from
-import androidclient.feature.loan.generated.resources.loan_new_loan_active_charges
-import androidclient.feature.loan.generated.resources.loan_new_loan_amortization
-import androidclient.feature.loan.generated.resources.loan_new_loan_arrears_tolerance
-import androidclient.feature.loan.generated.resources.loan_new_loan_ballon_repayment_amount
-import androidclient.feature.loan.generated.resources.loan_new_loan_calculate_interest_for_exact_days_in_pertial
-import androidclient.feature.loan.generated.resources.loan_new_loan_charges
-import androidclient.feature.loan.generated.resources.loan_new_loan_days_in_month
-import androidclient.feature.loan.generated.resources.loan_new_loan_enable_installment_level
-import androidclient.feature.loan.generated.resources.loan_new_loan_installment_amount
-import androidclient.feature.loan.generated.resources.loan_new_loan_interest_free_period
-import androidclient.feature.loan.generated.resources.loan_new_loan_is_equal_amortization
-import androidclient.feature.loan.generated.resources.loan_new_loan_is_savings_linked
-import androidclient.feature.loan.generated.resources.loan_new_loan_loan_officer
-import androidclient.feature.loan.generated.resources.loan_new_loan_loan_purpose
-import androidclient.feature.loan.generated.resources.loan_new_loan_loan_term
-import androidclient.feature.loan.generated.resources.loan_new_loan_moratorium
-import androidclient.feature.loan.generated.resources.loan_new_loan_nominal_interest_rate
-import androidclient.feature.loan.generated.resources.loan_new_loan_on_arrears_aging
-import androidclient.feature.loan.generated.resources.loan_new_loan_on_interest_payment
-import androidclient.feature.loan.generated.resources.loan_new_loan_on_principal_payment
-import androidclient.feature.loan.generated.resources.loan_new_loan_recalculate_interest
-import androidclient.feature.loan.generated.resources.loan_new_loan_repaid_every
-import androidclient.feature.loan.generated.resources.loan_new_loan_view
-import androidclient.feature.loan.generated.resources.no
-import androidclient.feature.loan.generated.resources.number_of_repayments
-import androidclient.feature.loan.generated.resources.principal
-import androidclient.feature.loan.generated.resources.product_name
-import androidclient.feature.loan.generated.resources.repayment_strategy
-import androidclient.feature.loan.generated.resources.step_details
-import androidclient.feature.loan.generated.resources.submission_date
-import androidclient.feature.loan.generated.resources.terms
-import androidclient.feature.loan.generated.resources.yes
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.back
+import kpt.feature.loan.generated.resources.expected_disbursement
+import kpt.feature.loan.generated.resources.external_id
+import kpt.feature.loan.generated.resources.feature_loan_charge_submit
+import kpt.feature.loan.generated.resources.first_repayment_date
+import kpt.feature.loan.generated.resources.interest_calculation_period
+import kpt.feature.loan.generated.resources.interest_charged_from
+import kpt.feature.loan.generated.resources.loan_new_loan_active_charges
+import kpt.feature.loan.generated.resources.loan_new_loan_amortization
+import kpt.feature.loan.generated.resources.loan_new_loan_arrears_tolerance
+import kpt.feature.loan.generated.resources.loan_new_loan_ballon_repayment_amount
+import kpt.feature.loan.generated.resources.loan_new_loan_calculate_interest_for_exact_days_in_pertial
+import kpt.feature.loan.generated.resources.loan_new_loan_charges
+import kpt.feature.loan.generated.resources.loan_new_loan_days_in_month
+import kpt.feature.loan.generated.resources.loan_new_loan_enable_installment_level
+import kpt.feature.loan.generated.resources.loan_new_loan_installment_amount
+import kpt.feature.loan.generated.resources.loan_new_loan_interest_free_period
+import kpt.feature.loan.generated.resources.loan_new_loan_is_equal_amortization
+import kpt.feature.loan.generated.resources.loan_new_loan_is_savings_linked
+import kpt.feature.loan.generated.resources.loan_new_loan_loan_officer
+import kpt.feature.loan.generated.resources.loan_new_loan_loan_purpose
+import kpt.feature.loan.generated.resources.loan_new_loan_loan_term
+import kpt.feature.loan.generated.resources.loan_new_loan_moratorium
+import kpt.feature.loan.generated.resources.loan_new_loan_nominal_interest_rate
+import kpt.feature.loan.generated.resources.loan_new_loan_on_arrears_aging
+import kpt.feature.loan.generated.resources.loan_new_loan_on_interest_payment
+import kpt.feature.loan.generated.resources.loan_new_loan_on_principal_payment
+import kpt.feature.loan.generated.resources.loan_new_loan_recalculate_interest
+import kpt.feature.loan.generated.resources.loan_new_loan_repaid_every
+import kpt.feature.loan.generated.resources.loan_new_loan_view
+import kpt.feature.loan.generated.resources.no
+import kpt.feature.loan.generated.resources.number_of_repayments
+import kpt.feature.loan.generated.resources.principal
+import kpt.feature.loan.generated.resources.product_name
+import kpt.feature.loan.generated.resources.repayment_strategy
+import kpt.feature.loan.generated.resources.step_details
+import kpt.feature.loan.generated.resources.submission_date
+import kpt.feature.loan.generated.resources.terms
+import kpt.feature.loan.generated.resources.yes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -70,7 +70,8 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountAction
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState
 import org.jetbrains.compose.resources.stringResource
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 fun PreviewPage(
@@ -79,7 +80,7 @@ fun PreviewPage(
     onAction: (NewLoanAccountAction) -> Unit,
 ) {
     Column(
-        Modifier.fillMaxSize().padding(bottom = KptTheme.spacing.md),
+        Modifier.fillMaxSize().padding(bottom = LocalKptSpacing.current.md),
     ) {
         Column(
             modifier = modifier.weight(1f)
@@ -192,7 +193,7 @@ fun PreviewPage(
                 btnText = stringResource(Res.string.loan_new_loan_view),
                 modifier = Modifier.fillMaxWidth(),
             )
-            Spacer(Modifier.height(KptTheme.spacing.md))
+            Spacer(Modifier.height(LocalKptSpacing.current.md))
         }
         MifosTwoButtonRow(
             firstBtnText = stringResource(Res.string.back),
@@ -221,7 +222,7 @@ private fun MoratoriumCard(
             Res.string.loan_new_loan_recalculate_interest to recalculateInterest,
             Res.string.loan_new_loan_days_in_month to daysInMonth,
         ),
-        verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
+        verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.sm),
     )
 }
 
@@ -263,7 +264,7 @@ private fun TermsCard(
             Res.string.loan_new_loan_installment_amount to installmentAmount,
             Res.string.loan_new_loan_ballon_repayment_amount to ballonRepayment,
         ),
-        verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
+        verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.sm),
     )
 }
 
@@ -287,6 +288,6 @@ private fun DetailsCard(
             Res.string.loan_new_loan_loan_purpose to loadPurpose,
             Res.string.loan_new_loan_is_savings_linked to isSavingsLinked,
         ),
-        verticalArrangement = Arrangement.spacedBy(KptTheme.spacing.sm),
+        verticalArrangement = Arrangement.spacedBy(LocalKptSpacing.current.sm),
     )
 }

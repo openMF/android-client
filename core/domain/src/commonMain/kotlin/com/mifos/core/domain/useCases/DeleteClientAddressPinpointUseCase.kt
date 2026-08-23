@@ -9,8 +9,6 @@
  */
 package com.mifos.core.domain.useCases
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.PinPointClientRepository
 import com.mifos.core.network.model.PinpointLocationActionResponse
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +18,7 @@ class DeleteClientAddressPinpointUseCase(
     private val pinPointClientRepository: PinPointClientRepository,
 ) {
 
-    operator fun invoke(clientId: Int, addressId: Int): Flow<DataState<PinpointLocationActionResponse>> =
+    operator fun invoke(clientId: Int, addressId: Int): Flow<PinpointLocationActionResponse> =
         flow {
             emit(
                 pinPointClientRepository.deleteClientAddressPinpointLocation(
@@ -28,5 +26,5 @@ class DeleteClientAddressPinpointUseCase(
                     addressId,
                 ),
             )
-        }.asDataStateFlow()
+        }
 }

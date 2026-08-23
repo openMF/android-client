@@ -9,7 +9,6 @@
  */
 package com.mifos.core.data.repository.loan
 
-import com.mifos.core.common.utils.DataState
 import com.mifos.room.entities.client.ChargesEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -18,5 +17,5 @@ import kotlinx.coroutines.flow.Flow
  */
 interface LoanChargeRepository {
 
-    fun getListOfLoanCharges(loanId: Int): Flow<DataState<List<ChargesEntity>>>
+    fun getListOfLoanCharges(loanId: Int): Flow<List<ChargesEntity>>
 }

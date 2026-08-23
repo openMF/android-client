@@ -9,11 +9,9 @@
  */
 package com.mifos.room.entities.accounts.loans
 
-import com.mifos.core.model.utils.Parcelable
-import com.mifos.core.model.utils.Parcelize
 import kotlinx.serialization.Serializable
-import template.core.base.database.Entity
-import template.core.base.database.PrimaryKey
+import androidx.room3.Entity
+import androidx.room3.PrimaryKey
 
 @Entity(
     tableName = "LoanStatus",
@@ -24,7 +22,6 @@ import template.core.base.database.PrimaryKey
     ignoredColumns = [],
 )
 @Serializable
-@Parcelize
 data class LoanStatusEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int? = null,
@@ -48,4 +45,4 @@ data class LoanStatusEntity(
     val closed: Boolean? = null,
 
     val overpaid: Boolean? = null,
-) : Parcelable
+)

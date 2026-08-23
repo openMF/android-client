@@ -9,9 +9,9 @@
  */
 package com.mifos.feature.loan.loanAccountAction
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_action_empty
-import androidclient.feature.loan.generated.resources.feature_loan_header_actions
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_action_empty
+import kpt.feature.loan.generated.resources.feature_loan_header_actions
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,7 +38,9 @@ import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.util.TextUtil
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptColors
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun LoanAccountActionScreen(
@@ -99,7 +101,7 @@ private fun LoanAccountActionContent(
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(horizontal = KptTheme.spacing.md),
+                            .padding(horizontal = LocalKptSpacing.current.md),
                     ) {
                         item {
                             Text(
@@ -123,7 +125,7 @@ private fun LoanAccountActionContent(
                                     TextUtil(
                                         text = stringResource(item.subTitle),
                                         style = MifosTypography.bodySmall,
-                                        color = KptTheme.colorScheme.secondary,
+                                        color = LocalKptColors.current.secondary,
                                     ),
                                 ),
                                 rightValues = emptyList(),
@@ -140,7 +142,7 @@ private fun LoanAccountActionContent(
                         }
 
                         item {
-                            Spacer(Modifier.height(KptTheme.spacing.md))
+                            Spacer(Modifier.height(LocalKptSpacing.current.md))
                         }
                     }
                 }

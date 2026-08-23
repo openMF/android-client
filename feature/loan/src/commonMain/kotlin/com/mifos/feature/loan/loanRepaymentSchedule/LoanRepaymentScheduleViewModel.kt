@@ -9,25 +9,22 @@
  */
 package com.mifos.feature.loan.loanRepaymentSchedule
 
-import androidclient.feature.loan.generated.resources.Res
-import androidclient.feature.loan.generated.resources.feature_loan_account_number
-import androidclient.feature.loan.generated.resources.feature_loan_disbursed_date
-import androidclient.feature.loan.generated.resources.feature_loan_error_fetching_repayment_schedule
-import androidclient.feature.loan.generated.resources.principal_paid_off
-import androidclient.feature.loan.generated.resources.total_installments
+import kpt.feature.loan.generated.resources.Res
+import kpt.feature.loan.generated.resources.feature_loan_account_number
+import kpt.feature.loan.generated.resources.feature_loan_disbursed_date
+import kpt.feature.loan.generated.resources.feature_loan_error_fetching_repayment_schedule
+import kpt.feature.loan.generated.resources.principal_paid_off
+import kpt.feature.loan.generated.resources.total_installments
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.mifos.core.common.utils.CurrencyFormatter
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.DataState.Error
-import com.mifos.core.common.utils.DataState.Loading
-import com.mifos.core.common.utils.DataState.Success
 import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.data.repository.loan.LoanRepaymentScheduleRepository
 import com.mifos.core.model.objects.account.loan.Period
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
-import com.mifos.core.ui.util.BaseViewModel
+import kpt.core.base.ui.viewmodel.BaseViewModel
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
@@ -90,45 +87,35 @@ class LoanRepaymentScheduleViewModel(
 
     private fun loadLoanRepaySchedule() {
         mutableStateFlow.update {
-            it.copy(dataState = DataState.Loading)
+            it.copy(viewState = LoanRepaymentScheduleState.ViewState.Loading)
         }
 
         viewModelScope.launch {
-            repository.getLoanRepaySchedule(state.loanId).collect { dataState ->
-                when (dataState) {
-                    is Error -> {
-                        mutableStateFlow.update {
-                            it.copy(
-                                dataState = DataState.Error(
-                                    exception = Exception(getString(Res.string.feature_loan_error_fetching_repayment_schedule)),
-                                ),
-                            )
-                        }
-                    }
-
-                    Loading -> {
-                        mutableStateFlow.update {
-                            it.copy(dataState = DataState.Loading)
-                        }
-                    }
-
-                    is Success -> {
-                        val tableData = mapToTableData(dataState.data)
-                        mutableStateFlow.update {
-                            it.copy(
-                                repaymentScheduleTableData = tableData,
-                                basicDetails = mapOf(
-                                    getString(Res.string.feature_loan_account_number) to tableData.accountNo,
-                                    getString(Res.string.feature_loan_disbursed_date) to tableData.disbursementDate,
-                                    getString(Res.string.principal_paid_off) to tableData.principalPaid,
-                                    getString(Res.string.total_installments) to "${tableData.installmentsPaid} / ${tableData.totalInstallments}",
-                                ),
-                                dataState = DataState.Success(dataState.data),
-                            )
-                        }
+            repository.getLoanRepaySchedule(state.loanId)
+                .catch {
+                    mutableStateFlow.update {
+                        it.copy(
+                            viewState = LoanRepaymentScheduleState.ViewState.Error(
+                                message = getString(Res.string.feature_loan_error_fetching_repayment_schedule),
+                            ),
+                        )
                     }
                 }
-            }
+                .collect { loan ->
+                    val tableData = mapToTableData(loan)
+                    mutableStateFlow.update {
+                        it.copy(
+                            repaymentScheduleTableData = tableData,
+                            basicDetails = mapOf(
+                                getString(Res.string.feature_loan_account_number) to tableData.accountNo,
+                                getString(Res.string.feature_loan_disbursed_date) to tableData.disbursementDate,
+                                getString(Res.string.principal_paid_off) to tableData.principalPaid,
+                                getString(Res.string.total_installments) to "${tableData.installmentsPaid} / ${tableData.totalInstallments}",
+                            ),
+                            viewState = LoanRepaymentScheduleState.ViewState.Success,
+                        )
+                    }
+                }
         }
     }
 
@@ -286,14 +273,24 @@ class LoanRepaymentScheduleViewModel(
  * @property basicDetails A map of basic details about the loan.
  * @property repaymentScheduleTableData The repayment schedule data.
  * @property dialogState The state of the dialog to display.
+ * @property viewState The load state of the repayment schedule.
  */
 data class LoanRepaymentScheduleState(
     val loanId: Int = 0,
     val basicDetails: Map<String, String?> = emptyMap(),
     val repaymentScheduleTableData: RepaymentScheduleTableData? = null,
     val dialogState: DialogState? = null,
-    val dataState: DataState<LoanWithAssociations> = Loading,
+    val viewState: ViewState = ViewState.Loading,
 ) {
+    /**
+     * Represents the load state of the repayment schedule screen.
+     */
+    sealed interface ViewState {
+        data object Loading : ViewState
+        data class Error(val message: String) : ViewState
+        data object Success : ViewState
+    }
+
     /**
      * Represents the possible dialog states.
      */

@@ -11,13 +11,13 @@
 
 package com.mifos.feature.activate
 
-import androidclient.feature.activate.generated.resources.Res
-import androidclient.feature.activate.generated.resources.feature_activate
-import androidclient.feature.activate.generated.resources.feature_activate_activation_date
-import androidclient.feature.activate.generated.resources.feature_activate_cancel
-import androidclient.feature.activate.generated.resources.feature_activate_client
-import androidclient.feature.activate.generated.resources.feature_activate_failed_to_activate_client
-import androidclient.feature.activate.generated.resources.feature_activate_select
+import kpt.feature.activate.generated.resources.Res
+import kpt.feature.activate.generated.resources.feature_activate
+import kpt.feature.activate.generated.resources.feature_activate_activation_date
+import kpt.feature.activate.generated.resources.feature_activate_cancel
+import kpt.feature.activate.generated.resources.feature_activate_client
+import kpt.feature.activate.generated.resources.feature_activate_failed_to_activate_client
+import kpt.feature.activate.generated.resources.feature_activate_select
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -59,7 +59,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameter
 import org.jetbrains.compose.ui.tooling.preview.PreviewParameterProvider
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -189,7 +191,7 @@ private fun ActivateContent(
             },
         )
 
-        Spacer(modifier = Modifier.height(KptTheme.spacing.md))
+        Spacer(modifier = Modifier.height(LocalKptSpacing.current.md))
 
         MifosButton(
             onClick = {
@@ -204,12 +206,12 @@ private fun ActivateContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(DesignToken.spacing.dp44)
-                .padding(horizontal = KptTheme.spacing.md),
+                .padding(horizontal = LocalKptSpacing.current.md),
             contentPadding = PaddingValues(),
         ) {
             Text(
                 text = stringResource(Res.string.feature_activate),
-                style = KptTheme.typography.bodySmall,
+                style = LocalKptTypography.current.bodySmall,
             )
         }
     }

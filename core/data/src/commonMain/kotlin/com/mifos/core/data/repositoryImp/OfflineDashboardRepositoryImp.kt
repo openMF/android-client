@@ -9,8 +9,6 @@
  */
 package com.mifos.core.data.repositoryImp
 
-import com.mifos.core.common.utils.DataState
-import com.mifos.core.common.utils.asDataStateFlow
 import com.mifos.core.data.repository.OfflineDashboardRepository
 import com.mifos.core.network.datamanager.DataManagerCenter
 import com.mifos.core.network.datamanager.DataManagerClient
@@ -35,28 +33,28 @@ class OfflineDashboardRepositoryImp(
     private val dataManagerSavings: DataManagerSavings,
 ) : OfflineDashboardRepository {
 
-    override fun allDatabaseClientPayload(): Flow<DataState<List<ClientPayloadEntity>>> {
+    override fun allDatabaseClientPayload(): Flow<List<ClientPayloadEntity>> {
         return dataManagerClient.allDatabaseClientPayload
-            .asDataStateFlow()
+            
     }
 
-    override fun allDatabaseGroupPayload(): Flow<DataState<List<GroupPayloadEntity>>> {
+    override fun allDatabaseGroupPayload(): Flow<List<GroupPayloadEntity>> {
         return dataManagerGroups.allDatabaseGroupPayload
-            .asDataStateFlow()
+            
     }
 
-    override fun allDatabaseCenterPayload(): Flow<DataState<List<CenterPayloadEntity>>> {
+    override fun allDatabaseCenterPayload(): Flow<List<CenterPayloadEntity>> {
         return dataManagerCenter.getAllDatabaseCenterPayload
-            .asDataStateFlow()
+            
     }
 
-    override fun databaseLoanRepayments(): Flow<DataState<List<LoanRepaymentRequestEntity>>> {
+    override fun databaseLoanRepayments(): Flow<List<LoanRepaymentRequestEntity>> {
         return dataManagerLoan.databaseLoanRepayments
-            .asDataStateFlow()
+            
     }
 
-    override fun allSavingsAccountTransactions(): Flow<DataState<List<SavingsAccountTransactionRequestEntity>>> {
+    override fun allSavingsAccountTransactions(): Flow<List<SavingsAccountTransactionRequestEntity>> {
         return dataManagerSavings.allSavingsAccountTransactions
-            .asDataStateFlow()
+            
     }
 }

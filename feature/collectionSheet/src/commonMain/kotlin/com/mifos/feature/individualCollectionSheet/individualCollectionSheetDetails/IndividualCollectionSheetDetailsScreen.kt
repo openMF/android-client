@@ -11,13 +11,13 @@
 
 package com.mifos.feature.individualCollectionSheet.individualCollectionSheetDetails
 
-import androidclient.feature.collectionsheet.generated.resources.Res
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_failed_to_save_collection_sheet
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_ic_dp_placeholder
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_individual_collection_details
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_save_collection_sheet_success
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_total_charges
-import androidclient.feature.collectionsheet.generated.resources.feature_collection_sheet_total_due
+import kpt.feature.collectionsheet.generated.resources.Res
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_failed_to_save_collection_sheet
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_ic_dp_placeholder
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_individual_collection_details
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_save_collection_sheet_success
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_total_charges
+import kpt.feature.collectionsheet.generated.resources.feature_collection_sheet_total_due
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -66,7 +66,9 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import template.core.base.designsystem.theme.KptTheme
+import kpt.core.base.designsystem.KptTheme
+import kpt.core.base.designsystem.theme.LocalKptTypography
+import kpt.core.base.designsystem.theme.LocalKptSpacing
 
 @Composable
 internal fun IndividualCollectionSheetDetailsScreen(
@@ -224,8 +226,8 @@ private fun IndividualCollectionSheetItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(
-                    horizontal = KptTheme.spacing.md,
-                    vertical = KptTheme.spacing.lg,
+                    horizontal = LocalKptSpacing.current.md,
+                    vertical = LocalKptSpacing.current.lg,
                 ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -240,35 +242,35 @@ private fun IndividualCollectionSheetItem(
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = KptTheme.spacing.md),
+                    .padding(start = LocalKptSpacing.current.md),
             ) {
                 client.clientName?.let {
                     Text(
                         text = it,
-                        style = KptTheme.typography.bodyLarge,
+                        style = LocalKptTypography.current.bodyLarge,
 
                     )
                 }
                 Row {
                     Text(
                         text = stringResource(Res.string.feature_collection_sheet_total_due),
-                        style = KptTheme.typography.bodyMedium,
+                        style = LocalKptTypography.current.bodyMedium,
                     )
-                    Spacer(modifier = Modifier.width(KptTheme.spacing.md))
+                    Spacer(modifier = Modifier.width(LocalKptSpacing.current.md))
                     Text(
                         text = client.loans?.get(index)?.totalDue.toString(),
-                        style = KptTheme.typography.bodyMedium,
+                        style = LocalKptTypography.current.bodyMedium,
                     )
                 }
                 Row {
                     Text(
                         text = stringResource(Res.string.feature_collection_sheet_total_charges),
-                        style = KptTheme.typography.bodyMedium,
+                        style = LocalKptTypography.current.bodyMedium,
                     )
-                    Spacer(modifier = Modifier.width(KptTheme.spacing.md))
+                    Spacer(modifier = Modifier.width(LocalKptSpacing.current.md))
                     Text(
                         text = client.loans?.get(index)?.chargesDue.toString(),
-                        style = KptTheme.typography.bodyMedium,
+                        style = LocalKptTypography.current.bodyMedium,
                     )
                 }
                 Text(
@@ -277,7 +279,7 @@ private fun IndividualCollectionSheetItem(
                             index,
                         )?.productShortName
                     })",
-                    style = KptTheme.typography.bodyMedium,
+                    style = LocalKptTypography.current.bodyMedium,
                 )
             }
             Icon(

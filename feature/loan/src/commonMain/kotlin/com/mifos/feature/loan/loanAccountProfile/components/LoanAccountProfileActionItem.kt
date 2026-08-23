@@ -9,48 +9,48 @@
  */
 package com.mifos.feature.loan.loanAccountProfile.components
 
-import androidclient.core.ui.generated.resources.account_details
-import androidclient.core.ui.generated.resources.autorenew
-import androidclient.core.ui.generated.resources.charges
-import androidclient.core.ui.generated.resources.collateral
-import androidclient.core.ui.generated.resources.dashboard
-import androidclient.core.ui.generated.resources.design_services
-import androidclient.core.ui.generated.resources.documents
-import androidclient.core.ui.generated.resources.notes
-import androidclient.core.ui.generated.resources.repayment_schedule
-import androidclient.core.ui.generated.resources.reschedules
-import androidclient.core.ui.generated.resources.term_variations
-import androidclient.core.ui.generated.resources.transaction
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_account_details_subtitle
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_account_details_title
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_charges_subtitle
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_charges_title
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_collateral_subtitle
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_collateral_title
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_dashboard_subtitle
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_dashboard_title
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_documents_subtitle
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_documents_title
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_general_subtitle
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_general_title
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_notes_subtitle
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_notes_title
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_repayment_schedule_subtitle
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_repayment_schedule_title
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_reschedules_subtitle
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_reschedules_title
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_standing_instructions_subtitle
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_standing_instructions_title
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_term_variations_subtitle
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_term_variations_title
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_transactions_subtitle
-import androidclient.feature.loan.generated.resources.feature_loan_profile_item_transactions_title
+import kpt.core.ui.generated.resources.account_details
+import kpt.core.ui.generated.resources.autorenew
+import kpt.core.ui.generated.resources.charges
+import kpt.core.ui.generated.resources.collateral
+import kpt.core.ui.generated.resources.dashboard
+import kpt.core.ui.generated.resources.design_services
+import kpt.core.ui.generated.resources.documents
+import kpt.core.ui.generated.resources.notes
+import kpt.core.ui.generated.resources.repayment_schedule
+import kpt.core.ui.generated.resources.reschedules
+import kpt.core.ui.generated.resources.term_variations
+import kpt.core.ui.generated.resources.transaction
+import kpt.feature.loan.generated.resources.feature_loan_profile_item_account_details_subtitle
+import kpt.feature.loan.generated.resources.feature_loan_profile_item_account_details_title
+import kpt.feature.loan.generated.resources.feature_loan_profile_item_charges_subtitle
+import kpt.feature.loan.generated.resources.feature_loan_profile_item_charges_title
+import kpt.feature.loan.generated.resources.feature_loan_profile_item_collateral_subtitle
+import kpt.feature.loan.generated.resources.feature_loan_profile_item_collateral_title
+import kpt.feature.loan.generated.resources.feature_loan_profile_item_dashboard_subtitle
+import kpt.feature.loan.generated.resources.feature_loan_profile_item_dashboard_title
+import kpt.feature.loan.generated.resources.feature_loan_profile_item_documents_subtitle
+import kpt.feature.loan.generated.resources.feature_loan_profile_item_documents_title
+import kpt.feature.loan.generated.resources.feature_loan_profile_item_general_subtitle
+import kpt.feature.loan.generated.resources.feature_loan_profile_item_general_title
+import kpt.feature.loan.generated.resources.feature_loan_profile_item_notes_subtitle
+import kpt.feature.loan.generated.resources.feature_loan_profile_item_notes_title
+import kpt.feature.loan.generated.resources.feature_loan_profile_item_repayment_schedule_subtitle
+import kpt.feature.loan.generated.resources.feature_loan_profile_item_repayment_schedule_title
+import kpt.feature.loan.generated.resources.feature_loan_profile_item_reschedules_subtitle
+import kpt.feature.loan.generated.resources.feature_loan_profile_item_reschedules_title
+import kpt.feature.loan.generated.resources.feature_loan_profile_item_standing_instructions_subtitle
+import kpt.feature.loan.generated.resources.feature_loan_profile_item_standing_instructions_title
+import kpt.feature.loan.generated.resources.feature_loan_profile_item_term_variations_subtitle
+import kpt.feature.loan.generated.resources.feature_loan_profile_item_term_variations_title
+import kpt.feature.loan.generated.resources.feature_loan_profile_item_transactions_subtitle
+import kpt.feature.loan.generated.resources.feature_loan_profile_item_transactions_title
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
-import androidclient.core.ui.generated.resources.Res as UiRes
-import androidclient.feature.loan.generated.resources.Res as LoanRes
+import kpt.core.ui.generated.resources.Res as UiRes
+import kpt.feature.loan.generated.resources.Res as LoanRes
 
 sealed class LoanAccountProfileActionItem(
     val title: StringResource,
