@@ -107,7 +107,12 @@ suspend fun <Value : Any> Store<PageKey, List<Value>>.loadPage(
 
     return when (response) {
         is StoreReadResponse.Data -> {
-            val items = response.value
+            // Null-safety: a Store SourceOfTruth reader that maps an empty page to `null`
+            // (the `.ifEmpty { null }` idiom) can surface a Data response whose value is null
+            // when a fetched page is genuinely empty (e.g. an officer with 0 centers). Guard
+            // against it so an empty terminal page renders as Empty instead of NPE-ing on
+            // `items.size`. (Local template fix — enqueued upstream per RULE-TEMPLATE-MODULE-FIX-UPSTREAM-001.)
+            val items = response.value ?: emptyList()
             StorePageResult.Success(
                 items = items,
                 prevKey = if (key.page > 0) key.page - 1 else null,
