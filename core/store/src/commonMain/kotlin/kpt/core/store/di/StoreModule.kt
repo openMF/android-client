@@ -9,6 +9,7 @@
  */
 package kpt.core.store.di
 
+import com.mifos.core.store.provideCenterPageStore
 import com.mifos.core.store.provideCheckerTaskStore
 import com.mifos.core.store.provideClientPageStore
 import com.mifos.core.store.provideClientStore
@@ -84,6 +85,9 @@ val appStoreModule: Module = module {
     single(AppStoreRegistry.GroupListPage) {
         provideGroupPageStore(api = get(), dao = get())
     }
+    single(AppStoreRegistry.CenterListPage) {
+        provideCenterPageStore(api = get(), dao = get())
+    }
     single(AppStoreRegistry.CheckerTasks) {
         provideCheckerTaskStore(api = get(), dao = get())
     }
@@ -109,6 +113,7 @@ val appStoreModule: Module = module {
         mgr.register(get(AppStoreRegistry.ClientListPage))
         mgr.register(get(AppStoreRegistry.Groups))
         mgr.register(get(AppStoreRegistry.GroupListPage))
+        mgr.register(get(AppStoreRegistry.CenterListPage))
         mgr.register(get(AppStoreRegistry.CheckerTasks))
         mgr.register(get(AppStoreRegistry.Documents))
         mgr.register(get(AppStoreRegistry.ReportCategories))

@@ -13,7 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import kpt.core.base.ui.nav.popBackStackSafely
+import com.mifos.feature.center.navigation.navigateToCenterListScreenRoute
 import com.mifos.feature.client.navigation.navigateToClientListScreen
+import com.mifos.feature.groups.navigation.navigateToGroupListScreen
 import com.mifos.feature.loan.loanLookup.navigateToLoanAccountLookup
 import kpt.feature.home.HomeDashboard
 import kpt.feature.home.ui.HomeFeature
@@ -73,6 +75,8 @@ object BackboneRegistry {
                     // each lands its FeatureRegistry destination + home routing.
                     HomeFeature.LOANS -> navController.navigateToLoanAccountLookup()
                     HomeFeature.CLIENTS -> navController.navigateToClientListScreen()
+                    HomeFeature.GROUPS -> navController.navigateToGroupListScreen()
+                    HomeFeature.CENTERS -> navController.navigateToCenterListScreenRoute()
                     else -> Unit
                 }
             },

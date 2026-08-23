@@ -14,10 +14,12 @@ import androidx.room3.Database
 import androidx.room3.RoomDatabase
 import androidx.room3.ColumnTypeConverters
 import com.mifos.room.dao.CenterDao
+import com.mifos.room.dao.CenterListCacheDao
 import com.mifos.room.dao.ChargeDao
 import com.mifos.room.dao.ClientDao
 import com.mifos.room.dao.ClientListCacheDao
 import com.mifos.room.dao.ColumnValueDao
+import com.mifos.room.dao.GroupListCacheDao
 import com.mifos.room.dao.GroupsDao
 import com.mifos.room.dao.LoanDao
 import com.mifos.room.dao.LoanTransactionDao
@@ -68,8 +70,10 @@ import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.client.ClientStatusEntity
 import com.mifos.room.entities.group.CenterDateEntity
 import com.mifos.room.entities.group.CenterEntity
+import com.mifos.room.entities.group.CenterListCacheEntity
 import com.mifos.room.entities.group.GroupDateEntity
 import com.mifos.room.entities.group.GroupEntity
+import com.mifos.room.entities.group.GroupListCacheEntity
 import com.mifos.room.entities.group.GroupPayloadEntity
 import com.mifos.room.entities.noncore.ColumnHeader
 import com.mifos.room.entities.noncore.ColumnValue
@@ -138,9 +142,11 @@ import com.mifos.room.typeconverters.CustomTypeConverters
         // group package
         CenterEntity::class,
         CenterDateEntity::class,
+        CenterListCacheEntity::class,
         GroupEntity::class,
         GroupDateEntity::class,
         GroupPayloadEntity::class,
+        GroupListCacheEntity::class,
         // non-core package
         ColumnHeader::class,
         ColumnValue::class,
@@ -180,6 +186,11 @@ import com.mifos.room.typeconverters.CustomTypeConverters
         // v7: purely-additive `client_list_cache` table (new FK-free entity, no destructive
         // column edits) — Room3 auto-migration handles a brand-new table with no spec.
         AutoMigration(from = 6, to = 7),
+        // v8: purely-additive `group_list_cache` table (new FK-free entity, no destructive
+        // column edits) — Room3 auto-migration handles a brand-new table with no spec.
+        AutoMigration(from = 7, to = 8),
+        // v9: purely-additive `center_list_cache` table (new FK-free entity, no destructive
+        // column edits) — Room3 auto-migration handles a brand-new table with no spec.
     ],
 )
 @ColumnTypeConverters(
@@ -187,11 +198,13 @@ import com.mifos.room.typeconverters.CustomTypeConverters
 )
 actual abstract class MifosDatabase : RoomDatabase() {
     actual abstract val centerDao: CenterDao
+    actual abstract val centerListCacheDao: CenterListCacheDao
     actual abstract val chargeDao: ChargeDao
     actual abstract val clientDao: ClientDao
     actual abstract val clientListCacheDao: ClientListCacheDao
     actual abstract val columnValueDao: ColumnValueDao
     actual abstract val groupsDao: GroupsDao
+    actual abstract val groupListCacheDao: GroupListCacheDao
     actual abstract val loanDao: LoanDao
     actual abstract val loanTransactionDao: LoanTransactionDao
     actual abstract val officeDao: OfficeDao
@@ -205,6 +218,6 @@ actual abstract class MifosDatabase : RoomDatabase() {
     actual abstract val surveyDao: SurveyDao
 
     companion object {
-        const val VERSION = 7
+        const val VERSION = 8
     }
 }

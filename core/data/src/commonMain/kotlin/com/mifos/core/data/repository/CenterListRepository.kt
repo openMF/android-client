@@ -13,12 +13,24 @@ import androidx.paging.PagingData
 import com.mifos.core.common.utils.Page
 import com.mifos.room.entities.group.CenterEntity
 import com.mifos.room.entities.group.CenterWithAssociations
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kpt.core.base.store.paging.PagingScreenStream
 
 /**
  * Created by Aditya Gupta on 06/08/23.
  */
 interface CenterListRepository {
+
+    /**
+     * Offline-first paged center-list stream — the native Store5 paging idiom that
+     * replaces the online-Paging3 read path (`CenterListPagingSource`). Backed by
+     * `Store<PageKey, List<CenterEntity>>.asPagingScreenStream(...)`.
+     */
+    fun centerListPagingStream(
+        scope: CoroutineScope,
+        pageSize: Int = 10,
+    ): PagingScreenStream<CenterEntity>
 
     fun getAllCenters(): Flow<PagingData<CenterEntity>>
 

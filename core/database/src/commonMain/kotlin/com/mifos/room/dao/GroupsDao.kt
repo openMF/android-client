@@ -29,15 +29,6 @@ interface GroupsDao {
     @Insert(entity = GroupEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGroup(group: GroupEntity)
 
-    // Offline-first paged group-list source-of-truth (GroupListPage Store5 read path).
-    // No `page` column on GroupEntity, so pages are windowed by LIMIT/OFFSET over the
-    // full GroupTable (ordered by primary key) — no schema change.
-    @Query("SELECT * FROM GroupTable ORDER BY id LIMIT :limit OFFSET :offset")
-    fun getPageGroups(limit: Int, offset: Int): Flow<List<GroupEntity>>
-
-    @Insert(entity = GroupEntity::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertGroups(groups: List<GroupEntity>)
-
     @Insert(entity = LoanAccountEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLoanAccount(loanAccount: LoanAccountEntity)
 

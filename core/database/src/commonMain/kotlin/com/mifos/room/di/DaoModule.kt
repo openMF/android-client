@@ -15,11 +15,13 @@ import org.koin.dsl.module
 val DaoModule = module {
     includes(PlatformSpecificDatabaseModule)
     single { get<MifosDatabase>().centerDao }
+    single { get<MifosDatabase>().centerListCacheDao }
     single { get<MifosDatabase>().chargeDao }
     single { get<MifosDatabase>().clientDao }
     single { get<MifosDatabase>().clientListCacheDao }
     single { get<MifosDatabase>().columnValueDao }
     single { get<MifosDatabase>().groupsDao }
+    single { get<MifosDatabase>().groupListCacheDao }
     single { get<MifosDatabase>().loanDao }
     single { get<MifosDatabase>().loanTransactionDao }
     single { get<MifosDatabase>().officeDao }

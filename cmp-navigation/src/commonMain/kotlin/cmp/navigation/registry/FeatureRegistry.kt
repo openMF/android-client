@@ -13,7 +13,11 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import com.mifos.feature.client.di.ClientModule
 import com.mifos.feature.loan.di.LoanModule
+import com.mifos.feature.center.di.CenterModule
+import com.mifos.feature.center.navigation.centerListScreenRoute
 import com.mifos.feature.client.navigation.clientListScreenRoute
+import com.mifos.feature.groups.di.GroupsModule
+import com.mifos.feature.groups.navigation.groupListScreenRoute
 import com.mifos.feature.loan.navigation.loanDestination
 import org.koin.core.module.Module
 
@@ -57,6 +61,9 @@ object FeatureRegistry {
         // client feature — its ViewModels (incl. ClientListViewModel for the offline-first
         // Store5 paged list) must be in the DI graph for the home Clients tile to render.
         ClientModule,
+        // group + center features — their ViewModels for the offline-first paged lists.
+        GroupsModule,
+        CenterModule,
     )
 
     /**
@@ -81,6 +88,16 @@ object FeatureRegistry {
         clientListScreenRoute(
             onClientSelect = { },
             createNewClient = { },
+        )
+        // Group + center lists — reachable from their home tiles. Offline-first Store5 paged
+        // lists (PagingScreenContent). Per-item drill-down is part of the broader graph wiring.
+        groupListScreenRoute(
+            onAddGroupClick = { },
+            onGroupClick = { },
+        )
+        centerListScreenRoute(
+            createNewCenter = { },
+            onCenterSelect = { },
         )
     }
 }

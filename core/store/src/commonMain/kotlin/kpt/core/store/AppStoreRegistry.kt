@@ -56,6 +56,9 @@ object AppStoreRegistry : StoreRegistry() {
     /** Offline-first paged group list (Store5 native paging — `Store<PageKey, List<GroupEntity>>`). */
     val GroupListPage = store("groupListPage")
 
+    /** Offline-first paged center list (Store5 native paging — `Store<PageKey, List<CenterEntity>>`). */
+    val CenterListPage = store("centerListPage")
+
     /** Read-only offline-first checker-inbox task list (single global list, keyed by Unit). */
     val CheckerTasks = store("checkerTasks")
 
