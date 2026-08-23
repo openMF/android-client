@@ -10,6 +10,7 @@
 package kpt.core.store.di
 
 import com.mifos.core.store.provideCheckerTaskStore
+import com.mifos.core.store.provideClientPageStore
 import com.mifos.core.store.provideClientStore
 import com.mifos.core.store.provideDocumentStore
 import com.mifos.core.store.provideGroupStore
@@ -73,6 +74,9 @@ val appStoreModule: Module = module {
     single(AppStoreRegistry.Clients) {
         provideClientStore(api = get(), dao = get())
     }
+    single(AppStoreRegistry.ClientListPage) {
+        provideClientPageStore(api = get(), dao = get())
+    }
     single(AppStoreRegistry.Groups) {
         provideGroupStore(api = get(), dao = get())
     }
@@ -98,6 +102,7 @@ val appStoreModule: Module = module {
         mgr.register(get(AppStoreRegistry.LoanTransactions))
         mgr.register(get(AppStoreRegistry.SavingsAccountTransactions))
         mgr.register(get(AppStoreRegistry.Clients))
+        mgr.register(get(AppStoreRegistry.ClientListPage))
         mgr.register(get(AppStoreRegistry.Groups))
         mgr.register(get(AppStoreRegistry.CheckerTasks))
         mgr.register(get(AppStoreRegistry.Documents))

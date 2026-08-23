@@ -184,7 +184,17 @@ val RepositoryModule = module {
             clientStore = get(AppStoreRegistry.Clients),
         )
     }
-    singleOf(::ClientListRepositoryImp) bind ClientListRepository::class
+    // Offline-first paged client list: read through the qualified Store5 paged store
+    // (ClientListPage) via asPagingScreenStream. singleOf can't resolve the qualified store
+    // arg, so this one is wired explicitly.
+    single<ClientListRepository> {
+        ClientListRepositoryImp(
+            clientListPageStore = get(AppStoreRegistry.ClientListPage),
+            networkMonitor = get(),
+            fetchedAtRepository = get(),
+            dataManagerClient = get(),
+        )
+    }
     singleOf(::ChargeRepositoryImp) bind ChargeRepository::class
     singleOf(::ClientIdentifiersRepositoryImp) bind ClientIdentifiersRepository::class
     singleOf(::CreateNewClientRepositoryImp) bind CreateNewClientRepository::class

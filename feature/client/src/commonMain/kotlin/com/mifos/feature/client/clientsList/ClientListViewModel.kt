@@ -18,6 +18,7 @@ import com.mifos.core.common.utils.Page
 import com.mifos.core.data.repository.ClientDetailsRepository
 import com.mifos.core.data.repository.ClientListRepository
 import com.mifos.core.datastore.UserPreferencesRepository
+import kpt.core.base.store.paging.PagingScreenStream
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import com.mifos.core.ui.util.imageToByteArray
 import com.mifos.room.entities.client.ClientEntity
@@ -43,10 +44,22 @@ internal class ClientListViewModel(
     ),
 ) {
 
+    /**
+     * Offline-first paged client-list stream — the native Store5 paging idiom that drives the
+     * list body ([ClientListContentScreen]'s `PagingScreenContent`). Replaces the previous dual
+     * online-Paging3 / offline-DB read paths. The surrounding toolbar / search / filter / FAB
+     * state still lives in [ClientListState] and is unchanged.
+     */
+    val pagingStream: PagingScreenStream<ClientEntity> =
+        repository.clientListPagingStream(scope = viewModelScope)
+
     init {
         // load initial data
         loadClients()
     }
+
+    /** Pull-to-refresh / retry for the paged list. Resets the paging cursor to page 0. */
+    fun retry() = pagingStream.refresh()
 
     override fun handleAction(action: ClientListAction) {
         when (action) {
@@ -91,7 +104,12 @@ internal class ClientListViewModel(
         mutableStateFlow.update { it.copy(dialogState = null) }
     }
 
-    private fun refreshClients() = loadClients()
+    private fun refreshClients() {
+        // Refresh the paged list body (page 0, force-network) and keep the legacy state.clients
+        // load alive so filter/sort/office-name state stays populated.
+        pagingStream.refresh()
+        loadClients()
+    }
 
     private fun loadClients() {
         viewModelScope.launch {

@@ -11,8 +11,6 @@ package com.mifos.feature.client.clientsList
 
 import kpt.feature.client.generated.resources.Res
 import kpt.feature.client.generated.resources.account_number_prefix
-import kpt.feature.client.generated.resources.feature_client_failed_to_fetch_clients
-import kpt.feature.client.generated.resources.feature_client_failed_to_more_clients
 import kpt.feature.client.generated.resources.feature_client_no_more_clients_available
 import kpt.feature.client.generated.resources.string_not_available
 import androidx.compose.animation.AnimatedVisibility
@@ -26,7 +24,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,32 +45,27 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.LoadState
-import androidx.paging.PagingData
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.mifos.core.designsystem.component.BasicDialogState
 import com.mifos.core.designsystem.component.MifosBasicDialog
-import com.mifos.core.designsystem.component.MifosSweetError
 import com.mifos.core.designsystem.icon.MifosIcons
 import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.ui.components.MifosEmptyCard
-import com.mifos.core.ui.components.MifosPagingAppendProgress
 import com.mifos.core.ui.components.MifosProgressIndicator
 import com.mifos.core.ui.components.MifosRowCard
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.core.ui.util.TextUtil
 import com.mifos.room.entities.client.ClientEntity
-import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import kpt.core.base.designsystem.KptTheme
 import kpt.core.base.designsystem.theme.LocalKptColors
 import kpt.core.base.designsystem.theme.LocalKptSpacing
+import kpt.core.base.store.paging.PagingScreenStream
+import kpt.core.base.ui.paging.PagingScreenContent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -112,9 +104,9 @@ internal fun ClientListScreen(
     ClientListContentScreen(
         modifier = modifier,
         state = state,
+        pagingStream = viewModel.pagingStream,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
         toggleFilterVisibility = { viewModel.trySendAction(ClientListAction.ToggleFilterVisibility) },
-        onUpdateOffices = { viewModel.trySendAction(ClientListAction.OnUpdateOffice(it)) },
     )
 
     ClientListDialogs(
@@ -203,10 +195,10 @@ private fun ClientActions(
 @Composable
 private fun ClientListContentScreen(
     state: ClientListState,
+    pagingStream: PagingScreenStream<ClientEntity>,
     modifier: Modifier = Modifier,
     onAction: (ClientListAction) -> Unit,
     toggleFilterVisibility: () -> Unit,
-    onUpdateOffices: (List<String?>) -> Unit,
     isRefreshing: Boolean = false,
 ) {
     val pullRefreshState = rememberPullToRefreshState()
@@ -226,68 +218,29 @@ private fun ClientListContentScreen(
             onRefresh = { onAction(ClientListAction.RefreshClients) },
             isRefreshing = isRefreshing,
         ) {
-            when {
-                state.clients.isNotEmpty() -> {
-                    ClientListContent(
-                        clientsList = state.clients,
+            // List body — native Store5 offline-first paging. The framework
+            // PagingScreenContent owns the LazyColumn, load-more trigger, footer,
+            // and the loading / no-network / error+retry / empty transitions.
+            PagingScreenContent(
+                pagingStream = pagingStream,
+                onRetry = { onAction(ClientListAction.RefreshClients) },
+                modifier = Modifier.padding(LocalKptSpacing.current.md),
+                endMessage = stringResource(Res.string.feature_client_no_more_clients_available),
+                empty = { MifosEmptyCard("No clients found") },
+            ) { clients ->
+                items(items = clients, key = { it.id }) { client ->
+                    LaunchedEffect(client.id) {
+                        onAction(ClientListAction.FetchImage(client.id))
+                    }
+                    ClientItem(
+                        client = client,
+                        byteArray = state.clientImages[client.id],
                         onClientClick = { clientId ->
                             onAction(ClientListAction.OnClientClick(clientId))
                         },
-                        modifier = Modifier.padding(LocalKptSpacing.current.md),
-                        fetchImage = {
-                            onAction(ClientListAction.FetchImage(it))
-                        },
-                        images = state.clientImages,
                     )
                 }
-
-                state.clientsFlow != null -> {
-                    LazyColumnForClientListApi(
-                        pagingFlow = state.clientsFlow,
-                        onRefresh = {
-                            onAction(ClientListAction.RefreshClients)
-                        },
-                        onClientSelect = {
-                            onAction(ClientListAction.OnClientClick(it))
-                        },
-                        modifier = Modifier,
-                        fetchImage = {
-                            onAction(ClientListAction.FetchImage(it))
-                        },
-                        images = state.clientImages,
-                        sort = state.sort,
-                        onUpdateOffices = onUpdateOffices,
-                    )
-                }
-
-                else -> {
-                    MifosEmptyCard("No clients found")
-                }
             }
-        }
-    }
-}
-
-@Composable
-fun ClientListContent(
-    clientsList: List<ClientEntity>,
-    onClientClick: (Int) -> Unit,
-    fetchImage: (Int) -> Unit,
-    images: Map<Int, ByteArray?>,
-    modifier: Modifier = Modifier,
-) {
-    LazyColumn(
-        modifier = modifier.fillMaxSize(),
-    ) {
-        items(items = clientsList) { client ->
-            LaunchedEffect(client.id) {
-                fetchImage(client.id)
-            }
-            ClientItem(
-                client = client,
-                byteArray = images[client.id],
-                onClientClick = onClientClick,
-            )
         }
     }
 }
@@ -363,127 +316,6 @@ private fun ClientListDialogs(
         }
 
         null -> Unit
-    }
-}
-
-@Composable
-internal fun LazyColumnForClientListApi(
-    pagingFlow: Flow<PagingData<ClientEntity>>,
-    onRefresh: () -> Unit,
-    onClientSelect: (Int) -> Unit,
-    fetchImage: (Int) -> Unit,
-    images: Map<Int, ByteArray?>,
-    modifier: Modifier,
-    sort: SortTypes?,
-    onUpdateOffices: (List<String?>) -> Unit,
-) {
-    val clientPagingList = pagingFlow.collectAsLazyPagingItems()
-
-    val items = clientPagingList.itemSnapshotList.items
-    if (items.isNotEmpty()) {
-        val offices = items.map { it.officeName }
-            .distinct()
-        LaunchedEffect(offices) { onUpdateOffices(offices) }
-    }
-
-    when (clientPagingList.loadState.refresh) {
-        is LoadState.Error -> {
-            MifosSweetError(message = stringResource(Res.string.feature_client_failed_to_fetch_clients)) {
-                onRefresh()
-            }
-        }
-
-        is LoadState.Loading -> MifosProgressIndicator()
-
-        is LoadState.NotLoading -> Unit
-    }
-
-    if (sort != null) {
-        val currentItems = clientPagingList.itemSnapshotList.items
-
-        val sortedItems = when (sort) {
-            SortTypes.NAME -> {
-                currentItems.sortedBy { it.displayName?.lowercase() }
-            }
-            SortTypes.ACCOUNT_NUMBER -> {
-                currentItems.sortedBy { it.accountNo }
-            }
-            SortTypes.EXTERNAL_ID -> {
-                currentItems.sortedBy { it.externalId }
-            }
-            else -> currentItems
-        }
-
-        LazyColumn(
-            modifier = modifier,
-        ) {
-            items(
-                items = sortedItems,
-                key = { client -> client.id },
-            ) { client ->
-                LaunchedEffect(client.id) {
-                    fetchImage(client.id)
-                }
-                ClientItem(
-                    client = client,
-                    byteArray = images[client.id],
-                    onClientClick = onClientSelect,
-                )
-            }
-        }
-    } else {
-        LazyColumn(
-            modifier = modifier,
-        ) {
-            items(
-                count = clientPagingList.itemCount,
-                key = { index -> clientPagingList[index]?.id ?: index },
-            ) { index ->
-                clientPagingList[index]?.let { client ->
-                    LaunchedEffect(client.id) {
-                        fetchImage(client.id)
-                    }
-                    ClientItem(
-                        client = client,
-                        byteArray = images[client.id],
-                        onClientClick = onClientSelect,
-                    )
-                }
-            }
-
-            when (clientPagingList.loadState.append) {
-                is LoadState.Error -> {
-                    item {
-                        MifosSweetError(message = stringResource(Res.string.feature_client_failed_to_more_clients)) {
-                            clientPagingList.retry()
-                        }
-                    }
-                }
-
-                is LoadState.Loading -> {
-                    item {
-                        MifosPagingAppendProgress()
-                    }
-                }
-
-                is LoadState.NotLoading -> {
-                    if (clientPagingList.loadState.append.endOfPaginationReached &&
-                        clientPagingList.itemCount > 0
-                    ) {
-                        item {
-                            Text(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = DesignToken.padding.extraExtraLarge),
-                                text = stringResource(Res.string.feature_client_no_more_clients_available),
-                                style = MifosTypography.bodyMedium,
-                                textAlign = TextAlign.Center,
-                            )
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 

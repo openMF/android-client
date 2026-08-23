@@ -47,6 +47,9 @@ object AppStoreRegistry : StoreRegistry() {
     /** Read-only offline-first single-client details (client-details read-cache). */
     val Clients = store("clients")
 
+    /** Offline-first paged client list (Store5 native paging — `Store<PageKey, List<ClientEntity>>`). */
+    val ClientListPage = store("clientListPage")
+
     /** Read-only offline-first single-group details (getGroup read-cache). */
     val Groups = store("groups")
 
