@@ -48,6 +48,11 @@ import com.mifos.room.entities.accounts.savings.SavingsTransactionDateEntity
 import com.mifos.room.entities.accounts.savings.SavingsTransactionTypeEntity
 import com.mifos.room.dao.CheckerTaskDao
 import com.mifos.room.entities.checkerinbox.CheckerTaskEntity
+import com.mifos.room.dao.DocumentDao
+import com.mifos.room.dao.NoteDao
+import com.mifos.room.dao.ReportCategoryDao
+import com.mifos.room.entities.document.DocumentEntity
+import com.mifos.room.entities.report.ReportCategoryEntity
 import com.mifos.room.entities.center.CenterPayloadEntity
 import com.mifos.room.entities.client.ChargeCalculationTypeEntity
 import com.mifos.room.entities.client.ChargeTimeTypeEntity
@@ -100,6 +105,8 @@ import com.mifos.room.typeconverters.CustomTypeConverters
         LoanTimelineEntity::class,
         LoanTransactionEntity::class,
         CheckerTaskEntity::class,
+        DocumentEntity::class,
+        ReportCategoryEntity::class,
         // savings package
         SavingAccountDepositTypeEntity::class,
         SavingsAccountEntity::class,
@@ -166,6 +173,7 @@ import com.mifos.room.typeconverters.CustomTypeConverters
         // column edits) — Room3 auto-migration handles a brand-new table with no spec.
         AutoMigration(from = 3, to = 4),
         AutoMigration(from = 4, to = 5),
+        AutoMigration(from = 5, to = 6),
     ],
 )
 @ColumnTypeConverters(
@@ -183,10 +191,13 @@ actual abstract class MifosDatabase : RoomDatabase() {
     actual abstract val savingsDao: SavingsDao
     actual abstract val savingsAccountTransactionDao: SavingsAccountTransactionDao
     actual abstract val checkerTaskDao: CheckerTaskDao
+    actual abstract val documentDao: DocumentDao
+    actual abstract val reportCategoryDao: ReportCategoryDao
+    actual abstract val noteDao: NoteDao
     actual abstract val staffDao: StaffDao
     actual abstract val surveyDao: SurveyDao
 
     companion object {
-        const val VERSION = 5
+        const val VERSION = 6
     }
 }

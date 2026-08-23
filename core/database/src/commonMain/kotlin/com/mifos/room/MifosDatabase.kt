@@ -16,7 +16,10 @@ import com.mifos.room.dao.ColumnValueDao
 import com.mifos.room.dao.GroupsDao
 import com.mifos.room.dao.LoanDao
 import com.mifos.room.dao.CheckerTaskDao
+import com.mifos.room.dao.DocumentDao
 import com.mifos.room.dao.LoanTransactionDao
+import com.mifos.room.dao.NoteDao
+import com.mifos.room.dao.ReportCategoryDao
 import com.mifos.room.dao.OfficeDao
 import com.mifos.room.dao.SavingsAccountTransactionDao
 import com.mifos.room.dao.SavingsDao
@@ -36,6 +39,9 @@ expect abstract class MifosDatabase {
     abstract val savingsDao: SavingsDao
     abstract val savingsAccountTransactionDao: SavingsAccountTransactionDao
     abstract val checkerTaskDao: CheckerTaskDao
+    abstract val documentDao: DocumentDao
+    abstract val reportCategoryDao: ReportCategoryDao
+    abstract val noteDao: NoteDao
     abstract val staffDao: StaffDao
     abstract val surveyDao: SurveyDao
 }

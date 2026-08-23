@@ -11,8 +11,12 @@ package kpt.core.store.di
 
 import com.mifos.core.store.provideCheckerTaskStore
 import com.mifos.core.store.provideClientStore
+import com.mifos.core.store.provideDocumentStore
 import com.mifos.core.store.provideGroupStore
 import com.mifos.core.store.provideLoanTransactionStore
+import com.mifos.core.store.provideNoteStore
+import com.mifos.core.store.provideReportCategoryStore
+import com.mifos.core.store.provideSavingsAccountSummaryStore
 import com.mifos.core.store.provideSavingsAccountTransactionStore
 import kpt.core.base.store.infra.DraftInventory
 import kpt.core.base.store.infra.StoreCacheManager
@@ -75,6 +79,18 @@ val appStoreModule: Module = module {
     single(AppStoreRegistry.CheckerTasks) {
         provideCheckerTaskStore(api = get(), dao = get())
     }
+    single(AppStoreRegistry.Documents) {
+        provideDocumentStore(api = get(), dao = get())
+    }
+    single(AppStoreRegistry.ReportCategories) {
+        provideReportCategoryStore(api = get(), dao = get())
+    }
+    single(AppStoreRegistry.Notes) {
+        provideNoteStore(api = get(), dao = get())
+    }
+    single(AppStoreRegistry.SavingsAccountSummary) {
+        provideSavingsAccountSummaryStore(api = get(), dao = get())
+    }
 
     // Register the read-cache Stores for logout cache clearing (D7).
     single(createdAtStart = true) {
@@ -84,5 +100,9 @@ val appStoreModule: Module = module {
         mgr.register(get(AppStoreRegistry.Clients))
         mgr.register(get(AppStoreRegistry.Groups))
         mgr.register(get(AppStoreRegistry.CheckerTasks))
+        mgr.register(get(AppStoreRegistry.Documents))
+        mgr.register(get(AppStoreRegistry.ReportCategories))
+        mgr.register(get(AppStoreRegistry.Notes))
+        mgr.register(get(AppStoreRegistry.SavingsAccountSummary))
     }
 }

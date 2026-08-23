@@ -60,6 +60,15 @@ interface SavingsDao {
     @Query("SELECT * FROM SavingsAccountWithAssociations where id = :savingsAccountId")
     fun getSavingsAccountWithAssociations(savingsAccountId: Int): Flow<SavingsAccountWithAssociationsEntity?>
 
+    // Business key for SavingsAccountWithAssociations is the `id` column (the autoGenerate PK
+    // holds the real savings-account id, stamped by provideSavingsAccountSummaryStore). The Store5
+    // SoT writer deletes-then-inserts per this key so an SWR refresh REPLACES (never duplicates).
+    @Query("DELETE FROM SavingsAccountWithAssociations WHERE id = :savingsAccountId")
+    suspend fun deleteSavingsAccountWithAssociations(savingsAccountId: Int)
+
+    @Query("DELETE FROM SavingsAccountWithAssociations")
+    suspend fun deleteAllSavingsAccountWithAssociations()
+
     @Query("SELECT * FROM PaymentTypeOption")
     fun getAllPaymentTypeOption(): Flow<List<PaymentTypeOptionEntity>>
 }

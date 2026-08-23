@@ -240,7 +240,12 @@ val RepositoryModule = module {
     singleOf(::SavingsAccountRepositoryImp) bind SavingsAccountRepository::class
     singleOf(::SavingsAccountActivateRepositoryImp) bind SavingsAccountActivateRepository::class
     singleOf(::SavingsAccountApprovalRepositoryImp) bind SavingsAccountApprovalRepository::class
-    singleOf(::SavingsAccountSummaryRepositoryImp) bind SavingsAccountSummaryRepository::class
+    // Offline-first: full-entity savings-summary store (cache-first).
+    single<SavingsAccountSummaryRepository> {
+        SavingsAccountSummaryRepositoryImp(
+            savingsSummaryStore = get(AppStoreRegistry.SavingsAccountSummary),
+        )
+    }
     singleOf(::SavingsAccountTransactionRepositoryImp) bind SavingsAccountTransactionRepository::class
     singleOf(::SavingsAccountTransactionReceiptRepositoryImpl) bind SavingsAccountTransactionReceiptRepository::class
 
@@ -269,14 +274,33 @@ val RepositoryModule = module {
     singleOf(::DataTableRepositoryImp) bind DataTableRepository::class
     singleOf(::DataTableRowDialogRepositoryImp) bind DataTableRowDialogRepository::class
     singleOf(::DocumentCreateUpdateRepositoryImp) bind DocumentCreateUpdateRepository::class
-    singleOf(::DocumentListRepositoryImp) bind DocumentListRepository::class
+    // Offline-first: document-list store (cache-first).
+    single<DocumentListRepository> {
+        DocumentListRepositoryImp(
+            documentStore = get(AppStoreRegistry.Documents),
+            dataManagerDocument = get(),
+        )
+    }
     singleOf(::IndividualCollectionSheetDetailsRepositoryImp) bind IndividualCollectionSheetDetailsRepository::class
     singleOf(::NewIndividualCollectionSheetRepositoryImp) bind NewIndividualCollectionSheetRepository::class
     singleOf(::GenerateCollectionSheetRepositoryImp) bind GenerateCollectionSheetRepository::class
-    singleOf(::NoteRepositoryImp) bind NoteRepository::class
+    // Offline-first: note-list store (cache-first).
+    single<NoteRepository> {
+        NoteRepositoryImp(
+            dataManagerNote = get(),
+            noteStore = get(AppStoreRegistry.Notes),
+            networkMonitor = get(),
+            dispatcher = get(),
+        )
+    }
     singleOf(::OfflineDashboardRepositoryImp) bind OfflineDashboardRepository::class
     singleOf(::PathTrackingRepositoryImp) bind PathTrackingRepository::class
-    singleOf(::ReportCategoryRepositoryImp) bind ReportCategoryRepository::class
+    // Offline-first: report-category store (cache-first).
+    single<ReportCategoryRepository> {
+        ReportCategoryRepositoryImp(
+            reportCategoryStore = get(AppStoreRegistry.ReportCategories),
+        )
+    }
     singleOf(::ReportDetailRepositoryImp) bind ReportDetailRepository::class
     singleOf(::SearchRepositoryImp) bind SearchRepository::class
     singleOf(::SignatureRepositoryImp) bind SignatureRepository::class

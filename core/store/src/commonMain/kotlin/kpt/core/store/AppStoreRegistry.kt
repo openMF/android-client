@@ -52,4 +52,16 @@ object AppStoreRegistry : StoreRegistry() {
 
     /** Read-only offline-first checker-inbox task list (single global list, keyed by Unit). */
     val CheckerTasks = store("checkerTasks")
+
+    /** Read-only offline-first document-metadata list, keyed by (entityType, entityId). */
+    val Documents = store("documents")
+
+    /** Read-only offline-first run-report category list, keyed by the request scope tuple. */
+    val ReportCategories = store("reportCategories")
+
+    /** Read-only offline-first note list for a parent, keyed by (entityType, entityId). */
+    val Notes = store("notes")
+
+    /** Read-only offline-first single savings-account summary (full-entity read-cache). */
+    val SavingsAccountSummary = store("savingsAccountSummary")
 }
