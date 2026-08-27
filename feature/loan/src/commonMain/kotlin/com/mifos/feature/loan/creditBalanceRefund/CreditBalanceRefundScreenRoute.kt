@@ -12,7 +12,6 @@ package com.mifos.feature.loan.creditBalanceRefund
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -34,10 +33,6 @@ fun NavGraphBuilder.creditBalanceRefundScreen(
     }
 }
 
-fun NavController.navigateToCreditBalanceRefundScreen(loanWithAssociations: LoanWithAssociationsEntity) {
-    navigate(
-        CreditBalanceRefundScreenRoute(
-            loanId = loanWithAssociations.id,
-        ),
-    )
+fun NavController.navigateToCreditBalanceRefundScreen(loanId: Int) {
+    navigate(CreditBalanceRefundScreenRoute(loanId = loanId))
 }

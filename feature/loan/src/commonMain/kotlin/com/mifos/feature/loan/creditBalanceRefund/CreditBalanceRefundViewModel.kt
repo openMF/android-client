@@ -11,6 +11,8 @@ package com.mifos.feature.loan.creditBalanceRefund
 
 import androidclient.feature.loan.generated.resources.Res
 import androidclient.feature.loan.generated.resources.feature_error_network_not_available
+import androidclient.feature.loan.generated.resources.feature_loan_credit_balance_refund_failed_to_fetch_details
+import androidclient.feature.loan.generated.resources.feature_loan_credit_balance_refund_failed_to_submit
 import androidclient.feature.loan.generated.resources.feature_loan_profile_error_details_not_found
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -22,6 +24,7 @@ import com.mifos.core.model.objects.account.loan.creditBalanceRefund.CreditBalan
 import com.mifos.core.ui.util.BaseViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
 
 class CreditBalanceRefundViewModel(
     savedStateHandle: SavedStateHandle,
@@ -41,8 +44,8 @@ class CreditBalanceRefundViewModel(
 
     private fun observeLoanDetails() {
         viewModelScope.launch {
-            if (state.clientName == null && state.dialogState !is CreditBalanceRefundState.DialogState.Success) {
-                mutableStateFlow.update { it.copy(dialogState = CreditBalanceRefundState.DialogState.Loading) }
+            if (state.clientName == null && state.viewState !is CreditBalanceRefundState.ViewState.Success) {
+                mutableStateFlow.update { it.copy(viewState = CreditBalanceRefundState.ViewState.Loading) }
             }
 
             when (val result = useCase.getLoanRefundDetails(route.loanId)) {
@@ -52,7 +55,7 @@ class CreditBalanceRefundViewModel(
                     if (loan == null) {
                         mutableStateFlow.update {
                             it.copy(
-                                dialogState = CreditBalanceRefundState.DialogState.Error(
+                                viewState = CreditBalanceRefundState.ViewState.Error(
                                     messageRes = Res.string.feature_loan_profile_error_details_not_found,
                                 ),
                             )
@@ -61,7 +64,7 @@ class CreditBalanceRefundViewModel(
                         mutableStateFlow.update {
                             it.copy(
                                 networkAvailable = true,
-                                dialogState = it.dialogState as? CreditBalanceRefundState.DialogState.Success,
+                                viewState = it.viewState as? CreditBalanceRefundState.ViewState.Success,
                                 clientName = loan.clientName,
                                 loanAccountNumber = loan.accountNo,
                                 overpaidAmount = loan.totalOverpaid,
@@ -78,14 +81,14 @@ class CreditBalanceRefundViewModel(
                         if (isNetworkError) {
                             it.copy(
                                 networkAvailable = false,
-                                dialogState = CreditBalanceRefundState.DialogState.Error(
+                                viewState = CreditBalanceRefundState.ViewState.Error(
                                     messageRes = Res.string.feature_error_network_not_available,
                                 ),
                             )
                         } else {
                             it.copy(
-                                dialogState = CreditBalanceRefundState.DialogState.Error(
-                                    message = result.message,
+                                viewState = CreditBalanceRefundState.ViewState.Error(
+                                    messageRes = Res.string.feature_loan_credit_balance_refund_failed_to_fetch_details,
                                 ),
                             )
                         }
@@ -98,17 +101,17 @@ class CreditBalanceRefundViewModel(
     override fun handleAction(action: CreditBalanceRefundAction) {
         when (action) {
             is CreditBalanceRefundAction.NavigateBack -> {
-                if (state.dialogState is CreditBalanceRefundState.DialogState.Success) {
+                if (state.viewState is CreditBalanceRefundState.ViewState.Success) {
                     sendEvent(CreditBalanceRefundEvent.NavigateBackWithRefresh)
                 } else {
                     sendEvent(CreditBalanceRefundEvent.NavigateBack)
                 }
             }
-            is CreditBalanceRefundAction.OnDismissDialog -> {
-                if (state.dialogState is CreditBalanceRefundState.DialogState.Success) {
+            is CreditBalanceRefundAction.OnDismissBottomSheet -> {
+                if (state.viewState is CreditBalanceRefundState.ViewState.Success) {
                     sendEvent(CreditBalanceRefundEvent.NavigateBackWithRefresh)
                 } else {
-                    mutableStateFlow.update { it.copy(dialogState = null) }
+                    mutableStateFlow.update { it.copy(viewState = null) }
                 }
             }
             is CreditBalanceRefundAction.OnRetry -> {
@@ -123,7 +126,7 @@ class CreditBalanceRefundViewModel(
 
     private fun submitRefund(input: CreditBalanceRefundInput) {
         viewModelScope.launch {
-            mutableStateFlow.update { it.copy(dialogState = CreditBalanceRefundState.DialogState.Loading) }
+            mutableStateFlow.update { it.copy(viewState = CreditBalanceRefundState.ViewState.Loading) }
 
             when (val result = useCase.submitRefund(route.loanId, input)) {
                 is DataState.Loading -> Unit
@@ -131,7 +134,7 @@ class CreditBalanceRefundViewModel(
                     val response = result.data
                     mutableStateFlow.update {
                         it.copy(
-                            dialogState = CreditBalanceRefundState.DialogState.Success(
+                            viewState = CreditBalanceRefundState.ViewState.Success(
                                 transactionId = response.transactionId.toString(),
                             ),
                         )
@@ -143,12 +146,16 @@ class CreditBalanceRefundViewModel(
 
                         if (isNetworkError) {
                             it.copy(
-                                dialogState = CreditBalanceRefundState.DialogState.Error(
+                                viewState = CreditBalanceRefundState.ViewState.Error(
                                     messageRes = Res.string.feature_error_network_not_available,
                                 ),
                             )
                         } else {
-                            it.copy(dialogState = CreditBalanceRefundState.DialogState.Error(message = result.message))
+                            it.copy(
+                                viewState = CreditBalanceRefundState.ViewState.Error(
+                                    messageRes = Res.string.feature_loan_credit_balance_refund_failed_to_submit,
+                                ),
+                            )
                         }
                     }
                 }
@@ -158,7 +165,7 @@ class CreditBalanceRefundViewModel(
 }
 
 data class CreditBalanceRefundState(
-    val dialogState: DialogState? = null,
+    val viewState: ViewState? = null,
     val loanId: Int = 0,
     val clientName: String? = null,
     val loanAccountNumber: String = "",
@@ -168,15 +175,14 @@ data class CreditBalanceRefundState(
     val decimalPlaces: Int? = null,
     val networkAvailable: Boolean = true,
 ) {
-    sealed interface DialogState {
-        data object Loading : DialogState
+    sealed interface ViewState {
+        data object Loading : ViewState
 
         data class Error(
-            val message: String? = null,
-            val messageRes: org.jetbrains.compose.resources.StringResource? = null,
-        ) : DialogState
+            val messageRes: StringResource? = null,
+        ) : ViewState
 
-        data class Success(val transactionId: String) : DialogState
+        data class Success(val transactionId: String) : ViewState
     }
 }
 
@@ -185,7 +191,7 @@ sealed interface CreditBalanceRefundAction {
 
     data object OnRetry : CreditBalanceRefundAction
 
-    data object OnDismissDialog : CreditBalanceRefundAction
+    data object OnDismissBottomSheet : CreditBalanceRefundAction
 
     data class OnSubmitRefund(val input: CreditBalanceRefundInput) : CreditBalanceRefundAction
 }

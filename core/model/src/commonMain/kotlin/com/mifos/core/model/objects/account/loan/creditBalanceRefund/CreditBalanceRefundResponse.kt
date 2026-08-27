@@ -10,6 +10,5 @@
 package com.mifos.core.model.objects.account.loan.creditBalanceRefund
 
 data class CreditBalanceRefundResponse(
-    val clientId: Int?,
     val transactionId: Int?,
 )

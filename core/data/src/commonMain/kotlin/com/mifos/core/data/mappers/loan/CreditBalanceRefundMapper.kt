@@ -37,7 +37,6 @@ fun LoanRefundDetailsEntity.toDomain(): LoanRefundDetails = LoanRefundDetails(
 
 fun CreditBalanceRefundResponseDto.toDomain(): CreditBalanceRefundResponse {
     return CreditBalanceRefundResponse(
-        clientId = clientId,
         transactionId = resourceId,
     )
 }

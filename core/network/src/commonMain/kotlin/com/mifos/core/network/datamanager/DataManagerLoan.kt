@@ -289,14 +289,7 @@ class DataManagerLoan(
         loanId: Int,
         request: CreditBalanceRefundRequestDto,
     ): CreditBalanceRefundResponseDto {
-        val response = mBaseApiManager.loanService.submitCreditBalanceRefund(loanId, request)
-
-        if (!response.status.isSuccess()) {
-            val errorMessage = extractErrorMessage(response)
-            throw IllegalStateException(errorMessage)
-        }
-
-        return Json.decodeFromString(response.bodyAsText())
+        return mBaseApiManager.loanService.submitCreditBalanceRefund(loanId, request)
     }
 
     /**
