@@ -130,6 +130,7 @@ internal class LoanAccountProfileViewModel(
             is LoanAccountAction.OnDetailItemClick -> sendEvent(NavigateToDetail(action.item))
             LoanAccountAction.OnAccountClick -> sendEvent(LoanAccountEvent.NavigateToAccountDetails)
             LoanAccountAction.OnArrowClick -> sendEvent(LoanAccountEvent.NavigateToLoanAction)
+            LoanAccountAction.OnRefresh -> loadLoanAccountDetails(route.loanId)
         }
     }
 
@@ -178,4 +179,5 @@ sealed interface LoanAccountAction {
     data class OnDetailItemClick(val item: LoanAccountProfileActionItem) : LoanAccountAction
     data object OnAccountClick : LoanAccountAction
     data object OnArrowClick : LoanAccountAction
+    data object OnRefresh : LoanAccountAction
 }

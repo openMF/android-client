@@ -562,6 +562,33 @@
     <string name="feature_loan_transfer_success">Transfer completed successfully</string>
     <string name="feature_loan_transfer_go_back">Go Back</string>
 
+    <!-- Credit Balance Refund -->
+    <string name="feature_loan_credit_balance_refund">Credit Balance Refund</string>
+    <string name="feature_loan_credit_balance_refund_title">Credit Balance Refund</string>
+
+    <string name="feature_loan_credit_balance_refund_client_name">Client Name</string>
+    <string name="feature_loan_credit_balance_refund_loan_account_number">Loan Account Number</string>
+    <string name="feature_loan_credit_balance_refund_transaction_date">Transaction Date</string>
+    <string name="feature_loan_credit_balance_refund_transaction_amount">Transaction Amount</string>
+    <string name="feature_loan_credit_balance_refund_external_id">External ID</string>
+    <string name="feature_loan_credit_balance_refund_note">Note</string>
+
+    <string name="feature_loan_credit_balance_refund_submit">Submit</string>
+    <string name="feature_loan_credit_balance_refund_cancel">Cancel</string>
+    <string name="feature_loan_credit_balance_refund_ok">OK</string>
+
+    <string name="feature_loan_credit_balance_refund_error_amount_required">Transaction amount is required</string>
+    <string name="feature_loan_credit_balance_refund_error_amount_invalid">Transaction amount must be a valid number</string>
+    <string name="feature_loan_credit_balance_refund_error_amount_exceeds_overpaid">Transaction amount cannot exceed overpaid amount of %1$s</string>
+    <string name="feature_loan_credit_balance_refund_error_amount_non_positive">Transaction amount must be greater than zero</string>
+    <string name="feature_loan_credit_balance_refund_failed_to_fetch_details">Failed to fetch credit balance refund details</string>
+    <string name="feature_loan_credit_balance_refund_failed_to_submit">Failed to process credit balance refund</string>
+
+    <string name="feature_loan_credit_balance_refund_success_title">Refund Successful</string>
+    <string name="feature_loan_credit_balance_refund_success_message">Credit balance refund has been processed successfully.</string>
+    <string name="feature_loan_credit_balance_refund_success_transaction_id">Transaction ID: %1$s</string>
+
+
     <!-- Loan Actions-->
     <string name="feature_loan_profile_open_actions">Open loan actions</string>
     <string name="feature_loan_header_actions">ACTIONS</string>
