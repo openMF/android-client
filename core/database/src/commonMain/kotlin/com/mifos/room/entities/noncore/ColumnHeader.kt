@@ -11,6 +11,7 @@ package com.mifos.room.entities.noncore
 
 import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import template.core.base.database.Entity
 import template.core.base.database.PrimaryKey
@@ -35,12 +36,15 @@ data class ColumnHeader(
 
     val columnLength: Int? = null,
 
+    @SerialName("columnName")
     val dataTableColumnName: String? = null,
 
     val columnType: String? = null,
 
+    @SerialName("isColumnNullable")
     val columnNullable: Boolean? = null,
 
+    @SerialName("isColumnPrimaryKey")
     val columnPrimaryKey: Boolean? = null,
 
     val registeredTableName: String? = null,

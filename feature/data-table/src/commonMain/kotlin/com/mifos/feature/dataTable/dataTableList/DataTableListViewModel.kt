@@ -9,8 +9,6 @@
  */
 package com.mifos.feature.dataTable.dataTableList
 
-import FormSpinnerDTO
-import FormWidgetDTO
 import androidclient.feature.data_table.generated.resources.Res
 import androidclient.feature.data_table.generated.resources.feature_data_table_generic_failure_message
 import androidclient.feature.data_table.generated.resources.feature_data_table_loan_creation_success

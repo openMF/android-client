@@ -10,6 +10,7 @@
 package com.mifos.core.network.model
 
 import com.mifos.room.entities.noncore.DataTablePayload
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
@@ -43,6 +44,8 @@ data class LoansPayload(
     var loanOfficerId: Int? = null,
     var fundId: Int? = null,
     var linkAccountId: Int? = null,
+
+    @SerialName("datatables")
     var dataTables: ArrayList<DataTablePayload>? = null,
     var externalId: String? = null,
 )

@@ -9,7 +9,6 @@
  */
 package com.mifos.feature.client.navigation
 
-import FormWidgetDTO
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -88,6 +87,7 @@ import com.mifos.feature.client.savingsAccounts.navigateToClientSavingsAccountsR
 import com.mifos.feature.client.savingsAccounts.savingsAccountsDestination
 import com.mifos.feature.client.shareAccounts.navigateToShareAccountsScreen
 import com.mifos.feature.client.shareAccounts.shareAccountsDestination
+import com.mifos.feature.dataTable.dataTableList.FormWidgetDTO
 import com.mifos.feature.dataTable.navigation.dataTableRoute
 import com.mifos.feature.dataTable.navigation.navigateDataTableData
 import com.mifos.feature.dataTable.navigation.navigateToDataTable

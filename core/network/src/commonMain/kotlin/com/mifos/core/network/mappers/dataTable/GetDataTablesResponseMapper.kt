@@ -33,6 +33,7 @@ object GetDataTablesResponseMapper : AbstractMapper<GetDataTablesResponse, DataT
                     columnLength = it.columnLength?.toInt(),
                     columnNullable = it.isColumnNullable,
                     columnPrimaryKey = it.isColumnPrimaryKey,
+                    dataTableColumnName = it.columnName,
                 )
             },
         )

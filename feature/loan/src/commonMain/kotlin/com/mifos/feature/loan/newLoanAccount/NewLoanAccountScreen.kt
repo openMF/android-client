@@ -74,6 +74,7 @@ import com.mifos.core.ui.components.MifosTwoButtonRow
 import com.mifos.core.ui.components.Step
 import com.mifos.core.ui.util.EventsEffect
 import com.mifos.feature.loan.newLoanAccount.pages.ChargesPage
+import com.mifos.feature.loan.newLoanAccount.pages.DatatableStepPage
 import com.mifos.feature.loan.newLoanAccount.pages.DetailsPage
 import com.mifos.feature.loan.newLoanAccount.pages.PreviewPage
 import com.mifos.feature.loan.newLoanAccount.pages.SchedulePage
@@ -129,38 +130,55 @@ private fun NewLoanAccountScaffold(
     onAction: (NewLoanAccountAction) -> Unit,
     snackbarHostState: SnackbarHostState,
 ) {
-    val steps = listOf(
-        Step(stringResource(Res.string.step_details)) {
-            DetailsPage(
-                state = state,
-                onAction = onAction,
+    val realDataTables = state.loanTemplate?.dataTables?.filterNotNull().orEmpty()
+    val steps = buildList {
+        add(
+            Step(stringResource(Res.string.step_details)) {
+                DetailsPage(state = state, onAction = onAction)
+            },
+        )
+        add(
+            Step(stringResource(Res.string.step_terms)) {
+                TermsPage(state = state, onAction = onAction)
+            },
+        )
+        add(
+            Step(stringResource(Res.string.step_charges)) {
+                ChargesPage(state = state, onAction = onAction)
+            },
+        )
+        add(
+            Step(stringResource(Res.string.step_schedule)) {
+                SchedulePage(state = state, onAction = onAction)
+            },
+        )
+        realDataTables.forEachIndexed { idx, table ->
+            add(
+                Step(table.registeredTableName ?: "Datatable ${idx + 1}") {
+                    DatatableStepPage(
+                        table = table,
+                        values = state.datatableValues[idx].orEmpty(),
+                        onValueChange = { columnName, value ->
+                            onAction(
+                                NewLoanAccountAction.UpdateDatatableField(
+                                    tableIndex = idx,
+                                    columnName = columnName,
+                                    value = value,
+                                ),
+                            )
+                        },
+                        onAction = onAction,
+                        isLastStep = false,
+                    )
+                },
             )
-        },
-        Step(stringResource(Res.string.step_terms)) {
-            TermsPage(
-                state = state,
-                onAction = onAction,
-            )
-        },
-        Step(stringResource(Res.string.step_charges)) {
-            ChargesPage(
-                state = state,
-                onAction = onAction,
-            )
-        },
-        Step(stringResource(Res.string.step_schedule)) {
-            SchedulePage(
-                state = state,
-                onAction = onAction,
-            )
-        },
-        Step(stringResource(Res.string.step_preview)) {
-            PreviewPage(
-                state = state,
-                onAction = onAction,
-            )
-        },
-    )
+        }
+        add(
+            Step(stringResource(Res.string.step_preview)) {
+                PreviewPage(state = state, onAction = onAction)
+            },
+        )
+    }
 
     MifosScaffold(
         modifier = modifier,
