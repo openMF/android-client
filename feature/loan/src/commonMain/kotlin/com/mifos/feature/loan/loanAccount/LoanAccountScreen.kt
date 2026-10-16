@@ -621,8 +621,10 @@ private fun LoanAccountContent(
                     linkAccountId = selectedLinkSavingsId,
                     interestRatePerPeriod = nominal.toDouble(),
                 )
-                if (loanTemplate.dataTables.isNotEmpty()) {
-                    dataTable(loanTemplate.dataTables, loadPayload)
+
+                val realDataTables = loanTemplate.dataTables.filterNotNull()
+                if (realDataTables.isNotEmpty()) {
+                    dataTable(ArrayList(realDataTables), loadPayload)
                 } else {
                     createLoanAccount(loadPayload)
                 }

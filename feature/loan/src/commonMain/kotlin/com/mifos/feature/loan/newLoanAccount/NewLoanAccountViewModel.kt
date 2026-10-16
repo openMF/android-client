@@ -19,6 +19,7 @@ import androidclient.feature.loan.generated.resources.total_installments
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.mifos.core.common.utils.Constants
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.common.utils.DataState
 import com.mifos.core.common.utils.DateHelper
@@ -33,6 +34,9 @@ import com.mifos.core.network.model.CollateralItem
 import com.mifos.core.network.model.LoansPayload
 import com.mifos.core.ui.util.BaseViewModel
 import com.mifos.feature.loan.newLoanAccount.NewLoanAccountState.DialogState
+import com.mifos.feature.loan.newLoanAccount.pages.DatatableFieldValue
+import com.mifos.room.entities.noncore.ColumnHeader
+import com.mifos.room.entities.noncore.DataTablePayload
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
@@ -246,39 +250,97 @@ internal class NewLoanAccountViewModel(
             }
 
             NewLoanAccountAction.SubmitLoanApplication -> submitLoanApplication()
+
+            is NewLoanAccountAction.UpdateDatatableField -> {
+                mutableStateFlow.update { current ->
+                    val tableMap = current.datatableValues[action.tableIndex].orEmpty().toMutableMap()
+                    tableMap[action.columnName] = action.value
+                    current.copy(
+                        datatableValues = current.datatableValues + (action.tableIndex to tableMap),
+                    )
+                }
+            }
         }
     }
 
     private fun submitLoanApplication() {
         viewModelScope.launch {
             val payload = LoansPayload(
-                loanOfficerId = if (state.loanOfficerIndex == -1) null else state.loanTemplate?.loanOfficerOptions[state.loanOfficerIndex]?.id,
+                loanOfficerId =
+                if (state.loanOfficerIndex == -1) {
+                    null
+                } else {
+                    state.loanTemplate?.loanOfficerOptions?.getOrNull(state.loanOfficerIndex)?.id
+                },
                 principal = state.principalAmount.toDouble(),
                 clientId = state.clientId,
                 allowPartialPeriodInterestCalculation = state.isCheckedInterestPartialPeriod,
-                amortizationType = state.loanTemplate?.amortizationTypeOptions[state.nominalAmortizationIndex]?.id,
+                amortizationType = state.loanTemplate?.amortizationTypeOptions?.getOrNull(state.nominalAmortizationIndex)?.id,
                 dateFormat = DateHelper.SHORT_MONTH,
-                interestCalculationPeriodType = state.loanTemplate?.interestCalculationPeriodTypeOptions[state.interestCalculationPeriodIndex]?.id,
+                interestCalculationPeriodType = state.loanTemplate
+                    ?.interestCalculationPeriodTypeOptions?.getOrNull(state.interestCalculationPeriodIndex)?.id,
                 interestRatePerPeriod = state.nominalInterestRate.toDouble(),
-                interestType = state.loanTemplate?.interestTypeOptions[state.nominalInterestMethodIndex]?.id,
+                interestType = state.loanTemplate
+                    ?.interestTypeOptions?.getOrNull(state.nominalInterestMethodIndex)?.id,
                 loanTermFrequency = state.noOfRepayments * state.repaidEvery,
-                loanTermFrequencyType = state.loanTemplate?.termFrequencyTypeOptions[state.termFrequencyIndex]?.id,
+                loanTermFrequencyType = state.loanTemplate?.termFrequencyTypeOptions?.getOrNull(state.termFrequencyIndex)?.id,
                 loanType = "individual",
                 locale = "en",
                 numberOfRepayments = state.noOfRepayments,
                 productId = state.productId,
                 repaymentEvery = state.repaidEvery,
-                repaymentFrequencyDayOfWeekType = if (state.selectedDayIndex == -1) null else state.loanTemplate?.repaymentFrequencyDaysOfWeekTypeOptions[state.selectedDayIndex]?.id,
-                repaymentFrequencyNthDayType = if (state.selectedOnIndex == -1) null else state.loanTemplate?.repaymentFrequencyNthDayTypeOptions[state.selectedOnIndex]?.id,
-                repaymentFrequencyType = state.loanTemplate?.termFrequencyTypeOptions[state.termFrequencyIndex]?.id,
+                repaymentFrequencyDayOfWeekType =
+                if (state.selectedDayIndex == -1) {
+                    null
+                } else {
+                    state.loanTemplate?.repaymentFrequencyDaysOfWeekTypeOptions?.getOrNull(state.selectedDayIndex)?.id
+                },
+                repaymentFrequencyNthDayType =
+                if (state.selectedOnIndex == -1) {
+                    null
+                } else {
+                    state.loanTemplate?.repaymentFrequencyNthDayTypeOptions?.getOrNull(state.selectedOnIndex)?.id
+                },
+                repaymentFrequencyType = state.loanTemplate?.termFrequencyTypeOptions?.getOrNull(state.termFrequencyIndex)?.id,
                 expectedDisbursementDate = state.expectedDisbursementDate,
                 submittedOnDate = state.submissionDate,
-                loanPurposeId = if (state.loanPurposeIndex == -1) null else state.loanTemplate?.loanPurposeOptions[state.loanPurposeIndex]?.id,
-                fundId = if (state.fundIndex == -1) null else state.loanTemplate?.fundOptions[state.fundIndex]?.id,
-                linkAccountId = if (state.linkSavingsIndex == -1) null else state.loanTemplate?.accountLinkingOptions[state.linkSavingsIndex]?.id,
-                transactionProcessingStrategyCode = state.loanTemplate?.transactionProcessingStrategyOptions[state.repaymentStrategyIndex]?.code,
+                loanPurposeId =
+                if (state.loanPurposeIndex == -1) {
+                    null
+                } else {
+                    state.loanTemplate?.loanPurposeOptions?.getOrNull(state.loanPurposeIndex)?.id
+                },
+                fundId =
+                if (state.fundIndex == -1) {
+                    null
+                } else {
+                    state.loanTemplate?.fundOptions?.getOrNull(state.fundIndex)?.id
+                },
+                linkAccountId =
+                if (state.linkSavingsIndex == -1) {
+                    null
+                } else {
+                    state.loanTemplate?.accountLinkingOptions?.getOrNull(state.linkSavingsIndex)?.id
+                },
+                transactionProcessingStrategyCode = state.loanTemplate
+                    ?.transactionProcessingStrategyOptions?.getOrNull(state.repaymentStrategyIndex)?.code,
                 externalId = state.externalId,
             )
+
+            val realDataTables = state.loanTemplate?.dataTables?.filterNotNull().orEmpty()
+
+            if (realDataTables.isNotEmpty()) {
+                val datatablePayloads = realDataTables.mapIndexed { idx, table ->
+                    DataTablePayload(
+                        registeredTableName = table.registeredTableName,
+                        data = buildDatatablePayloadMap(
+                            headers = table.columnHeaderData,
+                            rawValues = state.datatableValues[idx].orEmpty(),
+                        ),
+                    )
+                }
+                payload.dataTables = ArrayList(datatablePayloads)
+            }
 
             loanUseCase(payload).collect { dataState ->
                 when (dataState) {
@@ -817,7 +879,7 @@ internal class NewLoanAccountViewModel(
         }
     }
 
-    fun loadLoanAccountTemplate(productId: Int) = viewModelScope.launch {
+    private fun loadLoanAccountTemplate(productId: Int) = viewModelScope.launch {
         mutableStateFlow.update {
             it.copy(productId = productId)
         }
@@ -861,7 +923,6 @@ internal class NewLoanAccountViewModel(
     }
 
     private suspend fun repaymentScheduler() {
-        // Build LoansPayload from current form state to calculate schedule preview
         val payload = buildLoansPayloadForSchedulePreview()
 
         calculateLoanScheduleUseCase(payload).collect { dataState ->
@@ -923,10 +984,6 @@ internal class NewLoanAccountViewModel(
         }
     }
 
-    /**
-     * Build LoansPayload from current form state for schedule preview calculation.
-     * Uses the same data that will be sent when submitting the loan application.
-     */
     private fun buildLoansPayloadForSchedulePreview(): LoansPayload {
         return LoansPayload(
             loanOfficerId = if (state.loanOfficerIndex == -1) {
@@ -991,9 +1048,8 @@ internal class NewLoanAccountViewModel(
     }
 }
 
-data class NewLoanAccountState
 @OptIn(ExperimentalTime::class)
-constructor(
+data class NewLoanAccountState(
     val launchEffectKey: Int? = null,
     val accountNo: String = "",
     val clientId: Int,
@@ -1003,7 +1059,8 @@ constructor(
     val repaymentSchedulesSummary: Map<StringResource, String> = emptyMap(),
     val loanTemplate: LoanTemplate? = null,
     val currentStep: Int = 0,
-    val totalSteps: Int = 4,
+
+    val datatableValues: Map<Int, Map<String, DatatableFieldValue>> = emptyMap(),
     val dialogState: DialogState? = null,
     val screenState: ScreenState? = null,
     val isOverLayLoadingActive: Boolean = false,
@@ -1051,9 +1108,6 @@ constructor(
     val showChargesDatePick: Boolean = false,
     val chargeAmount: String = "",
 
-    /** these are use in dropDown field for change the value,
-     * it is not actual value for the field
-     */
     val loanProductSelected: Int = -1,
     val chooseChargeIndex: Int = -1,
     val collateralSelectedIndex: Int = -1,
@@ -1090,12 +1144,73 @@ constructor(
     val isDetailsNextEnabled =
         loanProductSelected != -1 && submissionDate.isNotEmpty() && expectedDisbursementDate.isNotEmpty()
     val isCollateralBtnEnabled = collateralQuantity != 0 && collateralSelectedIndex != -1
+
+    val totalSteps: Int
+        get() = 4 + (loanTemplate?.dataTables?.filterNotNull()?.size ?: 0)
 }
 
 sealed interface NewLoanAccountEvent {
     data object NavigateBack : NewLoanAccountEvent
     data object Finish : NewLoanAccountEvent
     data class LoanCreationSuccess(val clientId: Int) : NewLoanAccountEvent
+}
+
+/**
+ * Build the Fineract datatable-payload `data` map for one table.
+ * Mirrors `DataTableListViewModel.buildPayloadMap` (kept in sync intentionally —
+ * both serve the same Fineract contract). Filters system columns (PK, created_at,
+ * updated_at, FKs) and converts each typed [DatatableFieldValue] to the
+ * JSON-encodable primitive the API expects (with column-aware numeric coercion).
+ */
+private fun buildDatatablePayloadMap(
+    headers: List<ColumnHeader?>,
+    rawValues: Map<String, DatatableFieldValue>,
+): Map<String, Any> {
+    val payload = mutableMapOf<String, Any>(
+        "dateFormat" to DateHelper.SHORT_MONTH,
+        "locale" to Constants.LOCALE_EN,
+    )
+    headers.filterNotNull().filter {
+        !SYSTEM_COLUMNS.contains(it.dataTableColumnName)
+    }.forEach { header ->
+        if (header.columnPrimaryKey == true) return@forEach
+
+        val name = header.dataTableColumnName ?: return@forEach
+        val raw = rawValues[name] ?: return@forEach
+        val encoded = header.encodePayloadValue(raw) ?: return@forEach
+        payload[name] = encoded
+    }
+    return payload
+}
+
+/**
+ * Columns Fineract auto-populates server-side on insert — never user input.
+ * Audit timestamps + foreign keys to the parent entity (m_loan auto-fills
+ * `loan_id`, m_client auto-fills `client_id`, etc). Kept in sync with the
+ * same set in DatatableStepPage.SYSTEM_COLUMNS. (Two definitions because
+ * the page is in a different module; consider extracting to core/database
+ * if a third consumer appears.)
+ */
+private val SYSTEM_COLUMNS = setOf(
+    "created_at", "updated_at", "createdAt", "updatedAt",
+    "loan_id", "client_id", "group_id", "savings_id", "share_id", "office_id",
+)
+
+/**
+ * Convert a typed form value into the primitive shape Fineract expects for this
+ * column. Numeric coercion lives here (and only here) — the form layer stores all
+ * text inputs as [DatatableFieldValue.Text]; we parse to Int/Double per column
+ * display type at submit time. Empty or unparseable numeric input returns null
+ * so the caller omits the field rather than serializing it as 0 / 0.0.
+ */
+private fun ColumnHeader.encodePayloadValue(value: DatatableFieldValue): Any? = when (value) {
+    is DatatableFieldValue.Text -> when (columnDisplayType) {
+        "INTEGER" -> value.text.toIntOrNull()
+        "DECIMAL", "FLOAT" -> value.text.toDoubleOrNull()
+        else -> value.text
+    }
+    is DatatableFieldValue.Bool -> value.checked
+    is DatatableFieldValue.Code -> value.id
 }
 
 sealed interface NewLoanAccountAction {
@@ -1162,6 +1277,12 @@ sealed interface NewLoanAccountAction {
     data class EditCharge(val index: Int) : NewLoanAccountAction
     data object RepaymentScheduler : NewLoanAccountAction
     data object SubmitLoanApplication : NewLoanAccountAction
+
+    data class UpdateDatatableField(
+        val tableIndex: Int,
+        val columnName: String,
+        val value: DatatableFieldValue,
+    ) : NewLoanAccountAction
 }
 
 data class CreatedCollateral(

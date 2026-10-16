@@ -9,7 +9,6 @@
  */
 package com.mifos.feature.dataTable.navigation
 
-import FormWidgetDTO
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -21,6 +20,7 @@ import com.mifos.feature.dataTable.dataTable.DataTableScreen
 import com.mifos.feature.dataTable.dataTableData.DataTableDataScreen
 import com.mifos.feature.dataTable.dataTableList.DataTableListNavArgs
 import com.mifos.feature.dataTable.dataTableList.DataTableListScreen
+import com.mifos.feature.dataTable.dataTableList.FormWidgetDTO
 import com.mifos.room.entities.client.ClientPayloadEntity
 import com.mifos.room.entities.navigation.DataTableDataNavigationArg
 import com.mifos.room.entities.noncore.DataTableEntity

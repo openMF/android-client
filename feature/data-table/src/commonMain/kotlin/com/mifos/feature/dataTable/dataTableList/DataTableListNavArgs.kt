@@ -9,7 +9,6 @@
  */
 package com.mifos.feature.dataTable.dataTableList
 
-import FormWidgetDTO
 import com.mifos.room.entities.noncore.DataTableEntity
 import kotlinx.serialization.Polymorphic
 import kotlinx.serialization.Serializable

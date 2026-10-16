@@ -40,6 +40,7 @@ import com.mifos.core.model.utils.Parcelable
 import com.mifos.core.model.utils.Parcelize
 import com.mifos.room.entities.client.ChargesEntity
 import com.mifos.room.entities.noncore.DataTableEntity
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
@@ -117,7 +118,8 @@ data class LoanTemplate(
     @IgnoredOnParcel
     val productOptions: List<ProductOptions> = emptyList(),
 
-    val dataTables: ArrayList<DataTableEntity> = ArrayList(),
+    @SerialName("datatables")
+    val dataTables: ArrayList<DataTableEntity?> = ArrayList(),
 
     @IgnoredOnParcel
     val loanOfficerOptions: List<LoanOfficerOption> = emptyList(),
