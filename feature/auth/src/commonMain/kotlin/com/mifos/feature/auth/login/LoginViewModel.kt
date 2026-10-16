@@ -12,6 +12,7 @@ package com.mifos.feature.auth.login
 import androidclient.feature.auth.generated.resources.Res
 import androidclient.feature.auth.generated.resources.feature_auth_error_login_failed
 import androidclient.feature.auth.generated.resources.feature_auth_error_password_length
+import androidclient.feature.auth.generated.resources.feature_auth_error_too_many_attempts
 import androidclient.feature.auth.generated.resources.feature_auth_error_username_length
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -26,6 +27,7 @@ import com.mifos.core.network.model.PostAuthenticationResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 
 /**
  * Created by Aditya Gupta on 06/08/23.
@@ -37,12 +39,24 @@ class LoginViewModel(
     private val passwordValidationUseCase: PasswordValidationUseCase,
     private val loginUseCase: LoginUseCase,
 ) : ViewModel() {
+    private companion object {
+        const val MAX_FAILED_ATTEMPTS = 5
+        const val LOCKOUT_DURATION_MILLIS = 60_000L
+    }
 
     private val _loginUiState = MutableStateFlow<LoginUiState>(LoginUiState.Empty)
     val loginUiState = _loginUiState.asStateFlow()
+    private var failedLoginAttempts = 0
+    private var lockoutExpiresAtMillis = 0L
 
     suspend fun validateUserInputs(username: String, password: String) {
-        val usernameValidationResult = usernameValidationUseCase(username)
+        if (isLoginTemporarilyLocked()) {
+            _loginUiState.value =
+                LoginUiState.ShowError(Res.string.feature_auth_error_too_many_attempts)
+            return
+        }
+        val normalizedUsername = username.trim()
+        val usernameValidationResult = usernameValidationUseCase(normalizedUsername)
         val passwordValidationResult = passwordValidationUseCase(password)
 
         val hasError =
@@ -56,7 +70,7 @@ class LoginViewModel(
             return
         }
         viewModelScope.launch {
-            login(username, password)
+            login(normalizedUsername, password)
         }
     }
 
@@ -65,6 +79,7 @@ class LoginViewModel(
             loginUseCase(username, password).collect { result ->
                 when (result) {
                     is DataState.Error -> {
+                        onLoginFailure()
                         _loginUiState.value =
                             LoginUiState.ShowError(Res.string.feature_auth_error_login_failed)
                         Logger.d("@@@", Throwable("login: ${result.data}"))
@@ -76,8 +91,10 @@ class LoginViewModel(
 
                     is DataState.Success -> {
                         if (result.data.authenticated == true) {
-                            onLoginSuccessful(result.data, username, password)
+                            resetLoginFailureState()
+                            onLoginSuccessful(result.data, username)
                         } else {
+                            onLoginFailure()
                             _loginUiState.value =
                                 LoginUiState.ShowError(Res.string.feature_auth_error_login_failed)
 
@@ -92,13 +109,12 @@ class LoginViewModel(
     private fun onLoginSuccessful(
         user: PostAuthenticationResponse,
         username: String,
-        password: String,
     ) {
         viewModelScope.launch {
             prefManager.updateUser(
                 User(
                     username = username,
-                    password = password,
+                    password = null,
                     userId = user.userId!!,
                     base64EncodedAuthenticationKey = user.base64EncodedAuthenticationKey,
                     isAuthenticated = user.authenticated ?: false,
@@ -110,5 +126,22 @@ class LoginViewModel(
         }
 
         _loginUiState.value = LoginUiState.PassCodeActivityIntent
+    }
+
+    private fun isLoginTemporarilyLocked(): Boolean {
+        return Clock.System.now().toEpochMilliseconds() < lockoutExpiresAtMillis
+    }
+
+    private fun onLoginFailure() {
+        failedLoginAttempts += 1
+        if (failedLoginAttempts >= MAX_FAILED_ATTEMPTS) {
+            lockoutExpiresAtMillis = Clock.System.now().toEpochMilliseconds() + LOCKOUT_DURATION_MILLIS
+            failedLoginAttempts = 0
+        }
+    }
+
+    private fun resetLoginFailureState() {
+        failedLoginAttempts = 0
+        lockoutExpiresAtMillis = 0L
     }
 }
