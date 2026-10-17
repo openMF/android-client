@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "466ba88048f83d75ab5fa462625c5257",
+    "identityHash": "33a2c3c51109408ed81d6cb83c6453ca",
     "entities": [
       {
         "tableName": "ActualDisbursementDateEntity",
@@ -4229,6 +4229,68 @@
         ]
       },
       {
+        "tableName": "LoanRefundDetails",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`loanId` INTEGER NOT NULL, `accountNo` TEXT NOT NULL, `clientName` TEXT, `totalOverpaid` REAL NOT NULL, `currencyCode` TEXT, `decimalPlaces` INTEGER, `defaultTransactionDate` TEXT NOT NULL, PRIMARY KEY(`loanId`))",
+        "fields": [
+          {
+            "fieldPath": "loanId",
+            "columnName": "loanId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "accountNo",
+            "columnName": "accountNo",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "clientName",
+            "columnName": "clientName",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "totalOverpaid",
+            "columnName": "totalOverpaid",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "currencyCode",
+            "columnName": "currencyCode",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "decimalPlaces",
+            "columnName": "decimalPlaces",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "defaultTransactionDate",
+            "columnName": "defaultTransactionDate",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "loanId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_LoanRefundDetails_loanId",
+            "unique": false,
+            "columnNames": [
+              "loanId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_LoanRefundDetails_loanId` ON `${TABLE_NAME}` (`loanId`)"
+          }
+        ]
+      },
+      {
         "tableName": "PaymentTypeOption",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `description` TEXT, `isCashPayment` INTEGER, `position` INTEGER)",
         "fields": [
@@ -4270,7 +4332,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '466ba88048f83d75ab5fa462625c5257')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '33a2c3c51109408ed81d6cb83c6453ca')"
     ]
   }
 }

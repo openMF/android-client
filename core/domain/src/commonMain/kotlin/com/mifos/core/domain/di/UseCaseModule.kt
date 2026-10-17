@@ -26,6 +26,7 @@ import com.mifos.core.domain.useCases.CreateLoanAccountUseCase
 import com.mifos.core.domain.useCases.CreateLoanChargesUseCase
 import com.mifos.core.domain.useCases.CreateSavingsAccountUseCase
 import com.mifos.core.domain.useCases.CreateSignatureUseCase
+import com.mifos.core.domain.useCases.CreditBalanceRefundUseCase
 import com.mifos.core.domain.useCases.DeleteCheckerUseCase
 import com.mifos.core.domain.useCases.DeleteClientAddressPinpointUseCase
 import com.mifos.core.domain.useCases.DeleteDataTableEntryUseCase
@@ -185,6 +186,7 @@ val UseCaseModule = module {
     factoryOf(::UpdateNoteUseCase)
     factoryOf(::DeleteNoteUseCase)
     factoryOf(::CreateSignatureUseCase)
+    factoryOf(::CreditBalanceRefundUseCase)
     factoryOf(::UpdateSignatureUseCase)
     factoryOf(::GetLoanChargeOffTemplateUseCase)
     factoryOf(::LoanChargeOffUseCase)

@@ -39,6 +39,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -46,13 +47,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mifos.core.common.utils.CurrencyFormatter
 import com.mifos.core.designsystem.component.MifosButton
 import com.mifos.core.designsystem.component.MifosCard
 import com.mifos.core.designsystem.icon.MifosIcons
-import com.mifos.core.designsystem.theme.AppColors
 import com.mifos.core.designsystem.theme.DesignToken
 import com.mifos.core.designsystem.theme.MifosTypography
 import com.mifos.core.model.objects.account.loan.loanWithAssociations.LoanAccountSummary
@@ -95,6 +98,19 @@ internal fun LoanAccountProfileScreen(
     viewModel: LoanAccountProfileViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                viewModel.trySendAction(LoanAccountAction.OnRefresh)
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
 
     EventsEffect(viewModel.eventFlow) { event ->
         when (event) {
@@ -336,12 +352,7 @@ private fun LoanAccountTopCard(
 
                 OverviewRow(stringResource(Res.string.feature_loan_profile_label_balance), balance)
                 OverviewRow(stringResource(Res.string.feature_loan_profile_label_arrears), arrears)
-
-                OverviewRow(
-                    label = stringResource(Res.string.feature_loan_profile_label_overpaid_by),
-                    value = overpaid,
-                    valueColor = AppColors.loanActiveStatus,
-                )
+                OverviewRow(stringResource(Res.string.feature_loan_profile_label_overpaid_by), overpaid)
             }
         }
     }

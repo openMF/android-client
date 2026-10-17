@@ -22,6 +22,8 @@ import com.mifos.core.model.objects.organisations.LoanProducts
 import com.mifos.core.model.objects.payloads.GroupLoanPayload
 import com.mifos.core.model.objects.template.loan.GroupLoanTemplate
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.dto.loan.CreditBalanceRefundRequestDto
+import com.mifos.core.network.dto.loan.CreditBalanceRefundResponseDto
 import com.mifos.core.network.dto.loan.LoanWithAssociationsDto
 import com.mifos.core.network.dto.loans.CreateGuarantorResponseDto
 import com.mifos.core.network.dto.loans.GuarantorRequestDto
@@ -95,6 +97,12 @@ interface LoanService {
         @Path("loanId") loanId: Int,
         @Body request: RejectLoanRequestDto,
     ): RejectLoanResponseDto
+
+    @POST(APIEndPoint.LOANS + "/{loanId}/transactions?command=creditBalanceRefund")
+    suspend fun submitCreditBalanceRefund(
+        @Path("loanId") loanId: Int,
+        @Body request: CreditBalanceRefundRequestDto,
+    ): CreditBalanceRefundResponseDto
 
     @GET(APIEndPoint.LOANS + "/{loanId}?associations=repaymentSchedule")
     fun getLoanRepaymentSchedule(@Path("loanId") loanId: Int): Flow<LoanWithAssociationsDto>

@@ -12,6 +12,7 @@ package com.mifos.room.helper
 import com.mifos.room.dao.LoanDao
 import com.mifos.room.entities.PaymentTypeOptionEntity
 import com.mifos.room.entities.accounts.loans.ActualDisbursementDateEntity
+import com.mifos.room.entities.accounts.loans.LoanRefundDetailsEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
@@ -212,5 +213,40 @@ class LoanDaoHelper(
 
             emit(updatedLoanRepaymentTemplate)
         }
+    }
+
+    /**
+     * This method saves the LoanRefundDetails in Database for offline access.
+     *
+     * @param details LoanRefundDetailsEntity for saving in Database
+     * @return LoanRefundDetailsEntity
+     */
+    suspend fun saveLoanRefundDetails(
+        details: LoanRefundDetailsEntity,
+    ): LoanRefundDetailsEntity {
+        loanDao.insertLoanRefundDetails(details)
+        return details
+    }
+
+    /**
+     * This Method retrieves the LoanRefundDetails from Database according to Loan Id.
+     *
+     * @param loanId Loan Id of the LoanRefundDetails
+     * @return LoanRefundDetailsEntity from Database Query
+     */
+    fun getLoanRefundDetails(loanId: Int): Flow<LoanRefundDetailsEntity?> {
+        return flow {
+            val details = loanDao.getLoanRefundDetails(loanId)
+            emit(details)
+        }
+    }
+
+    /**
+     * This method deletes the LoanRefundDetails from Database according to Loan Id.
+     *
+     * @param loanId Loan Id of the LoanRefundDetails to delete
+     */
+    suspend fun deleteLoanRefundDetails(loanId: Int) {
+        loanDao.deleteLoanRefundDetails(loanId)
     }
 }

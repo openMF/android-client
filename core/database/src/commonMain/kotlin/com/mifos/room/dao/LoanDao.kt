@@ -10,6 +10,7 @@
 package com.mifos.room.dao
 
 import com.mifos.room.entities.PaymentTypeOptionEntity
+import com.mifos.room.entities.accounts.loans.LoanRefundDetailsEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanWithAssociationsEntity
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
@@ -55,4 +56,13 @@ interface LoanDao {
 
     @Query("DELETE FROM LoanRepaymentTemplate WHERE loanId = :loanId")
     suspend fun deleteLoanRepaymentByLoanId(loanId: Int)
+
+    @Insert(entity = LoanRefundDetailsEntity::class, onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertLoanRefundDetails(details: LoanRefundDetailsEntity)
+
+    @Query("SELECT * FROM LoanRefundDetails WHERE loanId = :loanId LIMIT 1")
+    suspend fun getLoanRefundDetails(loanId: Int): LoanRefundDetailsEntity?
+
+    @Query("DELETE FROM LoanRefundDetails WHERE loanId = :loanId")
+    suspend fun deleteLoanRefundDetails(loanId: Int)
 }

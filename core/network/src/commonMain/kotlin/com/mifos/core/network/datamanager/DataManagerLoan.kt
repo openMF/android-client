@@ -9,6 +9,7 @@
  */
 package com.mifos.core.network.datamanager
 
+import com.mifos.core.common.utils.DateHelper
 import com.mifos.core.common.utils.extractErrorMessage
 import com.mifos.core.datastore.UserPreferencesRepository
 import com.mifos.core.model.objects.account.loan.RepaymentSchedule
@@ -23,6 +24,8 @@ import com.mifos.core.model.objects.account.loan.transfer.AccountTransferRespons
 import com.mifos.core.model.objects.account.loan.transfer.AccountTransferTemplate
 import com.mifos.core.network.BaseApiManager
 import com.mifos.core.network.GenericResponse
+import com.mifos.core.network.dto.loan.CreditBalanceRefundRequestDto
+import com.mifos.core.network.dto.loan.CreditBalanceRefundResponseDto
 import com.mifos.core.network.dto.loans.CreateGuarantorResponseDto
 import com.mifos.core.network.dto.loans.GuarantorRequestDto
 import com.mifos.core.network.dto.loans.LoanChargeOffRequestDto
@@ -41,9 +44,12 @@ import com.mifos.core.network.dto.loans.template.LoanOfficerOptionsTemplateDto
 import com.mifos.core.network.mappers.loan.LoanAccountMapper
 import com.mifos.core.network.mappers.loan.toDomain
 import com.mifos.core.network.model.LoansPayload
+import com.mifos.room.basemodel.APIEndPoint
 import com.mifos.room.entities.PaymentTypeOptionEntity
+import com.mifos.room.entities.accounts.loans.LoanRefundDetailsEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentRequestEntity
 import com.mifos.room.entities.accounts.loans.LoanRepaymentResponseEntity
+import com.mifos.room.entities.accounts.loans.toLoanRefundDetailsEntity
 import com.mifos.room.entities.templates.loans.LoanRepaymentTemplateEntity
 import com.mifos.room.entities.templates.loans.LoanTemplate
 import com.mifos.room.entities.templates.loans.LoanTransactionTemplate
@@ -267,6 +273,64 @@ class DataManagerLoan(
                  */
                 loanDaoHelper.saveLoanRepaymentTransaction(loanId, request)
         }
+    }
+
+    /**
+     * This Method submits a credit balance refund transaction for a loan account.
+     * Calls the network API directly.
+     * Endpoint: POST /loans/{loanId}/transactions?command=creditBalanceRefund
+     * Returns LoanRepaymentResponseEntity with the transaction details.
+     *
+     * @param loanId Loan id of the loan
+     * @param request Request body containing refund transaction details
+     * @return LoanRepaymentResponseEntity
+     */
+    suspend fun submitCreditBalanceRefund(
+        loanId: Int,
+        request: CreditBalanceRefundRequestDto,
+    ): CreditBalanceRefundResponseDto {
+        return mBaseApiManager.loanService.submitCreditBalanceRefund(loanId, request)
+    }
+
+    /**
+     * Fetches loan refund details for the credit balance refund form.
+     * In online mode: fetches from API and caches in database.
+     * If network fails in online mode, falls back to database cache.
+     * In offline mode: reads from database cache.
+     *
+     * @param loanId Loan id
+     * @return LoanRefundDetailsEntity with refund form data
+     */
+    suspend fun getLoanRefundDetails(loanId: Int): LoanRefundDetailsEntity? {
+        val userStatus = prefManager.userInfo.first().userStatus
+        return if (!userStatus) {
+            try {
+                val loanDto = mBaseApiManager.loanService.getLoanByIdWithAllAssociations(loanId)
+                val loanEntity = LoanAccountMapper.mapToEntity(loanDto.toDomain())
+                val template = mBaseApiManager.loanService
+                    .getLoanTransactionTemplate(loanId, APIEndPoint.CREDIT_BALANCE_REFUND)
+                    .first()
+
+                val formattedDate = DateHelper.getDateAsString(template.date)
+
+                loanEntity.toLoanRefundDetailsEntity(formattedDate).also {
+                    loanDaoHelper.saveLoanRefundDetails(it)
+                }
+            } catch (e: Exception) {
+                loanDaoHelper.getLoanRefundDetails(loanId).first()
+            }
+        } else {
+            loanDaoHelper.getLoanRefundDetails(loanId).first()
+        }
+    }
+
+    /**
+     * This method deletes the LoanRefundDetails from Database according to Loan Id.
+     *
+     * @param loanId Loan Id of the LoanRefundDetails to delete
+     */
+    suspend fun deleteLoanRefundDetails(loanId: Int) {
+        loanDaoHelper.deleteLoanRefundDetails(loanId)
     }
 
     /**

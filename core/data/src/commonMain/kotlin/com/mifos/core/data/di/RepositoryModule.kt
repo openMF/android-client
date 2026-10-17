@@ -27,6 +27,7 @@ import com.mifos.core.data.repository.ClientListRepository
 import com.mifos.core.data.repository.CreateNewCenterRepository
 import com.mifos.core.data.repository.CreateNewClientRepository
 import com.mifos.core.data.repository.CreateNewGroupRepository
+import com.mifos.core.data.repository.CreditBalanceRefundRepository
 import com.mifos.core.data.repository.DataTableDataRepository
 import com.mifos.core.data.repository.DataTableListRepository
 import com.mifos.core.data.repository.DataTableRepository
@@ -101,6 +102,7 @@ import com.mifos.core.data.repositoryImp.ClientListRepositoryImp
 import com.mifos.core.data.repositoryImp.CreateNewCenterRepositoryImp
 import com.mifos.core.data.repositoryImp.CreateNewClientRepositoryImp
 import com.mifos.core.data.repositoryImp.CreateNewGroupRepositoryImp
+import com.mifos.core.data.repositoryImp.CreditBalanceRefundRepositoryImp
 import com.mifos.core.data.repositoryImp.DataTableDataRepositoryImp
 import com.mifos.core.data.repositoryImp.DataTableListRepositoryImp
 import com.mifos.core.data.repositoryImp.DataTableRepositoryImp
@@ -206,6 +208,7 @@ val RepositoryModule = module {
     singleOf(::LoanRepaymentRepositoryImp) bind LoanRepaymentRepository::class
     singleOf(::LoanRepaymentScheduleRepositoryImp) bind LoanRepaymentScheduleRepository::class
     singleOf(::LoanTransactionsRepositoryImp) bind LoanTransactionsRepository::class
+    singleOf(::CreditBalanceRefundRepositoryImp) bind CreditBalanceRefundRepository::class
     singleOf(::LoanReschedulesRepositoryImpl) bind LoanReschedulesRepository::class
     singleOf(::LoanChargeOffRepositoryImpl) bind LoanChargeOffRepository::class
     singleOf(::LoanDisburseRepositoryImpl) bind LoanDisburseRepository::class
@@ -252,11 +255,9 @@ val RepositoryModule = module {
     singleOf(::PathTrackingRepositoryImp) bind PathTrackingRepository::class
     singleOf(::ReportCategoryRepositoryImp) bind ReportCategoryRepository::class
     singleOf(::ReportDetailRepositoryImp) bind ReportDetailRepository::class
-    singleOf(::SearchRepositoryImp) bind SearchRepository::class
     singleOf(::SignatureRepositoryImp) bind SignatureRepository::class
     singleOf(::SurveyListRepositoryImp) bind SurveyListRepository::class
     singleOf(::SurveySubmitRepositoryImp) bind SurveySubmitRepository::class
-    singleOf(::SignatureRepositoryImp) bind SignatureRepository::class
     singleOf(::SearchRecordRepositoryImpl) bind SearchRecordRepository::class
     singleOf(::SearchRecordLocalDataSourceImpl) bind SearchRecordLocalDataSource::class
 
