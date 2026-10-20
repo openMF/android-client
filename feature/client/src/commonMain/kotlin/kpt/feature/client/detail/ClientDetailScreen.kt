@@ -40,6 +40,7 @@ import kpt.core.designsystem.icon.MifosIcons
 import kpt.feature.client.generated.resources.Res
 import androidx.compose.ui.draw.rotate
 import kpt.feature.client.generated.resources.feature_client_charges_title
+import kpt.feature.client.generated.resources.feature_client_notes_title
 import kpt.feature.client.generated.resources.feature_client_detail_title
 import kpt.feature.client.generated.resources.feature_client_loans
 import kpt.feature.client.generated.resources.feature_client_savings
@@ -76,6 +77,7 @@ internal fun ClientDetailScreen(
         onAction = { viewModel.actionChannel.trySend(it) },
         onBackClick = onBackClick,
         chargesClickable = onChargesClick != null,
+        notesClickable = onNotesClick != null,
         loansClickable = onLoanClick != null,
         savingsClickable = onSavingsClick != null,
         modifier = modifier,
@@ -91,6 +93,7 @@ internal fun ClientDetailContent(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
     chargesClickable: Boolean = true,
+    notesClickable: Boolean = true,
     loansClickable: Boolean = true,
     savingsClickable: Boolean = true,
 ) {
@@ -130,6 +133,14 @@ internal fun ClientDetailContent(
                 ChargesAction(onClick = { onAction(ClientDetailAction.ChargesClicked) })
             }
 
+            // Notes — S5. The ViewModel already handled `NotesClicked` and the screen already
+            // mapped `OpenNotes` onto `onNotesClick`; only this row was missing, so the whole path
+            // was unreachable from the UI. Found on device: wiring the callback in ClientNavigation
+            // changed nothing because nothing could emit the action.
+            if (notesClickable) {
+                NotesAction(onClick = { onAction(ClientDetailAction.NotesClicked) })
+            }
+
             ScreenContent(
                 state = state.accounts,
                 onRetry = { onAction(ClientDetailAction.RetryAccounts) },
@@ -156,6 +167,21 @@ private fun ChargesAction(onClick: () -> Unit) {
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(stringResource(Res.string.feature_client_charges_title), style = MaterialTheme.typography.bodyLarge)
+        Icon(MifosIcons.ArrowBack, contentDescription = null, modifier = Modifier.rotate(180f))
+    }
+}
+
+@Composable
+private fun NotesAction(onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .testTag(ClientDetailTestTags.NOTES)
+            .padding(vertical = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Text(stringResource(Res.string.feature_client_notes_title), style = MaterialTheme.typography.bodyLarge)
         Icon(MifosIcons.ArrowBack, contentDescription = null, modifier = Modifier.rotate(180f))
     }
 }
@@ -230,4 +256,5 @@ object ClientDetailTestTags {
     const val IDENTITY = "client-detail:identity"
     const val ACCOUNTS = "client-detail:accounts"
     const val CHARGES = "client-detail:charges"
+    const val NOTES = "client-detail:notes"
 }

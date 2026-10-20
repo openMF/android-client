@@ -54,6 +54,30 @@
 
     <!-- a11y. Every Icon carries a contentDescription (RULE-FEATURE-A11Y-001). -->
     <string name="feature_signin_cd_logo">Mifos logo</string>
+    <string name="feature_signin_cd_change_instance">Change server</string>
+
+    <!--
+        Lockout copy. Both forms state WHAT HAPPENS NEXT: a throttle with no stated exit reads as a
+        dead app, and a field officer who cannot sign in has no other route into their work.
+        The plural is formatted from the live count, never hardcoded, so the copy cannot drift from
+        SignInViewModel.LOCK_AFTER_ATTEMPTS the way the old "at least 5 characters" string drifted
+        from the username rule.
+    -->
+    <string name="feature_signin_locked_out">Too many sign-in attempts. Signing in is paused for 5 minutes. You can still change the server if you are connecting to the wrong instance.</string>
+    <string name="feature_signin_attempts_remaining">%1$d attempts remaining before sign-in is paused.</string>
+
+    <!--
+        Consent, pinned above the fold of the action it qualifies. No v1 equivalent: the original
+        collected credentials and transmitted banking data without stating terms anywhere.
+    -->
+    <!-- Biometric unlock (v2). Names the ACCELERATOR, not the mechanism: a returning officer
+         cares that they skip typing, not that a fingerprint API is involved. -->
+    <!-- The instance chip before a server is known. Names the ACTION, since at that point there
+         is no value to state. -->
+    <string name="feature_signin_set_instance">Set server</string>
+    <string name="feature_signin_biometric_unlock">Unlock with biometrics</string>
+    <string name="feature_signin_error_biometric_failed">Biometric check did not match. Enter your password instead.</string>
+    <string name="feature_signin_consent">By signing in you agree to our Terms of Service and Privacy Policy.</string>
     <string name="feature_signin_cd_username_error">Username is invalid</string>
     <string name="feature_signin_cd_password_error">Password is invalid</string>
     <!--

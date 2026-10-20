@@ -22,6 +22,7 @@ import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kpt.core.base.common.manager.DispatcherManager
+import kpt.core.base.security.BiometricAuthenticator
 import kpt.core.base.store.mutation.BlockReason
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.data.auth.AuthCommandRepository
@@ -71,6 +72,21 @@ class SignInViewModelTest {
      * interface inherits 22 framework members, so a fake would be 29 stubs that prove nothing, and
      * this additionally exercises the persistence the ViewModel depends on.
      */
+    /**
+     * The biometric authenticator is the REAL expect/actual — it cannot be faked, because
+     * `BiometricAuthenticator` is a final expect class with no interface above it.
+     *
+     * That is fine for every test here: the ViewModel's `init` wraps `isAvailable()` in
+     * `runCatching`, and the unlock affordance additionally requires a STORED SESSION, which none
+     * of these tests seeds. So the biometric path stays inert and these tests measure exactly the
+     * credential behaviour they are about. Biometric unlock itself is device-verified territory,
+     * recorded as such in docs.yaml#capabilities.
+     */
+    private fun signInViewModel(
+        auth: AuthCommandRepository,
+        preferences: ProjectPreferencesRepository,
+    ) = SignInViewModel(auth, preferences, BiometricAuthenticator())
+
     private fun preferences(): ProjectPreferencesRepository {
         val plain = MapSettings()
         val secure = MapSettings()
@@ -100,7 +116,7 @@ class SignInViewModelTest {
     @Test
     fun shortUsernameIsRejectedWithoutCallingTheServer() = runTest(dispatcher) {
         val auth = FakeAuth(MutationResult.Applied(response(true), synced = true))
-        val model = SignInViewModel(auth, preferences())
+        val model = signInViewModel(auth, preferences())
         model.actionChannel.trySend(SignInAction.UsernameChanged("abc"))
         model.actionChannel.trySend(SignInAction.PasswordChanged("longenough"))
         model.actionChannel.trySend(SignInAction.Submit)
@@ -112,7 +128,7 @@ class SignInViewModelTest {
 
     @Test
     fun offlineIsReportedAsOfflineNotAsBadCredentials() = runTest(dispatcher) {
-        val model = SignInViewModel(FakeAuth(MutationResult.Blocked(BlockReason.OFFLINE)), preferences())
+        val model = signInViewModel(FakeAuth(MutationResult.Blocked(BlockReason.OFFLINE)), preferences())
         submitValid(model)
         runCurrent()
         // Different problems: one is solved by finding signal, the other by retyping a password.
@@ -123,16 +139,33 @@ class SignInViewModelTest {
     fun authenticatedFalseIsAFailedLoginEvenThoughTheCallSucceeded() = runTest(dispatcher) {
         // Fineract answers 200 with authenticated=false for a bad credential rather than a 4xx,
         // so a successful CALL is not a successful LOGIN.
-        val model = SignInViewModel(FakeAuth(MutationResult.Applied(response(false), synced = true)), preferences())
+        val model = signInViewModel(FakeAuth(MutationResult.Applied(response(false), synced = true)), preferences())
         submitValid(model)
         runCurrent()
         assertEquals(SignInError.Rejected, model.stateFlow.value.error)
     }
 
     @Test
+    fun aStoredSessionIsWhatMakesBiometricUnlockRelevant() = runTest(dispatcher) {
+        val prefs = preferences()
+        val model = signInViewModel(FakeAuth(MutationResult.Applied(response(true), synced = true)), prefs)
+        runCurrent()
+        // Nothing stored yet. This is the first-run officer: there is no session to unlock INTO,
+        // so the accelerator has nothing to accelerate.
+        assertEquals(false, model.stateFlow.value.hasStoredSession)
+
+        submitValid(model)
+        runCurrent()
+        // A successful sign-in is exactly what creates the thing biometrics unlocks. The flag
+        // follows the stored credential rather than being set at sign-in, because the session also
+        // survives a process death the ViewModel does not.
+        assertTrue(model.stateFlow.value.hasStoredSession)
+    }
+
+    @Test
     fun successPersistsTheFineractUserAndSignalsTheShell() = runTest(dispatcher) {
         val prefs = preferences()
-        val model = SignInViewModel(FakeAuth(MutationResult.Applied(response(true), synced = true)), prefs)
+        val model = signInViewModel(FakeAuth(MutationResult.Applied(response(true), synced = true)), prefs)
         var loggedIn = false
         val job = launch { model.eventFlow.collect { if (it is SignInEvent.LoggedIn) loggedIn = true } }
         submitValid(model)
@@ -169,7 +202,7 @@ class SignInViewModelTest {
     @Test
     fun aUsernameAtExactlyTheMinimumLengthIsAccepted() = runTest(dispatcher) {
         val auth = FakeAuth(MutationResult.Applied(response(true), synced = true))
-        val model = SignInViewModel(auth, preferences())
+        val model = signInViewModel(auth, preferences())
         model.actionChannel.trySend(
             SignInAction.UsernameChanged("u".repeat(CredentialRules.MIN_USERNAME_LENGTH)),
         )
@@ -184,7 +217,7 @@ class SignInViewModelTest {
     @Test
     fun aUsernameOneBelowTheMinimumIsRefusedLocally() = runTest(dispatcher) {
         val auth = FakeAuth(MutationResult.Applied(response(true), synced = true))
-        val model = SignInViewModel(auth, preferences())
+        val model = signInViewModel(auth, preferences())
         model.actionChannel.trySend(
             SignInAction.UsernameChanged("u".repeat(CredentialRules.MIN_USERNAME_LENGTH - 1)),
         )
@@ -199,7 +232,7 @@ class SignInViewModelTest {
     @Test
     fun aPasswordAtExactlyTheMinimumLengthIsAccepted() = runTest(dispatcher) {
         val auth = FakeAuth(MutationResult.Applied(response(true), synced = true))
-        val model = SignInViewModel(auth, preferences())
+        val model = signInViewModel(auth, preferences())
         model.actionChannel.trySend(SignInAction.UsernameChanged("officer"))
         model.actionChannel.trySend(
             SignInAction.PasswordChanged("p".repeat(CredentialRules.MIN_PASSWORD_LENGTH)),
@@ -220,7 +253,7 @@ class SignInViewModelTest {
     @Test
     fun thresholdsComeFromTheSharedRulesNotALocalConstant() = runTest(dispatcher) {
         val auth = FakeAuth(MutationResult.Applied(response(true), synced = true))
-        val model = SignInViewModel(auth, preferences())
+        val model = signInViewModel(auth, preferences())
         val justBelow = "u".repeat(CredentialRules.MIN_USERNAME_LENGTH - 1)
         val atMinimum = "u".repeat(CredentialRules.MIN_USERNAME_LENGTH)
 

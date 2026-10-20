@@ -21,6 +21,10 @@ kotlin {
             implementation(projects.core.store)
             // NavigationItem + @FeatureTab + toObjectNavigationRoute — the tab declaration seam.
             implementation(projects.core.ui)
+            // Client is the hub that navigates into its drill-down features. The original declared
+            // the same edge (`6b66e8a43:feature/client/build.gradle.kts` → projects.feature.note,
+            // plus dataTable/savings/loan/document/recurringDeposit/groups as those slices land).
+            implementation(projects.feature.note)
             implementation(libs.koin.compose.navigation)
             implementation(compose.ui)
             implementation(compose.foundation)

@@ -42,21 +42,26 @@ fun AccessPointRegistry.ktorfitFor(
             "No network access point '$accessPointId' declared in app-profile network.access_points " +
                 "(AccessPointRegistry). Declare it there, or fix the id.",
         )
+    // The Ktorfit wrapper stays per API (it is cheap and holds no connections); the CLIENT is
+    // shared per access point — see AccessPointRegistry.restClients for the measurement.
     return Ktorfit.Builder()
         .httpClient(
-            client = httpClient(
-                setupDefaultHttpClient(
-                    baseUrl = ap.effectiveUrl,
-                    loggableHosts = listOf(ap.loggableHost),
-                    proxiedHosts = ap.proxiedHost?.let { listOf(it) } ?: emptyList(),
-                    // Per access point: a key belongs to ONE endpoint, and sending it to the others
-                    // leaks a credential to hosts that never needed it.
-                    defaultHeaders = headerProvider.headersFor(accessPointId),
-                    // The point's DECLARED headers, resolved per request so a runtimeKey picks up
-                    // the value login wrote after this client was built.
-                    dynamicHeaders = { runtimeHeaders.resolve(ap.headers) },
-                ),
-            ),
+            client = sharedRestClient(accessPointId) {
+                httpClient(
+                    setupDefaultHttpClient(
+                        baseUrl = ap.effectiveUrl,
+                        loggableHosts = listOf(ap.loggableHost),
+                        proxiedHosts = ap.proxiedHost?.let { listOf(it) } ?: emptyList(),
+                        // Per access point: a key belongs to ONE endpoint, and sending it to the
+                        // others leaks a credential to hosts that never needed it.
+                        defaultHeaders = headerProvider.headersFor(accessPointId),
+                        // The point's DECLARED headers, resolved per request so a runtimeKey picks
+                        // up the value login wrote after this client was built. This is also what
+                        // makes ONE client per access point correct rather than merely cheaper.
+                        dynamicHeaders = { runtimeHeaders.resolve(ap.headers) },
+                    ),
+                )
+            },
         )
         .build()
 }

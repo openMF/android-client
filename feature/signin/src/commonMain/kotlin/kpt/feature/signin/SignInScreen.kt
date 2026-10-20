@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
@@ -33,6 +34,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -43,6 +45,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -54,7 +57,11 @@ import kpt.core.designsystem.icon.MifosIcons
 import kpt.core.ui.components.MifosProgressIndicatorOverlay
 import kpt.feature.signin.generated.resources.Res
 import kpt.feature.signin.generated.resources.feature_signin_authenticating
+import kpt.feature.signin.generated.resources.feature_signin_biometric_unlock
+import kpt.feature.signin.generated.resources.feature_signin_error_biometric_failed
+import kpt.feature.signin.generated.resources.feature_signin_cd_change_instance
 import kpt.feature.signin.generated.resources.feature_signin_cd_logo
+import kpt.feature.signin.generated.resources.feature_signin_consent
 import kpt.feature.signin.generated.resources.feature_signin_cd_password_error
 import kpt.feature.signin.generated.resources.feature_signin_cd_username_error
 import kpt.feature.signin.generated.resources.feature_signin_enter_credentials
@@ -62,7 +69,10 @@ import kpt.feature.signin.generated.resources.feature_signin_error_login_failed
 import kpt.feature.signin.generated.resources.feature_signin_error_offline
 import kpt.feature.signin.generated.resources.feature_signin_error_password_length
 import kpt.feature.signin.generated.resources.feature_signin_error_username_length
+import kpt.feature.signin.generated.resources.feature_signin_attempts_remaining
+import kpt.feature.signin.generated.resources.feature_signin_locked_out
 import kpt.feature.signin.generated.resources.feature_signin_login
+import kpt.feature.signin.generated.resources.feature_signin_set_instance
 import kpt.feature.signin.generated.resources.feature_signin_brand_mark
 import kpt.feature.signin.generated.resources.feature_signin_password
 import kpt.feature.signin.generated.resources.feature_signin_password_placeholder
@@ -158,31 +168,20 @@ internal fun SignInContent(
         // D12: no topBar. The unauthenticated gate has nowhere to navigate back to.
         snackbarHost = { SnackbarHost(snackbarHostState) },
         bottomBar = {
-            // D1 — v1's `Scaffold(bottomBar = …)`: pinned, centered, tonal. Deliberately NOT
-            // disabled while submitting: it sits outside the overlay's parent in v1 too, and a user
-            // whose server is misconfigured needs the way out precisely when sign-in is failing.
-            Box(
+            // ui.yaml#components.consent_text — ABSENT in v1 and the clearest professional
+            // omission: an app that collects credentials and transmits banking data states its
+            // terms at the point of collection. Pinned, never scrollable: a consent the user
+            // cannot read is not a consent.
+            Text(
+                text = stringResource(Res.string.feature_signin_consent),
+                style = MaterialTheme.typography.bodySmall,
+                color = KptTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp, vertical = 16.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                FilledTonalButton(
-                    onClick = onUpdateServerConfig,
-                    colors = ButtonDefaults.filledTonalButtonColors(
-                        containerColor = KptTheme.colorScheme.secondaryContainer,
-                        contentColor = KptTheme.colorScheme.onSecondaryContainer,
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = 48.dp)
-                        .testTag(SignInTestTags.SERVER_CONFIG),
-                ) {
-                    Icon(imageVector = MifosIcons.Settings, contentDescription = null)
-                    Spacer(Modifier.size(8.dp))
-                    Text(text = stringResource(Res.string.feature_signin_update_server_config))
-                }
-            }
+                    .padding(horizontal = 24.dp, vertical = 16.dp)
+                    .testTag(SignInTestTags.CONSENT),
+            )
         },
     ) { padding ->
         Box(modifier = Modifier.fillMaxSize().padding(padding)) {
@@ -195,6 +194,22 @@ internal fun SignInContent(
                 verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
+                // ui.yaml#components.instance_chip — REPLACES v1's blind "Update Server
+                // Configuration" button. That button offered to change a setting without ever
+                // showing its current value, so a misconfigured instance was indistinguishable
+                // from a correct one. Information first, affordance second.
+                //
+                // Rendered UNCONDITIONALLY. An earlier version hid it while `instanceHost` was
+                // blank, which inverted the intent: a blank host is the FIRST-RUN case, the one
+                // where this is the only control that can get the user unstuck. Hiding the single
+                // route to server configuration precisely when no server is configured strands
+                // them — the same class of defect as v1's blind button, wearing a different shape.
+                InstanceChip(
+                    host = state.instanceHost,
+                    tenant = state.instanceTenant,
+                    onClick = onUpdateServerConfig,
+                )
+
                 LogoTile()
 
                 TitleBlock()
@@ -265,13 +280,25 @@ internal fun SignInContent(
                     modifier = Modifier.fillMaxWidth().testTag(SignInTestTags.PASSWORD),
                 )
 
+                // ui.yaml#components.lockout_notice. Two forms: a warning as the limit nears, and
+                // the lock itself. Both state what happens next, because a throttle with no stated
+                // exit reads as a dead app.
+                if (state.isLockedOut || state.isApproachingLockout) {
+                    LockoutNotice(
+                        locked = state.isLockedOut,
+                        attemptsRemaining = state.attemptsRemaining,
+                    )
+                }
+
                 // The button STAYS, enabled-gated, and keeps its label while submitting — the
                 // overlay below is what blocks a second tap. The previous port swapped the button
                 // for a spinner, which left the bottom-bar CTA as the only thing on screen that
                 // still looked pressable during a credential check.
                 Button(
                     onClick = { onAction(SignInAction.Submit) },
-                    enabled = !state.isSubmitting,
+                    // Disabled, never hidden: removing the control shifts the layout under the
+                    // user's thumb at the exact moment they are being told to stop.
+                    enabled = !state.isSubmitting && !state.isLockedOut,
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(min = 48.dp)
@@ -289,6 +316,28 @@ internal fun SignInContent(
                     if (!state.isSubmitting) {
                         Spacer(Modifier.size(8.dp))
                         Icon(imageVector = MifosIcons.ArrowForward, contentDescription = null)
+                    }
+                }
+
+                // `ui.yaml#components.biometric_action` — secondary, and rendered only in the
+                // `biometric_ready` state. Hidden rather than disabled: unlike the submit button,
+                // this control has no meaning for a user with no stored session, and a permanently
+                // greyed affordance reads as a broken feature.
+                if (state.canUseBiometrics) {
+                    TextButton(
+                        onClick = { onAction(SignInAction.UnlockWithBiometrics) },
+                        enabled = !state.isSubmitting,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .testTag(SignInTestTags.BIOMETRIC),
+                    ) {
+                        Icon(
+                            imageVector = MifosIcons.Fingerprint,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                        )
+                        Spacer(Modifier.size(8.dp))
+                        Text(stringResource(Res.string.feature_signin_biometric_unlock))
                     }
                 }
 
@@ -311,6 +360,77 @@ internal fun SignInContent(
  * The render's logo treatment: a 64dp soft rounded tinted tile. The thing inside it is the asset
  * `ui.yaml#components.logo` declares, not the render's substitute glyph (see the file header).
  */
+/**
+ * The instance this sign-in will hit: host and tenant, tappable to change.
+ *
+ * Deliberately an `AssistChip` and not a Button. `components.yaml#assist_chip` states the rule:
+ * information first, affordance second. It must read as a status line, not compete with the primary
+ * action. The v1 control it replaces was a full-width filled button that said only "Update Server
+ * Configuration" and never showed what the configuration WAS.
+ */
+@Composable
+private fun LockoutNotice(locked: Boolean, attemptsRemaining: Int) {
+    Surface(
+        shape = RoundedCornerShape(12.dp),
+        color = KptTheme.colorScheme.tertiaryContainer,
+        contentColor = KptTheme.colorScheme.onTertiaryContainer,
+        modifier = Modifier.fillMaxWidth().testTag(SignInTestTags.LOCKOUT_NOTICE),
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.padding(16.dp),
+        ) {
+            Icon(imageVector = MifosIcons.Error, contentDescription = null)
+            Text(
+                text = if (locked) {
+                    stringResource(Res.string.feature_signin_locked_out)
+                } else {
+                    stringResource(Res.string.feature_signin_attempts_remaining, attemptsRemaining)
+                },
+                style = MaterialTheme.typography.bodySmall,
+            )
+        }
+    }
+}
+
+@Composable
+private fun InstanceChip(
+    host: String,
+    tenant: String,
+    onClick: () -> Unit,
+) {
+    AssistChip(
+        onClick = onClick,
+        label = {
+            Text(
+                // Blank host = the preference flow has not emitted yet, or genuinely nothing is
+                // configured. Either way the chip states what it DOES rather than rendering a
+                // bare separator, so it never reads as a glitch.
+                text = if (host.isBlank()) stringResource(Res.string.feature_signin_set_instance) else "$host · $tenant",
+                style = MaterialTheme.typography.labelMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        },
+        leadingIcon = {
+            Icon(
+                imageVector = MifosIcons.Settings,
+                contentDescription = null,
+                modifier = Modifier.size(18.dp),
+            )
+        },
+        trailingIcon = {
+            Icon(
+                imageVector = MifosIcons.ArrowForward,
+                contentDescription = stringResource(Res.string.feature_signin_cd_change_instance),
+                modifier = Modifier.size(18.dp),
+            )
+        },
+        modifier = Modifier.heightIn(min = 36.dp).testTag(SignInTestTags.INSTANCE_CHIP),
+    )
+}
+
 @Composable
 private fun LogoTile() {
     Surface(
@@ -372,6 +492,12 @@ private fun TitleBlock() {
 private val SignInError.isTransportError: Boolean
     get() = when (this) {
         SignInError.Rejected, SignInError.Offline -> true
+        // LockedOut renders as an in-flow banner, not a transient snackbar: a message that
+        // disappears cannot tell you when the lock clears.
+        SignInError.LockedOut -> false
+        // Transport-shaped: a snackbar is right here. It is NOT an input error (nothing the user
+        // typed is wrong) and NOT in-flow like lockout (the form stays fully usable).
+        SignInError.BiometricFailed -> true
         SignInError.UsernameTooShort, SignInError.PasswordTooShort -> false
     }
 
@@ -381,4 +507,6 @@ private val SignInError.message: StringResource
         SignInError.PasswordTooShort -> Res.string.feature_signin_error_password_length
         SignInError.Rejected -> Res.string.feature_signin_error_login_failed
         SignInError.Offline -> Res.string.feature_signin_error_offline
+        SignInError.LockedOut -> Res.string.feature_signin_locked_out
+        SignInError.BiometricFailed -> Res.string.feature_signin_error_biometric_failed
     }

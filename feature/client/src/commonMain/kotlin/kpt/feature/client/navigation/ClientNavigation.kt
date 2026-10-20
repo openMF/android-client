@@ -20,6 +20,8 @@ import kpt.core.base.ui.nav.popBackStackSafely
 import kpt.feature.client.charges.ClientChargesScreen
 import kpt.feature.client.detail.ClientDetailScreen
 import kpt.feature.client.list.ClientListScreen
+import kpt.feature.note.navigation.navigateToClientNotes
+import kpt.feature.note.navigation.noteDestinations
 
 /** The tab's graph. Mirrors `HomeDestination` — the tab points at the graph, not at a screen. */
 @Serializable
@@ -87,12 +89,14 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
     composableWithStayTransitions<ClientDetailRoute> {
         ClientDetailScreen(
             onBackClick = navController::popBackStackSafely,
-            // Charges is live as of this slice. Loans, savings, notes and documents arrive in
-            // S3d/S4/S5 — null until then, so the affordance is absent rather than inert.
+            // Charges and notes are live. Loans, savings and documents arrive in S4/S5 — null
+            // until then, so the affordance is absent rather than inert.
             onChargesClick = navController::navigateToClientCharges,
             onLoanClick = null,
             onSavingsClick = null,
-            onNotesClick = null,
+            // Notes is live as of this slice. Loans, savings and documents arrive in S4/S5 — null
+            // until then, so the affordance is absent rather than inert.
+            onNotesClick = navController::navigateToClientNotes,
             onDocumentsClick = null,
         )
     }
@@ -102,6 +106,16 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
     composableWithStayTransitions<ClientChargesRoute> {
         ClientChargesScreen(onBackClick = navController::popBackStackSafely)
     }
+
+    // Notes list + add/edit, owned by `feature/note` and registered here.
+    //
+    // The ORIGINAL did exactly this: `noteDestination(navController, onBackPressed)` called from
+    // the client graph, with `feature/client` depending on `projects.feature.note`. Keeping the
+    // dependency direction is what makes the remaining drill-down slices mechanical — client is
+    // the hub, and each feature owns its own routes and screens.
+    //
+    // Nested, so NOT annotated: only TOP-LEVEL entries carry @FeatureDestination (spec §4).
+    noteDestinations(navController)
 }
 
 /**

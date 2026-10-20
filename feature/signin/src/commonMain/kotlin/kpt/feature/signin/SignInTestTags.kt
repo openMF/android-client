@@ -21,9 +21,6 @@ object SignInTestTags {
     /** Restored in S1 T3 — absent from the authored replacement. */
     const val LOGO = "signin:logo"
 
-    /** The server-config entry point. Without it a first-run user can never sign in. */
-    const val SERVER_CONFIG = "signin:server-config"
-
     /**
      * The headline + prompt block. The stitch mockup renders TWO lines here (app name, then the
      * prompt); the pre-migration screen rendered only the prompt.
@@ -44,6 +41,24 @@ object SignInTestTags {
      * error the slot becomes a non-interactive error icon (ui.yaml#password_field.trailing_slot).
      */
     const val PASSWORD_TOGGLE = "signin:password-toggle"
+
+    /**
+     * The instance chip: which Fineract host/tenant this sign-in targets.
+     * Replaces v1's blind full-width server-config button, whose tag is retired in v2.
+     */
+    const val INSTANCE_CHIP = "signin:instance-chip"
+
+    /** The legal consent line, pinned at the bottom. Absent in v1. */
+    const val CONSENT = "signin:consent"
+
+    /**
+     * Biometric unlock. Present ONLY when there is a stored session AND the device can perform it,
+     * so a test asserting its absence is asserting a real product rule, not a layout accident.
+     */
+    const val BIOMETRIC = "signin:biometric"
+
+    /** Warn-before-lock and locked banners. Absent in v1, which had no throttle at all. */
+    const val LOCKOUT_NOTICE = "signin:lockout-notice"
 
     /** Trailing error icons, shown per field when that field's rule failed (D2 / D3). */
     const val USERNAME_ERROR_ICON = "signin:username-error-icon"

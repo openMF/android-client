@@ -24,6 +24,29 @@
 // Empty on the template — this is yours to fill.
 
 dependencies {
+    // ── core-base/security re-export (added 2026-10-05, signin v2) ────────────────────────────
+    // `api`, not `implementation`: feature modules must see these symbols TRANSITIVELY.
+    //
+    // Why here. `core-base/security` ships BiometricAuthenticator (android/ios/desktop/js actuals),
+    // SecurityPolicy, FailedAttemptTracker, SecureAuthManager and SensitiveString — and before this
+    // line, NOTHING outside `cmp-navigation` and `core-base/network` could reach any of it. The
+    // capabilities had shipped with the template and sat unused because no `core/*` seam exposed
+    // them, so every feature that wanted biometric unlock or failed-attempt throttling had no path
+    // to it.
+    //
+    // Why THIS module. `core/designsystem` already `api`-exposes `core/platform` to every feature
+    // (RULE-IMPLEMENT-STORE5-001 S5-FEATURE-DEP-REDUNDANT), so re-exporting here reaches the whole
+    // feature layer without any feature declaring a new dependency. It mirrors exactly what
+    // `core/store` does for `core-base/store` and what line 25 of build.gradle.kts already does for
+    // `core-base/platform` — the encapsulation-compliant boundary (G-CORE-BASE-ENCAP): features
+    // reach core-base THROUGH core/, never directly.
+    //
+    // Why this file and not build.gradle.kts. That file is `owner: template` and FULL-COPIES on
+    // `/kmp-project-template-sync`; a dep added there is one sync from silent deletion. This seam
+    // exists precisely so a fork can extend the module without touching template-owned files, so
+    // no upstream PR is required for this change.
+    "commonMainApi"(project(":core-base:security"))
+
     // kpt.core.platform.permission.PermissionRequester — suspendCancellableCoroutine bridges the
     // Android ActivityResult callback to a suspend fn. core-base/platform declares coroutines as
     // `implementation`, so it is not visible transitively here.

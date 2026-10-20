@@ -48,10 +48,45 @@ class SignInScreenUiTest {
         // The load-bearing one. A user whose Fineract instance differs from the shipped default
         // cannot sign in until this is reachable BEFORE authenticating, and an earlier authored
         // version of this screen had dropped it entirely.
-        onNodeWithTag(SignInTestTags.SERVER_CONFIG).assertIsDisplayed()
+        onNodeWithTag(SignInTestTags.INSTANCE_CHIP).assertIsDisplayed()
         // Nothing has failed yet, so no error affordance exists.
         onNodeWithTag(SignInTestTags.USERNAME_ERROR_ICON, useUnmergedTree = true).assertDoesNotExist()
         onNodeWithTag(SignInTestTags.PROGRESS_OVERLAY).assertDoesNotExist()
+    }
+
+    @Test
+    fun biometricUnlockIsOfferedOnlyWhenItCanActuallySucceed() = runComposeUiTest {
+        // No stored session: the control would dead-end, so it must not render at all. Hidden, not
+        // disabled — a permanently greyed button reads as a broken feature rather than an absent one.
+        setContent(content(SignInState()))
+        onNodeWithTag(SignInTestTags.BIOMETRIC).assertDoesNotExist()
+
+        // A stored session on hardware that cannot perform the check is the same answer. This is
+        // the half a device test cannot show you: the emulator or phone you happen to run on has
+        // ONE enrolment state, and the other branch never gets exercised.
+        setContent(content(SignInState(hasStoredSession = true, biometricAvailable = false)))
+        onNodeWithTag(SignInTestTags.BIOMETRIC).assertDoesNotExist()
+    }
+
+    @Test
+    fun biometricUnlockRendersForAReturningOfficerAndIsWithdrawnOnLockout() = runComposeUiTest {
+        setContent(content(SignInState(hasStoredSession = true, biometricAvailable = true)))
+        onNodeWithTag(SignInTestTags.BIOMETRIC).assertIsDisplayed()
+
+        // Lockout is a throttle on SIGNING IN, not on one credential path. Leaving biometrics live
+        // during a lockout would make the throttle trivially bypassable by the same person who just
+        // failed five password attempts.
+        setContent(
+            content(
+                SignInState(
+                    hasStoredSession = true,
+                    biometricAvailable = true,
+                    isLockedOut = true,
+                    failedAttempts = 5,
+                ),
+            ),
+        )
+        onNodeWithTag(SignInTestTags.BIOMETRIC).assertDoesNotExist()
     }
 
     @Test
@@ -81,9 +116,9 @@ class SignInScreenUiTest {
         // fields live underneath.
         onNodeWithTag(SignInTestTags.PROGRESS_OVERLAY).assertIsDisplayed()
         onNodeWithTag(SignInTestTags.SUBMIT).assertIsNotEnabled()
-        // D1: the bottom-bar CTA stays reachable on purpose. A misconfigured server is exactly the
+        // D1: the instance chip stays reachable on purpose. A misconfigured server is exactly the
         // case where sign-in hangs, and that is the moment the user needs the way out most.
-        onNodeWithTag(SignInTestTags.SERVER_CONFIG).assertIsEnabled()
+        onNodeWithTag(SignInTestTags.INSTANCE_CHIP).assertIsEnabled()
     }
 
     @Test
@@ -122,6 +157,43 @@ class SignInScreenUiTest {
         // way, so only what reaches the screen distinguishes masked from not.
         onNodeWithTag(SignInTestTags.PASSWORD, useUnmergedTree = true).assertTextContains("•••")
         onNodeWithTag(SignInTestTags.PASSWORD_ERROR_ICON, useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun theInstanceChipStatesWhereTheSignInWillGo() = runComposeUiTest {
+        setContent(content(SignInState(instanceHost = "apis.mifos.community", instanceTenant = "mifos-bank-1")))
+
+        // THE POINT. On 2026-10-01 every call 404'd against a wrong base path, sign-in reported
+        // "Login failed. Check your credentials and try again", and the fault took a packet-level
+        // probe to find because the screen displayed NOTHING about its target. v1's control offered
+        // to change the server without ever showing what it was.
+        onNodeWithTag(SignInTestTags.INSTANCE_CHIP, useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun theConsentLineIsAlwaysPresent() = runComposeUiTest {
+        setContent(content(SignInState()))
+        // Absent in v1 entirely. Pinned, never behind a scroll: a consent the user cannot read is
+        // not a consent.
+        onNodeWithTag(SignInTestTags.CONSENT, useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun lockoutDisablesSubmitButKeepsTheWayOut() = runComposeUiTest {
+        setContent(content(SignInState(isLockedOut = true, failedAttempts = 5, instanceHost = "h", instanceTenant = "t")))
+
+        onNodeWithTag(SignInTestTags.LOCKOUT_NOTICE, useUnmergedTree = true).assertIsDisplayed()
+        onNodeWithTag(SignInTestTags.SUBMIT).assertIsNotEnabled()
+        // Deliberate: a wrong instance is a common cause of repeated failures, so the one control
+        // that fixes it must survive the lockout.
+        onNodeWithTag(SignInTestTags.INSTANCE_CHIP, useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun theWarningAppearsOnlyAsTheLimitNears() = runComposeUiTest {
+        // One failure in: counting from attempt one would be noise.
+        setContent(content(SignInState(failedAttempts = 1)))
+        onNodeWithTag(SignInTestTags.LOCKOUT_NOTICE, useUnmergedTree = true).assertDoesNotExist()
     }
 
     private companion object {

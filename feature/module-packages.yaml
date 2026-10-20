@@ -71,6 +71,10 @@ template: []
 # fork missing an `actual` for a newly-added KMP target would simply stop compiling.
 fork:
   - { id: auth,             status: exists }
+  # Ported from 6b66e8a43 in the S5 note slice — the first drill-down feature module of the
+  # feature/ migration, and the first feature->feature edge (client -> note), which the original
+  # also declared.
+  - { id: note,             status: exists }
   - { id: home,             status: exists }
   - { id: profile,          status: exists }
   - { id: settings,         status: exists }

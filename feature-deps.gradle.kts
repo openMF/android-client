@@ -35,4 +35,13 @@ dependencies {
     // feature/client — the client vertical (S3). Registration is three steps: this build
     // edge, the settings.local include, and @FeatureDestination on the graph builder.
     "commonMainImplementation"(project(":feature:client"))
+
+    // feature/note — client notes (S5). A DRILL-DOWN feature: its routes are registered by
+    // `ClientNavigation` (which depends on it directly), not by @FeatureDestination. The build edge
+    // is still required HERE, because the Koin codegen scans every feature module's `di` package
+    // and emitted `includes(NoteModule)` into the aggregate — and cmp-navigation cannot resolve
+    // that symbol without the dependency, even though it never navigates to note itself.
+    //
+    // The codegen derives the REGISTRATION from source; it cannot derive the BUILD EDGE.
+    "commonMainImplementation"(project(":feature:note"))
 }

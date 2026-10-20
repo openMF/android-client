@@ -27,3 +27,4 @@
 
 include(":feature:signin")
 include(":feature:client")
+include(":feature:note")

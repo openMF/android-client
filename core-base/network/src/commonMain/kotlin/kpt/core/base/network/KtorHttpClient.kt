@@ -89,6 +89,9 @@ data class AuthProviders(
  *        invoked inside `defaultRequest`, which runs per call.
  * @param requestTimeout Timeout in milliseconds for entire request lifecycle.
  * @param socketTimeout Timeout in milliseconds for socket-level communication.
+ * @param connectTimeout Timeout in milliseconds to ESTABLISH a connection. Without a bound here a
+ *   stalled handshake surfaces as a long spinner rather than an error the offline-first layer can
+ *   retry — see the install(HttpTimeout) block.
  * @param httpLogger A logger used for HTTP logging (defaults to `Logger.DEFAULT`).
  * @param httpLogLevel Level of HTTP logging (e.g. `LogLevel.ALL`).
  * @param loggableHosts A list of hostnames for which HTTP logging is enabled.
@@ -123,6 +126,7 @@ fun setupDefaultHttpClient(
     dynamicHeaders: () -> Map<String, String> = { emptyMap() },
     requestTimeout: Long = 60_000L,
     socketTimeout: Long = 60_000L,
+    connectTimeout: Long = 20_000L,
     httpLogger: Logger = Logger.DEFAULT,
     httpLogLevel: LogLevel = if (isReleaseBuild) LogLevel.HEADERS else LogLevel.ALL,
     loggableHosts: List<String> = emptyList(),
@@ -212,9 +216,24 @@ fun setupDefaultHttpClient(
         }
     }
 
+    // A CONNECT bound, not only request + socket.
+    //
+    // Without it a call that never completes its TCP/TLS handshake is governed only by the 60s
+    // request timeout, which a user reads as an indefinite spinner rather than a failure. Measured
+    // on mifos-x-field-officer-app 2026-10-20: an authenticated write took 45-85s and the paired
+    // read never settled — the screen sat on "Refreshing…" for minutes with no error and no retry.
+    //
+    // `mobile-wallet` hit this first and worked around it per-client, with the diagnosis written
+    // out in its own NetworkModule: "The corebase default sets request+socket to 60s but no
+    // connectTimeout; a shorter connect bound + request timeout surfaces a stalled call as an
+    // Error/Retry the offline-first layer handles, instead of a long spinner." Fixing the DEFAULT
+    // here is what stops the next fork re-deriving that workaround.
+    //
+    // 20s matches the value wallet settled on. Overridable per client for a slow endpoint.
     install(HttpTimeout) {
         requestTimeoutMillis = requestTimeout
         socketTimeoutMillis = socketTimeout
+        connectTimeoutMillis = connectTimeout
     }
 
     install(Logging) {

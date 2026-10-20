@@ -101,6 +101,7 @@ import androidx.compose.material.icons.rounded.FilterList
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
+import androidx.compose.material.icons.rounded.Fingerprint
 import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material.icons.rounded.MoreHoriz
 import androidx.compose.material.icons.rounded.MoreVert
@@ -147,6 +148,9 @@ object MifosIcons {
     val AddLocation = Icons.Rounded.AddLocation
     val CloudDownload = Icons.Default.CloudDownload
     val Password = Icons.Rounded.Lock
+
+    /** Biometric unlock. From material-icons-extended, which this module already carries. */
+    val Fingerprint = Icons.Rounded.Fingerprint
     val Theme = Icons.Rounded.Bedtime
     val Language = Icons.Rounded.Translate
     val Save = Icons.Rounded.Download

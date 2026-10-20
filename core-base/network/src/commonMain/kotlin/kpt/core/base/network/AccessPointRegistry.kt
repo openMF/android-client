@@ -9,6 +9,8 @@
  */
 package kpt.core.base.network
 
+import io.ktor.client.HttpClient
+
 /** Transport kind of a declared network access point. */
 enum class AccessPointKind {
     /** A REST endpoint reached over Ktor/Ktorfit. */
@@ -93,6 +95,35 @@ data class AccessPoint(
  * talks to" (`app-profile/app.yaml#network.access_points`).
  */
 class AccessPointRegistry(val points: List<AccessPoint>) {
+
+    /**
+     * One [HttpClient] per ACCESS POINT, not per API.
+     *
+     * `ktorfitFor` used to build a fresh client on every call, and `restApi(...)` registers one
+     * Koin `single` per API TYPE — so a monolith backend got one client per resource API. Measured
+     * on mifos-x-field-officer-app: 22 `@ApiBinding("mifos")` interfaces, 23 `restApi` lines, 23
+     * HttpClients against ONE host. Each carries its own connection pool and TLS session cache, so
+     * nothing is reused: every API pays a fresh TCP + TLS handshake on first use, and a slow link
+     * multiplies that by 23.
+     *
+     * `mobile-wallet` (the older fork, hand-wired before `@ApiBinding` existed) already had this
+     * right: THREE `single<KtorfitClient>` instances keyed by ROLE, each exposing ~24 services from
+     * one Ktorfit. This brings the generated path to the same shape.
+     *
+     * Keyed on the access-point id alone, which is sufficient because the per-request inputs are
+     * not baked into the client: `dynamicHeaders` is a lambda resolved on EVERY request, so a
+     * credential written at login reaches requests made by a client built before it. The static
+     * `defaultHeaders` are per access point by construction.
+     *
+     * Not separately locked. Koin serializes `single` creation, so the 23 registrations cannot race
+     * here; and if they ever did, the loser's client is simply discarded unused rather than
+     * observed — a wasteful outcome, not an incorrect one.
+     */
+    private val restClients: MutableMap<String, HttpClient> = mutableMapOf()
+
+    /** The shared REST client for [accessPointId], built by [build] on first use. */
+    internal fun sharedRestClient(accessPointId: String, build: () -> HttpClient): HttpClient =
+        restClients.getOrPut(accessPointId, build)
 
     /** Resolve the access point declared under [id], or `null`. */
     fun byId(id: String): AccessPoint? = points.firstOrNull { it.id == id }
