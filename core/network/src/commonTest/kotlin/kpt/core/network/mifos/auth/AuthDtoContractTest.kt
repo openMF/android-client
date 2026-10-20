@@ -86,11 +86,12 @@ class AuthDtoContractTest {
 
     @Test
     fun anErrorBodyDoesNotMasqueradeAsASuccessfulLogin() {
-        // THE IMPORTANT ONE. The shared client does not set expectSuccess, so a non-2xx body is
-        // deserialized onto this DTO's defaults. A 401 error payload therefore parses "fine" —
-        // every field null. The guard is that `authenticated` is NOT true, which is exactly what
-        // the ViewModel checks. If anyone ever gives `authenticated` a default of `true`, sign-in
-        // silently accepts failures.
+        // DEFENCE IN DEPTH. The shared client now sets `expectSuccess` (see
+        // NonSuccessIsNotDataTest), so a non-2xx raises before it is ever decoded and this body
+        // should not reach the DTO at all. The assertion stays because it guards a DIFFERENT
+        // failure: if anyone ever gives `authenticated` a default of `true`, a genuinely EMPTY or
+        // partial 200 body would read as an authenticated session. That is a DTO-shape invariant,
+        // independent of transport, and it is cheap to keep.
         val errorBody = """{"timestamp":"2026-10-01T18:38:51Z","status":401,"error":"Unauthorized","path":"/clients"}"""
 
         val res = json.decodeFromString<PostAuthenticationResponse>(errorBody)

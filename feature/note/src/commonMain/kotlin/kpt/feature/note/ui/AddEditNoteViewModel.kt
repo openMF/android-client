@@ -113,9 +113,10 @@ internal class AddEditNoteViewModel(
     /**
      * One submit path for both add and edit.
      *
-     * A successful write invalidates the Store, so the list the user returns to updates itself —
-     * the original's `popUpTo(inclusive) + launchSingleTop` route trick exists only because its
-     * list could not be told the data had changed.
+     * The write does NOT invalidate the read cache (`NoteCommandRepository` carries no Store), so
+     * the list the user returns to re-reads on RESUME instead — see `NoteListScreen`. The original
+     * achieved the same thing with a `popUpTo(inclusive) + launchSingleTop` route trick; dropping
+     * that without replacing it left a written note invisible until the cache expired.
      */
     private fun submit() {
         val text = state.text.trim()

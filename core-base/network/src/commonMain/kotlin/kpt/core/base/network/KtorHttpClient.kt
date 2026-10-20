@@ -150,6 +150,33 @@ fun setupDefaultHttpClient(
     urlType: UrlType = UrlType.MAIN,
     dynamicUrlProvider: DynamicUrlConfigProvider? = null,
 ): HttpClientConfig<*>.() -> Unit = {
+    // A NON-2XX MUST NOT REACH A CALLER AS DATA.
+    //
+    // Without this, Ktor hands the error BODY to ContentNegotiation, which deserializes it onto the
+    // expected success type. Nothing throws, so every layer above treats the result as real:
+    //
+    //   list read  -> the error object does not match `List<T>`, so it either throws a confusing
+    //                 JsonConvertException ("Expected start of the array '[', but had '{'") or,
+    //                 when the shapes happen to be compatible, yields an EMPTY LIST.
+    //   write      -> the DTO's fields are all nullable with defaults, so it parses "fine" and
+    //                 `MutationGateway.command` returns MutationResult.Applied — a FAILED WRITE
+    //                 REPORTED AS SUCCESS.
+    //
+    // MEASURED on device 2026-10-20 (mifos-x-field-officer-app, live Fineract): a 401 on
+    // POST /clients/3/notes returned `Applied`; the screen navigated back as though the note had
+    // been saved, and the note did not exist on the server. The paired list read rendered "No Item
+    // Found" rather than "signed out". A field officer is told the opposite of the truth in both
+    // directions, which is the worst possible failure mode for a write.
+    //
+    // With expectSuccess the 4xx/5xx raises ClientRequestException / ServerResponseException, which
+    // already have correct destinations on both paths: `DefaultMutationGateway.command` catches
+    // Throwable into MutationResult.Failed, and the read path surfaces ScreenState.Error (or
+    // Unauthenticated, which `ScreenState` already models and could never be reached before).
+    //
+    // This is opt-OUT per client, not a global policy: an endpoint that genuinely encodes outcomes
+    // in non-2xx bodies sets `expectSuccess = false` on its own client and handles them explicitly.
+    expectSuccess = true
+
     val refreshMutex = Mutex()
     val basicCredentialsProvider = authProviders.basic
     val digestCredentialsProvider = authProviders.digest

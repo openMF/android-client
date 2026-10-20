@@ -11,6 +11,8 @@ package kpt.feature.note.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavOptions
 import kotlinx.serialization.Serializable
 import kpt.core.base.ui.nav.composableWithStayTransitions
@@ -78,20 +80,42 @@ fun NavController.navigateToEditNote(clientId: Int, noteId: Long) =
  * would re-create and re-fetch after a write. That was necessary because its ViewModel fetched once
  * in `init` and had no way to be told the data changed.
  *
- * Here the list observes a Store-backed stream, so a successful write invalidates the cache and the
- * list updates itself. The add/edit screen therefore just pops — no route gymnastics, and no
- * re-creation of a screen that is already correct.
+ * Here the add/edit screen just pops, and the LIST re-reads when it resumes (see
+ * `NoteListScreen`). That is NOT because the write invalidates the cache — it does not;
+ * `NoteCommandRepository` is cache-free by contract — but because re-fetching on return is the
+ * same guarantee without the route gymnastics. Dropping the original's popUpTo WITHOUT adding the
+ * refresh was a regression, caught on device 2026-10-20.
  */
 fun NavGraphBuilder.noteDestinations(navController: NavController) {
-    composableWithStayTransitions<NoteListRoute> {
+    composableWithStayTransitions<NoteListRoute> { entry ->
+        // The list stays in composition while add/edit sits on top of it, so its stream is never
+        // re-created and nothing re-fetches on return. This result is what tells it to.
+        val refreshSignal by entry.savedStateHandle
+            .getStateFlow(NOTE_WRITTEN_KEY, false)
+            .collectAsStateWithLifecycle()
+
         NoteListScreen(
             onBackClick = navController::popBackStackSafely,
             onAddNote = navController::navigateToAddNote,
             onEditNote = navController::navigateToEditNote,
+            refreshSignal = refreshSignal,
+            onRefreshHandled = { entry.savedStateHandle[NOTE_WRITTEN_KEY] = false },
         )
     }
 
     composableWithStayTransitions<AddEditNoteRoute> {
-        AddEditNoteScreen(onBackClick = navController::popBackStackSafely)
+        AddEditNoteScreen(
+            onBackClick = {
+                // Signalled on EVERY pop, not only on a save. Distinguishing them would need a
+                // second event through the ViewModel, and the cost of being wrong is asymmetric: a
+                // redundant re-read after a discarded edit is one request, while a missed one
+                // leaves a note the user just wrote invisible until the cache expires.
+                navController.previousBackStackEntry?.savedStateHandle?.set(NOTE_WRITTEN_KEY, true)
+                navController.popBackStackSafely()
+            },
+        )
     }
 }
+
+/** Nav-result key: a write may have happened while the list was away. */
+private const val NOTE_WRITTEN_KEY = "note:written"
