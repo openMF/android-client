@@ -247,7 +247,69 @@ Notes remain absent.
 
 35 tests (23 ViewModel + 15 render, minus overlap).
 
+## S5e — recurring deposit, and the caller my own S5c slice was missing
+
+Ported from `6b66e8a43:feature/recurringDeposit/newRecurringDepositAccount/` — a 1,118-line
+ViewModel, a 220-line screen and six pages totalling ~2,100 lines. The largest single item in the
+migration.
+
+### It lives in `feature/savings`, not its own module
+
+A deliberate deviation from the original's separate `feature/recurringDeposit`. A recurring deposit
+IS a savings-family account — `SavingAccountDepositTypeEntity.ServerTypes.RECURRING` — and the
+savings summary already serves all three deposit types by `(type, id)`, so this wizard shares that
+module's strings, components and account vocabulary. A module whose only content is one wizard is
+the duplicate-scaffolding shape `G-IMPL-DUP` guards against.
+
+### The product was read through an unguarded index
+
+```kotlin
+productId = state.template.productOptions?.get(state.recurringDepositAccountDetail.loanProductSelected)?.id
+//                                        └─ get, not getOrNull …
+val loanProductSelected: Int = -1        // ← … against this default
+```
+
+`get(-1)` throws, so submitting before choosing a product crashed. What makes it easy to miss is
+that the file **reads as careful**: five other option reads in the same builder are wrapped in an
+explicit `!= -1` and two use `getOrNull`. One unguarded `get` sat among them — and the six guarded
+ones were only half-safe anyway, since `!= -1` catches the sentinel but not an index left over from
+a previous template.
+
+### The pre-closure penalty was sent even when unchecked
+
+Both penalty fields went out with whatever had been typed, regardless of the checkbox. A penalty the
+officer had *unchecked* still reached the server. They are now sent only when the penalty applies,
+and only rendered then.
+
+### `isCalendarInherited` was a constant dressed as a setting
+
+The payload set it from `depositFrequencySameAsGroupCenterMeeting` — whether the deposit cadence
+follows the GROUP or CENTRE meeting schedule. This screen is reached only for a client, a client has
+no meeting schedule, and no control ever set the flag. Omitted rather than sent.
+
+### The date pairing was correct here
+
+`DateHelper.SHORT_MONTH` alongside a date from `DateHelper.getDateAsStringFromLong` — both
+`dd-MM-yyyy`. Worth stating, because eight other screens got the same pairing wrong and two sent
+raw epoch millis: this one was right by both halves happening to come from the same object. The port
+keeps it right by construction instead.
+
+### The caller — and a gap in my own S5c slice
+
+S5c landed the savings wizard serving both owners but wired only group detail's row
+(`isGroup = true`). **The entire client path was unreachable** — a code path with no way in, which
+is the defect §6a's caller rule exists to prevent, introduced in my own slice and found by asking
+the §6a question *after* shipping rather than before.
+
+The lesson: the caller rule applies **per path, not per screen**. One screen with two owners needs
+two callers, and a screen-level check passes with one.
+
+Fixed by porting `clientApplyNewApplications` — the original's real entry point for all five account
+types — which gives the savings wizard its client caller and the recurring-deposit wizard its only
+caller. See `feature/client/MIGRATION.md#s5e`.
+
+23 ViewModel tests. 125 tests in the module.
+
 ## Still to come in S5
 
-`savingsAccountTransactionReceipt` (a multiplatform PDF viewer with four actuals) ·
-`recurringDeposit/newRecurringDepositAccount` (a 1,118-line ViewModel + 6 pages).
+`savingsAccountTransactionReceipt` — a multiplatform PDF viewer with four platform actuals.

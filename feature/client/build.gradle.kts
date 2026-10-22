@@ -34,6 +34,9 @@ kotlin {
             // no cycle. The loan screens take `onX` callbacks and know nothing about who opened
             // them.
             implementation(projects.feature.loan)
+            // feature/savings — the apply-new chooser opens the savings and recurring-deposit
+            // applications (S5e). Same edges as the original's `clientApplyNewApplicationRoute`.
+            implementation(projects.feature.savings)
             implementation(libs.koin.compose.navigation)
             implementation(compose.ui)
             implementation(compose.foundation)

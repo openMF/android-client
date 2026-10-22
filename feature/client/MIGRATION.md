@@ -826,3 +826,26 @@ tapped it and nothing happened — while `AddIdentifierClicked` was handled all 
 nav callback. Now an `IconButton` with a real `contentDescription` (it was `null`). And
 `ClientLoanAccountsAction.Refresh` was deleted: dead code from the refactor that dropped the
 hand-rolled `PullToRefreshBox`.
+
+## S5e — "Apply for a new account"
+
+Ported from `6b66e8a43:feature/client/clientApplyNewApplications/` (201-line screen + 57-line
+ViewModel). Five account types, each row opening that type's application.
+
+Ported now rather than as its own slice because it is the original's real entry point for all five —
+and because it fixes a gap in S5c: that slice landed the savings wizard serving both owners but
+wired only group detail's caller, leaving the **entire client path unreachable**. The caller rule
+applies per *path*, not per screen.
+
+- **Only ported rows are drawn.** Loan, savings and recurring deposit; share and fixed deposit are
+  absent. The original drew all five unconditionally, so three would have opened nothing here.
+- **The status gate reads the client** rather than taking it as a nav argument. The original carried
+  `status` in the route — a snapshot, so activating a client elsewhere and returning left the gate
+  refusing an application the server would now accept.
+- The original reused the **loan** subtitle under the Share row, so that option described the wrong
+  product.
+- Its stateless content took a `NavController` to render a breadcrumb that is not ported, which is
+  what made the screen untestable without one. A scaffold title stands in.
+
+`onApplyNewApplication` on client details went from `null` to live — the row was already gated and
+waiting.

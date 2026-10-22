@@ -9,9 +9,8 @@
  */
 package kpt.core.data.recurringdeposit
 
-import io.ktor.client.statement.HttpResponse
 import kpt.core.base.store.mutation.MutationResult
-import kpt.core.model.objects.payloads.RecurringDepositAccountPayload
+import kpt.core.model.recurringdeposit.RecurringDepositApplicationInput
 
 /**
  * Every recurringdeposit write, as an explicit outcome.
@@ -26,5 +25,13 @@ import kpt.core.model.objects.payloads.RecurringDepositAccountPayload
  */
 interface RecurringDepositCommandRepository {
 
-    suspend fun createRecurringDepositAccount(recurringDepositAccountPayload: RecurringDepositAccountPayload?): MutationResult<HttpResponse>
+    /**
+     * Submit a new recurring-deposit application.
+     *
+     * Takes a `core/model` input and returns `MutationResult<Unit>`: a feature module must not
+     * depend on `core:network`, and no caller needs the raw response.
+     */
+    suspend fun createRecurringDepositAccount(
+        input: RecurringDepositApplicationInput,
+    ): MutationResult<Unit>
 }

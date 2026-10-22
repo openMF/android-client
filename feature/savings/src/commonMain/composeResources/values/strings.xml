@@ -149,4 +149,25 @@
     <string name="feature_savings_application_created">The savings application was created and is awaiting approval.</string>
     <string name="feature_savings_application_failed">The application could not be submitted.</string>
     <string name="feature_savings_offline_application">No connection — the application was not submitted.</string>
+    <!-- S5e · the recurring-deposit application. Values verbatim from `6b66e8a43` unless noted. -->
+    <string name="feature_savings_rd_title">Recurring Deposit Application</string>
+    <string name="feature_savings_rd_deposit_amount">Deposit Amount</string>
+    <string name="feature_savings_rd_recurring_frequency">Deposit Every</string>
+    <string name="feature_savings_rd_recurring_frequency_type">Deposit Frequency</string>
+    <string name="feature_savings_rd_deposit_period">Deposit Period</string>
+    <string name="feature_savings_rd_deposit_period_type">Deposit Period Frequency</string>
+    <string name="feature_savings_rd_mandatory">Mandatory deposit</string>
+    <string name="feature_savings_rd_adjust_advance">Adjust advance payments toward future instalments</string>
+    <string name="feature_savings_rd_allow_withdrawal">Allow withdrawals</string>
+    <string name="feature_savings_rd_pre_closure_penalty">Apply penal interest on premature closure</string>
+    <string name="feature_savings_rd_penalty_interest">Penal Interest</string>
+    <string name="feature_savings_rd_penalty_interest_on">Penal Interest On</string>
+    <string name="feature_savings_rd_step_interest">Interest</string>
+    <!--
+        Added by the port. The original reported success with a snackbar fired from the composition
+        body and every failure with one generic error that replaced the five-page form.
+    -->
+    <string name="feature_savings_rd_created">The recurring deposit application was created and is awaiting approval.</string>
+    <string name="feature_savings_rd_failed">The application could not be submitted.</string>
+    <string name="feature_savings_error_positive_number">Enter a number greater than zero</string>
 </resources>

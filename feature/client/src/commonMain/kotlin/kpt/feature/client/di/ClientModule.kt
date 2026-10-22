@@ -10,6 +10,7 @@
 package kpt.feature.client.di
 
 import kpt.feature.client.address.ClientAddressViewModel
+import kpt.feature.client.applynew.ClientApplyNewViewModel
 import kpt.feature.client.charges.ClientChargesViewModel
 import kpt.feature.client.closure.ClientClosureViewModel
 import kpt.feature.client.collateral.ClientCollateralViewModel
@@ -32,6 +33,7 @@ import org.koin.dsl.module
  * which scans each feature module's `di` package — no registry edit (spec §4).
  */
 val ClientModule = module {
+    viewModelOf(::ClientApplyNewViewModel)
     viewModelOf(::ClientListViewModel)
     viewModelOf(::ClientProfileViewModel)
     viewModelOf(::ClientChargesViewModel)

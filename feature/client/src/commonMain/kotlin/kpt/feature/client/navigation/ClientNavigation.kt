@@ -20,6 +20,7 @@ import kpt.core.base.ui.nav.composableWithPushTransitions
 import kpt.core.base.ui.nav.composableWithStayTransitions
 import kpt.core.base.ui.nav.popBackStackSafely
 import kpt.feature.client.address.ClientAddressScreen
+import kpt.feature.client.applynew.ClientApplyNewScreen
 import kpt.feature.client.charges.ClientChargesScreen
 import kpt.feature.client.closure.ClientClosureScreen
 import kpt.feature.client.collateral.ClientCollateralScreen
@@ -39,6 +40,8 @@ import kpt.feature.loan.navigation.navigateToLoanRepayment
 import kpt.feature.loan.navigation.navigateToNewLoanApplication
 import kpt.feature.note.navigation.navigateToClientNotes
 import kpt.feature.note.navigation.noteDestinations
+import kpt.feature.savings.navigation.navigateToRecurringDepositApplication
+import kpt.feature.savings.navigation.navigateToSavingsApplication
 
 /** The tab's graph. Mirrors `HomeDestination` — the tab points at the graph, not at a screen. */
 @Serializable
@@ -110,6 +113,16 @@ data class ClientIdentifiersRoute(val clientId: Int)
  * Named for the original's `clientDetailsProfile`. Not to be confused with the original's separate
  * legacy `clientDetails` screen, which nothing navigates to (see [ClientProfileRoute]).
  */
+/**
+ * "Apply for a new account" — the client-side chooser.
+ *
+ * `clientId` only. The original's route also carried `status` and `accountNo`; the status is read
+ * from the client instead (a nav-arg status is a snapshot that goes stale — see
+ * `ClientApplyNewViewModel`).
+ */
+@Serializable
+data class ClientApplyNewRoute(val clientId: Int)
+
 @Serializable
 data class ClientDetailsRoute(val clientId: Int)
 
@@ -187,6 +200,9 @@ fun NavController.navigateToClientGeneral(clientId: Int, navOptions: NavOptions?
 
 fun NavController.navigateToClientIdentifiers(clientId: Int, navOptions: NavOptions? = null) =
     navigate(ClientIdentifiersRoute(clientId), navOptions)
+
+fun NavController.navigateToClientApplyNew(clientId: Int, navOptions: NavOptions? = null) =
+    navigate(ClientApplyNewRoute(clientId), navOptions)
 
 fun NavController.navigateToClientDetails(clientId: Int, navOptions: NavOptions? = null) =
     navigate(ClientDetailsRoute(clientId), navOptions)
@@ -335,6 +351,23 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
     // The client's detail fields + actions. This is what makes the four S3c action forms
     // reachable: Closure, Transfer, Assign Staff and Create Collateral all route from here.
     // Nested drill-down, NOT annotated.
+    composableWithPushTransitions<ClientApplyNewRoute> {
+        ClientApplyNewScreen(
+            onBackPressed = navController::popBackStackSafely,
+            // Each row is drawn only when its application exists. Loan, savings and recurring
+            // deposit are ported; share and fixed deposit are not, so those rows are ABSENT.
+            onApplyLoan = navController::navigateToNewLoanApplication,
+            // This is what gives the savings wizard its CLIENT path — S5c wired only the group
+            // path, from group detail, so `isGroup = false` was unreachable.
+            onApplySavings = { clientId ->
+                navController.navigateToSavingsApplication(ownerId = clientId, isGroup = false)
+            },
+            onApplyRecurringDeposit = navController::navigateToRecurringDepositApplication,
+            onApplyShare = null,
+            onApplyFixedDeposit = null,
+        )
+    }
+
     composableWithPushTransitions<ClientDetailsRoute> {
         ClientDetailsScreen(
             onNavigateBack = navController::popBackStackSafely,
@@ -343,10 +376,10 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
             onAssignStaff = navController::navigateToClientStaff,
             onCreateCollateral = navController::navigateToClientCollateral,
             onAddCharge = navController::navigateToClientCharges,
-            // `clientApplyNewApplications`, `clientUpdateDefaultAccount`, standing instructions,
-            // `clientEditDetails` and the photo capture are unported — null so their row / button
-            // is absent rather than inert. Signature is live as of this slice.
-            onApplyNewApplication = null,
+            // `clientUpdateDefaultAccount`, standing instructions, `clientEditDetails` and the
+            // photo capture are unported — null so their row / button is absent rather than
+            // inert. Apply-new is live as of S5e; signature landed earlier.
+            onApplyNewApplication = navController::navigateToClientApplyNew,
             onUpdateDefaultAccount = null,
             onCreateStandingInstructions = null,
             onUpdateDetails = null,

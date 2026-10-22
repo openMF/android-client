@@ -253,4 +253,26 @@
     <string name="feature_client_screen_loan_accounts">Loan Accounts</string>
     <string name="feature_client_screen_details">Client Details</string>
     <string name="feature_client_screen_collateral_details">Collateral</string>
+    <!--
+        S5e · "Apply for a new account" — the client-side chooser. Values verbatim from
+        `6b66e8a43`'s `client_apply_new_applications_*` unless noted.
+    -->
+    <string name="feature_client_apply_new_title">Apply For New Account</string>
+    <string name="feature_client_apply_new_loan">Loan Account</string>
+    <string name="feature_client_apply_new_loan_subtitle">Apply for a loan account</string>
+    <string name="feature_client_apply_new_savings">Savings Account</string>
+    <string name="feature_client_apply_new_savings_subtitle">Apply for a savings account</string>
+    <string name="feature_client_apply_new_share">Share Account</string>
+    <string name="feature_client_apply_new_recurring">Recurring Deposit</string>
+    <string name="feature_client_apply_new_recurring_subtitle">Apply for a recurring deposit account</string>
+    <string name="feature_client_apply_new_fixed">Fixed Deposit</string>
+    <string name="feature_client_apply_new_fixed_subtitle">Apply for a fixed deposit account</string>
+    <string name="feature_client_apply_new_inactive">This client is not active, so no new application can be submitted.</string>
+    <!--
+        Added by the port. The original reused the LOAN subtitle under the Share row, so that option
+        described the wrong product.
+    -->
+    <string name="feature_client_apply_new_share_subtitle">Apply for a share account</string>
+    <!-- Added by the port: reachable only when no application type is ported. -->
+    <string name="feature_client_apply_new_none_available">No account types are available yet.</string>
 </resources>

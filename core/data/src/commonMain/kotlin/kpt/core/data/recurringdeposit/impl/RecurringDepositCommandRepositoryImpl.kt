@@ -15,7 +15,9 @@ import kpt.core.base.store.mutation.MutationGateway
 import kpt.core.base.store.mutation.MutationPolicy
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.data.recurringdeposit.RecurringDepositCommandRepository
+import kpt.core.model.objects.payloads.ChargeItem
 import kpt.core.model.objects.payloads.RecurringDepositAccountPayload
+import kpt.core.model.recurringdeposit.RecurringDepositApplicationInput
 import kpt.core.network.mifos.recurringdeposit.api.RecurringAccountApi
 
 @RepositoryBinding(binds = RecurringDepositCommandRepository::class)
@@ -24,8 +26,14 @@ internal class RecurringDepositCommandRepositoryImpl(
     private val gateway: MutationGateway,
 ) : RecurringDepositCommandRepository {
 
-    override suspend fun createRecurringDepositAccount(recurringDepositAccountPayload: RecurringDepositAccountPayload?) =
-        online { recurringAccountApi.createRecurringDepositAccount(recurringDepositAccountPayload = recurringDepositAccountPayload) }
+    override suspend fun createRecurringDepositAccount(
+        input: RecurringDepositApplicationInput,
+    ): MutationResult<Unit> = online {
+        recurringAccountApi.createRecurringDepositAccount(
+            recurringDepositAccountPayload = input.toPayload(),
+        )
+        Unit
+    }
 
     /**
      * Commands run [MutationPolicy.OnlineRequired]: they await the server and write nothing
@@ -42,3 +50,43 @@ internal class RecurringDepositCommandRepositoryImpl(
             policy = MutationPolicy.OnlineRequired,
         )
 }
+
+/**
+ * The `core/model` input -> network payload boundary.
+ *
+ * `monthDayFormat` and `expectedFirstDepositOnDate` are left unset: the form collects neither, and
+ * the original hardcoded `expectedFirstDepositOnDate = null` for the same reason.
+ *
+ * Each charge's amount is parsed to the `Double` the payload declares. A row that does not parse is
+ * dropped rather than sent as 0 — the form refuses to add one, so this is a type boundary rather
+ * than a validation point.
+ */
+private fun RecurringDepositApplicationInput.toPayload() = RecurringDepositAccountPayload(
+    clientId = clientId,
+    productId = productId,
+    submittedOnDate = submittedOnDate,
+    locale = locale,
+    dateFormat = dateFormat,
+    mandatoryRecommendedDepositAmount = mandatoryRecommendedDepositAmount,
+    recurringFrequency = recurringFrequency,
+    recurringFrequencyType = recurringFrequencyType,
+    depositPeriod = depositPeriod,
+    depositPeriodFrequencyId = depositPeriodFrequencyId,
+    fieldOfficerId = fieldOfficerId,
+    externalId = externalId,
+    isMandatoryDeposit = isMandatoryDeposit,
+    adjustAdvanceTowardsFuturePayments = adjustAdvanceTowardsFuturePayments,
+    allowWithdrawal = allowWithdrawal,
+    interestCompoundingPeriodType = interestCompoundingPeriodType,
+    interestPostingPeriodType = interestPostingPeriodType,
+    interestCalculationType = interestCalculationType,
+    interestCalculationDaysInYearType = interestCalculationDaysInYearType,
+    lockinPeriodFrequency = lockinPeriodFrequency,
+    lockinPeriodFrequencyType = lockinPeriodFrequencyType,
+    preClosurePenalApplicable = preClosurePenalApplicable,
+    preClosurePenalInterest = preClosurePenalInterest,
+    preClosurePenalInterestOnTypeId = preClosurePenalInterestOnTypeId,
+    charges = charges.mapNotNull { charge ->
+        ChargeItem(chargeId = charge.chargeId, amount = charge.amount.toDoubleOrNull() ?: return@mapNotNull null)
+    },
+)

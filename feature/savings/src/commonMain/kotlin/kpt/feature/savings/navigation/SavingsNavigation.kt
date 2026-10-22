@@ -20,6 +20,7 @@ import kpt.core.common.utils.Constants
 import kpt.core.database.savings.entity.SavingAccountDepositTypeEntity
 import kpt.feature.document.navigation.navigateToDocumentList
 import kpt.feature.savings.application.SavingsApplicationScreen
+import kpt.feature.savings.recurring.RecurringDepositScreen
 import kpt.feature.savings.statuschange.SavingsStatusChange
 import kpt.feature.savings.statuschange.SavingsStatusChangeScreen
 import kpt.feature.savings.summary.SavingsSummaryScreen
@@ -74,6 +75,17 @@ data class SavingsStatusChangeRoute(val accountId: Int, val change: String)
 @Serializable
 data class SavingsApplicationRoute(val ownerId: Int, val isGroup: Boolean)
 
+/**
+ * A new RECURRING-DEPOSIT application, for a client.
+ *
+ * `clientId` only: the recurring-deposit template endpoint is keyed on the client alone, and the
+ * original's own route carried only a client id too. It lives in `feature/savings` rather than its
+ * own module because a recurring deposit is a savings-family account — see
+ * `RecurringDepositViewModel`.
+ */
+@Serializable
+data class RecurringDepositApplicationRoute(val clientId: Int)
+
 /** Deposit or withdraw. Carries the account TYPE, since Fineract's path segment names it. */
 @Serializable
 data class SavingsTransactionRoute(
@@ -105,6 +117,11 @@ fun NavController.navigateToSavingsApplication(
     isGroup: Boolean,
     navOptions: NavOptions? = null,
 ) = navigate(SavingsApplicationRoute(ownerId, isGroup), navOptions)
+
+fun NavController.navigateToRecurringDepositApplication(
+    clientId: Int,
+    navOptions: NavOptions? = null,
+) = navigate(RecurringDepositApplicationRoute(clientId), navOptions)
 
 fun NavController.navigateToSavingsApproval(accountId: Int, navOptions: NavOptions? = null) =
     navigate(SavingsStatusChangeRoute(accountId, SavingsStatusChange.APPROVE.name), navOptions)
@@ -140,5 +157,9 @@ fun NavGraphBuilder.savingsDestination(navController: NavController) {
 
     composableWithPushTransitions<SavingsApplicationRoute> {
         SavingsApplicationScreen(onBackPressed = navController::popBackStackSafely)
+    }
+
+    composableWithPushTransitions<RecurringDepositApplicationRoute> {
+        RecurringDepositScreen(onBackPressed = navController::popBackStackSafely)
     }
 }
