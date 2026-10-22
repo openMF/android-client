@@ -99,4 +99,54 @@
     <string name="feature_savings_deposit_failed">Deposit Not Recorded</string>
     <string name="feature_savings_withdraw_failed">Withdrawal Not Recorded</string>
     <string name="feature_savings_offline_transaction">No connection — the transaction was not recorded.</string>
+    <!-- S5c · the savings application wizard. Values verbatim from `6b66e8a43` unless noted. -->
+    <string name="feature_savings_application_title">Savings Application</string>
+    <string name="feature_savings_product">Savings Product</string>
+    <string name="feature_savings_field_officer">Field Officer</string>
+    <string name="feature_savings_submitted_on">Submitted On</string>
+    <string name="feature_savings_external_id">External Id</string>
+    <string name="feature_savings_opening_balance">Minimum Opening Balance</string>
+    <string name="feature_savings_min_balance">Minimum Balance</string>
+    <string name="feature_savings_lockin_period">Lock-in Period</string>
+    <string name="feature_savings_lockin_period_type">Lock-in Period Frequency</string>
+    <string name="feature_savings_compounding_period">Interest Compounding Period</string>
+    <string name="feature_savings_posting_period">Interest Posting Period</string>
+    <string name="feature_savings_interest_calculation_type">Interest Calculated Using</string>
+    <string name="feature_savings_days_in_year">Days In Year</string>
+    <string name="feature_savings_allow_overdraft">Allow overdraft</string>
+    <string name="feature_savings_enforce_min_balance">Enforce minimum balance</string>
+    <string name="feature_savings_charge_select">Charge</string>
+    <string name="feature_savings_charge_amount">Charge Amount</string>
+    <string name="feature_savings_charge_add">Add Charge</string>
+    <string name="feature_savings_charge_remove">Remove charge</string>
+    <string name="feature_savings_next">Next</string>
+    <string name="feature_savings_back">Back</string>
+    <string name="feature_savings_submit">Submit</string>
+    <string name="feature_savings_step_of">Step %1$d of %2$d · %3$s</string>
+    <string name="feature_savings_step_details">Details</string>
+    <string name="feature_savings_step_terms">Terms</string>
+    <string name="feature_savings_step_charges">Charges</string>
+    <string name="feature_savings_step_preview">Preview</string>
+    <!--
+        Added by the port. The original titled the wizard "Savings Account" for a client AND a
+        group, on the screen whose group path silently posted a client id.
+    -->
+    <string name="feature_savings_application_group_title">Group Savings Application</string>
+    <string name="feature_savings_summary_owner_client">Client</string>
+    <string name="feature_savings_summary_owner_group">Group</string>
+    <string name="feature_savings_summary_product">Product</string>
+    <string name="feature_savings_summary_submitted">Submitted on</string>
+    <string name="feature_savings_summary_officer">Field officer</string>
+    <string name="feature_savings_summary_charges">Charges</string>
+    <!--
+        Added by the port. The original had no per-step validation at all, so there were no
+        field-level messages to show.
+    -->
+    <string name="feature_savings_error_non_negative">Enter zero or more, or leave blank</string>
+    <string name="feature_savings_error_pick_an_option">Pick an option</string>
+    <string name="feature_savings_application_template_failed">Could not load this product\'s terms.</string>
+    <string name="feature_savings_no_charges_added">No charges added. Charges are optional.</string>
+    <string name="feature_savings_application_created">The savings application was created and is awaiting approval.</string>
+    <string name="feature_savings_application_failed">The application could not be submitted.</string>
+    <string name="feature_savings_offline_application">No connection — the application was not submitted.</string>
 </resources>

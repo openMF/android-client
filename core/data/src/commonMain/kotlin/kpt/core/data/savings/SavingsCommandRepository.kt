@@ -13,9 +13,9 @@ import io.ktor.client.statement.HttpResponse
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import kpt.core.model.objects.account.saving.SavingsActivationInput
+import kpt.core.model.objects.account.saving.SavingsApplicationInput
 import kpt.core.model.objects.account.saving.SavingsApprovalInput
 import kpt.core.model.objects.account.saving.SavingsTransactionInput
-import kpt.core.model.objects.payloads.SavingsPayload
 import kpt.core.model.shared.GenericResponse
 import kpt.core.network.mifos.savings.dto.FixedDepositPayload
 import kpt.core.network.mifos.savings.dto.ShareAccountPayload
@@ -64,7 +64,14 @@ interface SavingsCommandRepository {
         input: SavingsApprovalInput,
     ): MutationResult<GenericResponse>
 
-    suspend fun createSavingsAccount(savingsPayload: SavingsPayload?): MutationResult<HttpResponse>
+    /**
+     * Submit a new savings application for a client or a group.
+     *
+     * `MutationResult<Unit>` and a `core/model` input, for the same reasons the loan create has
+     * both: a feature module must not depend on `core:network`, and no caller needs the raw
+     * response.
+     */
+    suspend fun createSavingsAccount(input: SavingsApplicationInput): MutationResult<Unit>
 
     suspend fun createShareAccount(shareAccountPayload: ShareAccountPayload): MutationResult<HttpResponse>
 }

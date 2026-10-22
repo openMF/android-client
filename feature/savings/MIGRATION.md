@@ -185,8 +185,69 @@ taken because a reference list did not load is the worse failure. The notice its
 my own dead actions during this slice (`OnRefresh` in S5a, `OnRetryTemplate` here) — both became
 real affordances rather than deletions.
 
+## S5c — the create wizard, and the group path that was dropped
+
+Ported from `savingsAccountv2/` (a 736-line ViewModel, a 374-line screen, four pages totalling 795
+lines). The original ships two savings create screens — `savingsAccount/` and `savingsAccountv2/` —
+the same duplicate shape the loan vertical had; `v2` is the live one.
+
+### The group path was accepted by the route and discarded by the ViewModel
+
+```kotlin
+// the route
+data class SavingsAccountRoute(val groupId: Int, val clientId: Int, val isGroupAccount: Boolean)
+
+// the ViewModel, in full, on the subject
+SavingsAccountState(clientId = savedStateHandle.toRoute<SavingsAccountRoute>().clientId)
+```
+
+`groupId` and `isGroupAccount` appear **nowhere else in the file**. `SavingsPayload` has a `groupId`
+member and the builder never set it, so a group savings application posted with a client id and no
+group. The original's group-detail caller passed `(groupId, 0, true)` — so that path created an
+application against **client 0**.
+
+Same accepted-then-discarded class as the group loan's External Id and the loan wizard's charges,
+but on the *identity of the account being created*. Fixed by collapsing to `ownerId` + `isGroup`:
+one id and one discriminator, so there is no second id to forget. The discriminator also picks which
+Fineract **template endpoint** the form reads — the original read neither per-owner template, though
+both exist in `core/store` and are cached, so its option lists came from the generic one.
+
+### The Charges page is REAL here — unlike the loan wizard's
+
+`SavingsPayload` carries `charges` and the original's builder mapped them, so this page reaches the
+server and is ported. The loan wizard's identical-looking page had to be **removed**, because
+`LoansPayload` has no charges member. The difference is entirely in the payload, not the UI — which
+is why "does this input reach the server?" has to be checked per form rather than inferred from the
+screen. (The original did leave each charge's `locale`/`dateFormat` null while setting both on the
+application; the mapper supplies them from the same helper.)
+
+### Also fixed
+
+- **Occurrence eight of the date/format class** — `submittedOnDate` built by
+  `DateHelper.getDateAsStringFromLong` (`dd-MM-yyyy`) against a declared `dd MMMM yyyy`. Back to the
+  ordinary variant after the approval/activation screens' raw epoch millis.
+- **No per-step validation at all** — `moveToNextStep` incremented with no checks, and
+  `moveToPreviousStep` had no floor. Each `SavingsStep` now owns its fields; Submit re-validates
+  every step and lands on the earliest failure.
+- Eight parallel `Int = -1` dropdown indices → one keyed map. Read with `getOrNull`, so unlike the
+  loan wizard it did not *crash* — but a stale index still survived a product change and selected a
+  different option from the new product's list.
+- The title said "Savings Account" for a client and a group alike, on the screen whose group path
+  silently posted a client id. It now names the owner, and the preview states it.
+- `HorizontalPager` synced to `currentStep` → the step is state and the content is a `when`, so a
+  swipe cannot bypass validation.
+- The date picker allowed **future dates only**, so today was unselectable — the eighth screen with
+  that inverted rule.
+
+### Caller
+
+Group detail's **"Add Savings Account"** row, which S4k left absent pending this slice. It appeared
+with no edit to the menu beyond its own flag — which is what that design was for. Group Clients and
+Notes remain absent.
+
+35 tests (23 ViewModel + 15 render, minus overlap).
+
 ## Still to come in S5
 
 `savingsAccountTransactionReceipt` (a multiplatform PDF viewer with four actuals) ·
-`savingsAccountv2` (the create wizard) · `recurringDeposit/newRecurringDepositAccount` (a 1,118-line
-ViewModel + 6 pages).
+`recurringDeposit/newRecurringDepositAccount` (a 1,118-line ViewModel + 6 pages).

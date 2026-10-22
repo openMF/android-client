@@ -30,6 +30,7 @@
     <string name="feature_groups_activate_offline">You are offline — activation needs a connection.</string>
     <string name="feature_groups_activate_failed">Could not activate this group. Try again.</string>
     <string name="feature_groups_synced">Synced</string>
+    <string name="feature_groups_add_savings_account">Add Savings Account</string>
     <string name="feature_groups_documents">Documents</string>
     <string name="feature_groups_data_tables">More info</string>
     <!--

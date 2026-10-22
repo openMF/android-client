@@ -108,7 +108,8 @@ internal class LoanReschedulesViewModel(
     override fun handleAction(action: LoanReschedulesAction) {
         when (action) {
             LoanReschedulesAction.NavigateBack -> sendEvent(LoanReschedulesEvent.NavigateBack)
-            LoanReschedulesAction.OnRetry -> stream.retry()
+
+            LoanReschedulesAction.OnRefresh -> stream.refresh(forceFresh = true)
             LoanReschedulesAction.OnPropose -> sendEvent(LoanReschedulesEvent.Propose(state.loanId))
             LoanReschedulesAction.DismissDialog ->
                 mutableStateFlow.value = state.copy(dialogState = null)
@@ -296,7 +297,16 @@ internal sealed interface LoanReschedulesEvent {
 
 internal sealed interface LoanReschedulesAction {
     data object NavigateBack : LoanReschedulesAction
-    data object OnRetry : LoanReschedulesAction
+
+    /**
+     * Re-read, from EITHER the pull gesture or the error state's retry.
+     *
+     * ONE member, because `RefreshableScreenContent` routes both to the same callback — and
+     * because they are the same call anyway: `ScreenDataStream.retry()` is declared
+     * `= refresh(forceFresh = true)`. A separate `OnRetry` would be a second name for one
+     * operation, and whichever the wrapper did not route would sit undispatched.
+     */
+    data object OnRefresh : LoanReschedulesAction
     data object OnPropose : LoanReschedulesAction
     data object DismissDialog : LoanReschedulesAction
     data class OnApproveClick(val row: RescheduleRow) : LoanReschedulesAction

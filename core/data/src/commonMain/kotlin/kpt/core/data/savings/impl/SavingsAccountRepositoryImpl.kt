@@ -18,11 +18,15 @@ import kpt.core.base.store.screen.FetchPolicy
 import kpt.core.base.store.screen.ScreenDataStream
 import kpt.core.base.store.screen.asScreenStream
 import kpt.core.data.savings.SavingsAccountRepository
+import kpt.core.database.savings.entity.SavingProductsTemplate
 import kpt.core.database.savings.entity.SavingsAccountTransactionTemplateEntity
 import kpt.core.database.savings.entity.SavingsAccountWithAssociationsEntity
+import kpt.core.model.objects.organisations.ProductSavings
 import kpt.core.store.config.AppCacheKeys
 import kpt.core.store.config.AppStoreIds
 import kpt.core.store.config.AppStoreRegistry
+import kpt.core.store.savings.GetClientSavingsAccountTemplateByProductKey
+import kpt.core.store.savings.GetGroupSavingsAccountTemplateByProductKey
 import kpt.core.store.savings.GetSavingsAccountTransactionTemplateKey
 import kpt.core.store.savings.SavingsAccountKey
 import org.mobilenativefoundation.store.store5.Store
@@ -37,6 +41,18 @@ internal class SavingsAccountRepositoryImpl(
     private val transactionTemplateStore: Store<
         GetSavingsAccountTransactionTemplateKey,
         SavingsAccountTransactionTemplateEntity,
+        >,
+    @FromStore(AppStoreIds.SavingsProducts)
+    private val productsStore: Store<Unit, List<ProductSavings>>,
+    @FromStore(AppStoreIds.SavingsGetClientSavingsAccountTemplateByProduct)
+    private val clientApplicationTemplateStore: Store<
+        GetClientSavingsAccountTemplateByProductKey,
+        SavingProductsTemplate,
+        >,
+    @FromStore(AppStoreIds.SavingsGetGroupSavingsAccountTemplateByProduct)
+    private val groupApplicationTemplateStore: Store<
+        GetGroupSavingsAccountTemplateByProductKey,
+        SavingProductsTemplate,
         >,
 ) : SavingsAccountRepository {
 
@@ -69,6 +85,48 @@ internal class SavingsAccountRepositoryImpl(
                     refresh = false,
                 ),
             )
+            .filterNot {
+                it is StoreReadResponse.Loading ||
+                    it is StoreReadResponse.NoNewData ||
+                    it is StoreReadResponse.Initial
+            }
+            .first()
+            .requireData()
+    }.getOrNull()
+
+    override fun savingsProductsStream(scope: CoroutineScope): ScreenDataStream<List<ProductSavings>> =
+        productsStore.asScreenStream(
+            key = Unit,
+            cacheKey = AppCacheKeys.SavingsProducts.LIST,
+            scope = scope,
+            fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
+            ttl = AppStoreRegistry.Ttl.SAVINGS_PRODUCTS,
+        )
+
+    override suspend fun savingsApplicationTemplate(
+        ownerId: Int,
+        productId: Int,
+        isGroup: Boolean,
+    ): SavingProductsTemplate? = runCatching {
+        // The owner decides the ENDPOINT, not just a payload field — Fineract has a separate
+        // group template, and the original's wizard read neither.
+        val responses = if (isGroup) {
+            groupApplicationTemplateStore.stream(
+                StoreReadRequest.cached(
+                    GetGroupSavingsAccountTemplateByProductKey(groupId = ownerId, productId = productId),
+                    refresh = false,
+                ),
+            )
+        } else {
+            clientApplicationTemplateStore.stream(
+                StoreReadRequest.cached(
+                    GetClientSavingsAccountTemplateByProductKey(clientId = ownerId, productId = productId),
+                    refresh = false,
+                ),
+            )
+        }
+
+        responses
             .filterNot {
                 it is StoreReadResponse.Loading ||
                     it is StoreReadResponse.NoNewData ||

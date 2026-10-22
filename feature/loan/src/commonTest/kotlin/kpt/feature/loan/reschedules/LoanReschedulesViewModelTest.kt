@@ -374,12 +374,11 @@ class LoanReschedulesViewModelTest {
         testScheduler.advanceUntilIdle()
 
         repository.refreshes.test {
-            vm.actionChannel.trySend(LoanReschedulesAction.OnRetry)
+            vm.actionChannel.trySend(LoanReschedulesAction.OnRefresh)
             testScheduler.advanceUntilIdle()
             awaitItem()
-            // `OnRefresh` is GONE — declared, handled, and dispatched by nothing, because this
-            // screen has no pull-refresh control (the stream reports its own freshness). Removed
-            // in S5d when the action-dispatch sweep was drained to zero.
+            // ONE member for both the pull gesture and the error-state retry — see
+            // `RefreshableScreenContent`, and note `retry()` is `refresh(forceFresh = true)`.
             cancelAndIgnoreRemainingEvents()
         }
     }

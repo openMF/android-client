@@ -72,3 +72,49 @@ data class SavingsTransactionInput(
     val receiptNumber: String? = null,
     val bankNumber: String? = null,
 )
+
+/**
+ * A new savings application, for a CLIENT or a GROUP.
+ *
+ * [ownerId] + [isGroup] replace the original route's `(groupId, clientId, isGroupAccount)` triple —
+ * of which the wizard's ViewModel read only `clientId`, dropping the other two. So opening it from
+ * group detail produced an application with no `groupId` at all: the group path was accepted by the
+ * route and discarded by the ViewModel, which is the same accepted-then-dropped class as the group
+ * loan's External Id, but on the IDENTITY of the account being created.
+ *
+ * One owner and one discriminator make that unexpressible — there is no second id to forget, and
+ * the discriminator also selects which Fineract template endpoint the form reads.
+ */
+data class SavingsApplicationInput(
+    val ownerId: Int,
+    val isGroup: Boolean,
+    val productId: Int,
+    val submittedOnDate: String,
+    val locale: String,
+    val dateFormat: String,
+
+    val fieldOfficerId: Int? = null,
+    val externalId: String? = null,
+    val minRequiredOpeningBalance: String? = null,
+    val minRequiredBalance: String? = null,
+    val lockinPeriodFrequency: Int? = null,
+    val lockinPeriodFrequencyType: Int? = null,
+    val interestCompoundingPeriodType: Int? = null,
+    val interestPostingPeriodType: Int? = null,
+    val interestCalculationType: Int? = null,
+    val interestCalculationDaysInYearType: Int? = null,
+    val allowOverdraft: Boolean = false,
+    val enforceMinRequiredBalance: Boolean = false,
+
+    /**
+     * Charges attached to the application.
+     *
+     * Unlike the LOAN application — where `LoansPayload` has no charges member and the wizard's
+     * whole Charges page was discarded on submit — `SavingsPayload` does carry them, so this page
+     * is real and the list reaches the server.
+     */
+    val charges: List<SavingsChargeInput> = emptyList(),
+)
+
+/** One charge on a savings application: which charge, and how much. */
+data class SavingsChargeInput(val chargeId: Int, val amount: String)

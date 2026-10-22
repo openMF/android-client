@@ -95,6 +95,9 @@ internal class GroupsDetailViewModel(
 
             GroupsDetailAction.AddLoanAccountClicked ->
                 sendEvent(GroupsDetailEvent.OpenAddLoanAccount(groupId))
+
+            GroupsDetailAction.AddSavingsAccountClicked ->
+                sendEvent(GroupsDetailEvent.OpenAddSavingsAccount(groupId))
         }
     }
 
@@ -123,6 +126,7 @@ internal sealed interface GroupsDetailAction {
     data object DocumentsClicked : GroupsDetailAction
     data object DataTablesClicked : GroupsDetailAction
     data object AddLoanAccountClicked : GroupsDetailAction
+    data object AddSavingsAccountClicked : GroupsDetailAction
 }
 
 internal sealed interface GroupsDetailEvent {
@@ -139,4 +143,12 @@ internal sealed interface GroupsDetailEvent {
 
     /** Open the group loan application form — the original's `addGroupLoanAccount` edge. */
     data class OpenAddLoanAccount(val groupId: Int) : GroupsDetailEvent
+
+    /**
+     * Open the savings application for this GROUP — the original's `addSavingsAccount` edge.
+     *
+     * The original passed `(groupId, 0, true)` into a wizard that read only the second argument,
+     * so this path created an application against client 0. See `SavingsApplicationViewModel`.
+     */
+    data class OpenAddSavingsAccount(val groupId: Int) : GroupsDetailEvent
 }

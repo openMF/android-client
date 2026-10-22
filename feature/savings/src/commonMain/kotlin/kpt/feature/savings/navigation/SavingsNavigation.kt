@@ -19,6 +19,7 @@ import kpt.core.base.ui.nav.popBackStackSafely
 import kpt.core.common.utils.Constants
 import kpt.core.database.savings.entity.SavingAccountDepositTypeEntity
 import kpt.feature.document.navigation.navigateToDocumentList
+import kpt.feature.savings.application.SavingsApplicationScreen
 import kpt.feature.savings.statuschange.SavingsStatusChange
 import kpt.feature.savings.statuschange.SavingsStatusChangeScreen
 import kpt.feature.savings.summary.SavingsSummaryScreen
@@ -61,6 +62,18 @@ data class SavingsSummaryRoute(val accountType: String, val accountId: Int)
 @Serializable
 data class SavingsStatusChangeRoute(val accountId: Int, val change: String)
 
+/**
+ * A new savings application, for a CLIENT or a GROUP.
+ *
+ * ONE owner id and ONE discriminator. The original's route was
+ * `SavingsAccountRoute(groupId: Int, clientId: Int, isGroupAccount: Boolean)` and its ViewModel
+ * read only `clientId` — so `groupId` and `isGroupAccount` were accepted by the route and
+ * discarded, and a group application posted with no group. Two ids where one is always wrong is
+ * what made that possible.
+ */
+@Serializable
+data class SavingsApplicationRoute(val ownerId: Int, val isGroup: Boolean)
+
 /** Deposit or withdraw. Carries the account TYPE, since Fineract's path segment names it. */
 @Serializable
 data class SavingsTransactionRoute(
@@ -86,6 +99,12 @@ fun NavController.navigateToSavingsSummary(
     accountType: String = SavingAccountDepositTypeEntity.ServerTypes.SAVINGS.endpoint,
     navOptions: NavOptions? = null,
 ) = navigate(SavingsSummaryRoute(accountType, accountId), navOptions)
+
+fun NavController.navigateToSavingsApplication(
+    ownerId: Int,
+    isGroup: Boolean,
+    navOptions: NavOptions? = null,
+) = navigate(SavingsApplicationRoute(ownerId, isGroup), navOptions)
 
 fun NavController.navigateToSavingsApproval(accountId: Int, navOptions: NavOptions? = null) =
     navigate(SavingsStatusChangeRoute(accountId, SavingsStatusChange.APPROVE.name), navOptions)
@@ -117,5 +136,9 @@ fun NavGraphBuilder.savingsDestination(navController: NavController) {
 
     composableWithPushTransitions<SavingsTransactionRoute> {
         SavingsTransactionScreen(onBackPressed = navController::popBackStackSafely)
+    }
+
+    composableWithPushTransitions<SavingsApplicationRoute> {
+        SavingsApplicationScreen(onBackPressed = navController::popBackStackSafely)
     }
 }

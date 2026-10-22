@@ -109,7 +109,8 @@ internal class ClientLoanAccountsViewModel(
             // Both the original's `Refresh` and its `OnSearchClick` re-fetched from the server.
             // Searching no longer needs to: the query filters the stream locally, so the only
             // reason to re-read is to get fresher data.
-            ClientLoanAccountsAction.OnRetry -> stream.retry()
+
+            ClientLoanAccountsAction.Refresh -> stream.refresh(forceFresh = true)
 
             ClientLoanAccountsAction.ToggleSearch -> mutableStateFlow.value = state.copy(
                 isSearchBarActive = !state.isSearchBarActive,
@@ -240,7 +241,16 @@ internal sealed interface ClientLoanAccountsEvent {
 
 internal sealed interface ClientLoanAccountsAction {
     data object NavigateBack : ClientLoanAccountsAction
-    data object OnRetry : ClientLoanAccountsAction
+
+    /**
+     * Re-read, from EITHER the pull gesture or the error state's retry.
+     *
+     * ONE member, because `RefreshableScreenContent` routes both to the same callback — and
+     * because they are the same call anyway: `ScreenDataStream.retry()` is declared
+     * `= refresh(forceFresh = true)`. A separate `OnRetry` would be a second name for one
+     * operation, and whichever the wrapper did not route would sit undispatched.
+     */
+    data object Refresh : ClientLoanAccountsAction
     data object ToggleSearch : ClientLoanAccountsAction
     data object ToggleFilter : ClientLoanAccountsAction
     data object ClearFilters : ClientLoanAccountsAction

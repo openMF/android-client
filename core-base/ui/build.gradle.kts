@@ -124,3 +124,18 @@ buildkonfig {
         )
     }
 }
+
+// commonTest gets the multiplatform `runComposeUiTest` API, the desktop (JVM) target gets the JUnit4
+// runner that executes it — the same three lines `core-base/designsystem` declares, by COORDINATE
+// rather than through the `compose.*` accessors, which avoids the experimental-accessor opt-in.
+//
+// This module owns `ScreenContent` and its two wrappers and had NO render test of any kind, which is
+// how `RefreshableScreenContent` shipped forwarding none of `ScreenContent`'s state slots: nothing
+// could compose it and observe that a caller's `empty` never appeared. A state-rendering library
+// with no way to render it in a test cannot catch that class of defect.
+dependencies {
+    val composeVersion = libs.versions.compose.plugin.get()
+    add("commonTestImplementation", "org.jetbrains.compose.ui:ui-test:$composeVersion")
+    add("desktopTestImplementation", "org.jetbrains.compose.ui:ui-test-junit4:$composeVersion")
+    add("desktopTestImplementation", compose.desktop.currentOs)
+}

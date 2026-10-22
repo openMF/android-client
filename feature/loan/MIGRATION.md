@@ -1043,3 +1043,31 @@ the right local fix, and the missing `empty` passthrough is recorded as the upst
 
 Four screens' back navigation now routes through its action rather than calling the hoisted callback
 directly, removing a dead second path.
+
+## S5c — loan charges and reschedules adopt `RefreshableScreenContent`
+
+Once `core-base/ui`'s wrapper forwarded `ScreenContent`'s state slots
+([openMF/kmp-project-template#310](https://github.com/openMF/kmp-project-template/pull/310), applied
+locally pending the merge), both screens could use it — they pass a custom `empty`, which is exactly
+what the old signature made impossible.
+
+So the refresh actions deleted in S5d came back, and `OnRetry` **collapsed into them**: the wrapper
+routes the pull gesture and the error-state retry to one callback, and `ScreenDataStream.retry()` is
+declared `= refresh(forceFresh = true)` — literally the same call. Two members would have been two
+names for one operation, with whichever the wrapper did not route sitting undispatched. The
+dispatch sweep confirms zero.
+
+What the primitive buys over the original's hand-rolled version:
+
+```kotlin
+// 6b66e8a43:LoanChargeViewModel
+fun refreshLoanChargeList() {
+    _isRefreshing.value = true
+    loadLoanChargesList()        // ← `= viewModelScope.launch { … }`, returns immediately
+    _isRefreshing.value = false
+}
+```
+
+The flag went true → false in the same frame while the request was still in flight, so that spinner
+could never be observed true. `isRefreshing` now comes from the stream's own `freshnessSignal` — the
+layer that knows.

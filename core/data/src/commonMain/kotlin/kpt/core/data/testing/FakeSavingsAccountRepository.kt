@@ -16,8 +16,10 @@ import kpt.core.base.store.screen.ScreenDataStream
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.screenDataStreamForTesting
 import kpt.core.data.savings.SavingsAccountRepository
+import kpt.core.database.savings.entity.SavingProductsTemplate
 import kpt.core.database.savings.entity.SavingsAccountTransactionTemplateEntity
 import kpt.core.database.savings.entity.SavingsAccountWithAssociationsEntity
+import kpt.core.model.objects.organisations.ProductSavings
 
 /**
  * Test double for [SavingsAccountRepository] — the savings-side twin of [FakeLoanRepository].
@@ -31,6 +33,9 @@ class FakeSavingsAccountRepository(
     private val account: MutableStateFlow<ScreenState<SavingsAccountWithAssociationsEntity>>? = null,
     /** Answers the transaction-template question; null models the read failing. */
     private val transactionTemplate: () -> SavingsAccountTransactionTemplateEntity? = { null },
+    private val savingsProducts: MutableStateFlow<ScreenState<List<ProductSavings>>>? = null,
+    /** Answers the application-template question, per PRODUCT; null models the read failing. */
+    private val applicationTemplate: (productId: Int) -> SavingProductsTemplate? = { null },
 ) : SavingsAccountRepository {
 
     val refreshes: MutableSharedFlow<Unit> = MutableSharedFlow(extraBufferCapacity = 8)
@@ -61,5 +66,31 @@ class FakeSavingsAccountRepository(
     ): SavingsAccountTransactionTemplateEntity? {
         templateQueries += Triple(savingsAccountType, savingsAccountId, transactionType)
         return transactionTemplate()
+    }
+
+    override fun savingsProductsStream(scope: CoroutineScope): ScreenDataStream<List<ProductSavings>> {
+        val source = requireNotNull(savingsProducts) {
+            "FakeSavingsAccountRepository: savingsProductsStream was read but no state flow " +
+                "was supplied for it"
+        }
+        return screenDataStreamForTesting(source, refreshTrigger = refreshes)
+    }
+
+    /**
+     * Every `(ownerId, productId, isGroup)` the application template was asked for.
+     *
+     * `isGroup` is recorded because it selects the ENDPOINT: the original's wizard dropped the
+     * route's `isGroupAccount` entirely, so a test that only checked the ids would not notice a
+     * group application reading the client template.
+     */
+    val applicationTemplateQueries: MutableList<Triple<Int, Int, Boolean>> = mutableListOf()
+
+    override suspend fun savingsApplicationTemplate(
+        ownerId: Int,
+        productId: Int,
+        isGroup: Boolean,
+    ): SavingProductsTemplate? {
+        applicationTemplateQueries += Triple(ownerId, productId, isGroup)
+        return applicationTemplate(productId)
     }
 }

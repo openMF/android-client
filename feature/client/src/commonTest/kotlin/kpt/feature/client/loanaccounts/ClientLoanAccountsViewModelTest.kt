@@ -330,17 +330,16 @@ class ClientLoanAccountsViewModelTest {
     }
 
     @Test
-    fun retryReachesTheRead() = runTest(dispatcher) {
+    fun refreshReachesTheRead() = runTest(dispatcher) {
         val vm = viewModel()
         testScheduler.advanceUntilIdle()
 
         repository.refreshes.test {
-            vm.actionChannel.trySend(ClientLoanAccountsAction.OnRetry)
+            vm.actionChannel.trySend(ClientLoanAccountsAction.Refresh)
             testScheduler.advanceUntilIdle()
             awaitItem()
-            // `Refresh` is GONE — declared, handled, dispatched by nothing, because this screen
-            // has no pull-refresh control. Removed in S5d when the action-dispatch sweep was
-            // drained to zero.
+            // ONE member for both the pull gesture and the error-state retry — see
+            // `RefreshableScreenContent`, and note `retry()` is `refresh(forceFresh = true)`.
             cancelAndIgnoreRemainingEvents()
         }
     }

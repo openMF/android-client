@@ -18,8 +18,10 @@ import kpt.core.data.savings.SavingsCommandRepository
 import kpt.core.database.savings.entity.SavingsAccountTransactionRequestEntity
 import kpt.core.model.objects.account.loan.SavingsApproval
 import kpt.core.model.objects.account.saving.SavingsActivationInput
+import kpt.core.model.objects.account.saving.SavingsApplicationInput
 import kpt.core.model.objects.account.saving.SavingsApprovalInput
 import kpt.core.model.objects.account.saving.SavingsTransactionInput
+import kpt.core.model.objects.payloads.ChargesPayload
 import kpt.core.model.objects.payloads.SavingsPayload
 import kpt.core.network.mifos.savings.api.FixedDepositApi
 import kpt.core.network.mifos.savings.api.SavingsAccountApi
@@ -84,8 +86,12 @@ internal class SavingsCommandRepositoryImpl(
         )
     }
 
-    override suspend fun createSavingsAccount(savingsPayload: SavingsPayload?) =
-        online { savingsAccountApi.createSavingsAccount(savingsPayload = savingsPayload) }
+    override suspend fun createSavingsAccount(
+        input: SavingsApplicationInput,
+    ): MutationResult<Unit> = online {
+        savingsAccountApi.createSavingsAccount(savingsPayload = input.toPayload())
+        Unit
+    }
 
     override suspend fun createShareAccount(shareAccountPayload: ShareAccountPayload) =
         online { shareAccountApi.createShareAccount(shareAccountPayload = shareAccountPayload) }
@@ -129,3 +135,42 @@ private fun SavingsTransactionInput.toEntity() = SavingsAccountTransactionReques
     receiptNumber = receiptNumber,
     bankNumber = bankNumber,
 )
+
+/**
+ * The `core/model` input -> network payload boundary for a savings application.
+ *
+ * The owner lands on EXACTLY ONE of `clientId` / `groupId`, chosen by [SavingsApplicationInput.isGroup].
+ * The original set `clientId` unconditionally and never set `groupId`, so a group application
+ * carried the wrong owner field — the route's `groupId` and `isGroupAccount` were both dropped in
+ * the ViewModel.
+ */
+private fun SavingsApplicationInput.toPayload() = SavingsPayload().apply {
+    productId = this@toPayload.productId
+    clientId = this@toPayload.ownerId.takeUnless { isGroup }
+    groupId = this@toPayload.ownerId.takeIf { isGroup }
+    locale = this@toPayload.locale
+    dateFormat = this@toPayload.dateFormat
+    submittedOnDate = this@toPayload.submittedOnDate
+    fieldOfficerId = this@toPayload.fieldOfficerId
+    externalId = this@toPayload.externalId
+    minRequiredOpeningBalance = this@toPayload.minRequiredOpeningBalance
+    minRequiredBalance = this@toPayload.minRequiredBalance
+    lockinPeriodFrequency = this@toPayload.lockinPeriodFrequency
+    lockinPeriodFrequencyType = this@toPayload.lockinPeriodFrequencyType
+    interestCompoundingPeriodType = this@toPayload.interestCompoundingPeriodType
+    interestPostingPeriodType = this@toPayload.interestPostingPeriodType
+    interestCalculationType = this@toPayload.interestCalculationType
+    interestCalculationDaysInYearType = this@toPayload.interestCalculationDaysInYearType
+    allowOverdraft = this@toPayload.allowOverdraft
+    enforceMinRequiredBalance = this@toPayload.enforceMinRequiredBalance
+    charges = this@toPayload.charges.map { charge ->
+        // The charge's own date/format pair, from the same helper the application uses — the
+        // original left both null on every charge while setting them on the application.
+        ChargesPayload().apply {
+            chargeId = charge.chargeId
+            amount = charge.amount
+            locale = this@toPayload.locale
+            dateFormat = this@toPayload.dateFormat
+        }
+    }
+}

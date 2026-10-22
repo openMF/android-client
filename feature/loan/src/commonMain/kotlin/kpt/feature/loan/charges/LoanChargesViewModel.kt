@@ -70,7 +70,8 @@ internal class LoanChargesViewModel(
     override fun handleAction(action: LoanChargesAction) {
         when (action) {
             LoanChargesAction.NavigateBack -> sendEvent(LoanChargesEvent.NavigateBack)
-            LoanChargesAction.OnRetry -> stream.retry()
+
+            LoanChargesAction.OnRefresh -> stream.refresh(forceFresh = true)
             LoanChargesAction.OnAddCharge -> sendEvent(LoanChargesEvent.AddCharge(loanId))
         }
     }
@@ -139,6 +140,15 @@ internal sealed interface LoanChargesEvent {
 
 internal sealed interface LoanChargesAction {
     data object NavigateBack : LoanChargesAction
-    data object OnRetry : LoanChargesAction
+
+    /**
+     * Re-read, from EITHER the pull gesture or the error state's retry.
+     *
+     * ONE member, because `RefreshableScreenContent` routes both to the same callback — and
+     * because they are the same call anyway: `ScreenDataStream.retry()` is declared
+     * `= refresh(forceFresh = true)`. A separate `OnRetry` would be a second name for one
+     * operation, and whichever the wrapper did not route would sit undispatched.
+     */
+    data object OnRefresh : LoanChargesAction
     data object OnAddCharge : LoanChargesAction
 }

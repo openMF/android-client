@@ -165,16 +165,15 @@ class LoanChargesViewModelTest {
         testScheduler.advanceUntilIdle()
 
         repository.refreshes.test {
-            vm.actionChannel.trySend(LoanChargesAction.OnRetry)
+            vm.actionChannel.trySend(LoanChargesAction.OnRefresh)
             testScheduler.advanceUntilIdle()
             awaitItem()
-            // `OnRefresh` is GONE. The original's `refreshLoanChargeList` set `isRefreshing` true,
-            // called a function that only LAUNCHED a coroutine, then set it false — so the
-            // pull-refresh indicator could never be observed true. This screen deliberately
-            // dropped the hand-rolled `PullToRefreshBox` in favour of the stream owning that
-            // signal, and the action member outlived the control: declared, handled, dispatched by
-            // nothing. Removed in S5d when the action-dispatch sweep was drained to zero. Retry is
-            // the one refresh path this screen offers.
+            // ONE member for both the pull gesture and the error-state retry, because
+            // `RefreshableScreenContent` routes both to the same callback — and because
+            // `ScreenDataStream.retry()` is literally `refresh(forceFresh = true)`. The original
+            // owned an `isRefreshing` boolean it set true -> false around a call that only
+            // LAUNCHED a coroutine, so its spinner could never be observed true; the stream owns
+            // that signal now.
             cancelAndIgnoreRemainingEvents()
         }
     }

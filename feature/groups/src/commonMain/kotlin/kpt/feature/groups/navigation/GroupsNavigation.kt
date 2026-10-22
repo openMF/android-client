@@ -25,6 +25,7 @@ import kpt.feature.document.navigation.navigateToDocumentList
 import kpt.feature.groups.detail.GroupsDetailScreen
 import kpt.feature.groups.list.GroupsListScreen
 import kpt.feature.loan.navigation.navigateToGroupLoanApplication
+import kpt.feature.savings.navigation.navigateToSavingsApplication
 
 /** The tab's graph. Mirrors `ClientDestination` — the tab points at the graph, not at a screen. */
 @Serializable
@@ -87,6 +88,12 @@ fun NavGraphBuilder.groupsListDestination(navController: NavController) {
             // `addGroupLoanAccount`. This edge is what makes `GroupLoanApplicationRoute`
             // reachable; it was registered and caller-less until S4k.
             onAddLoanAccount = navController::navigateToGroupLoanApplication,
+            // The savings application in `feature/savings`, as a GROUP application — the original's
+            // `addSavingsAccount` edge passed `(groupId, 0, true)` into a wizard that read only the
+            // client id, so this path created an application against client 0.
+            onAddSavingsAccount = { groupId ->
+                navController.navigateToSavingsApplication(ownerId = groupId, isGroup = true)
+            },
         )
     }
 }

@@ -9,6 +9,7 @@
  */
 package kpt.feature.savings.di
 
+import kpt.feature.savings.application.SavingsApplicationViewModel
 import kpt.feature.savings.statuschange.SavingsStatusChangeViewModel
 import kpt.feature.savings.summary.SavingsSummaryViewModel
 import kpt.feature.savings.transaction.SavingsTransactionViewModel
@@ -23,4 +24,5 @@ val SavingsModule = module {
     viewModelOf(::SavingsSummaryViewModel)
     viewModelOf(::SavingsStatusChangeViewModel)
     viewModelOf(::SavingsTransactionViewModel)
+    viewModelOf(::SavingsApplicationViewModel)
 }

@@ -14,9 +14,9 @@ import kpt.core.base.store.mutation.MutationResult
 import kpt.core.data.savings.SavingsCommandRepository
 import kpt.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import kpt.core.model.objects.account.saving.SavingsActivationInput
+import kpt.core.model.objects.account.saving.SavingsApplicationInput
 import kpt.core.model.objects.account.saving.SavingsApprovalInput
 import kpt.core.model.objects.account.saving.SavingsTransactionInput
-import kpt.core.model.objects.payloads.SavingsPayload
 import kpt.core.model.shared.GenericResponse
 import kpt.core.network.mifos.savings.dto.FixedDepositPayload
 import kpt.core.network.mifos.savings.dto.ShareAccountPayload
@@ -43,6 +43,8 @@ class FakeSavingsCommandRepository(
         { MutationResult.Applied(GenericResponse(), synced = true) },
     private val transactionResult: () -> MutationResult<SavingsAccountTransactionResponse> =
         { MutationResult.Applied(SavingsAccountTransactionResponse(resourceId = 4_200), synced = true) },
+    private val createResult: () -> MutationResult<Unit> =
+        { MutationResult.Applied(Unit, synced = true) },
 ) : SavingsCommandRepository {
 
     /** Every approval sent, with its account — a test asserts the PAYLOAD, not merely a send. */
@@ -88,7 +90,16 @@ class FakeSavingsCommandRepository(
     override suspend fun createFixedDepositAccount(fixedDepositPayload: FixedDepositPayload) =
         unused()
 
-    override suspend fun createSavingsAccount(savingsPayload: SavingsPayload?) = unused()
+    /** Every savings application sent — a test asserts the PAYLOAD, not merely a send. */
+    val applications: MutableList<SavingsApplicationInput> = mutableListOf()
+
+    override suspend fun createSavingsAccount(
+        input: SavingsApplicationInput,
+    ): MutationResult<Unit> {
+        applications += input
+        gate?.await()
+        return createResult()
+    }
 
     override suspend fun createShareAccount(shareAccountPayload: ShareAccountPayload) = unused()
 

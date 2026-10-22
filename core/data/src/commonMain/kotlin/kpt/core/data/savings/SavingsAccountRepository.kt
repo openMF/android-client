@@ -11,8 +11,10 @@ package kpt.core.data.savings
 
 import kotlinx.coroutines.CoroutineScope
 import kpt.core.base.store.screen.ScreenDataStream
+import kpt.core.database.savings.entity.SavingProductsTemplate
 import kpt.core.database.savings.entity.SavingsAccountTransactionTemplateEntity
 import kpt.core.database.savings.entity.SavingsAccountWithAssociationsEntity
+import kpt.core.model.objects.organisations.ProductSavings
 
 interface SavingsAccountRepository {
     /**
@@ -42,4 +44,23 @@ interface SavingsAccountRepository {
         savingsAccountId: Int,
         transactionType: String,
     ): SavingsAccountTransactionTemplateEntity?
+
+    /** The tenant's savings products — what the create wizard opens on. */
+    fun savingsProductsStream(scope: CoroutineScope): ScreenDataStream<List<ProductSavings>>
+
+    /**
+     * The savings-application template for one (owner, product) pair.
+     *
+     * [isGroup] selects Fineract's GROUP endpoint over the client one. Both exist and both are
+     * cached; the original's wizard read neither per-owner — its route carried `groupId` and
+     * `isGroupAccount` and the ViewModel dropped both, so the group path could not work at all.
+     *
+     * A one-shot for the same reason the loan templates are: the wizard re-asks whenever the
+     * officer changes product, and a [ScreenDataStream] is keyed at construction.
+     */
+    suspend fun savingsApplicationTemplate(
+        ownerId: Int,
+        productId: Int,
+        isGroup: Boolean,
+    ): SavingProductsTemplate?
 }

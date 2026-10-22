@@ -45,6 +45,7 @@ import kpt.feature.groups.generated.resources.Res
 import kpt.feature.groups.generated.resources.feature_groups_account_no
 import kpt.feature.groups.generated.resources.feature_groups_activate
 import kpt.feature.groups.generated.resources.feature_groups_add_loan_account
+import kpt.feature.groups.generated.resources.feature_groups_add_savings_account
 import kpt.feature.groups.generated.resources.feature_groups_back
 import kpt.feature.groups.generated.resources.feature_groups_center
 import kpt.feature.groups.generated.resources.feature_groups_detail_title
@@ -66,6 +67,7 @@ internal object GroupsDetailTestTags {
     const val DOCUMENTS = "groups:detail:documents"
     const val DATA_TABLES = "groups:detail:data-tables"
     const val ADD_LOAN_ACCOUNT = "groups:detail:add-loan-account"
+    const val ADD_SAVINGS_ACCOUNT = "groups:detail:add-savings-account"
     const val OVERFLOW = "groups:detail:overflow"
 }
 
@@ -80,6 +82,7 @@ internal fun GroupsDetailScreen(
     onDocuments: ((Int) -> Unit)? = null,
     onDataTables: ((Int) -> Unit)? = null,
     onAddLoanAccount: ((Int) -> Unit)? = null,
+    onAddSavingsAccount: ((Int) -> Unit)? = null,
     viewModel: GroupsDetailViewModel = koinViewModel(),
 ) {
     val group by viewModel.group.collectAsStateWithLifecycle()
@@ -94,6 +97,8 @@ internal fun GroupsDetailScreen(
                 is GroupsDetailEvent.OpenDataTables -> onDataTables?.invoke(event.groupId)
                 is GroupsDetailEvent.OpenAddLoanAccount ->
                     onAddLoanAccount?.invoke(event.groupId)
+                is GroupsDetailEvent.OpenAddSavingsAccount ->
+                    onAddSavingsAccount?.invoke(event.groupId)
             }
         }
     }
@@ -105,6 +110,7 @@ internal fun GroupsDetailScreen(
         canOpenDocuments = onDocuments != null,
         canOpenDataTables = onDataTables != null,
         canAddLoanAccount = onAddLoanAccount != null,
+        canAddSavingsAccount = onAddSavingsAccount != null,
         onAction = { viewModel.actionChannel.trySend(it) },
         modifier = modifier,
     )
@@ -118,6 +124,7 @@ internal fun GroupsDetailContent(
     canOpenDocuments: Boolean = false,
     canOpenDataTables: Boolean = false,
     canAddLoanAccount: Boolean = false,
+    canAddSavingsAccount: Boolean = false,
     onAction: (GroupsDetailAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -137,6 +144,7 @@ internal fun GroupsDetailContent(
                 actions = {
                     OverflowMenu(
                         canAddLoanAccount = canAddLoanAccount,
+                        canAddSavingsAccount = canAddSavingsAccount,
                         canOpenDocuments = canOpenDocuments,
                         canOpenDataTables = canOpenDataTables,
                         onAction = onAction,
@@ -195,22 +203,27 @@ internal fun GroupsDetailContent(
  *
  * ## Three of the original's six
  *
- * Add Loan Account · Documents · More Group Info. The other three are ABSENT, not inert:
- * Add Savings Account (`feature/savings` is S5), Group Clients (the associate-clients list is
- * unported) and Notes (`feature/note` is still client-only — generalising it needs a Room schema
- * change on a shared table). Each gated on its own flag, so a row appears the slice its
- * destination lands and nothing here needs editing to hide one.
+ * Add Loan Account · Add Savings Account · Documents · More Group Info. Add Savings Account joined
+ * in S5c — exactly as designed: a row appears the slice its destination lands, and nothing in this
+ * function needed editing to reveal it beyond its own flag.
+ *
+ * The remaining two are ABSENT, not inert: Group Clients (the associate-clients list is unported)
+ * and Notes (`feature/note` is still client-only — generalising it needs a Room schema change on a
+ * shared table).
  *
  * The icon itself is absent when NO item is available, rather than opening an empty menu.
  */
 @Composable
 private fun OverflowMenu(
     canAddLoanAccount: Boolean,
+    canAddSavingsAccount: Boolean,
     canOpenDocuments: Boolean,
     canOpenDataTables: Boolean,
     onAction: (GroupsDetailAction) -> Unit,
 ) {
-    if (!canAddLoanAccount && !canOpenDocuments && !canOpenDataTables) return
+    if (!canAddLoanAccount && !canAddSavingsAccount && !canOpenDocuments && !canOpenDataTables) {
+        return
+    }
 
     var expanded by remember { mutableStateOf(false) }
 
@@ -232,6 +245,16 @@ private fun OverflowMenu(
                     onAction(GroupsDetailAction.AddLoanAccountClicked)
                 },
                 modifier = Modifier.testTag(GroupsDetailTestTags.ADD_LOAN_ACCOUNT),
+            )
+        }
+        if (canAddSavingsAccount) {
+            AppMenuDropDownItem(
+                option = stringResource(Res.string.feature_groups_add_savings_account),
+                onClick = {
+                    expanded = false
+                    onAction(GroupsDetailAction.AddSavingsAccountClicked)
+                },
+                modifier = Modifier.testTag(GroupsDetailTestTags.ADD_SAVINGS_ACCOUNT),
             )
         }
         if (canOpenDocuments) {

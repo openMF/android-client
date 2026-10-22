@@ -33,6 +33,9 @@ kotlin {
             // terms, amortization). The original has the same edge
             // (`6b66e8a43:feature/groups/.../GroupNavGraph.kt` -> addGroupLoanAccount).
             implementation(projects.feature.loan)
+            // feature/savings — group detail's "Add Savings Account" opens the savings application
+            // as a GROUP application (S5c). Same edge as the original's `addSavingsAccount`.
+            implementation(projects.feature.savings)
             implementation(libs.koin.compose.navigation)
             implementation(compose.ui)
             implementation(compose.foundation)

@@ -45,7 +45,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kpt.core.base.designsystem.theme.KptTheme
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.effects.EventsEffect
-import kpt.core.base.ui.screen.ScreenContent
+import kpt.core.base.ui.screen.RefreshableScreenContent
 import kpt.core.database.loan.entity.LoanAccountEntity
 import kpt.core.designsystem.component.AppScaffold
 import kpt.core.designsystem.icon.AppIcons
@@ -195,9 +195,19 @@ internal fun ClientLoanAccountsContent(
 
         Spacer(Modifier.height(KptTheme.spacing.md))
 
-        ScreenContent(
+        // `RefreshableScreenContent`: the same renderer inside a `PullToRefreshBox`, with the M3
+        // indicator driven off the stream's own `freshnessSignal.isRefreshing` rather than a
+        // boolean this screen would have to own. The original hand-rolled that boolean and set it
+        // true -> false around a call that only LAUNCHED a coroutine, so its spinner could never
+        // be observed true (`LoanChargeViewModel.refreshLoanChargeList`, `6b66e8a43`).
+        //
+        // Usable here only since the `empty` slot became forwardable — the wrapper used to pass
+        // the inner `ScreenContent` nothing but `state`/`onRetry`/`content`, so a screen with a
+        // branded empty state had to choose between it and the pull gesture
+        // (openMF/kmp-project-template#310).
+        RefreshableScreenContent(
             state = accounts,
-            onRetry = { onAction(ClientLoanAccountsAction.OnRetry) },
+            onRefresh = { onAction(ClientLoanAccountsAction.Refresh) },
             modifier = Modifier.fillMaxSize().testTag(ClientLoanAccountsTestTags.CONTENT),
             empty = {
                 AppEmptyCard(
