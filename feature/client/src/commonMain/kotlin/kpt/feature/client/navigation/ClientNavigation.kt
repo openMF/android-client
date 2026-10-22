@@ -20,11 +20,20 @@ import kpt.core.base.ui.nav.composableWithPushTransitions
 import kpt.core.base.ui.nav.composableWithStayTransitions
 import kpt.core.base.ui.nav.popBackStackSafely
 import kpt.feature.client.address.ClientAddressScreen
+import kpt.feature.client.addaddress.ClientAddAddressScreen
+import kpt.feature.client.addidentifier.ClientAddIdentifierScreen
+import kpt.feature.client.adddocument.ClientAddDocumentScreen
 import kpt.feature.client.applynew.ClientApplyNewScreen
 import kpt.feature.client.charges.ClientChargesScreen
 import kpt.feature.client.closure.ClientClosureScreen
 import kpt.feature.client.collateral.ClientCollateralScreen
 import kpt.feature.client.collateraldetails.ClientCollateralDetailsScreen
+import kpt.feature.client.depositaccounts.ClientDepositAccountsScreen
+import kpt.feature.client.editprofile.ClientEditProfileScreen
+import kpt.feature.client.editdetails.ClientEditDetailsScreen
+import kpt.feature.client.defaultaccount.ClientDefaultAccountScreen
+import kpt.feature.client.createnew.CreateNewClientScreen
+import kpt.feature.client.depositaccounts.DepositAccountKind
 import kpt.feature.client.details.ClientDetailsScreen
 import kpt.feature.client.documents.ClientDocumentsScreen
 import kpt.feature.client.general.ClientGeneralScreen
@@ -42,6 +51,8 @@ import kpt.feature.note.navigation.navigateToClientNotes
 import kpt.feature.note.navigation.noteDestinations
 import kpt.feature.savings.navigation.navigateToRecurringDepositApplication
 import kpt.feature.savings.navigation.navigateToSavingsApplication
+import kpt.feature.savings.navigation.navigateToSavingsApproval
+import kpt.feature.savings.navigation.navigateToSavingsSummary
 
 /** The tab's graph. Mirrors `HomeDestination` — the tab points at the graph, not at a screen. */
 @Serializable
@@ -154,6 +165,63 @@ data class ClientCollateralDetailsRoute(val clientId: Int)
 data class ClientLoanAccountsRoute(val clientId: Int)
 
 /**
+ * A client's deposit accounts of ONE kind — savings, fixed deposit or recurring deposit.
+ *
+ * [kind] is a [DepositAccountKind] name. The original had three separate routes over three
+ * near-identical screens reading the same list; see [ClientDepositAccountsViewModel] for why they
+ * collapsed into one parameterised destination.
+ */
+@Serializable
+data class ClientDepositAccountsRoute(val clientId: Int, val kind: String)
+
+/**
+ * Create a new client. Takes NO arguments — the form reads the tenant template itself.
+ *
+ * The original had this screen with no caller at all; the ported client list already carried a
+ * null-gated create FAB waiting for it, so the port is what makes it reachable.
+ */
+@Serializable
+data object CreateNewClientRoute
+
+/** Edit a client's details. Same `clientId`-without-a-default reasoning as [ClientStaffRoute]. */
+@Serializable
+data class ClientEditDetailsRoute(val clientId: Int)
+
+/**
+ * The client's profile PHOTO. Reached from client details' "Update Photo".
+ *
+ * Carries `clientName` + `accountNo` for the same reason [ClientSignatureRoute] does: the screen
+ * shows them in its header and has no client read of its own.
+ */
+@Serializable
+data class ClientEditProfileRoute(
+    val clientId: Int,
+    val clientName: String,
+    val accountNo: String,
+)
+
+/** Nominate a client's default savings account. Same no-default reasoning as [ClientStaffRoute]. */
+@Serializable
+data class ClientDefaultAccountRoute(val clientId: Int)
+
+/** Attach a document to a client. Reached from the client documents screen's "+". */
+@Serializable
+data class ClientAddDocumentRoute(val clientId: Int)
+
+/** Add a postal address to a client. Reached from the client address screen's "+". */
+@Serializable
+data class ClientAddAddressRoute(val clientId: Int)
+
+/**
+ * Add an identity document to a client. Reached from the client identifiers screen's "+".
+ *
+ * `clientId` is a Long here because the identifier commands and the template store are keyed by
+ * Long, unlike every other client route.
+ */
+@Serializable
+data class ClientAddIdentifierRoute(val clientId: Long)
+
+/**
  * The client's signature. Reached from client details' "Update Signature".
  *
  * Carries `clientName` + `accountNo` because the screen shows them in its header and has no
@@ -216,6 +284,37 @@ fun NavController.navigateToClientCollateralDetails(clientId: Int, navOptions: N
 fun NavController.navigateToClientLoanAccounts(clientId: Int, navOptions: NavOptions? = null) =
     navigate(ClientLoanAccountsRoute(clientId), navOptions)
 
+fun NavController.navigateToCreateNewClient(navOptions: NavOptions? = null) =
+    navigate(CreateNewClientRoute, navOptions)
+
+fun NavController.navigateToClientEditDetails(clientId: Int, navOptions: NavOptions? = null) =
+    navigate(ClientEditDetailsRoute(clientId), navOptions)
+
+fun NavController.navigateToClientEditProfile(
+    clientId: Int,
+    clientName: String,
+    accountNo: String,
+    navOptions: NavOptions? = null,
+) = navigate(ClientEditProfileRoute(clientId, clientName, accountNo), navOptions)
+
+fun NavController.navigateToClientDefaultAccount(clientId: Int, navOptions: NavOptions? = null) =
+    navigate(ClientDefaultAccountRoute(clientId), navOptions)
+
+fun NavController.navigateToClientAddDocument(clientId: Int, navOptions: NavOptions? = null) =
+    navigate(ClientAddDocumentRoute(clientId), navOptions)
+
+fun NavController.navigateToClientAddAddress(clientId: Int, navOptions: NavOptions? = null) =
+    navigate(ClientAddAddressRoute(clientId), navOptions)
+
+fun NavController.navigateToClientAddIdentifier(clientId: Long, navOptions: NavOptions? = null) =
+    navigate(ClientAddIdentifierRoute(clientId), navOptions)
+
+fun NavController.navigateToClientDepositAccounts(
+    clientId: Int,
+    kind: DepositAccountKind,
+    navOptions: NavOptions? = null,
+) = navigate(ClientDepositAccountsRoute(clientId, kind.name), navOptions)
+
 fun NavController.navigateToClientSignature(
     clientId: Int,
     clientName: String,
@@ -246,10 +345,10 @@ fun NavController.navigateToClientDocuments(clientId: Int, navOptions: NavOption
 fun NavGraphBuilder.clientListDestination(navController: NavController) {
     composableWithStayTransitions<ClientListRoute> {
         ClientListScreen(
-            // Detail exists as of S3b, so rows are clickable. Create-client is still null — S3c —
-            // and null (not an empty lambda) means the FAB is not drawn rather than drawn inert.
+            // Detail exists as of S3b, so rows are clickable. The create FAB went live in
+            // cluster B; it was null (not an empty lambda) so the FAB was not drawn at all.
             onClientClick = navController::navigateToClientProfile,
-            onCreateClient = null,
+            onCreateClient = navController::navigateToCreateNewClient,
         )
     }
 
@@ -330,9 +429,20 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
             // The client's loan accounts — and the loan PROFILE's only path in, which is why this
             // row is no longer null-gated. See `ClientLoanAccountsRoute`.
             onLoanAccounts = navController::navigateToClientLoanAccounts,
-            onSavingAccounts = null,
-            onFixedDepositAccounts = null,
-            onRecurringDepositAccounts = null,
+            // The three deposit rows. `null` (so ABSENT, not drawn dead) until S6-A1 landed the
+            // one parameterised destination that replaced the original's three near-identical
+            // screens — see `ClientDepositAccountsRoute`.
+            onSavingAccounts = {
+                navController.navigateToClientDepositAccounts(it, DepositAccountKind.SAVINGS)
+            },
+            onFixedDepositAccounts = {
+                navController.navigateToClientDepositAccounts(it, DepositAccountKind.FIXED)
+            },
+            onRecurringDepositAccounts = {
+                navController.navigateToClientDepositAccounts(it, DepositAccountKind.RECURRING)
+            },
+            // `shareAccounts` is a separate screen over a different entity and is not ported yet,
+            // so this row stays absent.
             onSharesAccounts = null,
         )
     }
@@ -341,10 +451,11 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
     composableWithPushTransitions<ClientIdentifiersRoute> {
         ClientIdentifiersScreen(
             onBackPress = navController::popBackStackSafely,
-            // The add/update identifier FORM is `clientIdentifiersAddUpdate` (657-line VM,
-            // 413-line screen) and is not ported — so the "+" is not drawn at all rather than
-            // drawn inert. It arrives with the rest of S3d.
-            onAddNewIdentifier = null,
+            // Live as of cluster C — null (so the "+" was ABSENT, not inert) until the add form
+            // landed. The form's VIEW_DOCUMENT phase is NOT ported: this list has no
+            // document affordance to open it, so porting it would be a screen with no caller
+            // (`identifier-document-preview-has-no-caller`).
+            onAddNewIdentifier = navController::navigateToClientAddIdentifier,
         )
     }
 
@@ -376,14 +487,15 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
             onAssignStaff = navController::navigateToClientStaff,
             onCreateCollateral = navController::navigateToClientCollateral,
             onAddCharge = navController::navigateToClientCharges,
-            // `clientUpdateDefaultAccount`, standing instructions, `clientEditDetails` and the
-            // photo capture are unported — null so their row / button is absent rather than
-            // inert. Apply-new is live as of S5e; signature landed earlier.
             onApplyNewApplication = navController::navigateToClientApplyNew,
-            onUpdateDefaultAccount = null,
+            // Live as of cluster B — each was null (so the row was ABSENT, not inert) until its
+            // destination landed.
+            onUpdateDefaultAccount = navController::navigateToClientDefaultAccount,
+            onUpdateDetails = navController::navigateToClientEditDetails,
+            onUpdatePhoto = navController::navigateToClientEditProfile,
+            // Standing instructions has NO original at 6b66e8a43 — there is nothing to port, so
+            // this row is permanently absent rather than pending.
             onCreateStandingInstructions = null,
-            onUpdateDetails = null,
-            onUpdatePhoto = null,
             onUpdateSignature = navController::navigateToClientSignature,
         )
     }
@@ -393,16 +505,17 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
         ClientAddressScreen(
             onNavigateBack = navController::popBackStackSafely,
             // The add-address form is a 610-line screen (S3d) — null, so the "+" is absent.
-            onAddAddress = null,
+            // Live as of cluster C — null (so the "+" was ABSENT) until the form landed.
+            onAddAddress = navController::navigateToClientAddAddress,
         )
     }
 
     composableWithPushTransitions<ClientDocumentsRoute> {
         ClientDocumentsScreen(
             onNavigateBack = navController::popBackStackSafely,
-            // `clientAddDocuments` is S3d — null, so the "+" is absent. The in-place search
-            // filter needs no destination and IS wired.
-            onAddDocument = null,
+            // Live as of cluster C — null (so the "+" was ABSENT, not inert) until the add form
+            // landed. The in-place search filter needs no destination and was always wired.
+            onAddDocument = navController::navigateToClientAddDocument,
         )
     }
 
@@ -421,6 +534,112 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
             // `clientLoanAccountsDestination(createAccount = …)`. This was `null` (so the "add
             // account" affordance was ABSENT rather than drawn dead) until S4l landed the screen.
             onAddAccount = navController::navigateToNewLoanApplication,
+        )
+    }
+
+    // The client's deposit accounts of one kind. Nested drill-down, NOT annotated.
+    composableWithPushTransitions<ClientDepositAccountsRoute> { backStackEntry ->
+        // The kind is read HERE, not only inside the ViewModel, because whether the create
+        // affordance exists at all is a NAVIGATION fact: savings and recurring deposit have a
+        // ported wizard, fixed deposit does not. Passing a no-op lambda for FIXED would make the
+        // screen draw a "+" that does nothing — an inert affordance, which §6a forbids. `null`
+        // makes it ABSENT.
+        val kind = runCatching {
+            DepositAccountKind.valueOf(backStackEntry.toRoute<ClientDepositAccountsRoute>().kind)
+        }.getOrDefault(DepositAccountKind.SAVINGS)
+
+        ClientDepositAccountsScreen(
+            onNavigateBack = navController::popBackStackSafely,
+            // The account SUMMARY, addressed by the row's own deposit-type endpoint so a
+            // recurring-deposit row opens `recurringdepositaccounts` rather than `savingsaccounts`.
+            onViewAccount = { accountId, endpoint ->
+                navController.navigateToSavingsSummary(accountId, endpoint)
+            },
+            // The approval half of the status-change screen. The ACCOUNT id — the original passed
+            // the CLIENT id here, which approved the wrong record.
+            onApproveAccount = navController::navigateToSavingsApproval,
+            // `newFixedDepositAccount` is a ~2,700-line six-page wizard and is NOT ported, so for
+            // FIXED this is null and neither the "+" nor the empty state's create button is drawn.
+            onAddAccount = when (kind) {
+                DepositAccountKind.FIXED -> null
+                DepositAccountKind.SAVINGS, DepositAccountKind.RECURRING -> { clientId, which ->
+                    when (which) {
+                        // The savings wizard serves both owners; a client is not a group.
+                        DepositAccountKind.SAVINGS ->
+                            navController.navigateToSavingsApplication(clientId, isGroup = false)
+                        DepositAccountKind.RECURRING ->
+                            navController.navigateToRecurringDepositApplication(clientId)
+                        DepositAccountKind.FIXED -> Unit
+                    }
+                }
+            },
+        )
+    }
+
+    // Create a new client. Reached from the list's FAB. Nested drill-down, NOT annotated.
+    composableWithPushTransitions<CreateNewClientRoute> {
+        CreateNewClientScreen(
+            onNavigateBack = navController::popBackStackSafely,
+            // Open the client that was just created — the original's behaviour.
+            onClientCreated = navController::navigateToClientProfile,
+        )
+    }
+
+    // Edit client details. Nested drill-down, NOT annotated.
+    composableWithPushTransitions<ClientEditDetailsRoute> {
+        ClientEditDetailsScreen(
+            onNavigateBack = navController::popBackStackSafely,
+            // POP on success rather than navigating forward. The original pushed a client detail
+            // on top of the detail the officer came FROM; popping returns to the live screen,
+            // which re-reads and shows the edit.
+            onNavigateNext = navController::popBackStackSafely,
+        )
+    }
+
+    // The client's profile photo. Nested drill-down, NOT annotated (same as signature).
+    composableWithPushTransitions<ClientEditProfileRoute> { backStackEntry ->
+        val route = backStackEntry.toRoute<ClientEditProfileRoute>()
+        ClientEditProfileScreen(
+            clientName = route.clientName,
+            accountNo = route.accountNo,
+            onNavigateBack = navController::popBackStackSafely,
+        )
+    }
+
+    // Add an identity document to a client. Nested drill-down, NOT annotated.
+    composableWithPushTransitions<ClientAddIdentifierRoute> {
+        ClientAddIdentifierScreen(
+            onNavigateBack = navController::popBackStackSafely,
+            // Pop whether a document was attached or skipped — the identifiers list behind
+            // re-reads and shows the new row either way.
+            onFinished = navController::popBackStackSafely,
+        )
+    }
+
+    // Add a postal address to a client. Nested drill-down, NOT annotated.
+    composableWithPushTransitions<ClientAddAddressRoute> {
+        ClientAddAddressScreen(
+            onNavigateBack = navController::popBackStackSafely,
+            // Pop on success: the address list behind re-reads and shows the new row.
+            onSaved = navController::popBackStackSafely,
+        )
+    }
+
+    // Attach a document to a client. Nested drill-down, NOT annotated.
+    composableWithPushTransitions<ClientAddDocumentRoute> {
+        ClientAddDocumentScreen(
+            onNavigateBack = navController::popBackStackSafely,
+            // Pop on success: the documents list behind re-reads and shows the new row.
+            onUploaded = navController::popBackStackSafely,
+        )
+    }
+
+    // Nominate the client's default savings account. Nested drill-down, NOT annotated.
+    composableWithPushTransitions<ClientDefaultAccountRoute> {
+        ClientDefaultAccountScreen(
+            onNavigateBack = navController::popBackStackSafely,
+            // Pop, for the same reason edit-details does.
+            onNavigateNext = navController::popBackStackSafely,
         )
     }
 
@@ -467,7 +686,10 @@ fun NavGraphBuilder.clientTabGraph(outerNav: NavController) {
         composableWithStayTransitions<ClientListRoute> {
             ClientListScreen(
                 onClientClick = outerNav::navigateToClientProfile,
-                onCreateClient = null,
+                // The TAB-graph copy of the list — the path a field officer actually takes from
+                // the bottom bar. Wiring only the other call site would ship a FAB that exists on
+                // one entry path and is missing on the one people use.
+                onCreateClient = outerNav::navigateToCreateNewClient,
             )
         }
     }

@@ -7,8 +7,38 @@
 first consumer of — `note` (8), `document` (8), `data-table` (20), `search-record` (4), `activate`
 (5). **208 files, ~36% of the whole migration.**
 
-**Status:** inventory complete. Port in progress, subdivided `3a` list → `3b` detail+charges →
-`3c` actions → `3d` shared drill-downs.
+**Status (re-measured 2026-10-22 — the line below is the CURRENT count, not an S3 snapshot).**
+Port in progress, subdivided `3a` list → `3b` detail+charges → `3c` actions → `3d` shared
+drill-downs → `S6-A1` deposit accounts → `S6-B` create/edit.
+
+**19 of the original's 38 screens are covered; ~18 remain.** Two caveats the headline number hides:
+
+- One of the 38 is a DEAD DUPLICATE — the original ships both `clientList/ClientListScreen.kt` and
+  `clientsList/ClientListScreen.kt`.
+- Three originals (`savingsAccounts`, `fixedDepositAccount`, `recurringDepositAccount`) collapsed
+  into ONE parameterised `depositaccounts` destination, so screens-covered and files-written do not
+  track each other.
+
+> **This header has gone stale twice.** It read "inventory complete, port in progress" for weeks
+> while six slices landed, and `CAPABILITY_GAPS`' own `client-vertical-partially-ported` entry was
+> still quoting "18 .kt / 3 screens … remaining ~35" on 2026-10-22. The same drift hit
+> `CURRENT_WORK.md` ("feature/** 1 of 20") and `signin/MIGRATION.md` ("port not started", for a
+> module that has its brand mark and a 509-line screen). **Re-measure from disk before trusting any
+> count in this file** — `git ls-tree 6b66e8a43 feature/client/` for the denominator, `find
+> feature/client/src -name "*Screen.kt"` for the numerator.
+
+### Landed in S6-B (2026-10-22)
+
+| screen | package | note |
+|---|---|---|
+| deposit accounts ×3 | `depositaccounts/` | one destination, keyed by `ServerTypes` |
+| create client | `createnew/` | the list FAB's destination; **both** list call sites wired |
+| edit details | `editdetails/` | details' `onUpdateDetails` |
+| edit photo | `editprofile/` | details' `onUpdatePhoto` |
+| default account | `defaultaccount/` | details' `onUpdateDefaultAccount` |
+
+Five null-gated affordances went live. `onCreateStandingInstructions` stays `null` **permanently** —
+it has no original at `6b66e8a43` at all, so it is not pending work.
 
 ---
 
@@ -297,6 +327,10 @@ correct live data. Only reading the original's graph surfaced it. It is the firs
 argument for §7.0: the port was faithful to a file and unfaithful to the app.
 
 ### F2 — the ported detail screen carries 4 of 13 actions
+
+> **Superseded 2026-10-22.** S6-B wired update-details, update-photo and update-default-account,
+> and established that `onCreateStandingInstructions` has no original to port. Re-read the
+> destination block in `ClientNavigation.kt` for the live count rather than trusting this heading.
 
 `clientDetailRoute` declares thirteen: `addLoanAccount`, `addSavingsAccount`, `charges`,
 `documents`, `identifiers`, `moreClientInfo`, `notes`, `pinpointLocation`, `survey`,

@@ -27,6 +27,9 @@ import kpt.core.model.client.ClientTemplateOptions
 import kpt.core.model.objects.clients.ClientAddressResponse
 import kpt.core.model.objects.noncoreobjects.Identifier
 import kpt.core.model.shared.CollateralItem
+import kpt.core.database.client.entity.AddressConfiguration
+import kpt.core.database.client.entity.ClientsTemplateEntity
+import kpt.core.model.objects.noncoreobjects.IdentifierTemplate
 import kpt.core.model.shared.CollateralItemResult
 
 /**
@@ -58,6 +61,9 @@ class FakeClientRepository(
     private val pinpoints: MutableStateFlow<ScreenState<List<ClientAddressResponse>>>? = null,
     private val clientCollateral: MutableStateFlow<ScreenState<List<CollateralItemResult>>>? = null,
     private val collateralCatalog: MutableStateFlow<ScreenState<List<CollateralItem>>>? = null,
+    private val clientsTemplate: MutableStateFlow<ScreenState<ClientsTemplateEntity>>? = null,
+    private val identifierTemplate: MutableStateFlow<ScreenState<IdentifierTemplate>>? = null,
+    private val addressConfiguration: MutableStateFlow<ScreenState<AddressConfiguration>>? = null,
     private val closeTemplate: MutableStateFlow<ScreenState<ClientCloseTemplateResponse>>? = null,
     private val template: MutableStateFlow<ScreenState<ClientTemplateOptions>>? = null,
     private val addresses: MutableStateFlow<ScreenState<List<ClientAddressEntity>>>? = null,
@@ -116,6 +122,15 @@ class FakeClientRepository(
 
     override fun collateralItemsStream(scope: CoroutineScope) =
         stream("collateralCatalog", null, collateralCatalog)
+
+    override fun clientsTemplateStream(scope: CoroutineScope) =
+        stream("clientsTemplate", null, clientsTemplate)
+
+    override fun clientIdentifierTemplateStream(clientId: Long, scope: CoroutineScope) =
+        stream("identifierTemplate", clientId, identifierTemplate)
+
+    override fun addressConfigurationStream(scope: CoroutineScope) =
+        stream("addressConfiguration", null, addressConfiguration)
 
     override fun clientCloseTemplateStream(scope: CoroutineScope) =
         stream("closeTemplate", null, closeTemplate)

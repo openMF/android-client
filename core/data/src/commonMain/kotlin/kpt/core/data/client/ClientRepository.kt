@@ -11,7 +11,9 @@ package kpt.core.data.client
 
 import kotlinx.coroutines.CoroutineScope
 import kpt.core.base.store.screen.ScreenDataStream
+import kpt.core.database.client.entity.AddressConfiguration
 import kpt.core.database.client.entity.AddressTemplate
+import kpt.core.database.client.entity.ClientsTemplateEntity
 import kpt.core.database.client.entity.ClientAccounts
 import kpt.core.database.client.entity.ClientAddressEntity
 import kpt.core.database.client.entity.ClientEntity
@@ -19,6 +21,7 @@ import kpt.core.model.client.ClientCloseTemplateResponse
 import kpt.core.model.client.ClientTemplateOptions
 import kpt.core.model.objects.clients.ClientAddressResponse
 import kpt.core.model.objects.noncoreobjects.Identifier
+import kpt.core.model.objects.noncoreobjects.IdentifierTemplate
 import kpt.core.model.shared.CollateralItem
 import kpt.core.model.shared.CollateralItemResult
 
@@ -49,6 +52,14 @@ interface ClientRepository {
     fun clientIdentifiersStream(clientId: Long, scope: CoroutineScope): ScreenDataStream<List<Identifier>>
 
     /**
+     * The document TYPES this client may be identified by.
+     *
+     * The store behind it (`@StoreProvider(id = "clientGetClientIdentifierTemplate")`) already
+     * existed and was unexposed — the add-identifier form is its first reader.
+     */
+    fun clientIdentifierTemplateStream(clientId: Long, scope: CoroutineScope): ScreenDataStream<IdentifierTemplate>
+
+    /**
      * The client's profile photo as the `data:image/...;base64,...` URL Fineract returns, or
      * `null` when there isn't one.
      *
@@ -70,6 +81,30 @@ interface ClientRepository {
      * The address FORM's option sets (address types, states, countries). A tenant-level catalog,
      * so keyed `Unit` and shared across clients — the original fetched it per client.
      */
+    /**
+     * The TENANT's client template — gender / client-type / classification / legal-form code
+     * values, and the tenant's configured data tables.
+     *
+     * NOT the same read as [clientTemplateStream], which is per-client. The create-client and
+     * edit-details forms both need this one; it is keyed by nothing because it is identical for
+     * every client in the tenant.
+     *
+     * Named for the API that supplies it (`clients/template` -> `ClientsTemplateEntity`). The
+     * create form and the edit form were ported independently and asked for this under two
+     * different names; there is one read, so there is one method.
+     */
+    fun clientsTemplateStream(scope: CoroutineScope): ScreenDataStream<ClientsTemplateEntity>
+
+    /**
+     * Whether this tenant collects client ADDRESSES at all, and how.
+     *
+     * The store behind this (`@StoreProvider(id = "addressConfiguration")`) already existed and was
+     * unexposed — the create-client form is its first reader. A tenant with addresses disabled must
+     * not be shown the address block, which is also why the original's unconditional address
+     * validation made client creation impossible on such a tenant.
+     */
+    fun addressConfigurationStream(scope: CoroutineScope): ScreenDataStream<AddressConfiguration>
+
     fun addressTemplateStream(scope: CoroutineScope): ScreenDataStream<AddressTemplate>
 
     /** Where the officer has recorded this client — the pinpoint map/list. */

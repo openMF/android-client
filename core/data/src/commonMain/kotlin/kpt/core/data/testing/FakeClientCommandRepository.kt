@@ -73,6 +73,15 @@ class FakeClientCommandRepository(
      * it would not have if the two results happened to agree.
      */
     private val unitResult: () -> MutationResult<Unit> = { MutationResult.Applied(Unit, synced = true) },
+    /**
+     * Result for the two commands that return the CLIENT they wrote (create, update).
+     *
+     * Declared BEFORE [result] for the reason [unitResult]'s KDoc gives: [result] is passed as a
+     * trailing lambda at several call sites, and a parameter added after it would silently capture
+     * them.
+     */
+    private val clientResult: () -> MutationResult<ClientEntity> =
+        { MutationResult.Applied(ClientEntity(), synced = true) },
     private val result: () -> MutationResult<GenericResponse> =
         { MutationResult.Applied(GenericResponse(), synced = true) },
 ) : ClientCommandRepository {
@@ -92,17 +101,43 @@ class FakeClientCommandRepository(
     override suspend fun activate1(clientId: Long, postClientsClientIdRequest: PostClientsClientIdRequest, command: String?): MutationResult<PostClientsClientIdResponse> =
         error("activate1 is not faked — add it when a test needs it")
 
-    override suspend fun uploadClientImage(clientId: Int, body: MultiPartFormDataContent): MutationResult<Unit> =
-        error("uploadClientImage is not faked — add it when a test needs it")
+    /** Client ids whose photo was uploaded, in order. The BODY is not recorded — a
+     *  `MultiPartFormDataContent` cannot be compared, and what a test needs to know is that the
+     *  upload was attempted for the right client and how many times. */
+    val uploadedImages = mutableListOf<Int>()
 
-    override suspend fun deleteClientImage(clientId: Int): MutationResult<Unit> =
-        error("deleteClientImage is not faked — add it when a test needs it")
+    override suspend fun uploadClientImage(clientId: Int, body: MultiPartFormDataContent): MutationResult<Unit> {
+        uploadedImages += clientId
+        gate?.await()
+        return unitResult()
+    }
 
-    override suspend fun createClient(clientPayload: ClientPayloadEntity?): MutationResult<ClientEntity> =
-        error("createClient is not faked — add it when a test needs it")
+    /** Client ids whose photo was deleted, in order. */
+    val deletedImages = mutableListOf<Int>()
 
-    override suspend fun updateClient(clientId: Int, clientPayload: ClientPayloadEntity?): MutationResult<ClientEntity> =
-        error("updateClient is not faked — add it when a test needs it")
+    override suspend fun deleteClientImage(clientId: Int): MutationResult<Unit> {
+        deletedImages += clientId
+        gate?.await()
+        return unitResult()
+    }
+
+    /** Payloads passed to create, in order — a test asserts WHAT was sent, not merely that it was. */
+    val createdClients = mutableListOf<ClientPayloadEntity?>()
+
+    override suspend fun createClient(clientPayload: ClientPayloadEntity?): MutationResult<ClientEntity> {
+        createdClients += clientPayload
+        gate?.await()
+        return clientResult()
+    }
+
+    /** (clientId, payload) per update — the pair matters: an edit form must target the client it read. */
+    val updatedClients = mutableListOf<Pair<Int, ClientPayloadEntity?>>()
+
+    override suspend fun updateClient(clientId: Int, clientPayload: ClientPayloadEntity?): MutationResult<ClientEntity> {
+        updatedClients += clientId to clientPayload
+        gate?.await()
+        return clientResult()
+    }
 
     override suspend fun addClientPinpointLocation(clientId: Int, clientAddressRequest: ClientAddressRequest?): MutationResult<PinpointLocationActionResponse> =
         error("addClientPinpointLocation is not faked — add it when a test needs it")

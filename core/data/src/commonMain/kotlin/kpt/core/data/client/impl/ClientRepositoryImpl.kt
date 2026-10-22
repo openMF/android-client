@@ -17,7 +17,9 @@ import kpt.core.base.store.screen.FetchPolicy
 import kpt.core.base.store.screen.ScreenDataStream
 import kpt.core.base.store.screen.asScreenStream
 import kpt.core.data.client.ClientRepository
+import kpt.core.database.client.entity.AddressConfiguration
 import kpt.core.database.client.entity.AddressTemplate
+import kpt.core.database.client.entity.ClientsTemplateEntity
 import kpt.core.database.client.entity.ClientAccounts
 import kpt.core.database.client.entity.ClientAddressEntity
 import kpt.core.database.client.entity.ClientEntity
@@ -25,6 +27,7 @@ import kpt.core.model.client.ClientCloseTemplateResponse
 import kpt.core.model.client.ClientTemplateOptions
 import kpt.core.model.objects.clients.ClientAddressResponse
 import kpt.core.model.objects.noncoreobjects.Identifier
+import kpt.core.model.objects.noncoreobjects.IdentifierTemplate
 import kpt.core.model.shared.CollateralItem
 import kpt.core.model.shared.CollateralItemResult
 import kpt.core.network.mifos.client.api.ClientApi
@@ -39,6 +42,8 @@ internal class ClientRepositoryImpl(
     @FromStore(AppStoreIds.Clients) private val store: Store<Unit, List<ClientEntity>>,
     @FromStore(AppStoreIds.ClientGetClient) private val clientStore: Store<Int, ClientEntity>,
     @FromStore(AppStoreIds.ClientGetClientAccounts) private val accountsStore: Store<Int, ClientAccounts>,
+    @FromStore(AppStoreIds.ClientGetClientIdentifierTemplate)
+    private val identifierTemplateStore: Store<Long, IdentifierTemplate>,
     @FromStore(AppStoreIds.ClientGetClientListIdentifiers)
     private val identifiersStore: Store<Long, List<Identifier>>,
     @FromStore(AppStoreIds.ClientGetClientPinpointLocations)
@@ -55,6 +60,10 @@ internal class ClientRepositoryImpl(
     private val addressesStore: Store<Int, List<ClientAddressEntity>>,
     @FromStore(AppStoreIds.AddressTemplate)
     private val addressTemplateStore: Store<Unit, AddressTemplate>,
+    @FromStore(AppStoreIds.ClientsTemplate)
+    private val clientsTemplateStore: Store<Unit, ClientsTemplateEntity>,
+    @FromStore(AppStoreIds.AddressConfiguration)
+    private val addressConfigurationStore: Store<Unit, AddressConfiguration>,
 ) : ClientRepository {
 
     // NETWORK_WITH_CACHE, not the CACHE_FIRST_SWR default.
@@ -106,6 +115,17 @@ internal class ClientRepositoryImpl(
         scope = scope,
         fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
         ttl = AppStoreRegistry.Ttl.CLIENT_GET_CLIENT_LIST_IDENTIFIERS,
+    )
+
+    override fun clientIdentifierTemplateStream(
+        clientId: Long,
+        scope: CoroutineScope,
+    ): ScreenDataStream<IdentifierTemplate> = identifierTemplateStore.asScreenStream(
+        key = clientId,
+        cacheKey = AppCacheKeys.ClientGetClientIdentifierTemplate.forKey(clientId.toString()),
+        scope = scope,
+        fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
+        ttl = AppStoreRegistry.Ttl.CLIENT_GET_CLIENT_IDENTIFIER_TEMPLATE,
     )
 
     override fun pinpointLocationsStream(
@@ -197,5 +217,27 @@ internal class ClientRepositoryImpl(
             scope = scope,
             fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
             ttl = AppStoreRegistry.Ttl.ADDRESS_TEMPLATE,
+        )
+
+    // Deliberately NOT marked `isEmpty`: an empty option list here is a TENANT MISCONFIGURATION,
+    // not an empty state. The same reasoning as `collateralItemsStream` above — a form that shows
+    // "nothing to see here" when the tenant forgot to configure genders sends the officer looking
+    // for data that was never going to arrive.
+    override fun clientsTemplateStream(scope: CoroutineScope): ScreenDataStream<ClientsTemplateEntity> =
+        clientsTemplateStore.asScreenStream(
+            key = Unit,
+            cacheKey = AppCacheKeys.ClientsTemplate.LIST,
+            scope = scope,
+            fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
+            ttl = AppStoreRegistry.Ttl.CLIENTS_TEMPLATE,
+        )
+
+    override fun addressConfigurationStream(scope: CoroutineScope): ScreenDataStream<AddressConfiguration> =
+        addressConfigurationStore.asScreenStream(
+            key = Unit,
+            cacheKey = AppCacheKeys.AddressConfiguration.LIST,
+            scope = scope,
+            fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
+            ttl = AppStoreRegistry.Ttl.ADDRESS_CONFIGURATION,
         )
 }

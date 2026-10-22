@@ -14,6 +14,7 @@ import kpt.core.base.store.annotation.StoreProvider
 import kpt.core.database.cache.dao.ApiResponseCacheDao
 import kpt.core.database.client.entity.AddressConfiguration
 import kpt.core.database.client.entity.AddressTemplate
+import kpt.core.database.client.entity.ClientsTemplateEntity
 import kpt.core.model.client.ClientCloseTemplateResponse
 import kpt.core.model.shared.CollateralItem
 import kpt.core.network.mifos.client.api.ClientApi
@@ -35,6 +36,30 @@ fun provideAddressConfigurationStore(
     dao = cache,
     keyOf = { AppCacheKeys.AddressConfiguration.LIST },
     fetch = { clientApi.getAddressConfiguration() },
+)
+
+/**
+ * The TENANT's client template — the gender / client-type / classification / legal-form code
+ * values a client form offers, plus its configured data tables.
+ *
+ * Distinct from `clientTemplateStream(clientId)`, which is the PER-CLIENT read
+ * (`clients/{id}?template=true`) carrying staff and savings options for one client. This one is
+ * `clients/template` and is the same for every client in the tenant, so it is keyed `Unit` and
+ * cached for 12h like its sibling catalogues.
+ *
+ * `ClientApi.getClientTemplate()` and `ClientDao.getClientsTemplate()` both already existed and
+ * were referenced by NOTHING — the create-client and edit-details forms are the first readers, and
+ * without this provider their four code-value dropdowns had no source at all.
+ */
+@StoreProvider(id = "clientsTemplate", ttl = "12h")
+@CacheKey(name = "LIST", key = "clientsTemplate")
+fun provideClientsTemplateStore(
+    clientApi: ClientApi,
+    cache: ApiResponseCacheDao,
+): Store<Unit, ClientsTemplateEntity> = cachedRead(
+    dao = cache,
+    keyOf = { AppCacheKeys.ClientsTemplate.LIST },
+    fetch = { clientApi.getClientTemplate() },
 )
 
 @StoreProvider(id = "addressTemplate", ttl = "12h")

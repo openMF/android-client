@@ -275,4 +275,146 @@
     <string name="feature_client_apply_new_share_subtitle">Apply for a share account</string>
     <!-- Added by the port: reachable only when no application type is ported. -->
     <string name="feature_client_apply_new_none_available">No account types are available yet.</string>
+    <!-- Client deposit accounts (savings / fixed deposit / recurring deposit) — S6-A1 -->
+    <string name="feature_client_deposit_accounts_item">%1$s item(s)</string>
+    <string name="feature_client_deposit_accounts_not_available">Not Available</string>
+    <string name="feature_client_deposit_accounts_pending_approval">Pending Approval</string>
+    <string name="feature_client_screen_savings_accounts">Savings Accounts</string>
+    <string name="feature_client_screen_fixed_deposit_accounts">Fixed Deposit Accounts</string>
+    <string name="feature_client_screen_recurring_deposit_accounts">Recurring Deposit Accounts</string>
+    <string name="feature_client_product_savings_account">Savings Account</string>
+    <string name="feature_client_product_fixed_deposit_account">Fixed Deposit Account</string>
+    <string name="feature_client_product_recurring_deposit_account">Recurring Deposit Account</string>
+    <string name="feature_client_savings_accounts_empty">No Savings Account Found</string>
+    <string name="feature_client_fixed_deposit_accounts_empty">No Fixed Deposit Account Found</string>
+    <string name="feature_client_recurring_deposit_accounts_empty">No Recurring Deposit Account Found</string>
+    <string name="feature_client_deposit_accounts_filtered_empty">No account matches the current search.</string>
+    <!-- Client defaultaccount — cluster B -->
+    <string name="feature_client_defaultaccount_choose">Choose Default Savings Account</string>
+    <string name="feature_client_defaultaccount_no_savings_accounts">No Savings Accounts found for this client</string>
+    <string name="feature_client_defaultaccount_success_title">Update Successful</string>
+    <string name="feature_client_defaultaccount_success_message">Default account updated successfully. Please Continue to get back to Profile Details Screen</string>
+    <string name="feature_client_defaultaccount_failure_title">Failed to update default account</string>
+
+    <!-- Client editprofile — cluster B -->
+    <string name="feature_client_editprofile_delete_photo">Delete Photo</string>
+    <string name="feature_client_editprofile_upload_new_photo">Upload New Photo</string>
+    <string name="feature_client_editprofile_update_photo_message">Please update your profile photo at earliest!</string>
+    <string name="feature_client_editprofile_delete_dialog_message">Please confirm that you want to remove the photo? You can upload the new photo again through the app or website.</string>
+    <string name="feature_client_editprofile_gallery">Gallery</string>
+    <string name="feature_client_editprofile_camera">Camera</string>
+    <string name="feature_client_editprofile_more">More</string>
+    <string name="feature_client_editprofile_photo_updated_success_title">Success</string>
+    <string name="feature_client_editprofile_photo_updated_success_message">Profile photo updated successfully</string>
+    <string name="feature_client_editprofile_write_offline">No connection — the photo was not saved.</string>
+    <string name="feature_client_editprofile_write_failed">Could not save the photo.</string>
+    <string name="feature_client_editprofile_crop_failed">Could not crop that image. Try another.</string>
+    <string name="feature_client_editprofile_camera_unavailable">The camera is not available on this device.</string>
+
+    <!-- Client editdetails — cluster B -->
+    <string name="feature_client_editdetails_personal_details">Personal Details</string>
+    <string name="feature_client_editdetails_account_information">Account Information</string>
+    <string name="feature_client_editdetails_office_use">Office Use</string>
+    <string name="feature_client_editdetails_first_name">First Name*</string>
+    <string name="feature_client_editdetails_middle_name">Middle name</string>
+    <string name="feature_client_editdetails_last_name">Last Name*</string>
+    <string name="feature_client_editdetails_phone_no">Phone Number</string>
+    <string name="feature_client_editdetails_email_address">Email Address</string>
+    <string name="feature_client_editdetails_select_date">Select Date</string>
+    <string name="feature_client_editdetails_error_first_name_empty">First name can not be empty</string>
+    <string name="feature_client_editdetails_error_first_name_alphabets">First name should contain only alphabets</string>
+    <string name="feature_client_editdetails_error_last_name_empty">Last name can not be empty</string>
+    <string name="feature_client_editdetails_error_last_name_alphabets">Last name should contain only alphabets</string>
+    <string name="feature_client_editdetails_error_middle_name_alphabets">Middle name should contain only alphabets</string>
+    <string name="feature_client_editdetails_error_phone_no_invalid">Enter a valid phone number</string>
+    <string name="feature_client_editdetails_success_title">Client Details Updated</string>
+    <string name="feature_client_editdetails_success_message">The client details have been updated successfully.</string>
+    <string name="feature_client_editdetails_failure_title">Client Details Update Failed</string>
+    <string name="feature_client_editdetails_offline">No connection — the update was not sent.</string>
+    <string name="feature_client_editdetails_no_options">None configured</string>
+
+    <!-- Client createnew — cluster B -->
+    <string name="feature_client_createnew_title">Create New Client</string>
+    <string name="feature_client_createnew_first_name">First Name *</string>
+    <string name="feature_client_createnew_middle_name">Middle Name</string>
+    <string name="feature_client_createnew_last_name">Last Name *</string>
+    <string name="feature_client_createnew_phone_no">Phone Number</string>
+    <string name="feature_client_createnew_external_id">External Id</string>
+    <string name="feature_client_createnew_gender">Gender</string>
+    <string name="feature_client_createnew_dob">Date of Birth</string>
+    <string name="feature_client_createnew_client_type">Client Type</string>
+    <string name="feature_client_createnew_client_classification">Client Classification</string>
+    <string name="feature_client_createnew_office">Office Name *</string>
+    <string name="feature_client_createnew_staff">Staff</string>
+    <string name="feature_client_createnew_no_staff">No staff associated with this office</string>
+    <string name="feature_client_createnew_client_active">Client Active</string>
+    <string name="feature_client_createnew_activation_date">Activation Date</string>
+    <string name="feature_client_createnew_address_type">Address Type *</string>
+    <string name="feature_client_createnew_state_province">State / Province</string>
+    <string name="feature_client_createnew_address_active">Address Active</string>
+    <string name="feature_client_createnew_submit">Submit</string>
+    <string name="feature_client_createnew_select_date">Select Date</string>
+    <string name="feature_client_createnew_gallery">Gallery</string>
+    <string name="feature_client_createnew_camera">Camera</string>
+    <string name="feature_client_createnew_remove_photo">Remove photo</string>
+    <string name="feature_client_createnew_uploading_photo">Uploading client\'s picture…</string>
+    <string name="feature_client_createnew_created_title">Client created</string>
+    <string name="feature_client_createnew_created_message">Client created successfully</string>
+    <string name="feature_client_createnew_created_photo_failed_message">Client created successfully, but the photo could not be uploaded.</string>
+    <string name="feature_client_createnew_awaiting_checker">Waiting for checker approval</string>
+    <string name="feature_client_createnew_failed_title">Could not create client</string>
+    <string name="feature_client_createnew_failed">The client was not created. Please try again.</string>
+    <string name="feature_client_createnew_offline">You are offline — the client was not created.</string>
+    <string name="feature_client_createnew_crop_failed">That image could not be cropped.</string>
+    <string name="feature_client_createnew_camera_unavailable">The camera is not available on this device.</string>
+    <string name="feature_client_createnew_error_first_name_empty">First name can not be empty</string>
+    <string name="feature_client_createnew_error_first_name_alphabets">First name should contain only alphabets</string>
+    <string name="feature_client_createnew_error_middle_name_alphabets">Middle name should contain only alphabets</string>
+    <string name="feature_client_createnew_error_last_name_empty">Last name can not be empty</string>
+    <string name="feature_client_createnew_error_last_name_alphabets">Last name should contain only alphabets</string>
+    <string name="feature_client_createnew_error_address_type_required">Address type is required</string>
+    <string name="feature_client_createnew_error_office_required">Office is required</string>
+    <string name="feature_client_createnew_error_invalid_phone">Enter a valid phone number</string>
+    <!-- Client add-document — cluster C -->
+    <string name="feature_client_adddocument_title">Add Document</string>
+    <string name="feature_client_adddocument_name">Document Name</string>
+    <string name="feature_client_adddocument_name_hint">Enter document name</string>
+    <string name="feature_client_adddocument_description">Description</string>
+    <string name="feature_client_adddocument_description_hint">Enter description</string>
+    <string name="feature_client_adddocument_no_file">No file selected</string>
+    <string name="feature_client_adddocument_pick">Add</string>
+    <string name="feature_client_adddocument_error_name_required">Document name is required</string>
+    <string name="feature_client_adddocument_error_too_large">That file is over 1 MB. Choose a smaller one.</string>
+    <string name="feature_client_adddocument_error_pick_failed">Could not open that file. Try another.</string>
+    <string name="feature_client_adddocument_error_offline">No connection — the document was not uploaded.</string>
+    <string name="feature_client_adddocument_error_failed">Could not upload the document.</string>
+    <!-- Client add-address — cluster C -->
+    <string name="feature_client_addaddress_title">Add Address</string>
+    <string name="feature_client_address_type">Address Type</string>
+    <string name="feature_client_state_province">State / Province</string>
+    <string name="feature_client_addaddress_type_error">Address type is required</string>
+    <string name="feature_client_addaddress_line_error">Address line 1 is required</string>
+    <string name="feature_client_addaddress_city_error">City is required</string>
+    <string name="feature_client_addaddress_state_province_error">State / Province is required</string>
+    <string name="feature_client_addaddress_country_error">Country is required</string>
+    <string name="feature_client_addaddress_postal_code_error">Postal code is required</string>
+    <string name="feature_client_addaddress_write_offline">No connection — the address was not saved.</string>
+    <string name="feature_client_addaddress_write_failed">Could not save the address.</string>
+    <!-- Client add-identifier — cluster C -->
+    <string name="feature_client_addidentifier_title">Add Identifier</string>
+    <string name="feature_client_addidentifier_document_type">Document Type</string>
+    <string name="feature_client_addidentifier_document_key">Unique ID</string>
+    <string name="feature_client_addidentifier_status">Status</string>
+    <string name="feature_client_addidentifier_description">Description</string>
+    <string name="feature_client_addidentifier_no_file">No file selected</string>
+    <string name="feature_client_addidentifier_pick">Add</string>
+    <string name="feature_client_addidentifier_upload">Upload</string>
+    <string name="feature_client_addidentifier_skip_document">Skip</string>
+    <string name="feature_client_addidentifier_created_note">Identifier created. Attaching a scan is optional.</string>
+    <string name="feature_client_addidentifier_error_type_required">Document type is required</string>
+    <string name="feature_client_addidentifier_error_key_required">Unique ID is required</string>
+    <string name="feature_client_addidentifier_error_create_failed">Could not create the identifier.</string>
+    <string name="feature_client_addidentifier_error_upload_failed">The identifier was created, but its document could not be uploaded.</string>
+    <string name="feature_client_addidentifier_error_pick_failed">Could not open that file. Try another.</string>
+    <string name="feature_client_addidentifier_error_offline">No connection — nothing was saved.</string>
 </resources>

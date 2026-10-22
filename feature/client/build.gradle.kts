@@ -18,6 +18,16 @@ kotlin {
             implementation(projects.core.data)
             implementation(projects.core.database)
             implementation(projects.core.model)
+            // For `PostClientAddressRequest`, which the add-address form must construct.
+            //
+            // That DTO is the ODD ONE OUT: its sibling command payloads (`AssignStaffRequest`,
+            // `IdentifierPayload`) live in core/model, which is why no other client screen needs
+            // this dependency. `ClientCommandRepository.createClientAddress` therefore exposes a
+            // core/network type in a core/data contract, and every caller inherits the leak.
+            // `feature/{activate,note,signin}` already carry the same dependency for the same
+            // reason. Moving the two address DTOs to core/model is the real fix — 11 references
+            // across 6 files — and is tracked as `address-dtos-live-in-core-network`.
+            implementation(projects.core.network)
             implementation(projects.core.store)
             // NavigationItem + @FeatureTab + toObjectNavigationRoute — the tab declaration seam.
             implementation(projects.core.ui)
