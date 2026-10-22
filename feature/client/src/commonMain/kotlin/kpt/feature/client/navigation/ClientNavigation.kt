@@ -575,16 +575,18 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
     }
 
     // The client's deposit accounts of one kind. Nested drill-down, NOT annotated.
-    composableWithPushTransitions<ClientDepositAccountsRoute> { backStackEntry ->
-        // The kind is read HERE, not only inside the ViewModel, because whether the create
-        // affordance exists at all is a NAVIGATION fact: savings and recurring deposit have a
-        // ported wizard, fixed deposit does not. Passing a no-op lambda for FIXED would make the
-        // screen draw a "+" that does nothing — an inert affordance, which §6a forbids. `null`
-        // makes it ABSENT.
-        val kind = runCatching {
-            DepositAccountKind.valueOf(backStackEntry.toRoute<ClientDepositAccountsRoute>().kind)
-        }.getOrDefault(DepositAccountKind.SAVINGS)
-
+    composableWithPushTransitions<ClientDepositAccountsRoute> {
+        // The route's `kind` is NOT read here any more.
+        //
+        // It used to be, because whether the create affordance existed was a navigation fact:
+        // savings and recurring deposit had a ported wizard and fixed deposit did not, so FIXED
+        // got `null` to keep the "+" ABSENT rather than inert. Since the fixed-deposit wizard
+        // landed, all three kinds have a destination and the branch is uniform — the screen reads
+        // the kind from its own `SavedStateHandle` for everything else.
+        //
+        // Worth recording how the stale version was found: an edit updated the INNER branch and
+        // silently missed this outer one. Both forms compile, so the only symptom was a missing
+        // "+" on an empty fixed-deposit list — caught on device, not by the build.
         ClientDepositAccountsScreen(
             onNavigateBack = navController::popBackStackSafely,
             // The account SUMMARY, addressed by the row's own deposit-type endpoint so a
@@ -595,20 +597,18 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
             // The approval half of the status-change screen. The ACCOUNT id — the original passed
             // the CLIENT id here, which approved the wrong record.
             onApproveAccount = navController::navigateToSavingsApproval,
-            // `newFixedDepositAccount` is a ~2,700-line six-page wizard and is NOT ported, so for
-            // FIXED this is null and neither the "+" nor the empty state's create button is drawn.
-            onAddAccount = when (kind) {
-                DepositAccountKind.FIXED -> null
-                DepositAccountKind.SAVINGS, DepositAccountKind.RECURRING -> { clientId, which ->
-                    when (which) {
-                        // The savings wizard serves both owners; a client is not a group.
-                        DepositAccountKind.SAVINGS ->
-                            navController.navigateToSavingsApplication(clientId, isGroup = false)
-                        DepositAccountKind.RECURRING ->
-                            navController.navigateToRecurringDepositApplication(clientId)
-                        DepositAccountKind.FIXED ->
-                            navController.navigateToFixedDepositApplication(clientId)
-                    }
+            // All three kinds have a create destination as of cluster D, so the "+" and the empty
+            // state's create button are drawn for every one.
+            //
+            onAddAccount = { clientId, which ->
+                when (which) {
+                    // The savings wizard serves both owners; a client is not a group.
+                    DepositAccountKind.SAVINGS ->
+                        navController.navigateToSavingsApplication(clientId, isGroup = false)
+                    DepositAccountKind.RECURRING ->
+                        navController.navigateToRecurringDepositApplication(clientId)
+                    DepositAccountKind.FIXED ->
+                        navController.navigateToFixedDepositApplication(clientId)
                 }
             },
         )

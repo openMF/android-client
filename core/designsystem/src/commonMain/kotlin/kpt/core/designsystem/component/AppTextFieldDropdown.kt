@@ -78,7 +78,31 @@ fun AppTextFieldDropdown(
                 }
             },
             modifier = modifier
-                .menuAnchor(type = MenuAnchorType.PrimaryEditable, enabled = enabled)
+                // The anchor type must MATCH `readOnly`, or the field takes focus instead of
+                // opening.
+                //
+                // This was hardcoded to `PrimaryEditable` while `readOnly` defaults to `true`, so
+                // every read-only dropdown in the app — 22 screens, from the loan forms to client
+                // transfer to every wizard — focused on tap and never expanded. M3 treats
+                // `PrimaryEditable` as "tap to type": it claims the gesture for the text field.
+                //
+                // The `.clickable` below was presumably meant to compensate, but it is chained
+                // AFTER `menuAnchor`, so the anchor's own pointer handling consumes the tap first
+                // and it never runs. It is kept for the editable case, where the anchor does not
+                // claim a body tap.
+                //
+                // Found on device 2026-10-22: the Office field on Create Group showed a focus ring
+                // and a chevron and did nothing. Nothing in the build or the test suite catches
+                // this — a dropdown that never opens still composes, still renders, and its
+                // ViewModel still passes its own tests.
+                .menuAnchor(
+                    type = if (readOnly) {
+                        MenuAnchorType.PrimaryNotEditable
+                    } else {
+                        MenuAnchorType.PrimaryEditable
+                    },
+                    enabled = enabled,
+                )
                 .clickable(enabled = readOnly && enabled) { isExpanded = true },
             shape = DesignToken.shapes.medium,
             colors = OutlinedTextFieldDefaults.colors(

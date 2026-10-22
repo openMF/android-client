@@ -111,19 +111,19 @@
     <string name="feature_client_perf_total_savings">Total Savings : </string>
     <string name="feature_client_not_available">Not Available</string>
     <string name="feature_client_general_upcoming_charges_title">Upcoming Charges</string>
-    <string name="feature_client_general_upcoming_charges_subtitle">Check all linked accounts</string>
+    <string name="feature_client_general_upcoming_charges_subtitle">Charges due on this client</string>
     <string name="feature_client_general_loan_accounts_title">Loan Accounts</string>
-    <string name="feature_client_general_loan_accounts_subtitle">View or edit the linked address</string>
+    <string name="feature_client_general_loan_accounts_subtitle">View this client's loan accounts</string>
     <string name="feature_client_general_saving_account_title">Saving Accounts</string>
-    <string name="feature_client_general_saving_account_subtitle">Check or edit the linked accounts</string>
+    <string name="feature_client_general_saving_account_subtitle">View this client's savings accounts</string>
     <string name="feature_client_general_fixed_deposit_title">Fixed Deposit Accounts</string>
-    <string name="feature_client_general_fixed_deposit_subtitle">Check or update the identities</string>
+    <string name="feature_client_general_fixed_deposit_subtitle">View this client's fixed deposit accounts</string>
     <string name="feature_client_general_recurring_deposit_title">Recurring Deposit Accounts</string>
-    <string name="feature_client_general_recurring_deposit_subtitle">Check or upload the documents</string>
+    <string name="feature_client_general_recurring_deposit_subtitle">View this client's recurring deposit accounts</string>
     <string name="feature_client_general_shares_title">Shares Accounts</string>
-    <string name="feature_client_general_shares_subtitle">Check or update the account notes</string>
+    <string name="feature_client_general_shares_subtitle">View this client's share accounts</string>
     <string name="feature_client_general_collateral_title">Collateral Data</string>
-    <string name="feature_client_general_collateral_subtitle">Check or update the account notes</string>
+    <string name="feature_client_general_collateral_subtitle">View collateral pledged by this client</string>
     <!-- clientIdentifiersList. Values verbatim from the original; keys re-prefixed. -->
     <string name="feature_client_identifiers_title">Identifiers</string>
     <string name="feature_client_identifiers_item">item</string>
