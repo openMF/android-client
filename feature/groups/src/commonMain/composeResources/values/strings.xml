@@ -41,4 +41,16 @@
     <string name="feature_groups_more_options">More options</string>
     <string name="feature_groups_add_loan_account">Add Loan Account</string>
     <string name="feature_groups_more_group_info">More Group Info</string>
+    <!-- Create group — S6 -->
+    <string name="feature_groups_create_title">Create Group</string>
+    <string name="feature_groups_create_name">Group Name</string>
+    <string name="feature_groups_create_office">Office</string>
+    <string name="feature_groups_create_external_id">External Id</string>
+    <string name="feature_groups_create_active">Group is active</string>
+    <string name="feature_groups_create_back">Back</string>
+    <string name="feature_groups_create_submit">Submit</string>
+    <string name="feature_groups_create_error_name_required">Group name is required</string>
+    <string name="feature_groups_create_error_office_required">Office is required</string>
+    <string name="feature_groups_create_error_offline">No connection — the group was not created.</string>
+    <string name="feature_groups_create_error_failed">Could not create the group.</string>
 </resources>

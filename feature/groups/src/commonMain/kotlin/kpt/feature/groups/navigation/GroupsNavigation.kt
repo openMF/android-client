@@ -22,6 +22,7 @@ import kpt.core.common.utils.Constants
 import kpt.feature.activate.navigation.navigateToActivateGroup
 import kpt.feature.datatable.navigation.navigateToDataTableList
 import kpt.feature.document.navigation.navigateToDocumentList
+import kpt.feature.groups.create.CreateGroupScreen
 import kpt.feature.groups.detail.GroupsDetailScreen
 import kpt.feature.groups.list.GroupsListScreen
 import kpt.feature.loan.navigation.navigateToGroupLoanApplication
@@ -38,6 +39,10 @@ data object GroupsListRoute
 @Serializable
 data class GroupsDetailRoute(val groupId: Int)
 
+/** Create a group. Reached from the groups list's FAB. */
+@Serializable
+data object CreateGroupRoute
+
 fun NavController.navigateToGroupsList(navOptions: NavOptions? = null) =
     navigate(GroupsListRoute, navOptions)
 
@@ -46,6 +51,9 @@ fun NavController.navigateToGroups(navOptions: NavOptions? = null) =
 
 fun NavController.navigateToGroupsDetail(groupId: Int, navOptions: NavOptions? = null) =
     navigate(GroupsDetailRoute(groupId), navOptions)
+
+fun NavController.navigateToCreateGroup(navOptions: NavOptions? = null) =
+    navigate(CreateGroupRoute, navOptions)
 
 /**
  * The group list — a TOP-LEVEL destination on the authenticated graph, collected into
@@ -66,11 +74,25 @@ fun NavController.navigateToGroupsDetail(groupId: Int, navOptions: NavOptions? =
 @FeatureDestination
 fun NavGraphBuilder.groupsListDestination(navController: NavController) {
     composableWithStayTransitions<GroupsListRoute> {
-        GroupsListScreen(onGroupClick = navController::navigateToGroupsDetail)
+        GroupsListScreen(
+            onGroupClick = navController::navigateToGroupsDetail,
+            onCreateGroup = navController::navigateToCreateGroup,
+        )
     }
 
     // Nested drill-down, deliberately NOT annotated: only TOP-LEVEL entries carry
     // @FeatureDestination, and annotating this would register detail as its own root entry.
+    // Create a group. Nested drill-down, NOT annotated.
+    composableWithPushTransitions<CreateGroupRoute> {
+        CreateGroupScreen(
+            onNavigateBack = navController::popBackStackSafely,
+            // Pop on success whether the write reached Fineract or was queued — the list behind
+            // re-reads either way. `synced` is carried so a future caller can tell them apart;
+            // this one does not need to.
+            onCreated = { navController.popBackStackSafely() },
+        )
+    }
+
     composableWithPushTransitions<GroupsDetailRoute> {
         GroupsDetailScreen(
             onBackClick = navController::popBackStackSafely,
@@ -111,7 +133,13 @@ fun NavGraphBuilder.groupsListDestination(navController: NavController) {
 fun NavGraphBuilder.groupsTabGraph(outerNav: NavController) {
     navigation<GroupsDestination>(startDestination = GroupsListRoute) {
         composableWithStayTransitions<GroupsListRoute> {
-            GroupsListScreen(onGroupClick = outerNav::navigateToGroupsDetail)
+            // The TAB-graph copy — the path a field officer actually takes from the bottom
+            // bar. Wiring only the other call site would ship a FAB that exists on one entry
+            // path and is missing on the one people use.
+            GroupsListScreen(
+                onGroupClick = outerNav::navigateToGroupsDetail,
+                onCreateGroup = outerNav::navigateToCreateGroup,
+            )
         }
     }
 }

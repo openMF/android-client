@@ -16,4 +16,5 @@ internal object GroupsListTestTags {
     const val FILTER_TOGGLE = "groups:list:filter-toggle"
     const val FILTERS = "groups:list:filters"
     const val ROW = "groups:list:row"
+    const val CREATE = "GroupsListCreate"
 }

@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -48,6 +49,7 @@ import kpt.core.designsystem.component.AppOutlinedTextField
 import kpt.core.designsystem.icon.AppIcons
 import kpt.core.designsystem.theme.DesignToken
 import kpt.feature.groups.generated.resources.Res
+import kpt.feature.groups.generated.resources.feature_groups_create_title
 import kpt.feature.groups.generated.resources.feature_groups_filter
 import kpt.feature.groups.generated.resources.feature_groups_filter_clear
 import kpt.feature.groups.generated.resources.feature_groups_search_hint
@@ -62,6 +64,14 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun GroupsListScreen(
     onGroupClick: ((Int) -> Unit)?,
     modifier: Modifier = Modifier,
+    /**
+     * Open the create-group form.
+     *
+     * The original draws `MifosFAB(icon = MifosIcons.Add, onClick = onAddGroupClick)` here; this
+     * port had no create callback at all, so the affordance was MISSING rather than null-gated.
+     * `null` keeps it absent for any caller that has no destination.
+     */
+    onCreateGroup: (() -> Unit)? = null,
     viewModel: GroupsListViewModel = koinViewModel(),
 ) {
     // TWO flows: `screenState` is the stream (collected WhileSubscribed, so it stops off-screen);
@@ -82,6 +92,7 @@ internal fun GroupsListScreen(
         rows = rows,
         onAction = { viewModel.actionChannel.trySend(it) },
         rowsClickable = onGroupClick != null,
+        onCreateGroup = onCreateGroup,
         modifier = modifier,
     )
 }
@@ -99,9 +110,29 @@ internal fun GroupsListContent(
      * affordance, because the user cannot tell it is unfinished (RULE-IMPL-DEAD-CLICKABLE-001).
      */
     rowsClickable: Boolean = true,
+    /**
+     * Open the create-group form, or `null` when no destination exists.
+     *
+     * Same gate as [rowsClickable]: the FAB is ABSENT rather than drawn inert.
+     */
+    onCreateGroup: (() -> Unit)? = null,
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize().testTag(GroupsListTestTags.SCREEN),
+        floatingActionButton = {
+            // Drawn only when a destination exists — the same gate the client list uses.
+            onCreateGroup?.let { create ->
+                FloatingActionButton(
+                    onClick = create,
+                    modifier = Modifier.testTag(GroupsListTestTags.CREATE),
+                ) {
+                    Icon(
+                        AppIcons.Add,
+                        contentDescription = stringResource(Res.string.feature_groups_create_title),
+                    )
+                }
+            }
+        },
     ) { padding ->
         Column(modifier = Modifier.fillMaxSize().padding(padding).padding(horizontal = 16.dp)) {
             // No TopAppBar: Groups is a TAB ROOT and the dashboard shell draws one bar above every
