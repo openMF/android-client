@@ -10,14 +10,24 @@
 package kpt.core.model.objects.account.loan
 
 import kotlinx.serialization.Serializable
-import kpt.core.model.utils.DateConstants
 @Serializable
+/**
+ * The wire body for `POST savingsaccounts/{id}?command=approve`.
+ *
+ * Every field REQUIRED except the note, and [locale]/[dateFormat] un-defaulted deliberately: they
+ * used to default to `DateConstants`, which let a caller set [approvedOnDate] without deciding how
+ * it would be parsed — and the original's caller passed epoch MILLISECONDS
+ * (`approvalDate.toString()`) against a `"dd MMMM yyyy"` format. Fineract parses with the format
+ * you declare, so the two are one decision. Built only by
+ * `SavingsCommandRepositoryImpl` from `SavingsApprovalInput`, which carries the same contract up to
+ * the feature layer.
+ */
 data class SavingsApproval(
-    var locale: String = DateConstants.LOCALE,
+    val approvedOnDate: String,
 
-    var dateFormat: String = DateConstants.DATE_FORMAT,
+    val locale: String,
 
-    var approvedOnDate: String? = null,
+    val dateFormat: String,
 
-    var note: String? = null,
+    val note: String? = null,
 )

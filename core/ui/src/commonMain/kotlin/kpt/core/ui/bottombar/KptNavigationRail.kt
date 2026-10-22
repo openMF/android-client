@@ -35,6 +35,12 @@ fun KptNavigationRail(
     selectedItem: NavigationItem?,
     onClick: (NavigationItem) -> Unit,
     modifier: Modifier = Modifier,
+    /**
+     * Show each item's name beside its icon. Threaded from the same `ScaffoldNavigationData` flag
+     * the bottom bar reads, so labels do not disappear when the window widens and the bar becomes
+     * a rail — the rail IS the bar on a large screen.
+     */
+    showLabels: Boolean = false,
     windowInsets: WindowInsets = NavigationRailDefaults.windowInsets,
 ) {
     Surface(
@@ -63,6 +69,7 @@ fun KptNavigationRail(
                     unselectedIconRes = navigationItem.icon,
                     isSelected = navigationItem == selectedItem,
                     onClick = { onClick(navigationItem) },
+                    labelRes = navigationItem.labelRes.takeIf { showLabels },
                     modifier = Modifier.testTag(tag = navigationItem.testTag),
                 )
             }

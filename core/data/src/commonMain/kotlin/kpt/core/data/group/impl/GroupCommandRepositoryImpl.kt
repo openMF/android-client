@@ -28,8 +28,11 @@ internal class GroupCommandRepositoryImpl(
     override suspend fun createGroup(groupPayload: GroupPayloadEntity?) =
         online { groupApi.createGroup(groupPayload = groupPayload) }
 
-    override suspend fun activateGroup(groupId: Int, activatePayload: ActivatePayload) =
-        online { groupApi.activateGroup(groupId = groupId, activatePayload = activatePayload) }
+    override suspend fun activateGroup(groupId: Int, activatePayload: ActivatePayload): MutationResult<Unit> =
+        online {
+            groupApi.activateGroup(groupId = groupId, activatePayload = activatePayload)
+            Unit
+        }
 
     /**
      * Commands run [MutationPolicy.OnlineRequired]: they await the server and write nothing

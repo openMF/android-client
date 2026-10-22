@@ -9,8 +9,8 @@
  */
 package kpt.core.network.mifos.group.mapper
 
-import kpt.core.model.objects.clients.Page
 import kpt.core.database.group.entity.GroupEntity
+import kpt.core.model.objects.clients.Page
 import kpt.core.network.data.AbstractMapper
 import kpt.core.network.mifos.group.dto.GetGroupsResponse
 

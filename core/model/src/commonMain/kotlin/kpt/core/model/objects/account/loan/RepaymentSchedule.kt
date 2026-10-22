@@ -65,11 +65,18 @@ data class RepaymentSchedule(
             return count
         }
 
-        // Helper Method to get total pending/upcoming repayments
+        /**
+         * Helper Method to get total pending/upcoming repayments.
+         *
+         * `complete != true` rather than `!complete!!`: the flag is nullable and the `!!` crashed
+         * the whole schedule screen on a period Fineract sent without it. The two agree on every
+         * non-null value, so the counts are unchanged — a period with an absent flag is counted
+         * as not-complete, which is what the `!!` would have meant had it not thrown.
+         */
         fun getNumberOfRepaymentsPending(periodList: List<Period>): Int {
             var count = 0
             for (period in periodList) {
-                if (!period.complete!!) count++
+                if (period.complete != true) count++
             }
             return count
         }
@@ -78,7 +85,8 @@ data class RepaymentSchedule(
         fun getNumberOfRepaymentsOverDue(periodList: List<Period>): Int {
             var count = 0
             for (period in periodList) {
-                if (period.totalOverdue != null && period.totalOverdue!! > 0 && !period.complete!!) {
+                val overdue = period.totalOverdue
+                if (overdue != null && overdue > 0 && period.complete != true) {
                     count++
                 }
             }

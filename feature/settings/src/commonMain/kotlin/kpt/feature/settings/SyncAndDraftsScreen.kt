@@ -42,7 +42,7 @@ import kpt.core.base.designsystem.component.AppCard
 import kpt.core.base.store.infra.DraftRecord
 import kpt.core.base.store.mutation.conflict.ConflictEntry
 import kpt.core.base.store.submit.SubmitOutboxStatus
-import kpt.core.designsystem.icon.AppIcons
+import kpt.core.designsystem.icon.KptIcons
 import kpt.core.designsystem.theme.spacing
 import kpt.core.ui.scaffold.KptScaffold
 import kpt.feature.settings.generated.resources.Res
@@ -236,13 +236,13 @@ internal fun DraftRow(record: DraftRecord, onRetry: (() -> Unit)?, onDiscard: ()
             Row(horizontalArrangement = Arrangement.spacedBy(sp.sm)) {
                 if (onRetry != null) {
                     TextButton(onClick = onRetry) {
-                        Icon(AppIcons.Payment, contentDescription = null, modifier = Modifier.padding(end = sp.xs))
+                        Icon(KptIcons.Payment, contentDescription = null, modifier = Modifier.padding(end = sp.xs))
                         Text(stringResource(Res.string.feature_settings_sync_drafts_retry))
                     }
                 }
                 TextButton(onClick = onDiscard) {
                     Icon(
-                        AppIcons.OutlinedDelete,
+                        KptIcons.OutlinedDelete,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.error,
                         modifier = Modifier.padding(end = sp.xs),
@@ -305,7 +305,7 @@ internal fun EmptyState() {
         verticalArrangement = Arrangement.Center,
     ) {
         Icon(
-            imageVector = AppIcons.OutlinedDoneAll,
+            imageVector = KptIcons.OutlinedDoneAll,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.primary,
         )

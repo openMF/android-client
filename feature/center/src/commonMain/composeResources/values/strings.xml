@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2026 Mifos Initiative
+
+    This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+    If a copy of the MPL was not distributed with this file,
+    You can obtain one at https://mozilla.org/MPL/2.0/.
+
+    See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+-->
+<resources>
+    <string name="feature_center_tab">Centers</string>
+    <string name="feature_center_title">Centers</string>
+    <string name="feature_center_search_hint">Search centers</string>
+    <string name="feature_center_filter">Filter centers</string>
+    <string name="feature_center_filter_clear">Clear filters</string>
+    <string name="feature_center_empty">No centers found</string>
+    <string name="feature_center_detail_title">Center</string>
+    <string name="feature_center_back">Navigate back</string>
+    <string name="feature_center_groups">Groups in this center</string>
+    <string name="feature_center_office">Office</string>
+    <string name="feature_center_staff">Staff</string>
+    <string name="feature_center_account_no">Account no.</string>
+    <string name="feature_center_external_id">External ID</string>
+    <string name="feature_center_status_active">Active</string>
+    <string name="feature_center_status_inactive">Inactive</string>
+    <string name="feature_center_sort_name">Name</string>
+    <string name="feature_center_sort_account">Account no.</string>
+    <string name="feature_center_unnamed">Unnamed center</string>
+    <string name="feature_center_synced">Synced</string>
+    <string name="feature_center_activate">Activate centre</string>
+</resources>

@@ -14,9 +14,9 @@ import kpt.core.base.store.annotation.StoreProvider
 import kpt.core.database.cache.dao.ApiResponseCacheDao
 import kpt.core.database.client.entity.AddressConfiguration
 import kpt.core.database.client.entity.AddressTemplate
+import kpt.core.model.client.ClientCloseTemplateResponse
 import kpt.core.model.shared.CollateralItem
 import kpt.core.network.mifos.client.api.ClientApi
-import kpt.core.network.mifos.client.dto.ClientCloseTemplateResponse
 import kpt.core.store.cache.cachedRead
 import kpt.core.store.config.AppCacheKeys
 import org.mobilenativefoundation.store.store5.Store

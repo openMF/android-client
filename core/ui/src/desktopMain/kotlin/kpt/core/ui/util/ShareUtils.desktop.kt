@@ -23,7 +23,7 @@ actual object ShareUtils {
 
     actual suspend fun shareImage(title: String, image: ImageBitmap) {
         val newFile = FileKit.openFileSaver(
-            suggestedName = "MifosQrCode",
+            suggestedName = "AppQrCode",
             extension = "png",
         )
         image.asSkiaBitmap().readPixels()?.let { newFile?.write(it) }
@@ -31,7 +31,7 @@ actual object ShareUtils {
 
     actual suspend fun shareImage(title: String, byte: ByteArray) {
         val newFile = FileKit.openFileSaver(
-            suggestedName = "MifosQrCode",
+            suggestedName = "AppQrCode",
             extension = "png",
         )
         newFile?.write(byte)

@@ -9,6 +9,7 @@
  */
 package kpt.core.store.datatable
 
+import kotlinx.serialization.json.JsonArray
 import kpt.core.base.store.annotation.CacheKey
 import kpt.core.base.store.annotation.StoreProvider
 import kpt.core.database.cache.dao.ApiResponseCacheDao
@@ -49,4 +50,32 @@ fun provideGetUserPathTrackingStore(
     dao = cache,
     keyOf = { key -> AppCacheKeys.DatatableGetUserPathTracking.forKey(key.toString()) },
     fetch = { key -> dataTableApi.getUserPathTracking(userId = key) },
+)
+
+/** Addresses one `getDataOfDataTable` read — a datatable's ROWS for one entity. */
+data class DataTableDataKey(
+    val tableName: String,
+    val entityId: Int,
+)
+
+/**
+ * A datatable's rows for one entity.
+ *
+ * The output is a raw `JsonArray` because a datatable's SHAPE is tenant-defined — the columns are
+ * configured per deployment, so there is no DTO to deserialize into. It still caches: the array is
+ * `@Serializable`, so the last-known rows render with no signal like every other read.
+ */
+@StoreProvider(id = "datatableGetDataOfDataTable", ttl = "12h")
+@CacheKey(fn = "forKey", key = "datatableGetDataOfDataTable:{key}", params = ["key:String"])
+fun provideGetDataOfDataTableStore(
+    dataTableApi: DataTableApi,
+    cache: ApiResponseCacheDao,
+): Store<DataTableDataKey, JsonArray> = cachedRead(
+    dao = cache,
+    keyOf = { key ->
+        AppCacheKeys.DatatableGetDataOfDataTable.forKey("${key.tableName}:${key.entityId}")
+    },
+    fetch = { key ->
+        dataTableApi.getDataOfDataTable(dataTableName = key.tableName, entityId = key.entityId)
+    },
 )

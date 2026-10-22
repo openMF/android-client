@@ -10,6 +10,7 @@
 package kpt.core.data.note
 
 import kpt.core.base.store.mutation.MutationResult
+import kpt.core.model.note.NoteDraft
 import kpt.core.network.mifos.note.dto.CreateNoteResponseDto
 import kpt.core.network.mifos.note.dto.DeleteNoteResponseDto
 import kpt.core.network.mifos.note.dto.NoteRequestDto
@@ -28,9 +29,23 @@ import kpt.core.network.mifos.note.dto.UpdateNoteResponseDto
  */
 interface NoteCommandRepository {
 
-    suspend fun addNewNote(resourceType: String, resourceId: Long, noteRequestDto: NoteRequestDto): MutationResult<CreateNoteResponseDto>
+    suspend fun addNewNote(resourceType: String, resourceId: Long, noteRequestDto: NoteRequestDto, idempotencyKey: String): MutationResult<CreateNoteResponseDto>
 
     suspend fun deleteNote(resourceType: String, resourceId: Long, noteId: Long): MutationResult<DeleteNoteResponseDto>
 
     suspend fun updateNote(resourceType: String, resourceId: Long, noteId: Long, noteRequestDto: NoteRequestDto): MutationResult<UpdateNoteResponseDto>
+
+    /**
+     * Send one [NoteDraft] — create or update, decided by `noteId`.
+     *
+     * The single entry point the OUTBOX replays against. `OfflineSubmitSyncer` hands back a payload
+     * it persisted days ago with no idea which of the two calls produced it, so the choice has to
+     * live here, derived from the draft itself.
+     *
+     * THROWS on failure rather than returning [MutationResult]. That is deliberate and is the one
+     * place in this layer that does: `SubmitHandler`/`OfflineSubmitSyncer` are built on
+     * throw-to-fail, and a `MutationResult.Blocked` quietly returned to the syncer would be read as
+     * success and the draft marked SUBMITTED — losing the note. See [NoteSubmitException].
+     */
+    suspend fun submitDraft(draft: NoteDraft)
 }

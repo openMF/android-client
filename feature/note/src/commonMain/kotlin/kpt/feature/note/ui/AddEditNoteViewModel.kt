@@ -5,67 +5,109 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+ * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
 package kpt.feature.note.ui
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kpt.core.base.store.mutation.BlockReason
-import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
-import kpt.core.base.ui.viewmodel.BaseViewModel
+import kpt.core.base.store.submit.IdempotencyKey
+import kpt.core.base.store.submit.SubmitOutbox
+import kpt.core.base.ui.viewmodel.BaseMutationViewModel
+import kpt.core.base.ui.viewmodel.MutationMode
 import kpt.core.common.utils.Constants
+import kpt.core.data.note.NOTE_FORM_KEY
 import kpt.core.data.note.NoteCommandRepository
 import kpt.core.data.note.NoteRepository
-import kpt.core.network.mifos.note.dto.NoteRequestDto
-
+import kpt.core.model.note.NoteDraft
 
 /**
- * Add or edit one client note — ported from
- * `6b66e8a43:feature/note/src/commonMain/kotlin/com/mifos/feature/note/addEditNotes/AddEditNoteViewModel.kt`.
+ * Write or edit one note — the app's first OFFLINE-DURABLE form.
  *
- * ## What changed from the original, and why
+ * Ported from `6b66e8a43:feature/note/addEditNotes/AddEditNoteViewModel.kt`, then re-based onto
+ * [BaseMutationViewModel] with [MutationMode.Draft].
  *
- * **1. The original put `StringResource` in its STATE.** `addUpdateButton`, `label` and `title` were
- * all `StringResource` fields that `init` reassigned when `noteId != null`. That makes the state
- * un-testable without a Compose resource runtime, and it puts a presentation concern in a layer
- * that should only know whether it is adding or editing. Here the state carries `editEnabled` and
- * the screen picks its own strings from it.
+ * ## What changed, and why it matters here more than anywhere else
  *
- * **2. `loadSingleNote()` called `repository.retrieveNote(...)` — a dedicated single-note read.**
- * The migrated substrate has no such endpoint, and does not need one: the note being edited is
- * already in the list the user just came from, in the same Store. Reading it from the cached stream
- * avoids a second network call for data the device already has, and means opening the editor works
- * offline.
+ * The first migration hand-rolled the submit: `viewModelScope.launch`, an exhaustive
+ * `when (MutationResult)`, and three bespoke flags (`isSubmitting` / `submitted` / `writeError`).
+ * It worked, and it lost data. On `Blocked(OFFLINE)` it showed "you are offline" and kept the text
+ * ON SCREEN — navigate away, or let the process die, and a note typed in a village with no signal
+ * was gone.
  *
- * **3. `OnRetry` in edit mode called `loadSingleNote()` and THEN `editNote(...)`.** Those race —
- * the load writes `textFieldNotesPayload`, so a retry could submit the SERVER's text rather than
- * what the user typed, silently discarding their edit. Retry here re-submits what is in the field.
+ * `MutationMode.Draft` persists the payload to `framework_submit_drafts` the moment the network
+ * refuses it, and `OfflineSubmitSyncer` (registered eagerly in `NoteDataProviders`) replays it on
+ * the next reconnect — with no screen open. The draft is visible and actionable meanwhile in
+ * **Settings → Sync & Drafts**, which already renders PENDING / RETRYING / FAILED and was waiting
+ * for a producer.
+ *
+ * `OnlineRequired` on the note write is UNCHANGED and still right: it stops the app claiming a note
+ * reached Fineract when it did not. It never implied throwing the officer's typing away.
+ *
+ * ## Keys
+ *
+ * `formKey = "note"` groups every note draft for the outbox; `uniqueKey` partitions inside it so
+ * concurrent drafts coexist — a new note on client 7 and an edit of note 12 are different slots and
+ * neither overwrites the other. `autoSaveDraft = true` because the officer has already decided to
+ * save by tapping Submit; prompting again after a failure they did not cause is noise.
  */
 internal class AddEditNoteViewModel(
     private val repository: NoteRepository,
     private val commands: NoteCommandRepository,
+    outbox: SubmitOutbox<NoteDraft>,
     savedStateHandle: SavedStateHandle,
-) : BaseViewModel<AddEditNoteState, AddEditNoteEvent, AddEditNoteAction>(AddEditNoteState()) {
+) : BaseMutationViewModel<NoteDraft, Unit>(
+    MutationMode.Draft(
+        outbox = outbox,
+        formKey = NOTE_FORM_KEY,
+        uniqueKey = savedStateHandle.uniqueKey(),
+        autoSaveDraft = true,
+    ),
+) {
 
     private val clientId: Int = savedStateHandle.get<Int>(CLIENT_ID_KEY) ?: 0
 
     /** `null` means ADD. Read once; the original branched on it in four separate places. */
     private val noteId: Long? = savedStateHandle.get<Long>(NOTE_ID_KEY)
 
+    /**
+     * Minted ONCE, when this editor opens — not per submit and never per retry.
+     *
+     * Regenerating it on retry would defeat the whole mechanism: the server would see each attempt
+     * as a new intent and the duplicate it exists to prevent would reappear. Held here (not in
+     * `draftPayload()`) so every payload this screen produces — first submit, retry, and the copy
+     * persisted to the outbox — carries the same token.
+     */
+    private val idempotencyKey: String = IdempotencyKey.generate()
+
+    private val _formState = MutableStateFlow(NoteFormState(editEnabled = noteId != null))
+
+    /** The form as it currently stands — the editable body the screen renders. */
+    val formState: StateFlow<NoteFormState> = _formState.asStateFlow()
+
     init {
-        mutableStateFlow.value = state.copy(editEnabled = noteId != null)
-        if (noteId != null) loadExistingNote(noteId)
+        // `mutableScreenState` gates "form ready", not display data: Loading while an existing note
+        // hydrates, then Content. Without it `MutationScreenContent` sits at Loading forever,
+        // because it renders the READ gate before the form.
+        if (noteId == null) {
+            mutableScreenState.value = ScreenState.Content(draftPayload())
+        } else {
+            loadExistingNote(noteId)
+        }
     }
 
     /**
      * Seed the field from the note already in the Store.
      *
-     * `first { it !is Loading }` waits for the stream to settle rather than sampling it — opening
+     * `first { it !is Loading }` waits for the stream to SETTLE rather than sampling it — opening
      * the editor directly (deep link, process death) must not show an empty field just because the
      * cache had not emitted yet.
      */
@@ -80,95 +122,41 @@ internal class AddEditNoteViewModel(
                     ?.firstOrNull { it.id == id }
                     ?.noteContent
                     .orEmpty()
-                mutableStateFlow.value = state.copy(text = existing, loadedText = existing)
+                _formState.update { it.copy(text = existing, loadedText = existing) }
             }.onFailure {
                 Logger.e(tag = TAG, throwable = it) { "could not seed note $id" }
             }
-        }
-    }
-
-    override fun handleAction(action: AddEditNoteAction) {
-        when (action) {
-            is AddEditNoteAction.TextChanged ->
-                mutableStateFlow.value = state.copy(text = action.value, writeError = null)
-
-            AddEditNoteAction.Submit, AddEditNoteAction.Retry -> submit()
-
-            AddEditNoteAction.DismissDialog ->
-                mutableStateFlow.value = state.copy(showDiscardConfirmation = false, writeError = null)
-
-            AddEditNoteAction.ConfirmDiscard -> sendEvent(AddEditNoteEvent.NavigateBack)
-
-            // The back affordance asks ONLY when there is something to lose. The original ran the
-            // same comparison, and it is the reason this dialog is not merely annoying.
-            AddEditNoteAction.BackClicked ->
-                if (state.isDirty) {
-                    mutableStateFlow.value = state.copy(showDiscardConfirmation = true)
-                } else {
-                    sendEvent(AddEditNoteEvent.NavigateBack)
-                }
+            mutableScreenState.value = ScreenState.Content(draftPayload())
         }
     }
 
     /**
-     * One submit path for both add and edit.
+     * The one network call, reached by BOTH paths — a live submit and an outbox replay days later.
      *
-     * The write does NOT invalidate the read cache (`NoteCommandRepository` carries no Store), so
-     * the list the user returns to re-reads on RESUME instead — see `NoteListScreen`. The original
-     * achieved the same thing with a `popUpTo(inclusive) + launchSingleTop` route trick; dropping
-     * that without replacing it left a written note invisible until the cache expired.
+     * It THROWS on failure (see `NoteCommandRepository.submitDraft`): the framework's submit
+     * machinery treats a returning block as success, so a swallowed `Blocked` would mark the draft
+     * SUBMITTED and delete a note that never left the device.
      */
-    private fun submit() {
-        val text = state.text.trim()
-        // `submitted` matters as much as `isSubmitting`. Guarding only the IN-FLIGHT window leaves
-        // the gap between a successful write and the screen actually leaving — a navigation
-        // transition is a few hundred milliseconds, and a second tap inside it wrote the note
-        // twice. Found by `aDoubleTapSendsOneWrite`, which completes the write instantly and so
-        // lands in exactly that gap every run.
-        if (text.isEmpty() || state.isSubmitting || state.submitted) return
+    override suspend fun performSubmit(payload: NoteDraft) = commands.submitDraft(payload)
 
-        mutableStateFlow.value = state.copy(isSubmitting = true, writeError = null)
-        viewModelScope.launch {
-            val dto = NoteRequestDto(note = text)
-            val result = if (noteId == null) {
-                commands.addNewNote(Constants.ENTITY_TYPE_CLIENTS, clientId.toLong(), dto)
-            } else {
-                commands.updateNote(Constants.ENTITY_TYPE_CLIENTS, clientId.toLong(), noteId, dto)
-            }
+    fun onTextChange(value: String) = _formState.update { it.copy(text = value) }
 
-            when (result) {
-                is MutationResult.Applied -> {
-                    // `submitted` latches; only a SUCCESS sets it. A failed write must stay
-                    // retryable, which is why this is not simply `!isSubmitting` inverted.
-                    mutableStateFlow.value =
-                        state.copy(isSubmitting = false, submitted = true, loadedText = text)
-                    sendEvent(AddEditNoteEvent.NavigateBack)
-                }
+    /** Submit the form. No-op while already submitting — the framework guards it. */
+    fun submitForm() = onSubmit(draftPayload())
 
-                // The form is LEFT INTACT on every failure. The user's text is the one thing that
-                // cannot be recovered from anywhere else, so it is never cleared by an error.
-                is MutationResult.Blocked ->
-                    mutableStateFlow.value = state.copy(
-                        isSubmitting = false,
-                        writeError = if (result.reason == BlockReason.OFFLINE) {
-                            NoteWriteError.Offline
-                        } else {
-                            NoteWriteError.Failed
-                        },
-                    )
+    fun onDiscardRequested() = _formState.update { it.copy(showDiscardConfirmation = true) }
 
-                is MutationResult.Failed -> {
-                    Logger.e(tag = TAG, throwable = result.cause) { "note write failed" }
-                    mutableStateFlow.value =
-                        state.copy(isSubmitting = false, writeError = NoteWriteError.Failed)
-                }
+    fun onDiscardDismissed() = _formState.update { it.copy(showDiscardConfirmation = false) }
 
-                is MutationResult.Conflicted ->
-                    mutableStateFlow.value =
-                        state.copy(isSubmitting = false, writeError = NoteWriteError.Failed)
-            }
-        }
-    }
+    private fun draftPayload() = NoteDraft(
+        resourceId = clientId.toLong(),
+        text = _formState.value.text.trim(),
+        noteId = noteId,
+        // Clients today. Centres and groups reach the same editor when those features land, and the
+        // type travels ON the draft so a replay does not have to re-derive it from UI context.
+        resourceType = Constants.ENTITY_TYPE_CLIENTS,
+        idempotencyKey = idempotencyKey,
+    )
 
     private companion object {
         const val CLIENT_ID_KEY = "clientId"
@@ -177,32 +165,28 @@ internal class AddEditNoteViewModel(
     }
 }
 
-internal data class AddEditNoteState(
+/**
+ * The draft's slot in the outbox.
+ *
+ * Read from the handle rather than from the ViewModel's own fields because
+ * [BaseMutationViewModel]'s constructor runs FIRST — the mode is a super-constructor argument, so
+ * `clientId`/`noteId` do not exist yet.
+ *
+ * An edit keys on the note; a new note keys on the client. So "new note on client 7" and "edit of
+ * note 12" are separate slots, and two officers' worth of offline work never collapses into one.
+ */
+private fun SavedStateHandle.uniqueKey(): String {
+    val client = get<Int>("clientId") ?: 0
+    return get<Long>("noteId")?.let { "note:$it" } ?: "client:$client:new"
+}
+
+/** The editable body. Submit lifecycle lives in [BaseMutationViewModel]'s `uiState`, not here. */
+internal data class NoteFormState(
     val text: String = "",
-    /** What the server last gave us. `isDirty` is the difference, not a separate flag to maintain. */
     val loadedText: String = "",
     val editEnabled: Boolean = false,
-    val isSubmitting: Boolean = false,
-    /** Latched on a successful write. Closes the tap-again-while-navigating-away window. */
-    val submitted: Boolean = false,
     val showDiscardConfirmation: Boolean = false,
-    val writeError: NoteWriteError? = null,
 ) {
     val isDirty: Boolean get() = text.trim() != loadedText.trim()
-
-    /** An empty note is not a note. The original let it through and the server rejected it. */
-    val canSubmit: Boolean get() = text.isNotBlank() && !isSubmitting && !submitted
-}
-
-internal sealed interface AddEditNoteEvent {
-    data object NavigateBack : AddEditNoteEvent
-}
-
-internal sealed interface AddEditNoteAction {
-    data class TextChanged(val value: String) : AddEditNoteAction
-    data object Submit : AddEditNoteAction
-    data object Retry : AddEditNoteAction
-    data object BackClicked : AddEditNoteAction
-    data object ConfirmDiscard : AddEditNoteAction
-    data object DismissDialog : AddEditNoteAction
+    val canSubmit: Boolean get() = text.isNotBlank()
 }

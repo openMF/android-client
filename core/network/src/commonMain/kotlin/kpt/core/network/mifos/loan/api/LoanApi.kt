@@ -24,6 +24,7 @@ import kpt.core.database.loan.entity.LoanRepaymentTemplateEntity
 import kpt.core.database.loan.entity.LoanTemplate
 import kpt.core.database.loan.entity.LoanTransactionTemplate
 import kpt.core.model.objects.account.loan.LoanApproval
+import kpt.core.model.objects.account.loan.RepaymentSchedule
 import kpt.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
 import kpt.core.model.objects.account.loan.reschedules.LoanRescheduleRejectionRequest
 import kpt.core.model.objects.account.loan.reschedules.LoanRescheduleRequest
@@ -128,7 +129,7 @@ interface LoanApi {
      * Used to preview the schedule before submitting the loan application.
      */
     @POST("loans?command=calculateLoanSchedule")
-    suspend fun calculateLoanSchedule(@Body loansPayload: LoansPayload?): HttpResponse
+    suspend fun calculateLoanSchedule(@Body loansPayload: LoansPayload?): RepaymentSchedule
 
     @GET("loans/template?templateType=individual")
     suspend fun getLoansAccountTemplate(

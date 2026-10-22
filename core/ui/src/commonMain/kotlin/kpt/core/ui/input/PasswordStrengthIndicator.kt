@@ -35,7 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
-import kpt.core.designsystem.icon.AppIcons
+import kpt.core.designsystem.icon.KptIcons
 import kpt.core.designsystem.theme.KptTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -144,9 +144,9 @@ private fun MinimumCharacterCount(
     ) {
         AnimatedContent(
             targetState = if (minimumRequirementMet) {
-                AppIcons.CheckCircle
+                KptIcons.CheckCircle
             } else {
-                AppIcons.Close
+                KptIcons.Close
             },
             label = "iconForMinimumCharacterCount",
         ) {

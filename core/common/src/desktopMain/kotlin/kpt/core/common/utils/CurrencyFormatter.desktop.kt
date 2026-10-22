@@ -20,7 +20,18 @@ actual object CurrencyFormatter {
     ): String {
         val numberFormat = NumberFormat.getCurrencyInstance()
         numberFormat.maximumFractionDigits = maximumFractionDigits ?: 0
-        numberFormat.currency = Currency.getInstance(currencyCode)
-        return numberFormat.format(balance)
+        // A null/blank/unrecognised code keeps the locale's own currency rather than throwing —
+        // see the common declaration for the two crashes this guard replaces.
+        currencyCode.toCurrencyOrNull()?.let { numberFormat.currency = it }
+        return numberFormat.format(balance ?: 0.0)
     }
 }
+
+/**
+ * `Currency.getInstance` throws on a null argument (NPE) and on anything that is not a valid
+ * ISO-4217 code (`IllegalArgumentException`) — including the empty string, which is what a loan
+ * with no currency block projects to. Both are reachable from live Fineract data, so neither is a
+ * programming error worth crashing a screen over.
+ */
+internal fun String?.toCurrencyOrNull(): Currency? =
+    this?.takeIf { it.isNotBlank() }?.let { runCatching { Currency.getInstance(it) }.getOrNull() }

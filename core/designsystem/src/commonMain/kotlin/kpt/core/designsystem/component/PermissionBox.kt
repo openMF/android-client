@@ -72,7 +72,7 @@ fun PermissionBox(
         if (!granted) ask()
     }
 
-    MifosDialogBox(
+    AppDialogBox(
         showDialogState = showRationale,
         onDismiss = { showRationale = false },
         title = title,
@@ -85,7 +85,7 @@ fun PermissionBox(
         dismissButtonText = dismissButtonText,
     )
 
-    MifosDialogBox(
+    AppDialogBox(
         showDialogState = showSettingsPrompt,
         onDismiss = { showSettingsPrompt = false },
         title = title,

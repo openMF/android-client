@@ -28,7 +28,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,10 +36,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.screen.ScreenContent
 import kpt.core.database.client.entity.ClientEntity
-import kpt.core.designsystem.component.MifosOutlinedTextField
-import kpt.core.designsystem.icon.MifosIcons
+import kpt.core.designsystem.component.AppOutlinedTextField
+import kpt.core.designsystem.icon.AppIcons
 import kpt.feature.client.generated.resources.Res
 import kpt.feature.client.generated.resources.feature_client_create
 import kpt.feature.client.generated.resources.feature_client_filter_clear
@@ -59,7 +59,10 @@ internal fun ClientListScreen(
     modifier: Modifier = Modifier,
     viewModel: ClientListViewModel = koinViewModel(),
 ) {
-    val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+    // TWO flows: `screenState` is the stream (collected WhileSubscribed, so it stops when the
+    // Clients tab is not on display); `stateFlow` is the filter state the chips read.
+    val rows by viewModel.screenState.collectAsStateWithLifecycle()
+    val ui by viewModel.stateFlow.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.eventFlow.collect { event ->
@@ -71,7 +74,8 @@ internal fun ClientListScreen(
     }
 
     ClientListContent(
-        state = state,
+        ui = ui,
+        rows = rows,
         onAction = { viewModel.actionChannel.trySend(it) },
         rowsClickable = onClientClick != null,
         canCreate = onCreateClient != null,
@@ -83,7 +87,8 @@ internal fun ClientListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ClientListContent(
-    state: ClientListState,
+    ui: ClientListState,
+    rows: ScreenState<List<ClientEntity>>,
     onAction: (ClientListAction) -> Unit,
     modifier: Modifier = Modifier,
     /**
@@ -98,42 +103,48 @@ internal fun ClientListContent(
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize().testTag(ClientListTestTags.SCREEN),
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(Res.string.feature_client_title)) },
-                actions = {
-                    IconButton(
-                        onClick = { onAction(ClientListAction.FilterVisibilityToggled) },
-                        modifier = Modifier.testTag(ClientListTestTags.FILTER_TOGGLE),
-                    ) {
-                        Icon(MifosIcons.FilterList, contentDescription = null)
-                    }
-                },
-            )
-        },
         floatingActionButton = {
             if (canCreate) {
                 FloatingActionButton(
                     onClick = { onAction(ClientListAction.CreateClientClicked) },
                     modifier = Modifier.testTag(ClientListTestTags.CREATE),
                 ) {
-                    Icon(MifosIcons.Add, contentDescription = stringResource(Res.string.feature_client_create))
+                    Icon(AppIcons.Add, contentDescription = stringResource(Res.string.feature_client_create))
                 }
             }
         },
     ) { padding ->
         Column(modifier = Modifier.fillMaxSize().padding(padding).padding(horizontal = 16.dp)) {
-            MifosOutlinedTextField(
-                value = state.query,
-                onValueChange = { onAction(ClientListAction.QueryChanged(it)) },
-                label = stringResource(Res.string.feature_client_search_hint),
-                leadingIcon = MifosIcons.Search,
-                showClearIcon = state.query.isNotEmpty(),
-                onClickClearIcon = { onAction(ClientListAction.QueryChanged("")) },
-                modifier = Modifier.fillMaxWidth().testTag(ClientListTestTags.SEARCH),
-            )
+            // The screen's own TopAppBar is gone: Clients is a TAB ROOT, and the dashboard shell
+            // draws one bar (hamburger + search + notifications) above every tab root. Two bars
+            // stacked is what a port that kept both looks like. Its only action — the filter
+            // toggle — moves beside the search field, which is what it reveals anyway; the title
+            // was redundant with the tab label and the shell bar.
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                AppOutlinedTextField(
+                    value = ui.query,
+                    onValueChange = { onAction(ClientListAction.QueryChanged(it)) },
+                    label = stringResource(Res.string.feature_client_search_hint),
+                    leadingIcon = AppIcons.Search,
+                    showClearIcon = ui.query.isNotEmpty(),
+                    onClickClearIcon = { onAction(ClientListAction.QueryChanged("")) },
+                    modifier = Modifier.weight(1f).testTag(ClientListTestTags.SEARCH),
+                )
+                IconButton(
+                    onClick = { onAction(ClientListAction.FilterVisibilityToggled) },
+                    modifier = Modifier.testTag(ClientListTestTags.FILTER_TOGGLE),
+                ) {
+                    Icon(
+                        AppIcons.FilterList,
+                        contentDescription = stringResource(Res.string.feature_client_title),
+                    )
+                }
+            }
 
-            if (state.filtersVisible) {
+            if (ui.filtersVisible) {
                 Column(
                     modifier = Modifier.padding(vertical = 8.dp).testTag(ClientListTestTags.FILTERS),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -141,20 +152,21 @@ internal fun ClientListContent(
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         ClientSort.entries.forEach { sort ->
                             FilterChip(
-                                selected = state.sort == sort,
+                                selected = ui.sort == sort,
                                 // Tapping the active sort clears it — the original's sort was
                                 // nullable with no way back to unsorted.
                                 onClick = {
-                                    onAction(ClientListAction.SortChanged(if (state.sort == sort) null else sort))
+                                    onAction(ClientListAction.SortChanged(if (ui.sort == sort) null else sort))
                                 },
                                 label = { Text(stringResource(sort.labelRes())) },
                             )
                         }
                     }
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        state.officeNames.forEach { office ->
+                        // Derived from the rows on screen, never a second fetch.
+                        officeNames(rows).forEach { office ->
                             FilterChip(
-                                selected = office in state.selectedOffices,
+                                selected = office in ui.selectedOffices,
                                 onClick = { onAction(ClientListAction.OfficeFilterToggled(office)) },
                                 label = { Text(office) },
                             )
@@ -170,8 +182,16 @@ internal fun ClientListContent(
             }
 
             ScreenContent(
-                state = state.listState,
-                onRetry = { onAction(ClientListAction.FiltersCleared) },
+                state = rows,
+                onRetry = {
+                    if (ui.query.isNotBlank() || ui.selectedOffices.isNotEmpty() ||
+                        ui.selectedStatuses.isNotEmpty()
+                    ) {
+                        onAction(ClientListAction.FiltersCleared)
+                    } else {
+                        onAction(ClientListAction.Retry)
+                    }
+                },
                 modifier = Modifier.fillMaxSize(),
             ) { clients, _ ->
                 LazyColumn(modifier = Modifier.testTag(ClientListTestTags.LIST)) {
@@ -210,6 +230,10 @@ private fun ClientRow(client: ClientEntity, onClick: (() -> Unit)?) {
         }
     }
 }
+
+/** Offices present in the loaded rows — the filter's options. Empty until content arrives. */
+private fun officeNames(rows: ScreenState<List<ClientEntity>>): List<String> =
+    (rows as? ScreenState.Content)?.data?.mapNotNull { it.officeName }?.distinct()?.sorted().orEmpty()
 
 private fun ClientSort.labelRes() = when (this) {
     ClientSort.Name -> Res.string.feature_client_sort_name

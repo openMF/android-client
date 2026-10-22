@@ -27,4 +27,11 @@
 
 include(":feature:signin")
 include(":feature:client")
+include(":feature:activate")
+include(":feature:center")
+include(":feature:datatable")
+include(":feature:document")
+include(":feature:groups")
+include(":feature:loan")
+include(":feature:savings")
 include(":feature:note")

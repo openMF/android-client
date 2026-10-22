@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2026 Mifos Initiative
+
+    This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+    If a copy of the MPL was not distributed with this file,
+    You can obtain one at https://mozilla.org/MPL/2.0/.
+
+    See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+-->
+<resources>
+    <!-- Values verbatim from `6b66e8a43:feature/loan/.../strings.xml`. -->
+    <string name="feature_loan_profile_account">Loan Account</string>
+    <string name="feature_loan_profile_item_general_title">General</string>
+    <string name="feature_loan_profile_item_general_subtitle">Basic Loan Information</string>
+    <string name="feature_loan_profile_item_dashboard_title">Dashboard</string>
+    <string name="feature_loan_profile_item_dashboard_subtitle">Account dashboard overview</string>
+    <string name="feature_loan_profile_item_account_details_title">Account Details</string>
+    <string name="feature_loan_profile_item_account_details_subtitle">Detailed account metadata</string>
+    <string name="feature_loan_profile_item_repayment_schedule_title">Repayment Schedule</string>
+    <string name="feature_loan_profile_item_repayment_schedule_subtitle">View upcoming installments</string>
+    <string name="feature_loan_profile_item_transactions_title">Transactions</string>
+    <string name="feature_loan_profile_item_transactions_subtitle">Full history of payments</string>
+    <string name="feature_loan_profile_item_charges_title">Charges</string>
+    <string name="feature_loan_profile_item_charges_subtitle">Applicable fees and charges</string>
+    <string name="feature_loan_profile_item_originators_title">Originators</string>
+    <string name="feature_loan_profile_item_originators_subtitle">Manage loan originators</string>
+    <string name="feature_loan_profile_item_collateral_title">Loan Collateral Details</string>
+    <string name="feature_loan_profile_item_collateral_subtitle">Assets pledged as security</string>
+    <string name="feature_loan_profile_item_term_variations_title">Term Variations</string>
+    <string name="feature_loan_profile_item_term_variations_subtitle">Changes in loan conditions</string>
+    <string name="feature_loan_profile_item_reschedules_title">Loan Reschedules</string>
+    <string name="feature_loan_profile_item_reschedules_subtitle">Timeline and date revisions</string>
+    <string name="feature_loan_profile_item_documents_title">Loan Documents</string>
+    <string name="feature_loan_profile_item_documents_subtitle">Contracts and attachments</string>
+    <string name="feature_loan_profile_item_notes_title">Notes</string>
+    <string name="feature_loan_profile_item_notes_subtitle">Additional internal comments</string>
+    <string name="feature_loan_profile_item_standing_instructions_title">Standing Instructions</string>
+    <string name="feature_loan_profile_item_standing_instructions_subtitle">Automated payment settings</string>
+    <string name="feature_loan_profile_status_active">Active</string>
+    <string name="feature_loan_profile_status_pending">Pending</string>
+    <string name="feature_loan_profile_status_overpaid">Overpaid</string>
+    <string name="feature_loan_profile_status_unknown">Unknown</string>
+    <string name="feature_loan_profile_action_approve">Approve Account</string>
+    <string name="feature_loan_profile_action_repayment">Make Repayment</string>
+    <string name="feature_loan_profile_action_transfer">Transfer Funds</string>
+    <string name="feature_loan_profile_action_view">View Action</string>
+    <string name="feature_loan_profile_section_actions_details">ACTIONS &amp; DETAILS</string>
+    <string name="feature_loan_profile_section_account_overview">ACCOUNT OVERVIEW</string>
+    <string name="feature_loan_profile_label_balance">Current Balance</string>
+    <string name="feature_loan_profile_label_arrears">Arrears By</string>
+    <string name="feature_loan_profile_label_overpaid_by">Overpaid By</string>
+    <string name="feature_loan_profile_label_client_name_placeholder">Client Name</string>
+    <string name="feature_loan_profile_error_details_not_found">Failed to load loan account details.</string>
+    <string name="feature_loan_profile_failed_to_load_loan">Failed to load loan details. Please try again later.</string>
+    <string name="feature_loan_profile_error_network_not_available">Network is not available. Please check your connection.</string>
+    <!-- Added by the port: the original had no offline case on this screen. -->
+    <string name="feature_loan_profile_offline">No connection — showing the last known details.</string>
+    <!-- S4b · Repayment schedule. Values verbatim from `6b66e8a43`. -->
+    <string name="feature_loan_loan_repayment_schedule">Loan Repayment Schedule</string>
+    <string name="feature_loan_number">#</string>
+    <string name="feature_loan_days">Days</string>
+    <string name="feature_loan_date">Date</string>
+    <string name="feature_loan_paid_date">Paid Date</string>
+    <string name="feature_loan_balance_of_loan">Balance Of Loan</string>
+    <string name="feature_loan_principal_due">Principal Due</string>
+    <string name="feature_loan_interest_short">Interest</string>
+    <string name="feature_loan_fees_short">Fees</string>
+    <string name="feature_loan_penalties_short">Penalties</string>
+    <string name="feature_loan_due_short">Due</string>
+    <string name="feature_loan_paid_short">Paid</string>
+    <string name="feature_loan_in_advance">In Advance</string>
+    <string name="feature_loan_late">Late</string>
+    <string name="feature_loan_outstanding">Outstanding</string>
+    <string name="feature_loan_total">Total</string>
+    <string name="feature_loan_loan_amount_and_balance">Loan Amount and Balance</string>
+    <string name="feature_loan_total_cost_of_loan">Total Cost of Loan</string>
+    <string name="feature_loan_installment_totals">Installment Totals</string>
+    <string name="feature_loan_complete_count">Complete: %1$s</string>
+    <string name="feature_loan_pending_count">Pending: %1$s</string>
+    <string name="feature_loan_overdue_count">Overdue: %1$s</string>
+
+    <!-- S4b · Transactions. Values verbatim from `6b66e8a43`. -->
+    <string name="feature_loan_loan_transactions">Loan Transactions</string>
+    <string name="feature_loan_break_down">Break Down</string>
+    <string name="feature_loan_table_header_number">#</string>
+    <string name="feature_loan_table_header_transaction_id">ID</string>
+    <string name="feature_loan_table_header_office">Office</string>
+    <string name="feature_loan_table_header_external_id">External ID</string>
+    <string name="feature_loan_table_header_transaction_date">Transaction Date</string>
+    <string name="feature_loan_table_header_transaction_type">Transaction Type</string>
+    <string name="feature_loan_table_header_amount">Amount</string>
+    <string name="feature_loan_table_header_principal">Principal</string>
+    <string name="feature_loan_table_header_interest">Interest</string>
+    <string name="feature_loan_table_header_fees">Fees</string>
+    <string name="feature_loan_table_header_penalties">Penalties</string>
+    <string name="feature_loan_table_header_loan_balance">Loan Balance</string>
+
+    <!-- S4b · Approval. Values verbatim from `6b66e8a43`. -->
+    <string name="feature_loan_approve_loan">Approve Loan</string>
+    <string name="feature_loan_approved_on">Approved On</string>
+    <string name="feature_loan_expected_disbursement_on">Expected Disbursement On</string>
+    <string name="feature_loan_approved_amount">Approved Amount</string>
+    <string name="feature_loan_approval_note">Approval Note</string>
+    <string name="feature_loan_select_date">Select Date</string>
+    <string name="feature_loan_cancel">Cancel</string>
+    <string name="feature_loan_submit">Submit</string>
+    <!--
+        Added by the port. The original showed its outcome in a snackbar fired from the composition
+        body; this port uses the codebase's status dialog, which needs a title and a body.
+    -->
+    <string name="feature_loan_approval_success_title">Loan Approved</string>
+    <string name="feature_loan_approval_success_message">The approval was sent to the server.</string>
+    <string name="feature_loan_approval_failure_title">Approval Failed</string>
+    <string name="feature_loan_dialog_continue">Continue</string>
+    <!-- The original rendered the literal text "null" when no date was set. -->
+    <string name="feature_loan_no_date_selected">Not set</string>
+    <!-- The original validated the amount and then showed nothing when it was invalid. -->
+    <string name="feature_loan_approval_amount_invalid">Enter a valid amount</string>
+    <!-- S4c · Repayment. Values verbatim from `6b66e8a43` unless noted. -->
+    <string name="feature_loan_loan_repayment">Loan Repayment</string>
+    <string name="feature_loan_loan_in_arrears">Loan in Arrears</string>
+    <string name="feature_loan_loan_amount_due">Loan Amount Due</string>
+    <string name="feature_loan_repayment_date">Repayment Date</string>
+    <string name="feature_loan_payment_type">Payment Type</string>
+    <string name="feature_loan_amount">Amount</string>
+    <string name="feature_loan_additional_payment">Additional Payment</string>
+    <string name="feature_loan_loan_fees">Loan Fees</string>
+    <string name="feature_loan_review_payment">Review Payment</string>
+    <string name="feature_loan_account_number">Account Number</string>
+    <string name="feature_loan_dialog_action_ok">OK</string>
+    <string name="feature_loan_dialog_action_pay_now">Pay Now</string>
+    <string name="feature_loan_payment_success_title">Payment Successful</string>
+    <string name="feature_loan_payment_success_transaction_label">Transaction ID: %1$s</string>
+    <string name="feature_loan_sync_previous_transaction">Sync Previous Transaction</string>
+    <string name="feature_loan_dialog_message_sync_transaction">A repayment for this loan is already waiting to be synced. Sync it before recording another.</string>
+    <!--
+        Added by the port. The original reported every failure through one
+        `feature_loan_payment_failed` string and reported the OFFLINE case not at all — it threw
+        the exception into the same bucket, so an officer who had collected cash with no signal was
+        told the payment had failed when it had in fact been queued.
+    -->
+    <string name="feature_loan_payment_failed_title">Payment Not Recorded</string>
+    <string name="feature_loan_payment_queued_title">Saved to Sync</string>
+    <string name="feature_loan_payment_queued_message">No connection — this repayment is saved on this device and has NOT reached the server yet. Sync from Offline Sync when you have signal.</string>
+    <!-- S4d · Account summary. Values verbatim from `6b66e8a43` unless noted. -->
+    <string name="feature_loan_loan_account_summary">Loan Account Summary</string>
+    <string name="feature_loan_total_loan">Total Loan</string>
+    <string name="feature_loan_amount_paid">Amount Paid</string>
+    <string name="feature_loan_outstanding_balance">Outstanding Balance</string>
+    <string name="feature_loan_loan_overview">Loan Overview</string>
+    <string name="feature_loan_loan_amount_disbursed">Loan Amount Disbursed</string>
+    <string name="feature_loan_disbursed_date">Disbursed Date</string>
+    <string name="feature_loan_arrears">Arrears</string>
+    <string name="feature_loan_staff">Staff</string>
+    <string name="feature_loan_info">Info</string>
+    <string name="feature_loan_copy">Copy</string>
+    <string name="feature_loan_loan_id_copied">Copied to clipboard</string>
+    <string name="feature_loan_summary">Summary</string>
+    <string name="feature_loan">Loan</string>
+    <string name="feature_loan_balance">Balance</string>
+    <string name="feature_loan_loan_principal">Loan Principal</string>
+    <string name="feature_loan_loan_interest">Loan Interest</string>
+    <string name="feature_loan_loan_penalty">Loan Penalty</string>
+    <string name="feature_loan_make_repayment">Make Repayment</string>
+    <string name="feature_loan_disburse_loan">Disburse Loan</string>
+    <string name="feature_loan_transfer_funds">Transfer Funds</string>
+    <string name="feature_loan_closed">Loan Closed</string>
+    <string name="feature_loan_transactions">Transactions</string>
+    <string name="feature_loan_repayment_schedule">Loan Repayment Schedule</string>
+    <string name="feature_loan_documents">Documents</string>
+    <string name="feature_loan_loan_charges">Loan Charges</string>
+    <!--
+        The original built this by CONCATENATION — `stringResource(feature_loan_loan_id) +
+        accountNo`, where that string was the literal "Loan ID: #". No translation can reorder a
+        concatenation, so it is a placeholder here.
+    -->
+    <string name="feature_loan_account_no">Loan ID: #%1$s</string>
+    <!--
+        The overflow menu's first entry. The original passed the raw Kotlin constant
+        `Constants.DATA_TABLE_LOAN_NAME` ("More Loan Info") straight into the menu, so that one
+        entry was untranslatable while its four siblings were string resources.
+    -->
+    <string name="feature_loan_more_info">More Loan Info</string>
+    <!--
+        Added by the port. The original wrote these four labels as inline Kotlin string literals
+        inside the status `when` ("Active" / "Pending Approval" / "Waiting for Disbursal" /
+        "Closed") and used them only as an accessibility contentDescription, so the status was
+        unreadable to a screen reader in any other language.
+    -->
+    <string name="feature_loan_status_active">Active</string>
+    <string name="feature_loan_status_pending_approval">Pending Approval</string>
+    <string name="feature_loan_status_awaiting_disbursal">Waiting for Disbursal</string>
+    <string name="feature_loan_status_overpaid">Overpaid</string>
+    <string name="feature_loan_status_closed">Closed</string>
+    <!-- S4f · Disbursement. Values verbatim from `6b66e8a43` unless noted. -->
+    <string name="feature_loan_approval_disbursement_date">Disbursement Date</string>
+    <string name="feature_loan_disbursement_note">Disbursement Note</string>
+    <!--
+        Added by the port. The original reported success through a snackbar fired from the
+        composition body and every failure through one `MifosSweetError` that replaced the whole
+        form; this uses the codebase's status dialog, which needs a title and a body.
+    -->
+    <string name="feature_loan_disbursement_success_title">Loan Disbursed</string>
+    <string name="feature_loan_disbursement_success_message">The disbursement was sent to the server.</string>
+    <string name="feature_loan_disbursement_failure_title">Disbursement Failed</string>
+    <!-- S4f · Loan charges. Values verbatim from `6b66e8a43` unless noted. -->
+    <string name="feature_loan_charge_id">Charge ID</string>
+    <string name="feature_loan_charge_name">Charge Name</string>
+    <string name="feature_loan_charge_amount">Charge Amount</string>
+    <string name="feature_loan_charge_due_date">Charge Due Date</string>
+    <!--
+        The original read "No Loan Charges Available for this client" — on the LOAN charges screen,
+        reached from a loan. The copy was wrong, not the behaviour.
+    -->
+    <string name="feature_loan_no_loan_charges">No charges on this loan</string>
+    <!--
+        S4g · Amount transfer. Values verbatim from `6b66e8a43` unless noted.
+        `feature_loan_transfer_funds` is NOT redeclared here — it already exists as the summary's
+        primary-button label (S4d), and it is the same words for the same action.
+    -->
+    <string name="feature_loan_transfer_amount_invalid">Enter a valid amount</string>
+    <string name="feature_loan_transfer_amount_not_positive">Transfer amount cannot be zero</string>
+    <string name="feature_loan_transfer_description_required">Description cannot be empty</string>
+    <string name="feature_loan_transfer_office_required">Select an office</string>
+    <string name="feature_loan_transfer_client_required">Select a client</string>
+    <string name="feature_loan_transfer_account_type_required">Select an account type</string>
+    <string name="feature_loan_transfer_account_required">Select an account</string>
+    <!-- Added by the port: the original labelled these only in its layout, not as resources. -->
+    <string name="feature_loan_transfer_from">TRANSFERRING FROM</string>
+    <string name="feature_loan_transfer_to">TRANSFERRING TO</string>
+    <string name="feature_loan_transfer_office">Office</string>
+    <string name="feature_loan_transfer_client">Client</string>
+    <string name="feature_loan_transfer_account_type">Account Type</string>
+    <string name="feature_loan_transfer_account">Account</string>
+    <string name="feature_loan_transfer_amount">Amount</string>
+    <string name="feature_loan_transfer_description">Description</string>
+    <string name="feature_loan_transfer_success_title">Transfer Complete</string>
+    <string name="feature_loan_transfer_success_message">The transfer was sent to the server.</string>
+    <string name="feature_loan_transfer_failure_title">Transfer Failed</string>
+    <!-- S4h · Add charge. Values verbatim from `6b66e8a43` unless noted. -->
+    <string name="feature_loan_add_charge">Add Charge</string>
+    <string name="feature_loan_charge_disbursement">Disbursement</string>
+    <string name="feature_loan_charge_installment">Installment Fee</string>
+    <string name="feature_loan_charge_specified_due_date">Specified Due Date</string>
+    <string name="feature_loan_charge_flat">Flat</string>
+    <!--
+        Added by the port. The original reported both outcomes with snackbars fired from the
+        enclosing LIST screen's callbacks (`onSuccess` / `onError` on the sheet), and labelled its
+        read-only charge-time / calculation fields only in the layout.
+    -->
+    <string name="feature_loan_charge_time">Charge Time</string>
+    <string name="feature_loan_charge_calculation">Charge Calculation</string>
+    <string name="feature_loan_charge_created_title">Charge Added</string>
+    <string name="feature_loan_charge_created_message">The charge was added to this loan.</string>
+    <string name="feature_loan_charge_created_failure_title">Charge Not Added</string>
+    <string name="feature_loan_charge_types_failed">Could not load the charge types for this loan.</string>
+    <string name="feature_loan_charge_none_available">No chargeable type is configured for this loan.</string>
+    <string name="feature_loan_charge_required">Select a charge</string>
+    <!-- S4i · Reschedules. -->
+    <string name="feature_loan_reschedules">Loan Reschedules</string>
+    <string name="feature_loan_reschedule_from">Reschedule From</string>
+    <string name="feature_loan_reschedule_reason">Reason</string>
+    <string name="feature_loan_reschedule_submitted_on">Submitted On</string>
+    <string name="feature_loan_reschedule_submitted_by">Submitted By</string>
+    <string name="feature_loan_reschedule_status_pending">Pending Approval</string>
+    <string name="feature_loan_reschedule_status_approved">Approved</string>
+    <string name="feature_loan_reschedule_status_rejected">Rejected</string>
+    <string name="feature_loan_reschedule_status_unknown">Unknown</string>
+    <string name="feature_loan_reschedule_approve">Approve</string>
+    <!--
+        "Reject", not "Delete". The original's icon, action and repository method were all named
+        delete — but the wire command is `?command=reject` with a rejection payload carrying a date
+        and a user, so the server records a decision rather than removing anything.
+    -->
+    <string name="feature_loan_reschedule_reject">Reject</string>
+    <string name="feature_loan_reschedule_approve_title">Approve Reschedule?</string>
+    <string name="feature_loan_reschedule_approve_confirm">This cannot be undone from the app.</string>
+    <string name="feature_loan_reschedule_reject_title">Reject Reschedule?</string>
+    <string name="feature_loan_reschedule_reject_confirm">The reschedule will be recorded as rejected. This cannot be undone from the app.</string>
+    <string name="feature_loan_reschedule_failed_title">Action Failed</string>
+    <string name="feature_loan_reschedule_none">No reschedule has been proposed on this loan</string>
+    <!-- S4j · Propose a reschedule. Values verbatim from `6b66e8a43` unless noted. -->
+    <string name="feature_loan_reschedules_new_title">Reschedule</string>
+    <string name="feature_loan_reschedule_from_date">Reschedule from Installment On *</string>
+    <string name="feature_loan_reschedule_comments">Comments</string>
+    <string name="feature_loan_reschedule_change_repayment_date">Change Repayment Date</string>
+    <string name="feature_loan_reschedule_installment_rescheduled_to">Installment Rescheduled To</string>
+    <string name="feature_loan_reschedule_introduce_grace_periods">Introduce Mid-term Grace Periods</string>
+    <string name="feature_loan_reschedule_principal_grace">Principal Grace Periods</string>
+    <string name="feature_loan_reschedule_interest_grace">Interest Grace Periods</string>
+    <string name="feature_loan_reschedule_extend_repayment">Extend Repayment Period</string>
+    <string name="feature_loan_reschedule_new_repayments">Number of New Repayments</string>
+    <string name="feature_loan_reschedule_adjust_interest">Adjust Interest Rate</string>
+    <string name="feature_loan_reschedule_new_interest_rate">New Interest Rate</string>
+    <string name="feature_loan_reschedule_waive_penalties">Waive Penalties</string>
+    <!--
+        Added by the port. The original disabled its submit button whenever any required field was
+        blank and had ONE error string for the reason only, so there was nothing to say about the
+        other five.
+    -->
+    <string name="feature_loan_reschedule_error_select_reason">Select a reschedule reason</string>
+    <string name="feature_loan_reschedule_error_pick_a_date">Pick a date</string>
+    <string name="feature_loan_reschedule_error_invalid_number">Enter a whole, non-negative number</string>
+    <string name="feature_loan_reschedule_reasons_failed">Could not load the reschedule reasons.</string>
+    <string name="feature_loan_reschedule_proposed_title">Reschedule Proposed</string>
+    <string name="feature_loan_reschedule_proposed_message">The proposal was sent and is awaiting approval.</string>
+    <!-- S4k · Group loan application. Values verbatim from `6b66e8a43` unless noted. -->
+    <string name="feature_loan_application">Loan Application</string>
+    <string name="feature_loan_product">Loan Product</string>
+    <string name="feature_loan_purpose">Loan Purpose</string>
+    <string name="feature_loan_officer">Loan Officer</string>
+    <string name="feature_loan_fund">Fund</string>
+    <string name="feature_loan_submission_date">Submitted On</string>
+    <string name="feature_loan_principal">Principal</string>
+    <string name="feature_loan_number_of_repayments">Number of Repayments</string>
+    <string name="feature_loan_nominal">Nominal Interest Rate</string>
+    <string name="feature_loan_repaid_every">Repaid Every</string>
+    <string name="feature_loan_loan_terms">Loan Term</string>
+    <string name="feature_loan_term">Frequency</string>
+    <string name="feature_loan_amortization">Amortization</string>
+    <string name="feature_loan_interest_calculation_period">Interest Calculation Period</string>
+    <string name="feature_loan_repayment_strategy">Repayment Strategy</string>
+    <string name="feature_loan_interest_type_method">Interest Method</string>
+    <string name="feature_loan_calculate_interest_for_exact_days_in">Calculate interest for exact days in partial period</string>
+    <!--
+        Added by the port. The original fed the repayment-frequency PAYLOAD field from the loan
+        term's dropdown, so it had no label of its own.
+    -->
+    <string name="feature_loan_repayment_frequency">Repayment Frequency</string>
+    <!--
+        Added by the port. The original reported success with a snackbar fired from the composition
+        body and every failure with one `MifosSweetError` that replaced the whole filled-in form.
+    -->
+    <string name="feature_loan_application_created_title">Application Submitted</string>
+    <string name="feature_loan_application_created_message">The loan application was created and is awaiting approval.</string>
+    <string name="feature_loan_application_failure_title">Application Not Submitted</string>
+    <string name="feature_loan_template_failed">Could not load this product\'s terms.</string>
+    <string name="feature_loan_error_positive_number">Enter a number greater than zero</string>
+    <string name="feature_loan_error_pick_an_option">Pick an option</string>
+    <!-- S4l · the new individual loan application wizard. -->
+    <string name="feature_loan_next">Next</string>
+    <string name="feature_loan_back">Back</string>
+    <string name="feature_loan_step_of">Step %1$d of %2$d · %3$s</string>
+    <string name="feature_loan_step_details">Details</string>
+    <string name="feature_loan_step_terms">Terms</string>
+    <string name="feature_loan_step_schedule">Schedule</string>
+    <string name="feature_loan_step_preview">Preview</string>
+    <string name="feature_loan_link_savings">Link Savings Account</string>
+    <string name="feature_loan_nominal_frequency">Interest Rate Frequency</string>
+    <string name="feature_loan_repayment_day_of_week">Repayment Day of Week</string>
+    <string name="feature_loan_repayment_nth_day">Repayment Nth Day</string>
+    <string name="feature_loan_equal_amortization">Equal amortization</string>
+    <string name="feature_loan_partial_period_interest">Calculate interest for exact days in partial period</string>
+    <!--
+        Added by the port. The original surfaced every schedule-preview failure as one generic
+        error page that replaced the whole four-page form, so none of these distinctions existed.
+    -->
+    <string name="feature_loan_schedule_unavailable">The repayment schedule has not been calculated yet.</string>
+    <string name="feature_loan_schedule_offline">No connection — the schedule is calculated on the server.</string>
+    <string name="feature_loan_schedule_rejected">The server could not calculate a schedule for these terms.</string>
+    <string name="feature_loan_summary_disbursement">Expected disbursement</string>
+    <string name="feature_loan_summary_installments">Installments</string>
+    <string name="feature_loan_summary_principal">Principal</string>
+    <string name="feature_loan_summary_interest">Interest</string>
+    <string name="feature_loan_summary_total">Total repayment</string>
+    <string name="feature_loan_external_id">External Id</string>
+    <!--
+        Added by the port (S5d). Two screens had an `OnRetrySubmit` action the ViewModel handled
+        and nothing dispatched: `AppStatusDialog` has one action slot, and a comment claimed retry
+        was "offered separately" when it never was.
+    -->
+    <string name="feature_loan_retry">Retry</string>
+</resources>

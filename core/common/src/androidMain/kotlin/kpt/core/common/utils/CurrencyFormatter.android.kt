@@ -20,7 +20,13 @@ actual object CurrencyFormatter {
     ): String {
         val balanceFormatter = NumberFormat.getCurrencyInstance()
         balanceFormatter.maximumFractionDigits = maximumFractionDigits ?: 0
-        balanceFormatter.currency = Currency.getInstance(currencyCode)
-        return balanceFormatter.format(balance ?: 0)
+        // Same guard as the desktop actual. This target already defaulted the AMOUNT (`?: 0`) but
+        // not the CODE, so an unknown currency crashed here too.
+        currencyCode.toCurrencyOrNull()?.let { balanceFormatter.currency = it }
+        return balanceFormatter.format(balance ?: 0.0)
     }
 }
+
+/** See the desktop actual's copy — `Currency.getInstance` throws on null and on a non-ISO code. */
+internal fun String?.toCurrencyOrNull(): Currency? =
+    this?.takeIf { it.isNotBlank() }?.let { runCatching { Currency.getInstance(it) }.getOrNull() }

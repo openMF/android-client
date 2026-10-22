@@ -28,6 +28,17 @@ interface ChargeDao {
     @Query("SELECT * FROM Charges where clientId = :clientId")
     fun getClientCharges(clientId: Int): Flow<List<ChargesEntity>>
 
+    /**
+     * Charges levied on one LOAN.
+     *
+     * A separate query rather than a shared one keyed by resource, because `Charges` carries both
+     * `clientId` and `loanId` and a charge belongs to exactly one of them — a single
+     * `where clientId = :id OR loanId = :id` would serve a client's charges to a loan whose id
+     * happened to match a client's.
+     */
+    @Query("SELECT * FROM Charges where loanId = :loanId")
+    fun getLoanCharges(loanId: Int): Flow<List<ChargesEntity>>
+
     @Insert(entity = ChargesEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllCharges(charges: List<ChargesEntity>)
 

@@ -173,7 +173,7 @@ val highContrastDarkColorScheme = darkColorScheme(
 // TODO:: Configure more themes for the app like medium contrast, high contrast, etc.
 
 @Composable
-fun MifosTheme(
+fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     androidTheme: Boolean = false,
     shouldDisplayDynamicTheming: Boolean = true,

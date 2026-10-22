@@ -16,7 +16,7 @@
     <string name="core_ui_core_common_working">Core Common Working</string>
     <string name="core_ui_click_to_add_new">Click to add new</string>
 
-    <!-- Mifos Client Fee -->
+    <!-- Client Fee -->
     <string name="core_ui_name">Name</string>
     <string name="core_ui_due_as_of">Due as of</string>
     <string name="core_ui_due">Due</string>
@@ -24,7 +24,7 @@
     <string name="core_ui_waived">Waived</string>
     <string name="core_ui_outstanding">Outstanding</string>
 
-    <!-- Mifos Loan -->
+    <!-- Loan -->
     <string name="core_ui_account_no">Account No</string>
     <string name="core_ui_loan_product">Loan Product</string>
     <string name="core_ui_original_loan">Original Loan</string>
@@ -32,17 +32,17 @@
     <string name="core_ui_loan_balance">Loan Balance</string>
     <string name="core_ui_type">Type</string>
 
-    <!-- Mifos Savings -->
+    <!-- Savings -->
     <string name="core_ui_savings_product">Savings Product</string>
     <string name="core_ui_last_active">Last Active</string>
     <string name="core_ui_balance">Balance</string>
 
-    <!-- Mifos Collateral -->
+    <!-- Collateral -->
     <string name="core_ui_quantity">Quantity</string>
     <string name="core_ui_total_value">Total Value</string>
     <string name="core_ui_total_collateral_value">Total Collateral Value</string>
 
-    <!-- Mifos Identifier -->
+    <!-- Identifier -->
     <string name="core_ui_document_type">Document Type</string>
     <string name="core_ui_document_id">Document ID</string>
     <string name="core_ui_document_key">Document Key</string>
@@ -50,18 +50,18 @@
     <string name="core_ui_description">Description</string>
     <string name="core_ui_identify_documents">Identify Documents</string>
 
-    <!-- Mifos Delinquency -->
+    <!-- Delinquency -->
     <string name="core_ui_action">Action</string>
     <string name="core_ui_pause">Pause</string>
     <string name="core_ui_resume">Resume</string>
     <string name="core_ui_start_date">Start Date</string>
     <string name="core_ui_end_date">End Date</string>
 
-    <!-- Mifos Charges -->
+    <!-- Charges -->
     <string name="core_ui_calculation_type">Calculation Type</string>
     <string name="core_ui_title_processing_fee">Processing Fee</string>
 
-    <!-- Mifos Sell Loan -->
+    <!-- Sell Loan -->
     <string name="core_ui_cancelled">Cancelled</string>
     <string name="core_ui_completed">Completed</string>
     <string name="core_ui_pending">Pending</string>
@@ -87,20 +87,20 @@
     <string name="core_ui_edit">Edit</string>
     <string name="core_ui_delete">Delete</string>
 
-    <!-- Mifos Note -->
+    <!-- Note -->
     <string name="core_ui_note_createdBy">Created By:</string>
     <string name="core_ui_note_date">Date</string>
     <string name="core_ui_note_note">Note</string>
 
-    <!-- MifosActionsIdentifierListingComponent -->
+    <!-- AppActionsIdentifierListingComponent -->
     <string name="listing_component_identifier_not_available">Not Available</string>
 
-    <!-- Mifos Client Documents-->
+    <!-- Client Documents-->
     <string name="client_documents_component_header_title">Document Name</string>
     <string name="client_documents_component_header_subtitle_description">Description</string>
     <string name="client_documents_component_header_subtitle_file_name">File Name</string>
 
-    <!-- MifosFilePickerBottomSheet -->
+    <!-- AppFilePickerBottomSheet -->
     <string name="file_picker_bottom_sheet_gallery">Gallery</string>
     <string name="file_picker_bottom_sheet_files">Files</string>
     <string name="file_picker_bottom_sheet_more">More</string>

@@ -9,6 +9,7 @@
  */
 package kpt.feature.signin
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,8 +26,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -44,39 +43,37 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kpt.core.base.designsystem.theme.KptTheme
-import androidx.compose.foundation.Image
-import kpt.core.designsystem.component.MifosOutlinedTextField
-import kpt.core.designsystem.icon.MifosIcons
-import kpt.core.ui.components.MifosProgressIndicatorOverlay
+import kpt.core.designsystem.component.AppOutlinedTextField
+import kpt.core.designsystem.icon.AppIcons
+import kpt.core.ui.components.AppProgressIndicatorOverlay
 import kpt.feature.signin.generated.resources.Res
+import kpt.feature.signin.generated.resources.feature_signin_attempts_remaining
 import kpt.feature.signin.generated.resources.feature_signin_authenticating
 import kpt.feature.signin.generated.resources.feature_signin_biometric_unlock
-import kpt.feature.signin.generated.resources.feature_signin_error_biometric_failed
+import kpt.feature.signin.generated.resources.feature_signin_brand_mark
 import kpt.feature.signin.generated.resources.feature_signin_cd_change_instance
 import kpt.feature.signin.generated.resources.feature_signin_cd_logo
-import kpt.feature.signin.generated.resources.feature_signin_consent
 import kpt.feature.signin.generated.resources.feature_signin_cd_password_error
 import kpt.feature.signin.generated.resources.feature_signin_cd_username_error
+import kpt.feature.signin.generated.resources.feature_signin_consent
 import kpt.feature.signin.generated.resources.feature_signin_enter_credentials
+import kpt.feature.signin.generated.resources.feature_signin_error_biometric_failed
 import kpt.feature.signin.generated.resources.feature_signin_error_login_failed
 import kpt.feature.signin.generated.resources.feature_signin_error_offline
 import kpt.feature.signin.generated.resources.feature_signin_error_password_length
 import kpt.feature.signin.generated.resources.feature_signin_error_username_length
-import kpt.feature.signin.generated.resources.feature_signin_attempts_remaining
 import kpt.feature.signin.generated.resources.feature_signin_locked_out
 import kpt.feature.signin.generated.resources.feature_signin_login
-import kpt.feature.signin.generated.resources.feature_signin_set_instance
-import kpt.feature.signin.generated.resources.feature_signin_brand_mark
 import kpt.feature.signin.generated.resources.feature_signin_password
 import kpt.feature.signin.generated.resources.feature_signin_password_placeholder
-import kpt.feature.signin.generated.resources.feature_signin_update_server_config
+import kpt.feature.signin.generated.resources.feature_signin_set_instance
 import kpt.feature.signin.generated.resources.feature_signin_username
 import kpt.feature.signin.generated.resources.feature_signin_username_placeholder
 import org.jetbrains.compose.resources.StringResource
@@ -107,7 +104,7 @@ import org.koin.compose.viewmodel.koinViewModel
  * Two deliberate deviations from the renders, both judgement calls rather than omissions:
  *
  *  1. **Field chrome is the design system's, not the mockup's.** The renders draw a label ABOVE each
- *     input; `MifosOutlinedTextField` uses a Material floating label. Matching the render pixel-wise
+ *     input; `AppOutlinedTextField` uses a Material floating label. Matching the render pixel-wise
  *     would mean hand-rolling a text field inside a feature module — duplicating `core/designsystem`
  *     and bypassing the design tokens, which is the duplication RULE-IMPL-DUPLICATION-001 and
  *     RULE-IMPL-DESIGN-TOKEN-CONSUMPTION-001 exist to stop. The affordances the render specifies
@@ -214,12 +211,12 @@ internal fun SignInContent(
 
                 TitleBlock()
 
-                MifosOutlinedTextField(
+                AppOutlinedTextField(
                     value = state.username,
                     onValueChange = { onAction(SignInAction.UsernameChanged(it)) },
                     label = stringResource(Res.string.feature_signin_username),
                     placeholder = stringResource(Res.string.feature_signin_username_placeholder),
-                    leadingIcon = MifosIcons.Person,
+                    leadingIcon = AppIcons.Person,
                     enabled = !state.isSubmitting,
                     // Fineract usernames are case-sensitive and the shared field defaults to
                     // capitalising words, so an IME turned `fieldofficer` into `Fieldofficer` and
@@ -233,7 +230,7 @@ internal fun SignInContent(
                     trailingIcon = if (state.error == SignInError.UsernameTooShort) {
                         {
                             Icon(
-                                imageVector = MifosIcons.Error,
+                                imageVector = AppIcons.Error,
                                 contentDescription = stringResource(Res.string.feature_signin_cd_username_error),
                                 tint = KptTheme.colorScheme.error,
                                 modifier = Modifier.testTag(SignInTestTags.USERNAME_ERROR_ICON),
@@ -246,12 +243,12 @@ internal fun SignInContent(
                 )
 
                 val passwordInvalid = state.error == SignInError.PasswordTooShort
-                MifosOutlinedTextField(
+                AppOutlinedTextField(
                     value = state.password,
                     onValueChange = { onAction(SignInAction.PasswordChanged(it)) },
                     label = stringResource(Res.string.feature_signin_password),
                     placeholder = stringResource(Res.string.feature_signin_password_placeholder),
-                    leadingIcon = MifosIcons.Lock,
+                    leadingIcon = AppIcons.Lock,
                     enabled = !state.isSubmitting,
                     keyboardType = KeyboardType.Password,
                     capitalization = KeyboardCapitalization.None,
@@ -268,7 +265,7 @@ internal fun SignInContent(
                     trailingIcon = if (passwordInvalid) {
                         {
                             Icon(
-                                imageVector = MifosIcons.Error,
+                                imageVector = AppIcons.Error,
                                 contentDescription = stringResource(Res.string.feature_signin_cd_password_error),
                                 tint = KptTheme.colorScheme.error,
                                 modifier = Modifier.testTag(SignInTestTags.PASSWORD_ERROR_ICON),
@@ -315,7 +312,7 @@ internal fun SignInContent(
                     )
                     if (!state.isSubmitting) {
                         Spacer(Modifier.size(8.dp))
-                        Icon(imageVector = MifosIcons.ArrowForward, contentDescription = null)
+                        Icon(imageVector = AppIcons.ArrowForward, contentDescription = null)
                     }
                 }
 
@@ -332,7 +329,7 @@ internal fun SignInContent(
                             .testTag(SignInTestTags.BIOMETRIC),
                     ) {
                         Icon(
-                            imageVector = MifosIcons.Fingerprint,
+                            imageVector = AppIcons.Fingerprint,
                             contentDescription = null,
                             modifier = Modifier.size(18.dp),
                         )
@@ -344,11 +341,11 @@ internal fun SignInContent(
                 Spacer(Modifier.height(8.dp))
             }
 
-            // D4 — v1's `MifosProgressIndicatorOverlay()`, the last child of the Scaffold body.
+            // D4 — v1's `AppProgressIndicatorOverlay()`, the last child of the Scaffold body.
             // Modal and non-dismissible: every terminal state (success, error, offline) clears
             // `isSubmitting`, so it is never dismissed by the user.
             if (state.isSubmitting) {
-                MifosProgressIndicatorOverlay(
+                AppProgressIndicatorOverlay(
                     modifier = Modifier.fillMaxSize().testTag(SignInTestTags.PROGRESS_OVERLAY),
                 )
             }
@@ -381,7 +378,7 @@ private fun LockoutNotice(locked: Boolean, attemptsRemaining: Int) {
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier.padding(16.dp),
         ) {
-            Icon(imageVector = MifosIcons.Error, contentDescription = null)
+            Icon(imageVector = AppIcons.Error, contentDescription = null)
             Text(
                 text = if (locked) {
                     stringResource(Res.string.feature_signin_locked_out)
@@ -415,14 +412,14 @@ private fun InstanceChip(
         },
         leadingIcon = {
             Icon(
-                imageVector = MifosIcons.Settings,
+                imageVector = AppIcons.Settings,
                 contentDescription = null,
                 modifier = Modifier.size(18.dp),
             )
         },
         trailingIcon = {
             Icon(
-                imageVector = MifosIcons.ArrowForward,
+                imageVector = AppIcons.ArrowForward,
                 contentDescription = stringResource(Res.string.feature_signin_cd_change_instance),
                 modifier = Modifier.size(18.dp),
             )
@@ -439,7 +436,7 @@ private fun LogoTile() {
         modifier = Modifier.size(64.dp),
     ) {
         Box(contentAlignment = Alignment.Center) {
-            // Compose's own `Image`, NOT the design system's `MifosAndroidClientIcon`, for two
+            // Compose's own `Image`, NOT the design system's `AppAndroidClientIcon`, for two
             // reasons that are both about that wrapper rather than about preference: it hardcodes
             // `contentDescription = null` — so the logo can never be announced, and the a11y rule
             // cannot be satisfied through it — and it forces a fixed 200x100dp, which cannot sit

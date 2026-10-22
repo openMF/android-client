@@ -36,5 +36,11 @@ object TestTags {
         const val SEARCH_FILTERS: String = "home.search.filters"
         const val SEARCH_EXACT_MATCH: String = "home.search.exact_match"
         const val SEARCH_RESULTS: String = "home.search.results"
+
+        /**
+         * One result row, keyed by its entity id — so a test can assert that a CLIENT row is
+         * clickable while a SAVING row, whose destination is not ported, is not.
+         */
+        fun searchResult(entityId: Int): String = "home.search.result.$entityId"
     }
 }

@@ -5,16 +5,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+ * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
 package kpt.feature.note.ui
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kpt.core.base.store.mutation.BlockReason
 import kpt.core.base.store.mutation.MutationResult
@@ -66,12 +66,13 @@ internal class NoteListViewModel(
      */
     private val notesStream = repository.notesStream(clientId.toLong(), viewModelScope)
 
-    init {
-        notesStream.state
-            .onEach { mutableStateFlow.value = state.copy(notes = it) }
-            .catch { Logger.e(tag = TAG, throwable = it) { "notesStream failed" } }
-            .launchIn(viewModelScope)
-    }
+    /**
+     * The client's notes. `stateIn(… WhileSubscribed …)` rather than an `init{}` hand-lift — the
+     * latter kept collecting for the ViewModel's whole lifetime, so a notes screen left on the back
+     * stack went on refreshing. See `ClientListViewModel.screenState`.
+     */
+    val notes: StateFlow<ScreenState<List<NoteEntity>>> = notesStream.state
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STATE_TIMEOUT_MS), ScreenState.Loading)
 
     override fun handleAction(action: NoteListAction) {
         when (action) {
@@ -105,9 +106,22 @@ internal class NoteListViewModel(
      * Delete is the only destructive action on this screen, so it is the only one that confirms.
      *
      * The original called `getNoteOptionsAndObserveNetwork()` after a successful delete — a full
-     * re-fetch AND a second network-observer coroutine every time, so the collectors accumulated for
-     * the life of the screen. The Store invalidates on a successful write and the list updates
-     * itself; there is nothing to re-fetch and nothing to re-subscribe.
+     * re-fetch AND a second network-observer coroutine every time, so the collectors accumulated
+     * for the life of the screen. Only the second half of that was wrong: the re-subscribe.
+     *
+     * ## The re-READ is required, and dropping it is why delete looked broken
+     *
+     * An earlier version of this comment claimed "the Store invalidates on a successful write and
+     * the list updates itself". It does not. `NoteCommandRepository` is CACHE-FREE — it writes
+     * through `MutationGateway.command`, which touches no store — so nothing invalidates the read.
+     * `feature/note/MIGRATION.md` §7 records the same fact for the ADD path, where it was already
+     * worked around with an explicit nav result.
+     *
+     * The consequence on device: the server deleted the note, the client was told `Applied`, and
+     * the row stayed on screen. Indistinguishable from a delete that silently failed — reported as
+     * "delete note is not working".
+     *
+     * So: refresh the stream the row came from, and only that. One re-read, no new collector.
      */
     private fun confirmDelete() {
         val id = state.expandedNoteId ?: return
@@ -119,8 +133,13 @@ internal class NoteListViewModel(
                 noteId = id,
             )
             mutableStateFlow.value = when (result) {
-                is MutationResult.Applied ->
+                is MutationResult.Applied -> {
+                    // The row is owned by the stream and the write does not invalidate it, so the
+                    // list must be re-read or the deleted note stays on screen. `forceFresh`
+                    // because a cached re-read would serve the row we just deleted.
+                    notesStream.refresh(forceFresh = true)
                     state.copy(isDeleting = false, expandedNoteId = null, writeError = null)
+                }
 
                 // Offline is NOT a failure the user caused, and it is recoverable by moving. The
                 // original rendered every non-success as "Unexpected error", which told a field
@@ -150,6 +169,9 @@ internal class NoteListViewModel(
         /** Matches the route argument name in `NoteNavigation.NoteListRoute`. */
         const val CLIENT_ID_KEY = "clientId"
         const val TAG = "NoteListViewModel"
+
+        /** Template default — long enough to survive a rotation or a brief tab switch. */
+        const val STATE_TIMEOUT_MS = 5_000L
     }
 }
 
@@ -160,15 +182,11 @@ internal class NoteListViewModel(
  * list below it.
  */
 internal data class NoteListState(
-    val notes: ScreenState<List<NoteEntity>> = ScreenState.Loading,
     val expandedNoteId: Long? = null,
     val showDeleteConfirmation: Boolean = false,
     val isDeleting: Boolean = false,
     val writeError: NoteWriteError? = null,
-) {
-    val count: Int
-        get() = (notes as? ScreenState.Content)?.data?.size ?: 0
-}
+)
 
 /**
  * Why a WRITE failure is modelled apart from the read's [ScreenState].

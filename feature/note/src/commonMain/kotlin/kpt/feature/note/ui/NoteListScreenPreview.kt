@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+ * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
 package kpt.feature.note.ui
 
@@ -46,15 +46,14 @@ internal fun previewNote(
 internal fun NoteListContentPreview() {
     KptTheme {
         NoteListContent(
-            state = NoteListState(
-                notes = ScreenState.Content(
-                    listOf(
-                        previewNote(),
-                        // i18n:skip — preview fixture
-                        previewNote(id = 2, content = "Called about the missed repayment."),
-                    ),
+            notes = ScreenState.Content(
+                listOf(
+                    previewNote(),
+                    // i18n:skip — preview fixture
+                    previewNote(id = 2, content = "Called about the missed repayment."),
                 ),
             ),
+            ui = NoteListState(),
             onAction = {},
         )
     }
@@ -67,7 +66,8 @@ internal fun NoteListContentEmptyPreview() {
     // notes is normal, not an error, so it must read as an invitation rather than a failure.
     KptTheme {
         NoteListContent(
-            state = NoteListState(notes = ScreenState.Content(emptyList())),
+            notes = ScreenState.Content(emptyList()),
+            ui = NoteListState(),
             onAction = {},
         )
     }
@@ -77,7 +77,7 @@ internal fun NoteListContentEmptyPreview() {
 @Composable
 internal fun NoteListContentLoadingPreview() {
     KptTheme {
-        NoteListContent(state = NoteListState(notes = ScreenState.Loading), onAction = {})
+        NoteListContent(notes = ScreenState.Loading, ui = NoteListState(), onAction = {})
     }
 }
 
@@ -89,10 +89,8 @@ internal fun NoteListContentWriteErrorKeepsTheNotesPreview() {
     // hide good data behind an unrelated failure, and only a render shows that clearly.
     KptTheme {
         NoteListContent(
-            state = NoteListState(
-                notes = ScreenState.Content(listOf(previewNote())),
-                writeError = NoteWriteError.Offline,
-            ),
+            notes = ScreenState.Content(listOf(previewNote())),
+            ui = NoteListState(writeError = NoteWriteError.Offline),
             onAction = {},
         )
     }

@@ -29,7 +29,7 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+import kotlin.test.assertIs
 
 /**
  * Locks what the port changed about this screen.
@@ -74,25 +74,35 @@ class ClientChargesViewModelTest {
     }
 
     @Test
-    fun countIsDerivedFromTheSameStateTheListRenders() = runTest {
+    fun theHeaderCountsExactlyTheRowsTheListRenders() = runTest {
+        // The count moved OUT of the ViewModel when the stream became a StateFlow — the screen now
+        // derives it from the same `charges` state it renders (`loadedCount`). The property worth
+        // pinning is unchanged and still lives here: ONE source, so the header cannot disagree with
+        // the rows beneath it. The original pushed an itemCount up through a setCount callback and
+        // could.
         val vm = viewModel()
-        assertEquals(0, vm.stateFlow.value.count)
-
         charges.value = ScreenState.Content(listOf(charge("Processing fee", 50.0), charge("Late fee", 0.0)))
 
-        // The original pushed an itemCount up from the list through a setCount callback, so the
-        // header could disagree with the rows beneath it. A derived value cannot.
-        assertEquals(2, vm.stateFlow.value.count)
+        vm.charges.test {
+            val content = assertIs<ScreenState.Content<List<ChargesEntity>>>(expectMostRecentItem())
+            assertEquals(2, content.data.size)
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
-    fun countIsZeroForEveryNonContentState() = runTest {
+    fun aNonContentStateCarriesNoRowsToCount() = runTest {
+        // Error and Empty are not Content, so the screen's `loadedCount` falls to 0 rather than
+        // holding a stale count from the previous client.
         val vm = viewModel()
         charges.value = ScreenState.Error(RuntimeException("boom"))
-        assertEquals(0, vm.stateFlow.value.count)
 
-        charges.value = ScreenState.Empty
-        assertEquals(0, vm.stateFlow.value.count)
+        vm.charges.test {
+            val failed = expectMostRecentItem()
+            assertIs<ScreenState.Error>(failed)
+            assertEquals(null, (failed as? ScreenState.Content<List<ChargesEntity>>)?.data)
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
@@ -104,7 +114,7 @@ class ClientChargesViewModelTest {
             vm.actionChannel.trySend(ClientChargesAction.Retry)
             // A Retry wired to `{}` would leave this unmet — the reason the stream is held rather
             // than collected inline.
-            awaitItem()
+            expectMostRecentItem()
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -114,7 +124,7 @@ class ClientChargesViewModelTest {
         val vm = viewModel()
         vm.eventFlow.test {
             vm.actionChannel.trySend(ClientChargesAction.BackClicked)
-            assertEquals(ClientChargesEvent.NavigateBack, awaitItem())
+            assertEquals(ClientChargesEvent.NavigateBack, expectMostRecentItem())
         }
     }
 
@@ -126,6 +136,11 @@ class ClientChargesViewModelTest {
         // This screen is read-only, so a failure that degraded to Empty would be SILENT — the user
         // would read "no charges" for "the server is down". The client does not set expectSuccess,
         // which makes that degradation a live risk rather than a hypothetical one.
-        assertTrue(vm.stateFlow.value.charges is ScreenState.Error)
+        vm.charges.test {
+            // `WhileSubscribed` needs a live collector — reading `.value` without one returns the
+            // initial value, which is how several assertions here used to pass for the wrong reason.
+            assertIs<ScreenState.Error>(expectMostRecentItem())
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 }

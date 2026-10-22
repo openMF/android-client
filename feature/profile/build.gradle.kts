@@ -13,6 +13,15 @@ plugins {
 
 kotlin {
     sourceSets {
+        commonTest.dependencies {
+            // Real preference repositories over in-memory MapSettings, as feature/signin does —
+            // a fake would test a reimplementation of the thing under test.
+            implementation(projects.coreBase.common)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.multiplatform.settings)
+            implementation(libs.multiplatform.settings.test)
+            implementation(libs.turbine)
+        }
         commonMain.dependencies {
             implementation(projects.core.data)
             implementation(projects.core.datastore)

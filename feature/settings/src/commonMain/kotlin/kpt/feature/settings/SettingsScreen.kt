@@ -31,7 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kpt.core.base.designsystem.component.AppCard
 import kpt.core.base.ui.AppInfo
-import kpt.core.designsystem.icon.AppIcons
+import kpt.core.designsystem.icon.KptIcons
 import kpt.core.designsystem.theme.spacing
 import kpt.core.ui.scaffold.KptScaffold
 import kpt.feature.settings.generated.resources.Res
@@ -99,7 +99,7 @@ internal fun SettingsScreenContent(
 @Composable
 internal fun SyncAndDraftsCard(onClick: () -> Unit, modifier: Modifier = Modifier) {
     SettingsRowCard(
-        icon = AppIcons.Payment,
+        icon = KptIcons.Payment,
         title = stringResource(Res.string.feature_settings_sync_drafts_row),
         contentDescription = stringResource(Res.string.feature_settings_sync_drafts_row_description),
         accentColor = MaterialTheme.colorScheme.secondary,
@@ -115,7 +115,7 @@ internal fun SyncAndDraftsCard(onClick: () -> Unit, modifier: Modifier = Modifie
 @Composable
 internal fun RateAppCard(onClick: () -> Unit, modifier: Modifier = Modifier) {
     SettingsRowCard(
-        icon = AppIcons.Star,
+        icon = KptIcons.Star,
         title = stringResource(Res.string.feature_settings_rate_app_row),
         contentDescription = stringResource(Res.string.feature_settings_rate_app_row_description),
         accentColor = MaterialTheme.colorScheme.primary,
@@ -158,7 +158,7 @@ internal fun VersionLabel(onLongClick: (() -> Unit)?, modifier: Modifier = Modif
 @Composable
 internal fun ThemeCard(onClick: () -> Unit, modifier: Modifier = Modifier) {
     SettingsRowCard(
-        icon = AppIcons.Sun,
+        icon = KptIcons.Sun,
         title = stringResource(Res.string.feature_settings_change_theme_text),
         contentDescription = stringResource(Res.string.feature_settings_change_theme_placeholder_text),
         accentColor = MaterialTheme.colorScheme.tertiary,
@@ -170,7 +170,7 @@ internal fun ThemeCard(onClick: () -> Unit, modifier: Modifier = Modifier) {
 @Composable
 internal fun LanguageCard(onClick: () -> Unit, modifier: Modifier = Modifier) {
     SettingsRowCard(
-        icon = AppIcons.Language,
+        icon = KptIcons.Language,
         title = stringResource(Res.string.feature_settings_change_language_text),
         contentDescription = stringResource(Res.string.feature_settings_change_language_placeholder_text),
         accentColor = MaterialTheme.colorScheme.primary,
@@ -204,7 +204,7 @@ internal fun SettingsRowCard(
             Icon(imageVector = icon, contentDescription = null, tint = accentColor)
             Text(text = title, modifier = Modifier.weight(1f))
             IconButton(onClick = onClick) {
-                Icon(imageVector = AppIcons.ArrowRight, contentDescription = contentDescription)
+                Icon(imageVector = KptIcons.ArrowRight, contentDescription = contentDescription)
             }
         }
     }

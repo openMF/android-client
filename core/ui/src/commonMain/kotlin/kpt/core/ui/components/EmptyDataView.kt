@@ -22,9 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import kpt.core.base.designsystem.theme.KptTheme
-import kpt.core.designsystem.icon.MifosIcons
+import kpt.core.designsystem.icon.AppIcons
+import kpt.core.designsystem.theme.AppTheme
 import kpt.core.designsystem.theme.DesignToken
-import kpt.core.designsystem.theme.MifosTheme
 import kpt.core.ui.generated.resources.Res
 import kpt.core.ui.generated.resources.core_ui_no_internet
 import kpt.core.ui.util.DevicePreview
@@ -37,7 +37,7 @@ import org.jetbrains.compose.resources.stringResource
 fun EmptyDataView(
     error: String,
     modifier: Modifier = Modifier.fillMaxSize(),
-    icon: ImageVector = MifosIcons.Error,
+    icon: ImageVector = AppIcons.Error,
 ) {
     Column(
         modifier = modifier,
@@ -97,7 +97,7 @@ fun EmptyDataView(
 private fun EmptyDataViewPreview(
     modifier: Modifier = Modifier,
 ) {
-    MifosTheme {
+    AppTheme {
         EmptyDataView(
             error = Res.string.core_ui_no_internet,
             modifier = modifier,
@@ -111,7 +111,7 @@ private fun EmptyDataViewPreview(
 private fun EmptyDataViewPreviewForIcon(
     modifier: Modifier = Modifier,
 ) {
-    MifosTheme {
+    AppTheme {
         EmptyDataView(
             error = "This is error",
             modifier = modifier,

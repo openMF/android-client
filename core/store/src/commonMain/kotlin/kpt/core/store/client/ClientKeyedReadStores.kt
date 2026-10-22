@@ -14,6 +14,8 @@ import kpt.core.base.store.annotation.StoreProvider
 import kpt.core.database.cache.dao.ApiResponseCacheDao
 import kpt.core.database.client.entity.ClientAccounts
 import kpt.core.database.client.entity.ClientEntity
+import kpt.core.model.client.ClientTemplateOptions
+import kpt.core.model.client.SavingAccountOption
 import kpt.core.model.objects.clients.ClientAddressEntity
 import kpt.core.model.objects.clients.ClientAddressResponse
 import kpt.core.model.objects.noncoreobjects.Identifier
@@ -23,7 +25,6 @@ import kpt.core.network.mifos.client.api.ClientAccountsApi
 import kpt.core.network.mifos.client.api.ClientApi
 import kpt.core.network.mifos.client.api.ClientIdentifierApi
 import kpt.core.network.mifos.client.dto.GetClientsClientIdAccountsResponse
-import kpt.core.network.mifos.client.dto.GetClientsPageItemsResponse
 import kpt.core.store.cache.cachedRead
 import kpt.core.store.config.AppCacheKeys
 import org.mobilenativefoundation.store.store5.Store
@@ -77,10 +78,25 @@ fun provideGetClientPinpointLocationsStore(
 fun provideGetClientTemplateStore(
     clientApi: ClientApi,
     cache: ApiResponseCacheDao,
-): Store<Int, GetClientsPageItemsResponse> = cachedRead(
+): Store<Int, ClientTemplateOptions> = cachedRead(
     dao = cache,
     keyOf = { key -> AppCacheKeys.ClientGetClientTemplate.forKey(key.toString()) },
-    fetch = { key -> clientApi.getClientTemplate(clientId = key) },
+    // Projected to the DOMAIN type here, not handed on as the wire envelope.
+    // `ScreenDataStream` has an internal constructor, so a feature cannot narrow the type itself —
+    // the projection has to happen at or below the store, and this is where the fetch already is.
+    // Keeping the envelope would force every screen with a staff dropdown to depend on
+    // `core:network`. See `ClientTemplateOptions` for the full reasoning.
+    fetch = { key ->
+        clientApi.getClientTemplate(clientId = key).let { response ->
+            ClientTemplateOptions(
+                staffOptions = response.staffOptions,
+                savingAccountOptions = response.savingAccountOptions.map {
+                    SavingAccountOption(id = it.id, accountNo = it.accountNo)
+                },
+                shareAccounts = response.shareAccounts,
+            )
+        }
+    },
 )
 
 @StoreProvider(id = "clientGetClientCollateralItems", ttl = "12h")

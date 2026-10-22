@@ -17,4 +17,9 @@ data class ScaffoldNavigationData(
     val navigationItems: ImmutableList<NavigationItem>,
     val selectedNavigationItem: NavigationItem?,
     val shouldShowNavigation: Boolean,
+    /**
+     * Render each tab's `labelRes` as a visible name. Off by default — the bar shows a selection
+     * pill instead, which is what the template ships and what existing forks look like.
+     */
+    val showLabels: Boolean = false,
 )

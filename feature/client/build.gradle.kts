@@ -25,6 +25,15 @@ kotlin {
             // the same edge (`6b66e8a43:feature/client/build.gradle.kts` → projects.feature.note,
             // plus dataTable/savings/loan/document/recurringDeposit/groups as those slices land).
             implementation(projects.feature.note)
+            // feature/loan — the client's loan-accounts list opens the loan PROFILE and the
+            // REPAYMENT form directly, which is the same edge the original had
+            // (`6b66e8a43:feature/client/.../ClientNavigation.kt` imports
+            // `navigateToLoanAccountProfileScreen` + `navigateToLoanRepaymentScreen`).
+            //
+            // One-directional: `feature/loan` has no dependency on `feature/client`, so there is
+            // no cycle. The loan screens take `onX` callbacks and know nothing about who opened
+            // them.
+            implementation(projects.feature.loan)
             implementation(libs.koin.compose.navigation)
             implementation(compose.ui)
             implementation(compose.foundation)
@@ -32,6 +41,11 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            // Signature screen: the file picker that supplies an image to crop. krop itself comes
+            // through core/ui's `api` dependency, because AppImageCropperDialog's signature
+            // names its types.
+            implementation(libs.filekit.compose)
+            implementation(libs.filekit.core)
         }
         commonTest.dependencies {
             // screenDataStreamForTesting — the sanctioned test factory, so the fake repository hands

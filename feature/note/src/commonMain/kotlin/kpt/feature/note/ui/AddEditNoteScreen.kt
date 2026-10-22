@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+ * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
 package kpt.feature.note.ui
 
@@ -19,21 +19,19 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kpt.core.designsystem.icon.MifosIcons
-
+import kpt.core.base.ui.submit.MutationScreenContent
+import kpt.core.designsystem.icon.AppIcons
 import kpt.feature.note.generated.resources.Res
 import kpt.feature.note.generated.resources.feature_note_add_note
 import kpt.feature.note.generated.resources.feature_note_button_add
@@ -44,11 +42,8 @@ import kpt.feature.note.generated.resources.feature_note_cd_back
 import kpt.feature.note.generated.resources.feature_note_dialog_warning
 import kpt.feature.note.generated.resources.feature_note_dialog_warning_message
 import kpt.feature.note.generated.resources.feature_note_edit_note_label
-import kpt.feature.note.generated.resources.feature_note_error_offline
-import kpt.feature.note.generated.resources.feature_note_unexpected_error
 import kpt.feature.note.generated.resources.feature_note_update_note
 import kpt.feature.note.generated.resources.feature_note_write_note_label
-
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -58,21 +53,30 @@ internal fun AddEditNoteScreen(
     modifier: Modifier = Modifier,
     viewModel: AddEditNoteViewModel = koinViewModel(),
 ) {
-    val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+    // TWO flows: the submit/draft lifecycle from BaseMutationViewModel, and the editable body.
+    val mutation by viewModel.uiState.collectAsStateWithLifecycle()
+    val form by viewModel.formState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        viewModel.eventFlow.collect { event ->
-            when (event) {
-                AddEditNoteEvent.NavigateBack -> onBackClick()
-            }
-        }
-    }
-
-    AddEditNoteContent(
-        state = state,
-        onAction = { viewModel.actionChannel.trySend(it) },
+    MutationScreenContent(
+        state = mutation,
+        onRetry = viewModel::onRetry,
+        // Reached on a real server ACK and on a draft saved offline alike — in both cases the note
+        // is safe (sent, or durable and queued), so leaving the editor is correct either way.
+        onSubmitted = { onBackClick() },
         modifier = modifier,
-    )
+    ) { _, _ ->
+        AddEditNoteContent(
+            form = form,
+            isSubmitting = mutation.isSubmitting,
+            onTextChange = viewModel::onTextChange,
+            onSubmit = viewModel::submitForm,
+            onBackClick = {
+                if (form.isDirty) viewModel.onDiscardRequested() else onBackClick()
+            },
+            onDiscardDismissed = viewModel::onDiscardDismissed,
+            onDiscardConfirmed = onBackClick,
+        )
+    }
 }
 
 /**
@@ -85,8 +89,13 @@ internal fun AddEditNoteScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun AddEditNoteContent(
-    state: AddEditNoteState,
-    onAction: (AddEditNoteAction) -> Unit,
+    form: NoteFormState,
+    isSubmitting: Boolean,
+    onTextChange: (String) -> Unit,
+    onSubmit: () -> Unit,
+    onBackClick: () -> Unit,
+    onDiscardDismissed: () -> Unit,
+    onDiscardConfirmed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -96,7 +105,7 @@ internal fun AddEditNoteContent(
                 title = {
                     Text(
                         stringResource(
-                            if (state.editEnabled) {
+                            if (form.editEnabled) {
                                 Res.string.feature_note_update_note
                             } else {
                                 Res.string.feature_note_add_note
@@ -108,11 +117,11 @@ internal fun AddEditNoteContent(
                     IconButton(
                         // Routed through the ViewModel, NOT straight to onBackClick: it is the
                         // ViewModel that knows whether there are unsaved changes worth asking about.
-                        onClick = { onAction(AddEditNoteAction.BackClicked) },
+                        onClick = onBackClick,
                         modifier = Modifier.testTag(TestTags.AddEditNote.BACK),
                     ) {
                         Icon(
-                            MifosIcons.ArrowBack,
+                            AppIcons.ArrowBack,
                             contentDescription = stringResource(Res.string.feature_note_cd_back),
                         )
                     }
@@ -124,12 +133,12 @@ internal fun AddEditNoteContent(
             modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp),
         ) {
             OutlinedTextField(
-                value = state.text,
-                onValueChange = { onAction(AddEditNoteAction.TextChanged(it)) },
+                value = form.text,
+                onValueChange = onTextChange,
                 label = {
                     Text(
                         stringResource(
-                            if (state.editEnabled) {
+                            if (form.editEnabled) {
                                 Res.string.feature_note_edit_note_label
                             } else {
                                 Res.string.feature_note_write_note_label
@@ -143,27 +152,21 @@ internal fun AddEditNoteContent(
                     .testTag(TestTags.AddEditNote.FIELD),
             )
 
-            // Shown INLINE, under the field, with the user's text still in place above it. A write
-            // failure must never clear the one thing that exists nowhere else.
-            state.writeError?.let { error ->
-                Text(
-                    text = stringResource(
-                        when (error) {
-                            NoteWriteError.Offline -> Res.string.feature_note_error_offline
-                            NoteWriteError.Failed -> Res.string.feature_note_unexpected_error
-                        },
-                    ),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(top = 8.dp).testTag(TestTags.AddEditNote.WRITE_ERROR),
-                )
-            }
+            // The write error is GONE from this screen, and that is the change.
+            //
+            // It used to render inline under the field because a failure left the note nowhere but
+            // on screen. Now a refused submit becomes a durable draft: `MutationScreenContent`
+            // shows the submit status, and the note itself is in `framework_submit_drafts`,
+            // replayed on reconnect and listed in Settings → Sync & Drafts. There is no longer a
+            // failure state in which the text exists only in this text field.
 
             Button(
-                onClick = { onAction(AddEditNoteAction.Submit) },
+                onClick = onSubmit,
                 // Disabled on a blank note and while in flight. The original allowed both: an
                 // empty note round-tripped to the server to be rejected, and a double-tap sent two.
-                enabled = state.canSubmit,
+                // The in-flight half is now also guarded by the framework (`SubmitHandler.submit`
+                // no-ops while Submitting); this keeps the BUTTON from looking tappable meanwhile.
+                enabled = form.canSubmit && !isSubmitting,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp)
@@ -171,7 +174,7 @@ internal fun AddEditNoteContent(
             ) {
                 Text(
                     stringResource(
-                        if (state.editEnabled) {
+                        if (form.editEnabled) {
                             Res.string.feature_note_button_update
                         } else {
                             Res.string.feature_note_button_add
@@ -182,19 +185,19 @@ internal fun AddEditNoteContent(
         }
     }
 
-    if (state.showDiscardConfirmation) {
+    if (form.showDiscardConfirmation) {
         AlertDialog(
-            onDismissRequest = { onAction(AddEditNoteAction.DismissDialog) },
+            onDismissRequest = onDiscardDismissed,
             modifier = Modifier.testTag(TestTags.AddEditNote.DISCARD_DIALOG),
             title = { Text(stringResource(Res.string.feature_note_dialog_warning)) },
             text = { Text(stringResource(Res.string.feature_note_dialog_warning_message)) },
             confirmButton = {
-                TextButton(onClick = { onAction(AddEditNoteAction.ConfirmDiscard) }) {
+                TextButton(onClick = onDiscardConfirmed) {
                     Text(stringResource(Res.string.feature_note_button_confirm))
                 }
             },
             dismissButton = {
-                TextButton(onClick = { onAction(AddEditNoteAction.DismissDialog) }) {
+                TextButton(onClick = onDiscardDismissed) {
                     Text(stringResource(Res.string.feature_note_button_cancel))
                 }
             },

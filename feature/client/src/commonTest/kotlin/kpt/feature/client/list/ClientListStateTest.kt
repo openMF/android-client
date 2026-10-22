@@ -39,8 +39,16 @@ class ClientListStateTest {
         status = ClientStatusEntity(value = status),
     )
 
-    private fun loaded(vararg clients: ClientEntity) =
-        ClientListState(all = ScreenState.Content(clients.toList()))
+    private fun loaded(vararg clients: ClientEntity): ScreenState<List<ClientEntity>> =
+        ScreenState.Content(clients.toList())
+
+    /** The rendered rows for a given filter state — the pure half of the screen's logic. */
+    private fun ScreenState<List<ClientEntity>>.visible(ui: ClientListState = ClientListState()) =
+        (applyFilters(ui) as? ScreenState.Content)?.data.orEmpty()
+
+    /** Office names offered by the filter, derived from the loaded rows exactly as the screen does. */
+    private fun ScreenState<List<ClientEntity>>.officeNames(): List<String> =
+        (this as? ScreenState.Content)?.data?.mapNotNull { it.officeName }?.distinct()?.sorted().orEmpty()
 
     @Test
     fun filterAndSortCompose() {
@@ -50,19 +58,21 @@ class ClientListStateTest {
             client(1, "Zara", office = "Branch A"),
             client(2, "Amit", office = "Branch B"),
             client(3, "Meera", office = "Branch A"),
-        ).copy(selectedOffices = setOf("Branch A"), sort = ClientSort.Name)
+        )
+        val ui = ClientListState(selectedOffices = setOf("Branch A"), sort = ClientSort.Name)
 
-        assertEquals(listOf("Meera", "Zara"), state.visible.map { it.displayName })
+        assertEquals(listOf("Meera", "Zara"), state.visible(ui).map { it.displayName })
     }
 
     @Test
     fun aFilterThatMatchesNothingIsEmptyNotAnEmptyList() {
-        val state = loaded(client(1, "Zara")).copy(selectedOffices = setOf("Nowhere"))
+        val state = loaded(client(1, "Zara"))
+        val ui = ClientListState(selectedOffices = setOf("Nowhere"))
         // Empty RESULT and empty DATASET must not render identically — the original showed a bare
         // list for both, so "no clients in this office" and "your filter excluded everyone" looked
         // the same.
-        assertTrue(state.listState is ScreenState.Empty)
-        assertTrue(state.visible.isEmpty())
+        assertTrue(state.applyFilters(ui) is ScreenState.Empty)
+        assertTrue(state.visible(ui).isEmpty())
     }
 
     @Test
@@ -71,8 +81,14 @@ class ClientListStateTest {
             client(1, "Ramesh", account = "000123"),
             client(2, "Sunita", account = "000987"),
         )
-        assertEquals(listOf("Ramesh"), state.copy(query = "rame").visible.map { it.displayName })
-        assertEquals(listOf("Sunita"), state.copy(query = "987").visible.map { it.displayName })
+        assertEquals(
+            listOf("Ramesh"),
+            state.visible(ClientListState(query = "rame")).map { it.displayName },
+        )
+        assertEquals(
+            listOf("Sunita"),
+            state.visible(ClientListState(query = "987")).map { it.displayName },
+        )
     }
 
     @Test
@@ -84,25 +100,25 @@ class ClientListStateTest {
         )
         // The original accumulated office names via an OnUpdateOffice action the screen had to
         // remember to dispatch; deriving them cannot go stale or be forgotten.
-        assertEquals(listOf("Branch A", "Branch B"), state.officeNames)
+        assertEquals(listOf("Branch A", "Branch B"), state.officeNames())
     }
 
     @Test
     fun loadingAndErrorPassThroughUntouchedByFilters() {
         // A filter must not turn a failed load into "Empty" — that would hide the failure.
-        val error = ClientListState(all = ScreenState.Error(RuntimeException("boom")))
-            .copy(selectedOffices = setOf("Branch A"))
-        assertTrue(error.listState is ScreenState.Error)
+        val error: ScreenState<List<ClientEntity>> = ScreenState.Error(RuntimeException("boom"))
+        val ui = ClientListState(selectedOffices = setOf("Branch A"))
+        assertTrue(error.applyFilters(ui) is ScreenState.Error)
 
-        val loading = ClientListState(all = ScreenState.Loading).copy(query = "x")
-        assertTrue(loading.listState is ScreenState.Loading)
+        val loading: ScreenState<List<ClientEntity>> = ScreenState.Loading
+        // A query must not turn a still-loading read into Empty — the filter applies to CONTENT.
+        assertTrue(loading.applyFilters(ClientListState(query = "x")) is ScreenState.Loading)
     }
 
     @Test
     fun clearingFiltersRestoresEveryRow() {
         val state = loaded(client(1, "A", office = "X"), client(2, "B", office = "Y"))
-            .copy(selectedOffices = setOf("X"), query = "A")
-        assertEquals(1, state.visible.size)
-        assertEquals(2, state.copy(selectedOffices = emptySet(), query = "").visible.size)
+        assertEquals(1, state.visible(ClientListState(selectedOffices = setOf("X"), query = "A")).size)
+        assertEquals(2, state.visible(ClientListState()).size)
     }
 }

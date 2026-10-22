@@ -18,9 +18,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.NavigationRailItemDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kpt.core.base.designsystem.theme.KptTheme
 import org.jetbrains.compose.resources.StringResource
@@ -34,6 +36,8 @@ fun ColumnScope.KptNavigationRailItem(
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    /** The item's NAME. Null keeps the selection-pill look. See `KptNavigationBarItem.labelRes`. */
+    labelRes: StringResource? = null,
 ) {
     NavigationRailItem(
         icon = {
@@ -42,19 +46,30 @@ fun ColumnScope.KptNavigationRailItem(
                 contentDescription = stringResource(contentDescriptionRes),
             )
         },
-        label = {
-            Spacer(
-                modifier = Modifier
-                    .height(4.dp)
-                    .width(10.dp)
-                    .background(
-                        color = KptTheme.colorScheme.primary,
-                        shape = RoundedCornerShape(999.dp),
-                    ),
-            )
+        label = if (labelRes != null) {
+            {
+                Text(
+                    text = stringResource(labelRes),
+                    style = KptTheme.typography.labelMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+        } else {
+            {
+                Spacer(
+                    modifier = Modifier
+                        .height(4.dp)
+                        .width(10.dp)
+                        .background(
+                            color = KptTheme.colorScheme.primary,
+                            shape = RoundedCornerShape(999.dp),
+                        ),
+                )
+            }
         },
         selected = isSelected,
-        alwaysShowLabel = isSelected,
+        alwaysShowLabel = labelRes != null || isSelected,
         onClick = onClick,
         colors = NavigationRailItemDefaults.colors(
             selectedIconColor = KptTheme.colorScheme.primary,

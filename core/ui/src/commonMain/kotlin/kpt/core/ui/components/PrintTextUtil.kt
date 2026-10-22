@@ -12,7 +12,7 @@ package kpt.core.ui.components
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import kpt.core.base.designsystem.theme.KptTheme
-import kpt.core.designsystem.theme.MifosTypography
+import kpt.core.designsystem.theme.AppTypography
 import kpt.core.ui.util.TextUtil
 
 @Composable
@@ -22,6 +22,6 @@ fun PrintTextUtil(
     Text(
         text = item.text,
         color = item.color ?: KptTheme.colorScheme.onSurface,
-        style = item.style ?: MifosTypography.bodySmall,
+        style = item.style ?: AppTypography.bodySmall,
     )
 }

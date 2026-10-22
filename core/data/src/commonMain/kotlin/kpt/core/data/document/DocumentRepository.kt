@@ -20,4 +20,13 @@ interface DocumentRepository {
         entityId: Int,
         scope: CoroutineScope,
     ): ScreenDataStream<List<Document>>
+
+    /**
+     * One document's bytes, or `null` when it cannot be fetched.
+     *
+     * A one-shot blob, NOT a [ScreenDataStream] — same reasoning as `ClientRepository.clientImage`:
+     * the caller either has the file or does not, and there is no Loading/Empty/Error for a screen
+     * to render around it.
+     */
+    suspend fun downloadDocument(entityType: String, entityId: Int, documentId: Int): ByteArray?
 }

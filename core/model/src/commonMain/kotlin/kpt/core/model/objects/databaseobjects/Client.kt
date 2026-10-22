@@ -18,7 +18,7 @@ data class Client(
 
     var attendanceType: AttendanceType? = null,
 
-    var mifosGroup: MifosGroup? = null,
+    var mifosGroup: AppGroup? = null,
 
     val loans: List<Loan> = ArrayList(),
 )

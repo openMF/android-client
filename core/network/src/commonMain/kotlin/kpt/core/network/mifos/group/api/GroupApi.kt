@@ -17,12 +17,12 @@ import de.jensklingenberg.ktorfit.http.Query
 import de.jensklingenberg.ktorfit.http.QueryMap
 import io.ktor.client.statement.HttpResponse
 import kpt.core.base.network.annotation.ApiBinding
-import kpt.core.model.objects.clients.Page
 import kpt.core.database.group.entity.GroupAccounts
 import kpt.core.database.group.entity.GroupEntity
 import kpt.core.database.group.entity.GroupPayloadEntity
 import kpt.core.database.group.entity.GroupWithAssociations
 import kpt.core.model.objects.clients.ActivatePayload
+import kpt.core.model.objects.clients.Page
 import kpt.core.model.objects.responses.SaveResponse
 import kpt.core.network.mifos.group.dto.GetGroupsResponse
 

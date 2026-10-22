@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+ * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
 package kpt.feature.note.ui
 
@@ -28,6 +28,7 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
@@ -73,11 +74,19 @@ class NoteListViewModelTest {
     }
 
     @Test
-    fun countIsDerivedFromTheListItRenders() = runTest {
+    fun theListCarriesExactlyTheNotesTheScreenCounts() = runTest {
+        // The derived `count` moved out of the state holder when the stream became a StateFlow —
+        // the screen now counts the same `notes` state it renders. The property is unchanged: ONE
+        // source, so a header cannot disagree with the rows beneath it.
         val (vm, _) = viewModel()
         repository.state.value = ScreenState.Content(listOf(note(1, "first"), note(2, "second")))
         runCurrent()
-        assertEquals(2, vm.stateFlow.value.count)
+
+        vm.notes.test {
+            val content = assertIs<ScreenState.Content<List<NoteEntity>>>(expectMostRecentItem())
+            assertEquals(2, content.data.size)
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
@@ -136,9 +145,13 @@ class NoteListViewModelTest {
         // THE REGRESSION THIS EXISTS FOR: a write failure must not blank the read. The notes are
         // still there and still correct; folding the failure into ScreenState.Error would replace
         // good content with an error screen because an unrelated mutation failed.
-        val state = vm.stateFlow.value
-        assertEquals(1, state.count)
-        assertEquals(NoteWriteError.Offline, state.writeError)
+        assertEquals(NoteWriteError.Offline, vm.stateFlow.value.writeError)
+        // …and the notes are STILL THERE. That is the half the regression is about.
+        vm.notes.test {
+            val content = assertIs<ScreenState.Content<List<NoteEntity>>>(expectMostRecentItem())
+            assertEquals(1, content.data.size)
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test
@@ -185,5 +198,29 @@ class NoteListViewModelTest {
         // No row open means no note to edit. Emitting a navigation event with a null id would
         // open the editor on nothing.
         assertNull(vm.stateFlow.value.expandedNoteId)
+    }
+
+    @Test
+    fun aSuccessfulDeleteReREADsTheListSoTheRowDisappears() = runTest {
+        // REPORTED ON DEVICE as "delete note is not working". The server DID delete the note and
+        // the client was told `Applied` — but `NoteCommandRepository` is cache-free, so nothing
+        // invalidated the read and the row stayed on screen. Indistinguishable from a delete that
+        // silently failed.
+        //
+        // Asserts the force-fresh specifically: a plain refresh could be served from the cache
+        // that still contains the row we just deleted.
+        val (vm, _) = viewModel()
+        repository.state.value = ScreenState.Content(listOf(note(1, "doomed")))
+        runCurrent()
+
+        repository.forceFreshes.test {
+            vm.trySendAction(NoteListAction.ToggleExpanded(1L))
+            vm.trySendAction(NoteListAction.DeleteClicked)
+            vm.trySendAction(NoteListAction.ConfirmDelete)
+            runCurrent()
+
+            awaitItem() // the re-read; absent before the fix
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 }

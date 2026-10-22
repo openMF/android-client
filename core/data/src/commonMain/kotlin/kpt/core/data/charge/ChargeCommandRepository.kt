@@ -9,7 +9,6 @@
  */
 package kpt.core.data.charge
 
-import io.ktor.client.statement.HttpResponse
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.model.objects.payloads.ChargesPayload
 
@@ -26,7 +25,19 @@ import kpt.core.model.objects.payloads.ChargesPayload
  */
 interface ChargeCommandRepository {
 
-    suspend fun createCharges(resourceType: String, resourceId: Int, chargesPayload: ChargesPayload): MutationResult<HttpResponse>
+    /**
+     * Levy a charge on a client or a loan.
+     *
+     * `Unit`, not `HttpResponse`: the endpoint's Ktorfit signature returns a raw response, and a
+     * FEATURE cannot name a Ktor type — `feature/loan` must not depend on `core:network`. The
+     * gateway already turns a non-2xx into [MutationResult.Failed], which is the only distinction
+     * a screen renders. Same change as the seven client commands and the loan transfer.
+     */
+    suspend fun createCharges(
+        resourceType: String,
+        resourceId: Int,
+        chargesPayload: ChargesPayload,
+    ): MutationResult<Unit>
 
     suspend fun deleteCharge(resourceType: String, resourceId: Int, chargeId: Int): MutationResult<Unit>
 

@@ -25,9 +25,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
-import kpt.core.designsystem.icon.MifosIcons
+import kpt.core.designsystem.icon.AppIcons
+import kpt.core.designsystem.theme.AppTheme
 import kpt.core.designsystem.theme.DesignToken
-import kpt.core.designsystem.theme.MifosTheme
 import kpt.core.ui.generated.resources.Res
 import kpt.core.ui.generated.resources.core_ui_no_internet
 import kpt.core.ui.util.DevicePreview
@@ -39,7 +39,7 @@ fun NoInternet(
     error: StringResource,
     modifier: Modifier = Modifier,
     isRetryEnabled: Boolean = true,
-    icon: ImageVector = MifosIcons.WifiOff,
+    icon: ImageVector = AppIcons.WifiOff,
     retry: () -> Unit = {},
 ) {
     Column(
@@ -75,7 +75,7 @@ fun NoInternet(
 private fun NoInternetPreview(
     modifier: Modifier = Modifier,
 ) {
-    MifosTheme {
+    AppTheme {
         NoInternet(
             error = Res.string.core_ui_no_internet,
             modifier = modifier,

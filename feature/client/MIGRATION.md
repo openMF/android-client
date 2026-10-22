@@ -321,3 +321,508 @@ Per-screen STATES and the `action_contract` for each `on_click` come from readin
 composables; routes, args, substrate deps and the nav edges above are complete. Stage B does not
 start until A.5 closes — materializing from a partial inventory is how a screen acquires invented
 behaviour.
+
+---
+
+## S3c — client action screens (2026-10-21)
+
+Four of the ten action packages ported end to end: **staff · closure · transfer · collateral**.
+Each is ViewModel + carried-over Compose screen (§6a) + TestTags + nav + Koin + tests.
+
+### Substrate work this slice needed first
+
+| | |
+|---|---|
+| `ClientRepository` | +5 streams — `pinpointLocationsStream`, `clientCollateralStream`, `collateralItemsStream`, `clientCloseTemplateStream`, `clientTemplateStream` |
+| `core/model/client/` | `StaffOption` + `ClientCloseTemplateResponse`/`Narration` MOVED out of `core/network`; new `ClientTemplateOptions` + `SavingAccountOption` |
+| `ClientCommandRepository` | 7 commands changed from `MutationResult<HttpResponse>` to `MutationResult<Unit>` |
+| `core/data/testing/` | new `FakeClientRepository`; `FakeClientCommandRepository` gained real impls for those 7 |
+
+**Why the DTOs moved.** `ScreenDataStream` has an `internal` constructor, so a feature cannot
+narrow a stream's type itself — the projection must happen at or below the store. A repository
+returning `GetClientsPageItemsResponse` would therefore have forced `core:network` onto every
+feature rendering a staff dropdown, the layering this port already rejected once. `StaffOption` and
+`ClientCloseTemplateResponse` are plain serializable values a SCREEN consumes, so they belong on the
+domain side; the client-template store now projects the envelope to `ClientTemplateOptions` in its
+own `fetch`.
+
+**Why the commands return `Unit`.** Their Fineract endpoints are declared `: HttpResponse` because
+the bodies differ per endpoint and nothing reads them, so the raw Ktor response was passed straight
+through `core/data`'s contract. That made all seven unfakeable — a test cannot build an
+`HttpResponse` without a MockEngine — so no S3c write path could be tested at all. The status check
+they used to need is already done by `expectSuccess`, so `Applied` already means "accepted".
+
+### One store, three screens
+
+`getClientStaffOptions` / `getSavingsAccounts` / `getShareAccounts` were three repository methods
+that each called `getClientTemplate(clientId)` and kept one field — three identical uncached
+requests. They share one store now; each screen projects its field.
+
+### Defects FIXED rather than carried
+
+§6a keeps the UI verbatim "including anything believed wrong". These are not UI choices — two are
+crashes and two are writes the server rejects, so fidelity to them is not fidelity.
+
+1. **Date contradicted its declared format** (closure + transfer). `closureDate`/`transferDate`
+   were `DateHelper.getDateAsStringFromLong` (`dd-MM-yyyy`) while the request declared
+   `ApiDateFormatter.DATE_FORMAT` (`dd MMMM yyyy`) — Fineract was told to parse a string it could
+   not. Both now use `ApiDateFormatter.formatForApi`, which exists for exactly this pairing. The
+   DISPLAYED date keeps the original's format.
+2. **`quantity.toInt()` unguarded** (collateral). Threw on every keystroke after clearing the field.
+   The `isEmpty()` checks on the next lines look like they cover it; `toInt()` has already thrown.
+3. **Totals were derived state stored as fields** (collateral). Recomputed only on a quantity
+   keystroke, so switching collateral TYPE left the previous type's figures on screen — which the
+   screen papered over by re-firing `OnQuantityChange` from the dropdown. Derived now.
+4. **Index held against a list the ViewModel no longer owns.** Every screen read
+   `state.options[state.currentSelectedIndex]` at submit. The rows belong to the stream now, so the
+   action carries the chosen id, and the screen clamps the index for display.
+
+Also per-status dialog buttons: the original gave the SUCCESS and FAILURE dialogs the same single
+button wired to "navigate forward", so acknowledging a failure also navigated.
+
+### Deliberately NOT ported
+
+**`clientPinpoint`** — blocked on Google Maps. Its UI is an `expect`/`actual` pair whose only real
+implementation is a 411-line Android actual on `maps-compose`; the fork has none of the three
+required deps and no Maps API key (which must come through the vault, per
+RULE-SECRETS-VAULT-001). The route is ABSENT rather than stubbed. Layers below it — the stream and
+the three write commands — are done and unblocked. Tracked as
+`client-pinpoint-blocked-on-maps-key`.
+
+### Remaining in S3c
+
+`clientSignature` (446-line VM, 299-line screen) · `clientSurveyList` + `clientSurveySubmit` +
+`clientSurveyQuestion` · `clientCollateralDetails`.
+
+---
+
+## Client profile UI — the rebuild REVERTED (2026-10-21)
+
+**Operator-flagged:** the client detail UI had been changed; it must be exactly the original's.
+
+It had. The screen the client list opens was a **rebuild, not a port** — a `Scaffold` with a
+`TopAppBar`, raw `Text` identity fields, hand-rolled "Charges"/"Notes" rows, and a loan/savings
+accounts section. None of that is in the original.
+
+### What the original actually is
+
+The list navigates to **`clientProfile/ClientProfileScreen.kt`** (222 lines), *not* to
+`clientDetails/ClientDetailsScreen.kt` (884 lines) — that one is a separate legacy destination the
+list never opened, which is how the earlier pass went wrong about what "client detail" means.
+
+```
+"Profile"  label
+ProfileCard          ← primary-coloured, avatar + name + "Acc. No. X" + office + group chip + chevron
+"Actions"  label
+MifosRowCard × 6     ← General · Address · Identifiers · Documents · Notes · Pinpoint
+```
+
+**Accounts are not on this screen at all.** They are behind the General row, in `clientGeneral` —
+which is why the accounts section was not just restyled but moved.
+
+### Ported now
+
+| | |
+|---|---|
+| `profile/` | `ClientProfileScreen` + `ClientProfileViewModel` + `components/ProfileCard` + `components/ClientProfileActions` |
+| `general/` | `ClientGeneralScreen` + `ClientGeneralViewModel` + `components/ClientGeneralActions` |
+| drawables | 14 copied from the original (7 profile action icons + 7 general action icons) |
+| deleted | the whole `detail/` package and its test |
+| route | `ClientDetailRoute` → **`ClientProfileRoute`**, matching the original's `ClientProfileRoute` |
+| `ClientRepository` | `+ clientImage(clientId): String?` — the avatar, a one-shot blob |
+
+### Kept verbatim, including what looks wrong
+
+- `FamilyMembers` is declared by the sealed class and deliberately absent from the rendered list —
+  the original left it out too, and its event branch is an empty `{}`.
+- `clientGeneral`'s subtitles are wrong in the original ("Loan Accounts" → *"View or edit the
+  linked address"*; Shares and Collateral share *"Check or update the account notes"*). Copy is UI;
+  §6a keeps it.
+- The empty `rightValues` slot on every general row, reserved for counts no endpoint supplies.
+- `lastLoanAmount` is always `null` — the original's own comment says nothing computes it, so the
+  row reads "Not Available" rather than showing an invented figure.
+- "No. Of Loan Cycles" SUMS `loanCycle` across active loans (it is not a count), and "Total
+  Savings" excludes recurring deposits and closed accounts (so it does not equal the accounts
+  list's sum). Both pinned by tests so neither changes silently.
+
+### Fixed, because they are not UI choices
+
+- Every navigation callback read `state.client?.id ?: -1` **at the call site** — 7 sites on the
+  profile screen and 7 more on general — so any tap while the load was in flight navigated to
+  client `-1`. The events carry the id now.
+- The avatar `ByteArray` sat in a `data class`, which compares by identity: every decode of the
+  same photo read as new state. `equals`/`hashCode` are by content.
+- Performance history was stored beside the accounts and computed once; it is derived now, so it
+  cannot disagree with them.
+
+106 tests green across `feature/client` + `core/data`.
+
+### Still to port from this cluster
+
+`clientDetailsProfile` (the ProfileCard's tap target — 388-line screen, 347-line VM) ·
+`clientAddress` · `clientDocuments` · the `identifiers` SCREEN (its ViewModel and tests landed in
+S3b but no screen was ever written, so the row is `null` and absent).
+
+---
+
+## The profile cluster completed (2026-10-21)
+
+Three more screens, closing the loop from the client list down to the action forms.
+
+### `identifiers/ClientIdentifiersScreen.kt`
+
+The missing half of S3b. The ViewModel and its 6 tests had shipped with **no screen** — so it had
+no consumer and was not even in the Koin module. Ported from `clientIdentifiersList`: header with
+count, `MifosEmptyCard`, one `MifosActionsIdentifierListingComponent` per identifier with its
+expanding menu, the composite `uniqueKeyForHandleDocument`, the `reversed()` ordering.
+
+The menu lists **Delete only**. The original listed ViewDocument and UploadAgain too and swallowed
+them in an `else -> {}` — a menu entry that does nothing is exactly the dead control
+RULE-IMPL-DEAD-CLICKABLE-001 forbids. They return with `feature/document`.
+
+### `details/` — the ProfileCard's tap target
+
+`clientDetailsProfile`: avatar header, the Update Photo / Update Signature pair, three derived
+detail cards, the "Scroll for More Options" hint, and eight action rows. **This is the screen that
+makes the four S3c action forms reachable** — Closure, Transfer, Assign Staff and Create Collateral
+all route from here, plus Add Charge.
+
+Its one piece of real logic is carried over exactly: **the AssignStaff row does two different
+things.** On an unstaffed client it opens the assign form; on an already-staffed one it raises the
+unassign confirmation instead, and confirming sends `unassignStaff`. The dialog's copy explains why
+(Fineract needs a few minutes before a re-assign takes).
+
+Eleven action items are declared, **eight render** — the original commented three out of its list
+and left their event branches empty, so they stay declared-but-unlisted rather than drawn dead.
+
+### `general/` — where the accounts live
+
+Already covered above; the profile's General row now routes to it.
+
+### Nav graph, end to end
+
+```
+Clients tab → list → ClientProfileRoute ─┬→ General      → ClientGeneralRoute → Collateral form
+                                         ├→ Identifiers  → ClientIdentifiersRoute
+                                         ├→ Notes        → feature/note
+                                         └→ ProfileCard  → ClientDetailsRoute ─┬→ Closure
+                                                                               ├→ Transfer
+                                                                               ├→ Assign Staff
+                                                                               ├→ Create Collateral
+                                                                               └→ Add Charge
+```
+
+Every other row and button is `null`, so it is absent rather than inert.
+
+### Fixed, same class as before
+
+Both screens' navigation callbacks read `state.client?.id ?: -1` at the call site — and
+`clientDetailsProfile` also did `state.client!!.staffId` at confirm time, a `!!` on a nullable field
+of a record the ViewModel does not own. The events carry what the screen already holds.
+
+117 tests green across `feature/client` + `core/data`.
+
+---
+
+## Address + Documents — the profile's last two rows (2026-10-21)
+
+Every row on the client profile now routes somewhere real.
+
+### `address/`
+
+The LIST half of the original's `clientAddress`. Its form half (`addAddress`, 610 lines) is S3d, so
+the template read and `createClientAddress` are not here — the "+" is absent.
+
+**The connectivity observer it deletes was leaking.** `observeNetwork()` collected
+`networkMonitor.isOnline` and ran both loads on every `true` — and it was called from `init` **and
+again from `handleRetry()`, with no cancellation**. Each retry started another collector on the same
+flow, so after three retries one reconnect fired four parallel address loads. `ScreenState.NoNetwork`
+removes the observer, the `networkConnection` field, the `NetworkError` screen-state and the leak
+together. Pinned by `retryDoesNotStackCollectorsTheWayTheOriginalDid`.
+
+Also deleted: the screen's `LaunchedEffect(Unit) { viewModel.loadClientAddress() }`, which ran on
+top of the `init` load — opening the screen fetched the list twice.
+
+`items(key = ...)` changed from `address.indexOf(it)` (an O(n) scan per item that returns the FIRST
+match, so two identical addresses collide and LazyColumn mis-recycles) to `addressId`.
+
+### `documents/`
+
+**The search filter destroyed the list it filtered.** The original overwrote `clientDocuments` in
+the state with the filtered result, so the unfiltered set was gone — clearing the query could not
+restore it and `Refresh` was the only way back. The rows stay the stream's here and the committed
+query combines over them (`applyQuery`, the same `ScreenState`-extension shape as
+`ClientListViewModel.applyFilters`), so closing the search bar restores everything. Pinned by
+`closingTheSearchBarRestoresTheWholeList`.
+
+Search also widened from `name` alone to name + fileName + description: a document the officer
+remembers by its FILE name was unfindable while visible on screen.
+
+`pullDownRefresh` was a `Boolean` in the state that nothing reset on the error path — the
+`PullToRefreshBox` reads `ScreenState` now.
+
+Delete refreshes `forceFresh` for the same reason the note list had to: the command repository is
+cache-free, so the deleted row would otherwise stay on screen.
+
+### Not ported, absent rather than inert
+
+`ViewDocument` / `OpenExternalPdfViewer` download the file into a platform PDF viewer (five
+`expect`/`actual` pairs under `feature/client/utils`) — that is the document-preview feature, S3d.
+The View entry is omitted from the row menu; the original listed it and ended its handler in
+`else -> null`. The add-document form is S3d too.
+
+132 tests green across `feature/client` (13 suites) + `core/data`.
+
+---
+
+## De-branding: `Mifos*` → `App*` (2026-10-21)
+
+**Operator instruction:** remove the `Mifos*` prefix, make the symbols generic, and place each one
+in the module whose context it belongs to.
+
+### The naming rule, and why not `Kpt*`
+
+**1,398 occurrences / 171 symbols / 121 files.** Two generic prefixes already exist here and they
+mean different things:
+
+| prefix | owner | where |
+|---|---|---|
+| `Kpt*` | the TEMPLATE | `core-base/**` + template-owned `core/**` |
+| `App*` | the FORK / consumer | `core/designsystem` (`AppColors`, `AppSpacing`, `AppShapes`, …) |
+
+The `Mifos*` components are fork-level wrappers ABOVE the template primitives — `AppOutlinedButton`
+takes `text:`/`leadingIcon:` slots that `KptOutlinedButton` does not. Renaming them `Kpt*` would
+squat the template's namespace and collide on the next `/kmp-project-template-sync`. So the rule is
+**`Mifos<X>` → `App<X>`**.
+
+Nine symbols would have collided with existing `Kpt*` names (`MifosButton`, `MifosScaffold`,
+`MifosTopAppBar`, `MifosTypography`, …) — which is the evidence for the rule, not an obstacle to it.
+
+### Two genuine collisions, resolved by ownership
+
+`MifosIcons` and `MifosCard` collided with existing `App*` symbols, so each needed a decision rather
+than a prefix swap:
+
+- **`MifosIcons` (117 icons) vs `AppIcons` (59).** Both live, both used. Merging was rejected: they
+  overlap on 31 names and **13 of those have different values** — `ArrowBack` is a real back-arrow
+  in one and `ChevronLeft` in the other, `Language` is `ArrowOutward` vs `Translate`. Merging would
+  silently restyle 13 icons app-wide. Resolved by ownership instead: the template's catalog became
+  **`KptIcons`** (template namespace, 6 consumers updated) and the fork's became **`AppIcons`**.
+- **`MifosCard` vs `AppCard`.** Different modules (`core/designsystem` vs `core-base/designsystem`),
+  different base component (`Card` vs `ElevatedCard`) and different defaults. Not interchangeable,
+  so the fork's became `AppCard` in its own package. No file imports both, so no aliasing.
+
+### Placement: nothing needed moving
+
+The instruction's second half was to re-place components by context. Audited against the ORIGINAL's
+usage, which is the only evidence that generalises past today's half-ported state:
+
+| component | features using it in `6b66e8a43` |
+|---|---|
+| `AppEmptyCard` · `AppBreadcrumbNavBar` | client · loan · note · recurringDeposit · savings |
+| `AppErrorComponent` | client · loan · note · recurringDeposit |
+| `AppRowCard` | client · loan |
+| `AppActionsIdentifierListingComponent` · `AppAddressCard` | client · search-record |
+
+All already in `core/ui`, all genuinely cross-feature — **correctly placed.** They look
+client-only today only because `feature/client` is the sole deeply-ported feature; moving them into
+it would have to be undone at S4/S5. The listing components also share one file with
+`AppActionsLoanListingComponent` / `…SavingsListingComponent`, which belong to features not yet
+ported.
+
+### No upstream PR
+
+RULE-TEMPLATE-MODULE-FIX-UPSTREAM-001 does not bind: the `Mifos*` components were **fork-added**
+into template-derived directories, not template code that was fixed. Verified against
+`kmp-project-template` — its `core/**` and `core-base/**` carry no `Mifos*` symbols at all. (Its
+only two mentions are KDoc *examples* of a brand identifier, `e.g. "MifosDatabase"`, in
+`core-base/database` — a template-level nit, unrelated to this change, and our fork's copies of
+those files are already clean.)
+
+### Brand text, not just symbols
+
+- `core_designsystem_app_title` = `"Mifos"` — **deleted**: zero consumers, and the live app title
+  already comes from `AppInfo.appDisplayName` (app-profile → BuildKonfig).
+- `drawer_profile_name` = `"Mifos"` — the drawer header's profile name was a hardcoded brand
+  string. Now reads `AppInfo.appDisplayName`, the same source `DashboardTopBar` uses.
+- `feature_signin_cd_logo` = `"Mifos logo"` → `"App logo"` (a content description, so user-facing).
+- `core-base/ui`'s `NavTransitions` KDoc said "pre-wires Mifos's shared-axis" — a brand reference in
+  the FRAMEWORK-SHARED layer, which is a leak rather than a fact about this fork. Genericised.
+- 10 `<!-- Mifos … -->` section comments in `core/ui` strings.
+
+**Preserved deliberately:** MPL licence headers ("Copyright 2026 Mifos Initiative"), the
+`openMF` upstream URLs, every `6b66e8a43:` provenance line, and every `com.mifos.*` path — those
+name the ORIGINAL codebase, and renaming them would misreport what was ported. The rename skipped
+any line matching those, which is why `Mifos` still appears in 59 files' KDoc.
+
+**319 tests green** across every module, including the Roborazzi device-free render tier.
+
+---
+
+## S3c tail (2026-10-21)
+
+### `collateraldetails` — and a divergence I had introduced
+
+The read-only list of collateral a client has pledged. Porting it surfaced a wiring mistake of my
+own: client-general's "Collateral Data" row had been pointed at the add-collateral FORM, where the
+original points it at this list (`clientProfileGeneralDestination(collateralData =
+navigateToClientCollateralDetailRoute)`). The form is reached from client details' "Create
+Collateral". Corrected.
+
+Its ViewModel also took `networkMonitor.isOnline.first()` — a ONE-SHOT read, so a load that began
+offline reported an error and never recovered when the connection returned. `ScreenState` reacts to
+reconnection for every screen.
+
+### `signature`
+
+A signature turns out to be a DOCUMENT under the reserved name `clientSignature`, so the original's
+five use-cases (`GetDocumentsList`, `DownloadDocument`, `CreateSignature`, `UpdateSignature`,
+`RemoveDocument`) collapse to one stream plus three commands. The id is **derived** from the
+document list rather than stored: the original wrote it in one step and read it back in another,
+where the second silently did nothing if the first had not landed (`state.signatureId?.let { … }`
+with no else).
+
+Needed new infrastructure: `krop` + `compose-signature` in the catalog, `AppImageCropperDialog` and
+`AppSignatureDrawDialog` ported into `core/ui`, and `downloadDocument` on `DocumentRepository` (a
+one-shot blob — an attachment has no useful TTL, and the document LIST is what the store holds).
+
+Reached from client details' "Update Signature", which was `null` until now.
+
+### `survey` — deliberately NOT ported
+
+Its only caller is the dead `clientDetailRoute`. Porting it would add three screens no live screen
+can open. Tracked as `client-survey-unreachable-in-original`; the substrate (`surveysStream` +
+`submitScore`) is ready.
+
+### Nav smoke test
+
+`NavigationGraphSmokeTest`'s KDoc said a `parameterisedRoutesInstantiateWithDefaults` test would
+"return when there is something to instantiate". There are now 14 arg-carrying routes, so it is
+back — constructing each with explicit arguments, which is what keeps sentinel-default routes
+(`ActivateRoute(id = -1, type = "")`) from reappearing.
+
+**329 tests green** across every module.
+
+
+---
+
+# S4e — the client's loan accounts
+
+Ported out of client-slice order, because it is the loan PROFILE's only caller in the original
+(`clientLoanAccountsDestination(navigateToViewAccount = navigateToLoanAccountProfileScreen)`). The
+spec's new "Verify the PATH into the screen" rule says to port a screen's caller in the same slice;
+this is the first port to follow it, and it discharges `onLoanAccounts = null` on the client General
+screen at the same time.
+
+Both of its card actions are live: View Account → the loan profile, Make Repayment → the repayment
+form. It is the first screen in this port where a card's whole action menu works.
+
+## FIXED: the filters destroyed the list they filter
+
+The original stored the SAME list in both fields:
+
+```kotlin
+val loanAccounts = repository.getClientAccounts(clientId).loanAccounts
+    .filter { it.accountNo?.contains(state.searchText.trim()) == true }
+…copy(loanAccounts = loanAccounts, unfilteredLoanAccounts = loanAccounts)
+```
+
+`unfilteredLoanAccounts` was already search-filtered, so "clear filters" restored the SEARCH result
+and a status filter applied on top of a search could never be widened back. Both the query and the
+status set are now a derivation over the one stream, via `combineContent` — the substrate's own
+filter/sort seam, so Loading / NoNetwork / Error / Unauthenticated pass through untouched and only
+Content is filtered. Nothing is stored twice, so nothing can disagree. Pinned by
+`clearingTheFilterRestoresTheFULLListNotTheSearchResult`.
+
+## FIXED: a refresh silently cleared the officer's status filter
+
+Every load did `selectedStatus = emptySet()`. Against a stream that re-reads on reconnect and on
+pull-to-refresh, that wipes the filter repeatedly and apparently at random. Because the filter is a
+derivation now, a refresh re-applies it.
+
+## FIXED: the header count reported the FILTER's own result
+
+It counted the filtered list, so the one number that could have told the officer their filter was
+too narrow read "0 item". It is the unfiltered total now — and the header's search/add/filter
+controls are drawn from that total too, where the original hid them when the FILTERED list was
+empty. Filtering everything out used to remove the only way to clear the filter.
+
+## Two empty states, where there was one
+
+"This client has no loan accounts" offers to create one; "nothing matches your search or filter"
+must not — creating an account would not reveal the accounts the filter is hiding. The original
+showed one message for both and offered the create button in each.
+
+## Smaller fixes
+
+- `symbol + (if (pending) "N/A" else amount.toString())` rendered **"₹Not Available"** — a currency
+  symbol glued to the words. The symbol belongs to an actual amount.
+- the count line was `count + " " + stringResource(client_savings_item)` — concatenation no
+  translation can reorder, and the string it reused was the SAVINGS screen's "item".
+- the search matched case-SENSITIVELY on account numbers that can carry a letter prefix.
+- closing the search bar left the query in place, so a hidden query kept filtering with nothing on
+  screen to explain why. It clears now.
+- `onActionClicked` passed `loan.id ?: 0`, and loan 0 is a request for a loan that does not exist.
+  A card whose loan has no id offers no actions.
+- `AddAccount` fetched the client a SECOND time at tap time just to read `accountNo` into the event
+  — un-guarded, so a tap while offline threw out of `handleAction`. The event carries the client id;
+  the create screen can read what else it needs.
+- the `networkMonitor.isOnline.first()` gate refused to even try when it believed itself offline,
+  showing "No internet connection, Try Again" over a blank screen while a good cached copy sat in
+  the database.
+
+## Carried over: the four filters do not cover every status
+
+`waitingForDisbursal` matches none of ACTIVE / PENDING / CLOSED / OVERPAID, so an
+approved-but-undisbursed loan disappears under ANY active filter. The original's behaviour; adding
+a fifth bucket is a product decision. Pinned by a test so the hole is visible rather than
+surprising, and logged as `client-loan-accounts-filters-do-not-cover-awaiting-disbursal`.
+
+## A recurring hazard, noted twice now
+
+`stateIn(..., WhileSubscribed)` hands back its INITIAL value whenever nothing is collecting. On the
+repayment screen that was a real defect — the WRITE read two such flows, so the double-payment
+guard read `false` and the account number read `null`; both are `Eagerly` now. Here `totalCount` is
+render-only, so `WhileSubscribed` is right and it was the TEST that had to collect rather than read
+`.value`. The rule that falls out: **a flow read by anything other than the composition must not be
+`WhileSubscribed`.**
+
+**28 tests** — 19 ViewModel, 9 render.
+
+## S4l — the loan-accounts "add account" edge
+
+`onAddAccount` went from `null` to `navController::navigateToNewLoanApplication` — one line, because
+the whole chain (action → event → callback → test tag) was already ported and correctly `null`-gated
+so the affordance was **absent rather than drawn dead**. See `feature/loan/MIGRATION.md#s4l`.
+
+Worth contrasting with S4k, where `feature/groups` had the inverse: a live destination with no
+control. Both are caught by the §6a path rule, but only this one is caught by the two-grep check.
+
+## S5d — twelve screens had no top bar
+
+Draining the action-dispatch sweep to zero surfaced the largest single defect in this feature: **all
+twelve `feature/client` push destinations rendered with no title and no back affordance.** The shell
+draws a top bar only for tab roots —
+
+```kotlin
+topBar = { if (!isTabRoot) return@KptRootScaffold; DashboardTopBar(…) }
+```
+
+— and only `ClientChargesScreen` had a scaffold of its own. So an officer on the client profile, its
+accounts, addresses, documents, identifiers, signature, loan accounts or details saw an untitled
+page with no way back except the system gesture, which does not exist on desktop or web.
+
+That is exactly *why* nine client ViewModels declared a `NavigateBack` the sweep could not find a
+dispatcher for: the control that would send it had never been drawn. Same inverse shape as the
+group-detail overflow menu — a complete chain with no control — and invisible to both the
+dead-clickable audit and the §6a two-grep check, because both start from the route.
+
+Each stateful half now wraps its content in `AppScaffold` with a title and a back that **dispatches**
+the action; the stateless half takes the insets as a defaulted `scaffoldPadding`, so tests and
+previews still render it alone.
+
+Also fixed here: the identifiers "+" was a bare `Icon` with **no clickable modifier** — officers
+tapped it and nothing happened — while `AddIdentifierClicked` was handled all the way through to the
+nav callback. Now an `IconButton` with a real `contentDescription` (it was `null`). And
+`ClientLoanAccountsAction.Refresh` was deleted: dead code from the refactor that dropped the
+hand-rolled `PullToRefreshBox`.

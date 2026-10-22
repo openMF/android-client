@@ -36,6 +36,14 @@ dependencies {
     // edge, the settings.local include, and @FeatureDestination on the graph builder.
     "commonMainImplementation"(project(":feature:client"))
 
+    // feature/center — the centers vertical. A TAB feature like client: its @FeatureTab and
+    // @FeatureDestination are collected by codegen, but codegen derives the REGISTRATION, not the
+    // build edge — without this line GeneratedFeatureKoinBindings cannot resolve CenterModule.
+    "commonMainImplementation"(project(":feature:center"))
+
+    // feature/groups — the groups vertical. Same three-step registration as center.
+    "commonMainImplementation"(project(":feature:groups"))
+
     // feature/note — client notes (S5). A DRILL-DOWN feature: its routes are registered by
     // `ClientNavigation` (which depends on it directly), not by @FeatureDestination. The build edge
     // is still required HERE, because the Koin codegen scans every feature module's `di` package
@@ -44,4 +52,42 @@ dependencies {
     //
     // The codegen derives the REGISTRATION from source; it cannot derive the BUILD EDGE.
     "commonMainImplementation"(project(":feature:note"))
+
+    // feature/activate — the shared activate screen (centre + group; client's only caller is the
+    // original's dead `clientDetailRoute`). Unlike note it IS `@FeatureDestination`-annotated, and
+    // deliberately so: it is reached from TWO parent graphs, so registering it inside each the way
+    // a single-parent drill-down is registered would declare `ActivateRoute` twice in one NavHost.
+    // Same two halves as every other fork feature — this edge plus the settings.local include.
+    "commonMainImplementation"(project(":feature:activate"))
+
+    // feature/document — the GENERIC document list + upload form, for any Fineract entity type.
+    // `@FeatureDestination`-annotated for the same reason activate is: group detail opens it today
+    // and loan / savings will, so it has no single parent graph to nest under.
+    //
+    // Distinct from `feature/client/documents`, which is the CLIENT-specific list the client
+    // profile opens — the original ships both and the two have different callers.
+    "commonMainImplementation"(project(":feature:document"))
+
+    // feature/datatable — the datatable list + a table's rows, for any entity. `@FeatureDestination`
+    // for the same reason as document and activate: group detail opens it today and client will
+    // once create-client lands, so it has no single parent graph to nest under.
+    "commonMainImplementation"(project(":feature:datatable"))
+
+    // feature/loan — S4. TWO loan detail screens, because the original has two and they have
+    // different callers: the loan ACCOUNT SUMMARY (opened by a search hit and by group detail) and
+    // the loan PROFILE (opened by the client's loan list). Plus the repayment schedule, the
+    // transaction list, the approval form and the repayment form.
+    //
+    // `@FeatureDestination` for the same reason as the other shared drill-downs: more than one
+    // parent graph opens it. The shell ALSO navigates into it directly — `navigateToSearchResult`
+    // routes a LOAN search hit to the summary — which is what makes this vertical reachable at
+    // all; it was registered but caller-less until S4d.
+    "commonMainImplementation"(project(":feature:loan"))
+
+    // feature/savings — S5. The savings vertical: the account SUMMARY (opened by a search hit),
+    // then approval / activation / deposit-withdraw and the create wizard as the slice proceeds.
+    //
+    // `@FeatureDestination` for the same reason as the other shared drill-downs: the client's
+    // savings list, group detail and the shell's search all open into it.
+    "commonMainImplementation"(project(":feature:savings"))
 }

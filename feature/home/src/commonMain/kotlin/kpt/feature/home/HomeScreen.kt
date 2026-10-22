@@ -49,36 +49,20 @@ import org.jetbrains.compose.resources.stringResource
 internal fun HomeScreen(
     onSettingsClick: () -> Unit,
     homeBody: @Composable () -> Unit = {},
+    /**
+     * The home tab's top bar, defaulting to this shell's own app-title bar.
+     *
+     * Overridable because a fork whose app shell already draws ONE bar above ALL tabs (a dashboard
+     * with a drawer, say) would otherwise stack two. Such a fork passes `{ }` and keeps its own.
+     * Defaulted, so every existing fork renders exactly what it rendered before.
+     */
+    topBar: @Composable () -> Unit = {
+        DefaultHomeTopBar(onSettingsClick = onSettingsClick)
+    },
 ) {
     Scaffold(
         modifier = Modifier.testTag(TestTags.Home.SCREEN),
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        // App title from the common AppInfo.appDisplayName accessor (BuildKonfig →
-                        // fork.properties#app.display.name), never a hardcoded brand string.
-                        text = AppInfo.appDisplayName,
-                        style = MaterialTheme.typography.titleLarge.copy(
-                            fontWeight = FontWeight.SemiBold,
-                        ),
-                    )
-                },
-                actions = {
-                    IconButton(onClick = onSettingsClick) {
-                        Icon(
-                            imageVector = Icons.Filled.Settings,
-                            contentDescription = stringResource(Res.string.screens_home_settings_cd),
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                ),
-                windowInsets = WindowInsets(0, 0, 0, 0),
-            )
-        },
+        topBar = topBar,
         containerColor = MaterialTheme.colorScheme.background,
     ) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
@@ -86,4 +70,34 @@ internal fun HomeScreen(
             homeBody()
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun DefaultHomeTopBar(onSettingsClick: () -> Unit) {
+    CenterAlignedTopAppBar(
+        title = {
+            Text(
+                // App title from the common AppInfo.appDisplayName accessor (BuildKonfig →
+                // fork.properties#app.display.name), never a hardcoded brand string.
+                text = AppInfo.appDisplayName,
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.SemiBold,
+                ),
+            )
+        },
+        actions = {
+            IconButton(onClick = onSettingsClick) {
+                Icon(
+                    imageVector = Icons.Filled.Settings,
+                    contentDescription = stringResource(Res.string.screens_home_settings_cd),
+                )
+            }
+        },
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+        ),
+        windowInsets = WindowInsets(0, 0, 0, 0),
+    )
 }

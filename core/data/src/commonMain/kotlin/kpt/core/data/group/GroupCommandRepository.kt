@@ -9,7 +9,6 @@
  */
 package kpt.core.data.group
 
-import io.ktor.client.statement.HttpResponse
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.database.group.entity.GroupPayloadEntity
 import kpt.core.model.objects.clients.ActivatePayload
@@ -30,5 +29,5 @@ interface GroupCommandRepository {
 
     suspend fun createGroup(groupPayload: GroupPayloadEntity?): MutationResult<SaveResponse>
 
-    suspend fun activateGroup(groupId: Int, activatePayload: ActivatePayload): MutationResult<HttpResponse>
+    suspend fun activateGroup(groupId: Int, activatePayload: ActivatePayload): MutationResult<Unit>
 }

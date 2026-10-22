@@ -27,9 +27,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
-import kpt.core.designsystem.icon.MifosIcons
+import kpt.core.designsystem.icon.AppIcons
+import kpt.core.designsystem.theme.AppTheme
 import kpt.core.designsystem.theme.DesignToken
-import kpt.core.designsystem.theme.MifosTheme
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -126,7 +126,7 @@ fun MultiFloatingActionButton(
                 .rotate(rotation),
         ) {
             Icon(
-                imageVector = MifosIcons.Add,
+                imageVector = AppIcons.Add,
                 contentDescription = "mainFabIcon",
             )
         }
@@ -136,7 +136,7 @@ fun MultiFloatingActionButton(
 @Preview
 @Composable
 private fun SelectionModeTopAppBarPreview() {
-    MifosTheme {
+    AppTheme {
         SelectionModeTopAppBar(
             itemCount = 3,
             resetSelectionMode = {},
@@ -147,14 +147,14 @@ private fun SelectionModeTopAppBarPreview() {
 @Preview
 @Composable
 private fun SelectionModeTopAppBarWithActionsPreview() {
-    MifosTheme {
+    AppTheme {
         SelectionModeTopAppBar(
             itemCount = 5,
             resetSelectionMode = {},
             actions = {
                 IconButton(onClick = {}) {
                     Icon(
-                        imageVector = MifosIcons.Delete,
+                        imageVector = AppIcons.Delete,
                         contentDescription = "delete",
                     )
                 }

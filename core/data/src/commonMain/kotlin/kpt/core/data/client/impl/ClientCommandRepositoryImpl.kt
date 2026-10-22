@@ -67,29 +67,50 @@ internal class ClientCommandRepositoryImpl(
     override suspend fun createClientAddress(clientId: Int, addressTypeId: Int, addressPayload: PostClientAddressRequest) =
         online { clientApi.createClientAddress(clientId = clientId, addressTypeId = addressTypeId, addressPayload = addressPayload) }
 
-    override suspend fun assignStaff(clientId: Int, payload: AssignStaffRequest) =
-        online { clientApi.assignStaff(clientId = clientId, payload = payload) }
+    override suspend fun assignStaff(clientId: Int, payload: AssignStaffRequest): MutationResult<Unit> =
+        online {
+            clientApi.assignStaff(clientId = clientId, payload = payload)
+            Unit
+        }
 
-    override suspend fun unassignStaff(clientId: Int, payload: AssignStaffRequest) =
-        online { clientApi.unassignStaff(clientId = clientId, payload = payload) }
+    override suspend fun unassignStaff(clientId: Int, payload: AssignStaffRequest): MutationResult<Unit> =
+        online {
+            clientApi.unassignStaff(clientId = clientId, payload = payload)
+            Unit
+        }
 
-    override suspend fun proposeTransfer(clientId: Int, payload: ProposeTransferRequest) =
-        online { clientApi.proposeTransfer(clientId = clientId, payload = payload) }
+    override suspend fun proposeTransfer(clientId: Int, payload: ProposeTransferRequest): MutationResult<Unit> =
+        online {
+            clientApi.proposeTransfer(clientId = clientId, payload = payload)
+            Unit
+        }
 
-    override suspend fun updateSavingsAccount(clientId: Int, payload: UpdateSavingsAccountRequest) =
-        online { clientApi.updateSavingsAccount(clientId = clientId, payload = payload) }
+    override suspend fun updateSavingsAccount(clientId: Int, payload: UpdateSavingsAccountRequest): MutationResult<Unit> =
+        online {
+            clientApi.updateSavingsAccount(clientId = clientId, payload = payload)
+            Unit
+        }
 
-    override suspend fun closeClient(clientId: Int, payload: ClientCloseRequest) =
-        online { clientApi.closeClient(clientId = clientId, payload = payload) }
+    override suspend fun closeClient(clientId: Int, payload: ClientCloseRequest): MutationResult<Unit> =
+        online {
+            clientApi.closeClient(clientId = clientId, payload = payload)
+            Unit
+        }
 
-    override suspend fun createCollateral(clientId: Int, payload: CollateralPayload) =
-        online { clientApi.createCollateral(clientId = clientId, payload = payload) }
+    override suspend fun createCollateral(clientId: Int, payload: CollateralPayload): MutationResult<Unit> =
+        online {
+            clientApi.createCollateral(clientId = clientId, payload = payload)
+            Unit
+        }
 
     override suspend fun deleteClientIdentifier(clientId: Long, identifierId: Long) =
         online { clientIdentifierApi.deleteClientIdentifier(clientId = clientId, identifierId = identifierId) }
 
-    override suspend fun createClientIdentifier(clientId: Long, identifierPayload: IdentifierPayload) =
-        online { clientIdentifierApi.createClientIdentifier(clientId = clientId, identifierPayload = identifierPayload) }
+    override suspend fun createClientIdentifier(clientId: Long, identifierPayload: IdentifierPayload): MutationResult<Unit> =
+        online {
+            clientIdentifierApi.createClientIdentifier(clientId = clientId, identifierPayload = identifierPayload)
+            Unit
+        }
 
     override suspend fun updateClientIdentifier(clientId: Long, identifierId: Long, identifierPayload: IdentifierPayload) =
         online { clientIdentifierApi.updateClientIdentifier(clientId = clientId, identifierId = identifierId, identifierPayload = identifierPayload) }

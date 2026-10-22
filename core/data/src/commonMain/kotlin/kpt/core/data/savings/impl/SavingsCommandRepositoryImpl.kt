@@ -17,6 +17,9 @@ import kpt.core.base.store.mutation.MutationResult
 import kpt.core.data.savings.SavingsCommandRepository
 import kpt.core.database.savings.entity.SavingsAccountTransactionRequestEntity
 import kpt.core.model.objects.account.loan.SavingsApproval
+import kpt.core.model.objects.account.saving.SavingsActivationInput
+import kpt.core.model.objects.account.saving.SavingsApprovalInput
+import kpt.core.model.objects.account.saving.SavingsTransactionInput
 import kpt.core.model.objects.payloads.SavingsPayload
 import kpt.core.network.mifos.savings.api.FixedDepositApi
 import kpt.core.network.mifos.savings.api.SavingsAccountApi
@@ -35,14 +38,51 @@ internal class SavingsCommandRepositoryImpl(
     override suspend fun createFixedDepositAccount(fixedDepositPayload: FixedDepositPayload) =
         online { fixedDepositApi.createFixedDepositAccount(fixedDepositPayload = fixedDepositPayload) }
 
-    override suspend fun processTransaction(savingsAccountType: String, savingsAccountId: Int, transactionType: String?, savingsAccountTransactionRequest: SavingsAccountTransactionRequestEntity?) =
-        online { savingsAccountApi.processTransaction(savingsAccountType = savingsAccountType, savingsAccountId = savingsAccountId, transactionType = transactionType, savingsAccountTransactionRequest = savingsAccountTransactionRequest) }
+    override suspend fun processTransaction(
+        savingsAccountType: String,
+        savingsAccountId: Int,
+        transactionType: String,
+        input: SavingsTransactionInput,
+    ) = online {
+        savingsAccountApi.processTransaction(
+            savingsAccountType = savingsAccountType,
+            savingsAccountId = savingsAccountId,
+            transactionType = transactionType,
+            savingsAccountTransactionRequest = input.toEntity(),
+        )
+    }
 
-    override suspend fun activateSavings(savingsAccountId: Int, genericRequest: HashMap<String, String>) =
-        online { savingsAccountApi.activateSavings(savingsAccountId = savingsAccountId, genericRequest = genericRequest) }
+    override suspend fun activateSavings(
+        savingsAccountId: Int,
+        input: SavingsActivationInput,
+    ) = online {
+        savingsAccountApi.activateSavings(
+            savingsAccountId = savingsAccountId,
+            // The endpoint's body is a string map, so the map is built HERE from a typed input
+            // rather than at the call site — which is what guarantees all three keys are present
+            // and spelled right.
+            genericRequest = hashMapOf(
+                "activatedOnDate" to input.activatedOnDate,
+                "locale" to input.locale,
+                "dateFormat" to input.dateFormat,
+            ),
+        )
+    }
 
-    override suspend fun approveSavingsApplication(savingsAccountId: Int, savingsApproval: SavingsApproval?) =
-        online { savingsAccountApi.approveSavingsApplication(savingsAccountId = savingsAccountId, savingsApproval = savingsApproval) }
+    override suspend fun approveSavingsApplication(
+        savingsAccountId: Int,
+        input: SavingsApprovalInput,
+    ) = online {
+        savingsAccountApi.approveSavingsApplication(
+            savingsAccountId = savingsAccountId,
+            savingsApproval = SavingsApproval(
+                approvedOnDate = input.approvedOnDate,
+                locale = input.locale,
+                dateFormat = input.dateFormat,
+                note = input.note,
+            ),
+        )
+    }
 
     override suspend fun createSavingsAccount(savingsPayload: SavingsPayload?) =
         online { savingsAccountApi.createSavingsAccount(savingsPayload = savingsPayload) }
@@ -65,3 +105,27 @@ internal class SavingsCommandRepositoryImpl(
             policy = MutationPolicy.OnlineRequired,
         )
 }
+
+/**
+ * The `core/model` input -> Room-entity request body the savings transaction endpoint takes.
+ *
+ * `SavingsAccountTransactionRequestEntity` is the wire type the API declares, so the mapping lives
+ * at this boundary. `id`/`savingAccountId`/`savingsAccountType`/`transactionType` are left unset:
+ * they are STORAGE columns on that entity (it doubles as the offline-capture row), and the request
+ * carries the account and the command in its path and query instead.
+ *
+ * `errorMessage` is likewise storage — a request body has no business carrying one.
+ */
+private fun SavingsTransactionInput.toEntity() = SavingsAccountTransactionRequestEntity(
+    transactionDate = transactionDate,
+    transactionAmount = transactionAmount,
+    locale = locale,
+    dateFormat = dateFormat,
+    paymentTypeId = paymentTypeId?.toString(),
+    note = note,
+    accountNumber = accountNumber,
+    checkNumber = checkNumber,
+    routingCode = routingCode,
+    receiptNumber = receiptNumber,
+    bankNumber = bankNumber,
+)

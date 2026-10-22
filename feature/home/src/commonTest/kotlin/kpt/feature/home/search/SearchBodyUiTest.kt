@@ -15,7 +15,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runComposeUiTest
 import kpt.core.base.store.screen.ScreenState
-import kpt.core.designsystem.theme.MifosTheme
+import kpt.core.designsystem.theme.AppTheme
 import kpt.core.model.objects.SearchedEntity
 import kpt.feature.home.ui.TestTags
 import kotlin.test.Test
@@ -40,8 +40,12 @@ class SearchBodyUiTest {
     @Test
     fun theSearchFieldAndFiltersRender() = runComposeUiTest {
         setContent {
-            MifosTheme {
-                SearchBodyContent(state = SearchState(), onAction = {})
+            AppTheme {
+                SearchBodyContent(
+                    results = ScreenState.Empty,
+                    state = SearchState(),
+                    onAction = {},
+                )
             }
         }
         onNodeWithTag(TestTags.Home.SEARCH).assertIsDisplayed()
@@ -53,14 +57,12 @@ class SearchBodyUiTest {
     @Test
     fun resultsRenderWhenTheStateCarriesContent() = runComposeUiTest {
         setContent {
-            MifosTheme {
+            AppTheme {
                 SearchBodyContent(
-                    state = SearchState(
-                        query = "ram",
-                        results = ScreenState.Content(
-                            data = listOf(entity(1, "Ramesh"), entity(2, "Ramu")),
-                        ),
+                    results = ScreenState.Content(
+                        data = listOf(entity(1, "Ramesh"), entity(2, "Ramu")),
                     ),
+                    state = SearchState(query = "ram"),
                     onAction = {},
                 )
             }
@@ -78,11 +80,122 @@ class SearchBodyUiTest {
     fun typingEmitsAQueryChangedAction() = runComposeUiTest {
         val emitted = mutableListOf<SearchAction>()
         setContent {
-            MifosTheme {
-                SearchBodyContent(state = SearchState(), onAction = { emitted += it })
+            AppTheme {
+                SearchBodyContent(
+                    results = ScreenState.Empty,
+                    state = SearchState(),
+                    onAction = { emitted += it },
+                )
             }
         }
         onNodeWithTag(TestTags.Home.SEARCH_EXACT_MATCH).performClick()
         assertEquals(listOf<SearchAction>(SearchAction.ExactMatchToggled), emitted)
+    }
+    // ---- the result tap (S4d) ----
+
+    @Test
+    fun aResultWhoseTypeHasAPortedDestinationIsClickable() = runComposeUiTest {
+        var tapped: SearchedEntity? = null
+        setContent {
+            AppTheme {
+                SearchBodyContent(
+                    results = ScreenState.Content(listOf(entity(1, "Ramesh"))),
+                    state = SearchState(query = "ram"),
+                    onAction = {},
+                    onResultClick = { tapped = it },
+                )
+            }
+        }
+        onNodeWithTag(TestTags.Home.searchResult(1)).performClick()
+        assertEquals(1, tapped?.entityId)
+    }
+
+    @Test
+    fun theTypeIsMatchedCaseINSENSITIVELY() = runComposeUiTest {
+        // `entityType` arrives off the wire, not out of an enum — Fineract sends "CLIENT" but this
+        // very test file's own fixture says "client", and a tenant could send "Client". Matching
+        // exactly would have made every client result silently inert for one of those spellings.
+        var tapped = 0
+        setContent {
+            AppTheme {
+                SearchBodyContent(
+                    results = ScreenState.Content(
+                        listOf(
+                            entity(1, "Ramesh").copy(entityType = "CLIENT"),
+                            entity(2, "Ramu").copy(entityType = "client"),
+                            entity(3, "Rama").copy(entityType = "Loan"),
+                        ),
+                    ),
+                    state = SearchState(query = "ram"),
+                    onAction = {},
+                    onResultClick = { tapped++ },
+                )
+            }
+        }
+        onNodeWithTag(TestTags.Home.searchResult(1)).performClick()
+        onNodeWithTag(TestTags.Home.searchResult(2)).performClick()
+        onNodeWithTag(TestTags.Home.searchResult(3)).performClick()
+        assertEquals(3, tapped)
+    }
+
+    @Test
+    fun aResultWithNoPortedDestinationIsNOTClickable() = runComposeUiTest {
+        // CENTER alone now. SAVING became live in S5a when the savings summary landed — this list
+        // shrinks by one each time a vertical lands, which is the point of gating on it rather than
+        // on whether a callback was supplied (RULE-IMPL-DEAD-CLICKABLE-001).
+        var tapped = 0
+        setContent {
+            AppTheme {
+                SearchBodyContent(
+                    results = ScreenState.Content(
+                        listOf(entity(1, "Centre A").copy(entityType = "CENTER")),
+                    ),
+                    state = SearchState(query = "a"),
+                    onAction = {},
+                    onResultClick = { tapped++ },
+                )
+            }
+        }
+        onNodeWithTag(TestTags.Home.searchResult(1)).performClick()
+        assertEquals(0, tapped, "an unported entity type must not be tappable")
+    }
+
+    @Test
+    fun aSavingsResultBecameClickableInS5a() = runComposeUiTest {
+        var tapped = 0
+        setContent {
+            AppTheme {
+                SearchBodyContent(
+                    results = ScreenState.Content(
+                        listOf(entity(2, "Savings A").copy(entityType = "SAVING")),
+                    ),
+                    state = SearchState(query = "a"),
+                    onAction = {},
+                    onResultClick = { tapped++ },
+                )
+            }
+        }
+        onNodeWithTag(TestTags.Home.searchResult(2)).performClick()
+        // The savings summary is the destination — and it is what makes the whole savings vertical
+        // reachable, per spec §6a.
+        assertEquals(1, tapped)
+    }
+
+    @Test
+    fun noResultIsClickableWhenTheHostSuppliesNoCallback() = runComposeUiTest {
+        // This is what shipped in S2: no destination existed, so the rows were inert by design.
+        var tapped = 0
+        setContent {
+            AppTheme {
+                SearchBodyContent(
+                    results = ScreenState.Content(listOf(entity(1, "Ramesh"))),
+                    state = SearchState(query = "ram"),
+                    onAction = {},
+                    onResultClick = null,
+                )
+            }
+        }
+        onNodeWithTag(TestTags.Home.searchResult(1)).performClick()
+        assertEquals(0, tapped)
     }
 }

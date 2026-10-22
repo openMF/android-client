@@ -9,8 +9,8 @@
  */
 package kpt.core.network.mifos.client.mapper
 
-import kpt.core.model.objects.clients.Page
 import kpt.core.database.client.entity.ClientEntity
+import kpt.core.model.objects.clients.Page
 import kpt.core.network.data.AbstractMapper
 import kpt.core.network.mifos.client.dto.GetClientsResponse
 

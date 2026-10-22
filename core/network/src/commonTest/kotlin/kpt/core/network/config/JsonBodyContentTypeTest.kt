@@ -54,7 +54,7 @@ class JsonBodyContentTypeTest {
     private val mifos = AppAccessPoints.points.single { it.id == "mifos" }
 
     @Test
-    fun theMifosAccessPointDeclaresJsonOnBothSides() {
+    fun theAppAccessPointDeclaresJsonOnBothSides() {
         val declared = mifos.headers.mapNotNull { spec -> spec.value?.let { spec.name to it } }.toMap()
         assertEquals("application/json", declared[HttpHeaders.ContentType])
         assertEquals("application/json", declared[HttpHeaders.Accept])

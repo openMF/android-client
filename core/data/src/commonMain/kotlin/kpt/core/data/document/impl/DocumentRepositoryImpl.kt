@@ -9,6 +9,7 @@
  */
 package kpt.core.data.document.impl
 
+import io.ktor.client.statement.readRawBytes
 import kotlinx.coroutines.CoroutineScope
 import kpt.core.base.data.annotation.FromStore
 import kpt.core.base.data.annotation.RepositoryBinding
@@ -17,6 +18,7 @@ import kpt.core.base.store.screen.ScreenDataStream
 import kpt.core.base.store.screen.asScreenStream
 import kpt.core.data.document.DocumentRepository
 import kpt.core.model.objects.noncoreobjects.Document
+import kpt.core.network.mifos.document.api.DocumentApi
 import kpt.core.store.config.AppCacheKeys
 import kpt.core.store.config.AppStoreIds
 import kpt.core.store.config.AppStoreRegistry
@@ -26,6 +28,7 @@ import org.mobilenativefoundation.store.store5.Store
 @RepositoryBinding(binds = DocumentRepository::class)
 internal class DocumentRepositoryImpl(
     @FromStore(AppStoreIds.Documents) private val store: Store<DocumentKey, List<Document>>,
+    private val documentApi: DocumentApi,
 ) : DocumentRepository {
 
     override fun documentsStream(
@@ -41,4 +44,20 @@ internal class DocumentRepositoryImpl(
             fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
             ttl = AppStoreRegistry.Ttl.DOCUMENTS,
         )
+
+    /**
+     * NOT cached through a store. The response is an arbitrary attachment — a signature PNG today,
+     * a scanned PDF tomorrow — so there is no useful TTL and nothing to invalidate it on; the
+     * document LIST is what the store holds.
+     *
+     * `getOrNull()` because every failure means one thing to the caller: no file. A client with no
+     * signature yet is the common case and is not an error.
+     */
+    override suspend fun downloadDocument(
+        entityType: String,
+        entityId: Int,
+        documentId: Int,
+    ): ByteArray? = runCatching {
+        documentApi.downloadDocument(entityType, entityId, documentId).readRawBytes()
+    }.getOrNull()
 }

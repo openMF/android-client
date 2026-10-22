@@ -23,14 +23,14 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
-import kpt.core.designsystem.component.MifosBottomSheet
-import kpt.core.designsystem.component.MifosDatePickerTextField
-import kpt.core.designsystem.component.MifosOutlinedTextField
-import kpt.core.designsystem.component.MifosTextFieldConfig
-import kpt.core.designsystem.component.MifosTextFieldDropdown
+import kpt.core.designsystem.component.AppBottomSheet
+import kpt.core.designsystem.component.AppDatePickerTextField
+import kpt.core.designsystem.component.AppOutlinedTextField
+import kpt.core.designsystem.component.AppTextFieldConfig
+import kpt.core.designsystem.component.AppTextFieldDropdown
+import kpt.core.designsystem.theme.AppTheme
+import kpt.core.designsystem.theme.AppTypography
 import kpt.core.designsystem.theme.DesignToken
-import kpt.core.designsystem.theme.MifosTheme
-import kpt.core.designsystem.theme.MifosTypography
 import kpt.core.ui.generated.resources.Res
 import kpt.core.ui.generated.resources.amount
 import kpt.core.ui.generated.resources.cancel
@@ -65,7 +65,7 @@ fun AddChargeBottomSheet(
     amountError: String? = null,
     onAmountChange: (String) -> Unit,
 ) {
-    MifosBottomSheet(
+    AppBottomSheet(
         onDismiss = onDismiss,
         content = {
             val datePickerState = rememberDatePickerState(
@@ -75,7 +75,7 @@ fun AddChargeBottomSheet(
             Column(
                 Modifier.padding(DesignToken.padding.large),
             ) {
-                Text(text = title, style = MifosTypography.titleMediumEmphasized)
+                Text(text = title, style = AppTypography.titleMediumEmphasized)
 
                 Spacer(Modifier.height(DesignToken.padding.large))
                 if (showDatePicker) {
@@ -101,7 +101,7 @@ fun AddChargeBottomSheet(
                     }
                 }
 
-                MifosTextFieldDropdown(
+                AppTextFieldDropdown(
                     value = selectedChargeName,
                     onValueChanged = {},
                     onOptionSelected = onChargeSelected,
@@ -110,7 +110,7 @@ fun AddChargeBottomSheet(
                 )
 
                 if (selectedDate != null) {
-                    MifosDatePickerTextField(
+                    AppDatePickerTextField(
                         value = selectedDate,
                         label = stringResource(Res.string.date),
                         openDatePicker = { onDatePick(true) },
@@ -119,11 +119,11 @@ fun AddChargeBottomSheet(
                     Spacer(Modifier.height(DesignToken.padding.large))
                 }
 
-                MifosOutlinedTextField(
+                AppOutlinedTextField(
                     value = chargeAmount,
                     onValueChange = onAmountChange,
                     label = stringResource(Res.string.amount),
-                    config = MifosTextFieldConfig(
+                    config = AppTextFieldConfig(
                         isError = amountError != null,
                         errorText = amountError,
                         keyboardOptions = KeyboardOptions(
@@ -134,11 +134,11 @@ fun AddChargeBottomSheet(
 
                 Spacer(Modifier.height(DesignToken.padding.large))
 
-                MifosOutlinedTextField(
+                AppOutlinedTextField(
                     value = chargeType,
                     onValueChange = {},
                     label = stringResource(Res.string.type),
-                    config = MifosTextFieldConfig(
+                    config = AppTextFieldConfig(
                         readOnly = true,
                         enabled = false,
                     ),
@@ -146,11 +146,11 @@ fun AddChargeBottomSheet(
 
                 Spacer(Modifier.height(DesignToken.padding.large))
 
-                MifosOutlinedTextField(
+                AppOutlinedTextField(
                     value = chargeCollectedOn,
                     onValueChange = {},
                     label = stringResource(Res.string.collected_on),
-                    config = MifosTextFieldConfig(
+                    config = AppTextFieldConfig(
                         readOnly = true,
                         enabled = false,
                     ),
@@ -158,7 +158,7 @@ fun AddChargeBottomSheet(
 
                 Spacer(Modifier.height(DesignToken.padding.large))
 
-                MifosTwoButtonRow(
+                AppTwoButtonRow(
                     firstBtnText = dismissText,
                     secondBtnText = confirmText,
                     onFirstBtnClick = onDismiss,
@@ -175,7 +175,7 @@ fun AddChargeBottomSheet(
 private fun AddChargeBottomSheetPreview() {
     val sampleChargeOptions = listOf("Bank Fee", "Overdue Fee", "Processing Fee")
 
-    MifosTheme {
+    AppTheme {
         AddChargeBottomSheet(
             title = "Add Charge",
             confirmText = "Confirm",

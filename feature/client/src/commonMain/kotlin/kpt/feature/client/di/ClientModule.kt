@@ -9,9 +9,21 @@
  */
 package kpt.feature.client.di
 
+import kpt.feature.client.address.ClientAddressViewModel
 import kpt.feature.client.charges.ClientChargesViewModel
-import kpt.feature.client.detail.ClientDetailViewModel
+import kpt.feature.client.closure.ClientClosureViewModel
+import kpt.feature.client.collateral.ClientCollateralViewModel
+import kpt.feature.client.collateraldetails.ClientCollateralDetailsViewModel
+import kpt.feature.client.details.ClientDetailsViewModel
+import kpt.feature.client.documents.ClientDocumentsViewModel
+import kpt.feature.client.general.ClientGeneralViewModel
+import kpt.feature.client.identifiers.ClientIdentifiersViewModel
 import kpt.feature.client.list.ClientListViewModel
+import kpt.feature.client.loanaccounts.ClientLoanAccountsViewModel
+import kpt.feature.client.profile.ClientProfileViewModel
+import kpt.feature.client.signature.ClientSignatureViewModel
+import kpt.feature.client.staff.ClientStaffViewModel
+import kpt.feature.client.transfer.ClientTransferViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -21,6 +33,18 @@ import org.koin.dsl.module
  */
 val ClientModule = module {
     viewModelOf(::ClientListViewModel)
-    viewModelOf(::ClientDetailViewModel)
+    viewModelOf(::ClientProfileViewModel)
     viewModelOf(::ClientChargesViewModel)
+    viewModelOf(::ClientIdentifiersViewModel)
+    viewModelOf(::ClientStaffViewModel)
+    viewModelOf(::ClientClosureViewModel)
+    viewModelOf(::ClientTransferViewModel)
+    viewModelOf(::ClientCollateralViewModel)
+    viewModelOf(::ClientGeneralViewModel)
+    viewModelOf(::ClientDetailsViewModel)
+    viewModelOf(::ClientAddressViewModel)
+    viewModelOf(::ClientDocumentsViewModel)
+    viewModelOf(::ClientCollateralDetailsViewModel)
+    viewModelOf(::ClientSignatureViewModel)
+    viewModelOf(::ClientLoanAccountsViewModel)
 }

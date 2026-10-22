@@ -12,13 +12,17 @@ package cmp.navigation.registry
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import cmp.navigation.authenticatednavbar.PendingFeatureScreen
+import cmp.navigation.generated.resources.Res
+import cmp.navigation.generated.resources.home_dashboard_feature
 import kpt.core.base.ui.nav.popBackStackSafely
-import kpt.feature.home.search.SearchBody
 import kpt.feature.profile.identity.ProfileBody
+import kpt.feature.settings.navigateToNotification
 import kpt.feature.settings.navigateToSettings
 import kpt.feature.settings.notificationDestination
 import kpt.feature.settings.settingsDestination
 import kpt.feature.settings.syncAndDraftsDestination
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * BackboneRegistry — the FORK-OWNED white-label seam for the app **backbone** (the home-tab body and,
@@ -42,13 +46,17 @@ object BackboneRegistry {
      * strips the fenced block below, leaving `{ }` — an empty backbone body for the fork to fill.
      */
     val homeBody: @Composable (NavController) -> Unit = { _ ->
-        // Fineract resource search — the original app's de-facto dashboard, ported in S2 from
-        // 6b66e8a43:feature/search. This seam was EMPTY, which is why the Home tab rendered as a
-        // blank screen on device.
+        // Search used to render HERE — it was the original app's first tab and so its de-facto
+        // dashboard. It now has its own destination behind the top bar's magnifier (SearchNavigation),
+        // which leaves this seam needing content of its own.
         //
-        // No NavController is used yet: result rows are not clickable until S3 lands client detail,
-        // the first destination a result can open (RULE-IMPL-DEAD-CLICKABLE-001).
-        SearchBody()
+        // There is no home dashboard to put in it: the original has none (its four tabs are Search ·
+        // Clients · Centers · Groups), and a Home-first bar is a NEW product decision, so nothing has
+        // been designed or ported for this surface. Rather than improvise a plausible-looking
+        // dashboard — fabricated summary cards being precisely what RULE-DESIGN-CONFORMANCE-001
+        // forbids — the tab states what it is waiting for, and the gap is tracked in
+        // CAPABILITY_GAPS.yaml like every other unported destination.
+        PendingFeatureScreen(featureName = stringResource(Res.string.home_dashboard_feature))
     }
 
     /**
@@ -82,6 +90,13 @@ object BackboneRegistry {
      * imports (mirrors the `homeBody` seam pattern).
      */
     val navigateToSettings: (NavController) -> Unit = { it.navigateToSettings() }
+
+    /**
+     * Route the dashboard top bar's bell to the Notification backbone. Same seam shape as
+     * [navigateToSettings] and for the same reason: it keeps the `kpt.feature.settings` import out
+     * of the merge-owned shell, which `customization-surface.yaml` has as `owner: merge`.
+     */
+    val navigateToNotification: (NavController) -> Unit = { it.navigateToNotification() }
 
     /**
      * Backbone (framework) nav destinations — settings, notification, sync-and-drafts.

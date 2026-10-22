@@ -11,10 +11,9 @@ package kpt.feature.client.charges
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import co.touchlab.kermit.Logger
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.data.charge.ClientChargeRepository
@@ -35,7 +34,7 @@ import kpt.core.database.charge.entity.ChargesEntity
 internal class ClientChargesViewModel(
     private val repository: ClientChargeRepository,
     savedStateHandle: SavedStateHandle,
-) : BaseViewModel<ClientChargesState, ClientChargesEvent, ClientChargesAction>(ClientChargesState()) {
+) : BaseViewModel<Unit, ClientChargesEvent, ClientChargesAction>(Unit) {
 
     /**
      * Read once from the route argument.
@@ -54,12 +53,12 @@ internal class ClientChargesViewModel(
      */
     private val chargesStream = repository.clientChargesStream(clientId, viewModelScope)
 
-    init {
-        chargesStream.state
-            .onEach { mutableStateFlow.value = state.copy(charges = it) }
-            .catch { Logger.e(tag = TAG, throwable = it) { "clientChargesStream failed" } }
-            .launchIn(viewModelScope)
-    }
+    /**
+     * The charges levied on this client. `stateIn(… WhileSubscribed …)`, not an `init{}` hand-lift
+     * — see `ClientListViewModel.screenState` for why that kept dead subscriptions alive.
+     */
+    val charges: StateFlow<ScreenState<List<ChargesEntity>>> = chargesStream.state
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STATE_TIMEOUT_MS), ScreenState.Loading)
 
     override fun handleAction(action: ClientChargesAction) {
         when (action) {
@@ -72,21 +71,10 @@ internal class ClientChargesViewModel(
         /** Matches the route argument name in `ClientNavigation`. */
         const val CLIENT_ID_KEY = "clientId"
         const val TAG = "ClientChargesViewModel"
-    }
-}
 
-/**
- * One state, one source.
- *
- * `count` is DERIVED rather than stored. The original kept an `itemCount` in the composable via
- * `rememberSaveable`, pushed up from the list through a `setCount` callback — so the header could
- * disagree with the list it was describing. A derived value cannot.
- */
-internal data class ClientChargesState(
-    val charges: ScreenState<List<ChargesEntity>> = ScreenState.Loading,
-) {
-    val count: Int
-        get() = (charges as? ScreenState.Content)?.data?.size ?: 0
+        /** Template default — long enough to survive a rotation or a brief tab switch. */
+        const val STATE_TIMEOUT_MS = 5_000L
+    }
 }
 
 internal sealed interface ClientChargesAction {

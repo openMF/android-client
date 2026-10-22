@@ -16,7 +16,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 
 /**
- * `NavGraphBuilder.composable<T>(...)` wrapper that pre-wires Mifos's shared-axis
+ * `NavGraphBuilder.composable<T>(...)` wrapper that pre-wires the app's shared-axis
  * transitions for **forward/back navigation** in a single stack.
  *
  * Reads `MaterialTheme.motion` at graph-build time (`@Composable` extension) so the

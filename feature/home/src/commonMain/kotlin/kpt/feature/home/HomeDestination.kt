@@ -34,15 +34,18 @@ fun NavController.navigateToHome(navOptions: NavOptions? = null) {
 fun NavGraphBuilder.homeGraph(
     onSettingsClick: () -> Unit,
     homeBody: @Composable () -> Unit = {},
+    /** See `HomeScreen`'s `topBar` — pass `{ }` when the app shell already draws one bar for all tabs. */
+    topBar: (@Composable () -> Unit)? = null,
 ) {
     navigation<HomeDestination>(
         startDestination = HomeRoute,
     ) {
         composableWithStayTransitions<HomeRoute> {
-            HomeScreen(
-                onSettingsClick = onSettingsClick,
-                homeBody = homeBody,
-            )
+            if (topBar == null) {
+                HomeScreen(onSettingsClick = onSettingsClick, homeBody = homeBody)
+            } else {
+                HomeScreen(onSettingsClick = onSettingsClick, homeBody = homeBody, topBar = topBar)
+            }
         }
     }
 }

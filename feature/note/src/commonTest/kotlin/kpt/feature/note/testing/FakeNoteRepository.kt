@@ -5,12 +5,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+ * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
 @file:OptIn(kpt.core.base.store.screen.ExperimentalScreenDataStreamTestingApi::class)
 
 package kpt.feature.note.testing
 
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +22,7 @@ import kpt.core.base.store.screen.screenDataStreamForTesting
 import kpt.core.data.note.NoteCommandRepository
 import kpt.core.data.note.NoteRepository
 import kpt.core.database.note.entity.NoteEntity
+import kpt.core.model.note.NoteDraft
 import kpt.core.network.mifos.note.dto.CreateNoteResponseDto
 import kpt.core.network.mifos.note.dto.DeleteNoteResponseDto
 import kpt.core.network.mifos.note.dto.NoteRequestDto
@@ -40,6 +42,16 @@ internal class FakeNoteRepository(
     val state = MutableStateFlow(initial)
     private val refreshes = MutableSharedFlow<Unit>(extraBufferCapacity = 4)
 
+    /**
+     * The stream's force-fresh channel, exposed so a test can assert the screen RE-READ after a
+     * write.
+     *
+     * It has to be asserted rather than assumed: `NoteCommandRepository` is cache-free, so a write
+     * does NOT invalidate the read. Believing otherwise is what left a deleted note on screen and
+     * was reported as "delete note is not working".
+     */
+    val forceFreshes = MutableSharedFlow<Unit>(extraBufferCapacity = 4)
+
     /** Every resourceId the ViewModel asked for — the read key is worth asserting. */
     val requestedIds = mutableListOf<Long>()
 
@@ -53,7 +65,11 @@ internal class FakeNoteRepository(
         scope: CoroutineScope,
     ): ScreenDataStream<List<NoteEntity>> {
         requestedIds += resourceId
-        return screenDataStreamForTesting(state, refreshTrigger = refreshes)
+        return screenDataStreamForTesting(
+            state,
+            refreshTrigger = refreshes,
+            forceFreshTrigger = forceFreshes,
+        )
     }
 }
 
@@ -79,12 +95,17 @@ internal class FakeNoteCommandRepository(
         val text: String? = null,
     )
 
+    /** Idempotency keys seen by create, in order — a retry must present the SAME one. */
+    val createKeys = mutableListOf<String>()
+
     override suspend fun addNewNote(
         resourceType: String,
         resourceId: Long,
         noteRequestDto: NoteRequestDto,
+        idempotencyKey: String,
     ): MutationResult<CreateNoteResponseDto> {
         added += Written(resourceType, resourceId, text = noteRequestDto.note)
+        createKeys += idempotencyKey
         return outcome().map { CreateNoteResponseDto() }
     }
 
@@ -105,6 +126,34 @@ internal class FakeNoteCommandRepository(
     ): MutationResult<DeleteNoteResponseDto> {
         deleted += Written(resourceType, resourceId, noteId)
         return outcome().map { DeleteNoteResponseDto() }
+    }
+
+    /** Drafts actually sent, in order — the outbox's and the syncer's shared view. */
+    val submitted = mutableListOf<NoteDraft>()
+
+    /**
+     * Set to make the next [submitDraft] THROW.
+     *
+     * `submitDraft` throws to fail by design (the framework's submit machinery treats a returning
+     * block as success), so a fake that returned an error value would not exercise the path that
+     * matters.
+     */
+    var failWith: Throwable? = null
+
+    /**
+     * When set, awaited BEFORE the submit completes — holding the mutation IN FLIGHT.
+     *
+     * Needed because the framework's double-submit guard is "no-op while Submitting". Under
+     * `Dispatchers.Unconfined` the first submit finishes before the second call is even made, so
+     * without a gate the guard is never exercised and the test would pass against a ViewModel with
+     * no protection at all.
+     */
+    var gate: CompletableDeferred<Unit>? = null
+
+    override suspend fun submitDraft(draft: NoteDraft) {
+        failWith?.let { throw it }
+        gate?.await()
+        submitted += draft
     }
 }
 

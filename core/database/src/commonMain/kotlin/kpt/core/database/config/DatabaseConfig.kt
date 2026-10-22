@@ -15,5 +15,5 @@ object DatabaseConfig {
     const val NAME = "com_mifos_mifosxdroid.db"
 
     /** Desktop (JVM) data directory under the OS app-data root (app_name-derived). */
-    const val DESKTOP_DIR_NAME = "MifosXDroid"
+    const val DESKTOP_DIR_NAME = "AppXDroid"
 }

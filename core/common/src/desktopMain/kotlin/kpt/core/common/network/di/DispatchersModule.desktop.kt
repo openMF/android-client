@@ -11,7 +11,7 @@ package kpt.core.common.network.di
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kpt.core.common.network.MifosDispatchers
+import kpt.core.common.network.AppDispatchers
 import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -19,9 +19,9 @@ import kotlin.coroutines.CoroutineContext
 
 actual val ioDispatcherModule: Module
     get() = module {
-        single<CoroutineDispatcher>(named(MifosDispatchers.IO.name)) { Dispatchers.Default }
+        single<CoroutineDispatcher>(named(AppDispatchers.IO.name)) { Dispatchers.Default }
     }
 actual val ioContextModule: Module
     get() = module {
-        single<CoroutineContext>(named(MifosDispatchers.IO.name)) { Dispatchers.Default }
+        single<CoroutineContext>(named(AppDispatchers.IO.name)) { Dispatchers.Default }
     }

@@ -131,6 +131,10 @@ kermit = "2.1.0"
 # compiler version and fails fast on a mismatch). See 07-ios-swiftpm.md.
 skie = "0.10.4"
 fileKit = "0.14.2"
+# Image cropper + signature canvas — both needed by the client signature screen
+# (core/ui MifosImageCropperDialog / MifosSignatureDrawDialog).
+krop = "0.2.0"
+composeSignature = "1.0.1"
 uiBackhandler = "1.11.1"
 wire = "6.2.0"
 compottie = "2.2.4"
@@ -363,6 +367,8 @@ filekit-core = { group = "io.github.vinceglb", name = "filekit-core", version.re
 filekit-compose = { module = "io.github.vinceglb:filekit-dialogs-compose", version.ref = "fileKit" }
 filekit-dialog-compose = { module = "io.github.vinceglb:filekit-dialogs", version.ref = "fileKit" }
 filekit-coil = { module = "io.github.vinceglb:filekit-coil", version.ref = "fileKit" }
+crop-krop-ui = { module = "com.attafitamim.krop:ui", version.ref = "krop" }
+compose-signature = { module = "io.github.niyajali:compose-signature", version.ref = "composeSignature" }
 
 kermit-logging = { group = "co.touchlab", name = "kermit", version.ref = "kermit" }
 kermit-simple = { group = "co.touchlab", name = "kermit-simple", version.ref = "kermit" }

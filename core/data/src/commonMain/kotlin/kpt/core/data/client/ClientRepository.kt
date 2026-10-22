@@ -11,8 +11,16 @@ package kpt.core.data.client
 
 import kotlinx.coroutines.CoroutineScope
 import kpt.core.base.store.screen.ScreenDataStream
+import kpt.core.database.client.entity.AddressTemplate
 import kpt.core.database.client.entity.ClientAccounts
+import kpt.core.database.client.entity.ClientAddressEntity
 import kpt.core.database.client.entity.ClientEntity
+import kpt.core.model.client.ClientCloseTemplateResponse
+import kpt.core.model.client.ClientTemplateOptions
+import kpt.core.model.objects.clients.ClientAddressResponse
+import kpt.core.model.objects.noncoreobjects.Identifier
+import kpt.core.model.shared.CollateralItem
+import kpt.core.model.shared.CollateralItemResult
 
 interface ClientRepository {
     /** The officer's client roster. */
@@ -29,4 +37,64 @@ interface ClientRepository {
      * while accounts are still loading, instead of blocking the whole screen on the slower of two.
      */
     fun clientAccountsStream(clientId: Int, scope: CoroutineScope): ScreenDataStream<ClientAccounts>
+
+    /**
+     * The client's identity documents (passport, national id, …).
+     *
+     * The STORE for this read already existed (`clientGetClientListIdentifiers`) and nothing
+     * exposed it — the identifiers screen could not be ported without this line. That is the usual
+     * shape of the remaining feature work: the substrate is wired API-to-store, and the repository
+     * surface is completed per feature as its screens land.
+     */
+    fun clientIdentifiersStream(clientId: Long, scope: CoroutineScope): ScreenDataStream<List<Identifier>>
+
+    /**
+     * The client's profile photo as the `data:image/...;base64,...` URL Fineract returns, or
+     * `null` when there isn't one.
+     *
+     * A one-shot blob, NOT a [ScreenDataStream]: a missing photo is the common case rather than an
+     * error, so there is no Loading/Empty/Error for a screen to render — the avatar placeholder IS
+     * the empty state. Failure returns `null` for the same reason; an unreachable photo must not
+     * turn the client's profile into an error screen.
+     *
+     * Returned as the raw STRING, decoded by the caller through `core/ui`'s `imageToByteArray`.
+     * That is where the original put the conversion too (`Flow<DataState<String>>`), and it keeps
+     * `core/data` from depending on `core/ui` — the dependency runs the other way.
+     */
+    suspend fun clientImage(clientId: Int): String?
+
+    /** The client's postal addresses. */
+    fun clientAddressesStream(clientId: Int, scope: CoroutineScope): ScreenDataStream<List<ClientAddressEntity>>
+
+    /**
+     * The address FORM's option sets (address types, states, countries). A tenant-level catalog,
+     * so keyed `Unit` and shared across clients — the original fetched it per client.
+     */
+    fun addressTemplateStream(scope: CoroutineScope): ScreenDataStream<AddressTemplate>
+
+    /** Where the officer has recorded this client — the pinpoint map/list. */
+    fun pinpointLocationsStream(clientId: Int, scope: CoroutineScope): ScreenDataStream<List<ClientAddressResponse>>
+
+    /** Collateral the client has already pledged. */
+    fun clientCollateralStream(clientId: Int, scope: CoroutineScope): ScreenDataStream<List<CollateralItemResult>>
+
+    /**
+     * The collateral TYPES the tenant offers — a catalog, not client data, which is why it is keyed
+     * `Unit` and shared across clients. Backs the type picker on the add-collateral form.
+     */
+    fun collateralItemsStream(scope: CoroutineScope): ScreenDataStream<List<CollateralItem>>
+
+    /** Closure reasons for the close-client form. Also a tenant-level catalog. */
+    fun clientCloseTemplateStream(scope: CoroutineScope): ScreenDataStream<ClientCloseTemplateResponse>
+
+    /**
+     * The client's TEMPLATE — the option sets the Fineract server offers for THIS client:
+     * `staffOptions`, `savingAccountOptions`, `shareAccounts`.
+     *
+     * One read backing several screens, which is how the original got it too: `getClientStaff`,
+     * `getSavingsAccounts` and `getShareAccounts` were three repository methods that each called
+     * `getClientTemplate(clientId)` and kept one field. Three identical uncached requests became
+     * one store; the screens project the field they need.
+     */
+    fun clientTemplateStream(clientId: Int, scope: CoroutineScope): ScreenDataStream<ClientTemplateOptions>
 }

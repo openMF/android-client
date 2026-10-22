@@ -19,8 +19,8 @@ internal class AuthenticatedNavbarNavigationViewModel :
 
     override fun handleAction(action: AuthenticatedNavBarAction) {
         when (action) {
-            AuthenticatedNavBarAction.SettingsTabClick -> handleSettingsTabClicked()
             AuthenticatedNavBarAction.HomeTabClick -> handleHomeTabClicked()
+            AuthenticatedNavBarAction.PendingTabClick -> Unit
             is AuthenticatedNavBarAction.Internal -> handleInternalAction(action)
         }
     }
@@ -35,16 +35,20 @@ internal class AuthenticatedNavbarNavigationViewModel :
     private fun handleHomeTabClicked() {
         sendEvent(AuthenticatedNavBarEvent.NavigateToHomeScreen)
     }
-
-    private fun handleSettingsTabClicked() {
-        sendEvent(AuthenticatedNavBarEvent.NavigateToProfileScreen)
-    }
 }
 
 internal sealed class AuthenticatedNavBarAction {
+    /** The first tab. Search moved to the top bar's magnifier (see AuthenticatedNavBarTabItem). */
     data object HomeTabClick : AuthenticatedNavBarAction()
 
-    data object SettingsTabClick : AuthenticatedNavBarAction()
+    /**
+     * Centers / Groups, whose feature modules are not ported yet.
+     *
+     * Routed by the navbar straight to the pending host, so there is nothing for the ViewModel to
+     * decide; it is modelled anyway rather than omitted so the `when` stays exhaustive and the day
+     * those tabs become real, the compiler points here.
+     */
+    data object PendingTabClick : AuthenticatedNavBarAction()
 
     sealed class Internal : AuthenticatedNavBarAction() {
         data class UserStateUpdateReceive(val userState: UserData?) : Internal()
@@ -57,9 +61,5 @@ internal sealed class AuthenticatedNavBarEvent {
 
     data object NavigateToHomeScreen : AuthenticatedNavBarEvent() {
         override val tab: AuthenticatedNavBarTabItem = AuthenticatedNavBarTabItem.HomeTab
-    }
-
-    data object NavigateToProfileScreen : AuthenticatedNavBarEvent() {
-        override val tab: AuthenticatedNavBarTabItem = AuthenticatedNavBarTabItem.ProfileTab
     }
 }

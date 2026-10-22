@@ -9,6 +9,7 @@
  */
 package kpt.feature.home.search
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,9 +33,11 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.screen.ScreenContent
-import kpt.core.designsystem.component.MifosOutlinedTextField
-import kpt.core.designsystem.icon.MifosIcons
+import kpt.core.common.utils.Constants
+import kpt.core.designsystem.component.AppOutlinedTextField
+import kpt.core.designsystem.icon.AppIcons
 import kpt.core.model.objects.SearchedEntity
 import kpt.feature.home.generated.resources.Res
 import kpt.feature.home.generated.resources.feature_home_search_blank_query
@@ -61,12 +64,21 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun SearchBody(
     modifier: Modifier = Modifier,
+    /**
+     * Opens the tapped result's detail. Null leaves every row un-clickable, which is what shipped
+     * in S2 when no destination existed; the shell supplies it now that three of the five entity
+     * types have one. See [SearchResultRow].
+     */
+    onResultClick: ((SearchedEntity) -> Unit)? = null,
     viewModel: SearchViewModel = koinViewModel(),
 ) {
+    val results by viewModel.results.collectAsStateWithLifecycle()
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
     SearchBodyContent(
         state = state,
+        results = results,
         onAction = { viewModel.actionChannel.trySend(it) },
+        onResultClick = onResultClick,
         modifier = modifier,
     )
 }
@@ -81,8 +93,10 @@ fun SearchBody(
 @Composable
 internal fun SearchBodyContent(
     state: SearchState,
+    results: ScreenState<List<SearchedEntity>>,
     onAction: (SearchAction) -> Unit,
     modifier: Modifier = Modifier,
+    onResultClick: ((SearchedEntity) -> Unit)? = null,
 ) {
     Column(
         modifier = modifier
@@ -91,11 +105,11 @@ internal fun SearchBodyContent(
             .testTag(TestTags.Home.SEARCH),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        MifosOutlinedTextField(
+        AppOutlinedTextField(
             value = state.query,
             onValueChange = { onAction(SearchAction.QueryChanged(it)) },
             label = stringResource(Res.string.feature_home_search_hint),
-            leadingIcon = MifosIcons.Search,
+            leadingIcon = AppIcons.Search,
             showClearIcon = state.query.isNotEmpty(),
             onClickClearIcon = { onAction(SearchAction.Clear) },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
@@ -139,13 +153,19 @@ internal fun SearchBodyContent(
         }
 
         ScreenContent(
-            state = state.results,
+            state = results,
             onRetry = { onAction(SearchAction.Submit) },
             modifier = Modifier.fillMaxSize(),
         ) { results, _ ->
             LazyColumn(modifier = Modifier.testTag(TestTags.Home.SEARCH_RESULTS)) {
                 items(results) { entity ->
-                    SearchResultRow(entity)
+                    SearchResultRow(
+                        entity = entity,
+                        // Null for an entity type with no ported destination, so that row is not
+                        // clickable while its siblings are — see [SearchResultRow].
+                        onClick = onResultClick?.takeIf { entity.hasPortedDestination() }
+                            ?.let { click -> { click(entity) } },
+                    )
                     HorizontalDivider()
                 }
             }
@@ -154,20 +174,29 @@ internal fun SearchBodyContent(
 }
 
 /**
- * A result row.
+ * A result row, clickable only when its entity type has a ported destination.
  *
- * Deliberately NOT clickable in S2. The original opened the client, group, loan or savings detail
- * for the tapped result — none of which exists yet; `client` arrives in S3, `loan` in S4, `savings`
- * in S5, `groups` in S6. Wiring a tap now would mean an `onClick` that goes nowhere, which is the
- * dead-clickable defect (RULE-IMPL-DEAD-CLICKABLE-001). The row gains its tap in S3, with the first
- * destination that can receive it.
+ * ## It took until S4 for this tap to be honest
+ *
+ * The row shipped deliberately inert in S2 — the original routed a tap to the client, group, centre,
+ * loan or savings detail by `entityType`, and none of those existed, so a tap would have been the
+ * dead-clickable defect (RULE-IMPL-DEAD-CLICKABLE-001).
+ *
+ * Three of the five now exist: `CLIENT` → the client profile, `GROUP` → group detail, `LOAN` → the
+ * loan account SUMMARY (which is the screen the original's search opened — not the loan profile;
+ * see `LoanSummaryViewModel` for why those are different). `CENTER` and `SAVING` are still
+ * unported, so those rows stay un-clickable rather than all five becoming live together. That is
+ * also what makes `feature/loan` reachable at all: it is registered but, until this tap, nothing
+ * in the running app navigated to any loan screen.
  */
 @Composable
-private fun SearchResultRow(entity: SearchedEntity) {
+private fun SearchResultRow(entity: SearchedEntity, onClick: (() -> Unit)?) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 12.dp),
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
+            .padding(vertical = 12.dp)
+            .testTag(TestTags.Home.searchResult(entity.entityId)),
     ) {
         Text(text = entity.description, style = MaterialTheme.typography.bodyLarge)
         entity.entityType?.let {
@@ -175,6 +204,24 @@ private fun SearchResultRow(entity: SearchedEntity) {
         }
     }
 }
+
+/**
+ * Whether this result's type has somewhere to go.
+ *
+ * Fineract's `entityType` is upper-case (`"CLIENT"`, `"LOAN"`, …) — matched case-INSENSITIVELY,
+ * because this value reaches the app from a server response rather than from a closed enum, and a
+ * tenant returning `"Client"` would otherwise silently make every client result inert.
+ */
+private fun SearchedEntity.hasPortedDestination(): Boolean =
+    entityType?.uppercase() in PORTED_SEARCH_ENTITIES
+
+private val PORTED_SEARCH_ENTITIES = setOf(
+    Constants.SEARCH_ENTITY_CLIENT,
+    Constants.SEARCH_ENTITY_GROUP,
+    Constants.SEARCH_ENTITY_LOAN,
+    // S5a — the savings summary landed, so a SAVING hit now has somewhere to go.
+    Constants.SEARCH_ENTITY_SAVING,
+)
 
 private fun SearchFilter.labelRes() = when (this) {
     SearchFilter.Clients -> Res.string.feature_home_search_filter_clients

@@ -10,6 +10,7 @@
 package kpt.core.data.datatable.impl
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.serialization.json.JsonArray
 import kpt.core.base.data.annotation.FromStore
 import kpt.core.base.data.annotation.RepositoryBinding
 import kpt.core.base.store.screen.FetchPolicy
@@ -20,11 +21,14 @@ import kpt.core.database.datatable.entity.DataTableEntity
 import kpt.core.store.config.AppCacheKeys
 import kpt.core.store.config.AppStoreIds
 import kpt.core.store.config.AppStoreRegistry
+import kpt.core.store.datatable.DataTableDataKey
 import org.mobilenativefoundation.store.store5.Store
 
 @RepositoryBinding(binds = DataTableRepository::class)
 internal class DataTableRepositoryImpl(
     @FromStore(AppStoreIds.DataTables) private val store: Store<String, List<DataTableEntity>>,
+    @FromStore(AppStoreIds.DatatableGetDataOfDataTable)
+    private val dataStore: Store<DataTableDataKey, JsonArray>,
 ) : DataTableRepository {
 
     // NETWORK_WITH_CACHE, not the CACHE_FIRST_SWR default: SWR's read path is
@@ -41,4 +45,19 @@ internal class DataTableRepositoryImpl(
             fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
             ttl = AppStoreRegistry.Ttl.DATA_TABLES,
         )
+
+    override fun dataTableDataStream(
+        tableName: String,
+        entityId: Int,
+        scope: CoroutineScope,
+    ): ScreenDataStream<JsonArray> = dataStore.asScreenStream(
+        key = DataTableDataKey(tableName, entityId),
+        cacheKey = AppCacheKeys.DatatableGetDataOfDataTable.forKey("$tableName:$entityId"),
+        scope = scope,
+        // An entity with no rows in this datatable is the common case — the officer has simply not
+        // filled it in — so it is an EMPTY state, not an error.
+        isEmpty = { it.isEmpty() },
+        fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
+        ttl = AppStoreRegistry.Ttl.DATATABLE_GET_DATA_OF_DATA_TABLE,
+    )
 }

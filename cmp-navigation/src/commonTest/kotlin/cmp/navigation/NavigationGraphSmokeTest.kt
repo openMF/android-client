@@ -12,16 +12,32 @@ package cmp.navigation
 import cmp.navigation.authenticated.AuthenticatedGraphRoute
 import cmp.navigation.authenticatednavbar.AuthenticatedNavBarTabItem
 import cmp.navigation.authenticatednavbar.AuthenticatedNavbarRoute
+import cmp.navigation.registry.TabRegistry
 import cmp.navigation.rootnav.RootNavNavigation
 import cmp.navigation.splash.SplashRoute
 import cmp.navigation.utils.toObjectNavigationRoute
 import kotlinx.serialization.serializer
-import kpt.feature.signin.SignInRoute
+import kpt.core.common.utils.Constants
+import kpt.feature.activate.navigation.ActivateRoute
+import kpt.feature.client.navigation.ClientAddressRoute
+import kpt.feature.client.navigation.ClientChargesRoute
+import kpt.feature.client.navigation.ClientClosureRoute
+import kpt.feature.client.navigation.ClientCollateralDetailsRoute
+import kpt.feature.client.navigation.ClientCollateralRoute
+import kpt.feature.client.navigation.ClientDetailsRoute
+import kpt.feature.client.navigation.ClientDocumentsRoute
+import kpt.feature.client.navigation.ClientGeneralRoute
+import kpt.feature.client.navigation.ClientIdentifiersRoute
+import kpt.feature.client.navigation.ClientProfileRoute
+import kpt.feature.client.navigation.ClientSignatureRoute
+import kpt.feature.client.navigation.ClientStaffRoute
+import kpt.feature.client.navigation.ClientTransferRoute
 import kpt.feature.home.HomeRoute
 import kpt.feature.profile.ProfileRoute
 import kpt.feature.settings.NotificationRoute
 import kpt.feature.settings.SettingsRoute
 import kpt.feature.settings.SyncAndDraftsRoute
+import kpt.feature.signin.SignInRoute
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -54,11 +70,9 @@ import kotlin.test.assertTrue
 class NavigationGraphSmokeTest {
 
     /**
-     * Every route the fork declares today. All are parameterless `data object`s — the original app's
-     * arg-carrying routes (`ClientDetailRoute`, `LoanDetailRoute`, `ActivateRoute(id, type)` …)
-     * arrive with their slices, and a `parameterisedRoutesInstantiateWithDefaults` test returns then.
-     * There is deliberately no such test now: there is nothing to instantiate, and a test asserting
-     * that an empty list is empty is worse than no test.
+     * Every PARAMETERLESS route the fork declares. Arg-carrying routes are counted separately in
+     * [argCarryingRoutes] — they arrived with S3/S3c, which is what this KDoc used to say would
+     * happen ("a `parameterisedRoutesInstantiateWithDefaults` test returns then").
      */
     private val allRoutes: List<Any> = listOf(
         // shell
@@ -74,6 +88,45 @@ class NavigationGraphSmokeTest {
         NotificationRoute,
         SyncAndDraftsRoute,
     )
+
+    /**
+     * The arg-carrying routes, instantiated with real arguments.
+     *
+     * The point is not the count — it is that every one of them REQUIRES its arguments. An earlier
+     * pass of this port gave several of them defaults (`ActivateRoute(id = -1, type = "")`,
+     * `ClientStaffRoute(id = -1)`), which made a screen reachable with a sentinel id that it would
+     * then ask Fineract about. Constructing them here without defaults is what keeps that from
+     * coming back: adding a default would not break this test, but REMOVING a required argument
+     * would stop compiling it.
+     */
+    private val argCarryingRoutes: List<Any> = listOf(
+        ClientProfileRoute(clientId = 1),
+        ClientDetailsRoute(clientId = 1),
+        ClientGeneralRoute(clientId = 1),
+        ClientIdentifiersRoute(clientId = 1),
+        ClientAddressRoute(clientId = 1),
+        ClientDocumentsRoute(clientId = 1),
+        ClientChargesRoute(clientId = 1),
+        ClientStaffRoute(clientId = 1),
+        ClientClosureRoute(clientId = 1),
+        ClientTransferRoute(clientId = 1),
+        ClientCollateralRoute(clientId = 1),
+        ClientCollateralDetailsRoute(clientId = 1),
+        ClientSignatureRoute(clientId = 1, clientName = "n", accountNo = "a"),
+        ActivateRoute(id = 1, type = Constants.ACTIVATE_GROUP),
+    )
+
+    @Test
+    fun everyArgCarryingRouteRequiresItsArguments() {
+        // Each entry above is constructed with explicit arguments; this asserts the set is
+        // non-empty and distinct, so a copy-paste duplicate in the list is caught.
+        assertEquals(
+            argCarryingRoutes.size,
+            argCarryingRoutes.distinct().size,
+            "duplicate entries in argCarryingRoutes",
+        )
+        assertTrue(argCarryingRoutes.isNotEmpty())
+    }
 
     // vacuous-ok: `serializer<T>()` returns a non-null KSerializer by signature, so these
     // assertions cannot fail at RUNTIME. They are kept because the guarantee is at COMPILE time —
@@ -121,33 +174,44 @@ class NavigationGraphSmokeTest {
     }
 
     @Test
-    fun bottomNavTabsHaveStableTestTagsAndNonBlankRoutes() {
-        val tabs = listOf(
-            AuthenticatedNavBarTabItem.HomeTab,
-            AuthenticatedNavBarTabItem.ProfileTab,
+    fun theBottomBarIsTheFourPortedTabsInTheOriginalsOrder() {
+        // ORDER is the assertion, not just membership. Clients, Centers and Groups all arrive
+        // through @FeatureTab, so without an explicit order in TabRegistry the bar would show
+        // whatever sequence `generateFeatureTabs` happened to scan the modules in — and tab order
+        // is muscle memory for a field officer, not a code-generation detail.
+        //
+        // Home is FIRST by product decision (the original's first tab was Search, which now lives
+        // on the top bar's magnifier). ProfileTab is absent: the original has no Profile tab, its
+        // account surface is the drawer header.
+        assertEquals(
+            listOf("HomeTab", "ClientTab", "CentersTab", "GroupsTab"),
+            TabRegistry.tabs.map { it.testTag },
         )
+    }
 
-        // Locked test tags — instrumentation tests + analytics depend on these.
-        // Renaming requires updating both the test suite and any dashboards.
-        assertEquals("HomeTab", AuthenticatedNavBarTabItem.HomeTab.testTag)
-        assertEquals("ProfileTab", AuthenticatedNavBarTabItem.ProfileTab.testTag)
-
-        // Every tab declares non-blank graphRoute + startDestinationRoute so the
-        // bottom bar doesn't crash with "destination not found" on first tap.
-        tabs.forEach { tab ->
-            assertTrue(
-                tab.graphRoute.isNotBlank(),
-                "${tab::class.simpleName} has blank graphRoute",
-            )
+    @Test
+    fun everyTabHasADistinctNonBlankRoutePair() {
+        // A blank route makes the tab crash with "destination not found" on first tap; a SHARED
+        // route makes two tabs highlight at once and leaves the back stack unable to tell them
+        // apart. Both were live risks while Centers and Groups were placeholders pointing at one
+        // pending host, and both stay asserted now that they point at real graphs.
+        TabRegistry.tabs.forEach { tab ->
+            assertTrue(tab.graphRoute.isNotBlank(), "${tab.testTag} has blank graphRoute")
             assertTrue(
                 tab.startDestinationRoute.isNotBlank(),
-                "${tab::class.simpleName} has blank startDestinationRoute",
-            )
-            assertTrue(
-                tab.testTag.isNotBlank(),
-                "${tab::class.simpleName} has blank testTag",
+                "${tab.testTag} has blank startDestinationRoute",
             )
         }
+        val starts = TabRegistry.tabs.map { it.startDestinationRoute }
+        assertEquals(starts.size, starts.distinct().size, "two tabs share a start destination")
+    }
+
+    @Test
+    fun theShellOwnsOnlyTheHomeTab() {
+        // Every other tab has left AuthenticatedNavBarTabItem for its own feature module. This
+        // pins the direction of travel: a NEW placeholder tab added here should be a deliberate
+        // decision, not something that accumulates.
+        assertEquals("HomeTab", AuthenticatedNavBarTabItem.HomeTab.testTag)
     }
 
     @Test

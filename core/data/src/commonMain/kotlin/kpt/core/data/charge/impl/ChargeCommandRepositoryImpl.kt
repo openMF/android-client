@@ -24,8 +24,18 @@ internal class ChargeCommandRepositoryImpl(
     private val gateway: MutationGateway,
 ) : ChargeCommandRepository {
 
-    override suspend fun createCharges(resourceType: String, resourceId: Int, chargesPayload: ChargesPayload) =
-        online { chargeApi.createCharges(resourceType = resourceType, resourceId = resourceId, chargesPayload = chargesPayload) }
+    override suspend fun createCharges(
+        resourceType: String,
+        resourceId: Int,
+        chargesPayload: ChargesPayload,
+    ): MutationResult<Unit> = online {
+        chargeApi.createCharges(
+            resourceType = resourceType,
+            resourceId = resourceId,
+            chargesPayload = chargesPayload,
+        )
+        Unit
+    }
 
     override suspend fun deleteCharge(resourceType: String, resourceId: Int, chargeId: Int) =
         online { chargeApi.deleteCharge(resourceType = resourceType, resourceId = resourceId, chargeId = chargeId) }

@@ -9,12 +9,14 @@
  */
 package kpt.core.data.loan
 
-import io.ktor.client.statement.HttpResponse
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.database.loan.entity.Loan
 import kpt.core.database.loan.entity.LoanRepaymentRequestEntity
 import kpt.core.database.loan.entity.LoanRepaymentResponseEntity
+import kpt.core.model.objects.account.loan.LoanApplicationInput
 import kpt.core.model.objects.account.loan.LoanApproval
+import kpt.core.model.objects.account.loan.RepaymentSchedule
+import kpt.core.model.objects.account.loan.loanDisburse.LoanDisburseInput
 import kpt.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
 import kpt.core.model.objects.account.loan.reschedules.LoanRescheduleRejectionRequest
 import kpt.core.model.objects.account.loan.reschedules.LoanRescheduleRequest
@@ -27,9 +29,6 @@ import kpt.core.network.mifos.loan.dto.CreateGuarantorResponseDto
 import kpt.core.network.mifos.loan.dto.GuarantorRequestDto
 import kpt.core.network.mifos.loan.dto.LoanChargeOffRequestDto
 import kpt.core.network.mifos.loan.dto.LoanChargeOffResponseDto
-import kpt.core.network.mifos.loan.dto.LoanDisburseRequestDto
-import kpt.core.network.mifos.loan.dto.LoanDisburseResponseDto
-import kpt.core.network.mifos.loan.dto.LoansPayload
 import kpt.core.network.mifos.loan.dto.RejectLoanRequestDto
 import kpt.core.network.mifos.loan.dto.RejectLoanResponseDto
 /**
@@ -61,7 +60,15 @@ interface LoanCommandRepository {
 
     suspend fun rejectLoan(loanId: Int, request: RejectLoanRequestDto): MutationResult<RejectLoanResponseDto>
 
-    suspend fun disburse(loanId: Int, request: LoanDisburseRequestDto): MutationResult<LoanDisburseResponseDto>
+    /**
+     * Disburse an approved loan.
+     *
+     * Takes [LoanDisburseInput] — a `core/model` type — rather than the network DTO, because
+     * `feature/loan` must not depend on `core:network`. Returns `Unit`: Fineract's response carries
+     * office / client / loan / resource ids the disbursement screen does not render, and a feature
+     * cannot name `LoanDisburseResponseDto` either.
+     */
+    suspend fun disburse(loanId: Int, request: LoanDisburseInput): MutationResult<Unit>
 
     suspend fun submitPayment(
         loanId: Int,
@@ -72,19 +79,58 @@ interface LoanCommandRepository {
 
     suspend fun assignLoanOfficer(loanId: Int, request: AssignLoanOfficerRequestDto): MutationResult<AssignLoanOfficerResponseDto>
 
-    suspend fun createLoanAccount(payload: LoansPayload): MutationResult<HttpResponse>
+    /**
+     * Submit a new INDIVIDUAL loan application.
+     *
+     * `MutationResult<Unit>`, not `MutationResult<HttpResponse>`: a feature module must not depend
+     * on `core:network`, and the caller has no use for the raw response — Fineract returns the new
+     * loan id, which this screen does not navigate to.
+     */
+    suspend fun createLoanAccount(input: LoanApplicationInput): MutationResult<Unit>
 
     suspend fun createGroupLoanAccount(payload: GroupLoanPayload): MutationResult<Loan>
 
-    suspend fun calculateLoanSchedule(payload: LoansPayload): MutationResult<HttpResponse>
+    /**
+     * Preview the repayment schedule for an application that has NOT been submitted.
+     *
+     * Returns the schedule itself — the preview page renders it, so handing back an `HttpResponse`
+     * would make the one caller parse a body from a feature module.
+     */
+    suspend fun calculateLoanSchedule(input: LoanApplicationInput): MutationResult<RepaymentSchedule>
 
     suspend fun createGuarantor(loanId: Int, request: GuarantorRequestDto): MutationResult<CreateGuarantorResponseDto>
 
-    suspend fun submitAccountTransfer(request: AccountTransferRequest): MutationResult<HttpResponse>
+    /**
+     * Move money between two accounts.
+     *
+     * `Unit`, not `HttpResponse`: the endpoint's Ktorfit signature returns a raw response (so the
+     * original could read its status code), and a feature cannot name a Ktor type —
+     * `feature/loan` must not depend on `core:network`. The gateway already turns a non-2xx into
+     * `MutationResult.Failed`, which is the distinction the screen actually renders.
+     */
+    suspend fun submitAccountTransfer(request: AccountTransferRequest): MutationResult<Unit>
 
-    suspend fun submitLoanReschedule(request: LoanRescheduleRequest): MutationResult<HttpResponse>
+    /**
+     * Propose a reschedule. `Unit` for the same reason as [submitAccountTransfer] — the endpoint
+     * returns a raw Ktor response and a feature cannot name one.
+     */
+    suspend fun submitLoanReschedule(request: LoanRescheduleRequest): MutationResult<Unit>
 
-    suspend fun approveLoanReschedule(scheduleId: Int, request: LoanRescheduleApprovalRequest): MutationResult<HttpResponse>
+    suspend fun approveLoanReschedule(
+        scheduleId: Int,
+        request: LoanRescheduleApprovalRequest,
+    ): MutationResult<Unit>
 
-    suspend fun rejectLoanReschedule(scheduleId: Int, request: LoanRescheduleRejectionRequest): MutationResult<HttpResponse>
+    /**
+     * REJECT a proposed reschedule.
+     *
+     * The UI calls this "delete", which is what the original's icon and action were named — but
+     * the wire command is `?command=reject` and the payload is a
+     * [LoanRescheduleRejectionRequest], so the server records a rejection with a date and a user,
+     * not a deletion. Named for what it does. See `loan-reschedule-delete-is-really-reject`.
+     */
+    suspend fun rejectLoanReschedule(
+        scheduleId: Int,
+        request: LoanRescheduleRejectionRequest,
+    ): MutationResult<Unit>
 }

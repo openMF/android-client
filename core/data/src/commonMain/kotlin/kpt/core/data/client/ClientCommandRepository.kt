@@ -10,7 +10,6 @@
 package kpt.core.data.client
 
 import io.ktor.client.request.forms.MultiPartFormDataContent
-import io.ktor.client.statement.HttpResponse
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.database.client.entity.ClientEntity
 import kpt.core.database.client.entity.ClientPayloadEntity
@@ -41,6 +40,19 @@ import kpt.core.network.mifos.client.dto.PostClientsClientIdResponse
  * a silent fallback from here.
  */
 interface ClientCommandRepository {
+    /*
+     * The seven commands below return `MutationResult<Unit>`, not `MutationResult<HttpResponse>`.
+     *
+     * Their Fineract endpoints are declared `: HttpResponse` because the response bodies differ
+     * per endpoint and nothing reads them — so the raw Ktor response was passed straight through
+     * this contract to the callers. Three consequences, all bad: `core/data`'s own contract named
+     * a Ktor type, every caller could in principle read a consumed body, and the interface was
+     * untestable — a fake cannot construct an `HttpResponse` without standing up a MockEngine.
+     *
+     * The status check these results used to need is already done: `setupDefaultHttpClient` sets
+     * `expectSuccess`, so a non-2xx throws and the gateway returns `Failed`. `Applied` therefore
+     * already means "the server accepted it", and the response object carries nothing beyond that.
+     */
 
     suspend fun activate1(clientId: Long, postClientsClientIdRequest: PostClientsClientIdRequest, command: String? = null): MutationResult<PostClientsClientIdResponse>
 
@@ -62,21 +74,21 @@ interface ClientCommandRepository {
 
     suspend fun createClientAddress(clientId: Int, addressTypeId: Int, addressPayload: PostClientAddressRequest): MutationResult<PostClientAddressResponse>
 
-    suspend fun assignStaff(clientId: Int, payload: AssignStaffRequest): MutationResult<HttpResponse>
+    suspend fun assignStaff(clientId: Int, payload: AssignStaffRequest): MutationResult<Unit>
 
-    suspend fun unassignStaff(clientId: Int, payload: AssignStaffRequest): MutationResult<HttpResponse>
+    suspend fun unassignStaff(clientId: Int, payload: AssignStaffRequest): MutationResult<Unit>
 
-    suspend fun proposeTransfer(clientId: Int, payload: ProposeTransferRequest): MutationResult<HttpResponse>
+    suspend fun proposeTransfer(clientId: Int, payload: ProposeTransferRequest): MutationResult<Unit>
 
-    suspend fun updateSavingsAccount(clientId: Int, payload: UpdateSavingsAccountRequest): MutationResult<HttpResponse>
+    suspend fun updateSavingsAccount(clientId: Int, payload: UpdateSavingsAccountRequest): MutationResult<Unit>
 
-    suspend fun closeClient(clientId: Int, payload: ClientCloseRequest): MutationResult<HttpResponse>
+    suspend fun closeClient(clientId: Int, payload: ClientCloseRequest): MutationResult<Unit>
 
-    suspend fun createCollateral(clientId: Int, payload: CollateralPayload): MutationResult<HttpResponse>
+    suspend fun createCollateral(clientId: Int, payload: CollateralPayload): MutationResult<Unit>
 
     suspend fun deleteClientIdentifier(clientId: Long, identifierId: Long): MutationResult<GenericResponse>
 
-    suspend fun createClientIdentifier(clientId: Long, identifierPayload: IdentifierPayload): MutationResult<HttpResponse>
+    suspend fun createClientIdentifier(clientId: Long, identifierPayload: IdentifierPayload): MutationResult<Unit>
 
     suspend fun updateClientIdentifier(clientId: Long, identifierId: Long, identifierPayload: IdentifierPayload): MutationResult<GenericResponse>
 }

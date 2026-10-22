@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+ * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
 package kpt.feature.note.ui
 
@@ -37,7 +37,11 @@ class NoteListScreenUiTest {
     fun theAddAffordanceIsAlwaysReachable() = runComposeUiTest {
         setContent {
             KptTheme {
-                NoteListContent(state = NoteListState(notes = ScreenState.Loading), onAction = {})
+                NoteListContent(
+                    notes = ScreenState.Loading,
+                    ui = NoteListState(),
+                    onAction = {},
+                )
             }
         }
         // The FAB lives in `Scaffold.floatingActionButton` and is present regardless of repository
@@ -52,7 +56,8 @@ class NoteListScreenUiTest {
         setContent {
             KptTheme {
                 NoteListContent(
-                    state = NoteListState(notes = ScreenState.Content(listOf(note(1, "first")))),
+                    notes = ScreenState.Content(listOf(note(1, "first"))),
+                    ui = NoteListState(),
                     onAction = {},
                 )
             }
@@ -68,10 +73,8 @@ class NoteListScreenUiTest {
         setContent {
             KptTheme {
                 NoteListContent(
-                    state = NoteListState(
-                        notes = ScreenState.Content(listOf(note(1, "first"))),
-                        expandedNoteId = 1,
-                    ),
+                    notes = ScreenState.Content(listOf(note(1, "first"))),
+                    ui = NoteListState(expandedNoteId = 1),
                     onAction = {},
                 )
             }
@@ -88,11 +91,8 @@ class NoteListScreenUiTest {
         setContent {
             KptTheme {
                 NoteListContent(
-                    state = NoteListState(
-                        notes = ScreenState.Content(listOf(note(1, "first"))),
-                        expandedNoteId = 1,
-                        showDeleteConfirmation = true,
-                    ),
+                    notes = ScreenState.Content(listOf(note(1, "first"))),
+                    ui = NoteListState(expandedNoteId = 1, showDeleteConfirmation = true),
                     onAction = {},
                 )
             }
@@ -105,10 +105,8 @@ class NoteListScreenUiTest {
         setContent {
             KptTheme {
                 NoteListContent(
-                    state = NoteListState(
-                        notes = ScreenState.Content(listOf(note(1, "keep me"))),
-                        writeError = NoteWriteError.Offline,
-                    ),
+                    notes = ScreenState.Content(listOf(note(1, "keep me"))),
+                    ui = NoteListState(writeError = NoteWriteError.Offline),
                     onAction = {},
                 )
             }

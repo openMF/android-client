@@ -53,7 +53,7 @@
     <string name="feature_signin_authenticating">Signing in…</string>
 
     <!-- a11y. Every Icon carries a contentDescription (RULE-FEATURE-A11Y-001). -->
-    <string name="feature_signin_cd_logo">Mifos logo</string>
+    <string name="feature_signin_cd_logo">App logo</string>
     <string name="feature_signin_cd_change_instance">Change server</string>
 
     <!--
@@ -81,7 +81,7 @@
     <string name="feature_signin_cd_username_error">Username is invalid</string>
     <string name="feature_signin_cd_password_error">Password is invalid</string>
     <!--
-        NOT declared: show/hide-password descriptions. MifosOutlinedTextField hardcodes its own
+        NOT declared: show/hide-password descriptions. AppOutlinedTextField hardcodes its own
         ("VisibilityOn"/"VisibilityOff") and accepts no override, so a key here would be dead weight
         that reads like a11y coverage. That hardcoded English string is a core/designsystem defect
         (unlocalisable screen-reader text) — it belongs upstream, not worked around here.

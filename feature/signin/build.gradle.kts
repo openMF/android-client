@@ -27,7 +27,7 @@ kotlin {
             // Biometric unlock. `core/platform` api-re-exports `core-base:security` (see its
             // module-deps.gradle.kts) — features reach core-base THROUGH core/, never directly.
             implementation(projects.core.platform)
-            // MifosProgressIndicatorOverlay — the modal submit overlay the v1 screen rendered
+            // AppProgressIndicatorOverlay — the modal submit overlay the v1 screen rendered
             // (ui.yaml#components.progress_overlay, RE-EXTRACT D4) and the stitch mockup's
             // #progress_overlay. Lives in core/ui, which the module did not previously depend on,
             // which is part of why the port shipped an inline spinner instead.

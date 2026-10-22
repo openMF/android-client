@@ -14,7 +14,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import kotlinx.serialization.Serializable
-import kpt.core.base.ui.nav.composableWithStayTransitions
+import kpt.core.base.ui.nav.composableWithPushTransitions
 
 @Serializable
 data object ProfileRoute
@@ -27,7 +27,7 @@ fun NavController.navigateToProfile(navOptions: NavOptions? = null) = navigate(P
  * forwards the opaque body into the [ProfileScreen] shell. (WS01 base-feature seam, epic AC7.)
  */
 fun NavGraphBuilder.profileDestination(profileBody: @Composable () -> Unit = {}) {
-    composableWithStayTransitions<ProfileRoute> {
+    composableWithPushTransitions<ProfileRoute> {
         ProfileScreen(profileBody = profileBody)
     }
 }

@@ -5,17 +5,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+ * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
 package kpt.feature.note.navigation
 
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import kotlinx.serialization.Serializable
-import kpt.core.base.ui.nav.composableWithStayTransitions
+import kpt.core.base.ui.nav.composableWithPushTransitions
 import kpt.core.base.ui.nav.popBackStackSafely
 import kpt.feature.note.ui.AddEditNoteScreen
 import kpt.feature.note.ui.NoteListScreen
@@ -87,7 +87,7 @@ fun NavController.navigateToEditNote(clientId: Int, noteId: Long) =
  * refresh was a regression, caught on device 2026-10-20.
  */
 fun NavGraphBuilder.noteDestinations(navController: NavController) {
-    composableWithStayTransitions<NoteListRoute> { entry ->
+    composableWithPushTransitions<NoteListRoute> { entry ->
         // The list stays in composition while add/edit sits on top of it, so its stream is never
         // re-created and nothing re-fetches on return. This result is what tells it to.
         val refreshSignal by entry.savedStateHandle
@@ -103,7 +103,7 @@ fun NavGraphBuilder.noteDestinations(navController: NavController) {
         )
     }
 
-    composableWithStayTransitions<AddEditNoteRoute> {
+    composableWithPushTransitions<AddEditNoteRoute> {
         AddEditNoteScreen(
             onBackClick = {
                 // Signalled on EVERY pop, not only on a save. Distinguishing them would need a

@@ -5,195 +5,252 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+ * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
 package kpt.feature.note.ui
 
 import androidx.lifecycle.SavedStateHandle
-import app.cash.turbine.test
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kpt.core.base.store.mutation.BlockReason
-import kpt.core.base.store.mutation.MutationResult
-import kpt.core.base.store.screen.ExperimentalScreenDataStreamTestingApi
 import kpt.core.base.store.screen.ScreenState
+import kpt.core.base.store.submit.SubmitOutboxStatus
+import kpt.core.common.utils.Constants
+import kpt.core.data.note.NOTE_FORM_KEY
+import kpt.core.data.note.NoteSubmitException
 import kpt.core.database.note.entity.NoteEntity
 import kpt.feature.note.testing.FakeNoteCommandRepository
 import kpt.feature.note.testing.FakeNoteRepository
-
+import kpt.feature.note.testing.FakeSubmitOutbox
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
-/** Locks what the port of `6b66e8a43:.../addEditNotes/AddEditNoteViewModel.kt` changed. */
-@OptIn(ExperimentalScreenDataStreamTestingApi::class, ExperimentalCoroutinesApi::class)
+/**
+ * The app's first offline-durable form.
+ *
+ * The tests that matter are the DURABILITY ones: before this change a refused submit left the
+ * note in a text field and nowhere else, so navigating away lost it. The guarantee is now "the
+ * note is in the outbox", and these assert exactly that rather than taking it on trust.
+ */
 class AddEditNoteViewModelTest {
 
     private val repository = FakeNoteRepository()
+    private val commands = FakeNoteCommandRepository()
+    private val outbox = FakeSubmitOutbox<kpt.core.model.note.NoteDraft>()
 
-    private fun viewModel(
-        clientId: Int = 42,
-        noteId: Long? = null,
-        outcome: () -> MutationResult<Unit> = { MutationResult.Applied(Unit, synced = true) },
-    ): Pair<AddEditNoteViewModel, FakeNoteCommandRepository> {
-        val commands = FakeNoteCommandRepository(outcome)
-        val args = mutableMapOf<String, Any?>("clientId" to clientId)
-        if (noteId != null) args["noteId"] = noteId
-        return AddEditNoteViewModel(repository, commands, SavedStateHandle(args)) to commands
+    @BeforeTest fun setUp() = Dispatchers.setMain(Dispatchers.Unconfined)
+
+    @AfterTest fun tearDown() = Dispatchers.resetMain()
+
+    private fun note(id: Long, text: String) = NoteEntity(id = id, clientId = 7, noteContent = text)
+
+    private fun viewModel(clientId: Int = 7, noteId: Long? = null): AddEditNoteViewModel {
+        val handle = SavedStateHandle(
+            buildMap<String, Any> {
+                put("clientId", clientId)
+                noteId?.let { put("noteId", it) }
+            },
+        )
+        return AddEditNoteViewModel(repository, commands, outbox, handle)
     }
-
-    @BeforeTest
-    fun setUp() = Dispatchers.setMain(Dispatchers.Unconfined)
-
-    @AfterTest
-    fun tearDown() = Dispatchers.resetMain()
 
     @Test
     fun aMissingNoteIdMeansAdd() = runTest {
-        val (vm, _) = viewModel(noteId = null)
-        runCurrent()
-        assertFalse(vm.stateFlow.value.editEnabled)
+        val vm = viewModel()
+        assertFalse(vm.formState.value.editEnabled)
     }
 
     @Test
     fun theEditorSeedsItselfFromTheNoteAlreadyInTheStore() = runTest {
-        repository.state.value = ScreenState.Content(listOf(NoteEntity(id = 3, clientId = 42, noteContent = "existing")))
-        val (vm, _) = viewModel(noteId = 3)
+        repository.emit(note(1, "first"), note(2, "second"))
+        val vm = viewModel(noteId = 2)
         runCurrent()
 
-        // The original called `repository.retrieveNote(...)` — a second network round trip for a
-        // note the device already had, which also meant the editor could not open offline.
-        val state = vm.stateFlow.value
-        assertTrue(state.editEnabled)
-        assertEquals("existing", state.text)
-        assertEquals("existing", state.loadedText)
-    }
-
-    @Test
-    fun anUntouchedEditorIsNotDirty() = runTest {
-        repository.state.value = ScreenState.Content(listOf(NoteEntity(id = 3, clientId = 42, noteContent = "existing")))
-        val (vm, _) = viewModel(noteId = 3)
-        runCurrent()
-        // isDirty is DERIVED from text vs loadedText. The original kept a separate
-        // `notesPayloadInitialData` field that each write path had to remember to update.
-        assertFalse(vm.stateFlow.value.isDirty)
-    }
-
-    @Test
-    fun backOnAnUntouchedEditorLeavesWithoutAsking() = runTest {
-        val (vm, _) = viewModel()
-        vm.eventFlow.test {
-            vm.trySendAction(AddEditNoteAction.BackClicked)
-            assertEquals(AddEditNoteEvent.NavigateBack, awaitItem())
-            cancelAndIgnoreRemainingEvents()
-        }
-        assertFalse(vm.stateFlow.value.showDiscardConfirmation)
-    }
-
-    @Test
-    fun backWithUnsavedTextAsksFirst() = runTest {
-        val (vm, _) = viewModel()
-        vm.trySendAction(AddEditNoteAction.TextChanged("half a thought"))
-        vm.trySendAction(AddEditNoteAction.BackClicked)
-        runCurrent()
-        // Asks ONLY when there is something to lose — which is what keeps the dialog from being
-        // noise the user learns to dismiss without reading.
-        assertTrue(vm.stateFlow.value.showDiscardConfirmation)
+        // Seeded from the CACHE — no second per-note read.
+        assertEquals("second", vm.formState.value.text)
+        assertFalse(vm.formState.value.isDirty)
     }
 
     @Test
     fun aBlankNoteCannotBeSubmitted() = runTest {
-        val (vm, commands) = viewModel()
-        vm.trySendAction(AddEditNoteAction.TextChanged("   "))
-        vm.trySendAction(AddEditNoteAction.Submit)
-        runCurrent()
-        // The original let it through and the server rejected it — a round trip to be told
-        // nothing was typed.
-        assertFalse(vm.stateFlow.value.canSubmit)
-        assertEquals(emptyList<FakeNoteCommandRepository.Written>(), commands.added)
+        val vm = viewModel()
+        assertFalse(vm.formState.value.canSubmit)
+
+        vm.onTextChange("   ")
+        assertFalse(vm.formState.value.canSubmit, "whitespace is not a note")
+
+        vm.onTextChange("real")
+        assertTrue(vm.formState.value.canSubmit)
     }
 
     @Test
     fun addSendsTheTrimmedTextAndTheClientResourceType() = runTest {
-        val (vm, commands) = viewModel(clientId = 42, noteId = null)
-        vm.trySendAction(AddEditNoteAction.TextChanged("  visited the shop  "))
-        vm.trySendAction(AddEditNoteAction.Submit)
+        val vm = viewModel(clientId = 7)
+        vm.onTextChange("  visited the shop  ")
+        vm.submitForm()
         runCurrent()
-        assertEquals(
-            listOf(FakeNoteCommandRepository.Written("clients", 42L, text = "visited the shop")),
-            commands.added,
-        )
+
+        val sent = commands.submitted.single()
+        assertEquals("visited the shop", sent.text)
+        assertEquals(7L, sent.resourceId)
+        assertNull(sent.noteId, "an add must not carry a note id")
+        assertEquals(Constants.ENTITY_TYPE_CLIENTS, sent.resourceType)
     }
 
     @Test
     fun editSendsAnUpdateRatherThanAnAdd() = runTest {
-        repository.state.value = ScreenState.Content(listOf(NoteEntity(id = 7, clientId = 42, noteContent = "old")))
-        val (vm, commands) = viewModel(noteId = 7)
+        repository.emit(note(5, "original"))
+        val vm = viewModel(noteId = 5)
         runCurrent()
-        vm.trySendAction(AddEditNoteAction.TextChanged("new"))
-        vm.trySendAction(AddEditNoteAction.Submit)
+        vm.onTextChange("corrected")
+        vm.submitForm()
         runCurrent()
 
-        assertEquals(emptyList<FakeNoteCommandRepository.Written>(), commands.added)
+        // The id is what makes `submitDraft` choose update over create — on a live submit AND on
+        // an outbox replay days later, which is why it travels on the payload.
+        assertEquals(5L, commands.submitted.single().noteId)
+    }
+
+    @Test
+    fun anOfflineSubmitPERSISTSTheNoteRatherThanLosingIt() = runTest {
+        // THE regression this whole change exists for. Before it, this path showed "you are
+        // offline", kept the text on screen, and lost it the moment the user navigated away.
+        commands.failWith = NoteSubmitException.Offline("OFFLINE")
+        val vm = viewModel(clientId = 7)
+        vm.onTextChange("client was not at the shop; will revisit Thursday")
+        vm.submitForm()
+        runCurrent()
+
+        val draft = outbox.entries.singleOrNull()
+        assertNotNull(draft, "an offline note must survive as a draft, not only on screen")
+        assertEquals(SubmitOutboxStatus.PENDING, draft.status)
+        assertEquals("client was not at the shop; will revisit Thursday", draft.payload.text)
+        assertEquals(NOTE_FORM_KEY, draft.formKey)
+    }
+
+    @Test
+    fun concurrentDraftsDoNotOverwriteEachOther() = runTest {
+        // A new note on one client and an edit of another note are different slots. Sharing a
+        // unique key would mean the second offline note silently replaced the first — the failure
+        // mode the outbox's uniqueKey exists to prevent.
+        commands.failWith = NoteSubmitException.Offline("OFFLINE")
+
+        viewModel(clientId = 7).apply {
+            onTextChange("new note on 7")
+            submitForm()
+        }
+        runCurrent()
+        repository.emit(note(12, "existing"))
+        viewModel(clientId = 7, noteId = 12).apply {
+            onTextChange("edit of 12")
+            submitForm()
+        }
+        runCurrent()
+
+        assertEquals(2, outbox.entries.size, "two drafts collapsed into one slot")
         assertEquals(
-            listOf(FakeNoteCommandRepository.Written("clients", 42L, noteId = 7L, text = "new")),
-            commands.updated,
+            setOf("client:7:new", "note:12"),
+            outbox.entries.mapNotNull { it.uniqueKey }.toSet(),
         )
     }
 
     @Test
-    fun aFailedWriteKeepsWhatTheUserTyped() = runTest {
-        val (vm, _) = viewModel(outcome = { MutationResult.Blocked(BlockReason.OFFLINE) })
-        vm.trySendAction(AddEditNoteAction.TextChanged("do not lose me"))
-        vm.trySendAction(AddEditNoteAction.Submit)
+    fun aSuccessfulSubmitLeavesNoDraftBehind() = runTest {
+        val vm = viewModel()
+        vm.onTextChange("sent fine")
+        vm.submitForm()
         runCurrent()
 
-        // THE ONE THING THAT EXISTS NOWHERE ELSE. The note is not on the server and not in the
-        // cache; if the error clears the field it is simply gone.
-        val state = vm.stateFlow.value
-        assertEquals("do not lose me", state.text)
-        assertEquals(NoteWriteError.Offline, state.writeError)
-        assertFalse(state.isSubmitting)
+        assertEquals(1, commands.submitted.size)
+        assertTrue(
+            outbox.entries.none { it.status == SubmitOutboxStatus.PENDING },
+            "a note that reached the server must not linger as a pending draft",
+        )
     }
 
     @Test
-    fun retryResubmitsWhatIsInTheFieldNotWhatTheServerHas() = runTest {
-        repository.state.value = ScreenState.Content(listOf(NoteEntity(id = 7, clientId = 42, noteContent = "server text")))
-        var fail = true
-        val (vm, commands) = viewModel(
-            noteId = 7,
-            outcome = {
-                if (fail) MutationResult.Blocked(BlockReason.OFFLINE)
-                else MutationResult.Applied(Unit, synced = true)
-            },
-        )
-        runCurrent()
-        vm.trySendAction(AddEditNoteAction.TextChanged("my edit"))
-        vm.trySendAction(AddEditNoteAction.Submit)
-        runCurrent()
-        fail = false
-        vm.trySendAction(AddEditNoteAction.Retry)
+    fun aRetryPresentsTheSAMEIdempotencyKeyAsTheFirstAttempt() = runTest {
+        // The whole point of the token. The template makes a replay idempotent by minting the
+        // row's own id client-side; Fineract assigns note ids, so the equivalent is a stable
+        // de-duplication key — and "stable" is the entire contract. Regenerating it per attempt
+        // would make the server treat each retry as a new intent and recreate the duplicate this
+        // exists to prevent.
+        val vm = viewModel()
+        vm.onTextChange("retry me")
+
+        commands.failWith = NoteSubmitException.Offline("OFFLINE")
+        vm.submitForm()
         runCurrent()
 
-        // THE RACE THE ORIGINAL HAD: its OnRetry called loadSingleNote() and THEN editNote(), so a
-        // retry could submit the SERVER's text over the user's edit. Both sends carry "my edit".
-        assertEquals(listOf<String?>("my edit", "my edit"), commands.updated.map { it.text })
+        commands.failWith = null
+        vm.onRetry()
+        runCurrent()
+
+        val draftKey = outbox.entries.single().payload.idempotencyKey
+        assertEquals(draftKey, commands.submitted.single().idempotencyKey)
+        assertTrue(draftKey.isNotBlank())
+    }
+
+    @Test
+    fun twoSeparateNotesGetDifferentKeys() = runTest {
+        // The inverse: distinct intents must NOT share a token, or the server would dedupe a
+        // genuinely new note away as a repeat of the previous one.
+        commands.failWith = NoteSubmitException.Offline("OFFLINE")
+        viewModel(clientId = 7).apply {
+            onTextChange("first")
+            submitForm()
+        }
+        runCurrent()
+        repository.emit(note(12, "existing"))
+        viewModel(clientId = 7, noteId = 12).apply {
+            onTextChange("second")
+            submitForm()
+        }
+        runCurrent()
+
+        val keys = outbox.entries.map { it.payload.idempotencyKey }
+        assertEquals(keys.size, keys.distinct().size, "two intents shared one idempotency key")
     }
 
     @Test
     fun aDoubleTapSendsOneWrite() = runTest {
-        val (vm, commands) = viewModel()
-        vm.trySendAction(AddEditNoteAction.TextChanged("once"))
-        vm.trySendAction(AddEditNoteAction.Submit)
-        vm.trySendAction(AddEditNoteAction.Submit)
+        // Still guarded — but by the FRAMEWORK now (`SubmitHandler.submit` no-ops while
+        // Submitting) rather than by a hand-rolled `submitted` latch. Kept because the guarantee
+        // is what matters, not which layer provides it.
+        val gate = CompletableDeferred<Unit>()
+        commands.gate = gate
+        val vm = viewModel()
+        vm.onTextChange("once")
+
+        vm.submitForm()
         runCurrent()
-        assertEquals(1, commands.added.size)
+        vm.submitForm() // lands while the first is still in flight
+        runCurrent()
+
+        gate.complete(Unit)
+        runCurrent()
+        assertEquals(1, commands.submitted.size, "the second tap sent a second note")
+    }
+
+    @Test
+    fun theFormIsReadyOnlyOnceAnExistingNoteHasHydrated() = runTest {
+        // `MutationScreenContent` renders the READ gate before the form, so a screen whose
+        // screenState never reaches Content sits at a spinner forever.
+        repository.state.value = ScreenState.Loading
+        val vm = viewModel(noteId = 5)
+        runCurrent()
+        repository.emit(note(5, "arrived"))
+        runCurrent()
+
+        assertEquals("arrived", vm.formState.value.text)
     }
 }

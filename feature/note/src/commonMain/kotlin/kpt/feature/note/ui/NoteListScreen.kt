@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+ * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
 package kpt.feature.note.ui
 
@@ -38,10 +38,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.screen.ScreenContent
 import kpt.core.database.note.entity.NoteEntity
-import kpt.core.designsystem.icon.MifosIcons
-
+import kpt.core.designsystem.icon.AppIcons
 import kpt.feature.note.generated.resources.Res
 import kpt.feature.note.generated.resources.feature_note_add_item
 import kpt.feature.note.generated.resources.feature_note_button_cancel
@@ -70,7 +70,8 @@ internal fun NoteListScreen(
     modifier: Modifier = Modifier,
     viewModel: NoteListViewModel = koinViewModel(),
 ) {
-    val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+    val notes by viewModel.notes.collectAsStateWithLifecycle()
+    val ui by viewModel.stateFlow.collectAsStateWithLifecycle()
 
     /*
      * Re-read when a write happened while we were away.
@@ -105,7 +106,8 @@ internal fun NoteListScreen(
     }
 
     NoteListContent(
-        state = state,
+        notes = notes,
+        ui = ui,
         onAction = { viewModel.actionChannel.trySend(it) },
         modifier = modifier,
     )
@@ -115,7 +117,8 @@ internal fun NoteListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun NoteListContent(
-    state: NoteListState,
+    notes: ScreenState<List<NoteEntity>>,
+    ui: NoteListState,
     onAction: (NoteListAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -130,7 +133,7 @@ internal fun NoteListContent(
                         modifier = Modifier.testTag(TestTags.NoteList.BACK),
                     ) {
                         Icon(
-                            MifosIcons.ArrowBack,
+                            AppIcons.ArrowBack,
                             contentDescription = stringResource(Res.string.feature_note_cd_back),
                         )
                     }
@@ -143,7 +146,7 @@ internal fun NoteListContent(
                 modifier = Modifier.testTag(TestTags.NoteList.FAB),
             ) {
                 Icon(
-                    MifosIcons.Add,
+                    AppIcons.Add,
                     contentDescription = stringResource(Res.string.feature_note_cd_add),
                 )
             }
@@ -153,7 +156,7 @@ internal fun NoteListContent(
             // A failed WRITE is shown ABOVE the list, never instead of it. The notes are still
             // correct; replacing them with an error screen because a delete failed would hide
             // good data behind an unrelated failure.
-            state.writeError?.let { error ->
+            ui.writeError?.let { error ->
                 WriteErrorBanner(
                     error = error,
                     onDismiss = { onAction(NoteListAction.DismissDialog) },
@@ -161,7 +164,7 @@ internal fun NoteListContent(
             }
 
             ScreenContent(
-                state = state.notes,
+                state = notes,
                 onRetry = { onAction(NoteListAction.Retry) },
                 modifier = Modifier.fillMaxSize().testTag(TestTags.NoteList.LIST),
             ) { notes, _ ->
@@ -176,7 +179,7 @@ internal fun NoteListContent(
                         items(notes, key = { it.id ?: 0L }) { note ->
                             NoteRow(
                                 note = note,
-                                expanded = state.expandedNoteId == note.id,
+                                expanded = ui.expandedNoteId == note.id,
                                 onToggle = { onAction(NoteListAction.ToggleExpanded(note.id)) },
                                 onEdit = { onAction(NoteListAction.EditClicked) },
                                 onDelete = { onAction(NoteListAction.DeleteClicked) },
@@ -188,7 +191,7 @@ internal fun NoteListContent(
         }
     }
 
-    if (state.showDeleteConfirmation) {
+    if (ui.showDeleteConfirmation) {
         DeleteConfirmationDialog(
             onConfirm = { onAction(NoteListAction.ConfirmDelete) },
             onDismiss = { onAction(NoteListAction.DismissDialog) },
@@ -264,7 +267,7 @@ private fun EmptyNotes() {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(
-            MifosIcons.Add,
+            AppIcons.Add,
             contentDescription = null,
             modifier = Modifier.size(48.dp),
         )

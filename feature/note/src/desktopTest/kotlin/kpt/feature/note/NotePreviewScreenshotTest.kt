@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+ * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
 package kpt.feature.note
 
@@ -38,6 +38,16 @@ class NotePreviewScreenshotTest {
         val previews = CommonComposablePreviewScanner()
             .scanPackageTrees("kpt.feature.note")
             .getPreviews()
+
+        // A scan that finds NOTHING must FAIL, not pass. `previews.forEach { }` over an empty list
+        // captures nothing and reports success — which is exactly what happened here when the
+        // previews were declared `private` (the scanner only sees internal/public). The golden
+        // directory stayed empty and the build went green, so the render tier was silently off.
+        assertTrue(
+            previews.isNotEmpty(),
+            "no @Preview found — the render tier is silently disabled. Previews must be `internal` " +
+                "or public; `private` ones are invisible to CommonComposablePreviewScanner.",
+        )
 
         // Names must be unique BEFORE anything is written. Two previews resolving to one file would
         // otherwise have the second silently overwrite the first: the golden count stays plausible,

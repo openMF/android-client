@@ -10,10 +10,10 @@
 package kpt.feature.client.list
 
 import androidx.lifecycle.viewModelScope
-import co.touchlab.kermit.Logger
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.data.client.ClientRepository
@@ -39,17 +39,24 @@ import kpt.core.database.client.entity.ClientEntity
  * `DataState` → `ScreenState` change deleting a code path, not renaming a type.
  */
 internal class ClientListViewModel(
-    private val repository: ClientRepository,
+    repository: ClientRepository,
 ) : BaseViewModel<ClientListState, ClientListEvent, ClientListAction>(ClientListState()) {
 
-    init {
-        repository.clientsStream(viewModelScope).state
-            .onEach { screenState -> mutableStateFlow.value = state.withClients(screenState) }
-            // A read that fails in the stream itself (not inside the Store) would otherwise cancel
-            // the ViewModel's scope silently and leave the screen on its last state forever.
-            .catch { Logger.e(tag = "ClientList", throwable = it) { "clientsStream failed" } }
-            .launchIn(viewModelScope)
-    }
+    private val stream = repository.clientsStream(viewModelScope)
+
+    /**
+     * The rows to render — the stream combined with this screen's filter state.
+     *
+     * `stateIn(… WhileSubscribed …)`, not an `init{}` collector. The hand-lift this replaced
+     * collected for the ViewModel's whole lifetime, so the Clients tab kept its Store subscription
+     * and background refreshes alive while the user was on another tab.
+     */
+    val screenState: StateFlow<ScreenState<List<ClientEntity>>> =
+        combine(stream.state, stateFlow) { data, ui -> data.applyFilters(ui) }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STATE_TIMEOUT_MS), ScreenState.Loading)
+
+    /** Re-run the read. Wired to `ScreenContent`'s retry. */
+    fun onRetry() = stream.retry()
 
     override fun handleAction(action: ClientListAction) {
         when (action) {
@@ -84,69 +91,61 @@ internal class ClientListViewModel(
 
             ClientListAction.CreateClientClicked ->
                 sendEvent(ClientListEvent.CreateClient)
+
+            ClientListAction.Retry -> onRetry()
         }
     }
 
     private fun <T> Set<T>.toggle(value: T): Set<T> = if (value in this) this - value else this + value
+
+    private companion object {
+        /** Template default — long enough to survive a rotation or a brief tab switch. */
+        const val STATE_TIMEOUT_MS = 5_000L
+    }
 }
 
 /**
- * Screen state.
- *
- * Search, sort and filtering are DERIVED from [all] rather than stored as a second list. The original
- * kept `clients` and `unfilteredClients` side by side, sorted `clients` and filtered
- * `unfilteredClients` — so sorting then filtering silently discarded the sort, and the two could
- * disagree about what the user was looking at. One source plus a derived view cannot drift.
+ * The screen's own UI state — what the search field and filter chips show. The loaded rows are NOT
+ * here; they live on [ClientListViewModel.screenState], which is the stream.
  */
 internal data class ClientListState(
-    val all: ScreenState<List<ClientEntity>> = ScreenState.Loading,
     val query: String = "",
     val sort: ClientSort? = null,
     val selectedStatuses: Set<String> = emptySet(),
     val selectedOffices: Set<String> = emptySet(),
     val filtersVisible: Boolean = false,
-) {
-    /** Office names present in the loaded data — the filter's options, never a separate fetch. */
-    val officeNames: List<String>
-        get() = contentOrEmpty().mapNotNull { it.officeName }.distinct().sorted()
+)
 
-    /** The rows to render: filtered, searched, then sorted, in that order and only here. */
-    val visible: List<ClientEntity>
-        get() = contentOrEmpty()
-            .filter { client ->
-                val statusOk = selectedStatuses.isEmpty() || client.status?.value in selectedStatuses
-                val officeOk = selectedOffices.isEmpty() || client.officeName in selectedOffices
-                val queryOk = query.isBlank() ||
-                    client.displayName?.contains(query, ignoreCase = true) == true ||
-                    client.accountNo?.contains(query, ignoreCase = true) == true
-                statusOk && officeOk && queryOk
-            }
-            .let { rows ->
-                when (sort) {
-                    ClientSort.Name -> rows.sortedBy { it.displayName?.lowercase() }
-                    ClientSort.AccountNumber -> rows.sortedBy { it.accountNo }
-                    ClientSort.ExternalId -> rows.sortedBy { it.externalId }
-                    null -> rows
-                }
-            }
-
-    /**
-     * What the list area should render.
-     *
-     * A filter that matches nothing is [ScreenState.Empty] even when [all] carries content — the
-     * original rendered an empty list, indistinguishable from "this office has no clients".
-     */
-    val listState: ScreenState<List<ClientEntity>>
-        get() = when {
-            all is ScreenState.Content && visible.isEmpty() -> ScreenState.Empty
-            all is ScreenState.Content -> ScreenState.Content(visible)
-            else -> all
+/**
+ * Filter, search and sort, as a PURE function of the loaded rows and the filter state.
+ *
+ * The original kept `clients` and `unfilteredClients` side by side, sorted one and filtered the
+ * other — so sorting then filtering silently discarded the sort. One source and a derived view
+ * cannot drift. A filter matching nothing is [ScreenState.Empty], not a Content of zero rows:
+ * otherwise "no match" renders identically to "this officer has no clients".
+ */
+internal fun ScreenState<List<ClientEntity>>.applyFilters(
+    ui: ClientListState,
+): ScreenState<List<ClientEntity>> {
+    if (this !is ScreenState.Content) return this
+    val rows = data
+        .filter { client ->
+            val statusOk = ui.selectedStatuses.isEmpty() || client.status?.value in ui.selectedStatuses
+            val officeOk = ui.selectedOffices.isEmpty() || client.officeName in ui.selectedOffices
+            val queryOk = ui.query.isBlank() ||
+                client.displayName?.contains(ui.query, ignoreCase = true) == true ||
+                client.accountNo?.contains(ui.query, ignoreCase = true) == true
+            statusOk && officeOk && queryOk
         }
-
-    private fun contentOrEmpty(): List<ClientEntity> =
-        (all as? ScreenState.Content)?.data.orEmpty()
-
-    fun withClients(next: ScreenState<List<ClientEntity>>) = copy(all = next)
+        .let { filtered ->
+            when (ui.sort) {
+                ClientSort.Name -> filtered.sortedBy { it.displayName?.lowercase() }
+                ClientSort.AccountNumber -> filtered.sortedBy { it.accountNo }
+                ClientSort.ExternalId -> filtered.sortedBy { it.externalId }
+                null -> filtered
+            }
+        }
+    return if (rows.isEmpty()) ScreenState.Empty else ScreenState.Content(rows, fetchedAt, freshnessSignal)
 }
 
 internal enum class ClientSort { Name, AccountNumber, ExternalId }
@@ -160,6 +159,7 @@ internal sealed interface ClientListAction {
     data object FilterVisibilityToggled : ClientListAction
     data class ClientClicked(val clientId: Int) : ClientListAction
     data object CreateClientClicked : ClientListAction
+    data object Retry : ClientListAction
 }
 
 internal sealed interface ClientListEvent {

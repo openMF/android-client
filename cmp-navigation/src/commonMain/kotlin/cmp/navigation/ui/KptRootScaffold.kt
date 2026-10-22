@@ -170,6 +170,7 @@ private fun ScaffoldBottomAppBar(navigationData: ScaffoldNavigationData, modifie
             navigationItems = navigationData.navigationItems,
             selectedItem = navigationData.selectedNavigationItem,
             onClick = navigationData.onNavigationClick,
+            showLabels = navigationData.showLabels,
             modifier = Modifier
                 .fillMaxWidth()
                 .testTag(tag = "NavigationBarContainer"),
@@ -190,6 +191,7 @@ private fun ScaffoldNavigationRail(navigationData: ScaffoldNavigationData, modif
             navigationItems = navigationData.navigationItems,
             selectedItem = navigationData.selectedNavigationItem,
             onClick = navigationData.onNavigationClick,
+            showLabels = navigationData.showLabels,
             modifier = Modifier
                 .fillMaxHeight()
                 .wrapContentWidth()

@@ -20,7 +20,7 @@ The absorbed original is `6b66e8a43:feature/search/` — 9 `.kt`:
 | original file | disposition |
 |---|---|
 | `SearchScreen.kt` · `SearchUiState.kt` · `SearchViewModel.kt` | **PORT** into `feature/home` as the Home tab's content |
-| `components/SearchBox.kt` · `components/FilterDialog.kt` · `components/SearchScreenResult.kt` | PORT |
+| `components/SearchBox.kt` · `components/FilterDialog.kt` · `components/SearchScreenResult.kt` | **PORTED INLINE, not as files** — see §7 |
 | `navigation/SearchNavigation.kt` · `navigation/SearchScreens.kt` | rewritten — Home is a backbone tab, not a `@FeatureDestination` |
 | `di/SearchModule.kt` | merge into `feature/home/di/HomeModule.kt` |
 | `composeResources/values/feature_search_strings.xml` | PORT |
@@ -75,6 +75,10 @@ No mutations. Search is read-only.
 | Search becomes the Home tab rather than its own tab | backbone-tab decision (spec §6): the template always renders Home + Profile, and Search was the original's de-facto dashboard |
 | `SearchNavigation`/`SearchScreens` not ported | Home is a backbone tab; a feature-owned nav graph would duplicate the shell's wiring |
 | `Empty` and `NoNetwork` split out of the success state | substrate change (spec §3) — these states did not exist in `DataState` |
+| the three `components/` files are reimplemented INSIDE `SearchBody.kt` rather than ported as files | their BEHAVIOUR is all present — filter chips, exact-match checkbox, result rows. What is not present is the file boundary. Recorded here because the row above said "PORT" and a reader comparing the file lists would otherwise score three files as missing. |
+| **`MultiFloatingActionButton` has no caller** | the original's search screen carried a `+` FAB opening create-client / create-center / create-group. The COMPONENT migrated (it is in `core/ui`); its only consumer did not. None of the three create flows is ported, so the FAB would be three dead controls. Absent rather than inert (RULE-IMPL-DEAD-CLICKABLE-001). **Found by audit 2026-10-20** — the component had 0 references, which is how a migrated-but-unreachable widget hides. It returns with the first create flow. |
+| search is EXPLICIT (a Search button), not search-as-you-type | the original's shape, kept. `SearchViewModelTest.typingAloneSendsNothing` pins it — otherwise every keystroke on a three-letter name hits Fineract. |
+| `searchJob` replaced by `flatMapLatest` (2026-10-20) | the original cancelled and relaunched a job per submit and hand-lifted each launch into state. `flatMapLatest` IS that cancellation, declared rather than performed, so a slow first query can no longer paint results over a later one. Proven by reverting to `flatMapMerge`, which fails `aSupersededSearchCannotDeliverItsResults`. |
 
 ---
 
@@ -82,4 +86,9 @@ No mutations. Search is read-only.
 
 **New surface, absorbing a real original.** No original `feature/home` to compare against, so the
 audit's job is to pin what `feature/search` contributes — including the `values-es` strings, which are
-the one thing here that can be silently lost. Blocked on Phase 11 T5 (`SearchRepository`).
+the one thing here that can be silently lost.
+
+**Re-audited 2026-10-20.** `SearchRepository` landed; the search body is live against Fineract. Two
+discrepancies between this ledger and the disk were found and are now recorded in §7: the three
+`components/` files exist as behaviour but not as files, and `MultiFloatingActionButton` migrated
+into `core/ui` with zero consumers. Neither is a silent drop any more.

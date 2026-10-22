@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+ * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
 package kpt.feature.note.ui
 
@@ -13,7 +13,6 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
-import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.v2.runComposeUiTest
 import kpt.core.designsystem.theme.KptTheme
@@ -31,7 +30,17 @@ class AddEditNoteScreenUiTest {
     @Test
     fun aBlankNoteCannotBeSubmitted() = runComposeUiTest {
         setContent {
-            KptTheme { AddEditNoteContent(state = AddEditNoteState(), onAction = {}) }
+            KptTheme {
+                AddEditNoteContent(
+                    form = NoteFormState(),
+                    isSubmitting = false,
+                    onTextChange = {},
+                    onSubmit = {},
+                    onBackClick = {},
+                    onDiscardDismissed = {},
+                    onDiscardConfirmed = {},
+                )
+            }
         }
         // Disabled, not hidden. The user must be able to see what the screen is FOR before they
         // have typed anything.
@@ -44,8 +53,14 @@ class AddEditNoteScreenUiTest {
         setContent {
             KptTheme {
                 AddEditNoteContent(
-                    state = AddEditNoteState(text = "visited the shop"), // i18n:skip — test fixture
-                    onAction = {},
+                    // i18n:skip — test fixture
+                    form = NoteFormState(text = "visited the shop"),
+                    isSubmitting = false,
+                    onTextChange = {},
+                    onSubmit = {},
+                    onBackClick = {},
+                    onDiscardDismissed = {},
+                    onDiscardConfirmed = {},
                 )
             }
         }
@@ -57,11 +72,14 @@ class AddEditNoteScreenUiTest {
         setContent {
             KptTheme {
                 AddEditNoteContent(
-                    state = AddEditNoteState(
-                        text = "sending", // i18n:skip — test fixture
-                        isSubmitting = true,
-                    ),
-                    onAction = {},
+                    // i18n:skip — test fixture
+                    form = NoteFormState(text = "sending"),
+                    isSubmitting = true,
+                    onTextChange = {},
+                    onSubmit = {},
+                    onBackClick = {},
+                    onDiscardDismissed = {},
+                    onDiscardConfirmed = {},
                 )
             }
         }
@@ -69,39 +87,32 @@ class AddEditNoteScreenUiTest {
         onNodeWithTag(TestTags.AddEditNote.SUBMIT).assertIsNotEnabled()
     }
 
-    @Test
-    fun aFailedWriteKeepsTheUsersTextOnScreen() = runComposeUiTest {
-        setContent {
-            KptTheme {
-                AddEditNoteContent(
-                    state = AddEditNoteState(
-                        text = "do not lose me", // i18n:skip — test fixture
-                        writeError = NoteWriteError.Offline,
-                    ),
-                    onAction = {},
-                )
-            }
-        }
-        // THE ONE THAT MATTERS, as a render. The note is not on the server and not in the cache —
-        // if the error clears the field it is simply gone. The error and the text must coexist.
-        onNodeWithTag(TestTags.AddEditNote.WRITE_ERROR).assertIsDisplayed()
-        // Both values: the field's semantics MERGE its label with its editable text, so asserting
-        // the text alone fails against `[Write a Note, do not lose me]`.
-        onNodeWithTag(TestTags.AddEditNote.FIELD)
-            .assertTextEquals("Write a Note", "do not lose me") // i18n:skip — test fixture
-    }
-
+    /*
+     * REMOVED: the offline-write-error test.
+     *
+     * It asserted that a failed submit kept the user's text on screen beneath an inline error —
+     * the best this screen could do when a refusal left the note nowhere else. There is no such
+     * state now: a refused submit becomes a durable draft, so the guarantee moved from "the text
+     * is still in the field" to "the note is in the outbox", which is asserted in
+     * AddEditNoteViewModelTest where it belongs.
+     */
     @Test
     fun theDiscardWarningRendersWhenThereIsSomethingToLose() = runComposeUiTest {
         setContent {
             KptTheme {
                 AddEditNoteContent(
-                    state = AddEditNoteState(
-                        text = "half a thought", // i18n:skip — test fixture
+                    form = NoteFormState(
+                        // i18n:skip — test fixture
+                        text = "half a thought",
                         loadedText = "",
                         showDiscardConfirmation = true,
                     ),
-                    onAction = {},
+                    isSubmitting = false,
+                    onTextChange = {},
+                    onSubmit = {},
+                    onBackClick = {},
+                    onDiscardDismissed = {},
+                    onDiscardConfirmed = {},
                 )
             }
         }

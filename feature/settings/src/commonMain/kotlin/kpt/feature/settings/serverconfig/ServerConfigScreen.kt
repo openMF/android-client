@@ -36,8 +36,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import kpt.core.designsystem.component.MifosOutlinedTextField
-import kpt.core.designsystem.icon.MifosIcons
+import kpt.core.designsystem.component.AppOutlinedTextField
+import kpt.core.designsystem.icon.AppIcons
 import kpt.core.domain.validation.ValidationFailure
 import kpt.feature.settings.generated.resources.Res
 import kpt.feature.settings.generated.resources.feature_settings_server_api_path
@@ -107,7 +107,7 @@ fun ServerConfigScreen(
                 title = { Text(stringResource(Res.string.feature_settings_server_config_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick, modifier = Modifier.testTag(ServerConfigTestTags.BACK)) {
-                        Icon(MifosIcons.ArrowBack, contentDescription = null)
+                        Icon(AppIcons.ArrowBack, contentDescription = null)
                     }
                 },
             )
@@ -193,7 +193,7 @@ private fun Field(
     tag: String,
     keyboardType: KeyboardType = KeyboardType.Text,
 ) {
-    MifosOutlinedTextField(
+    AppOutlinedTextField(
         value = value,
         onValueChange = onChange,
         label = label,

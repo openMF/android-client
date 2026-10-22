@@ -14,7 +14,12 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import cmp.navigation.authenticatednavbar.AuthenticatedNavBarTabItem
 import kpt.core.ui.navigation.NavigationItem
+import kpt.feature.center.navigation.CenterTab
+import kpt.feature.center.navigation.centerTabGraph
+import kpt.feature.client.navigation.ClientTab
 import kpt.feature.client.navigation.clientTabGraph
+import kpt.feature.groups.navigation.GroupsTab
+import kpt.feature.groups.navigation.groupsTabGraph
 
 /**
  * TabRegistry — the FORK-OWNED white-label seam for the authenticated bottom-nav tabs.
@@ -62,20 +67,44 @@ object TabRegistry {
      */
     val extraInlineTabDestinations: NavGraphBuilder.(innerNav: NavHostController, outerNav: NavController) -> Unit =
         { _, outerNav ->
-            // The Clients tab's own graph. `outerNav` (not innerNav) is handed to it so client DETAIL
-            // pushes on the authenticated graph and covers the bottom bar, while the list stays inline.
+            // Each tab's own graph. `outerNav` (not innerNav) is handed to every one of them so a
+            // DETAIL drill-down pushes on the authenticated graph and covers the bottom bar, while
+            // the list stays inline and the bar persists.
             clientTabGraph(outerNav)
+            centerTabGraph(outerNav)
+            groupsTabGraph(outerNav)
         }
 
-    /** The full ordered tab list the navbar renders: backbone shell tabs + [extraTabs]. */
+    /**
+     * The four tabs the dashboard renders, in order: Home · Clients · Centers · Groups.
+     *
+     * This is the ORIGINAL's bar, ported from `6b66e8a43`, with one deliberate change: Home stays
+     * FIRST. The original's first tab was Search; search now lives on the top bar's magnifier, which
+     * frees tab one for a real home dashboard. `ProfileTab` is GONE — the original has no Profile
+     * tab, its account surface is the drawer header.
+     *
+     * ## Why the order is written out instead of `addAll(extraTabs)`
+     *
+     * Clients, Centers and Groups all arrive through `@FeatureTab` now, so `extraTabs` holds exactly
+     * these three — but in whatever order `generateFeatureTabs` happened to scan the modules in. Tab
+     * order is muscle memory for a field officer, and "the order the code generator found the files"
+     * is not a product decision. Naming them pins it; the assertion below makes a NEW `@FeatureTab`
+     * fail loudly here rather than silently never appear in the bar.
+     */
     val tabs: List<NavigationItem> = buildList {
         add(AuthenticatedNavBarTabItem.HomeTab)
-        // Feature tabs sit BETWEEN Home and Profile — a deliberate fork layout decision, which
-        // `@FeatureTab`'s own doc says belongs here rather than encoded as a priority on the feature.
-        // Profile is an account menu, not a workspace; for a field officer the day's work (Clients,
-        // then Centers and Groups) belongs next to Home, and leaving Profile last keeps the bar
-        // stable as later slices add their tabs.
-        addAll(extraTabs)
-        add(AuthenticatedNavBarTabItem.ProfileTab)
+        add(ClientTab)
+        add(CenterTab)
+        add(GroupsTab)
+    }.also { ordered ->
+        // A feature that declares a @FeatureTab and is not listed above would build, register its
+        // Koin module and its destinations, and never appear in the bar — the same silent
+        // unreachability `ClientTab` was added to fix. Fail at startup instead.
+        val unlisted = extraTabs.filterNot { tab -> ordered.any { it.testTag == tab.testTag } }
+        check(unlisted.isEmpty()) {
+            "@FeatureTab declared but not placed in TabRegistry.tabs: " +
+                unlisted.joinToString { it.testTag } +
+                " — add it in the position the bar should show it."
+        }
     }
 }

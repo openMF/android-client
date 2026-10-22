@@ -10,9 +10,13 @@
 package kpt.feature.home.search
 
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.stateIn
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.data.search.SearchRepository
@@ -34,7 +38,33 @@ class SearchViewModel(
     private val repository: SearchRepository,
 ) : BaseViewModel<SearchState, SearchEvent, SearchAction>(SearchState()) {
 
-    private var searchJob: Job? = null
+    /**
+     * The query actually SUBMITTED, as opposed to the one being typed.
+     *
+     * Search is explicit here (a Search button, as in the original) rather than search-as-you-type,
+     * so typing must not fire requests. `null` means nothing has been submitted yet.
+     */
+    private val submitted = MutableStateFlow<SearchResourcesKey?>(null)
+
+    /**
+     * Results for the submitted query.
+     *
+     * `flatMapLatest` + `stateIn(… WhileSubscribed …)` replaces a hand-managed `searchJob` that was
+     * cancelled and relaunched on every submit, with each launch hand-lifting into
+     * `mutableStateFlow`. `flatMapLatest` IS that cancellation, declared rather than performed —
+     * a new key automatically abandons the previous stream, so an in-flight search can no longer
+     * deliver results for a query the user has already replaced.
+     */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val results: StateFlow<ScreenState<List<SearchedEntity>>> = submitted
+        .flatMapLatest { key ->
+            if (key == null) {
+                flowOf(ScreenState.Empty)
+            } else {
+                repository.searchStream(key, viewModelScope).state
+            }
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STATE_TIMEOUT_MS), ScreenState.Empty)
 
     override fun handleAction(action: SearchAction) {
         when (action) {
@@ -52,7 +82,9 @@ class SearchViewModel(
             }
 
             SearchAction.Clear -> {
-                searchJob?.cancel()
+                // Clearing the submitted key is what cancels the in-flight search — `flatMapLatest`
+                // abandons the previous stream when the key changes.
+                submitted.value = null
                 mutableStateFlow.value = SearchState()
             }
 
@@ -67,22 +99,24 @@ class SearchViewModel(
      * directory; the original guarded this with a `showEmptyError` flag, and the guard is preserved.
      */
     private fun search() {
-        searchJob?.cancel()
         val query = state.query.trim()
         if (query.isEmpty()) {
-            mutableStateFlow.value = state.copy(results = ScreenState.Empty, blankQuery = true)
+            submitted.value = null
+            mutableStateFlow.value = state.copy(blankQuery = true)
             return
         }
         mutableStateFlow.value = state.copy(blankQuery = false)
 
-        val key = SearchResourcesKey(
+        submitted.value = SearchResourcesKey(
             query = query,
             resource = state.filter?.apiValue,
             exactMatch = state.exactMatch,
         )
-        searchJob = repository.searchStream(key, viewModelScope).state
-            .onEach { screenState -> mutableStateFlow.value = state.copy(results = screenState) }
-            .launchIn(viewModelScope)
+    }
+
+    private companion object {
+        /** Template default — long enough to survive a rotation or a brief tab switch. */
+        const val STATE_TIMEOUT_MS = 5_000L
     }
 }
 
@@ -106,7 +140,6 @@ data class SearchState(
     val query: String = "",
     val filter: SearchFilter? = null,
     val exactMatch: Boolean = false,
-    val results: ScreenState<List<SearchedEntity>> = ScreenState.Empty,
     /** True when Submit was pressed with nothing typed — the original's `showEmptyError`. */
     val blankQuery: Boolean = false,
 )

@@ -12,7 +12,7 @@ package kpt.core.network.utils
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.json.Json
-import kpt.core.model.objects.error.MifosError
+import kpt.core.model.objects.error.AppError
 
 /**
  * Generic function to extract error messages from API responses
@@ -21,7 +21,7 @@ suspend fun extractErrorMessage(response: HttpResponse): String {
     val responseText = response.bodyAsText()
     return try {
         val json = Json { ignoreUnknownKeys = true }
-        val errorResponse = json.decodeFromString<MifosError>(responseText)
+        val errorResponse = json.decodeFromString<AppError>(responseText)
         errorResponse.errors.firstOrNull()?.defaultUserMessage
             ?: errorResponse.defaultUserMessage
             ?: "HTTP ${response.status.value} ${response.status.description}"

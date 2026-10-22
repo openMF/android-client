@@ -21,11 +21,11 @@ actual object ShareUtils {
 
     actual suspend fun shareImage(title: String, image: ImageBitmap) {
         image.asSkiaBitmap().readPixels()
-            ?.let { FileKit.download(bytes = it, fileName = "MifosQrCode") }
+            ?.let { FileKit.download(bytes = it, fileName = "AppQrCode") }
     }
 
     actual suspend fun shareImage(title: String, byte: ByteArray) {
-        FileKit.download(bytes = byte, fileName = "MifosQrCode")
+        FileKit.download(bytes = byte, fileName = "AppQrCode")
     }
 
     actual fun callHelpline() {

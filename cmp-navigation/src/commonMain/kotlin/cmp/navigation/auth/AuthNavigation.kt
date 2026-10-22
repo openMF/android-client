@@ -13,10 +13,10 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navOptions
 import cmp.navigation.authenticated.AuthenticatedGraphRoute
-import kpt.feature.signin.SignInRoute
-import kpt.feature.signin.signInDestination
 import kpt.feature.settings.serverconfig.navigateToServerConfig
 import kpt.feature.settings.serverconfig.serverConfigDestination
+import kpt.feature.signin.SignInRoute
+import kpt.feature.signin.signInDestination
 
 /**
  * Installs the unauthenticated entry destinations on the ROOT graph.

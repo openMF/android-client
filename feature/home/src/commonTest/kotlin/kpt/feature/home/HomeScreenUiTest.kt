@@ -13,6 +13,7 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.v2.runComposeUiTest
+import kpt.core.base.store.screen.ScreenState
 import kpt.core.designsystem.theme.KptTheme
 import kpt.feature.home.search.SearchBodyContent
 import kpt.feature.home.search.SearchState
@@ -42,7 +43,13 @@ class HomeScreenUiTest {
             KptTheme {
                 HomeScreen(
                     onSettingsClick = {},
-                    homeBody = { SearchBodyContent(state = SearchState(), onAction = {}) },
+                    homeBody = {
+                        SearchBodyContent(
+                            results = ScreenState.Empty,
+                            state = SearchState(),
+                            onAction = {},
+                        )
+                    },
                 )
             }
         }

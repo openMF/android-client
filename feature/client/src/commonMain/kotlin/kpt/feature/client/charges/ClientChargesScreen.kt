@@ -35,10 +35,11 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.screen.ScreenContent
 import kpt.core.common.utils.DateHelper
 import kpt.core.database.charge.entity.ChargesEntity
-import kpt.core.designsystem.icon.MifosIcons
+import kpt.core.designsystem.icon.AppIcons
 import kpt.core.designsystem.theme.LocalFinanceColors
 import kpt.feature.client.generated.resources.Res
 import kpt.feature.client.generated.resources.feature_client_charges_count
@@ -53,7 +54,7 @@ internal fun ClientChargesScreen(
     modifier: Modifier = Modifier,
     viewModel: ClientChargesViewModel = koinViewModel(),
 ) {
-    val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+    val charges by viewModel.charges.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.eventFlow.collect { event ->
@@ -64,7 +65,7 @@ internal fun ClientChargesScreen(
     }
 
     ClientChargesContent(
-        state = state,
+        charges = charges,
         onAction = { viewModel.actionChannel.trySend(it) },
         onBackClick = onBackClick,
         modifier = modifier,
@@ -75,11 +76,15 @@ internal fun ClientChargesScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ClientChargesContent(
-    state: ClientChargesState,
+    charges: ScreenState<List<ChargesEntity>>,
     onAction: (ClientChargesAction) -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    // Derived from the SAME state the list renders, so the header cannot disagree with it — and
+    // 0 until content arrives, rather than a stale count held over from a previous client.
+    val loadedCount = (charges as? ScreenState.Content)?.data?.size ?: 0
+
     Scaffold(
         modifier = modifier.fillMaxSize().testTag(ClientChargesTestTags.SCREEN),
         topBar = {
@@ -92,7 +97,7 @@ internal fun ClientChargesContent(
                         // list through a setCount callback — and labelled it with the SAVINGS
                         // string, so a charges screen read "3 Savings Account".
                         Text(
-                            text = stringResource(Res.string.feature_client_charges_count, state.count),
+                            text = stringResource(Res.string.feature_client_charges_count, loadedCount),
                             style = MaterialTheme.typography.bodySmall,
                             modifier = Modifier.testTag(ClientChargesTestTags.COUNT),
                         )
@@ -100,17 +105,20 @@ internal fun ClientChargesContent(
                 },
                 navigationIcon = {
                     IconButton(
-                        onClick = onBackClick,
+                        // Dispatched, not called directly: `ClientChargesAction.BackClicked` and
+                        // its event were declared and handled with nothing reaching them, so this
+                        // screen had two paths to the same place and the ViewModel's was dead.
+                        onClick = { onAction(ClientChargesAction.BackClicked) },
                         modifier = Modifier.testTag(ClientChargesTestTags.BACK),
                     ) {
-                        Icon(MifosIcons.ArrowBack, contentDescription = null)
+                        Icon(AppIcons.ArrowBack, contentDescription = null)
                     }
                 },
             )
         },
     ) { padding ->
         ScreenContent(
-            state = state.charges,
+            state = charges,
             onRetry = { onAction(ClientChargesAction.Retry) },
             modifier = Modifier
                 .fillMaxSize()

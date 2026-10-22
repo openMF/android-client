@@ -572,7 +572,7 @@ fun ExampleUsage(
 @Preview
 @Composable
 private fun Example_preview() {
-    MifosTheme {
+    AppTheme {
         ExampleUsage()
     }
 }

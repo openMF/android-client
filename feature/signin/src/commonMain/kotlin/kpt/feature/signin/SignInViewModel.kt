@@ -238,7 +238,6 @@ class SignInViewModel(
 
         /** Shown by the OS prompt. States WHY, because a bare biometric dialog is alarming. */
         const val BIOMETRIC_REASON = "Unlock your field officer session"
-
     }
 
     private fun validate(username: String, password: String): SignInError? = when {
@@ -291,6 +290,7 @@ data class SignInState(
 ) {
     /** The accelerator is offered only when it can actually succeed. */
     val canUseBiometrics: Boolean get() = hasStoredSession && biometricAvailable && !isLockedOut
+
     /** How many attempts remain before sign-in pauses. Drives the warn-before-lock banner. */
     val attemptsRemaining: Int get() = (SignInViewModel.LOCK_AFTER_ATTEMPTS - failedAttempts).coerceAtLeast(0)
 

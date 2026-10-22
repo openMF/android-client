@@ -25,6 +25,8 @@ fun KptBottomBar(
     selectedItem: NavigationItem?,
     onClick: (NavigationItem) -> Unit,
     modifier: Modifier = Modifier,
+    /** Show each tab's name under its icon. See `KptNavigationBarItem.labelRes`. */
+    showLabels: Boolean = false,
     windowInsets: WindowInsets = BottomAppBarDefaults.windowInsets,
 ) {
     BottomAppBar(
@@ -39,6 +41,7 @@ fun KptBottomBar(
                 unselectedIcon = navigationItem.icon,
                 isSelected = selectedItem == navigationItem,
                 onClick = { onClick(navigationItem) },
+                labelRes = navigationItem.labelRes.takeIf { showLabels },
                 modifier = Modifier.testTag(tag = navigationItem.testTag),
             )
         }

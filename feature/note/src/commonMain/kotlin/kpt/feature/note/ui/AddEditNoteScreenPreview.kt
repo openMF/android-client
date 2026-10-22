@@ -5,7 +5,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *
- * See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+ * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
  */
 package kpt.feature.note.ui
 
@@ -33,7 +33,15 @@ internal fun AddEditNoteContentAddPreview() {
     // Add mode with an empty field: submit must be DISABLED. The original let a blank note through
     // and the server rejected it — a round trip to be told nothing was typed.
     KptTheme {
-        AddEditNoteContent(state = AddEditNoteState(), onAction = {})
+        AddEditNoteContent(
+            form = NoteFormState(),
+            isSubmitting = false,
+            onTextChange = {},
+            onSubmit = {},
+            onBackClick = {},
+            onDiscardDismissed = {},
+            onDiscardConfirmed = {},
+        )
     }
 }
 
@@ -44,12 +52,19 @@ internal fun AddEditNoteContentEditPreview() {
     // three StringResource fields in its STATE to do this; here the screen picks its own copy.
     KptTheme {
         AddEditNoteContent(
-            state = AddEditNoteState(
-                text = "Follow up on the missed repayment.", // i18n:skip — preview fixture
-                loadedText = "Follow up on the missed repayment.", // i18n:skip — preview fixture
+            form = NoteFormState(
+                // i18n:skip — preview fixture
+                text = "Follow up on the missed repayment.",
+                // i18n:skip — preview fixture
+                loadedText = "Follow up on the missed repayment.",
                 editEnabled = true,
             ),
-            onAction = {},
+            isSubmitting = false,
+            onTextChange = {},
+            onSubmit = {},
+            onBackClick = {},
+            onDiscardDismissed = {},
+            onDiscardConfirmed = {},
         )
     }
 }
@@ -60,31 +75,32 @@ internal fun AddEditNoteContentSubmittingPreview() {
     // In flight: submit disabled so a double-tap cannot send the note twice.
     KptTheme {
         AddEditNoteContent(
-            state = AddEditNoteState(
-                text = "Saving this one.", // i18n:skip — preview fixture
-                isSubmitting = true,
+            form = NoteFormState(
+                // i18n:skip — preview fixture
+                text = "Saving this one.",
             ),
-            onAction = {},
+            isSubmitting = true,
+            onTextChange = {},
+            onSubmit = {},
+            onBackClick = {},
+            onDiscardDismissed = {},
+            onDiscardConfirmed = {},
         )
     }
 }
 
-@Preview
-@Composable
-internal fun AddEditNoteContentOfflineKeepsTheTextPreview() {
-    // THE ONE WORTH LOOKING AT. The user's text is the only thing that exists nowhere else — not
-    // on the server, not in the cache. The error renders UNDER the field with the text still above
-    // it, and the offline wording says "try again", not "unexpected error".
-    KptTheme {
-        AddEditNoteContent(
-            state = AddEditNoteState(
-                text = "Client was not at the shop; will revisit Thursday.", // i18n:skip — preview fixture
-                writeError = NoteWriteError.Offline,
-            ),
-            onAction = {},
-        )
-    }
-}
+/*
+ * REMOVED: `AddEditNoteContentOfflineKeepsTheTextPreview`.
+ *
+ * It rendered the inline write-error with the user's text still above it — the best this screen
+ * could do when a refused submit left the note nowhere but in the text field.
+ *
+ * That state no longer exists. A refused submit now writes the note to `framework_submit_drafts`
+ * and `OfflineSubmitSyncer` replays it on reconnect, so there is no "offline, text at risk" render
+ * to pin. The durability it used to approximate is covered where it actually lives:
+ * `AddEditNoteViewModelTest` asserts the draft is persisted under its unique key, and Settings →
+ * Sync & Drafts renders the queued note.
+ */
 
 /*
  * NOT PREVIEWED: the discard-confirmation dialog.

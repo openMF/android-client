@@ -15,7 +15,7 @@ import kotlinx.serialization.json.Json
 @Serializable
 data class CollectionSheet(
     var dueDate: IntArray,
-    var groups: List<MifosGroup>,
+    var groups: List<AppGroup>,
 ) {
     override fun toString(): String {
         return Json.encodeToString(serializer(), this)

@@ -7,10 +7,6 @@
     You can obtain one at https://mozilla.org/MPL/2.0/.
 
     See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
-
-    Ported from 6b66e8a43:feature/note/src/commonMain/composeResources/values/res.xml.
-    Every key the original declared is carried over; the ones NOT carried over are recorded at the
-    bottom with the reason, so a reader can tell a deliberate drop from an oversight.
 -->
 <resources>
     <string name="feature_note_notes">Notes</string>
@@ -54,7 +50,7 @@
     <!--
         NOT carried over, deliberately:
 
-        feature_note_item ("Item") — the original passed it to MifosEmptyCard, which renders
+        feature_note_item ("Item") — the original passed it to AppEmptyCard, which renders
         'No {x} Found'. The result read "No Item Found" on a NOTES screen. The empty state here
         names what is actually missing, so the generic key has no caller.
     -->

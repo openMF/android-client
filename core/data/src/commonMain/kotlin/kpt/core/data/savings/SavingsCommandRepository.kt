@@ -11,9 +11,10 @@ package kpt.core.data.savings
 
 import io.ktor.client.statement.HttpResponse
 import kpt.core.base.store.mutation.MutationResult
-import kpt.core.database.savings.entity.SavingsAccountTransactionRequestEntity
-import kpt.core.model.objects.account.loan.SavingsApproval
 import kpt.core.model.objects.account.saving.SavingsAccountTransactionResponse
+import kpt.core.model.objects.account.saving.SavingsActivationInput
+import kpt.core.model.objects.account.saving.SavingsApprovalInput
+import kpt.core.model.objects.account.saving.SavingsTransactionInput
 import kpt.core.model.objects.payloads.SavingsPayload
 import kpt.core.model.shared.GenericResponse
 import kpt.core.network.mifos.savings.dto.FixedDepositPayload
@@ -34,11 +35,34 @@ interface SavingsCommandRepository {
 
     suspend fun createFixedDepositAccount(fixedDepositPayload: FixedDepositPayload): MutationResult<HttpResponse>
 
-    suspend fun processTransaction(savingsAccountType: String, savingsAccountId: Int, transactionType: String?, savingsAccountTransactionRequest: SavingsAccountTransactionRequestEntity?): MutationResult<SavingsAccountTransactionResponse>
+    /**
+     * Deposit or withdraw on one savings account.
+     *
+     * [savingsAccountType] is Fineract's path segment for the deposit kind, so the same numeric id
+     * under a different type is a different account.
+     *
+     * Takes [SavingsTransactionInput] rather than the nullable Room entity it used to: that entity
+     * has every field nullable plus an `errorMessage` column, which is storage shape, not request
+     * shape. See the input type for why `locale`/`dateFormat` are required.
+     */
+    suspend fun processTransaction(
+        savingsAccountType: String,
+        savingsAccountId: Int,
+        transactionType: String,
+        input: SavingsTransactionInput,
+    ): MutationResult<SavingsAccountTransactionResponse>
 
-    suspend fun activateSavings(savingsAccountId: Int, genericRequest: HashMap<String, String>): MutationResult<GenericResponse>
+    /** Activate an approved savings account. Typed, not a `HashMap<String, String>`. */
+    suspend fun activateSavings(
+        savingsAccountId: Int,
+        input: SavingsActivationInput,
+    ): MutationResult<GenericResponse>
 
-    suspend fun approveSavingsApplication(savingsAccountId: Int, savingsApproval: SavingsApproval?): MutationResult<GenericResponse>
+    /** Approve a submitted savings application. */
+    suspend fun approveSavingsApplication(
+        savingsAccountId: Int,
+        input: SavingsApprovalInput,
+    ): MutationResult<GenericResponse>
 
     suspend fun createSavingsAccount(savingsPayload: SavingsPayload?): MutationResult<HttpResponse>
 

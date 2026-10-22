@@ -65,17 +65,23 @@ class AuthenticatedNavbarNavigationViewModelTest {
     }
 
     @Test
-    fun settingsTabNavigatesToProfileAndHighlightsTheProfileTab() = runTest(dispatcher) {
+    fun aPendingTabEmitsNoNavigationEvent() = runTest(dispatcher) {
+        // Replaces the old settings-tab-navigates-to-profile test: Profile is no longer a tab (the
+        // ported app has none), so that event no longer exists.
+        //
+        // Centers and Groups route through the shell directly — it calls `navigateToInlineTab` so
+        // the bottom bar persists, which a ViewModel event cannot express. The action exists purely
+        // so the tap is still observable; asserting the SILENCE is what stops someone later adding
+        // an event here and double-navigating on every tap of those two tabs.
         val vm = AuthenticatedNavbarNavigationViewModel()
         val events = mutableListOf<AuthenticatedNavBarEvent>()
         backgroundScope.launch { vm.eventFlow.collect { events += it } }
         drain()
 
-        vm.trySendAction(AuthenticatedNavBarAction.SettingsTabClick)
+        vm.trySendAction(AuthenticatedNavBarAction.PendingTabClick)
         drain()
 
-        assertEquals(listOf<AuthenticatedNavBarEvent>(AuthenticatedNavBarEvent.NavigateToProfileScreen), events)
-        assertEquals(AuthenticatedNavBarTabItem.ProfileTab, events.single().tab)
+        assertEquals(emptyList<AuthenticatedNavBarEvent>(), events)
     }
 
     @Test
