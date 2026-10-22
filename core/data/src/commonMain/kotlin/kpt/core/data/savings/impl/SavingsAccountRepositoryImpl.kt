@@ -22,13 +22,17 @@ import kpt.core.database.savings.entity.SavingProductsTemplate
 import kpt.core.database.savings.entity.SavingsAccountTransactionTemplateEntity
 import kpt.core.database.savings.entity.SavingsAccountWithAssociationsEntity
 import kpt.core.model.objects.organisations.ProductSavings
+import kpt.core.network.mifos.savings.dto.FixedDepositTemplate
+import kpt.core.network.mifos.savings.dto.ShareTemplate
 import kpt.core.store.config.AppCacheKeys
 import kpt.core.store.config.AppStoreIds
 import kpt.core.store.config.AppStoreRegistry
+import kpt.core.store.savings.FixedDepositProductTemplateKey
 import kpt.core.store.savings.GetClientSavingsAccountTemplateByProductKey
 import kpt.core.store.savings.GetGroupSavingsAccountTemplateByProductKey
 import kpt.core.store.savings.GetSavingsAccountTransactionTemplateKey
 import kpt.core.store.savings.SavingsAccountKey
+import kpt.core.store.savings.ShareProductTemplateKey
 import org.mobilenativefoundation.store.store5.Store
 import org.mobilenativefoundation.store.store5.StoreReadRequest
 import org.mobilenativefoundation.store.store5.StoreReadResponse
@@ -54,6 +58,10 @@ internal class SavingsAccountRepositoryImpl(
         GetGroupSavingsAccountTemplateByProductKey,
         SavingProductsTemplate,
         >,
+    @FromStore(AppStoreIds.SavingsShareProductTemplate)
+    private val shareTemplateStore: Store<ShareProductTemplateKey, ShareTemplate>,
+    @FromStore(AppStoreIds.SavingsFixedDepositProductTemplate)
+    private val fixedDepositTemplateStore: Store<FixedDepositProductTemplateKey, FixedDepositTemplate>,
 ) : SavingsAccountRepository {
 
     override fun savingsAccountStream(
@@ -135,4 +143,28 @@ internal class SavingsAccountRepositoryImpl(
             .first()
             .requireData()
     }.getOrNull()
+
+    override fun shareTemplateStream(
+        clientId: Int,
+        productId: Int?,
+        scope: CoroutineScope,
+    ): ScreenDataStream<ShareTemplate> = shareTemplateStore.asScreenStream(
+        key = ShareProductTemplateKey(clientId = clientId, productId = productId),
+        cacheKey = AppCacheKeys.SavingsShareProductTemplate.forKey("$clientId:$productId"),
+        scope = scope,
+        fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
+        ttl = AppStoreRegistry.Ttl.SAVINGS_SHARE_PRODUCT_TEMPLATE,
+    )
+
+    override fun fixedDepositTemplateStream(
+        clientId: Int,
+        productId: Int?,
+        scope: CoroutineScope,
+    ): ScreenDataStream<FixedDepositTemplate> = fixedDepositTemplateStore.asScreenStream(
+        key = FixedDepositProductTemplateKey(clientId = clientId, productId = productId),
+        cacheKey = AppCacheKeys.SavingsFixedDepositProductTemplate.forKey("$clientId:$productId"),
+        scope = scope,
+        fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
+        ttl = AppStoreRegistry.Ttl.SAVINGS_FIXED_DEPOSIT_PRODUCT_TEMPLATE,
+    )
 }

@@ -417,4 +417,48 @@
     <string name="feature_client_addidentifier_error_upload_failed">The identifier was created, but its document could not be uploaded.</string>
     <string name="feature_client_addidentifier_error_pick_failed">Could not open that file. Try another.</string>
     <string name="feature_client_addidentifier_error_offline">No connection — nothing was saved.</string>
+    <!-- Client share accounts — cluster D -->
+    <string name="feature_client_shareaccounts_title">Share Accounts</string>
+    <string name="feature_client_shareaccounts_empty">No Share Account Found</string>
+    <string name="feature_client_shareaccounts_filtered_empty">No share account matches the current search.</string>
+    <!-- Client share application — cluster D -->
+    <string name="feature_client_shareapp_title">Share Application</string>
+    <string name="feature_client_shareapp_step_of">Step %1$d of %2$d</string>
+    <string name="feature_client_shareapp_next">Next</string>
+    <string name="feature_client_shareapp_product">Share Product</string>
+    <string name="feature_client_shareapp_savings_account">Savings Account</string>
+    <string name="feature_client_shareapp_total_shares">Total Shares</string>
+    <string name="feature_client_shareapp_external_id">External Id</string>
+    <string name="feature_client_shareapp_min_active_period">Minimum Active Period</string>
+    <string name="feature_client_shareapp_lock_in_period">Lock-in Period</string>
+    <string name="feature_client_shareapp_dividend_allowed">Allow dividends for inactive clients</string>
+    <string name="feature_client_shareapp_error_product_required">Share product is required</string>
+    <string name="feature_client_shareapp_error_savings_required">Savings account is required</string>
+    <string name="feature_client_shareapp_error_shares_required">Enter a whole number of shares greater than zero</string>
+    <string name="feature_client_shareapp_error_offline">No connection — the application was not submitted.</string>
+    <string name="feature_client_shareapp_error_failed">Could not submit the share application.</string>
+    <!-- Client fixed-deposit application — cluster D -->
+    <string name="feature_client_fdapp_title">Fixed Deposit Application</string>
+    <string name="feature_client_fdapp_step_of">Step %1$d of %2$d</string>
+    <string name="feature_client_fdapp_next">Next</string>
+    <string name="feature_client_fdapp_product">Fixed Deposit Product</string>
+    <string name="feature_client_fdapp_field_officer">Field Officer</string>
+    <string name="feature_client_fdapp_external_id">External Id</string>
+    <string name="feature_client_fdapp_deposit_amount">Deposit Amount</string>
+    <string name="feature_client_fdapp_deposit_period">Deposit Period</string>
+    <string name="feature_client_fdapp_deposit_period_type">Deposit Period Frequency</string>
+    <string name="feature_client_fdapp_lock_in_period">Lock-in Period</string>
+    <string name="feature_client_fdapp_transfer_interest">Transfer interest to linked savings</string>
+    <string name="feature_client_fdapp_penal_applicable">Apply pre-closure penal interest</string>
+    <string name="feature_client_fdapp_penal_interest">Penal Interest (%)</string>
+    <string name="feature_client_fdapp_interest_compounding">Interest Compounding Period</string>
+    <string name="feature_client_fdapp_interest_posting">Interest Posting Period</string>
+    <string name="feature_client_fdapp_interest_calculation_type">Interest Calculated Using</string>
+    <string name="feature_client_fdapp_interest_days_in_year">Days in Year</string>
+    <string name="feature_client_fdapp_error_product_required">Fixed deposit product is required</string>
+    <string name="feature_client_fdapp_error_amount_required">Enter a deposit amount greater than zero</string>
+    <string name="feature_client_fdapp_error_period_required">Enter a deposit period greater than zero</string>
+    <string name="feature_client_fdapp_error_period_type_required">Deposit period frequency is required</string>
+    <string name="feature_client_fdapp_error_offline">No connection — the application was not submitted.</string>
+    <string name="feature_client_fdapp_error_failed">Could not submit the fixed deposit application.</string>
 </resources>

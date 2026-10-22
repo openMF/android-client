@@ -36,11 +36,14 @@ import kpt.feature.client.createnew.CreateNewClientScreen
 import kpt.feature.client.depositaccounts.DepositAccountKind
 import kpt.feature.client.details.ClientDetailsScreen
 import kpt.feature.client.documents.ClientDocumentsScreen
+import kpt.feature.client.fixeddepositapplication.FixedDepositApplicationScreen
 import kpt.feature.client.general.ClientGeneralScreen
 import kpt.feature.client.identifiers.ClientIdentifiersScreen
 import kpt.feature.client.list.ClientListScreen
 import kpt.feature.client.loanaccounts.ClientLoanAccountsScreen
 import kpt.feature.client.profile.ClientProfileScreen
+import kpt.feature.client.shareaccounts.ClientShareAccountsScreen
+import kpt.feature.client.shareapplication.ShareApplicationScreen
 import kpt.feature.client.signature.ClientSignatureScreen
 import kpt.feature.client.staff.ClientStaffScreen
 import kpt.feature.client.transfer.ClientTransferScreen
@@ -221,6 +224,21 @@ data class ClientAddAddressRoute(val clientId: Int)
 @Serializable
 data class ClientAddIdentifierRoute(val clientId: Long)
 
+/** A client's SHARE accounts. Reached from client-general's "Share Accounts" row. */
+@Serializable
+data class ClientShareAccountsRoute(val clientId: Int)
+
+/** Open a SHARE account. Reached from the apply-new chooser and from the share-accounts list. */
+@Serializable
+data class ShareApplicationRoute(val clientId: Int)
+
+/**
+ * Open a FIXED DEPOSIT account. Reached from the apply-new chooser and from the deposit-accounts
+ * list when it is showing the FIXED kind.
+ */
+@Serializable
+data class FixedDepositApplicationRoute(val clientId: Int)
+
 /**
  * The client's signature. Reached from client details' "Update Signature".
  *
@@ -308,6 +326,15 @@ fun NavController.navigateToClientAddAddress(clientId: Int, navOptions: NavOptio
 
 fun NavController.navigateToClientAddIdentifier(clientId: Long, navOptions: NavOptions? = null) =
     navigate(ClientAddIdentifierRoute(clientId), navOptions)
+
+fun NavController.navigateToClientShareAccounts(clientId: Int, navOptions: NavOptions? = null) =
+    navigate(ClientShareAccountsRoute(clientId), navOptions)
+
+fun NavController.navigateToShareApplication(clientId: Int, navOptions: NavOptions? = null) =
+    navigate(ShareApplicationRoute(clientId), navOptions)
+
+fun NavController.navigateToFixedDepositApplication(clientId: Int, navOptions: NavOptions? = null) =
+    navigate(FixedDepositApplicationRoute(clientId), navOptions)
 
 fun NavController.navigateToClientDepositAccounts(
     clientId: Int,
@@ -425,7 +452,15 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
             // navigateToClientCollateralDetailRoute)`. An earlier pass of this port had it on the
             // form; corrected. The add form is reached from client details' "Create Collateral".
             onCollateralData = navController::navigateToClientCollateralDetails,
-            onUpcomingCharges = null,
+            // Points at the EXISTING charges screen, not a port of `clientUpcomingCharges`.
+            //
+            // That original is a second screen over the SAME endpoint: it reads
+            // `getListOfPagingCharges` -> `GET {resourceType}/{resourceId}/charges`, while the
+            // ported charges screen reads `getListOfClientCharges` -> the same path with
+            // `?offset=0&limit=0`. Neither filters for anything "upcoming" — the name is a
+            // misnomer, and the two differ only in paging. Porting it would have been a duplicate
+            // screen over one endpoint (`upcoming-charges-is-the-same-list-as-charges`).
+            onUpcomingCharges = navController::navigateToClientCharges,
             // The client's loan accounts — and the loan PROFILE's only path in, which is why this
             // row is no longer null-gated. See `ClientLoanAccountsRoute`.
             onLoanAccounts = navController::navigateToClientLoanAccounts,
@@ -441,9 +476,10 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
             onRecurringDepositAccounts = {
                 navController.navigateToClientDepositAccounts(it, DepositAccountKind.RECURRING)
             },
-            // `shareAccounts` is a separate screen over a different entity and is not ported yet,
-            // so this row stays absent.
-            onSharesAccounts = null,
+            // Live as of cluster D. A separate screen over a different entity — share accounts
+            // carry approved/pending COUNTS, not a balance — so it did not fold into the
+            // parameterised deposit destination above.
+            onSharesAccounts = navController::navigateToClientShareAccounts,
         )
     }
 
@@ -465,8 +501,9 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
     composableWithPushTransitions<ClientApplyNewRoute> {
         ClientApplyNewScreen(
             onBackPressed = navController::popBackStackSafely,
-            // Each row is drawn only when its application exists. Loan, savings and recurring
-            // deposit are ported; share and fixed deposit are not, so those rows are ABSENT.
+            // Every row is drawn: loan, savings, recurring deposit, share and fixed deposit all
+            // have an application now, so the chooser finally offers every product type the
+            // client's eligibility allows rather than the subset this port had reached.
             onApplyLoan = navController::navigateToNewLoanApplication,
             // This is what gives the savings wizard its CLIENT path — S5c wired only the group
             // path, from group detail, so `isGroup = false` was unreachable.
@@ -474,8 +511,8 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
                 navController.navigateToSavingsApplication(ownerId = clientId, isGroup = false)
             },
             onApplyRecurringDeposit = navController::navigateToRecurringDepositApplication,
-            onApplyShare = null,
-            onApplyFixedDeposit = null,
+            onApplyShare = navController::navigateToShareApplication,
+            onApplyFixedDeposit = navController::navigateToFixedDepositApplication,
         )
     }
 
@@ -569,7 +606,8 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
                             navController.navigateToSavingsApplication(clientId, isGroup = false)
                         DepositAccountKind.RECURRING ->
                             navController.navigateToRecurringDepositApplication(clientId)
-                        DepositAccountKind.FIXED -> Unit
+                        DepositAccountKind.FIXED ->
+                            navController.navigateToFixedDepositApplication(clientId)
                     }
                 }
             },
@@ -603,6 +641,34 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
             clientName = route.clientName,
             accountNo = route.accountNo,
             onNavigateBack = navController::popBackStackSafely,
+        )
+    }
+
+    // Open a fixed deposit account. Nested drill-down, NOT annotated.
+    composableWithPushTransitions<FixedDepositApplicationRoute> {
+        FixedDepositApplicationScreen(
+            onNavigateBack = navController::popBackStackSafely,
+            onCreated = navController::popBackStackSafely,
+        )
+    }
+
+    // Open a share account. Nested drill-down, NOT annotated.
+    composableWithPushTransitions<ShareApplicationRoute> {
+        ShareApplicationScreen(
+            onNavigateBack = navController::popBackStackSafely,
+            // Pop on success — the list or chooser behind re-reads.
+            onCreated = navController::popBackStackSafely,
+        )
+    }
+
+    // A client's share accounts. Nested drill-down, NOT annotated.
+    composableWithPushTransitions<ClientShareAccountsRoute> {
+        ClientShareAccountsScreen(
+            onNavigateBack = navController::popBackStackSafely,
+            // Live as of cluster D — the share wizard landed, so the "+" and the empty state's
+            // create button are drawn. This is the original's own edge
+            // (`ShareAccountsRoute` -> `navigateToCreateShareAccountRoute`).
+            onAddAccount = navController::navigateToShareApplication,
         )
     }
 

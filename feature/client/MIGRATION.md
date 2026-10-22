@@ -11,7 +11,7 @@ first consumer of — `note` (8), `document` (8), `data-table` (20), `search-rec
 Port in progress, subdivided `3a` list → `3b` detail+charges → `3c` actions → `3d` shared
 drill-downs → `S6-A1` deposit accounts → `S6-B` create/edit.
 
-**19 of the original's 38 screens are covered; ~18 remain.** Two caveats the headline number hides:
+**30 of the original's 38 screens are covered; the other 8 are CLASSIFIED, not pending.** Two caveats the headline number hides:
 
 - One of the 38 is a DEAD DUPLICATE — the original ships both `clientList/ClientListScreen.kt` and
   `clientsList/ClientListScreen.kt`.
@@ -27,6 +27,23 @@ drill-downs → `S6-A1` deposit accounts → `S6-B` create/edit.
 > count in this file** — `git ls-tree 6b66e8a43 feature/client/` for the denominator, `find
 > feature/client/src -name "*Screen.kt"` for the numerator.
 
+### The remaining 8, and why each is not simply "to do" (2026-10-22)
+
+Checked individually against the spec's caller rule. Only ONE is a screen this port
+has chosen not to write yet:
+
+| screen | verdict |
+|---|---|
+| `clientPinpoint` | **no caller** in the original; also blocked on a vaulted Maps key |
+| `syncClientDialog` | **no caller** in the original |
+| `clientSurveyList` / `…Question` / `…Submit` | route REGISTERED but never navigated to — all three unreachable |
+| `clientList` | **dead duplicate** of `clientsList`; the graph opens the latter, so "38" overstates by one |
+| `documentPreviewScreen` | reachable, two real callers — **blocked on a multiplatform image+PDF viewer** (`core/platform`, six source sets), the same capability `savingsAccountTransactionReceipt` needs |
+
+Porting any of the first six would land a screen nothing opens. See
+`client-vertical-remaining-screens-classified` and
+`document-preview-needs-a-multiplatform-viewer`.
+
 ### Landed in S6-B (2026-10-22)
 
 | screen | package | note |
@@ -39,6 +56,25 @@ drill-downs → `S6-A1` deposit accounts → `S6-B` create/edit.
 
 Five null-gated affordances went live. `onCreateStandingInstructions` stays `null` **permanently** —
 it has no original at `6b66e8a43` at all, so it is not pending work.
+
+### Landed in cluster C + D (2026-10-22)
+
+| screen | package | note |
+|---|---|---|
+| add address | `addaddress/` | address list's "+" |
+| add document | `adddocument/` | documents list's "+" |
+| add identifier | `addidentifier/` | identifiers list's "+"; 2 of the original's 3 phases |
+| share accounts | `shareaccounts/` | client-general's last account row |
+| share application | `shareapplication/` | chooser's Share row + the share list's "+" |
+| fixed deposit application | `fixeddepositapplication/` | chooser's Fixed row + the deposit list's FIXED "+" |
+
+`clientUpcomingCharges` was **not** ported: it reads the same
+`{resourceType}/{resourceId}/charges` endpoint as the already-ported charges screen, differing only
+in paging, so its row points at that screen instead
+(`upcoming-charges-is-the-same-list-as-charges`).
+
+With both wizards in, the apply-new chooser offers **all five** product types — it had been
+showing three, then four, purely because the destinations did not exist yet.
 
 ---
 

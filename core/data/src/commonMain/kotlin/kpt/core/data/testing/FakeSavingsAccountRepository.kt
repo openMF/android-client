@@ -20,6 +20,8 @@ import kpt.core.database.savings.entity.SavingProductsTemplate
 import kpt.core.database.savings.entity.SavingsAccountTransactionTemplateEntity
 import kpt.core.database.savings.entity.SavingsAccountWithAssociationsEntity
 import kpt.core.model.objects.organisations.ProductSavings
+import kpt.core.network.mifos.savings.dto.FixedDepositTemplate
+import kpt.core.network.mifos.savings.dto.ShareTemplate
 
 /**
  * Test double for [SavingsAccountRepository] — the savings-side twin of [FakeLoanRepository].
@@ -36,6 +38,8 @@ class FakeSavingsAccountRepository(
     private val savingsProducts: MutableStateFlow<ScreenState<List<ProductSavings>>>? = null,
     /** Answers the application-template question, per PRODUCT; null models the read failing. */
     private val applicationTemplate: (productId: Int) -> SavingProductsTemplate? = { null },
+    private val shareTemplate: MutableStateFlow<ScreenState<ShareTemplate>>? = null,
+    private val fixedDepositTemplate: MutableStateFlow<ScreenState<FixedDepositTemplate>>? = null,
 ) : SavingsAccountRepository {
 
     val refreshes: MutableSharedFlow<Unit> = MutableSharedFlow(extraBufferCapacity = 8)
@@ -51,6 +55,38 @@ class FakeSavingsAccountRepository(
         requestedKeys += savingsAccountType to savingsAccountId
         val source = requireNotNull(account) {
             "FakeSavingsAccountRepository: savingsAccountStream was read but no state flow " +
+                "was supplied for it"
+        }
+        return screenDataStreamForTesting(source, refreshTrigger = refreshes)
+    }
+
+    /** Every `(clientId, productId)` the fixed-deposit template was constructed for. */
+    val fixedDepositTemplateQueries: MutableList<Pair<Int, Int?>> = mutableListOf()
+
+    override fun fixedDepositTemplateStream(
+        clientId: Int,
+        productId: Int?,
+        scope: CoroutineScope,
+    ): ScreenDataStream<FixedDepositTemplate> {
+        fixedDepositTemplateQueries += clientId to productId
+        val source = requireNotNull(fixedDepositTemplate) {
+            "FakeSavingsAccountRepository: fixedDepositTemplateStream was read but no state flow " +
+                "was supplied for it"
+        }
+        return screenDataStreamForTesting(source, refreshTrigger = refreshes)
+    }
+
+    /** Every `(clientId, productId)` the share template was constructed for. */
+    val shareTemplateQueries: MutableList<Pair<Int, Int?>> = mutableListOf()
+
+    override fun shareTemplateStream(
+        clientId: Int,
+        productId: Int?,
+        scope: CoroutineScope,
+    ): ScreenDataStream<ShareTemplate> {
+        shareTemplateQueries += clientId to productId
+        val source = requireNotNull(shareTemplate) {
+            "FakeSavingsAccountRepository: shareTemplateStream was read but no state flow " +
                 "was supplied for it"
         }
         return screenDataStreamForTesting(source, refreshTrigger = refreshes)

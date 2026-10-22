@@ -15,6 +15,8 @@ import kpt.core.database.savings.entity.SavingProductsTemplate
 import kpt.core.database.savings.entity.SavingsAccountTransactionTemplateEntity
 import kpt.core.database.savings.entity.SavingsAccountWithAssociationsEntity
 import kpt.core.model.objects.organisations.ProductSavings
+import kpt.core.network.mifos.savings.dto.FixedDepositTemplate
+import kpt.core.network.mifos.savings.dto.ShareTemplate
 
 interface SavingsAccountRepository {
     /**
@@ -47,6 +49,35 @@ interface SavingsAccountRepository {
 
     /** The tenant's savings products — what the create wizard opens on. */
     fun savingsProductsStream(scope: CoroutineScope): ScreenDataStream<List<ProductSavings>>
+
+    /**
+     * The share-account application template for one client, optionally narrowed to one product.
+     *
+     * `productId = null` is the FIRST read — it returns the product options to choose from. Passing
+     * a product id re-reads with that product's price, currency and charge options filled in, which
+     * is why the share wizard reads this stream twice.
+     *
+     * The store behind it (`@StoreProvider(id = "savingsShareProductTemplate")`) already existed
+     * and was unexposed; the share wizard is its first reader.
+     */
+    fun shareTemplateStream(
+        clientId: Int,
+        productId: Int?,
+        scope: CoroutineScope,
+    ): ScreenDataStream<ShareTemplate>
+
+    /**
+     * The fixed-deposit application template for one client, optionally narrowed to one product.
+     *
+     * Same two-phase shape as [shareTemplateStream]: `productId = null` supplies the product
+     * options, and re-reading with a product fills in its interest, term and charge defaults. The
+     * store behind it already existed and was unexposed; this wizard is its first reader.
+     */
+    fun fixedDepositTemplateStream(
+        clientId: Int,
+        productId: Int?,
+        scope: CoroutineScope,
+    ): ScreenDataStream<FixedDepositTemplate>
 
     /**
      * The savings-application template for one (owner, product) pair.

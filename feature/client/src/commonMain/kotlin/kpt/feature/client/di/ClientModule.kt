@@ -30,6 +30,9 @@ import kpt.feature.client.identifiers.ClientIdentifiersViewModel
 import kpt.feature.client.list.ClientListViewModel
 import kpt.feature.client.loanaccounts.ClientLoanAccountsViewModel
 import kpt.feature.client.profile.ClientProfileViewModel
+import kpt.feature.client.fixeddepositapplication.FixedDepositApplicationViewModel
+import kpt.feature.client.shareaccounts.ClientShareAccountsViewModel
+import kpt.feature.client.shareapplication.ShareApplicationViewModel
 import kpt.feature.client.signature.ClientSignatureViewModel
 import kpt.feature.client.staff.ClientStaffViewModel
 import kpt.feature.client.transfer.ClientTransferViewModel
@@ -65,4 +68,7 @@ val ClientModule = module {
     viewModelOf(::ClientAddDocumentViewModel)
     viewModelOf(::ClientAddAddressViewModel)
     viewModelOf(::ClientAddIdentifierViewModel)
+    viewModelOf(::ClientShareAccountsViewModel)
+    viewModelOf(::ShareApplicationViewModel)
+    viewModelOf(::FixedDepositApplicationViewModel)
 }
