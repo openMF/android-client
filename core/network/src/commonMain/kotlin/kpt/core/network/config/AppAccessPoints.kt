@@ -34,29 +34,15 @@ object AppAccessPoints {
         AccessPoint(
             id = "mifos",
             kind = AccessPointKind.REST,
-            baseUrl = "https://apis.mifos.community/",
-            basePath = "1.0/field/v1/",
-            loggableHost = "apis.mifos.community",
-            auth = AuthScheme.BASIC,
-            headers = listOf(
-                HeaderSpec(name = "Fineract-Platform-TenantId", value = "mifos-bank-1"),
-                HeaderSpec(name = "Content-Type", value = "application/json"),
-                HeaderSpec(name = "Accept", value = "application/json"),
-                HeaderSpec(name = "Authorization", runtimeKey = "mifos.auth"),
-            ),
-        ),
-        AccessPoint(
-            id = "staging",
-            kind = AccessPointKind.REST,
-            baseUrl = "https://demo.mifos.org/",
+            baseUrl = "https://sandbox.mifos.community/",
             basePath = "fineract-provider/api/v1/",
-            loggableHost = "demo.mifos.org",
+            loggableHost = "sandbox.mifos.community",
             auth = AuthScheme.BASIC,
             headers = listOf(
                 HeaderSpec(name = "Fineract-Platform-TenantId", value = "default"),
                 HeaderSpec(name = "Content-Type", value = "application/json"),
                 HeaderSpec(name = "Accept", value = "application/json"),
-                HeaderSpec(name = "Authorization", runtimeKey = "staging.auth"),
+                HeaderSpec(name = "Authorization", runtimeKey = "mifos.auth"),
             ),
         ),
     )

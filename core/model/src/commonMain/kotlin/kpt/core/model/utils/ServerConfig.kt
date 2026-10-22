@@ -23,12 +23,21 @@ data class ServerConfig(
     val tenant: String,
 ) {
     companion object {
+        /**
+         * REPOINTED 2026-10-22 to `sandbox.mifos.community` — operator decision.
+         *
+         * Must stay equal to the `mifos` access point in `app-profile/app.yaml`, which is the SoT;
+         * `ServerConfigAccessPointParityTest` fails if the two diverge. The previous value was
+         * `apis.mifos.community` + `/1.0/field/v1/` + tenant `mifos-bank-1` — the field-officer
+         * gateway, whose Fineract is down (502 on every path, including its own health endpoint).
+         * Sandbox is plain Fineract, so path AND tenant change with the host.
+         */
         val DEFAULT = ServerConfig(
             protocol = "https://",
-            endPoint = "apis.mifos.community",
-            apiPath = "/1.0/field/v1/",
+            endPoint = "sandbox.mifos.community",
+            apiPath = "/fineract-provider/api/v1/",
             port = "443",
-            tenant = "mifos-bank-1",
+            tenant = "default",
         )
 
         val LOCALHOST = ServerConfig(

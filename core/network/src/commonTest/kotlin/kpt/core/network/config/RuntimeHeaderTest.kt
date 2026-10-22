@@ -127,13 +127,13 @@ class RuntimeHeaderTest {
 
         client.get("offices")
         // Declared `value:` in app.yaml -> on the wire, with no code touching it anywhere.
-        assertEquals("mifos-bank-1", seen[0]["tenant"])
+        assertEquals("default", seen[0]["tenant"])
         // …while the credential half stays absent until a token exists.
         assertNull(seen[0]["auth"])
 
         store[AuthScheme.runtimeKeyFor("mifos")] = "Basic dG9rZW4="
         client.get("offices")
-        assertEquals("mifos-bank-1", seen[1]["tenant"], "the static header is unaffected by sign-in")
+        assertEquals("default", seen[1]["tenant"], "the static header is unaffected by sign-in")
         assertEquals("Basic dG9rZW4=", seen[1]["auth"])
     }
 
@@ -141,14 +141,17 @@ class RuntimeHeaderTest {
     fun origin_and_path_join_into_one_effective_url() {
         val mifos = AppAccessPoints.points.first { it.id == "mifos" }
 
-        assertEquals("https://apis.mifos.community/", mifos.baseUrl, "base_url is the ORIGIN only")
-        // The field-officer GATEWAY path, not plain Fineract's. Probed 2026-10-01:
-        // `1.0/field/v1/authentication` answers 401, `fineract-provider/api/v1/authentication` 404.
-        assertEquals("1.0/field/v1/", mifos.basePath)
+        assertEquals("https://sandbox.mifos.community/", mifos.baseUrl, "base_url is the ORIGIN only")
+        // PLAIN Fineract's path. Repointed 2026-10-22 from the field-officer gateway
+        // (`apis.mifos.community` + `1.0/field/v1/`), whose Fineract is down — 502 on every path
+        // including its own /actuator/health, steady across 90s of probing, and a real browser
+        // login on that tenant's back-office returned `502 POST .../authentication`. Sandbox was
+        // the only live Mifos instance found; being plain Fineract, host AND path move together.
+        assertEquals("fineract-provider/api/v1/", mifos.basePath)
         // The trailing slash is load-bearing: Ktor resolves a relative request path against this, so
         // without it `offices` would REPLACE the last segment and hit /api/offices.
         assertEquals(
-            "https://apis.mifos.community/1.0/field/v1/",
+            "https://sandbox.mifos.community/fineract-provider/api/v1/",
             mifos.effectiveUrl,
         )
     }
@@ -171,7 +174,7 @@ class RuntimeHeaderTest {
         val mifos = AppAccessPoints.points.first { it.id == "mifos" }
         val byName = mifos.headers.associateBy { it.name }
 
-        assertEquals("mifos-bank-1", byName["Fineract-Platform-TenantId"]?.value, "tenant is a build-time constant")
+        assertEquals("default", byName["Fineract-Platform-TenantId"]?.value, "tenant is a build-time constant")
         assertEquals("mifos.auth", byName[HttpHeaders.Authorization]?.runtimeKey, "auth is runtime-valued")
         assertNull(byName[HttpHeaders.Authorization]?.value, "no credential may be baked into the binary")
     }

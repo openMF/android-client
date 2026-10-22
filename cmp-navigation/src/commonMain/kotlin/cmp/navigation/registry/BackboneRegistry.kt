@@ -17,8 +17,10 @@ import cmp.navigation.generated.resources.Res
 import cmp.navigation.generated.resources.home_dashboard_feature
 import kpt.core.base.ui.nav.popBackStackSafely
 import kpt.feature.profile.identity.ProfileBody
+import kpt.feature.settings.SettingsBody
 import kpt.feature.settings.navigateToNotification
 import kpt.feature.settings.navigateToSettings
+import kpt.feature.settings.navigateToSyncAndDrafts
 import kpt.feature.settings.notificationDestination
 import kpt.feature.settings.settingsDestination
 import kpt.feature.settings.syncAndDraftsDestination
@@ -67,6 +69,18 @@ object BackboneRegistry {
      * strips the fenced block, leaving `{ }` for the fork to fill (mirrors `homeBody`). WS01 / AC7.
      */
     val settingsBody: @Composable (NavController) -> Unit = { navController ->
+        // Settings content (S7). This seam was EMPTY — the same class as `profileBody` below, and
+        // with a worse symptom: `HomeDestinationsScreen.SettingsScreen` declares `isMigrated = true`,
+        // so the drawer routed to a destination that rendered NOTHING. No crash, no log, a blank
+        // screen. Found on device 2026-10-22; the desktop suite missed it because every settings
+        // test drives `SettingsScreenContent` directly and never passes through this seam.
+        //
+        // `SettingsBody` is the fork's stand-in for the stripped `demo.SettingsDemoBody`: it owns the
+        // theme/language dialog state that the stateless, `internal` content composable cannot.
+        SettingsBody(
+            onBackClick = { navController.popBackStackSafely() },
+            onSyncAndDraftsClick = { navController.navigateToSyncAndDrafts() },
+        )
     }
 
     /**

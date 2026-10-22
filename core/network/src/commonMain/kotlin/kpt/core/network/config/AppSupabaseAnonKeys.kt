@@ -29,7 +29,8 @@ object AppSupabaseAnonKeys {
     // One row per SUPABASE access point. `anon_key_env: X` on the point emits BuildKonfig.X
     // (build-time env / local.properties read, referenced by FQN so no import is needed
     // outside this block); no key is committed. Absent -> "" so the client stays inert.
-    private val byId: Map<String, String> = mapOf()
+    private val byId: Map<String, String> = mapOf(
+    )
     // syncForkConfig:supabase-anon-keys:end
 
     /** Anon key for [id], or empty string if [id] is not registered. */

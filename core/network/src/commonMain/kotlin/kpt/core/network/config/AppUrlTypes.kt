@@ -35,13 +35,9 @@ object AppUrlTypes {
     /** `mifos` — REST access point. */
     val MIFOS: UrlType = UrlType("MIFOS")
 
-    /** `staging` — REST access point. */
-    val STAGING: UrlType = UrlType("STAGING")
-
     /** Every declared endpoint type, in app-profile order. */
     val all: List<UrlType> = listOf(
         MIFOS,
-        STAGING,
     )
     // syncForkConfig:url-types:end
 }

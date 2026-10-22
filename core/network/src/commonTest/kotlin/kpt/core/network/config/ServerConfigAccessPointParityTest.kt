@@ -89,9 +89,9 @@ class ServerConfigAccessPointParityTest {
 
     @Test
     fun theEffectiveUrlIsTheOneThatAnswers() {
-        // Probed 2026-10-01: this URL + /authentication answers 401 (exists, credential rejected),
-        // while the plain-Fineract path answers 404. Pinning the composed value catches a
-        // divergence introduced on EITHER side of the join.
-        assertEquals("https://apis.mifos.community/1.0/field/v1/", mifos.effectiveUrl)
+        // Repointed 2026-10-22 to sandbox (the gateway's Fineract is down, 502 everywhere). Verified
+        // on device: this URL + /authentication returns 200 for mifos/password. Pinning the composed
+        // value catches a divergence introduced on EITHER side of the join.
+        assertEquals("https://sandbox.mifos.community/fineract-provider/api/v1/", mifos.effectiveUrl)
     }
 }

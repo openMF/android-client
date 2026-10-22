@@ -27,8 +27,15 @@ network:
   #     - name: MY_ANALYTICS_KEY      # the BuildKonfig constant
   #       from_env: MY_ANALYTICS_KEY  # env var / local.properties key (defaults to `name`)
   build_config_fields: []
-  demo_base_url: https://demo.mifos.org      # Fineract demo (from dev)
-  prod_base_url: https://apis.mifos.community  # Fineract prod (from dev)
+  # demo_base_url REMOVED 2026-10-22 — it was `https://demo.mifos.org`, whose host
+  # TCP-times-out (see the removed `staging` access point below). It fed only
+  # `BuildConfig.BASE_URL` for the demo flavor via `forkProp("network.base.url.demo")`,
+  # and NOTHING in this fork reads `BuildConfig.BASE_URL` at runtime — every call
+  # goes through the `mifos` access point. Absent, `get()` returns "" and
+  # KMPFlavorsConventionPlugin falls back to its baked-in template default, so
+  # the demo flavor still builds. Re-add it pointing at a REACHABLE host if the
+  # demo flavor ever needs a real endpoint.
+  prod_base_url: https://sandbox.mifos.community  # repointed 2026-10-22 — see the `mifos` access point
   demo_username: demo
   demo_password: demo
   log_tag: MifosXDroid
@@ -110,11 +117,33 @@ network:
       #
       # These three values must stay equal to `ServerConfig.DEFAULT` (core/model) — that is what the
       # server-config screen shows and restores with "Use defaults", and a user who repairs their
-      # settings with it must land on a working server.
-      base_url: https://apis.mifos.community/
-      base_path: 1.0/field/v1/
+      # settings with it must land on a working server. (Enforced by
+      # `ServerConfigAccessPointParityTest`; change one and you MUST change the other.)
+      #
+      # REPOINTED 2026-10-22 — operator decision — from the field-officer gateway
+      # `https://apis.mifos.community/` + `1.0/field/v1/` + tenant `mifos-bank-1`.
+      #
+      # That gateway's Fineract is DOWN, not misconfigured. Nine probes over 90s returned 502 on
+      # every path including Fineract's own `/actuator/health`, and a real browser click on the
+      # tenant's back-office login produced `502 POST /fineract-provider/api/v1/authentication` —
+      # a live Fineract answers a login 200/400/401, never 502. `apis.mifos.community` and
+      # `mifos-bank-1.mifos.community` resolve to the SAME IP (74.235.112.52): one machine, one
+      # dead Fineract, two front doors. Every other Mifos host referenced in this repo was probed
+      # the same day — `demo.mifos.org` TCP-times-out, `demo.mifos.io` 502, `api.mifos.org` is a
+      # WordPress site. `sandbox.mifos.community` was the ONLY live instance found.
+      #
+      # It is PLAIN FINERACT, so all three values move together: the `1.0/field/v1/` gateway path
+      # does not exist here, and the tenant is `default` (`mifos-bank-1` returns 400 on this host).
+      # Credentials are `mifos`/`password`; `fieldofficer`/`password` is 401 here.
+      #
+      # NOTE this is a PUBLIC SANDBOX whose login is a Super user, and its data is shared and
+      # writable by anyone. Fine for development and device verification; revert to the gateway
+      # (git history has the exact three values) once its Fineract is back, and do NOT ship a
+      # release pointing here.
+      base_url: https://sandbox.mifos.community/
+      base_path: fineract-provider/api/v1/
       auth: basic                   # Fineract authenticates the field officer with basic credentials
-      loggable_host: apis.mifos.community
+      loggable_host: sandbox.mifos.community
       headers:
         # Fineract requires a tenant on EVERY call; it is a build-time constant, unlike the
         # Authorization header which the login flow writes to the runtime store.
@@ -123,7 +152,9 @@ network:
         # on the server-config screen does not reach the HTTP client; the access point's values win.
         # Tracked in feature/settings/MIGRATION.md; until then the shipped default is the only
         # server that works.
-        - { name: Fineract-Platform-TenantId, value: mifos-bank-1 }
+        # `default`, not `mifos-bank-1` — see the repoint note above. Measured: sandbox returns
+        # 400 for tenant `mifos-bank-1` and 200 for `default`.
+        - { name: Fineract-Platform-TenantId, value: default }
         # Declared here, per access point, because Fineract is a JSON API and every call to it is
         # JSON — it is a property of THIS endpoint, not of the HTTP client.
         #
@@ -138,21 +169,25 @@ network:
         # again" with no HTTP log at all — indistinguishable from a wrong password.
         - { name: Content-Type, value: application/json }
         - { name: Accept, value: application/json }
-    - id: staging
-      owner: fork
-      type: rest
-      # Fineract demo (from dev) — mirrors `main`; keep the two in step.
-      base_url: https://demo.mifos.org/
-      base_path: fineract-provider/api/v1/
-      auth: basic
-      loggable_host: demo.mifos.org
-      headers:
-        # Fineract requires a tenant on EVERY call; it is a build-time constant, unlike the
-        # Authorization header which the login flow writes to the runtime store.
-        - { name: Fineract-Platform-TenantId, value: default }
-        # Same JSON contract as `mifos` — keep the two in step.
-        - { name: Content-Type, value: application/json }
-        - { name: Accept, value: application/json }
+    # REMOVED 2026-10-22 — the `staging` access point (`https://demo.mifos.org/`,
+    # `fineract-provider/api/v1/`, tenant `default`).
+    #
+    # It was dead twice over. The HOST is unreachable: DNS resolves
+    # (75.149.167.24) but TCP times out — not a 5xx, no listener. And NOTHING
+    # was bound to it: all 22 `@ApiBinding` declarations name `"mifos"`, so the
+    # point generated an `AppUrlTypes.STAGING` constant and an `AccessPoint` row
+    # that no API could ever reach. Repointing it at a live host would therefore
+    # still have changed nothing — the binding is what selects a point, and no
+    # binding named it.
+    #
+    # Probed with every other Mifos host referenced in this repo on 2026-10-22;
+    # the only live Fineract found was `sandbox.mifos.community`
+    # (`fineract-provider/api/v1/`, tenant `default`). It is deliberately NOT
+    # added here: making a public sandbox that authenticates a Super user the
+    # app's shipped endpoint is a product decision, not a config tidy.
+    #
+    # A fork that wants a second environment adds the point back AND gives it
+    # bindings — `@ApiBinding("staging")` on the API types that should use it.
 
 # ── Room database — declared by ANNOTATION, not here (E1/C7, superseded by the KSP migration) ──
 # This block used to carry `entities:` / `daos:` / `type_converters:` / `auto_migrations:`, which
