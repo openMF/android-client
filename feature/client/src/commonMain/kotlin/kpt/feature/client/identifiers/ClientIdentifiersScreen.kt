@@ -17,10 +17,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,8 +31,9 @@ import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.effects.EventsEffect
 import kpt.core.base.ui.screen.ScreenContent
 import kpt.core.designsystem.component.AppScaffold
+import kpt.core.designsystem.component.FloatingActionButtonContent
+import kpt.core.designsystem.icon.AppIcons
 import kpt.core.designsystem.theme.AppTypography
-import kpt.core.designsystem.theme.DesignToken
 import kpt.core.model.objects.noncoreobjects.Identifier
 import kpt.core.ui.components.Actions
 import kpt.core.ui.components.AppActionsIdentifierListingComponent
@@ -42,20 +41,18 @@ import kpt.core.ui.components.AppAlertDialog
 import kpt.core.ui.components.AppEmptyCard
 import kpt.core.ui.utils.getClientIdentifierStatus
 import kpt.feature.client.generated.resources.Res
-import kpt.feature.client.generated.resources.add_icon
+import kpt.feature.client.generated.resources.feature_client_add_record
 import kpt.feature.client.generated.resources.feature_client_cancel
 import kpt.feature.client.generated.resources.feature_client_delete_dialog_identifier_message
 import kpt.feature.client.generated.resources.feature_client_delete_dialog_title
 import kpt.feature.client.generated.resources.feature_client_identifier_delete_failed
 import kpt.feature.client.generated.resources.feature_client_identifier_delete_offline
-import kpt.feature.client.generated.resources.feature_client_identifiers_add
 import kpt.feature.client.generated.resources.feature_client_identifiers_empty
 import kpt.feature.client.generated.resources.feature_client_identifiers_item
 import kpt.feature.client.generated.resources.feature_client_identifiers_not_available
 import kpt.feature.client.generated.resources.feature_client_identifiers_title
 import kpt.feature.client.generated.resources.feature_client_remove
 import kpt.feature.client.generated.resources.feature_client_screen_identifiers
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -108,12 +105,27 @@ internal fun ClientIdentifiersScreen(
         // Dispatched, not called directly: the ViewModel owns the event, which is the
         // path `ClientIdentifiersAction.NavigateBack` already declared and nothing reached.
         onBackPressed = { viewModel.trySendAction(ClientIdentifiersAction.NavigateBack) },
+        // The add affordance is a FAB, not the original's header icon — operator-directed UI
+        // change (2026-10-22), recorded as a §6a deviation. See ClientDepositAccountsScreen for
+        // the full reasoning; in short, the original's header "+" read as "no way to add here" on
+        // a real device, and it passed `contentDescription = null` so it was unlabelled too.
+        floatingActionButtonContent = onAddNewIdentifier?.let {
+            FloatingActionButtonContent(
+                onClick = { viewModel.trySendAction(ClientIdentifiersAction.AddIdentifierClicked) },
+                contentColor = KptTheme.colorScheme.onPrimaryContainer,
+                content = {
+                    Icon(
+                        imageVector = AppIcons.Add,
+                        contentDescription = stringResource(Res.string.feature_client_add_record),
+                    )
+                },
+            )
+        },
     ) { scaffoldPadding ->
         ClientIdentifiersContent(
             state = state,
             identifiers = identifiers,
             onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
-            canAdd = onAddNewIdentifier != null,
             modifier = modifier,
             scaffoldPadding = scaffoldPadding,
         )
@@ -127,7 +139,6 @@ internal fun ClientIdentifiersContent(
     identifiers: ScreenState<List<Identifier>>,
     onAction: (ClientIdentifiersAction) -> Unit,
     modifier: Modifier = Modifier,
-    canAdd: Boolean = true,
     /**
      * Insets from the host [AppScaffold]'s top bar.
      *
@@ -155,7 +166,6 @@ internal fun ClientIdentifiersContent(
             // Derived from the SAME state the list renders, so the count cannot disagree with it,
             // and it is 0 until content arrives rather than a stale count from a previous client.
             totalItem = ((identifiers as? ScreenState.Content)?.data?.size ?: 0).toString(),
-            canAdd = canAdd,
             onAction = onAction,
         )
 
@@ -224,7 +234,6 @@ internal fun ClientIdentifiersContent(
 @Composable
 private fun Header(
     totalItem: String,
-    canAdd: Boolean,
     onAction: (ClientIdentifiersAction) -> Unit,
 ) {
     Row(modifier = Modifier.fillMaxWidth()) {
@@ -243,27 +252,6 @@ private fun Header(
         Spacer(modifier = Modifier.weight(1f))
 
         // The search icon of the original is not drawn — see this file's header.
-        if (canAdd) {
-            Spacer(modifier = Modifier.width(DesignToken.padding.largeIncreased))
-            // An `IconButton`, not a bare `Icon`. This was drawn with no clickable modifier at
-            // all, so an officer saw a "+" and tapping it did nothing — a dead control that looks
-            // live, which is the defect RULE-IMPL-DEAD-CLICKABLE-001 exists for. Its other half
-            // was `ClientIdentifiersAction.AddIdentifierClicked`, declared and handled all the way
-            // through to the `onAddNewIdentifier` nav callback with nothing dispatching it; the
-            // action-dispatch sweep is what surfaced the pair.
-            IconButton(
-                onClick = { onAction(ClientIdentifiersAction.AddIdentifierClicked) },
-                modifier = Modifier.testTag(ClientIdentifiersTestTags.ADD),
-            ) {
-                Icon(
-                    modifier = Modifier.padding(DesignToken.padding.extraSmall),
-                    painter = painterResource(Res.drawable.add_icon),
-                    // Was `null`: an icon-only affordance with no label is unreachable by a
-                    // screen reader even once it is tappable.
-                    contentDescription = stringResource(Res.string.feature_client_identifiers_add),
-                )
-            }
-        }
     }
 }
 

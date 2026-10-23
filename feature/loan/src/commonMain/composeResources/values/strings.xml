@@ -371,4 +371,15 @@
         was "offered separately" when it never was.
     -->
     <string name="feature_loan_retry">Retry</string>
+
+    <!--
+        The wizard's first page is gated on the tenant's product catalogue, so an office with no
+        loan products shows the EMPTY state before any field is drawn. The shared default reads
+        "Nothing here yet / When you have data, it'll show up here", which tells an officer nothing
+        about why a form they just opened is blank or what to do next (observed on device
+        2026-10-22 against a tenant whose /loanproducts returned an empty list). The empty state
+        names the cause and offers the only recourse — retry once an administrator adds a product.
+    -->
+    <string name="feature_loan_application_no_products_title">No loan products</string>
+    <string name="feature_loan_application_no_products">This office has no loan products set up yet, so there is nothing to apply for. An administrator has to add one first.</string>
 </resources>

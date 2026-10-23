@@ -41,9 +41,6 @@ import kpt.core.designsystem.component.AppScaffold
 import kpt.core.designsystem.component.AppTextFieldDropdown
 import kpt.core.designsystem.theme.AppTypography
 import kpt.feature.client.generated.resources.Res
-import kpt.feature.client.generated.resources.feature_client_address_line_1
-import kpt.feature.client.generated.resources.feature_client_address_line_2
-import kpt.feature.client.generated.resources.feature_client_address_line_3
 import kpt.feature.client.generated.resources.feature_client_addaddress_city_error
 import kpt.feature.client.generated.resources.feature_client_addaddress_country_error
 import kpt.feature.client.generated.resources.feature_client_addaddress_line_error
@@ -53,6 +50,9 @@ import kpt.feature.client.generated.resources.feature_client_addaddress_title
 import kpt.feature.client.generated.resources.feature_client_addaddress_type_error
 import kpt.feature.client.generated.resources.feature_client_addaddress_write_failed
 import kpt.feature.client.generated.resources.feature_client_addaddress_write_offline
+import kpt.feature.client.generated.resources.feature_client_address_line_1
+import kpt.feature.client.generated.resources.feature_client_address_line_2
+import kpt.feature.client.generated.resources.feature_client_address_line_3
 import kpt.feature.client.generated.resources.feature_client_address_type
 import kpt.feature.client.generated.resources.feature_client_btn_back
 import kpt.feature.client.generated.resources.feature_client_btn_submit

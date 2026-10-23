@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -42,9 +41,9 @@ import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.effects.EventsEffect
 import kpt.core.base.ui.screen.ScreenContent
 import kpt.core.designsystem.component.AppScaffold
+import kpt.core.designsystem.component.FloatingActionButtonContent
 import kpt.core.designsystem.icon.AppIcons
 import kpt.core.designsystem.theme.AppTypography
-import kpt.core.designsystem.theme.DesignToken
 import kpt.core.model.objects.noncoreobjects.Document
 import kpt.core.ui.components.Actions
 import kpt.core.ui.components.AppActionsClientDocumentListingComponent
@@ -52,6 +51,7 @@ import kpt.core.ui.components.AppAlertDialog
 import kpt.core.ui.components.AppEmptyCard
 import kpt.core.ui.components.AppSearchBar
 import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_client_add_record
 import kpt.feature.client.generated.resources.feature_client_confirm_text
 import kpt.feature.client.generated.resources.feature_client_delete_dialog_title
 import kpt.feature.client.generated.resources.feature_client_dismiss_text
@@ -97,12 +97,27 @@ internal fun ClientDocumentsScreen(
         // Dispatched, not called directly: the ViewModel owns the event, which is the
         // path `ClientDocumentsAction.NavigateBack` already declared and nothing reached.
         onBackPressed = { viewModel.trySendAction(ClientDocumentsAction.NavigateBack) },
+        // The add affordance is a FAB, not the original's header icon — operator-directed UI
+        // change (2026-10-22), recorded as a §6a deviation. See ClientDepositAccountsScreen for
+        // the full reasoning; in short, the original's header "+" read as "no way to add here" on
+        // a real device, and it passed `contentDescription = null` so it was unlabelled too.
+        floatingActionButtonContent = onAddDocument?.let {
+            FloatingActionButtonContent(
+                onClick = { viewModel.trySendAction(ClientDocumentsAction.AddDocument) },
+                contentColor = KptTheme.colorScheme.onPrimaryContainer,
+                content = {
+                    Icon(
+                        imageVector = AppIcons.Add,
+                        contentDescription = stringResource(Res.string.feature_client_add_record),
+                    )
+                },
+            )
+        },
     ) { scaffoldPadding ->
         ClientDocumentsContent(
             state = state,
             documents = documents,
             onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
-            canAdd = onAddDocument != null,
             modifier = modifier,
             scaffoldPadding = scaffoldPadding,
         )
@@ -116,7 +131,6 @@ internal fun ClientDocumentsContent(
     documents: ScreenState<List<Document>>,
     onAction: (ClientDocumentsAction) -> Unit,
     modifier: Modifier = Modifier,
-    canAdd: Boolean = true,
     /**
      * Insets from the host [AppScaffold]'s top bar.
      *
@@ -141,7 +155,6 @@ internal fun ClientDocumentsContent(
         Column(Modifier.fillMaxSize().padding(horizontal = KptTheme.spacing.md)) {
             Header(
                 totalItem = ((documents as? ScreenState.Content)?.data?.size ?: 0).toString(),
-                canAdd = canAdd,
                 onAction = onAction,
             )
 
@@ -211,7 +224,6 @@ internal fun ClientDocumentsContent(
 @Composable
 private fun Header(
     totalItem: String,
-    canAdd: Boolean,
     onAction: (ClientDocumentsAction) -> Unit,
 ) {
     Row(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
@@ -237,17 +249,6 @@ private fun Header(
                 .clickable { onAction(ClientDocumentsAction.ToggleSearch) }
                 .testTag(ClientDocumentsTestTags.SEARCH_TOGGLE),
         )
-
-        if (canAdd) {
-            Spacer(modifier = Modifier.width(DesignToken.spacing.largeIncreased))
-            Icon(
-                imageVector = AppIcons.Add,
-                contentDescription = null,
-                modifier = Modifier
-                    .clickable { onAction(ClientDocumentsAction.AddDocument) }
-                    .testTag(ClientDocumentsTestTags.ADD),
-            )
-        }
     }
 }
 

@@ -31,7 +31,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kpt.core.base.designsystem.theme.KptTheme
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.effects.EventsEffect
+import kpt.core.base.ui.screen.DefaultEmptyContent
 import kpt.core.base.ui.screen.ScreenContent
+import kpt.core.base.ui.screen.ScreenStateCta
+import kpt.core.base.ui.screen.ScreenStateEmpty
 import kpt.core.designsystem.component.AppScaffold
 import kpt.core.designsystem.theme.AppTypography
 import kpt.core.designsystem.theme.DesignToken
@@ -42,6 +45,9 @@ import kpt.feature.savings.generated.resources.Res
 import kpt.feature.savings.generated.resources.feature_savings_application_created
 import kpt.feature.savings.generated.resources.feature_savings_application_failed
 import kpt.feature.savings.generated.resources.feature_savings_application_group_title
+import kpt.feature.savings.generated.resources.feature_savings_application_no_products
+import kpt.feature.savings.generated.resources.feature_savings_application_no_products_title
+import kpt.feature.savings.generated.resources.feature_savings_application_retry
 import kpt.feature.savings.generated.resources.feature_savings_application_title
 import kpt.feature.savings.generated.resources.feature_savings_back
 import kpt.feature.savings.generated.resources.feature_savings_cancel
@@ -128,6 +134,21 @@ internal fun SavingsApplicationContent(
             ScreenContent(
                 state = products,
                 onRetry = { onAction(SavingsApplicationAction.OnRetryProducts) },
+                // An office with no product catalogue hits this BEFORE any field is drawn, so the
+                // shared default ("Nothing here yet") would leave an officer staring at a blank
+                // form with no stated cause and no next step. Name the cause, offer the recourse.
+                empty = {
+                    DefaultEmptyContent(
+                        config = ScreenStateEmpty(
+                            title = stringResource(Res.string.feature_savings_application_no_products_title),
+                            message = stringResource(Res.string.feature_savings_application_no_products),
+                            cta = ScreenStateCta(
+                                label = stringResource(Res.string.feature_savings_application_retry),
+                                onClick = { onAction(SavingsApplicationAction.OnRetryProducts) },
+                            ),
+                        ),
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)

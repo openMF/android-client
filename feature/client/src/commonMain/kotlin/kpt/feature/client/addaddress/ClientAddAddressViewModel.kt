@@ -92,14 +92,17 @@ internal class ClientAddAddressViewModel(
         when (action) {
             ClientAddAddressAction.NavigateBack -> sendEvent(ClientAddAddressEvent.NavigateBack)
 
-            is ClientAddAddressAction.UpdateAddressType -> mutableStateFlow.value =
-                state.copy(addressTypeId = action.id, addressTypeLabel = action.label)
+            is ClientAddAddressAction.UpdateAddressType ->
+                mutableStateFlow.value =
+                    state.copy(addressTypeId = action.id, addressTypeLabel = action.label)
 
-            is ClientAddAddressAction.UpdateStateProvince -> mutableStateFlow.value =
-                state.copy(stateProvinceId = action.id, stateProvinceLabel = action.label)
+            is ClientAddAddressAction.UpdateStateProvince ->
+                mutableStateFlow.value =
+                    state.copy(stateProvinceId = action.id, stateProvinceLabel = action.label)
 
-            is ClientAddAddressAction.UpdateCountry -> mutableStateFlow.value =
-                state.copy(countryId = action.id, countryLabel = action.label)
+            is ClientAddAddressAction.UpdateCountry ->
+                mutableStateFlow.value =
+                    state.copy(countryId = action.id, countryLabel = action.label)
 
             is ClientAddAddressAction.UpdateAddressLine1 ->
                 mutableStateFlow.value = state.copy(addressLine1 = action.value)
@@ -156,8 +159,9 @@ internal class ClientAddAddressViewModel(
                         state.copy(isSubmitting = false, writeError = AddAddressError.Failed)
                 }
 
-                is MutationResult.Conflicted -> mutableStateFlow.value =
-                    state.copy(isSubmitting = false, writeError = AddAddressError.Failed)
+                is MutationResult.Conflicted ->
+                    mutableStateFlow.value =
+                        state.copy(isSubmitting = false, writeError = AddAddressError.Failed)
             }
         }
     }

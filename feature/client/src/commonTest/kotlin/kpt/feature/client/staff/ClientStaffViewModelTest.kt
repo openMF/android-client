@@ -55,7 +55,11 @@ class ClientStaffViewModelTest {
     private fun viewModel(
         commands: FakeClientCommandRepository = FakeClientCommandRepository(),
         clientId: Int = 42,
-    ) = ClientStaffViewModel(repository, commands, SavedStateHandle(mapOf("id" to clientId)))
+        // The key is "clientId" — the property name on ClientStaffRoute — not "id". This helper
+        // seeded "id", which matched the ViewModel's (wrong) constant, so the two agreed with each
+        // other and disagreed with the route. Both tests below passed while the shipped screen read
+        // nothing and fell through to its `?: -1` default on every real open.
+    ) = ClientStaffViewModel(repository, commands, SavedStateHandle(mapOf("clientId" to clientId)))
 
     private fun options(vararg names: String) = ClientTemplateOptions(
         staffOptions = names.mapIndexed { i, n -> StaffOption(id = i + 1, displayName = n) },

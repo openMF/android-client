@@ -448,8 +448,9 @@ internal class CreateNewClientViewModel(
         mutableStateFlow.value = state.copy(dialog = CreateClientDialog.ImageCrop)
 
         when (val result = cropState.crop(bmp = image)) {
-            is CropError -> mutableStateFlow.value =
-                state.copy(dialog = CreateClientDialog.CropFailed)
+            is CropError ->
+                mutableStateFlow.value =
+                    state.copy(dialog = CreateClientDialog.CropFailed)
 
             CropResult.Cancelled -> mutableStateFlow.value = state.copy(dialog = null)
 

@@ -27,6 +27,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kpt.core.base.designsystem.theme.KptTheme
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.screen.ScreenContent
+import kpt.core.designsystem.component.AppScaffold
 import kpt.core.designsystem.theme.AppTypography
 import kpt.core.model.shared.CollateralItemResult
 import kpt.core.ui.components.AppActionsCollateralDataListingComponent
@@ -47,16 +48,27 @@ import org.koin.compose.viewmodel.koinViewModel
  */
 @Composable
 internal fun ClientCollateralDetailsScreen(
+    // Added 2026-10-23 along with the AppScaffold below. This screen is read-only and had no
+    // navigation callback of ANY kind, no app bar and no action — reached from the client detail's
+    // "Collateral Data" row it was a complete dead end, escapable only by the system back gesture.
+    // Its four scaffold-less siblings (closure / transfer / collateral / staff) at least had a
+    // Back button in their populated branch; this one had nothing in any branch.
+    onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ClientCollateralDetailsViewModel = koinViewModel(),
 ) {
     val collaterals by viewModel.collaterals.collectAsStateWithLifecycle()
 
-    ClientCollateralDetailsContent(
-        collaterals = collaterals,
-        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
-        modifier = modifier,
-    )
+    AppScaffold(
+        title = stringResource(Res.string.feature_client_general_collateral_title),
+        onBackPressed = onNavigateBack,
+    ) { scaffoldPadding ->
+        ClientCollateralDetailsContent(
+            collaterals = collaterals,
+            onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+            modifier = modifier.padding(scaffoldPadding),
+        )
+    }
 }
 
 /** Stateless half — rendered in tests and previews without Koin. */

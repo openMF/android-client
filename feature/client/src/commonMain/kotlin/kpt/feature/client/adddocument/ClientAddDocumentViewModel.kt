@@ -159,8 +159,9 @@ internal class ClientAddDocumentViewModel(
                         state.copy(isSubmitting = false, error = AddDocumentError.Failed)
                 }
 
-                is MutationResult.Conflicted -> mutableStateFlow.value =
-                    state.copy(isSubmitting = false, error = AddDocumentError.Failed)
+                is MutationResult.Conflicted ->
+                    mutableStateFlow.value =
+                        state.copy(isSubmitting = false, error = AddDocumentError.Failed)
             }
         }
     }

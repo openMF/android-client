@@ -56,10 +56,13 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import kpt.core.base.designsystem.theme.KptTheme
+import kpt.core.designsystem.generated.resources.Res
+import kpt.core.designsystem.generated.resources.core_designsystem_open_date_picker
 import kpt.core.designsystem.icon.AppIcons
 import kpt.core.designsystem.theme.AppTheme
 import kpt.core.designsystem.theme.AppTypography
 import kpt.core.designsystem.theme.DesignToken
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -416,7 +419,13 @@ fun AppDatePickerTextField(
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         trailingIcon = {
             IconButton(onClick = { openDatePicker() }) {
-                Icon(imageVector = Icons.Default.CalendarMonth, null)
+                Icon(
+                    imageVector = Icons.Default.CalendarMonth,
+                    // Was `null`. The field is `readOnly` with no click handler of its own, so
+                    // this button is the ONLY way to open the picker — unlabelled, it was
+                    // unreachable by a screen reader on every date field in the app.
+                    contentDescription = stringResource(Res.string.core_designsystem_open_date_picker),
+                )
             }
         },
         isError = errorMessage != null,

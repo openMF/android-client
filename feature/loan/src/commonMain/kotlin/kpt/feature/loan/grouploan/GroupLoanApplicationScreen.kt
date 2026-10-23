@@ -35,7 +35,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kpt.core.base.designsystem.theme.KptTheme
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.effects.EventsEffect
+import kpt.core.base.ui.screen.DefaultEmptyContent
 import kpt.core.base.ui.screen.ScreenContent
+import kpt.core.base.ui.screen.ScreenStateCta
+import kpt.core.base.ui.screen.ScreenStateEmpty
 import kpt.core.common.utils.DateHelper
 import kpt.core.designsystem.component.AppButton
 import kpt.core.designsystem.component.AppDatePickerTextField
@@ -56,6 +59,8 @@ import kpt.feature.loan.generated.resources.feature_loan_application
 import kpt.feature.loan.generated.resources.feature_loan_application_created_message
 import kpt.feature.loan.generated.resources.feature_loan_application_created_title
 import kpt.feature.loan.generated.resources.feature_loan_application_failure_title
+import kpt.feature.loan.generated.resources.feature_loan_application_no_products
+import kpt.feature.loan.generated.resources.feature_loan_application_no_products_title
 import kpt.feature.loan.generated.resources.feature_loan_calculate_interest_for_exact_days_in
 import kpt.feature.loan.generated.resources.feature_loan_cancel
 import kpt.feature.loan.generated.resources.feature_loan_dialog_continue
@@ -75,6 +80,7 @@ import kpt.feature.loan.generated.resources.feature_loan_purpose
 import kpt.feature.loan.generated.resources.feature_loan_repaid_every
 import kpt.feature.loan.generated.resources.feature_loan_repayment_frequency
 import kpt.feature.loan.generated.resources.feature_loan_repayment_strategy
+import kpt.feature.loan.generated.resources.feature_loan_retry
 import kpt.feature.loan.generated.resources.feature_loan_select_date
 import kpt.feature.loan.generated.resources.feature_loan_submission_date
 import kpt.feature.loan.generated.resources.feature_loan_submit
@@ -152,6 +158,22 @@ internal fun GroupLoanApplicationContent(
         ScreenContent(
             state = products,
             onRetry = { onAction(GroupLoanApplicationAction.OnRetryProducts) },
+            // Same reasoning as NewLoanApplicationScreen: the wizard's first page is gated on
+            // the tenant's product catalogue, so an office with none configured gets the EMPTY
+            // state before any field is drawn. The shared default ("Nothing here yet") names no
+            // cause and offers no next step on a form the officer just opened.
+            empty = {
+                DefaultEmptyContent(
+                    config = ScreenStateEmpty(
+                        title = stringResource(Res.string.feature_loan_application_no_products_title),
+                        message = stringResource(Res.string.feature_loan_application_no_products),
+                        cta = ScreenStateCta(
+                            label = stringResource(Res.string.feature_loan_retry),
+                            onClick = { onAction(GroupLoanApplicationAction.OnRetryProducts) },
+                        ),
+                    ),
+                )
+            },
             modifier = Modifier.fillMaxSize().padding(padding)
                 .testTag(GroupLoanApplicationTestTags.CONTENT),
         ) { productOptions, _ ->

@@ -248,7 +248,13 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                 // pending TABS and the six pending DRAWER entries all land here. See PendingFeature.kt.
                 // One host per pending destination — the two pending TABS and the six pending DRAWER
                 // entries. Literal routes, so each is independently replaceable when its feature lands.
-                PENDING_DESTINATIONS.forEach { pendingFeatureDestination(it) }
+                // Every entry here is a DRAWER destination (HomeDestinationsScreen holds only
+                // drawer entries), so each gets a back affordance. Without one they opened
+                // full-screen with no app bar and no control of any kind — the system gesture was
+                // the only way out. Found on device 2026-10-23.
+                PENDING_DESTINATIONS.forEach {
+                    pendingFeatureDestination(it, onNavigateBack = { navController.popBackStack() })
+                }
 
                 // Fork INLINE extra-tab top screens (TabRegistry.extraInlineTabDestinations). Registered in
                 // THIS inner NavHost so tapping the tab swaps content inside the scaffold (bottom bar stays)

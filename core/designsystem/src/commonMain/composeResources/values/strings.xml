@@ -16,6 +16,11 @@
     <string name="core_designsystem_enter_tenant">Enter a tenant</string>
     <string name="core_designsystem_cancel">Cancel</string>
     <string name="core_designsystem_dialog_action_ok">Save</string>
-
-
+    <!--
+        The date field's trailing calendar button is icon-only, and it was the ONLY way to open the
+        picker (the field itself is readOnly with no click handler), so with a null
+        contentDescription the control was unreachable by a screen reader on every date field in
+        the app. Found on device 2026-10-22 on the client Update Details form.
+    -->
+    <string name="core_designsystem_open_date_picker">Open date picker</string>
 </resources>

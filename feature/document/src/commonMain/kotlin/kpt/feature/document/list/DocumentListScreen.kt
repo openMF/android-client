@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -38,6 +39,8 @@ import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.effects.EventsEffect
 import kpt.core.base.ui.screen.ScreenContent
 import kpt.core.designsystem.component.AppScaffold
+import kpt.core.designsystem.component.FloatingActionButtonContent
+import kpt.core.designsystem.icon.AppIcons
 import kpt.core.model.objects.noncoreobjects.Document
 import kpt.core.ui.components.AppEmptyUi
 import kpt.feature.document.generated.resources.Res
@@ -54,6 +57,7 @@ import kpt.feature.document.generated.resources.feature_document_remove_successf
 import kpt.feature.document.generated.resources.feature_document_select_option
 import kpt.feature.document.generated.resources.feature_document_title
 import kpt.feature.document.generated.resources.feature_document_update_document
+import kpt.feature.document.generated.resources.feature_document_upload_document
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -124,6 +128,26 @@ internal fun DocumentListContent(
         onBackPressed = onBackPressed,
         snackbarHostState = snackbarHostState,
         modifier = modifier.testTag(DocumentListTestTags.SCREEN),
+        // The ONLY upload affordance used to be the "Update document" option inside an existing
+        // row's dialog — so a list with no documents had no way to add one, on every entity that
+        // reaches this screen. Found on device 2026-10-23 on a group's Documents screen: an empty
+        // list with a back arrow and nothing else, while `onUpload` was wired the whole time.
+        // Gated on the same `canUpload` as that dialog option, so where the destination is
+        // unported the FAB is ABSENT rather than inert (§6a adaptation 3).
+        floatingActionButtonContent = if (canUpload) {
+            FloatingActionButtonContent(
+                onClick = { onAction(DocumentListAction.UploadClicked) },
+                contentColor = KptTheme.colorScheme.onPrimaryContainer,
+                content = {
+                    Icon(
+                        imageVector = AppIcons.Add,
+                        contentDescription = stringResource(Res.string.feature_document_upload_document),
+                    )
+                },
+            )
+        } else {
+            null
+        },
     ) { padding ->
         ScreenContent(
             state = documents,

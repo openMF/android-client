@@ -119,8 +119,21 @@ fun rememberAppErrorMessageFor(): (Throwable) -> String {
                 ErrorCategory.RateLimit -> rateLimitCopy
                 ErrorCategory.QuotaExceeded -> quotaCopy
                 is ErrorCategory.Server -> serverCopy
-                is ErrorCategory.ClientError -> error.message ?: clientCopy
-                ErrorCategory.Generic -> error.message ?: genericCopy
+                // NOT `error.message ?: clientCopy`. A transport exception's `message` is a
+                // DIAGNOSTIC, not user copy: Ktor builds it from the whole exchange, so a 404
+                // rendered as the full request URL (host, tenant, path, query) followed by the
+                // raw response body. Observed on device 2026-10-23 — the Assign Staff screen
+                // showed an officer eight paragraphs of Fineract JSON including
+                // `developerMessage` and `userMessageGlobalisationCode`.
+                //
+                // It also made the state unusable: the message column grew so tall it clipped
+                // the retry button underneath to a 24px sliver with no readable label.
+                //
+                // An exception that genuinely carries user-facing copy is handled by
+                // `ProjectErrorMapper`, which is consulted FIRST (`projectCopy` above) — that is
+                // what the seam is for. The category fallback never echoes a throwable.
+                is ErrorCategory.ClientError -> clientCopy
+                ErrorCategory.Generic -> genericCopy
             }
         }
     }

@@ -97,15 +97,17 @@ internal class ClientAddIdentifierViewModel(
             ClientAddIdentifierAction.NavigateBack ->
                 sendEvent(ClientAddIdentifierEvent.NavigateBack)
 
-            is ClientAddIdentifierAction.UpdateDocumentType -> mutableStateFlow.value =
-                state.copy(
-                    documentTypeId = action.id,
-                    documentTypeLabel = action.label,
-                    documentTypeError = false,
-                )
+            is ClientAddIdentifierAction.UpdateDocumentType ->
+                mutableStateFlow.value =
+                    state.copy(
+                        documentTypeId = action.id,
+                        documentTypeLabel = action.label,
+                        documentTypeError = false,
+                    )
 
-            is ClientAddIdentifierAction.UpdateDocumentKey -> mutableStateFlow.value =
-                state.copy(documentKey = action.value, documentKeyError = false)
+            is ClientAddIdentifierAction.UpdateDocumentKey ->
+                mutableStateFlow.value =
+                    state.copy(documentKey = action.value, documentKeyError = false)
 
             is ClientAddIdentifierAction.UpdateStatus ->
                 mutableStateFlow.value = state.copy(status = action.value)
@@ -180,8 +182,9 @@ internal class ClientAddIdentifierViewModel(
                     )
                 }
 
-                is MutationResult.Conflicted -> mutableStateFlow.value =
-                    state.copy(isSubmitting = false, error = IdentifierError.CreateFailed)
+                is MutationResult.Conflicted ->
+                    mutableStateFlow.value =
+                        state.copy(isSubmitting = false, error = IdentifierError.CreateFailed)
             }
         }
     }
@@ -241,8 +244,9 @@ internal class ClientAddIdentifierViewModel(
                         state.copy(isSubmitting = false, error = IdentifierError.UploadFailed)
                 }
 
-                is MutationResult.Conflicted -> mutableStateFlow.value =
-                    state.copy(isSubmitting = false, error = IdentifierError.UploadFailed)
+                is MutationResult.Conflicted ->
+                    mutableStateFlow.value =
+                        state.copy(isSubmitting = false, error = IdentifierError.UploadFailed)
             }
         }
     }

@@ -127,14 +127,17 @@ internal class ClientEditProfileViewModel(
             ClientEditProfileAction.NavigateBack ->
                 sendEvent(ClientEditProfileEvent.NavigateBack)
 
-            ClientEditProfileAction.ShowDeleteDialog -> mutableStateFlow.value =
-                state.copy(dialogState = ClientEditProfileState.DialogState.ShowDeleteDialog)
+            ClientEditProfileAction.ShowDeleteDialog ->
+                mutableStateFlow.value =
+                    state.copy(dialogState = ClientEditProfileState.DialogState.ShowDeleteDialog)
 
-            ClientEditProfileAction.ShowUploadOptionsBottomSheet -> mutableStateFlow.value =
-                state.copy(dialogState = ClientEditProfileState.DialogState.ShowUploadOptions)
+            ClientEditProfileAction.ShowUploadOptionsBottomSheet ->
+                mutableStateFlow.value =
+                    state.copy(dialogState = ClientEditProfileState.DialogState.ShowUploadOptions)
 
-            ClientEditProfileAction.OnDismissDialog -> mutableStateFlow.value =
-                state.copy(dialogState = null, writeError = null)
+            ClientEditProfileAction.OnDismissDialog ->
+                mutableStateFlow.value =
+                    state.copy(dialogState = null, writeError = null)
 
             ClientEditProfileAction.OnConfirmDeleteClick -> delete()
 
@@ -198,8 +201,9 @@ internal class ClientEditProfileViewModel(
         when (val result = cropState.crop(bmp = file)) {
             // The original put the literal "Unexpected error" into its error state from the
             // ViewModel. A user-facing string belongs in resources and is rendered by the screen.
-            is CropError -> mutableStateFlow.value =
-                state.copy(dialogState = null, writeError = PhotoWriteError.CropFailed)
+            is CropError ->
+                mutableStateFlow.value =
+                    state.copy(dialogState = null, writeError = PhotoWriteError.CropFailed)
 
             CropResult.Cancelled -> mutableStateFlow.value = state.copy(dialogState = null)
 
@@ -269,8 +273,9 @@ internal class ClientEditProfileViewModel(
                     state.copy(isSubmitting = false, writeError = PhotoWriteError.Failed)
             }
 
-            is MutationResult.Conflicted -> mutableStateFlow.value =
-                state.copy(isSubmitting = false, writeError = PhotoWriteError.Failed)
+            is MutationResult.Conflicted ->
+                mutableStateFlow.value =
+                    state.copy(isSubmitting = false, writeError = PhotoWriteError.Failed)
         }
     }
 

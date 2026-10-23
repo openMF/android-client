@@ -187,8 +187,9 @@ internal class ClientEditDetailsViewModel(
                 mutableStateFlow.value =
                     state.copy(form = state.form.copy(classification = action.option))
 
-            is ClientEditDetailsAction.UpdateDateOfBirth -> mutableStateFlow.value =
-                state.copy(form = state.form.copy(dateOfBirth = action.millis))
+            is ClientEditDetailsAction.UpdateDateOfBirth ->
+                mutableStateFlow.value =
+                    state.copy(form = state.form.copy(dateOfBirth = action.millis))
 
             is ClientEditDetailsAction.UpdateDatePicker ->
                 mutableStateFlow.value = state.copy(showDatePicker = action.status)

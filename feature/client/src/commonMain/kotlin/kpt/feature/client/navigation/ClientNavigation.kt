@@ -19,23 +19,23 @@ import kpt.core.base.ui.nav.FeatureDestination
 import kpt.core.base.ui.nav.composableWithPushTransitions
 import kpt.core.base.ui.nav.composableWithStayTransitions
 import kpt.core.base.ui.nav.popBackStackSafely
-import kpt.feature.client.address.ClientAddressScreen
 import kpt.feature.client.addaddress.ClientAddAddressScreen
-import kpt.feature.client.addidentifier.ClientAddIdentifierScreen
 import kpt.feature.client.adddocument.ClientAddDocumentScreen
+import kpt.feature.client.addidentifier.ClientAddIdentifierScreen
+import kpt.feature.client.address.ClientAddressScreen
 import kpt.feature.client.applynew.ClientApplyNewScreen
 import kpt.feature.client.charges.ClientChargesScreen
 import kpt.feature.client.closure.ClientClosureScreen
 import kpt.feature.client.collateral.ClientCollateralScreen
 import kpt.feature.client.collateraldetails.ClientCollateralDetailsScreen
-import kpt.feature.client.depositaccounts.ClientDepositAccountsScreen
-import kpt.feature.client.editprofile.ClientEditProfileScreen
-import kpt.feature.client.editdetails.ClientEditDetailsScreen
-import kpt.feature.client.defaultaccount.ClientDefaultAccountScreen
 import kpt.feature.client.createnew.CreateNewClientScreen
+import kpt.feature.client.defaultaccount.ClientDefaultAccountScreen
+import kpt.feature.client.depositaccounts.ClientDepositAccountsScreen
 import kpt.feature.client.depositaccounts.DepositAccountKind
 import kpt.feature.client.details.ClientDetailsScreen
 import kpt.feature.client.documents.ClientDocumentsScreen
+import kpt.feature.client.editdetails.ClientEditDetailsScreen
+import kpt.feature.client.editprofile.ClientEditProfileScreen
 import kpt.feature.client.fixeddepositapplication.FixedDepositApplicationScreen
 import kpt.feature.client.general.ClientGeneralScreen
 import kpt.feature.client.identifiers.ClientIdentifiersScreen
@@ -523,7 +523,14 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
             onTransferClient = navController::navigateToClientTransfer,
             onAssignStaff = navController::navigateToClientStaff,
             onCreateCollateral = navController::navigateToClientCollateral,
-            onAddCharge = navController::navigateToClientCharges,
+            // NULL, so the row is ABSENT — §6a adaptation 3. This pointed at
+            // `navigateToClientCharges`, the same read-only list "Upcoming Charges" opens, so
+            // "Add Charge" took an officer to a screen with no way to add a charge. That is worse
+            // than an absent row and worse than an inert one: it looks like it worked.
+            // There is no destination to point it at. No client-charge CREATE surface is ported —
+            // `POST clients/{clientId}/charges` is not declared anywhere in core/network (only the
+            // loan-charge equivalent is). Wire this the day that lands.
+            onAddCharge = null,
             onApplyNewApplication = navController::navigateToClientApplyNew,
             // Live as of cluster B — each was null (so the row was ABSENT, not inert) until its
             // destination landed.
@@ -710,7 +717,9 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
     }
 
     composableWithPushTransitions<ClientCollateralDetailsRoute> {
-        ClientCollateralDetailsScreen()
+        ClientCollateralDetailsScreen(
+            onNavigateBack = navController::popBackStackSafely,
+        )
     }
 
     // The client's signature. Nested drill-down, NOT annotated.

@@ -38,6 +38,7 @@ import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.effects.EventsEffect
 import kpt.core.base.ui.screen.RefreshableScreenContent
 import kpt.core.designsystem.component.AppScaffold
+import kpt.core.designsystem.component.FloatingActionButtonContent
 import kpt.core.designsystem.icon.AppIcons
 import kpt.core.designsystem.theme.AppTypography
 import kpt.core.model.objects.account.share.ShareAccounts
@@ -46,6 +47,7 @@ import kpt.core.ui.components.AppActionsShareListingComponent
 import kpt.core.ui.components.AppEmptyCard
 import kpt.core.ui.components.AppSearchBar
 import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_client_add_record
 import kpt.feature.client.generated.resources.feature_client_deposit_accounts_item
 import kpt.feature.client.generated.resources.feature_client_shareaccounts_empty
 import kpt.feature.client.generated.resources.feature_client_shareaccounts_filtered_empty
@@ -95,6 +97,22 @@ internal fun ClientShareAccountsScreen(
     AppScaffold(
         title = stringResource(Res.string.feature_client_shareaccounts_title),
         onBackPressed = { viewModel.trySendAction(ClientShareAccountsAction.NavigateBack) },
+        // The add affordance is a FAB, not the original's header icon — operator-directed UI
+        // change (2026-10-22), recorded as a §6a deviation. See ClientDepositAccountsScreen for
+        // the full reasoning; in short, the original's header "+" read as "no way to add here" on
+        // a real device, and it passed `contentDescription = null` so it was unlabelled too.
+        floatingActionButtonContent = onAddAccount?.let {
+            FloatingActionButtonContent(
+                onClick = { viewModel.trySendAction(ClientShareAccountsAction.AddAccount) },
+                contentColor = KptTheme.colorScheme.onPrimaryContainer,
+                content = {
+                    Icon(
+                        imageVector = AppIcons.Add,
+                        contentDescription = stringResource(Res.string.feature_client_add_record),
+                    )
+                },
+            )
+        },
     ) { scaffoldPadding ->
         ClientShareAccountsContent(
             state = state,
@@ -129,7 +147,6 @@ internal fun ClientShareAccountsContent(
         Header(
             totalItem = totalCount.toString(),
             hasAnyAccount = totalCount > 0,
-            canAddAccount = canAddAccount,
             onAction = onAction,
         )
 
@@ -205,7 +222,6 @@ private fun ShareAccountList(
 private fun Header(
     totalItem: String,
     hasAnyAccount: Boolean,
-    canAddAccount: Boolean,
     onAction: (ClientShareAccountsAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -232,15 +248,6 @@ private fun Header(
                     modifier = Modifier.testTag(ClientShareAccountsTestTags.SEARCH_TOGGLE),
                 ) {
                     Icon(imageVector = AppIcons.Search, contentDescription = null)
-                }
-            }
-            // Drawn only when the create destination is wired — absent, not inert.
-            if (canAddAccount) {
-                IconButton(
-                    onClick = { onAction(ClientShareAccountsAction.AddAccount) },
-                    modifier = Modifier.testTag(ClientShareAccountsTestTags.ADD),
-                ) {
-                    Icon(imageVector = AppIcons.Add, contentDescription = null)
                 }
             }
         }

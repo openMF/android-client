@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kpt.core.base.store.screen.ScreenState
+import kpt.core.base.store.screen.emptyIfContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.data.datatable.DataTableRepository
 import kpt.core.database.datatable.entity.DataTableEntity
@@ -56,6 +57,12 @@ internal class DataTableListViewModel(
     private val stream = repository.dataTablesStream(appTable, viewModelScope)
 
     val dataTables: StateFlow<ScreenState<List<DataTableEntity>>> = stream.state
+        // An empty list must be marked Empty, or the `empty = { ... }` slot the screen supplies
+        // is unreachable and the officer gets a BLANK body under a "Refreshing…" banner. Found on
+        // device 2026-10-23: "More Group Info" fetched `datatables?apptable=m_group` → 200 with no
+        // rows and rendered nothing at all, while the screen was carrying the original's own
+        // "no datatables" copy the whole time.
+        .emptyIfContent { it.isEmpty() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STATE_TIMEOUT_MS), ScreenState.Loading)
 
     override fun handleAction(action: DataTableListAction) {

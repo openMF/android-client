@@ -461,4 +461,6 @@
     <string name="feature_client_fdapp_error_period_type_required">Deposit period frequency is required</string>
     <string name="feature_client_fdapp_error_offline">No connection — the application was not submitted.</string>
     <string name="feature_client_fdapp_error_failed">Could not submit the fixed deposit application.</string>
+    <!-- Shared add-affordance label (accessibility) -->
+    <string name="feature_client_add_record">Add</string>
 </resources>

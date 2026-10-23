@@ -40,6 +40,7 @@ import kpt.core.base.ui.screen.RefreshableScreenContent
 import kpt.core.common.utils.DateHelper
 import kpt.core.database.savings.entity.SavingsAccountEntity
 import kpt.core.designsystem.component.AppScaffold
+import kpt.core.designsystem.component.FloatingActionButtonContent
 import kpt.core.designsystem.icon.AppIcons
 import kpt.core.designsystem.theme.AppTypography
 import kpt.core.ui.components.Actions
@@ -47,6 +48,7 @@ import kpt.core.ui.components.AppActionsSavingsListingComponent
 import kpt.core.ui.components.AppEmptyCard
 import kpt.core.ui.components.AppSearchBar
 import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_client_add_record
 import kpt.feature.client.generated.resources.feature_client_deposit_accounts_filtered_empty
 import kpt.feature.client.generated.resources.feature_client_deposit_accounts_item
 import kpt.feature.client.generated.resources.feature_client_deposit_accounts_not_available
@@ -116,6 +118,29 @@ internal fun ClientDepositAccountsScreen(
         title = stringResource(state.kind.titleRes),
         // Dispatched, not called directly — the ViewModel owns the event.
         onBackPressed = { viewModel.trySendAction(ClientDepositAccountsAction.NavigateBack) },
+        // The add affordance is a FAB, not the original's header icon.
+        //
+        // OPERATOR-DIRECTED UI CHANGE (2026-10-22), recorded as a §6a deviation. The original
+        // puts "+" in the header beside the title — zero FABs anywhere in `feature/client` — and
+        // on a real device an officer read that as "there is no way to add here". A FAB is the
+        // platform's add affordance and is what the clients and groups lists already use, so this
+        // also makes the app internally consistent.
+        //
+        // It also fixes an accessibility defect: the header icon passed
+        // `contentDescription = null`, so the only way to add a record was unlabelled to a screen
+        // reader.
+        floatingActionButtonContent = onAddAccount?.let { add ->
+            FloatingActionButtonContent(
+                onClick = { viewModel.trySendAction(ClientDepositAccountsAction.AddAccount) },
+                contentColor = KptTheme.colorScheme.onPrimaryContainer,
+                content = {
+                    Icon(
+                        imageVector = AppIcons.Add,
+                        contentDescription = stringResource(Res.string.feature_client_add_record),
+                    )
+                },
+            )
+        },
     ) { scaffoldPadding ->
         ClientDepositAccountsContent(
             state = state,
@@ -311,15 +336,7 @@ private fun AccountsHeader(
                     Icon(imageVector = AppIcons.Search, contentDescription = null)
                 }
             }
-            // Drawn only when the create destination is wired — absent, not inert.
-            if (canAddAccount) {
-                IconButton(
-                    onClick = { onAction(ClientDepositAccountsAction.AddAccount) },
-                    modifier = Modifier.testTag(ClientDepositAccountsTestTags.ADD),
-                ) {
-                    Icon(imageVector = AppIcons.Add, contentDescription = null)
-                }
-            }
+            // The add affordance moved to the scaffold's FAB — see the screen KDoc.
         }
     }
 }

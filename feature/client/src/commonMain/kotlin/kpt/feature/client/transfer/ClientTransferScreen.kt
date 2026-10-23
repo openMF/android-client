@@ -43,6 +43,7 @@ import kpt.core.database.office.entity.OfficeEntity
 import kpt.core.designsystem.component.AppDatePickerTextField
 import kpt.core.designsystem.component.AppOutlinedButton
 import kpt.core.designsystem.component.AppOutlinedTextField
+import kpt.core.designsystem.component.AppScaffold
 import kpt.core.designsystem.component.AppTextButton
 import kpt.core.designsystem.component.AppTextFieldDropdown
 import kpt.core.designsystem.icon.AppIcons
@@ -94,12 +95,26 @@ internal fun ClientTransferScreen(
         }
     }
 
-    ClientTransferContent(
-        state = state,
-        offices = offices,
-        onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
-        modifier = modifier,
-    )
+    // Wrapped in AppScaffold 2026-10-23. This screen had NO app bar at all — no title and no
+    // back arrow — and every one of its empty branches returns before the Back/Submit row, so an
+    // officer who reached it on a tenant with nothing configured had no way out but the system
+    // back gesture. Found on device: the client Closure screen rendered as the single line
+    // "No closure reasons found" with zero clickable nodes in the whole hierarchy.
+    //
+    // Not a §6a deviation. The originals were Fragments and took their app bar from the hosting
+    // Activity's toolbar; AppScaffold IS that toolbar in the ported world, which is why every
+    // other ported screen has one. These five simply missed it.
+    AppScaffold(
+        title = stringResource(Res.string.feature_client_transfer_title),
+        onBackPressed = { viewModel.trySendAction(ClientTransferAction.NavigateBack) },
+    ) { scaffoldPadding ->
+        ClientTransferContent(
+            state = state,
+            offices = offices,
+            onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
+            modifier = modifier.padding(scaffoldPadding),
+        )
+    }
 }
 
 /** Stateless half — rendered in tests and previews without Koin. */

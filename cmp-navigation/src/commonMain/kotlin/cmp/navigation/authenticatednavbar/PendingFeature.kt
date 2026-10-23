@@ -30,6 +30,7 @@ import cmp.navigation.generated.resources.Res
 import cmp.navigation.generated.resources.pending_message
 import cmp.navigation.generated.resources.pending_title
 import cmp.navigation.navigation.HomeDestinationsScreen
+import kpt.core.designsystem.component.AppScaffold
 import kpt.core.designsystem.icon.AppIcons
 import org.jetbrains.compose.resources.stringResource
 
@@ -80,14 +81,36 @@ fun NavController.navigateToPendingFeature(featureName: String) =
  * the two pending TABS are sibling tab switches (a push would animate on top of the fade), and a
  * pending DRAWER entry is a jump across the drawer rather than a drill-down into a hierarchy.
  */
-fun NavGraphBuilder.pendingFeatureDestination(featureName: String) {
+fun NavGraphBuilder.pendingFeatureDestination(
+    featureName: String,
+    // Non-null for a DRAWER entry, which opens full-screen and would otherwise have no way back
+    // but the system gesture. Null for the Home TAB body, which renders inside the navbar
+    // scaffold and already has its app bar and bottom bar — wrapping that one would draw a
+    // second app bar and a back arrow on a root tab.
+    onNavigateBack: (() -> Unit)? = null,
+) {
     composable(route = pendingFeatureRoute(featureName)) {
-        PendingFeatureScreen(featureName = featureName)
+        PendingFeatureScreen(featureName = featureName, onNavigateBack = onNavigateBack)
     }
 }
 
 @Composable
 internal fun PendingFeatureScreen(
+    featureName: String,
+    modifier: Modifier = Modifier,
+    onNavigateBack: (() -> Unit)? = null,
+) {
+    if (onNavigateBack != null) {
+        AppScaffold(title = featureName, onBackPressed = onNavigateBack) { padding ->
+            PendingFeatureBody(featureName = featureName, modifier = modifier.padding(padding))
+        }
+    } else {
+        PendingFeatureBody(featureName = featureName, modifier = modifier)
+    }
+}
+
+@Composable
+private fun PendingFeatureBody(
     featureName: String,
     modifier: Modifier = Modifier,
 ) {

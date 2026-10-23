@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,12 +35,14 @@ import kpt.core.base.ui.effects.EventsEffect
 import kpt.core.base.ui.screen.ScreenContent
 import kpt.core.database.client.entity.ClientAddressEntity
 import kpt.core.designsystem.component.AppScaffold
+import kpt.core.designsystem.component.FloatingActionButtonContent
 import kpt.core.designsystem.icon.AppIcons
 import kpt.core.designsystem.theme.AppColors
 import kpt.core.designsystem.theme.AppTypography
 import kpt.core.designsystem.theme.DesignToken
 import kpt.core.ui.components.AppAddressCard
 import kpt.feature.client.generated.resources.Res
+import kpt.feature.client.generated.resources.feature_client_add_record
 import kpt.feature.client.generated.resources.feature_client_address
 import kpt.feature.client.generated.resources.feature_client_address_line_1
 import kpt.feature.client.generated.resources.feature_client_address_line_2
@@ -88,11 +89,26 @@ internal fun ClientAddressScreen(
         // Dispatched, not called directly: the ViewModel owns the event, which is the
         // path `ClientAddressAction.NavigateBack` already declared and nothing reached.
         onBackPressed = { viewModel.trySendAction(ClientAddressAction.NavigateBack) },
+        // The add affordance is a FAB, not the original's header icon — operator-directed UI
+        // change (2026-10-22), recorded as a §6a deviation. See ClientDepositAccountsScreen for
+        // the full reasoning; in short, the original's header "+" read as "no way to add here" on
+        // a real device, and it passed `contentDescription = null` so it was unlabelled too.
+        floatingActionButtonContent = onAddAddress?.let {
+            FloatingActionButtonContent(
+                onClick = { viewModel.trySendAction(ClientAddressAction.ShowAddressForm) },
+                contentColor = KptTheme.colorScheme.onPrimaryContainer,
+                content = {
+                    Icon(
+                        imageVector = AppIcons.Add,
+                        contentDescription = stringResource(Res.string.feature_client_add_record),
+                    )
+                },
+            )
+        },
     ) { scaffoldPadding ->
         ClientAddressContent(
             addresses = addresses,
             onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
-            canAdd = onAddAddress != null,
             modifier = modifier,
             scaffoldPadding = scaffoldPadding,
         )
@@ -105,7 +121,6 @@ internal fun ClientAddressContent(
     addresses: ScreenState<List<ClientAddressEntity>>,
     onAction: (ClientAddressAction) -> Unit,
     modifier: Modifier = Modifier,
-    canAdd: Boolean = true,
     /**
      * Insets from the host [AppScaffold]'s top bar.
      *
@@ -130,7 +145,6 @@ internal fun ClientAddressContent(
         Header(
             // Derived from the same state the list renders, so it cannot disagree with it.
             totalItem = ((addresses as? ScreenState.Content)?.data?.size ?: 0).toString(),
-            canAdd = canAdd,
             onAction = onAction,
         )
         Spacer(modifier = Modifier.height(KptTheme.spacing.md))
@@ -172,7 +186,6 @@ internal fun ClientAddressContent(
 @Composable
 private fun Header(
     totalItem: String,
-    canAdd: Boolean,
     onAction: (ClientAddressAction) -> Unit,
 ) {
     Row(modifier = Modifier.fillMaxWidth()) {
@@ -191,14 +204,6 @@ private fun Header(
         Spacer(modifier = Modifier.weight(1f))
 
         // Search icon omitted — unreachable from a feature module, see the file header.
-        if (canAdd) {
-            IconButton(
-                onClick = { onAction(ClientAddressAction.ShowAddressForm) },
-                modifier = Modifier.testTag(ClientAddressTestTags.ADD),
-            ) {
-                Icon(imageVector = AppIcons.Add, contentDescription = null)
-            }
-        }
     }
 }
 

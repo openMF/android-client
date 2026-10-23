@@ -155,7 +155,14 @@ internal class ClientStaffViewModel(
 
     private companion object {
         const val TAG = "ClientStaff"
-        const val CLIENT_ID_KEY = "id"
+
+        // "clientId", NOT "id". The SavedStateHandle key for a type-safe route is the
+        // PROPERTY NAME on the route class, and `ClientStaffRoute` declares `val clientId: Int`.
+        // Reading "id" always missed, so the `?: -1` below it always won and this screen asked
+        // Fineract for client -1 on every open — a 404 whose body was then rendered to the officer
+        // as the error message. Found on device 2026-10-23; the other 25 client ViewModels all
+        // had it right, so this was a single typo, not a pattern.
+        const val CLIENT_ID_KEY = "clientId"
         const val STATE_TIMEOUT_MS = 5_000L
         const val OFFLINE_MSG = "No connection — assignment not sent."
         const val FAILED_MSG = "Could not assign staff."

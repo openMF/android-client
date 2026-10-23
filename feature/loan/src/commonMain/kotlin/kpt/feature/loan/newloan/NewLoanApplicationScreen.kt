@@ -34,7 +34,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kpt.core.base.designsystem.theme.KptTheme
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.effects.EventsEffect
+import kpt.core.base.ui.screen.DefaultEmptyContent
 import kpt.core.base.ui.screen.ScreenContent
+import kpt.core.base.ui.screen.ScreenStateCta
+import kpt.core.base.ui.screen.ScreenStateEmpty
 import kpt.core.designsystem.component.AppScaffold
 import kpt.core.designsystem.theme.AppTypography
 import kpt.core.designsystem.theme.DesignToken
@@ -46,10 +49,13 @@ import kpt.feature.loan.generated.resources.feature_loan_application
 import kpt.feature.loan.generated.resources.feature_loan_application_created_message
 import kpt.feature.loan.generated.resources.feature_loan_application_created_title
 import kpt.feature.loan.generated.resources.feature_loan_application_failure_title
+import kpt.feature.loan.generated.resources.feature_loan_application_no_products
+import kpt.feature.loan.generated.resources.feature_loan_application_no_products_title
 import kpt.feature.loan.generated.resources.feature_loan_back
 import kpt.feature.loan.generated.resources.feature_loan_cancel
 import kpt.feature.loan.generated.resources.feature_loan_dialog_continue
 import kpt.feature.loan.generated.resources.feature_loan_next
+import kpt.feature.loan.generated.resources.feature_loan_retry
 import kpt.feature.loan.generated.resources.feature_loan_select_date
 import kpt.feature.loan.generated.resources.feature_loan_step_details
 import kpt.feature.loan.generated.resources.feature_loan_step_of
@@ -125,6 +131,21 @@ internal fun NewLoanApplicationContent(
             ScreenContent(
                 state = products,
                 onRetry = { onAction(NewLoanApplicationAction.OnRetryProducts) },
+                // An office with no product catalogue hits this BEFORE any field is drawn, so the
+                // shared default ("Nothing here yet") would leave an officer staring at a blank
+                // form with no stated cause and no next step. Name the cause, offer the recourse.
+                empty = {
+                    DefaultEmptyContent(
+                        config = ScreenStateEmpty(
+                            title = stringResource(Res.string.feature_loan_application_no_products_title),
+                            message = stringResource(Res.string.feature_loan_application_no_products),
+                            cta = ScreenStateCta(
+                                label = stringResource(Res.string.feature_loan_retry),
+                                onClick = { onAction(NewLoanApplicationAction.OnRetryProducts) },
+                            ),
+                        ),
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)

@@ -199,8 +199,9 @@ internal class ShareApplicationViewModel(
                     )
                 }
 
-                is MutationResult.Conflicted -> mutableStateFlow.value =
-                    state.copy(isSubmitting = false, error = ShareApplicationError.Failed)
+                is MutationResult.Conflicted ->
+                    mutableStateFlow.value =
+                        state.copy(isSubmitting = false, error = ShareApplicationError.Failed)
             }
         }
     }

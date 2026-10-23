@@ -170,4 +170,9 @@
     <string name="feature_savings_rd_created">The recurring deposit application was created and is awaiting approval.</string>
     <string name="feature_savings_rd_failed">The application could not be submitted.</string>
     <string name="feature_savings_error_positive_number">Enter a number greater than zero</string>
+
+    <!-- Same reasoning as feature_loan_application_no_products — see that string's comment. -->
+    <string name="feature_savings_application_no_products_title">No savings products</string>
+    <string name="feature_savings_application_no_products">This office has no savings products set up yet, so there is nothing to apply for. An administrator has to add one first.</string>
+    <string name="feature_savings_application_retry">Retry</string>
 </resources>

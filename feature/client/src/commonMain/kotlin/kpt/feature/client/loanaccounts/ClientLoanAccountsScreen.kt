@@ -48,6 +48,7 @@ import kpt.core.base.ui.effects.EventsEffect
 import kpt.core.base.ui.screen.RefreshableScreenContent
 import kpt.core.database.loan.entity.LoanAccountEntity
 import kpt.core.designsystem.component.AppScaffold
+import kpt.core.designsystem.component.FloatingActionButtonContent
 import kpt.core.designsystem.icon.AppIcons
 import kpt.core.designsystem.theme.AppTypography
 import kpt.core.designsystem.theme.DesignToken
@@ -57,6 +58,7 @@ import kpt.core.ui.components.AppEmptyCard
 import kpt.core.ui.components.AppSearchBar
 import kpt.feature.client.generated.resources.Res
 import kpt.feature.client.generated.resources.feature_client_account_status
+import kpt.feature.client.generated.resources.feature_client_add_record
 import kpt.feature.client.generated.resources.feature_client_filters
 import kpt.feature.client.generated.resources.feature_client_loan_account
 import kpt.feature.client.generated.resources.feature_client_loan_accounts_empty
@@ -121,6 +123,22 @@ internal fun ClientLoanAccountsScreen(
         // Dispatched, not called directly: the ViewModel owns the event, which is the
         // path `ClientLoanAccountsAction.NavigateBack` already declared and nothing reached.
         onBackPressed = { viewModel.trySendAction(ClientLoanAccountsAction.NavigateBack) },
+        // The add affordance is a FAB, not the original's header icon — operator-directed UI
+        // change (2026-10-22), recorded as a §6a deviation. See ClientDepositAccountsScreen for
+        // the full reasoning; in short, the original's header "+" read as "no way to add here" on
+        // a real device, and it passed `contentDescription = null` so it was unlabelled too.
+        floatingActionButtonContent = onAddAccount?.let {
+            FloatingActionButtonContent(
+                onClick = { viewModel.trySendAction(ClientLoanAccountsAction.AddAccount) },
+                contentColor = KptTheme.colorScheme.onPrimaryContainer,
+                content = {
+                    Icon(
+                        imageVector = AppIcons.Add,
+                        contentDescription = stringResource(Res.string.feature_client_add_record),
+                    )
+                },
+            )
+        },
     ) { scaffoldPadding ->
         ClientLoanAccountsContent(
             state = state,
@@ -177,7 +195,6 @@ internal fun ClientLoanAccountsContent(
             // FILTERED list was empty, so filtering everything out also removed the only way to
             // clear the filter.
             hasAnyAccount = totalCount > 0,
-            canAddAccount = canAddAccount,
             onAction = onAction,
         )
 
@@ -314,7 +331,6 @@ private fun AccountsHeader(
     totalItem: String,
     isFilterActive: Boolean,
     hasAnyAccount: Boolean,
-    canAddAccount: Boolean,
     onAction: (ClientLoanAccountsAction) -> Unit,
 ) {
     Row(
@@ -344,14 +360,6 @@ private fun AccountsHeader(
                 modifier = Modifier.testTag(ClientLoanAccountsTestTags.SEARCH_TOGGLE),
             ) {
                 Icon(imageVector = AppIcons.Search, contentDescription = null)
-            }
-            if (canAddAccount) {
-                IconButton(
-                    onClick = { onAction(ClientLoanAccountsAction.AddAccount) },
-                    modifier = Modifier.testTag(ClientLoanAccountsTestTags.ADD),
-                ) {
-                    Icon(imageVector = AppIcons.Add, contentDescription = null)
-                }
             }
             Box(modifier = Modifier.wrapContentSize(), contentAlignment = Alignment.Center) {
                 IconButton(

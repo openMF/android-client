@@ -205,8 +205,9 @@ internal class FixedDepositApplicationViewModel(
                     )
                 }
 
-                is MutationResult.Conflicted -> mutableStateFlow.value =
-                    state.copy(isSubmitting = false, error = FixedDepositError.Failed)
+                is MutationResult.Conflicted ->
+                    mutableStateFlow.value =
+                        state.copy(isSubmitting = false, error = FixedDepositError.Failed)
             }
         }
     }

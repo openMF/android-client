@@ -80,8 +80,8 @@ import kpt.feature.client.generated.resources.feature_client_editdetails_first_n
 import kpt.feature.client.generated.resources.feature_client_editdetails_last_name
 import kpt.feature.client.generated.resources.feature_client_editdetails_middle_name
 import kpt.feature.client.generated.resources.feature_client_editdetails_no_options
-import kpt.feature.client.generated.resources.feature_client_editdetails_offline
 import kpt.feature.client.generated.resources.feature_client_editdetails_office_use
+import kpt.feature.client.generated.resources.feature_client_editdetails_offline
 import kpt.feature.client.generated.resources.feature_client_editdetails_personal_details
 import kpt.feature.client.generated.resources.feature_client_editdetails_phone_no
 import kpt.feature.client.generated.resources.feature_client_editdetails_select_date
