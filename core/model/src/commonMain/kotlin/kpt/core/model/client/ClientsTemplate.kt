@@ -1,0 +1,31 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+ */
+package kpt.core.model.client
+
+import kotlinx.serialization.Serializable
+import kpt.core.model.datatable.DataTable
+
+/**
+ * GENERATED twin — what every layer above `core/store` sees of `core/database`'s `ClientsTemplateEntity`.
+ * Same field names as the row; `core/store/mapping/EntityModelMappers.kt` converts between them.
+ */
+@Serializable
+data class ClientsTemplate(
+    val activationDate: List<Int> = emptyList(),
+    val officeId: Int = 0,
+    val officeOptions: List<OfficeOptions>? = emptyList(),
+    val staffOptions: List<StaffOptions>? = emptyList(),
+    val savingProductOptions: List<SavingProductOptions>? = emptyList(),
+    val genderOptions: List<Options>? = emptyList(),
+    val clientTypeOptions: List<Options>? = emptyList(),
+    val clientClassificationOptions: List<Options>? = emptyList(),
+    val clientLegalFormOptions: List<InterestTypeOption>? = emptyList(),
+    val dataTables: List<DataTable>? = emptyList(),
+)

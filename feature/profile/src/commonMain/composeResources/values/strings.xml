@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2026 Mifos Initiative
+
+    This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+    If a copy of the MPL was not distributed with this file,
+    You can obtain one at https://mozilla.org/MPL/2.0/.
+
+    See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+-->
+<resources>
+    <!-- ============================================================
+         RULE-IMPL-NO-HARDCODED-STRING-001 — feature/profile i18n surface
+         Authored by W2-6 of plan-layer/active/store5-superbrain-v2/.
+         ============================================================ -->
+
+    <string name="screens_profile_local_title">Local profile</string>
+    <string name="screens_profile_local_message">%1$s runs entirely on-device. No account required.</string>
+    <!-- Identity + sign-out (S2). New surface: the original had no Profile tab. -->
+    <string name="feature_profile_office">Office: %1$s</string>
+    <string name="feature_profile_server">Server: %1$s</string>
+    <string name="feature_profile_sign_out">Sign out</string>
+    <string name="feature_profile_sign_out_keep_data">Sign out only</string>
+    <string name="feature_profile_sign_out_keep_data_detail">Your session ends. Cached clients, loans and documents, and any work not yet synced, stay on this device for your next sign-in.</string>
+    <string name="feature_profile_sign_out_clear_data">Sign out and clear data</string>
+    <string name="feature_profile_sign_out_clear_data_detail">Also deletes everything this app stored on this device, including work not yet synced. Use this before handing the device to someone else.</string>
+    <string name="feature_profile_sign_out_failed">Could not clear the data on this device. You are still signed in; try again.</string>
+    <string name="feature_profile_sign_out_confirm">Sign out</string>
+    <string name="feature_profile_sign_out_confirm_clear">Sign out and clear</string>
+    <string name="feature_profile_sign_out_cancel">Cancel</string>
+</resources>

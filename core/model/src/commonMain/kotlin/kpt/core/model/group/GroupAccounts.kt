@@ -1,0 +1,43 @@
+/*
+ * Copyright 2025 Mifos Initiative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * See See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+ */
+package kpt.core.model.group
+
+import kotlinx.serialization.Serializable
+import kpt.core.model.loan.LoanAccount
+import kpt.core.model.savings.SavingsAccount
+
+/**
+ * GENERATED twin — what every layer above `core/store` sees of `core/database`'s `GroupAccounts`.
+ * Same field names as the row; `core/store/mapping/EntityModelMappers.kt` converts between them.
+ */
+@Serializable
+data class GroupAccounts(
+    var loanAccounts: List<LoanAccount> = emptyList(),
+    var savingsAccounts: List<SavingsAccount> = emptyList(),
+) {
+
+    private fun getSavingsAccounts(wantRecurring: Boolean): List<SavingsAccount> {
+        val result: MutableList<SavingsAccount> = ArrayList()
+        for (account in savingsAccounts) {
+            if (account.depositType?.isRecurring == wantRecurring) {
+                result.add(account)
+            }
+        }
+        return result
+    }
+
+    fun getRecurringSavingsAccounts(): List<SavingsAccount> {
+        return getSavingsAccounts(true)
+    }
+
+    fun getNonRecurringSavingsAccounts(): List<SavingsAccount> {
+        return getSavingsAccounts(false)
+    }
+}
