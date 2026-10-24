@@ -27,6 +27,10 @@ internal fun NavController.navigateToAuthenticatedNavBar(navOptions: NavOptions?
 
 internal fun NavGraphBuilder.authenticatedNavbarGraph(
     navigateToSettingsScreen: () -> Unit,
+    navigateToAboutScreen: () -> Unit,
+    navigateToCollectionSheet: () -> Unit,
+    navigateToReports: () -> Unit,
+    navigateToCheckerInbox: () -> Unit,
     homeBody: @Composable () -> Unit,
     // The OUTER authenticated-graph controller, threaded down to the navbar screen so full-screen fork
     // tabs push above the scaffold and inline fork tabs can drill down full-screen. Passed from
@@ -36,6 +40,10 @@ internal fun NavGraphBuilder.authenticatedNavbarGraph(
     composableWithStayTransitions<AuthenticatedNavbarRoute> {
         AuthenticatedNavbarNavigationScreen(
             navigateToSettingsScreen = navigateToSettingsScreen,
+            navigateToAboutScreen = navigateToAboutScreen,
+            navigateToCollectionSheet = navigateToCollectionSheet,
+            navigateToReports = navigateToReports,
+            navigateToCheckerInbox = navigateToCheckerInbox,
             homeBody = homeBody,
             outerNavController = outerNavController,
         )

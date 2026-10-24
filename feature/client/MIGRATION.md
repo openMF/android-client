@@ -966,3 +966,11 @@ waiting.
 
 `feature/client` now depends on `feature/charge` (one-directional).
 
+## Datatables in create-client (2026-10-24)
+
+The original's datatable step (`feature/data-table/dataTableList`) is now part of the create-client
+form: one section per client datatable, one field per column (text, number, decimal, date, boolean,
+code lookup), NOT NULL columns required, sent in `ClientPayload.datatables` with the create
+(`createnew/ClientDataTables.kt`). The original's form was inert — every field hardwired to
+`value = ""` / `onValueChange = {}` — and its payload list started `null`, so `?.add` never added and
+the client was created with `datatables = null` regardless.

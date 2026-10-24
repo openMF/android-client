@@ -348,6 +348,10 @@
     <string name="feature_client_createnew_address_type">Address Type *</string>
     <string name="feature_client_createnew_state_province">State / Province</string>
     <string name="feature_client_createnew_address_active">Address Active</string>
+    <string name="feature_client_createnew_datatable_required">This field is required</string>
+    <string name="feature_client_createnew_datatable_not_a_number">Enter a number</string>
+    <string name="feature_client_createnew_datatable_select">Select</string>
+    <string name="feature_client_createnew_datatable_cancel">Cancel</string>
     <string name="feature_client_createnew_submit">Submit</string>
     <string name="feature_client_createnew_select_date">Select Date</string>
     <string name="feature_client_createnew_gallery">Gallery</string>

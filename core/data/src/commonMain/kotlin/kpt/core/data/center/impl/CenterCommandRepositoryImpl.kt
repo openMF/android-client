@@ -149,7 +149,7 @@ internal class CenterCommandRepositoryImpl(
 }
 
 /** The detail read carries every column the `Center` row holds except the (unused) timeline. */
-private fun CenterWithAssociations.toCenter() = Center(
+internal fun CenterWithAssociations.toCenter() = Center(
     id = id,
     accountNo = accountNo,
     name = name,

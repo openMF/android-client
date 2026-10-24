@@ -31,7 +31,7 @@ import org.jetbrains.compose.resources.StringResource
  *
  * ## migrated vs pending
  *
- * Each entry declares whether its feature exists yet. Only Settings does. The other six render as
+ * Each entry declares whether its feature exists yet. Settings, About and Collection Sheet do. The other four render as
  * real rows and open [PendingFeatureRoute], which names the missing feature rather than imitating
  * it — see that file for why the shell ships complete instead of partially drawn.
  *
@@ -50,22 +50,28 @@ sealed class HomeDestinationsScreen(
     /** `false` until the feature module lands. Drives routing, never visibility. */
     val isMigrated: Boolean = false,
 ) {
+    /** Migrated: `feature/checkerinbox` — maker-checker approvals + pending reschedules (2026-10-24). */
     data object CheckerInboxAndTasksScreen : HomeDestinationsScreen(
         title = Res.string.drawer_checker_inbox_tasks,
         icon = AppIcons.Checkbox,
         featureName = "Checker Inbox & Tasks",
+        isMigrated = true,
     )
 
+    /** Migrated: `feature/collectionsheet` — the individual collection sheet (2026-10-24). */
     data object CollectionSheetScreen : HomeDestinationsScreen(
         title = Res.string.drawer_collection_sheet,
         icon = AppIcons.Assignment,
         featureName = "Collection Sheet",
+        isMigrated = true,
     )
 
+    /** Migrated: `feature/report` — report catalogue, parameter form, result + CSV (2026-10-24). */
     data object RunReportsScreen : HomeDestinationsScreen(
         title = Res.string.drawer_run_reports,
         icon = AppIcons.Task,
         featureName = "Run Reports",
+        isMigrated = true,
     )
 
     data object PathTrackerScreen : HomeDestinationsScreen(
@@ -75,7 +81,7 @@ sealed class HomeDestinationsScreen(
     )
 
     /**
-     * The one migrated entry. `feature/settings` is in fact RICHER than the original's, which had
+     * Migrated. `feature/settings` is in fact RICHER than the original's, which had
      * only Settings + UpdateServerConfig: the port adds SyncAndDrafts and Notification.
      */
     data object SettingsScreen : HomeDestinationsScreen(
@@ -85,10 +91,12 @@ sealed class HomeDestinationsScreen(
         isMigrated = true,
     )
 
+    /** Migrated: `feature/about` (2026-10-24). */
     data object AboutScreen : HomeDestinationsScreen(
         title = Res.string.drawer_about,
         icon = AppIcons.Info,
         featureName = "About",
+        isMigrated = true,
     )
 
     /** Last by design — the divider above it is computed from this list's size. */

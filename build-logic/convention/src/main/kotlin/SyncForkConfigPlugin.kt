@@ -162,6 +162,9 @@ abstract class SyncForkConfigTask : DefaultTask() {
         val marketingUrl = get("org.marketing.url","APP_MARKETING_URL")
         val privacyUrl   = get("org.privacy.url",  "APP_PRIVACY_URL")
         val supportUrl   = get("org.support.url")
+        // Where users get help (a community chat) and the product's own site — read by About.
+        val communityUrl = get("org.community.url")
+        val productUrl   = get("org.product.url")
 
         // Web
         val cloudflareProject = get("web.cloudflare.project","CLOUDFLARE_PAGES_PROJECT_NAME")
@@ -294,6 +297,7 @@ abstract class SyncForkConfigTask : DefaultTask() {
                 "org.last.name" to orgLastName, "org.phone" to orgPhone,
                 "org.marketing.url" to marketingUrl, "org.privacy.url" to privacyUrl,
                 "org.support.url" to supportUrl, "web.cloudflare.project" to cloudflareProject,
+                "org.community.url" to communityUrl, "org.product.url" to productUrl,
                 "store.primary.locale" to primaryLocale, "store.title" to storeTitle,
                 "store.subtitle" to storeSubtitle, "store.description" to storeDescription,
                 "store.promotional.text" to storePromoText, "store.release.notes" to storeReleaseNotes,
@@ -1606,6 +1610,8 @@ abstract class SyncForkConfigTask : DefaultTask() {
             "org.marketing.url" to "org.marketing_url",
             "org.privacy.url" to "org.privacy_url",
             "org.support.url" to "org.support_url",
+            "org.community.url" to "org.community_url",
+            "org.product.url" to "org.product_url",
             // ── legal ──
             "legal.company.name" to "legal.company_name",
             "legal.jurisdiction" to "legal.jurisdiction",

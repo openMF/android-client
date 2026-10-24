@@ -12,8 +12,8 @@ package kpt.core.model.objects.checkerinboxtask
 import kotlinx.serialization.Serializable
 @Serializable
 data class RescheduleReasonCodeValue(
-    var id: Int,
-    var name: String,
-    var active: Boolean,
-    var mandatory: Boolean,
+    var id: Int = 0,
+    var name: String = "",
+    var active: Boolean = true,
+    var mandatory: Boolean = false,
 )

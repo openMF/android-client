@@ -11,11 +11,16 @@ package kpt.core.model.objects.checkerinboxtask
 
 import kotlinx.serialization.Serializable
 @Serializable
+// Defaults on every field: this decodes Fineract's `LoanRescheduleRequestData` for
+// `rescheduleloans?command=pending`, which carries no `actionName` and a null reason when none was
+// given — one such request must not fail the whole pending list.
 data class RescheduleLoansTask(
     var id: Int,
-    var clientName: String,
-    var loanAccountNumber: String,
-    var rescheduleFromDate: List<Int>,
-    var actionName: String,
-    var rescheduleReasonCodeValue: RescheduleReasonCodeValue,
+    /** The loan the request reschedules — what opens its reschedule screen (approve / reject live there). */
+    var loanId: Int? = null,
+    var clientName: String = "",
+    var loanAccountNumber: String = "",
+    var rescheduleFromDate: List<Int> = emptyList(),
+    var actionName: String = "",
+    var rescheduleReasonCodeValue: RescheduleReasonCodeValue? = null,
 )

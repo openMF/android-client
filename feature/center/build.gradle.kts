@@ -15,12 +15,16 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kermit.logging)
+            // DateHelper — the date field's display format, shared with the other forms.
+            implementation(projects.core.common)
             implementation(projects.core.data)
             implementation(projects.core.model)
             // NavigationItem + @FeatureTab + toObjectNavigationRoute — the tab declaration seam.
             implementation(projects.core.ui)
             // The shared activate screen (client / centre / group all reach it).
             implementation(projects.feature.activate)
+            // Group rows in a center open the group detail, owned by feature/groups (no reverse edge).
+            implementation(projects.feature.groups)
             implementation(libs.koin.compose.navigation)
             implementation(compose.ui)
             implementation(compose.foundation)

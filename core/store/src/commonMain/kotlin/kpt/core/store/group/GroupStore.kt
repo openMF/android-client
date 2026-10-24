@@ -9,7 +9,9 @@
  */
 package kpt.core.store.group
 
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kpt.core.store.offline.keepingDownloadedFlag
 import kpt.core.model.group.Group
 import kpt.core.store.mapping.toEntity
 import kpt.core.store.mapping.toModel
@@ -39,7 +41,11 @@ fun provideGroupStore(
     },
     sourceOfTruth = SourceOfTruth.of(
         reader = { _: Unit -> dao.getAllGroups().map { rows -> rows.map { it.toModel() } } },
-        writer = { _: Unit, groups: List<Group> -> groups.map { it.toEntity() }.forEach { dao.insertGroup(it) } },
+        writer = { _: Unit, groups: List<Group> ->
+            // Keep the local "downloaded" flag — the server's rows do not carry it (KeepDownloadedFlag.kt).
+            val existing = dao.getAllGroups().first()
+            groups.map { it.toEntity() }.keepingDownloadedFlag(existing).forEach { dao.insertGroup(it) }
+        },
         // The list IS the table, so clearing its one key and the logout purge (`Store.clear()`) both
         // empty it. Without these the purge cleared memory and left every group for the next officer.
         delete = { _: Unit -> dao.deleteAllGroups() },

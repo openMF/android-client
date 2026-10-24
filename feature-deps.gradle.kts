@@ -96,4 +96,8 @@ dependencies {
     // savings list, group detail and the shell's search all open into it.
     "commonMainImplementation"(project(":feature:savings"))
     "commonMainImplementation"(project(":feature:searchrecord"))
+    "commonMainImplementation"(project(":feature:about"))
+    "commonMainImplementation"(project(":feature:collectionsheet"))
+    "commonMainImplementation"(project(":feature:report"))
+    "commonMainImplementation"(project(":feature:checkerinbox"))
 }

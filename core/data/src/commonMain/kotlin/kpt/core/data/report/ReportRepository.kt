@@ -9,6 +9,10 @@
  */
 package kpt.core.data.report
 
+import kpt.core.model.objects.runreport.FullParameterListResponse
+import kpt.core.model.report.ReportOption
+import kpt.core.model.report.ReportParameter
+
 import kotlinx.coroutines.CoroutineScope
 import kpt.core.base.store.screen.ScreenDataStream
 import kpt.core.model.objects.runreport.client.ClientReportTypeItem
@@ -16,4 +20,16 @@ import kpt.core.model.objects.runreport.client.ClientReportTypeItem
 interface ReportRepository {
     /** The runnable report catalogue. */
     fun reportTypesStream(scope: CoroutineScope): ScreenDataStream<List<ClientReportTypeItem>>
+
+    /** What [reportName] asks for — its parameters, in the server's order. */
+    fun reportParametersStream(reportName: String, scope: CoroutineScope): ScreenDataStream<List<ReportParameter>>
+
+    /**
+     * A SELECT parameter's options. [parentValues] narrow them (`R_officeId` for a loan-officer list);
+     * null when they could not be read.
+     */
+    suspend fun parameterOptions(parameterName: String, parentValues: Map<String, String>): List<ReportOption>?
+
+    /** Runs [reportName] with [values] (`R_*` keys). Always from the server — a report is not cached data. */
+    suspend fun runReport(reportName: String, values: Map<String, String>): Result<FullParameterListResponse>
 }

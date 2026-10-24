@@ -14,6 +14,7 @@ import kpt.core.base.store.annotation.StoreProvider
 import kpt.core.database.cache.dao.ApiResponseCacheDao
 import kpt.core.model.objects.groups.CenterInfo
 import kpt.core.model.objects.runreport.FullParameterListResponse
+import kpt.core.model.report.ReportParameter
 import kpt.core.network.mifos.report.api.RunReportsApi
 import kpt.core.store.cache.cachedRead
 import kpt.core.store.config.AppCacheKeys
@@ -126,4 +127,20 @@ fun provideGetCenterSummaryInfoStore(
     dao = cache,
     keyOf = { key -> AppCacheKeys.ReportGetCenterSummaryInfo.forKey("${key.centerId}:${key.genericResultSet}") },
     fetch = { key -> runReportsApi.getCenterSummaryInfo(centerId = key.centerId, genericResultSet = key.genericResultSet) },
+)
+
+/**
+ * A report's parameters as data — `FullParameterList` mapped by [toReportParameters]. Keyed by the
+ * report's plain name; the SQL-literal quoting `R_reportListing` needs is applied here, once.
+ */
+@StoreProvider(id = "reportParameters", ttl = "12h")
+@CacheKey(fn = "forReport", key = "reportParameters:{report}", params = ["report:String"])
+fun provideReportParametersStore(
+    runReportsApi: RunReportsApi,
+    cache: ApiResponseCacheDao,
+): Store<String, List<ReportParameter>> = cachedRead(
+    dao = cache,
+    keyOf = { report -> AppCacheKeys.ReportParameters.forReport(report) },
+    fetch = { report -> runReportsApi.getReportFullParameterList(reportName = "'$report'", parameterType = true) },
+    map = { it.toReportParameters() },
 )

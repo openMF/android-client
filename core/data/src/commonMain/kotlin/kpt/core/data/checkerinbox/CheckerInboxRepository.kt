@@ -11,9 +11,17 @@ package kpt.core.data.checkerinbox
 
 import kotlinx.coroutines.CoroutineScope
 import kpt.core.base.store.screen.ScreenDataStream
+import kpt.core.model.objects.checkerinboxtask.CheckerInboxSearchTemplate
 import kpt.core.model.objects.checkerinboxtask.CheckerTask
+import kpt.core.model.objects.checkerinboxtask.RescheduleLoansTask
 
 interface CheckerInboxRepository {
     /** Maker-checker tasks awaiting this user's approval. */
     fun checkerTasksStream(scope: CoroutineScope): ScreenDataStream<List<CheckerTask>>
+
+    /** Loan reschedule requests awaiting approval. Deciding one is the loan's own reschedule screen. */
+    fun rescheduleRequestsStream(scope: CoroutineScope): ScreenDataStream<List<RescheduleLoansTask>>
+
+    /** The action and entity names the inbox can be filtered by; null when they could not be read. */
+    suspend fun searchTemplate(): CheckerInboxSearchTemplate?
 }

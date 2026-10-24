@@ -19,8 +19,10 @@ import kpt.core.base.ui.nav.composableWithPushTransitions
 import kpt.core.base.ui.nav.composableWithStayTransitions
 import kpt.core.base.ui.nav.popBackStackSafely
 import kpt.feature.activate.navigation.navigateToActivateCenter
+import kpt.feature.center.create.CreateCenterScreen
 import kpt.feature.center.detail.CenterDetailScreen
 import kpt.feature.center.list.CenterListScreen
+import kpt.feature.groups.navigation.navigateToGroupsDetail
 
 /** The tab's graph. Mirrors `ClientDestination` — the tab points at the graph, not at a screen. */
 @Serializable
@@ -42,6 +44,11 @@ fun NavController.navigateToCenters(navOptions: NavOptions? = null) =
 fun NavController.navigateToCenterDetail(centerId: Int, navOptions: NavOptions? = null) =
     navigate(CenterDetailRoute(centerId), navOptions)
 
+@Serializable
+data object CreateCenterRoute
+
+fun NavController.navigateToCreateCenter(navOptions: NavOptions? = null) = navigate(CreateCenterRoute, navOptions)
+
 /**
  * The center list — a TOP-LEVEL destination on the authenticated graph, collected into
  * `GeneratedFeatureDestinations` by `:cmp-navigation:generateFeatureDestinations`.
@@ -50,18 +57,23 @@ fun NavController.navigateToCenterDetail(centerId: Int, navOptions: NavOptions? 
  * an annotated destination anywhere else is silently skipped — a clean build and a screen that does
  * not exist in the app.
  *
- * ## What is NOT here
- *
- * `CreateNewCenter` and `SyncCentersDialog` from `6b66e8a43` are not ported in this slice. Both are
- * WRITE paths and neither has a command repository behind it yet — `CenterCommandRepository` exists
- * but is not wired to a create endpoint. They are passed as `null` rather than as empty lambdas, so
- * the FAB and the sync action are ABSENT rather than drawn inert
- * (RULE-IMPL-DEAD-CLICKABLE-001), and they are tracked in CAPABILITY_GAPS.
+ * Create center (2026-10-24) is the list's FAB → [CreateCenterRoute], on `CenterCommandRepository.createCenter`.
  */
 @FeatureDestination
 fun NavGraphBuilder.centerListDestination(navController: NavController) {
     composableWithStayTransitions<CenterListRoute> {
-        CenterListScreen(onCenterClick = navController::navigateToCenterDetail)
+        CenterListScreen(
+            onCenterClick = navController::navigateToCenterDetail,
+            onCreateCenter = navController::navigateToCreateCenter,
+        )
+    }
+
+    composableWithPushTransitions<CreateCenterRoute> {
+        CreateCenterScreen(
+            onNavigateBack = navController::popBackStackSafely,
+            // Back to the list, which re-reads: the command already wrote the new center into it.
+            onCreated = navController::popBackStackSafely,
+        )
     }
 
     // Nested drill-down, deliberately NOT annotated: only TOP-LEVEL entries carry
@@ -69,9 +81,8 @@ fun NavGraphBuilder.centerListDestination(navController: NavController) {
     composableWithPushTransitions<CenterDetailRoute> {
         CenterDetailScreen(
             onBackClick = navController::popBackStackSafely,
-            // Group detail belongs to feature/groups and lands with it. Null until then, so a group
-            // row in a center renders without a click rather than with one that goes nowhere.
-            onGroupClick = null,
+            // Group detail is owned by feature/groups; live now that it has landed.
+            onGroupClick = { groupId -> navController.navigateToGroupsDetail(groupId) },
             onActivate = navController::navigateToActivateCenter,
         )
     }
@@ -90,7 +101,12 @@ fun NavGraphBuilder.centerListDestination(navController: NavController) {
 fun NavGraphBuilder.centerTabGraph(outerNav: NavController) {
     navigation<CenterDestination>(startDestination = CenterListRoute) {
         composableWithStayTransitions<CenterListRoute> {
-            CenterListScreen(onCenterClick = outerNav::navigateToCenterDetail)
+            CenterListScreen(
+                onCenterClick = outerNav::navigateToCenterDetail,
+                // The TAB copy of the list — the one officers actually use. Wiring only the other
+                // registration would ship a FAB on one entry path and not on the one people take.
+                onCreateCenter = outerNav::navigateToCreateCenter,
+            )
         }
     }
 }

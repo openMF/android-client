@@ -29,4 +29,20 @@
     <string name="feature_center_unnamed">Unnamed center</string>
     <string name="feature_center_synced">Synced</string>
     <string name="feature_center_activate">Activate centre</string>
+    <!-- Create center — ported from 6b66e8a43:feature/center/createCenter. -->
+    <string name="feature_center_create_new_center">Create New Center</string>
+    <string name="feature_center_center_name">Center Name *</string>
+    <string name="feature_center_office_required">Office *</string>
+    <string name="feature_center_activation_date">Activation Date</string>
+    <string name="feature_center_submit">Submit</string>
+    <string name="feature_center_select">Select</string>
+    <string name="feature_center_cancel">Cancel</string>
+    <string name="feature_center_ok">OK</string>
+    <string name="feature_center_center_name_empty">Center name is required</string>
+    <string name="feature_center_center_name_should_be_more_than_4_characters">Center name should be at least 4 characters</string>
+    <string name="feature_center_center_name_should_not_contains_special_characters_or_numbers">Center name should not contain special characters or numbers</string>
+    <string name="feature_center_select_office">Select an office</string>
+    <string name="feature_center_center_created_successfully">Center created successfully</string>
+    <string name="feature_center_failed_to_create_center">Failed to create center</string>
+    <string name="feature_center_create_offline">You are offline. Connect to create a center.</string>
 </resources>

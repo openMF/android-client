@@ -249,6 +249,9 @@ internal fun CreateNewClientContent(
                 AddressFields(state = state, address = address, onAction = onAction)
             }
 
+            // The tenant's client datatables — absent when it registers none.
+            DataTableSections(tables = options.dataTables, state = state, onAction = onAction)
+
             Spacer(Modifier.height(KptTheme.spacing.md))
 
             if (state.isUploadingPhoto) {
@@ -860,6 +863,9 @@ private fun FieldGap() = Spacer(Modifier.height(KptTheme.spacing.md))
 
 /** Stable handles for UI tests and Maestro flows — see RULE-KMP-COMPOSE-UITEST-001. */
 internal object CreateNewClientTestTags {
+    fun dataTable(table: String) = "createNewClient:datatable:$table"
+    fun dataTableField(table: String, column: String) = "createNewClient:datatable:$table:$column"
+
     const val SCREEN = "createNewClient:screen"
     const val FORM = "createNewClient:form"
     const val PHOTO = "createNewClient:photo"

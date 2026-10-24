@@ -241,7 +241,9 @@ org:
   copyright: "© 2026 Mifos Initiative. All rights reserved."   # desktop / Mac App Store packaging copyright (org.copyright)
   marketing_url: https://mifos.org
   privacy_url: https://raw.githubusercontent.com/openMF/kmp-project-template/main/legal/output/privacy-policy.md
-  support_url: https://github.com/openMF/kmp-project-template
+  support_url: https://github.com/openMF/mifos-x-field-officer-app   # this app's repo — About (source/license/contributors) + store support link
+  community_url: https://mifos.slack.com/                             # About → Community: ask anything in #mobile
+  product_url: https://mifos-products.pages.dev/mobile/field-officer/ # About → Product site: the app's guides + information
 
 legal:
   company_name: Mifos Initiative

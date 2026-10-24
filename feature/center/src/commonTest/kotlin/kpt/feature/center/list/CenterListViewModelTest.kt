@@ -10,12 +10,16 @@
 package kpt.feature.center.list
 
 import app.cash.turbine.test
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kpt.core.base.store.screen.ScreenState
+import kpt.core.data.testing.ExperimentalDataTestingApi
+import kpt.core.data.testing.FakeOfflineDownloadRepository
 import kpt.feature.center.testing.FakeCenterRepository
 import kpt.feature.center.testing.center
 import kotlin.test.AfterTest
@@ -31,7 +35,12 @@ import kotlin.test.assertIs
  * Both are where the audit found the gap — a state class can be perfect while the ViewModel never
  * subscribes, and every assertion still passes.
  */
+@OptIn(ExperimentalDataTestingApi::class)
 class CenterListViewModelTest {
+
+    private val downloads = FakeOfflineDownloadRepository()
+
+    private fun repoWith() = FakeCenterRepository().also { it.emit(center(1), center(2)) }
 
     private val dispatcher = StandardTestDispatcher()
 
@@ -42,7 +51,7 @@ class CenterListViewModelTest {
     @Test
     fun theStreamIsSubscribedOnlyWhileSomethingCollects() = runTest(dispatcher) {
         val repo = FakeCenterRepository()
-        val vm = CenterListViewModel(repo)
+        val vm = CenterListViewModel(repo, downloads)
         repo.emit(center(1), center(2))
         testScheduler.advanceUntilIdle()
 
@@ -65,7 +74,7 @@ class CenterListViewModelTest {
     @Test
     fun theFilterStateIsCombinedIntoTheRenderedRows() = runTest(dispatcher) {
         val repo = FakeCenterRepository()
-        val vm = CenterListViewModel(repo)
+        val vm = CenterListViewModel(repo, downloads)
         repo.emit(center(1, name = "Alpha"), center(2, name = "Beta"))
 
         vm.screenState.test {
@@ -81,7 +90,7 @@ class CenterListViewModelTest {
 
     @Test
     fun aTappedCenterRaisesOpenCenterWithItsId() = runTest(dispatcher) {
-        val vm = CenterListViewModel(FakeCenterRepository())
+        val vm = CenterListViewModel(FakeCenterRepository(), downloads)
         vm.eventFlow.test {
             vm.trySendAction(CenterListAction.CenterClicked(42))
             assertEquals(CenterListEvent.OpenCenter(42), awaitItem())
@@ -90,7 +99,7 @@ class CenterListViewModelTest {
 
     @Test
     fun filterActionsMutateStateAndClearTogether() = runTest(dispatcher) {
-        val vm = CenterListViewModel(FakeCenterRepository())
+        val vm = CenterListViewModel(FakeCenterRepository(), downloads)
 
         vm.trySendAction(CenterListAction.QueryChanged("abc"))
         vm.trySendAction(CenterListAction.OfficeFilterToggled("Branch A"))
@@ -111,7 +120,7 @@ class CenterListViewModelTest {
 
     @Test
     fun theOfficeFilterToggles() = runTest(dispatcher) {
-        val vm = CenterListViewModel(FakeCenterRepository())
+        val vm = CenterListViewModel(FakeCenterRepository(), downloads)
         vm.trySendAction(CenterListAction.OfficeFilterToggled("A"))
         testScheduler.advanceUntilIdle()
         assertEquals(setOf("A"), vm.stateFlow.value.selectedOffices)
@@ -119,5 +128,43 @@ class CenterListViewModelTest {
         vm.trySendAction(CenterListAction.OfficeFilterToggled("A"))
         testScheduler.advanceUntilIdle()
         assertEquals(emptySet(), vm.stateFlow.value.selectedOffices)
+    }
+
+    @Test
+    fun longPressSelectsAndATapThenTogglesInsteadOfOpening() = runTest(dispatcher) {
+        val vm = CenterListViewModel(repoWith(), downloads)
+        vm.trySendAction(CenterListAction.SelectionToggled(1))
+        testScheduler.advanceUntilIdle()
+        assertEquals(setOf(1), vm.stateFlow.value.selected)
+
+        vm.eventFlow.test {
+            // In selection mode a tap toggles — it must NOT open the row.
+            vm.trySendAction(CenterListAction.CenterClicked(2))
+            testScheduler.advanceUntilIdle()
+            expectNoEvents()
+        }
+        assertEquals(setOf(1, 2), vm.stateFlow.value.selected)
+        vm.trySendAction(CenterListAction.SelectionCleared)
+        testScheduler.advanceUntilIdle()
+        assertTrue(vm.stateFlow.value.selected.isEmpty())
+    }
+
+    @Test
+    fun downloadingSendsTheSelectedRowsAndReportsProgressToTheEnd() = runTest(dispatcher) {
+        val vm = CenterListViewModel(repoWith(), downloads)
+        vm.screenState.test {
+            skipItems(1)
+            awaitItem() // content
+            vm.trySendAction(CenterListAction.SelectionToggled(2))
+            vm.trySendAction(CenterListAction.DownloadSelected)
+            testScheduler.advanceUntilIdle()
+            cancelAndIgnoreRemainingEvents()
+        }
+        assertEquals(listOf(2), downloads.centersRequested.single().map { it.id })
+        assertTrue(vm.stateFlow.value.download!!.finished)
+        assertTrue(vm.stateFlow.value.selected.isEmpty())
+        vm.trySendAction(CenterListAction.DownloadDismissed)
+        testScheduler.advanceUntilIdle()
+        assertNull(vm.stateFlow.value.download)
     }
 }

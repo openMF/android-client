@@ -11,6 +11,7 @@ package kpt.feature.groups.list
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -48,6 +49,8 @@ import kpt.core.model.group.Group
 import kpt.core.designsystem.component.AppOutlinedTextField
 import kpt.core.designsystem.icon.AppIcons
 import kpt.core.designsystem.theme.DesignToken
+import kpt.core.ui.components.OfflineDownloadDialog
+import kpt.core.ui.components.OfflineSelectionBar
 import kpt.feature.groups.generated.resources.Res
 import kpt.feature.groups.generated.resources.feature_groups_create_title
 import kpt.feature.groups.generated.resources.feature_groups_filter
@@ -135,6 +138,14 @@ internal fun GroupsListContent(
         },
     ) { padding ->
         Column(modifier = Modifier.fillMaxSize().padding(padding).padding(horizontal = 16.dp)) {
+            if (ui.selected.isNotEmpty()) {
+                OfflineSelectionBar(
+                    count = ui.selected.size,
+                    onDownload = { onAction(GroupsListAction.DownloadSelected) },
+                    onClear = { onAction(GroupsListAction.SelectionCleared) },
+                    modifier = Modifier.padding(vertical = KptTheme.spacing.sm),
+                )
+            }
             // No TopAppBar: Groups is a TAB ROOT and the dashboard shell draws one bar above every
             // tab root. The filter toggle sits beside the search field, as it does on Clients.
             Row(
@@ -222,11 +233,22 @@ internal fun GroupsListContent(
                             } else {
                                 null
                             },
+                            // Long-press selects for download — the original's selection mode.
+                            onLongClick = groupId?.let { { onAction(GroupsListAction.SelectionToggled(it)) } },
+                            selected = groupId != null && groupId in ui.selected,
                         )
                     }
                 }
             }
         }
+    }
+
+    ui.download?.let { progress ->
+        OfflineDownloadDialog(
+            progress = progress,
+            onCancel = { onAction(GroupsListAction.DownloadCancelled) },
+            onDone = { onAction(GroupsListAction.DownloadDismissed) },
+        )
     }
 }
 
@@ -238,27 +260,32 @@ internal fun GroupsListContent(
  * a sync marker plus chevron trailing. An earlier pass replaced all of this with a plain `Column`
  * and a divider — a different screen wearing the same data.
  *
- * ## Deliberately not ported yet
- *
- * The original's `combinedClickable` long-press enters SELECTION MODE, which exists to drive the
- * `SelectionModeTopAppBar`'s bulk Sync action. Neither `GroupRepository` nor
- * `GroupCommandRepository` exposes a sync path on this substrate, so a long-press would select
- * rows for an action that cannot run. The card therefore takes a plain `onClick` until that lands,
- * and selection + sync are tracked in CAPABILITY_GAPS rather than drawn inert.
+ * Long-press enters the original's SELECTION MODE for the bulk offline download
+ * (`OfflineDownloadRepository`); a selected card takes the secondary container colour.
  */
 @Composable
 internal fun GroupsCard(
     group: Group,
     onClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
+    onLongClick: (() -> Unit)? = null,
+    selected: Boolean = false,
 ) {
     OutlinedCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(CardDefaults.outlinedShape)
-            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
+            .then(
+                if (onClick != null || onLongClick != null) {
+                    Modifier.combinedClickable(onClick = onClick ?: {}, onLongClick = onLongClick)
+                } else {
+                    Modifier
+                },
+            )
             .testTag(GroupsListTestTags.ROW),
-        colors = CardDefaults.cardColors(containerColor = KptTheme.colorScheme.surface),
+        colors = CardDefaults.cardColors(
+            containerColor = if (selected) KptTheme.colorScheme.secondaryContainer else KptTheme.colorScheme.surface,
+        ),
     ) {
         ListItem(
             leadingContent = {
@@ -295,7 +322,9 @@ internal fun GroupsCard(
                     )
                 }
             },
-            colors = ListItemDefaults.colors(containerColor = Color.Unspecified),
+            // Transparent, not Unspecified: Unspecified fell back to an opaque surface over the card, hiding
+            // the selected tint (invisible before, as both were the surface colour).
+            colors = ListItemDefaults.colors(containerColor = Color.Transparent),
         )
     }
 }

@@ -31,6 +31,16 @@ interface CollectionSheetRepository {
         scope: CoroutineScope,
     ): ScreenDataStream<List<CenterDetail>>
 
+    /**
+     * The individual collection sheet for one (office, staff, date) request — network first, and
+     * offline the last sheet generated for it. A sheet with no loan due is still CONTENT here; a screen
+     * that shows "nothing due" applies `emptyIfContent` itself.
+     */
+    fun individualCollectionSheetStream(
+        request: RequestCollectionSheetPayload,
+        scope: CoroutineScope,
+    ): ScreenDataStream<IndividualCollectionSheet>
+
     /*
      * Generated sheets. Fineract's `?command=generateCollectionSheet` is POST-shaped but a read —
      * these were misfiled as commands. Each is network first and, offline, the last sheet generated

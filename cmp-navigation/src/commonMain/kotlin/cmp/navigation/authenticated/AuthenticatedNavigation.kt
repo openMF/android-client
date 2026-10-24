@@ -37,6 +37,10 @@ internal fun NavGraphBuilder.authenticatedGraph(navController: NavController) {
     ) {
         authenticatedNavbarGraph(
             navigateToSettingsScreen = { BackboneRegistry.navigateToSettings(navController) },
+            navigateToAboutScreen = { BackboneRegistry.navigateToAbout(navController) },
+            navigateToCollectionSheet = { BackboneRegistry.navigateToCollectionSheet(navController) },
+            navigateToReports = { BackboneRegistry.navigateToReports(navController) },
+            navigateToCheckerInbox = { BackboneRegistry.navigateToCheckerInbox(navController) },
             // Home body from the fork-owned BackboneRegistry seam (default: demo dashboard). The
             // template shell carries zero demo imports — a fork edits BackboneRegistry, not this file.
             homeBody = { BackboneRegistry.homeBody(navController) },

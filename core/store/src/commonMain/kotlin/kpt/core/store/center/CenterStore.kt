@@ -9,7 +9,9 @@
  */
 package kpt.core.store.center
 
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kpt.core.store.offline.keepingDownloadedFlag
 import kpt.core.model.center.Center
 import kpt.core.store.mapping.toEntity
 import kpt.core.store.mapping.toModel
@@ -43,7 +45,11 @@ fun provideCenterStore(
     },
     sourceOfTruth = SourceOfTruth.of(
         reader = { _: Unit -> dao.readAllCenters().map { rows -> rows.map { it.toModel() } } },
-        writer = { _: Unit, centers: List<Center> -> centers.map { it.toEntity() }.forEach { dao.saveCenter(it) } },
+        writer = { _: Unit, centers: List<Center> ->
+            // Keep the local "downloaded" flag — the server's rows do not carry it (KeepDownloadedFlag.kt).
+            val existing = dao.readAllCenters().first()
+            centers.map { it.toEntity() }.keepingDownloadedFlag(existing).forEach { dao.saveCenter(it) }
+        },
         // The list IS the table, so clearing its one key and the logout purge (`Store.clear()`) both
         // empty it. Without these the purge cleared memory and left every center for the next officer.
         delete = { _: Unit -> dao.deleteAllCenters() },

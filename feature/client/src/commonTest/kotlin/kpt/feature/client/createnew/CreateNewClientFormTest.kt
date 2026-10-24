@@ -230,6 +230,24 @@ class CreateNewClientFormTest {
         assertNull(address?.postalCode)
     }
 
+    @Test
+    fun datatablesTravelInThePayloadAndAreAbsentWhenTheTenantHasNone() {
+        assertNull(filled().toPayload(form, hasAddressBlock = false).datatables)
+
+        val table = kpt.core.model.datatable.DataTable(
+            registeredTableName = "client_extra",
+            columnHeaderData = listOf(
+                kpt.core.model.datatable.ColumnHeader(dataTableColumnName = "household_size", columnDisplayType = "INTEGER", columnNullable = false),
+            ),
+        )
+        val withTable = form.copy(dataTables = listOf(table))
+        val state = filled().copy(dataTableValues = mapOf(DataTableField("client_extra", "household_size") to "4"))
+        // The ORIGINAL sent `datatables = null` even after its datatable form: its list started null.
+        val sent = state.toPayload(withTable, hasAddressBlock = false).datatables!!.single()
+        assertEquals("client_extra", sent.registeredTableName)
+        assertEquals(4L, sent.data["household_size"])
+    }
+
     private companion object {
         /** 1990-06-15T00:00:00Z — any fixed instant; the assertions never read the rendered text. */
         const val DOB_MILLIS = 645_321_600_000L

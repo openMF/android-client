@@ -10,16 +10,21 @@
 package kpt.feature.groups.list
 
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.combineContent
 import kpt.core.base.store.screen.emptyIfContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.data.group.GroupRepository
+import kpt.core.data.offline.OfflineDownloadRepository
 import kpt.core.model.group.Group
+import kpt.core.model.offline.DownloadProgress
+import kpt.core.model.offline.DownloadTarget
 
 /**
  * The group list — ported from `6b66e8a43:feature/group/groupList/ui/GroupsListViewModel.kt`.
@@ -42,6 +47,7 @@ import kpt.core.model.group.Group
  */
 internal class GroupsListViewModel(
     repository: GroupRepository,
+    private val downloads: OfflineDownloadRepository,
 ) : BaseViewModel<GroupsListState, GroupsListEvent, GroupsListAction>(GroupsListState()) {
 
     private val stream = repository.groupsStream(viewModelScope)
@@ -69,6 +75,20 @@ internal class GroupsListViewModel(
     /** Re-run the read. Wired to `ScreenContent`'s retry. */
     fun onRetry() = stream.retry()
 
+    /** The running download — held so Cancel can stop it (what is already downloaded stays). */
+    private var download: Job? = null
+
+    /** The original's long-press selection + Sync: the selected groups, their clients and active accounts. */
+    private fun downloadSelected() {
+        val rows = (screenState.value as? ScreenState.Content)?.data.orEmpty()
+        val targets = rows.mapNotNull { g -> g.id?.takeIf { it in state.selected }?.let { DownloadTarget(it, g.name ?: "#$it") } }
+        if (targets.isEmpty() || download?.isActive == true) return
+        mutableStateFlow.value = state.copy(selected = emptySet(), download = DownloadProgress(total = targets.size))
+        download = viewModelScope.launch {
+            downloads.downloadGroups(targets).collect { mutableStateFlow.value = state.copy(download = it) }
+        }
+    }
+
     override fun handleAction(action: GroupsListAction) {
         when (action) {
             is GroupsListAction.QueryChanged ->
@@ -88,10 +108,25 @@ internal class GroupsListViewModel(
             GroupsListAction.FilterVisibilityToggled ->
                 mutableStateFlow.value = state.copy(filtersVisible = !state.filtersVisible)
 
+            // In selection mode a tap toggles the row, as in the original; otherwise it opens it.
             is GroupsListAction.GroupClicked ->
-                sendEvent(GroupsListEvent.OpenGroup(action.groupId))
+                if (state.selected.isNotEmpty()) {
+                    handleAction(GroupsListAction.SelectionToggled(action.groupId))
+                } else {
+                    sendEvent(GroupsListEvent.OpenGroup(action.groupId))
+                }
 
             GroupsListAction.Retry -> onRetry()
+
+            is GroupsListAction.SelectionToggled -> mutableStateFlow.value =
+                state.copy(selected = if (action.groupId in state.selected) state.selected - action.groupId else state.selected + action.groupId)
+            GroupsListAction.SelectionCleared -> mutableStateFlow.value = state.copy(selected = emptySet())
+            GroupsListAction.DownloadSelected -> downloadSelected()
+            GroupsListAction.DownloadCancelled -> {
+                download?.cancel()
+                mutableStateFlow.value = state.copy(download = null)
+            }
+            GroupsListAction.DownloadDismissed -> mutableStateFlow.value = state.copy(download = null)
         }
     }
 
@@ -144,6 +179,10 @@ internal data class GroupsListState(
     val sort: GroupsSort? = null,
     val selectedOffices: Set<String> = emptySet(),
     val filtersVisible: Boolean = false,
+    /** Groups selected by long-press, for download. Non-empty = selection mode. */
+    val selected: Set<Int> = emptySet(),
+    /** The download in progress (or just finished); null when there is none to show. */
+    val download: DownloadProgress? = null,
 )
 
 internal enum class GroupsSort { Name, AccountNumber }
@@ -156,6 +195,11 @@ internal sealed interface GroupsListAction {
     data object FilterVisibilityToggled : GroupsListAction
     data class GroupClicked(val groupId: Int) : GroupsListAction
     data object Retry : GroupsListAction
+    data class SelectionToggled(val groupId: Int) : GroupsListAction
+    data object SelectionCleared : GroupsListAction
+    data object DownloadSelected : GroupsListAction
+    data object DownloadCancelled : GroupsListAction
+    data object DownloadDismissed : GroupsListAction
 }
 
 internal sealed interface GroupsListEvent {

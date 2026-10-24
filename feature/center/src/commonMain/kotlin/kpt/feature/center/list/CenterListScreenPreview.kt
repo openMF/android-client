@@ -59,3 +59,34 @@ internal fun CenterListContentEmptyPreview() {
         CenterListContent(ui = CenterListState(), rows = ScreenState.Empty, onAction = {})
     }
 }
+
+/** Selection mode (two centers long-pressed) — the selection bar and highlighted rows. */
+@Preview
+@Composable
+internal fun CenterListSelectionPreview() {
+    KptTheme {
+        CenterListContent(ui = CenterListState(selected = setOf(1, 2)), rows = ScreenState.Content(previewCenters), onAction = {})
+    }
+}
+
+/** A finished download that could not fetch one record — the failure is named, with the server's reason. */
+@Preview
+@Composable
+internal fun CenterListDownloadPreview() {
+    KptTheme {
+        CenterListContent(
+            ui = CenterListState(
+                // i18n:skip — preview fixture
+                download = kpt.core.model.offline.DownloadProgress(
+                    completed = 2,
+                    total = 2,
+                    records = 37,
+                    finished = true,
+                    failures = listOf(kpt.core.model.offline.DownloadFailure("Riverside Centre · loan #42", "Loan with identifier 42 does not exist")),
+                ),
+            ),
+            rows = ScreenState.Content(previewCenters.map { it.copy(sync = true) }),
+            onAction = {},
+        )
+    }
+}

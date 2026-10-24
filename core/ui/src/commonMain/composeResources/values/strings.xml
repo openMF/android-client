@@ -127,4 +127,15 @@
     <string name="core_ui_document_viewer_open_failed">This PDF could not be opened.</string>
     <string name="core_ui_document_viewer_unsupported">This file type cannot be previewed. Use Share to open it in another app.</string>
     <string name="core_ui_document_viewer_image_description">Document image</string>
+    <!-- Offline download — shared by the center and group lists (OfflineDownload.kt). -->
+    <string name="core_ui_offline_selected">%1$d selected</string>
+    <string name="core_ui_offline_download">Download for offline use</string>
+    <string name="core_ui_offline_clear_selection">Clear selection</string>
+    <string name="core_ui_offline_downloading">Downloading for offline use</string>
+    <string name="core_ui_offline_downloaded">Download complete</string>
+    <string name="core_ui_offline_progress">%1$d of %2$d · %3$d records</string>
+    <string name="core_ui_offline_current">Now: %1$s</string>
+    <string name="core_ui_offline_failures">%1$d could not be downloaded:</string>
+    <string name="core_ui_offline_cancel">Cancel</string>
+    <string name="core_ui_offline_done">Done</string>
 </resources>

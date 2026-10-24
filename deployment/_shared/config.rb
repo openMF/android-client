@@ -119,6 +119,8 @@ module AppProfile
     "org.marketing.url"                  => "org.marketing_url",
     "org.privacy.url"                    => "org.privacy_url",
     "org.support.url"                    => "org.support_url",
+    "org.community.url"                  => "org.community_url",
+    "org.product.url"                    => "org.product_url",
     # ── legal ──
     "legal.company.name"                 => "legal.company_name",
     "legal.jurisdiction"                 => "legal.jurisdiction",

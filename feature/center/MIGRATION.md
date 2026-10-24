@@ -13,8 +13,8 @@
 | `centerList/ui/` | 3 | `list/` | `CenterListUiState` dissolves into `ScreenState` |
 | `centerDetails/` | 3 | `detail/` | merged with `centerGroupList` — see §3 |
 | `centerGroupList/` | 3 | `detail/` | merged, NOT dropped |
-| `createCenter/` | 3 | — | **DEFER** (§7) |
-| `syncCentersDialog/` | 3 | — | **DEFER** (§7) |
+| `createCenter/` | 3 | `create/CreateCenter{Screen,ViewModel}.kt` | **PORTED** 2026-10-24 (§8) |
+| `syncCentersDialog/` | 3 | `core/data/offline/OfflineDownloadRepository` + list selection | **PORTED** 2026-10-24 (§8) |
 | `navigation/CenterNavigation.kt` | 1 | `navigation/CenterNavigation.kt` + `CenterTab.kt` | tab declaration split out as a `@FeatureTab` |
 | `di/CenterModule.kt` | 1 | `di/CenterModule.kt` | |
 
@@ -25,8 +25,8 @@
 | list centers | read, cache-first | `CenterRepository.centersStream` |
 | one center's details | read | selected from the same stream (§3) |
 | groups of a center | read | `GroupRepository.groupsStream`, filtered |
-| create a center | write | deferred (§7) |
-| bulk sync centers | write | deferred (§7) |
+| create a center | write | `CenterCommandRepository.createCenter` (§8) |
+| bulk sync centers | read (download) | `OfflineDownloadRepository.downloadCenters` (§8) |
 
 ## 3. Substrate mapping
 
@@ -85,3 +85,21 @@ the same change — two Centers tabs, one of them dead, is worse than the gap it
 | `SelectionModeTopAppBar` + long-press selection not ported | selection exists ONLY to drive the bulk Sync action above. With no sync path, long-press would select rows for an action that cannot run. |
 | create FAB absent, not disabled | an affordance that does nothing is the dead-clickable defect; absent is honest |
 | `PullToRefreshBox` not yet wired | the streams expose `refresh()`, so this is an omission rather than a decision. Noted so it is not mistaken for one. |
+
+## 8. Create + offline download (2026-10-24)
+
+The §7 deferrals are closed.
+
+- **Create center** — the list's FAB (both registrations, tab and outer) → `CreateCenterRoute`. The
+  original's fields and name rules (required, ≥ 4 characters, letters and spaces). Fixed, not carried:
+  the activation date allowed only the FUTURE (today and the past now); Submit with an error did
+  nothing and said nothing (its Toasts were commented out — errors now show on the fields); the office
+  id defaulted to 0; any failure was "Failed to create center" (Fineract's reason now, and offline says
+  so). Offices come from `OfficeRepository`; the original's office picker needs no other template.
+- **Download for offline use** (the original's long-press selection + Sync dialog) — long-press selects,
+  a tap toggles while selecting, the selection bar downloads. `OfflineDownloadRepository` walks each
+  center → groups → clients → ACTIVE loans (+ repayment template) and savings (+ deposit/withdrawal
+  templates) through the SAME stores and keys the screens read, so they open offline. A failure is
+  named and the walk continues. The center is marked downloaded (`sync`), and the list writer now keeps
+  that flag across refreshes — before, every list refresh reset it (`KeepDownloadedFlag.kt`).
+- **Group rows in a center open the group** — `onGroupClick` was null until feature/groups landed.

@@ -25,10 +25,13 @@
 :core:platform
 :core:store
 :core:ui
+:feature:about
 :feature:activate
 :feature:center
 :feature:charge
+:feature:checkerinbox
 :feature:client
+:feature:collectionsheet
 :feature:datatable
 :feature:document
 :feature:groups
@@ -36,6 +39,7 @@
 :feature:loan
 :feature:note
 :feature:profile
+:feature:report
 :feature:savings
 :feature:searchrecord
 :feature:settings

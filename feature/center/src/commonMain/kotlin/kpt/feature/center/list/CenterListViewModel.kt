@@ -10,16 +10,21 @@
 package kpt.feature.center.list
 
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.combineContent
 import kpt.core.base.store.screen.emptyIfContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.data.center.CenterRepository
+import kpt.core.data.offline.OfflineDownloadRepository
 import kpt.core.model.center.Center
+import kpt.core.model.offline.DownloadProgress
+import kpt.core.model.offline.DownloadTarget
 
 /**
  * The center list — ported from `6b66e8a43:feature/center/centerList/ui/CenterListViewModel.kt`.
@@ -42,6 +47,7 @@ import kpt.core.model.center.Center
  */
 internal class CenterListViewModel(
     repository: CenterRepository,
+    private val downloads: OfflineDownloadRepository,
 ) : BaseViewModel<CenterListState, CenterListEvent, CenterListAction>(CenterListState()) {
 
     private val stream = repository.centersStream(viewModelScope)
@@ -69,6 +75,24 @@ internal class CenterListViewModel(
     /** Re-run the read. Wired to `ScreenContent`'s retry. */
     fun onRetry() = stream.retry()
 
+    /** The running download — held so Cancel can stop it (what is already downloaded stays). */
+    private var download: Job? = null
+
+    /**
+     * The original's long-press SELECTION + Sync, now that the download path exists
+     * (`OfflineDownloadRepository`): the selected centers, then each one's groups, clients and active
+     * accounts. Collected on the action, not in an `init {}` — nothing runs until the officer asks.
+     */
+    private fun downloadSelected() {
+        val rows = (screenState.value as? ScreenState.Content)?.data.orEmpty()
+        val targets = rows.mapNotNull { c -> c.id?.takeIf { it in state.selected }?.let { DownloadTarget(it, c.name ?: "#$it") } }
+        if (targets.isEmpty() || download?.isActive == true) return
+        mutableStateFlow.value = state.copy(selected = emptySet(), download = DownloadProgress(total = targets.size))
+        download = viewModelScope.launch {
+            downloads.downloadCenters(targets).collect { mutableStateFlow.value = state.copy(download = it) }
+        }
+    }
+
     override fun handleAction(action: CenterListAction) {
         when (action) {
             is CenterListAction.QueryChanged ->
@@ -88,10 +112,27 @@ internal class CenterListViewModel(
             CenterListAction.FilterVisibilityToggled ->
                 mutableStateFlow.value = state.copy(filtersVisible = !state.filtersVisible)
 
+            // In selection mode a tap toggles the row, as in the original; otherwise it opens it.
             is CenterListAction.CenterClicked ->
-                sendEvent(CenterListEvent.OpenCenter(action.centerId))
+                if (state.selected.isNotEmpty()) {
+                    handleAction(CenterListAction.SelectionToggled(action.centerId))
+                } else {
+                    sendEvent(CenterListEvent.OpenCenter(action.centerId))
+                }
+
+            CenterListAction.CreateCenterClicked -> sendEvent(CenterListEvent.CreateCenter)
 
             CenterListAction.Retry -> onRetry()
+
+            is CenterListAction.SelectionToggled -> mutableStateFlow.value =
+                state.copy(selected = if (action.centerId in state.selected) state.selected - action.centerId else state.selected + action.centerId)
+            CenterListAction.SelectionCleared -> mutableStateFlow.value = state.copy(selected = emptySet())
+            CenterListAction.DownloadSelected -> downloadSelected()
+            CenterListAction.DownloadCancelled -> {
+                download?.cancel()
+                mutableStateFlow.value = state.copy(download = null)
+            }
+            CenterListAction.DownloadDismissed -> mutableStateFlow.value = state.copy(download = null)
         }
     }
 
@@ -144,6 +185,10 @@ internal data class CenterListState(
     val sort: CenterSort? = null,
     val selectedOffices: Set<String> = emptySet(),
     val filtersVisible: Boolean = false,
+    /** Centers selected by long-press, for download. Non-empty = selection mode. */
+    val selected: Set<Int> = emptySet(),
+    /** The download in progress (or just finished); null when there is none to show. */
+    val download: DownloadProgress? = null,
 )
 
 internal enum class CenterSort { Name, AccountNumber }
@@ -155,9 +200,16 @@ internal sealed interface CenterListAction {
     data object FiltersCleared : CenterListAction
     data object FilterVisibilityToggled : CenterListAction
     data class CenterClicked(val centerId: Int) : CenterListAction
+    data object CreateCenterClicked : CenterListAction
+    data class SelectionToggled(val centerId: Int) : CenterListAction
+    data object SelectionCleared : CenterListAction
+    data object DownloadSelected : CenterListAction
+    data object DownloadCancelled : CenterListAction
+    data object DownloadDismissed : CenterListAction
     data object Retry : CenterListAction
 }
 
 internal sealed interface CenterListEvent {
     data class OpenCenter(val centerId: Int) : CenterListEvent
+    data object CreateCenter : CenterListEvent
 }

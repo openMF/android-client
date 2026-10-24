@@ -56,6 +56,24 @@ internal class CollectionSheetRepositoryImpl(
             ttl = AppStoreRegistry.Ttl.COLLECTION_SHEET_CENTERS,
         )
 
+    override fun individualCollectionSheetStream(
+        request: RequestCollectionSheetPayload,
+        scope: CoroutineScope,
+    ): ScreenDataStream<IndividualCollectionSheet> {
+        // A COPY: the request type is mutable, and a store key must not change after it is used.
+        val key = request.copy()
+        return individualStore.asScreenStream(
+            key = key,
+            cacheKey = AppCacheKeys.CollectionsheetIndividual.forKey(key.toString()),
+            scope = scope,
+            fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
+            ttl = AppStoreRegistry.Ttl.COLLECTIONSHEET_INDIVIDUAL,
+            // No `isEmpty`: it means "nothing has arrived from the store yet", not "empty content" —
+            // passing a no-loans predicate here kept an ARRIVED sheet on Loading forever (device,
+            // 2026-10-24). "Nothing due" is the consumer's `emptyIfContent`.
+        )
+    }
+
     // Through the sheet stores, never `CollectionSheetApi` directly: `fresh` writes the generated
     // sheet through the read cache, and offline `get` answers from it. Each key is a COPY — the
     // request types are mutable, and a store key must not change after it is used.

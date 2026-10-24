@@ -102,3 +102,12 @@ feature-local repository into `core/data`. §11 can be closed.
 three capabilities it never had; the original contributes server-config (S1) and survey sync (S7).
 Two items need reading rather than porting: per-setting parity, and the `Platform.kt` expect/actual.
 S1's scope is strictly `updateServer/**`.
+
+## Sync surveys — classified, not ported (2026-10-24)
+
+The original's Settings → "Sync surveys" (`syncSurvey/*`, ~800 lines) downloaded surveys with their
+questions and response options. Its ONLY consumers are the three survey screens (`surveyList`,
+`surveyQuestion`, `surveyLast`), which are registered but never navigated to in `6b66e8a43` — already
+classified unreachable in feature/client's ledger. Porting the sync would download data no screen reads:
+an inert control. It lands with the survey screens, if they are ever given an entry point. The data
+layer for it exists (`surveys` / `surveyGetSurvey` stores).

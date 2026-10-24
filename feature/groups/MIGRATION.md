@@ -110,3 +110,12 @@ it**. Three items ship; Add Savings Account, Group Clients and Notes stay absent
 
 Also fixed here: the detail Column had no `verticalScroll`, so the Activate button could sit off a
 short screen with no way to reach it.
+
+## Offline download (2026-10-24)
+
+The original's long-press selection + `SyncGroupDialog` is ported onto the shared
+`OfflineDownloadRepository.downloadGroups`: long-press selects, a tap toggles while selecting, and the
+selection bar downloads each group's clients and their ACTIVE loans and savings (with the templates a
+repayment or deposit needs) through the stores the screens read. The group is marked downloaded, and
+the group list writer keeps that flag across refreshes. The original's ~550-line ViewModel and the
+center's ~790-line one were the same walk written twice; it is one implementation now (core/data).

@@ -10,12 +10,16 @@
 package kpt.feature.groups.list
 
 import app.cash.turbine.test
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kpt.core.base.store.screen.ScreenState
+import kpt.core.data.testing.ExperimentalDataTestingApi
+import kpt.core.data.testing.FakeOfflineDownloadRepository
 import kpt.feature.groups.testing.FakeGroupRepository
 import kpt.feature.groups.testing.group
 import kotlin.test.AfterTest
@@ -31,7 +35,12 @@ import kotlin.test.assertIs
  * Both are where the audit found the gap — a state class can be perfect while the ViewModel never
  * subscribes, and every assertion still passes.
  */
+@OptIn(ExperimentalDataTestingApi::class)
 class GroupsListViewModelTest {
+
+    private val downloads = FakeOfflineDownloadRepository()
+
+    private fun repoWith() = FakeGroupRepository().also { it.emit(group(1), group(2)) }
 
     private val dispatcher = StandardTestDispatcher()
 
@@ -42,7 +51,7 @@ class GroupsListViewModelTest {
     @Test
     fun theStreamIsSubscribedOnlyWhileSomethingCollects() = runTest(dispatcher) {
         val repo = FakeGroupRepository()
-        val vm = GroupsListViewModel(repo)
+        val vm = GroupsListViewModel(repo, downloads)
         repo.emit(group(1), group(2))
         testScheduler.advanceUntilIdle()
 
@@ -65,7 +74,7 @@ class GroupsListViewModelTest {
     @Test
     fun theFilterStateIsCombinedIntoTheRenderedRows() = runTest(dispatcher) {
         val repo = FakeGroupRepository()
-        val vm = GroupsListViewModel(repo)
+        val vm = GroupsListViewModel(repo, downloads)
         repo.emit(group(1, name = "Alpha"), group(2, name = "Beta"))
 
         vm.screenState.test {
@@ -81,7 +90,7 @@ class GroupsListViewModelTest {
 
     @Test
     fun aTappedGroupRaisesOpenGroupWithItsId() = runTest(dispatcher) {
-        val vm = GroupsListViewModel(FakeGroupRepository())
+        val vm = GroupsListViewModel(FakeGroupRepository(), downloads)
         vm.eventFlow.test {
             vm.trySendAction(GroupsListAction.GroupClicked(42))
             assertEquals(GroupsListEvent.OpenGroup(42), awaitItem())
@@ -90,7 +99,7 @@ class GroupsListViewModelTest {
 
     @Test
     fun filterActionsMutateStateAndClearTogether() = runTest(dispatcher) {
-        val vm = GroupsListViewModel(FakeGroupRepository())
+        val vm = GroupsListViewModel(FakeGroupRepository(), downloads)
 
         vm.trySendAction(GroupsListAction.QueryChanged("abc"))
         vm.trySendAction(GroupsListAction.OfficeFilterToggled("Branch A"))
@@ -111,7 +120,7 @@ class GroupsListViewModelTest {
 
     @Test
     fun theOfficeFilterToggles() = runTest(dispatcher) {
-        val vm = GroupsListViewModel(FakeGroupRepository())
+        val vm = GroupsListViewModel(FakeGroupRepository(), downloads)
         vm.trySendAction(GroupsListAction.OfficeFilterToggled("A"))
         testScheduler.advanceUntilIdle()
         assertEquals(setOf("A"), vm.stateFlow.value.selectedOffices)
@@ -119,5 +128,43 @@ class GroupsListViewModelTest {
         vm.trySendAction(GroupsListAction.OfficeFilterToggled("A"))
         testScheduler.advanceUntilIdle()
         assertEquals(emptySet(), vm.stateFlow.value.selectedOffices)
+    }
+
+    @Test
+    fun longPressSelectsAndATapThenTogglesInsteadOfOpening() = runTest(dispatcher) {
+        val vm = GroupsListViewModel(repoWith(), downloads)
+        vm.trySendAction(GroupsListAction.SelectionToggled(1))
+        testScheduler.advanceUntilIdle()
+        assertEquals(setOf(1), vm.stateFlow.value.selected)
+
+        vm.eventFlow.test {
+            // In selection mode a tap toggles — it must NOT open the row.
+            vm.trySendAction(GroupsListAction.GroupClicked(2))
+            testScheduler.advanceUntilIdle()
+            expectNoEvents()
+        }
+        assertEquals(setOf(1, 2), vm.stateFlow.value.selected)
+        vm.trySendAction(GroupsListAction.SelectionCleared)
+        testScheduler.advanceUntilIdle()
+        assertTrue(vm.stateFlow.value.selected.isEmpty())
+    }
+
+    @Test
+    fun downloadingSendsTheSelectedRowsAndReportsProgressToTheEnd() = runTest(dispatcher) {
+        val vm = GroupsListViewModel(repoWith(), downloads)
+        vm.screenState.test {
+            skipItems(1)
+            awaitItem() // content
+            vm.trySendAction(GroupsListAction.SelectionToggled(2))
+            vm.trySendAction(GroupsListAction.DownloadSelected)
+            testScheduler.advanceUntilIdle()
+            cancelAndIgnoreRemainingEvents()
+        }
+        assertEquals(listOf(2), downloads.groupsRequested.single().map { it.id })
+        assertTrue(vm.stateFlow.value.download!!.finished)
+        assertTrue(vm.stateFlow.value.selected.isEmpty())
+        vm.trySendAction(GroupsListAction.DownloadDismissed)
+        testScheduler.advanceUntilIdle()
+        assertNull(vm.stateFlow.value.download)
     }
 }

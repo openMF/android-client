@@ -19,6 +19,10 @@ import kpt.core.base.ui.nav.popBackStackSafely
 import kpt.feature.profile.identity.ProfileBody
 import kpt.feature.settings.SettingsBody
 import kpt.feature.settings.navigateToNotification
+import kpt.feature.about.navigation.navigateToAbout
+import kpt.feature.collectionsheet.navigation.navigateToIndividualCollectionSheet
+import kpt.feature.report.navigation.navigateToReports
+import kpt.feature.checkerinbox.navigation.navigateToCheckerInbox
 import kpt.feature.settings.navigateToSettings
 import kpt.feature.settings.navigateToSyncAndDrafts
 import kpt.feature.settings.notificationDestination
@@ -104,6 +108,18 @@ object BackboneRegistry {
      * imports (mirrors the `homeBody` seam pattern).
      */
     val navigateToSettings: (NavController) -> Unit = { it.navigateToSettings() }
+
+    /** The drawer's About entry → `feature/about`. Same seam shape as [navigateToSettings]. */
+    val navigateToAbout: (NavController) -> Unit = { it.navigateToAbout() }
+
+    /** The drawer's Collection Sheet entry → `feature/collectionsheet`. */
+    val navigateToCollectionSheet: (NavController) -> Unit = { it.navigateToIndividualCollectionSheet() }
+
+    /** The drawer's Run Reports entry → `feature/report`. */
+    val navigateToReports: (NavController) -> Unit = { it.navigateToReports() }
+
+    /** The drawer's Checker Inbox & Tasks entry → `feature/checkerinbox`. */
+    val navigateToCheckerInbox: (NavController) -> Unit = { it.navigateToCheckerInbox() }
 
     /**
      * Route the dashboard top bar's bell to the Notification backbone. Same seam shape as

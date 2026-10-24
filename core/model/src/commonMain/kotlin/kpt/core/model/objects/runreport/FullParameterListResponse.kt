@@ -16,6 +16,6 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class FullParameterListResponse(
-    var columnHeaders: List<ColumnHeader>,
-    var data: List<DataRow>,
+    var columnHeaders: List<ColumnHeader> = emptyList(),
+    var data: List<DataRow> = emptyList(),
 )

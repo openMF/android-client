@@ -80,6 +80,10 @@ fork:
   # `charges/` + `chargeform/` — see feature/charge/MIGRATION.md.
   - { id: charge,           status: exists }
   - { id: searchrecord,     status: exists }
+  - { id: about,            status: exists }
+  - { id: collectionsheet,  status: exists }
+  - { id: report,           status: exists }
+  - { id: checkerinbox,     status: exists }
   - { id: home,             status: exists }
   - { id: profile,          status: exists }
   - { id: settings,         status: exists }

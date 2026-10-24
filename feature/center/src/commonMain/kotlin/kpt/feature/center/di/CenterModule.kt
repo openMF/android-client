@@ -11,6 +11,7 @@ package kpt.feature.center.di
 
 import kpt.feature.center.detail.CenterDetailViewModel
 import kpt.feature.center.list.CenterListViewModel
+import kpt.feature.center.create.CreateCenterViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -21,4 +22,5 @@ import org.koin.dsl.module
 val CenterModule = module {
     viewModelOf(::CenterListViewModel)
     viewModelOf(::CenterDetailViewModel)
+    viewModelOf(::CreateCenterViewModel)
 }

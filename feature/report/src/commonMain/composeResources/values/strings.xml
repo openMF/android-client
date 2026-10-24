@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2026 Mifos Initiative
+
+    This Source Code Form is subject to the terms of the Mozilla Public
+    License, v. 2.0. If a copy of the MPL was not distributed with this
+    file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
+    See https://github.com/openMF/kmp-project-template/blob/main/LICENSE
+-->
+<resources>
+    <!-- Ported from 6b66e8a43:feature/report. -->
+    <string name="feature_report_run_reports">Run Reports</string>
+    <string name="feature_report_client">Client</string>
+    <string name="feature_report_loan">Loan</string>
+    <string name="feature_report_savings">Savings</string>
+    <string name="feature_report_fund">Fund</string>
+    <string name="feature_report_accounting">Accounting</string>
+    <string name="feature_report_xbrl">XBRL</string>
+    <string name="feature_report_all">All</string>
+    <string name="feature_report_no_reports_found">No Reports Found</string>
+    <string name="feature_report_details">Report Details</string>
+    <string name="feature_report_run_report">Run Report</string>
+    <string name="feature_report_title">Report</string>
+    <string name="feature_report_export_csv">Export CSV</string>
+    <string name="feature_report_unable_to_export">Unable to Export</string>
+    <string name="feature_report_exported_successfully">Exported Successfully</string>
+
+    <!-- New in the port. -->
+    <string name="feature_report_all_option">All</string>
+    <string name="feature_report_required">Required</string>
+    <string name="feature_report_select">Select</string>
+    <string name="feature_report_cancel">Cancel</string>
+    <string name="feature_report_no_parameters">This report needs no input.</string>
+    <string name="feature_report_running">Running…</string>
+    <string name="feature_report_failed">The report could not be run.</string>
+    <string name="feature_report_rows">%1$d rows</string>
+    <string name="feature_report_no_rows">The report returned no rows.</string>
+    <string name="feature_report_back_to_parameters">Change parameters</string>
+    <string name="feature_report_ok">OK</string>
+</resources>

@@ -10,7 +10,7 @@
 package kpt.feature.center.list
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -47,7 +48,10 @@ import kpt.core.model.center.Center
 import kpt.core.designsystem.component.AppOutlinedTextField
 import kpt.core.designsystem.icon.AppIcons
 import kpt.core.designsystem.theme.DesignToken
+import kpt.core.ui.components.OfflineDownloadDialog
+import kpt.core.ui.components.OfflineSelectionBar
 import kpt.feature.center.generated.resources.Res
+import kpt.feature.center.generated.resources.feature_center_create_new_center
 import kpt.feature.center.generated.resources.feature_center_filter
 import kpt.feature.center.generated.resources.feature_center_filter_clear
 import kpt.feature.center.generated.resources.feature_center_search_hint
@@ -61,6 +65,8 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun CenterListScreen(
     onCenterClick: ((Int) -> Unit)?,
+    /** The original's create-center FAB. Null draws no FAB — never one that goes nowhere. */
+    onCreateCenter: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     viewModel: CenterListViewModel = koinViewModel(),
 ) {
@@ -74,6 +80,7 @@ internal fun CenterListScreen(
         viewModel.eventFlow.collect { event ->
             when (event) {
                 is CenterListEvent.OpenCenter -> onCenterClick?.invoke(event.centerId)
+                CenterListEvent.CreateCenter -> onCreateCenter?.invoke()
             }
         }
     }
@@ -83,6 +90,7 @@ internal fun CenterListScreen(
         rows = rows,
         onAction = { viewModel.actionChannel.trySend(it) },
         rowsClickable = onCenterClick != null,
+        canCreate = onCreateCenter != null,
         modifier = modifier,
     )
 }
@@ -100,11 +108,31 @@ internal fun CenterListContent(
      * affordance, because the user cannot tell it is unfinished (RULE-IMPL-DEAD-CLICKABLE-001).
      */
     rowsClickable: Boolean = true,
+    /** Whether create-center is wired. Same reasoning as [rowsClickable]. */
+    canCreate: Boolean = false,
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize().testTag(CenterListTestTags.SCREEN),
+        floatingActionButton = {
+            if (canCreate) {
+                FloatingActionButton(
+                    onClick = { onAction(CenterListAction.CreateCenterClicked) },
+                    modifier = Modifier.testTag(CenterListTestTags.CREATE),
+                ) {
+                    Icon(AppIcons.Add, contentDescription = stringResource(Res.string.feature_center_create_new_center))
+                }
+            }
+        },
     ) { padding ->
         Column(modifier = Modifier.fillMaxSize().padding(padding).padding(horizontal = 16.dp)) {
+            if (ui.selected.isNotEmpty()) {
+                OfflineSelectionBar(
+                    count = ui.selected.size,
+                    onDownload = { onAction(CenterListAction.DownloadSelected) },
+                    onClear = { onAction(CenterListAction.SelectionCleared) },
+                    modifier = Modifier.padding(vertical = KptTheme.spacing.sm),
+                )
+            }
             // No TopAppBar: Centers is a TAB ROOT and the dashboard shell draws one bar above every
             // tab root. The filter toggle sits beside the search field, as it does on Clients.
             Row(
@@ -193,11 +221,22 @@ internal fun CenterListContent(
                             } else {
                                 null
                             },
+                            // Long-press selects for download — the original's selection mode.
+                            onLongClick = centerId?.let { { onAction(CenterListAction.SelectionToggled(it)) } },
+                            selected = centerId != null && centerId in ui.selected,
                         )
                     }
                 }
             }
         }
+    }
+
+    ui.download?.let { progress ->
+        OfflineDownloadDialog(
+            progress = progress,
+            onCancel = { onAction(CenterListAction.DownloadCancelled) },
+            onDone = { onAction(CenterListAction.DownloadDismissed) },
+        )
     }
 }
 
@@ -209,27 +248,32 @@ internal fun CenterListContent(
  * a sync marker plus chevron trailing. An earlier pass replaced all of this with a plain `Column`
  * and a divider — a different screen wearing the same data.
  *
- * ## Deliberately not ported yet
- *
- * The original's `combinedClickable` long-press enters SELECTION MODE, which exists to drive the
- * `SelectionModeTopAppBar`'s bulk Sync action. Neither `CenterRepository` nor
- * `CenterCommandRepository` exposes a sync path on this substrate, so a long-press would select
- * rows for an action that cannot run. The card therefore takes a plain `onClick` until that lands,
- * and selection + sync are tracked in CAPABILITY_GAPS rather than drawn inert.
+ * Long-press enters the original's SELECTION MODE for the bulk offline download
+ * (`OfflineDownloadRepository`); a selected card takes the secondary container colour.
  */
 @Composable
 internal fun CenterCard(
     center: Center,
     onClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
+    onLongClick: (() -> Unit)? = null,
+    selected: Boolean = false,
 ) {
     OutlinedCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(CardDefaults.outlinedShape)
-            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
+            .then(
+                if (onClick != null || onLongClick != null) {
+                    Modifier.combinedClickable(onClick = onClick ?: {}, onLongClick = onLongClick)
+                } else {
+                    Modifier
+                },
+            )
             .testTag(CenterListTestTags.ROW),
-        colors = CardDefaults.cardColors(containerColor = KptTheme.colorScheme.surface),
+        colors = CardDefaults.cardColors(
+            containerColor = if (selected) KptTheme.colorScheme.secondaryContainer else KptTheme.colorScheme.surface,
+        ),
     ) {
         ListItem(
             leadingContent = {
@@ -266,7 +310,9 @@ internal fun CenterCard(
                     )
                 }
             },
-            colors = ListItemDefaults.colors(containerColor = Color.Unspecified),
+            // Transparent, not Unspecified: Unspecified fell back to an opaque surface over the card, hiding
+            // the selected tint (invisible before, as both were the surface colour).
+            colors = ListItemDefaults.colors(containerColor = Color.Transparent),
         )
     }
 }

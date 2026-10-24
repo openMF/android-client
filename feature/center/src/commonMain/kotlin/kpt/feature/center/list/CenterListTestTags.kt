@@ -12,6 +12,7 @@ package kpt.feature.center.list
 /** Stable tags for UI tests and Maestro flows. Renaming one breaks both — treat as a contract. */
 internal object CenterListTestTags {
     const val SCREEN = "center:list"
+    const val CREATE = "center:list:create"
     const val SEARCH = "center:list:search"
     const val FILTER_TOGGLE = "center:list:filter-toggle"
     const val FILTERS = "center:list:filters"

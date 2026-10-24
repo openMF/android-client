@@ -48,6 +48,7 @@ import kpt.core.base.store.screen.dataOrNull
 import kpt.core.base.store.screen.emptyIfContent
 import kpt.core.base.store.screen.mapContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kpt.core.model.datatable.DataTable
 import kpt.core.model.objects.error.serverErrorMessage
 import kpt.core.common.utils.FileKitUtil
 import kpt.core.data.client.ClientCommandRepository
@@ -181,16 +182,12 @@ import kotlin.time.ExperimentalTime
  * `+1 (555) 123-4567` was kept on Android and dropped everywhere else. [isGlobalPhoneNumber] states
  * the Android rule once in common code, so there is no platform seam and no stub.
  *
- * ## What is NOT ported
+ * ## Datatables
  *
- * The DATATABLE prefill step. The original branched on `clientTemplate.dataTables` being non-empty
- * and handed the un-submitted payload to a datatable-filling destination
- * (`hasDatatables(datatables, clientPayload)`) which then created the client itself. No such
- * destination exists on this substrate — `DataTableListRoute(tableName, entityId)` and
- * `DataTableRowsRoute(tableName, entityId)` both need an entity that ALREADY exists, so neither can
- * carry a pending client. Per §6a an unreachable destination is absent rather than inert, so there
- * is no callback and no branch: the client is created with `datatables = null`, which is exactly
- * what the original's other branch did. Recorded as a gap.
+ * The original branched on `clientTemplate.dataTables` and handed the un-submitted payload to a
+ * separate datatable screen — whose fields could not be typed into and whose values were never sent
+ * (see ClientDataTables.kt). The tables are now sections of this form, validated with it, and sent in
+ * `ClientPayload.datatables` with the create.
  */
 @OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class)
 internal class CreateNewClientViewModel(
@@ -236,6 +233,7 @@ internal class CreateNewClientViewModel(
             clientTypes = template.clientTypeOptions.orEmpty().toOptions(),
             classifications = template.clientClassificationOptions.orEmpty().toOptions(),
             serverActivationDate = template.activationDate.toPickerMillis(),
+            dataTables = template.dataTables.orEmpty().withEntryColumns(),
             offices = officeList
                 .map { ClientOption(id = it.id, label = it.name.orEmpty()) }
                 .sortedBy { it.label },
@@ -358,6 +356,10 @@ internal class CreateNewClientViewModel(
                 mutableStateFlow.value = state.copy(openDatePicker = null)
 
             is CreateNewClientAction.OnDatePicked -> onDatePicked(action)
+            is CreateNewClientAction.DataTableValueChanged -> mutableStateFlow.value = state.copy(
+                dataTableValues = state.dataTableValues + (action.field to action.value),
+                dataTableErrors = state.dataTableErrors - action.field,
+            )
 
             CreateNewClientAction.ShowPhotoOptions ->
                 mutableStateFlow.value = state.copy(dialog = CreateClientDialog.PhotoOptions)
@@ -480,8 +482,9 @@ internal class CreateNewClientViewModel(
         val hasAddressBlock = address.value != null
 
         val errors = state.validate(hasAddressBlock = hasAddressBlock)
-        if (errors.isNotEmpty()) {
-            mutableStateFlow.value = state.copy(errors = errors)
+        val dataTableErrors = validateDataTables(formOptions.dataTables, state.dataTableValues)
+        if (errors.isNotEmpty() || dataTableErrors.isNotEmpty()) {
+            mutableStateFlow.value = state.copy(errors = errors, dataTableErrors = dataTableErrors)
             return
         }
 
@@ -652,6 +655,8 @@ internal data class CreateClientForm(
      * 2026-10-24: IST device on the 24th, server on the 23rd — "Client Active" failed every time).
      */
     val serverActivationDate: Long? = null,
+    /** The tenant's client datatables with something to fill in — see ClientDataTables.kt. */
+    val dataTables: List<DataTable> = emptyList(),
 )
 
 /** The address block's option sets. Present only on tenants that enable addresses. */
@@ -697,6 +702,9 @@ internal data class CreateNewClientState(
     val texts: Map<CreateClientField, String> = emptyMap(),
     val choices: Map<CreateClientField, ClientOption> = emptyMap(),
     val errors: Map<CreateClientField, CreateClientFieldError> = emptyMap(),
+    /** Datatable entries as typed (see [validateDataTables] for each type's encoding). */
+    val dataTableValues: Map<DataTableField, String> = emptyMap(),
+    val dataTableErrors: Map<DataTableField, DataTableFieldError> = emptyMap(),
     val isActive: Boolean = false,
     /** The officer's PICK; null until they choose one — read through [activationDateOr]. */
     val activationDate: Long? = null,
@@ -821,9 +829,9 @@ internal fun CreateNewClientState.toPayload(
 
         address = if (hasAddressBlock) listOf(toAddress()) else null,
 
-        // The datatable prefill step is not ported — see the ViewModel KDoc. This is the value the
+        // The tenant's datatables, filled in on this form. Null when it has none — the value the
         // original's non-datatable branch sent.
-        datatables = null,
+        datatables = dataTablePayloads(form.dataTables, dataTableValues).takeIf { it.isNotEmpty() },
     )
 }
 
@@ -850,6 +858,8 @@ internal sealed interface CreateNewClientEvent {
 }
 
 internal sealed interface CreateNewClientAction {
+    /** One datatable field — [value] in the encoding [validateDataTables] documents. */
+    data class DataTableValueChanged(val field: DataTableField, val value: String) : CreateNewClientAction
     data object NavigateBack : CreateNewClientAction
     data object OnRetry : CreateNewClientAction
     data object OnSubmit : CreateNewClientAction

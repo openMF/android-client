@@ -58,6 +58,10 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 internal fun AuthenticatedNavbarNavigationScreen(
     navigateToSettingsScreen: () -> Unit,
+    navigateToAboutScreen: () -> Unit,
+    navigateToCollectionSheet: () -> Unit,
+    navigateToReports: () -> Unit,
+    navigateToCheckerInbox: () -> Unit,
     homeBody: @Composable () -> Unit,
     // The OUTER authenticated-graph controller. Used to (a) push a FULL-SCREEN tab (inlineTab = false,
     // e.g. an immersive focus modal) above the scaffold, and (b) hand INLINE fork tabs a controller for
@@ -90,6 +94,10 @@ internal fun AuthenticatedNavbarNavigationScreen(
         outerNavController = outerNavController,
         modifier = modifier,
         navigateToSettingsScreen = navigateToSettingsScreen,
+        navigateToAboutScreen = navigateToAboutScreen,
+        navigateToCollectionSheet = navigateToCollectionSheet,
+        navigateToReports = navigateToReports,
+        navigateToCheckerInbox = navigateToCheckerInbox,
         homeBody = homeBody,
         onAction = remember(viewModel) {
             { viewModel.trySendAction(it) }
@@ -103,6 +111,10 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
     navController: NavHostController,
     outerNavController: NavController,
     navigateToSettingsScreen: () -> Unit,
+    navigateToAboutScreen: () -> Unit,
+    navigateToCollectionSheet: () -> Unit,
+    navigateToReports: () -> Unit,
+    navigateToCheckerInbox: () -> Unit,
     homeBody: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
@@ -144,13 +156,16 @@ internal fun AuthenticatedNavbarNavigationScreenContent(
                 onEntryClick = { entry ->
                     selectedDrawerEntry = entry
                     closeDrawer()
-                    if (entry == HomeDestinationsScreen.SettingsScreen) {
-                        // The one migrated entry. Settings lives on the OUTER graph (it is a
-                        // full-screen backbone destination, not a tab), so it routes through the
-                        // callback the authenticated graph supplied.
-                        navigateToSettingsScreen()
-                    } else {
-                        navController.navigateToInlineTab(pendingFeatureRoute(entry.featureName))
+                    // Migrated entries live on the OUTER graph (full-screen destinations, not tabs),
+                    // so they route through callbacks the authenticated graph supplied — the shell
+                    // never imports a feature module.
+                    when (entry) {
+                        HomeDestinationsScreen.SettingsScreen -> navigateToSettingsScreen()
+                        HomeDestinationsScreen.AboutScreen -> navigateToAboutScreen()
+                        HomeDestinationsScreen.CollectionSheetScreen -> navigateToCollectionSheet()
+                        HomeDestinationsScreen.RunReportsScreen -> navigateToReports()
+                        HomeDestinationsScreen.CheckerInboxAndTasksScreen -> navigateToCheckerInbox()
+                        else -> navController.navigateToInlineTab(pendingFeatureRoute(entry.featureName))
                     }
                 },
             )

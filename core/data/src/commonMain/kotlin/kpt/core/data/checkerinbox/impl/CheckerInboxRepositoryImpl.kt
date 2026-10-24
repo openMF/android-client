@@ -16,7 +16,10 @@ import kpt.core.base.store.screen.FetchPolicy
 import kpt.core.base.store.screen.ScreenDataStream
 import kpt.core.base.store.screen.asScreenStream
 import kpt.core.data.checkerinbox.CheckerInboxRepository
+import kpt.core.data.util.freshOrCached
+import kpt.core.model.objects.checkerinboxtask.CheckerInboxSearchTemplate
 import kpt.core.model.objects.checkerinboxtask.CheckerTask
+import kpt.core.model.objects.checkerinboxtask.RescheduleLoansTask
 import kpt.core.store.config.AppCacheKeys
 import kpt.core.store.config.AppStoreIds
 import kpt.core.store.config.AppStoreRegistry
@@ -25,6 +28,8 @@ import org.mobilenativefoundation.store.store5.Store
 @RepositoryBinding(binds = CheckerInboxRepository::class)
 internal class CheckerInboxRepositoryImpl(
     @FromStore(AppStoreIds.CheckerTasks) private val store: Store<Unit, List<CheckerTask>>,
+    @FromStore(AppStoreIds.RescheduleLoanTasks) private val rescheduleStore: Store<Unit, List<RescheduleLoansTask>>,
+    @FromStore(AppStoreIds.CheckerSearchTemplate) private val templateStore: Store<Unit, CheckerInboxSearchTemplate>,
 ) : CheckerInboxRepository {
 
     // NETWORK_WITH_CACHE, not the CACHE_FIRST_SWR default: SWR's read path is
@@ -41,4 +46,16 @@ internal class CheckerInboxRepositoryImpl(
             fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
             ttl = AppStoreRegistry.Ttl.CHECKER_TASKS,
         )
+
+    override fun rescheduleRequestsStream(scope: CoroutineScope): ScreenDataStream<List<RescheduleLoansTask>> =
+        rescheduleStore.asScreenStream(
+            key = Unit,
+            cacheKey = AppCacheKeys.RescheduleLoanTasks.LIST,
+            scope = scope,
+            // No `isEmpty`: nothing pending is real content. NETWORK_WITH_CACHE for the reason above.
+            fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
+            ttl = AppStoreRegistry.Ttl.RESCHEDULE_LOAN_TASKS,
+        )
+
+    override suspend fun searchTemplate(): CheckerInboxSearchTemplate? = templateStore.freshOrCached(Unit)
 }
