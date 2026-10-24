@@ -26,4 +26,7 @@ interface OfficeDao {
 
     @Query("SELECT * FROM Office")
     fun getAllOffices(): Flow<List<OfficeEntity>>
+
+    @Query("DELETE FROM Office")
+    suspend fun deleteAll()
 }

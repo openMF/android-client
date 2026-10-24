@@ -21,6 +21,7 @@ import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.mapContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kpt.core.model.objects.error.serverErrorMessage
 import kpt.core.data.client.ClientCommandRepository
 import kpt.core.data.client.ClientRepository
 import kpt.core.model.client.StaffOption
@@ -134,10 +135,11 @@ internal class ClientStaffViewModel(
                         isSubmitting = false,
                         dialogState = ClientStaffState.DialogState.ShowStatusDialog(
                             status = ResultStatus.FAILURE,
-                            // The original surfaced `e.message` here. Kept: a Fineract rejection
-                            // reason ("staff not in client's office") is the only useful thing the
-                            // officer gets, and replacing it with a generic string loses it.
-                            msg = result.cause.message ?: FAILED_MSG,
+                            // The original surfaced `e.message` here — the reason is kept, the
+                            // request line + raw JSON around it are not: a Fineract rejection
+                            // ("staff not in client's office") is the only useful thing the
+                            // officer gets. See `serverErrorMessage` in core/model.
+                            msg = result.cause.serverErrorMessage() ?: FAILED_MSG,
                         ),
                     )
                 }

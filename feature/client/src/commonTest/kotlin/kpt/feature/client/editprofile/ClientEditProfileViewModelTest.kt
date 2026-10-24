@@ -13,13 +13,13 @@ package kpt.feature.client.editprofile
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import io.ktor.client.request.forms.MultiPartFormDataContent
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import kpt.core.model.objects.noncoreobjects.DocumentUpload
 import kpt.core.base.store.mutation.BlockReason
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.data.client.ClientCommandRepository
@@ -76,7 +76,7 @@ class ClientEditProfileViewModelTest {
 
         override suspend fun uploadClientImage(
             clientId: Int,
-            body: MultiPartFormDataContent,
+            image: DocumentUpload,
         ): MutationResult<Unit> {
             uploaded += clientId
             gate?.await()

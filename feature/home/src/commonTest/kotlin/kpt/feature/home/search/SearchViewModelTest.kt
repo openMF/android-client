@@ -20,7 +20,7 @@ import kotlinx.coroutines.test.setMain
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.data.testing.FakeSearchRepository
 import kpt.core.model.objects.SearchedEntity
-import kpt.core.store.search.SearchResourcesKey
+import kpt.core.model.search.SearchResourcesKey
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -87,6 +87,22 @@ class SearchViewModelTest {
             testScheduler.advanceUntilIdle()
             val content = assertIs<ScreenState.Content<List<SearchedEntity>>>(expectMostRecentItem())
             assertEquals("Asha", content.data.single().entityName)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun aSearchWithNoHitsIsEmpty() = runTest(dispatcher) {
+        // The stream reports no hits as an empty Content; `emptyIfContent` makes it Empty.
+        val vm = SearchViewModel(repository)
+        vm.results.test {
+            assertIs<ScreenState.Empty>(awaitItem())
+            vm.trySendAction(SearchAction.QueryChanged("zzz"))
+            vm.trySendAction(SearchAction.Submit)
+            testScheduler.advanceUntilIdle()
+            repository.resolve(key("zzz"))
+            testScheduler.advanceUntilIdle()
+            assertEquals(ScreenState.Empty, expectMostRecentItem())
             cancelAndIgnoreRemainingEvents()
         }
     }

@@ -9,8 +9,9 @@
  */
 package kpt.core.data.document
 
-import io.ktor.client.request.forms.MultiPartFormDataContent
 import kpt.core.base.store.mutation.MutationResult
+import kpt.core.model.objects.noncoreobjects.DocumentUpload
+import kpt.core.model.objects.responses.SaveResponse
 import kpt.core.model.shared.GenericResponse
 
 /**
@@ -20,15 +21,17 @@ import kpt.core.model.shared.GenericResponse
  * change reached the server, was refused because the device is offline, or failed — a distinction
  * that cannot be reconstructed above this layer.
  *
- * These are commands, so they carry no Store and no cache. Offline CAPTURE is a different
- * operation with its own explicit queue ([kpt.core.data.sync.OfflineQueueRepository]); it is never
- * a silent fallback from here.
+ * Writes go the same way reads do — network → store → database: the command reaches Fineract, and
+ * the server's acceptance is recorded through the document stores, so every document stream already
+ * shows it when the call returns. Offline CAPTURE is a different operation with its own explicit
+ * queue ([kpt.core.data.sync.OfflineQueueRepository]); it is never a silent fallback from here.
  */
 interface DocumentCommandRepository {
 
-    suspend fun createDocument(entityType: String, entityId: Int, request: MultiPartFormDataContent): MutationResult<GenericResponse>
+    /** [SaveResponse.resourceId] is the new document's id. */
+    suspend fun createDocument(entityType: String, entityId: Int, upload: DocumentUpload): MutationResult<SaveResponse>
 
     suspend fun removeDocument(entityType: String, entityId: Int, documentId: Int): MutationResult<GenericResponse>
 
-    suspend fun updateDocument(entityType: String, entityId: Int, documentId: Int, request: MultiPartFormDataContent): MutationResult<GenericResponse>
+    suspend fun updateDocument(entityType: String, entityId: Int, documentId: Int, upload: DocumentUpload): MutationResult<GenericResponse>
 }

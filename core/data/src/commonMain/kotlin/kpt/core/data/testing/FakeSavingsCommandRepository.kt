@@ -18,8 +18,8 @@ import kpt.core.model.objects.account.saving.SavingsApplicationInput
 import kpt.core.model.objects.account.saving.SavingsApprovalInput
 import kpt.core.model.objects.account.saving.SavingsTransactionInput
 import kpt.core.model.shared.GenericResponse
-import kpt.core.network.mifos.savings.dto.FixedDepositPayload
-import kpt.core.network.mifos.savings.dto.ShareAccountPayload
+import kpt.core.model.savings.FixedDepositPayload
+import kpt.core.model.savings.ShareAccountPayload
 
 /**
  * Test double for [SavingsCommandRepository] — the savings-side twin of

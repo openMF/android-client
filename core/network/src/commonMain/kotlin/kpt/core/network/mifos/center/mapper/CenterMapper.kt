@@ -9,23 +9,23 @@
  */
 package kpt.core.network.mifos.center.mapper
 
-import kpt.core.database.center.entity.CenterEntity
-import kpt.core.database.client.entity.ClientStatusEntity
+import kpt.core.model.center.Center
+import kpt.core.model.client.ClientStatus
 import kpt.core.network.data.AbstractMapper
 import kpt.core.network.mifos.center.dto.GetCentersPageItems
 import kpt.core.network.mifos.center.dto.GetCentersStatus
 
-object CenterMapper : AbstractMapper<GetCentersPageItems, CenterEntity>() {
+object CenterMapper : AbstractMapper<GetCentersPageItems, Center>() {
 
-    override fun mapFromEntity(entity: GetCentersPageItems): CenterEntity {
-        return CenterEntity(
+    override fun mapFromEntity(entity: GetCentersPageItems): Center {
+        return Center(
             id = entity.id?.toInt(),
             active = entity.active,
             name = entity.name,
             officeName = entity.officeName,
             officeId = entity.officeId?.toInt(),
             hierarchy = entity.hierarchy,
-            status = ClientStatusEntity(
+            status = ClientStatus(
                 id = entity.status?.id!!.toInt(),
                 code = entity.status?.code,
                 value = entity.status?.description,
@@ -33,7 +33,7 @@ object CenterMapper : AbstractMapper<GetCentersPageItems, CenterEntity>() {
         )
     }
 
-    override fun mapToEntity(domainModel: CenterEntity): GetCentersPageItems {
+    override fun mapToEntity(domainModel: Center): GetCentersPageItems {
         return GetCentersPageItems(
             id = domainModel.id?.toLong(),
             active = domainModel.active,

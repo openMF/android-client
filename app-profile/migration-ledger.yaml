@@ -32,12 +32,35 @@
 # `ForkDatabaseConfig.VERSION` read 13. `syncForkConfig` only rewrites `version:` when it APPENDS a
 # template migration unit, so with no unit pending the two never reconciled, and the number here
 # described nothing. 14 is the real next version for both.
-version: 14
+#
+# 14 -> 15 (2026-10-23): added `document_contents` — a document's FILE bytes as the local source of
+# truth for the `documentContent` store, so the download follows network -> database -> store ->
+# data like every other API. Purely additive, so it is a plain AutoMigration (no spec): the
+# destructive fallback must not fire, because it would also drop pending offline drafts.
+#
+# 15 -> 16 (2026-10-23): `Charges` re-keyed from `id` to `(resourceType, resourceId, id)`. Client,
+# loan and savings charges are different Fineract tables with overlapping ids, so on the old key a
+# loan charge overwrote the client charge sharing its id. A primary-key change is a table recreate,
+# which Room's AutoMigration performs itself (no spec): it copies the shared columns and the two new
+# ones take their declared defaults ('' / 0). Copied rows therefore belong to no resource — no reader
+# addresses them, every list refetches on open, and the logout purge removes them. A spec to delete
+# them would need `execSQL`, which commonMain cannot reach while core/database targets web. The
+# destructive fallback must still not fire: it would drop pending offline drafts with the cache.
+version: 16
 
 # Units already folded into this fork's INITIAL schema. A fresh fork is created with the framework
 # tables in their current shape, so it needs no migration for them — it records them here instead.
 # `remove-demo.sh` sets this to every declared unit id when it resets a clean fork to v1.
-baseline_units: [framework-fetched-at,framework-submit-drafts drafts-unique-key,framework-write-conflicts drafts-attempt-count]
+#
+# Comma-separated, one id per entry. This line once read
+# `[framework-fetched-at,framework-submit-drafts drafts-unique-key,framework-write-conflicts drafts-attempt-count]`
+# — two ids fused by a SPACE — so `syncForkConfig` parsed `framework-submit-drafts drafts-unique-key`
+# as one unknown id and treated four baseline units as unapplied. It stayed latent only because
+# `migrations:` was empty (the reconcile bails out with no rows); the first real row made it
+# append four migrations for tables this fork already has (2026-10-23).
+baseline_units: [framework-fetched-at, framework-submit-drafts, drafts-unique-key, framework-write-conflicts, drafts-attempt-count]
 
 # The applied sequence. `unit:` ties a row to its declaration; `from`/`to` are this fork's numbering.
 migrations:
+  - { unit: fork-document-contents, from: 14, to: 15 }
+  - { unit: fork-charges-composite-key, from: 15, to: 16 }

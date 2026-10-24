@@ -204,16 +204,7 @@
     <string name="feature_loan_disbursement_success_title">Loan Disbursed</string>
     <string name="feature_loan_disbursement_success_message">The disbursement was sent to the server.</string>
     <string name="feature_loan_disbursement_failure_title">Disbursement Failed</string>
-    <!-- S4f · Loan charges. Values verbatim from `6b66e8a43` unless noted. -->
-    <string name="feature_loan_charge_id">Charge ID</string>
-    <string name="feature_loan_charge_name">Charge Name</string>
-    <string name="feature_loan_charge_amount">Charge Amount</string>
-    <string name="feature_loan_charge_due_date">Charge Due Date</string>
-    <!--
-        The original read "No Loan Charges Available for this client" — on the LOAN charges screen,
-        reached from a loan. The copy was wrong, not the behaviour.
-    -->
-    <string name="feature_loan_no_loan_charges">No charges on this loan</string>
+    <!-- S4f / S4h loan charges + add-charge strings moved to feature/charge (2026-10-23). -->
     <!--
         S4g · Amount transfer. Values verbatim from `6b66e8a43` unless noted.
         `feature_loan_transfer_funds` is NOT redeclared here — it already exists as the summary's
@@ -238,25 +229,6 @@
     <string name="feature_loan_transfer_success_title">Transfer Complete</string>
     <string name="feature_loan_transfer_success_message">The transfer was sent to the server.</string>
     <string name="feature_loan_transfer_failure_title">Transfer Failed</string>
-    <!-- S4h · Add charge. Values verbatim from `6b66e8a43` unless noted. -->
-    <string name="feature_loan_add_charge">Add Charge</string>
-    <string name="feature_loan_charge_disbursement">Disbursement</string>
-    <string name="feature_loan_charge_installment">Installment Fee</string>
-    <string name="feature_loan_charge_specified_due_date">Specified Due Date</string>
-    <string name="feature_loan_charge_flat">Flat</string>
-    <!--
-        Added by the port. The original reported both outcomes with snackbars fired from the
-        enclosing LIST screen's callbacks (`onSuccess` / `onError` on the sheet), and labelled its
-        read-only charge-time / calculation fields only in the layout.
-    -->
-    <string name="feature_loan_charge_time">Charge Time</string>
-    <string name="feature_loan_charge_calculation">Charge Calculation</string>
-    <string name="feature_loan_charge_created_title">Charge Added</string>
-    <string name="feature_loan_charge_created_message">The charge was added to this loan.</string>
-    <string name="feature_loan_charge_created_failure_title">Charge Not Added</string>
-    <string name="feature_loan_charge_types_failed">Could not load the charge types for this loan.</string>
-    <string name="feature_loan_charge_none_available">No chargeable type is configured for this loan.</string>
-    <string name="feature_loan_charge_required">Select a charge</string>
     <!-- S4i · Reschedules. -->
     <string name="feature_loan_reschedules">Loan Reschedules</string>
     <string name="feature_loan_reschedule_from">Reschedule From</string>
@@ -335,7 +307,7 @@
     <string name="feature_loan_application_created_title">Application Submitted</string>
     <string name="feature_loan_application_created_message">The loan application was created and is awaiting approval.</string>
     <string name="feature_loan_application_failure_title">Application Not Submitted</string>
-    <string name="feature_loan_template_failed">Could not load this product\'s terms.</string>
+    <string name="feature_loan_template_failed">Could not load this product's terms.</string>
     <string name="feature_loan_error_positive_number">Enter a number greater than zero</string>
     <string name="feature_loan_error_pick_an_option">Pick an option</string>
     <!-- S4l · the new individual loan application wizard. -->

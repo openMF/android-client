@@ -9,6 +9,7 @@
  */
 package kpt.core.database.di
 
+import kpt.core.database.encryption.encryptedDatabaseModule
 import org.koin.dsl.module
 
 /**
@@ -28,5 +29,7 @@ import org.koin.dsl.module
  * ```
  */
 val ProjectDatabaseModule = module {
-    // Intentionally empty on the template — a fork adds its own bindings here.
+    // At-rest encryption: re-binds AppDatabase over the template's plaintext one on Android (Koin
+    // loads this seam after DatabaseModule, so the later definition wins). Empty elsewhere.
+    includes(encryptedDatabaseModule)
 }

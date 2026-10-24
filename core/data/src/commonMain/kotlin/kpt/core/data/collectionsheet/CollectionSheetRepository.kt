@@ -11,7 +11,11 @@ package kpt.core.data.collectionsheet
 
 import kotlinx.coroutines.CoroutineScope
 import kpt.core.base.store.screen.ScreenDataStream
-import kpt.core.database.collectionsheet.entity.CenterDetail
+import kpt.core.model.collectionsheet.CenterDetail
+import kpt.core.model.collectionsheet.CollectionSheetResponse
+import kpt.core.model.collectionsheet.IndividualCollectionSheet
+import kpt.core.model.objects.collectionsheets.CollectionSheetRequestPayload
+import kpt.core.model.collectionsheet.RequestCollectionSheetPayload
 
 interface CollectionSheetRepository {
     /**
@@ -26,4 +30,16 @@ interface CollectionSheetRepository {
         meetingDate: String,
         scope: CoroutineScope,
     ): ScreenDataStream<List<CenterDetail>>
+
+    /*
+     * Generated sheets. Fineract's `?command=generateCollectionSheet` is POST-shaped but a read —
+     * these were misfiled as commands. Each is network first and, offline, the last sheet generated
+     * for that request; `null` when neither exists.
+     */
+
+    suspend fun individualCollectionSheet(request: RequestCollectionSheetPayload): IndividualCollectionSheet?
+
+    suspend fun productiveSheet(centerId: Int, request: CollectionSheetRequestPayload): CollectionSheetResponse?
+
+    suspend fun groupCollectionSheet(groupId: Int, request: CollectionSheetRequestPayload): CollectionSheetResponse?
 }

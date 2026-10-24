@@ -9,6 +9,10 @@
  */
 package kpt.feature.client.navigation
 
+import co.touchlab.kermit.Logger
+import kpt.core.model.objects.searchrecord.RecordType
+import kpt.feature.searchrecord.navigation.searchRecordDestination
+import kpt.feature.searchrecord.navigation.navigateToSearchRecord
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -19,12 +23,15 @@ import kpt.core.base.ui.nav.FeatureDestination
 import kpt.core.base.ui.nav.composableWithPushTransitions
 import kpt.core.base.ui.nav.composableWithStayTransitions
 import kpt.core.base.ui.nav.popBackStackSafely
+import kpt.core.common.utils.Constants
+import kpt.core.model.objects.charge.ChargeResource
+import kpt.feature.charge.navigation.navigateToAddCharge
+import kpt.feature.charge.navigation.navigateToCharges
 import kpt.feature.client.addaddress.ClientAddAddressScreen
 import kpt.feature.client.adddocument.ClientAddDocumentScreen
 import kpt.feature.client.addidentifier.ClientAddIdentifierScreen
 import kpt.feature.client.address.ClientAddressScreen
 import kpt.feature.client.applynew.ClientApplyNewScreen
-import kpt.feature.client.charges.ClientChargesScreen
 import kpt.feature.client.closure.ClientClosureScreen
 import kpt.feature.client.collateral.ClientCollateralScreen
 import kpt.feature.client.collateraldetails.ClientCollateralDetailsScreen
@@ -33,6 +40,8 @@ import kpt.feature.client.defaultaccount.ClientDefaultAccountScreen
 import kpt.feature.client.depositaccounts.ClientDepositAccountsScreen
 import kpt.feature.client.depositaccounts.DepositAccountKind
 import kpt.feature.client.details.ClientDetailsScreen
+import kpt.feature.client.documentpreview.ClientDocumentPreviewScreen
+import kpt.feature.client.documentpreview.NO_DOCUMENT_ID
 import kpt.feature.client.documents.ClientDocumentsScreen
 import kpt.feature.client.editdetails.ClientEditDetailsScreen
 import kpt.feature.client.editprofile.ClientEditProfileScreen
@@ -76,16 +85,6 @@ data object ClientListRoute
  */
 @Serializable
 data class ClientProfileRoute(val clientId: Int)
-
-/**
- * Charges levied on a client.
- *
- * Typed `clientId`, NOT the original's `resourceId: Int` + `resourceType: String`. Every caller of
- * that route passed "clients", so the type parameter was a hole rather than flexibility; loan and
- * savings charges get their own routes when those slices land.
- */
-@Serializable
-data class ClientChargesRoute(val clientId: Int)
 
 /**
  * Assign a loan officer to a client.
@@ -257,6 +256,21 @@ data class ClientSignatureRoute(
 @Serializable
 data class ClientDocumentsRoute(val clientId: Int)
 
+/**
+ * One saved document, shown in the app. Reached from the documents list's "View" (by
+ * [documentId]) and the identifiers list's "View document" (by [matchKey] / [matchPrefix], because
+ * an identifier does not know its document's id — see `findIdentifierDocument`).
+ */
+@Serializable
+data class ClientDocumentPreviewRoute(
+    val entityType: String,
+    val entityId: Int,
+    val title: String,
+    val documentId: Int = NO_DOCUMENT_ID,
+    val matchKey: String = "",
+    val matchPrefix: String = "",
+)
+
 fun NavController.navigateToClientList(navOptions: NavOptions? = null) =
     navigate(ClientListRoute, navOptions)
 
@@ -265,9 +279,6 @@ fun NavController.navigateToClients(navOptions: NavOptions? = null) =
 
 fun NavController.navigateToClientProfile(clientId: Int, navOptions: NavOptions? = null) =
     navigate(ClientProfileRoute(clientId), navOptions)
-
-fun NavController.navigateToClientCharges(clientId: Int, navOptions: NavOptions? = null) =
-    navigate(ClientChargesRoute(clientId), navOptions)
 
 fun NavController.navigateToClientStaff(clientId: Int, navOptions: NavOptions? = null) =
     navigate(ClientStaffRoute(clientId), navOptions)
@@ -352,6 +363,8 @@ fun NavController.navigateToClientSignature(
 fun NavController.navigateToClientDocuments(clientId: Int, navOptions: NavOptions? = null) =
     navigate(ClientDocumentsRoute(clientId), navOptions)
 
+fun NavController.navigateToClientDocumentPreview(route: ClientDocumentPreviewRoute) = navigate(route)
+
 /**
  * The client list — a TOP-LEVEL destination on the authenticated graph, so it is annotated and
  * collected into `GeneratedFeatureDestinations` by `:cmp-navigation:generateFeatureDestinations`.
@@ -399,13 +412,8 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
         )
     }
 
-    // Charges list. Nested drill-down — NOT annotated: only TOP-LEVEL entries carry
+    // Assign staff. Nested drill-down — NOT annotated: only TOP-LEVEL entries carry
     // @FeatureDestination (spec §4), and annotating this would register it as its own root entry.
-    composableWithPushTransitions<ClientChargesRoute> {
-        ClientChargesScreen(onBackClick = navController::popBackStackSafely)
-    }
-
-    // Assign staff. Nested drill-down, NOT annotated — same reason as charges.
     composableWithPushTransitions<ClientStaffRoute> {
         ClientStaffScreen(
             onNavigateBack = navController::popBackStackSafely,
@@ -452,15 +460,12 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
             // navigateToClientCollateralDetailRoute)`. An earlier pass of this port had it on the
             // form; corrected. The add form is reached from client details' "Create Collateral".
             onCollateralData = navController::navigateToClientCollateralDetails,
-            // Points at the EXISTING charges screen, not a port of `clientUpcomingCharges`.
-            //
-            // That original is a second screen over the SAME endpoint: it reads
-            // `getListOfPagingCharges` -> `GET {resourceType}/{resourceId}/charges`, while the
-            // ported charges screen reads `getListOfClientCharges` -> the same path with
-            // `?offset=0&limit=0`. Neither filters for anything "upcoming" — the name is a
-            // misnomer, and the two differ only in paging. Porting it would have been a duplicate
-            // screen over one endpoint (`upcoming-charges-is-the-same-list-as-charges`).
-            onUpcomingCharges = navController::navigateToClientCharges,
+            // The ONE charge list (`feature/charge`), scoped to this client — not a port of
+            // `clientUpcomingCharges`. That original is a second screen over the SAME endpoint
+            // (`getListOfPagingCharges` vs `getListOfClientCharges`, the same path with
+            // `?offset=0&limit=0`); neither filters for anything "upcoming" — the name is a
+            // misnomer (`upcoming-charges-is-the-same-list-as-charges`).
+            onUpcomingCharges = { clientId -> navController.navigateToCharges(ChargeResource.CLIENT, clientId) },
             // The client's loan accounts — and the loan PROFILE's only path in, which is why this
             // row is no longer null-gated. See `ClientLoanAccountsRoute`.
             onLoanAccounts = navController::navigateToClientLoanAccounts,
@@ -488,10 +493,23 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
         ClientIdentifiersScreen(
             onBackPress = navController::popBackStackSafely,
             // Live as of cluster C — null (so the "+" was ABSENT, not inert) until the add form
-            // landed. The form's VIEW_DOCUMENT phase is NOT ported: this list has no
-            // document affordance to open it, so porting it would be a screen with no caller
-            // (`identifier-document-preview-has-no-caller`).
+            // landed.
             onAddNewIdentifier = navController::navigateToClientAddIdentifier,
+            onNavigateToSearch = { navController.navigateToSearchRecord(RecordType.IDENTIFIER) },
+            // The original form's VIEW_DOCUMENT phase, now the shared in-app preview. The scan
+            // is a `client_identifiers` document keyed by the CLIENT's id — the original's
+            // storage convention, kept so scans it uploaded are still found.
+            onViewDocument = { event ->
+                navController.navigateToClientDocumentPreview(
+                    ClientDocumentPreviewRoute(
+                        entityType = Constants.ENTITY_TYPE_CLIENT_IDENTIFIERS,
+                        entityId = event.clientId,
+                        title = event.title,
+                        matchKey = event.matchKey,
+                        matchPrefix = event.matchPrefix,
+                    ),
+                )
+            },
         )
     }
 
@@ -523,14 +541,10 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
             onTransferClient = navController::navigateToClientTransfer,
             onAssignStaff = navController::navigateToClientStaff,
             onCreateCollateral = navController::navigateToClientCollateral,
-            // NULL, so the row is ABSENT — §6a adaptation 3. This pointed at
-            // `navigateToClientCharges`, the same read-only list "Upcoming Charges" opens, so
-            // "Add Charge" took an officer to a screen with no way to add a charge. That is worse
-            // than an absent row and worse than an inert one: it looks like it worked.
-            // There is no destination to point it at. No client-charge CREATE surface is ported —
-            // `POST clients/{clientId}/charges` is not declared anywhere in core/network (only the
-            // loan-charge equivalent is). Wire this the day that lands.
-            onAddCharge = null,
+            // Straight to the add form — the original's `navigateToChargesRoute(it, clients)`
+            // opened on that same form. Was null (row absent) until feature/charge landed a
+            // client-charge CREATE; before that it pointed at a read-only list.
+            onAddCharge = { clientId -> navController.navigateToAddCharge(ChargeResource.CLIENT, clientId) },
             onApplyNewApplication = navController::navigateToClientApplyNew,
             // Live as of cluster B — each was null (so the row was ABSENT, not inert) until its
             // destination landed.
@@ -551,6 +565,7 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
             // The add-address form is a 610-line screen (S3d) — null, so the "+" is absent.
             // Live as of cluster C — null (so the "+" was ABSENT) until the form landed.
             onAddAddress = navController::navigateToClientAddAddress,
+            onNavigateToSearch = { navController.navigateToSearchRecord(RecordType.ADDRESS) },
         )
     }
 
@@ -560,7 +575,22 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
             // Live as of cluster C — null (so the "+" was ABSENT, not inert) until the add form
             // landed. The in-place search filter needs no destination and was always wired.
             onAddDocument = navController::navigateToClientAddDocument,
+            onViewDocument = { event ->
+                navController.navigateToClientDocumentPreview(
+                    ClientDocumentPreviewRoute(
+                        entityType = Constants.ENTITY_TYPE_CLIENTS,
+                        entityId = event.clientId,
+                        title = event.title,
+                        documentId = event.documentId,
+                    ),
+                )
+            },
         )
+    }
+
+    // One saved document, shown in the app. Nested drill-down, NOT annotated.
+    composableWithPushTransitions<ClientDocumentPreviewRoute> {
+        ClientDocumentPreviewScreen(onNavigateBack = navController::popBackStackSafely)
     }
 
     // The client's pledged collateral, read-only. Nested drill-down, NOT annotated.
@@ -741,6 +771,24 @@ fun NavGraphBuilder.clientListDestination(navController: NavController) {
     //
     // Nested, so NOT annotated: only TOP-LEVEL entries carry @FeatureDestination (spec §4).
     noteDestinations(navController)
+
+    // Record search, owned by `feature/searchrecord`. The ORIGINAL registered it in the app shell
+    // (`AuthenticatedNavbarNavigationScreen`); it belongs here instead because both ends are client
+    // screens — it is opened from the address / identifiers headers, and a result opens that
+    // client's address or identifier list. Same routing as the original, by the record's type.
+    searchRecordDestination(
+        onBackClick = navController::popBackStackSafely,
+        onRecordSelected = { record ->
+            val clientId = record.metadata[Constants.CLIENT_ID]?.toIntOrNull()
+            if (clientId == null) {
+                Logger.w(TAG) { "search result ${record.type}/${record.id} has no client id; not navigating" }
+            } else if (record.type.equals(RecordType.ADDRESS.name, ignoreCase = true)) {
+                navController.navigateToClientAddress(clientId)
+            } else if (record.type.equals(RecordType.IDENTIFIER.name, ignoreCase = true)) {
+                navController.navigateToClientIdentifiers(clientId)
+            }
+        },
+    )
 }
 
 /**
@@ -769,3 +817,5 @@ fun NavGraphBuilder.clientTabGraph(outerNav: NavController) {
         }
     }
 }
+
+private const val TAG = "ClientNavigation"

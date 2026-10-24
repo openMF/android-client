@@ -10,9 +10,13 @@
 package kpt.feature.settings.serverconfig
 
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kpt.core.base.store.mutation.MutationResult
+import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.viewmodel.BaseViewModel
-import kpt.core.datastore.prefs.ProjectPreferencesRepository
+import kpt.core.data.serverconfig.ServerConfigRepository
 import kpt.core.domain.validation.ServerConfigRules
 import kpt.core.domain.validation.ValidationFailure
 import kpt.core.domain.validation.ValidationResult
@@ -35,12 +39,35 @@ import kpt.core.model.utils.ServerConfig
  *  - Validation runs on SUBMIT as well as per keystroke. The original validated only reactively, so
  *    nothing stopped `UpdateServerConfig` being dispatched while a field was invalid; it wrote
  *    whatever was in the fields.
+ *
+ * The stored config is read through `ServerConfigRepository.serverConfigStream` — the same
+ * store-backed read path as every other screen — and written through its `updateServerConfig`,
+ * never by reaching into `core/datastore`.
  */
 class ServerConfigViewModel(
-    private val preferences: ProjectPreferencesRepository,
+    private val repository: ServerConfigRepository,
 ) : BaseViewModel<ServerConfigState, ServerConfigEvent, ServerConfigAction>(
-    ServerConfigState(config = preferences.serverConfig.value),
+    ServerConfigState(config = ServerConfig.DEFAULT),
 ) {
+
+    /** The stored config has been loaded into the fields; until then a submit would write DEFAULT. */
+    private var hydrated = false
+
+    /** The user has changed a field; a late hydrate must never overwrite their input. */
+    private var edited = false
+
+    init {
+        // A FORM, so a one-shot seed rather than a live subscription: re-applying every emission
+        // would replace what the user is typing whenever the preference re-emits.
+        viewModelScope.launch {
+            val stored = repository.serverConfigStream(viewModelScope).state
+                .filterIsInstance<ScreenState.Content<ServerConfig>>()
+                .first()
+                .data
+            if (!edited) mutableStateFlow.value = state.copy(config = stored)
+            hydrated = true
+        }
+    }
 
     override fun handleAction(action: ServerConfigAction) {
         when (action) {
@@ -56,15 +83,19 @@ class ServerConfigViewModel(
     }
 
     private fun edit(mutate: ServerConfig.() -> ServerConfig) {
+        edited = true
         val next = state.config.mutate()
         mutableStateFlow.value = state.copy(config = next, failures = validate(next))
     }
 
     private fun replace(config: ServerConfig) {
+        edited = true
         mutableStateFlow.value = state.copy(config = config, failures = validate(config))
     }
 
     private fun submit() {
+        // Nothing loaded and nothing typed: the fields hold a placeholder, not the user's config.
+        if (!hydrated && !edited) return
         val failures = validate(state.config)
         if (failures.isNotEmpty()) {
             // Re-publish so a user who never touched a field still sees why submit refused.
@@ -73,8 +104,10 @@ class ServerConfigViewModel(
             return
         }
         viewModelScope.launch {
-            preferences.updateServerConfig(state.config)
-            sendEvent(ServerConfigEvent.Saved)
+            when (repository.updateServerConfig(state.config)) {
+                is MutationResult.Failed -> sendEvent(ServerConfigEvent.SaveFailed)
+                else -> sendEvent(ServerConfigEvent.Saved)
+            }
         }
     }
 
@@ -130,4 +163,7 @@ sealed interface ServerConfigAction {
 sealed interface ServerConfigEvent {
     data object Saved : ServerConfigEvent
     data object Invalid : ServerConfigEvent
+
+    /** The write itself failed. Reported, not swallowed: the screen must not claim it was saved. */
+    data object SaveFailed : ServerConfigEvent
 }

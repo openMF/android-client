@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kpt.core.base.store.screen.ScreenState
+import kpt.core.base.store.screen.emptyIfContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.data.client.ClientRepository
 import kpt.core.model.shared.CollateralItemResult
@@ -49,6 +50,8 @@ internal class ClientCollateralDetailsViewModel(
     private val stream = repository.clientCollateralStream(clientId, viewModelScope)
 
     val collaterals: StateFlow<ScreenState<List<CollateralItemResult>>> = stream.state
+        // No collateral is Empty (the screen's empty slot); the stream reports it as empty Content.
+        .emptyIfContent { it.isEmpty() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STATE_TIMEOUT_MS), ScreenState.Loading)
 
     override fun handleAction(action: ClientCollateralDetailsAction) {

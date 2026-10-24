@@ -9,7 +9,7 @@
  */
 package kpt.feature.signin.di
 
-import kpt.feature.signin.SignInViewModel
+import kpt.feature.signin.ui.SignInViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 

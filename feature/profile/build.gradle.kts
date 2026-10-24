@@ -21,6 +21,9 @@ kotlin {
             implementation(libs.multiplatform.settings)
             implementation(libs.multiplatform.settings.test)
             implementation(libs.turbine)
+            // The fake AuthCommandRepository must implement `authenticate`, whose request/response
+            // DTOs live in core/network (as in feature/signin's test).
+            implementation(projects.core.network)
         }
         commonMain.dependencies {
             implementation(projects.core.data)

@@ -26,6 +26,7 @@
     <string name="feature_savings_activate">Activate Savings</string>
     <string name="feature_savings_closed">Savings account closed</string>
     <string name="feature_savings_documents">Documents</string>
+    <string name="feature_savings_charges">Charges</string>
     <string name="feature_savings_transaction_id">Transaction Id</string>
     <string name="feature_savings_date">Date</string>
     <string name="feature_savings_transaction_type">Transaction Type</string>
@@ -144,7 +145,7 @@
     -->
     <string name="feature_savings_error_non_negative">Enter zero or more, or leave blank</string>
     <string name="feature_savings_error_pick_an_option">Pick an option</string>
-    <string name="feature_savings_application_template_failed">Could not load this product\'s terms.</string>
+    <string name="feature_savings_application_template_failed">Could not load this product's terms.</string>
     <string name="feature_savings_no_charges_added">No charges added. Charges are optional.</string>
     <string name="feature_savings_application_created">The savings application was created and is awaiting approval.</string>
     <string name="feature_savings_application_failed">The application could not be submitted.</string>

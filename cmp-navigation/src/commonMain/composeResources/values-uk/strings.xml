@@ -15,7 +15,7 @@
     <string name="settings">Налаштування</string>
     <string name="not_connected">⚠️ Немає підключення до інтернету</string>
     <string name="screenstate_empty_title">Тут поки нічого немає</string>
-    <string name="screenstate_empty_message">Коли з\'являться дані, вони відображатимуться тут.</string>
+    <string name="screenstate_empty_message">Коли з'являться дані, вони відображатимуться тут.</string>
     <string name="screenstate_error_title">Щось пішло не так</string>
     <string name="screenstate_error_retry">Спробувати ще раз</string>
     <string name="screenstate_nonet_title">Ви офлайн</string>

@@ -32,4 +32,10 @@ interface StaffDao {
 
     @Query("SELECT * FROM Staff WHERE officeId = :officeId")
     fun getAllStaff(officeId: Int): Flow<List<StaffEntity>>
+
+    @Query("DELETE FROM Staff WHERE officeId = :officeId")
+    suspend fun deleteForOffice(officeId: Int)
+
+    @Query("DELETE FROM Staff")
+    suspend fun deleteAll()
 }

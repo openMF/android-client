@@ -27,6 +27,7 @@ import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.data.testing.FakeClientCommandRepository
 import kpt.core.data.testing.FakeClientRepository
+import kpt.core.data.testing.fineractRejection
 import kpt.core.model.client.ClientTemplateOptions
 import kpt.core.model.client.StaffOption
 import kpt.core.ui.components.ResultStatus
@@ -186,7 +187,7 @@ class ClientStaffViewModelTest {
     @Test
     fun aRejectionKeepsTheServersReason() = runTest(dispatcher) {
         val commands = FakeClientCommandRepository(
-            unitResult = { MutationResult.Failed(IllegalStateException("staff not in client office"), rolledBack = false) },
+            unitResult = { MutationResult.Failed(fineractRejection("staff not in client office"), rolledBack = false) },
         )
         val vm = viewModel(commands)
         template.value = ScreenState.Content(options("Asha"))

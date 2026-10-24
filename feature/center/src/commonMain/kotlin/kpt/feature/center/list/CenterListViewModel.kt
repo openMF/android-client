@@ -10,14 +10,16 @@
 package kpt.feature.center.list
 
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kpt.core.base.store.screen.ScreenState
+import kpt.core.base.store.screen.combineContent
+import kpt.core.base.store.screen.emptyIfContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.data.center.CenterRepository
-import kpt.core.database.center.entity.CenterEntity
+import kpt.core.model.center.Center
 
 /**
  * The center list — ported from `6b66e8a43:feature/center/centerList/ui/CenterListViewModel.kt`.
@@ -60,8 +62,8 @@ internal class CenterListViewModel(
      * also reads directly (to draw the chips), so it belongs on `stateFlow`, not inside the
      * content.
      */
-    val screenState: StateFlow<ScreenState<List<CenterEntity>>> =
-        combine(stream.state, stateFlow) { data, ui -> data.applyFilters(ui) }
+    val screenState: StateFlow<ScreenState<List<Center>>> =
+        stream.state.applyFilters(stateFlow)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STATE_TIMEOUT_MS), ScreenState.Loading)
 
     /** Re-run the read. Wired to `ScreenContent`'s retry. */
@@ -104,23 +106,26 @@ internal class CenterListViewModel(
 /**
  * Filter, search and sort, as a PURE function of the loaded rows and the screen's filter state.
  *
- * Kept out of the combine body so it stays unit-testable without a ViewModel or a dispatcher —
+ * Kept out of the ViewModel so it stays unit-testable without a ViewModel or a dispatcher —
  * `CenterListStateTest` exercises it directly. A filter matching nothing becomes [ScreenState.Empty]
  * rather than a Content of zero rows: otherwise "no match for this search" renders identically to
  * "this officer services no centers", and only one of those is worth clearing a filter over.
  */
-internal fun ScreenState<List<CenterEntity>>.applyFilters(
-    ui: CenterListState,
-): ScreenState<List<CenterEntity>> {
-    if (this !is ScreenState.Content) return this
-    val rows = data
-        .filter { center ->
-            val officeOk = ui.selectedOffices.isEmpty() || center.officeName in ui.selectedOffices
-            val queryOk = ui.query.isBlank() ||
-                center.name?.contains(ui.query, ignoreCase = true) == true ||
-                center.accountNo?.contains(ui.query, ignoreCase = true) == true
-            officeOk && queryOk
-        }
+internal fun Flow<ScreenState<List<Center>>>.applyFilters(
+    ui: Flow<CenterListState>,
+): Flow<ScreenState<List<Center>>> =
+    combineContent(ui) { rows, filters, _ -> rows.filteredFor(filters) }
+        .emptyIfContent { it.isEmpty() }
+
+/** The rows [ui] keeps, in [ui]'s order. Loading/Error never reach here — [combineContent] passes them through. */
+internal fun List<Center>.filteredFor(ui: CenterListState): List<Center> =
+    filter { center ->
+        val officeOk = ui.selectedOffices.isEmpty() || center.officeName in ui.selectedOffices
+        val queryOk = ui.query.isBlank() ||
+            center.name?.contains(ui.query, ignoreCase = true) == true ||
+            center.accountNo?.contains(ui.query, ignoreCase = true) == true
+        officeOk && queryOk
+    }
         .let { filtered ->
             when (ui.sort) {
                 CenterSort.Name -> filtered.sortedBy { it.name?.lowercase() }
@@ -128,8 +133,6 @@ internal fun ScreenState<List<CenterEntity>>.applyFilters(
                 null -> filtered
             }
         }
-    return if (rows.isEmpty()) ScreenState.Empty else ScreenState.Content(rows, fetchedAt, freshnessSignal)
-}
 
 /**
  * The screen's own UI state — what the FILTER CHIPS show. The loaded rows are NOT here; they live

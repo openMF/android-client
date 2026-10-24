@@ -11,9 +11,9 @@ package kpt.core.data.survey
 
 import kotlinx.coroutines.CoroutineScope
 import kpt.core.base.store.screen.ScreenDataStream
-import kpt.core.database.survey.entity.SurveyEntity
+import kpt.core.model.survey.Survey
 
 interface SurveyRepository {
     /** Surveys the officer can administer in the field. */
-    fun surveysStream(scope: CoroutineScope): ScreenDataStream<List<SurveyEntity>>
+    fun surveysStream(scope: CoroutineScope): ScreenDataStream<List<Survey>>
 }

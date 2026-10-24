@@ -55,6 +55,7 @@ import kpt.feature.settings.generated.resources.feature_settings_server_invalid
 import kpt.feature.settings.generated.resources.feature_settings_server_port
 import kpt.feature.settings.generated.resources.feature_settings_server_protocol
 import kpt.feature.settings.generated.resources.feature_settings_server_save
+import kpt.feature.settings.generated.resources.feature_settings_server_save_failed
 import kpt.feature.settings.generated.resources.feature_settings_server_saved
 import kpt.feature.settings.generated.resources.feature_settings_server_tenant
 import kpt.feature.settings.generated.resources.feature_settings_server_use_defaults
@@ -84,6 +85,7 @@ fun ServerConfigScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val savedMessage = stringResource(Res.string.feature_settings_server_saved)
     val invalidMessage = stringResource(Res.string.feature_settings_server_invalid)
+    val saveFailedMessage = stringResource(Res.string.feature_settings_server_save_failed)
 
     LaunchedEffect(Unit) {
         viewModel.eventFlow.collect { event ->
@@ -95,6 +97,7 @@ fun ServerConfigScreen(
                     onBackClick()
                 }
                 ServerConfigEvent.Invalid -> snackbarHostState.showSnackbar(invalidMessage)
+                ServerConfigEvent.SaveFailed -> snackbarHostState.showSnackbar(saveFailedMessage)
             }
         }
     }

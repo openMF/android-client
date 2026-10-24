@@ -9,23 +9,23 @@
  */
 package kpt.core.network.mifos.group.mapper
 
-import kpt.core.database.client.entity.ClientStatusEntity
-import kpt.core.database.group.entity.GroupEntity
+import kpt.core.model.client.ClientStatus
+import kpt.core.model.group.Group
 import kpt.core.network.data.AbstractMapper
 import kpt.core.network.mifos.group.dto.GetGroupsPageItems
 import kpt.core.network.mifos.group.dto.GetGroupsStatus
 
-object GroupMapper : AbstractMapper<GetGroupsPageItems, GroupEntity>() {
+object GroupMapper : AbstractMapper<GetGroupsPageItems, Group>() {
 
-    override fun mapFromEntity(entity: GetGroupsPageItems): GroupEntity {
-        return GroupEntity(
+    override fun mapFromEntity(entity: GetGroupsPageItems): Group {
+        return Group(
             id = entity.id?.toInt(),
             name = entity.name,
             active = entity.active,
             officeId = entity.officeId?.toInt(),
             officeName = entity.officeName,
             hierarchy = entity.hierarchy,
-            status = ClientStatusEntity(
+            status = ClientStatus(
                 id = entity.status?.id!!.toInt(),
                 code = entity.status?.code,
                 value = entity.status?.description,
@@ -33,7 +33,7 @@ object GroupMapper : AbstractMapper<GetGroupsPageItems, GroupEntity>() {
         )
     }
 
-    override fun mapToEntity(domainModel: GroupEntity): GetGroupsPageItems {
+    override fun mapToEntity(domainModel: Group): GetGroupsPageItems {
         return GetGroupsPageItems(
             id = domainModel.id?.toLong(),
             name = domainModel.name,

@@ -43,6 +43,21 @@ internal val cacheJson: Json = Json { ignoreUnknownKeys = true }
  *
  * @param keyOf the cache key for a given store key — pass the generated `AppCacheKeys.X.y(...)`.
  */
+/**
+ * [cachedRead] for an endpoint whose wire type is not what the app should see: [fetch] returns the
+ * row type the network layer produces, [map] turns it into the `core/model` type the store caches and
+ * emits. Entities stay below `core/store`; everything above it reads [T].
+ *
+ * The cached JSON is the MAPPED value. The twins keep the rows' field names, so a row cached before
+ * this mapping existed still decodes.
+ */
+inline fun <Key : Any, R : Any, reified T : Any> cachedRead(
+    dao: ApiResponseCacheDao,
+    crossinline keyOf: (Key) -> String,
+    crossinline fetch: suspend (Key) -> R,
+    crossinline map: (R) -> T,
+): Store<Key, T> = cachedRead(dao = dao, keyOf = keyOf, fetch = { key: Key -> map(fetch(key)) })
+
 inline fun <Key : Any, reified T : Any> cachedRead(
     dao: ApiResponseCacheDao,
     crossinline keyOf: (Key) -> String,
@@ -64,5 +79,11 @@ inline fun <Key : Any, reified T : Any> cachedRead(
                 ),
             )
         },
+        delete = { key: Key -> dao.delete(keyOf(key)) },
+        // `Store.clear()` — what the logout purge runs — reaches the database ONLY through this.
+        // Without it every cachedRead store (~70) cleared its memory at sign-out and left its rows
+        // for the next officer to read. The table is shared, so this wipes it whole: each of the
+        // stores runs it at logout, and they all mean "nothing cached survives the session".
+        deleteAll = { dao.deleteAll() },
     ),
 )

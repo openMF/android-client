@@ -9,6 +9,10 @@
  */
 package kpt.core.store.loan
 
+import kpt.core.store.mapping.toEntity
+import kpt.core.model.loan.LoanRepaymentTemplate
+import kpt.core.model.loan.LoanTemplate as LoanTemplateModel
+import kpt.core.store.mapping.toModel
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
 import kpt.core.base.store.annotation.CacheKey
@@ -47,7 +51,7 @@ data class LoanTemplateKey(val clientId: Int, val productId: Int?)
 fun provideLoanTemplateStore(
     service: LoanApi,
     dao: LoanDao,
-): Store<LoanTemplateKey, LoanTemplate> = StoreFactory.createStore(
+): Store<LoanTemplateKey, LoanTemplateModel> = StoreFactory.createStore(
     fetcher = Fetcher.of { key: LoanTemplateKey ->
         // NO_PRODUCT is the API's own "no product chosen yet" value, and the same sentinel the
         // composite primary key stores — one meaning, one constant.
@@ -60,19 +64,22 @@ fun provideLoanTemplateStore(
         reader = { key: LoanTemplateKey ->
             // -1 stands in for "no product" so the pair can be a composite primary key.
             dao.observeLoanTemplate(key.clientId, key.productId ?: NO_PRODUCT).map { row ->
-                row?.let { templateJson.decodeFromString<LoanTemplate>(it.payload) }
+                row?.let { templateJson.decodeFromString<LoanTemplateModel>(it.payload) }
             }
         },
-        writer = { key: LoanTemplateKey, template: LoanTemplate ->
+        writer = { key: LoanTemplateKey, template: LoanTemplateModel ->
             dao.upsertLoanTemplate(
                 LoanTemplateCacheEntity(
                     clientId = key.clientId,
                     productId = key.productId ?: NO_PRODUCT,
-                    payload = templateJson.encodeToString(template),
+                    payload = templateJson.encodeToString(template.toEntity()),
                     fetchedAtMs = getCurrentTimeInMillis(),
                 ),
             )
         },
+        delete = { key: LoanTemplateKey -> dao.deleteLoanTemplate(key.clientId, key.productId ?: NO_PRODUCT) },
+        // The logout purge (`Store.clear()`) reaches the database only through `deleteAll`.
+        deleteAll = { dao.deleteAllLoanTemplates() },
     ),
 )
 
@@ -82,13 +89,16 @@ fun provideLoanTemplateStore(
 fun provideLoanRepaymentTemplateStore(
     service: LoanApi,
     dao: LoanDao,
-): Store<Int, LoanRepaymentTemplateEntity> = StoreFactory.createStore(
+): Store<Int, LoanRepaymentTemplate> = StoreFactory.createStore(
     fetcher = Fetcher.of { loanId: Int -> service.getLoanRepaymentTemplate(loanId) },
     sourceOfTruth = SourceOfTruth.of(
-        reader = { loanId: Int -> dao.observeLoanRepaymentTemplate(loanId) },
-        writer = { loanId: Int, template: LoanRepaymentTemplateEntity ->
-            dao.saveLoanRepaymentTemplateFor(loanId, template)
+        reader = { loanId: Int -> dao.observeLoanRepaymentTemplate(loanId).map { it?.toModel() } },
+        writer = { loanId: Int, template: LoanRepaymentTemplate ->
+            dao.saveLoanRepaymentTemplateFor(loanId, template.toEntity())
         },
+        // The payment-type options stay: they are the tenant's catalog, shared by every template.
+        delete = { loanId: Int -> dao.deleteLoanRepaymentByLoanId(loanId) },
+        deleteAll = { dao.deleteAllLoanRepaymentTemplates() },
     ),
 )
 
@@ -115,6 +125,8 @@ fun provideLoanDisburseTemplateStore(
                 ),
             )
         },
+        delete = { loanId: Int -> dao.deleteLoanDisburseTemplate(loanId) },
+        deleteAll = { dao.deleteAllLoanDisburseTemplates() },
     ),
 )
 

@@ -18,18 +18,18 @@ import kpt.core.base.store.screen.ScreenDataStream
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.screenDataStreamForTesting
 import kpt.core.data.client.ClientRepository
-import kpt.core.database.client.entity.AddressTemplate
-import kpt.core.database.client.entity.ClientAccounts
-import kpt.core.database.client.entity.ClientAddressEntity
-import kpt.core.database.client.entity.ClientEntity
+import kpt.core.model.client.AddressConfiguration
+import kpt.core.model.client.AddressTemplate
+import kpt.core.model.client.ClientAccounts
+import kpt.core.model.client.Client
+import kpt.core.model.client.ClientsTemplate
 import kpt.core.model.client.ClientCloseTemplateResponse
 import kpt.core.model.client.ClientTemplateOptions
+import kpt.core.model.objects.clients.ClientAddressEntity
 import kpt.core.model.objects.clients.ClientAddressResponse
 import kpt.core.model.objects.noncoreobjects.Identifier
-import kpt.core.model.shared.CollateralItem
-import kpt.core.database.client.entity.AddressConfiguration
-import kpt.core.database.client.entity.ClientsTemplateEntity
 import kpt.core.model.objects.noncoreobjects.IdentifierTemplate
+import kpt.core.model.shared.CollateralItem
 import kpt.core.model.shared.CollateralItemResult
 
 /**
@@ -54,14 +54,14 @@ import kpt.core.model.shared.CollateralItemResult
  */
 @ExperimentalDataTestingApi
 class FakeClientRepository(
-    private val clients: MutableStateFlow<ScreenState<List<ClientEntity>>>? = null,
-    private val client: MutableStateFlow<ScreenState<ClientEntity>>? = null,
+    private val clients: MutableStateFlow<ScreenState<List<Client>>>? = null,
+    private val client: MutableStateFlow<ScreenState<Client>>? = null,
     private val accounts: MutableStateFlow<ScreenState<ClientAccounts>>? = null,
     private val identifiers: MutableStateFlow<ScreenState<List<Identifier>>>? = null,
     private val pinpoints: MutableStateFlow<ScreenState<List<ClientAddressResponse>>>? = null,
     private val clientCollateral: MutableStateFlow<ScreenState<List<CollateralItemResult>>>? = null,
     private val collateralCatalog: MutableStateFlow<ScreenState<List<CollateralItem>>>? = null,
-    private val clientsTemplate: MutableStateFlow<ScreenState<ClientsTemplateEntity>>? = null,
+    private val clientsTemplate: MutableStateFlow<ScreenState<ClientsTemplate>>? = null,
     private val identifierTemplate: MutableStateFlow<ScreenState<IdentifierTemplate>>? = null,
     private val addressConfiguration: MutableStateFlow<ScreenState<AddressConfiguration>>? = null,
     private val closeTemplate: MutableStateFlow<ScreenState<ClientCloseTemplateResponse>>? = null,

@@ -9,6 +9,8 @@
  */
 package kpt.core.store.staff
 
+import kpt.core.model.staff.Staff
+import kpt.core.store.mapping.toModel
 import kpt.core.base.store.annotation.CacheKey
 import kpt.core.base.store.annotation.StoreProvider
 import kpt.core.database.cache.dao.ApiResponseCacheDao
@@ -28,7 +30,7 @@ import org.mobilenativefoundation.store.store5.Store
 fun provideAllStaffStore(
     staffApi: StaffApi,
     cache: ApiResponseCacheDao,
-): Store<Unit, List<StaffEntity>> = cachedRead(
+): Store<Unit, List<Staff>> = cachedRead(
     dao = cache,
     keyOf = { key -> AppCacheKeys.StaffAllStaff.forKey("all") },
     fetch = { key -> staffApi.allStaff() },
@@ -39,7 +41,7 @@ fun provideAllStaffStore(
 fun provideFieldStaffForOfficeStore(
     staffApi: StaffApi,
     cache: ApiResponseCacheDao,
-): Store<Unit, List<StaffEntity>> = cachedRead(
+): Store<Unit, List<Staff>> = cachedRead(
     dao = cache,
     keyOf = { key -> AppCacheKeys.StaffFieldStaffForOffice.forKey("all") },
     fetch = { key -> staffApi.fieldStaffForOffice() },

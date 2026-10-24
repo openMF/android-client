@@ -15,16 +15,16 @@ import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
 import kpt.core.base.network.annotation.ApiBinding
-import kpt.core.database.center.entity.CenterWithAssociations
-import kpt.core.database.collectionsheet.entity.CenterDetail
-import kpt.core.database.collectionsheet.entity.CollectionSheetResponse
-import kpt.core.database.collectionsheet.entity.IndividualCollectionSheet
+import kpt.core.model.center.CenterWithAssociations
+import kpt.core.model.collectionsheet.CenterDetail
+import kpt.core.model.collectionsheet.CollectionSheetResponse
+import kpt.core.model.collectionsheet.IndividualCollectionSheet
 import kpt.core.model.collectionsheet.CollectionSheetPayload
 import kpt.core.model.collectionsheet.ProductiveCollectionSheetPayload
 import kpt.core.model.objects.collectionsheets.CollectionSheetRequestPayload
 import kpt.core.model.shared.GenericResponse
-import kpt.core.network.mifos.collectionsheet.dto.IndividualCollectionSheetPayload
-import kpt.core.network.mifos.collectionsheet.dto.RequestCollectionSheetPayload
+import kpt.core.model.collectionsheet.IndividualCollectionSheetPayload
+import kpt.core.model.collectionsheet.RequestCollectionSheetPayload
 
 /**
  * Created by Tarun on 06-07-2017.

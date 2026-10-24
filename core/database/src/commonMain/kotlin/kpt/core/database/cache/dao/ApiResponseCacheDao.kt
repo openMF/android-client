@@ -23,6 +23,14 @@ interface ApiResponseCacheDao {
     @Query("SELECT * FROM api_response_cache WHERE cacheKey = :cacheKey LIMIT 1")
     fun observe(cacheKey: String): Flow<ApiResponseCacheEntity?>
 
+    /**
+     * Every cached response under one prefix, re-emitting on any write to the table — the read side
+     * of [deleteByPrefix]. A search over "everything this device has cached for clients" (addresses,
+     * identifiers) is a scan of these rows, because each client's list is its own row.
+     */
+    @Query("SELECT * FROM api_response_cache WHERE cacheKey LIKE :prefix || '%'")
+    fun observeByPrefix(prefix: String): Flow<List<ApiResponseCacheEntity>>
+
     @Upsert
     suspend fun upsert(row: ApiResponseCacheEntity)
 

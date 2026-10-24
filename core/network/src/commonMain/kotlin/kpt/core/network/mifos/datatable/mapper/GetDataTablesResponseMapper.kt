@@ -9,8 +9,8 @@
  */
 package kpt.core.network.mifos.datatable.mapper
 
-import kpt.core.database.datatable.entity.ColumnHeader
-import kpt.core.database.datatable.entity.DataTableEntity
+import kpt.core.model.datatable.ColumnHeader
+import kpt.core.model.datatable.DataTable
 import kpt.core.model.shared.ResultsetColumnHeaderData
 import kpt.core.network.data.AbstractMapper
 import kpt.core.network.mifos.datatable.dto.GetDataTablesResponse
@@ -19,10 +19,10 @@ import kpt.core.network.mifos.datatable.dto.GetDataTablesResponse
  * Created by Aditya Gupta on 31/08/23.
  */
 
-object GetDataTablesResponseMapper : AbstractMapper<GetDataTablesResponse, DataTableEntity>() {
+object GetDataTablesResponseMapper : AbstractMapper<GetDataTablesResponse, DataTable>() {
 
-    override fun mapFromEntity(entity: GetDataTablesResponse): DataTableEntity {
-        return DataTableEntity(
+    override fun mapFromEntity(entity: GetDataTablesResponse): DataTable {
+        return DataTable(
             applicationTableName = entity.applicationTableName,
             registeredTableName = entity.registeredTableName,
             columnHeaderData = entity.columnHeaderData!!.map {
@@ -38,7 +38,7 @@ object GetDataTablesResponseMapper : AbstractMapper<GetDataTablesResponse, DataT
         )
     }
 
-    override fun mapToEntity(domainModel: DataTableEntity): GetDataTablesResponse {
+    override fun mapToEntity(domainModel: DataTable): GetDataTablesResponse {
         return GetDataTablesResponse(
             applicationTableName = domainModel.applicationTableName,
             registeredTableName = domainModel.registeredTableName,

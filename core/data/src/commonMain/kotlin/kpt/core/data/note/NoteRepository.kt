@@ -11,9 +11,9 @@ package kpt.core.data.note
 
 import kotlinx.coroutines.CoroutineScope
 import kpt.core.base.store.screen.ScreenDataStream
-import kpt.core.database.note.entity.NoteEntity
+import kpt.core.model.objects.note.Note
 
 interface NoteRepository {
     /** Notes attached to a client, group or loan. */
-    fun notesStream(resourceId: Long, scope: CoroutineScope): ScreenDataStream<List<NoteEntity>>
+    fun notesStream(resourceId: Long, scope: CoroutineScope): ScreenDataStream<List<Note>>
 }

@@ -11,12 +11,12 @@ package kpt.core.data.savings
 
 import kotlinx.coroutines.CoroutineScope
 import kpt.core.base.store.screen.ScreenDataStream
-import kpt.core.database.savings.entity.SavingProductsTemplate
-import kpt.core.database.savings.entity.SavingsAccountTransactionTemplateEntity
-import kpt.core.database.savings.entity.SavingsAccountWithAssociationsEntity
+import kpt.core.model.savings.SavingProductsTemplate
+import kpt.core.model.savings.SavingsAccountTransactionTemplate
+import kpt.core.model.savings.SavingsAccountWithAssociations
 import kpt.core.model.objects.organisations.ProductSavings
-import kpt.core.network.mifos.savings.dto.FixedDepositTemplate
-import kpt.core.network.mifos.savings.dto.ShareTemplate
+import kpt.core.model.savings.FixedDepositTemplate
+import kpt.core.model.savings.ShareTemplate
 
 interface SavingsAccountRepository {
     /**
@@ -30,7 +30,7 @@ interface SavingsAccountRepository {
         savingsAccountType: String,
         savingsAccountId: Int,
         scope: CoroutineScope,
-    ): ScreenDataStream<SavingsAccountWithAssociationsEntity>
+    ): ScreenDataStream<SavingsAccountWithAssociations>
 
     /**
      * The transaction template for one (account, command) pair — its payment-type options.
@@ -45,7 +45,7 @@ interface SavingsAccountRepository {
         savingsAccountType: String,
         savingsAccountId: Int,
         transactionType: String,
-    ): SavingsAccountTransactionTemplateEntity?
+    ): SavingsAccountTransactionTemplate?
 
     /** The tenant's savings products — what the create wizard opens on. */
     fun savingsProductsStream(scope: CoroutineScope): ScreenDataStream<List<ProductSavings>>

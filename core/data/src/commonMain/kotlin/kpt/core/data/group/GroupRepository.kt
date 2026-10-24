@@ -11,9 +11,9 @@ package kpt.core.data.group
 
 import kotlinx.coroutines.CoroutineScope
 import kpt.core.base.store.screen.ScreenDataStream
-import kpt.core.database.group.entity.GroupEntity
+import kpt.core.model.group.Group
 
 interface GroupRepository {
     /** Groups the officer services. */
-    fun groupsStream(scope: CoroutineScope): ScreenDataStream<List<GroupEntity>>
+    fun groupsStream(scope: CoroutineScope): ScreenDataStream<List<Group>>
 }

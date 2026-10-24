@@ -17,7 +17,6 @@ kotlin {
             implementation(libs.kermit.logging)
             implementation(projects.core.common)
             implementation(projects.core.data)
-            implementation(projects.core.database)
             implementation(projects.core.model)
             implementation(projects.core.ui)
             implementation(libs.koin.compose.navigation)
@@ -29,7 +28,6 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(projects.coreBase.store)
-            implementation(projects.core.database)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.turbine)
         }

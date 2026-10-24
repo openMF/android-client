@@ -75,6 +75,11 @@ fork:
   # feature/ migration, and the first feature->feature edge (client -> note), which the original
   # also declared.
   - { id: note,             status: exists }
+  # The ONE charge module for every owner (client / loan / savings): list, detail, add, edit,
+  # delete. Consolidated 2026-10-23 from feature/client `charges/` and feature/loan
+  # `charges/` + `chargeform/` — see feature/charge/MIGRATION.md.
+  - { id: charge,           status: exists }
+  - { id: searchrecord,     status: exists }
   - { id: home,             status: exists }
   - { id: profile,          status: exists }
   - { id: settings,         status: exists }

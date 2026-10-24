@@ -27,10 +27,11 @@ import kpt.core.common.utils.DateHelper
 import kpt.core.data.testing.FakeLoanCommandRepository
 import kpt.core.data.testing.FakeLoanRepository
 import kpt.core.data.testing.FakeOfflineQueueRepository
-import kpt.core.database.loan.entity.LoanRepaymentRequestEntity
-import kpt.core.database.loan.entity.LoanRepaymentTemplateEntity
-import kpt.core.database.payment.entity.PaymentTypeOptionEntity
-import kpt.core.database.savings.entity.SavingAccountCurrencyEntity
+import kpt.core.data.testing.fineractRejection
+import kpt.core.model.loan.LoanRepaymentRequest
+import kpt.core.model.loan.LoanRepaymentTemplate
+import kpt.core.model.payment.PaymentTypeOption
+import kpt.core.model.savings.SavingAccountCurrency
 import kpt.core.model.objects.account.loan.loanWithAssociations.LoanAccountSummary
 import kpt.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import kotlin.test.AfterTest
@@ -65,22 +66,22 @@ class LoanRepaymentViewModelTest {
         ),
     )
 
-    private val templateState = MutableStateFlow<ScreenState<LoanRepaymentTemplateEntity>>(
+    private val templateState = MutableStateFlow<ScreenState<LoanRepaymentTemplate>>(
         ScreenState.Content(
-            LoanRepaymentTemplateEntity(
+            LoanRepaymentTemplate(
                 loanId = 7,
                 amount = 1_000.0,
-                currency = SavingAccountCurrencyEntity(code = "INR", decimalPlaces = 2),
+                currency = SavingAccountCurrency(code = "INR", decimalPlaces = 2),
                 paymentTypeOptions = listOf(
-                    PaymentTypeOptionEntity(id = 1, name = "Cash"),
-                    PaymentTypeOptionEntity(id = 4, name = "Mobile Money"),
+                    PaymentTypeOption(id = 1, name = "Cash"),
+                    PaymentTypeOption(id = 4, name = "Mobile Money"),
                 ),
             ),
         ),
     )
 
     private val pending =
-        MutableStateFlow<ScreenState<List<LoanRepaymentRequestEntity>>>(ScreenState.Content(emptyList()))
+        MutableStateFlow<ScreenState<List<LoanRepaymentRequest>>>(ScreenState.Content(emptyList()))
 
     private fun viewModel(
         commands: FakeLoanCommandRepository = FakeLoanCommandRepository(),
@@ -272,7 +273,7 @@ class LoanRepaymentViewModelTest {
         // Two repayments for one visit is money counted twice, and the queued one has not reached
         // Fineract so the server cannot dedupe it. The original refused too; this keeps the
         // refusal and reads the SAME queue the sync screen drains.
-        pending.value = ScreenState.Content(listOf(LoanRepaymentRequestEntity(loanId = 7)))
+        pending.value = ScreenState.Content(listOf(LoanRepaymentRequest(loanId = 7)))
         val vm = viewModel()
 
         vm.alreadyQueued.test {
@@ -283,8 +284,22 @@ class LoanRepaymentViewModelTest {
     }
 
     @Test
+    fun onceTheQueuedRepaymentSyncsTheFormIsNoLongerBlocked() = runTest(dispatcher) {
+        // The queue stream reports a drained queue as an empty Content (no `isEmpty` predicate).
+        // With the predicate it held the LAST content — the synced repayment — and kept refusing.
+        pending.value = ScreenState.Content(listOf(LoanRepaymentRequest(loanId = 7)))
+        val vm = viewModel()
+        testScheduler.advanceUntilIdle()
+        assertEquals(true, vm.alreadyQueued.value)
+
+        pending.value = ScreenState.Content(emptyList())
+        testScheduler.advanceUntilIdle()
+        assertEquals(false, vm.alreadyQueued.value)
+    }
+
+    @Test
     fun aRepaymentQueuedForADIFFERENTLoanDoesNotBlockThisOne() = runTest(dispatcher) {
-        pending.value = ScreenState.Content(listOf(LoanRepaymentRequestEntity(loanId = 99)))
+        pending.value = ScreenState.Content(listOf(LoanRepaymentRequest(loanId = 99)))
         val vm = viewModel()
         testScheduler.advanceUntilIdle()
 
@@ -300,7 +315,7 @@ class LoanRepaymentViewModelTest {
         vm.fillValid()
         testScheduler.advanceUntilIdle()
 
-        pending.value = ScreenState.Content(listOf(LoanRepaymentRequestEntity(loanId = 7)))
+        pending.value = ScreenState.Content(listOf(LoanRepaymentRequest(loanId = 7)))
         testScheduler.advanceUntilIdle()
 
         vm.actionChannel.trySend(LoanRepaymentAction.OnSubmit)
@@ -391,7 +406,7 @@ class LoanRepaymentViewModelTest {
     // ---- the outcome ----
 
     @Test
-    fun successCarriesFineractsTransactionIdAndReReadsTheLoan() = runTest(dispatcher) {
+    fun successCarriesFineractsTransactionIdAndDoesNotReReadTheLoan() = runTest(dispatcher) {
         val repository = FakeLoanRepository(loan = loanState, repaymentTemplate = templateState)
         val commands = FakeLoanCommandRepository()
         val vm = viewModel(commands, repository = repository)
@@ -400,9 +415,9 @@ class LoanRepaymentViewModelTest {
         repository.refreshesFor("loan").test {
             vm.actionChannel.trySend(LoanRepaymentAction.OnSubmit)
             testScheduler.advanceUntilIdle()
-            // The balance and the transaction list have both changed, and the profile plus both
-            // detail screens read the same cached loan.
-            awaitItem()
+            // The command ingests the repaid loan through the `loans` store; a refresh here
+            // would be the post-write re-read the write door replaced.
+            expectNoEvents()
             cancelAndIgnoreRemainingEvents()
         }
 
@@ -415,7 +430,7 @@ class LoanRepaymentViewModelTest {
         val commands = FakeLoanCommandRepository(
             paymentResult = {
                 MutationResult.Failed(
-                    IllegalStateException("transaction date is before the last transaction"),
+                    fineractRejection("transaction date is before the last transaction"),
                     rolledBack = false,
                 )
             },

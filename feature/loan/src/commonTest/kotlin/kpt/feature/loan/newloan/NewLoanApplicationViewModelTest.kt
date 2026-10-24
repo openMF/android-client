@@ -26,7 +26,8 @@ import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.data.testing.FakeLoanCommandRepository
 import kpt.core.data.testing.FakeLoanRepository
-import kpt.core.database.loan.entity.LoanTemplate
+import kpt.core.data.testing.fineractRejection
+import kpt.core.model.loan.LoanTemplate
 import kpt.core.model.objects.account.loan.Currency
 import kpt.core.model.objects.account.loan.RepaymentSchedule
 import kpt.core.model.objects.organisations.LoanProducts
@@ -341,7 +342,7 @@ class NewLoanApplicationViewModelTest {
             commands = FakeLoanCommandRepository(
                 scheduleResult = {
                     MutationResult.Failed(
-                        IllegalStateException("repayment every must be greater than zero"),
+                        fineractRejection("repayment every must be greater than zero"),
                         rolledBack = false,
                     )
                 },

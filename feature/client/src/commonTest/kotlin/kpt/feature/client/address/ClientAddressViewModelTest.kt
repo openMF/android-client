@@ -24,7 +24,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.data.testing.FakeClientRepository
-import kpt.core.database.client.entity.ClientAddressEntity
+import kpt.core.model.objects.clients.ClientAddressEntity
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -46,7 +46,7 @@ class ClientAddressViewModelTest {
         ClientAddressViewModel(repository, SavedStateHandle(mapOf("clientId" to clientId)))
 
     private fun address(id: Int, type: String) =
-        ClientAddressEntity(addressId = id, clientId = 42, addressType = type, city = "Pune")
+        ClientAddressEntity(addressId = id, clientID = 42, addressType = type, city = "Pune")
 
     @Test
     fun theRouteArgumentReachesTheRead() = runTest(dispatcher) {
@@ -102,16 +102,20 @@ class ClientAddressViewModelTest {
     }
 
     @Test
-    fun anEmptyAddressListIsAnEmptyStateNotAnError() = runTest(dispatcher) {
+    fun removingTheLastAddressLeavesAnEmptyListNotTheRemovedRow() = runTest(dispatcher) {
+        // The stream reports "no addresses" as an empty Content (no `isEmpty` predicate) and the
+        // screen draws the original's EmptyAddressCard from it. With the predicate the stream held
+        // the last address on screen after it was gone.
         val vm = viewModel()
-        addresses.value = ScreenState.Empty
-        testScheduler.advanceUntilIdle()
-
         vm.addresses.test {
             assertIs<ScreenState.Loading>(awaitItem())
-            // `isEmpty` is declared on the stream, so a client with no addresses renders the
-            // original's EmptyAddressCard rather than a spinner or an error.
-            assertIs<ScreenState.Empty>(awaitItem())
+            addresses.value = ScreenState.Content(listOf(address(1, "Home")))
+            assertEquals(1, assertIs<ScreenState.Content<List<ClientAddressEntity>>>(awaitItem()).data.size)
+            addresses.value = ScreenState.Content(emptyList())
+            assertEquals(
+                emptyList<ClientAddressEntity>(),
+                assertIs<ScreenState.Content<List<ClientAddressEntity>>>(awaitItem()).data,
+            )
             cancelAndIgnoreRemainingEvents()
         }
     }

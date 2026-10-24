@@ -22,6 +22,7 @@ import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.mapContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kpt.core.model.objects.error.serverErrorMessage
 import kpt.core.data.client.ClientCommandRepository
 import kpt.core.data.client.ClientRepository
 import kpt.core.model.client.SavingAccountOption
@@ -212,7 +213,7 @@ internal class ClientDefaultAccountViewModel(
                             // The original surfaced the server's own message as the dialog body
                             // (it extracted the Fineract error body in the repository). Kept: a
                             // rejection reason is the only actionable thing the officer gets.
-                            msg = result.cause.message ?: FAILED_MSG,
+                            msg = result.cause.serverErrorMessage() ?: FAILED_MSG,
                         ),
                     )
                 }

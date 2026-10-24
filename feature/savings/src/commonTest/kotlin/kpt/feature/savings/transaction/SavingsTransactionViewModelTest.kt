@@ -23,8 +23,9 @@ import kpt.core.base.store.mutation.BlockReason
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.data.testing.FakeSavingsAccountRepository
 import kpt.core.data.testing.FakeSavingsCommandRepository
-import kpt.core.database.payment.entity.PaymentTypeOptionEntity
-import kpt.core.database.savings.entity.SavingsAccountTransactionTemplateEntity
+import kpt.core.data.testing.fineractRejection
+import kpt.core.model.payment.PaymentTypeOption
+import kpt.core.model.savings.SavingsAccountTransactionTemplate
 import kpt.core.model.utils.ApiDateFormatter
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -47,10 +48,10 @@ class SavingsTransactionViewModelTest {
 
     @AfterTest fun tearDown() = Dispatchers.resetMain()
 
-    private fun template() = SavingsAccountTransactionTemplateEntity(
+    private fun template() = SavingsAccountTransactionTemplate(
         paymentTypeOptions = listOf(
-            PaymentTypeOptionEntity(id = 3, name = "Cash"),
-            PaymentTypeOptionEntity(id = 4, name = "Mobile Money"),
+            PaymentTypeOption(id = 3, name = "Cash"),
+            PaymentTypeOption(id = 4, name = "Mobile Money"),
         ),
     )
 
@@ -302,7 +303,7 @@ class SavingsTransactionViewModelTest {
         val vm = viewModel(
             FakeSavingsCommandRepository(
                 transactionResult = {
-                    MutationResult.Failed(IllegalStateException("insufficient balance"), rolledBack = false)
+                    MutationResult.Failed(fineractRejection("insufficient balance"), rolledBack = false)
                 },
             ),
         )

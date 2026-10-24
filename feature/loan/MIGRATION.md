@@ -1071,3 +1071,23 @@ fun refreshLoanChargeList() {
 The flag went true → false in the same frame while the request was still in flight, so that spinner
 could never be observed true. `isRefreshing` now comes from the stream's own `freshnessSignal` — the
 layer that knows.
+
+# Charges moved to `feature/charge` (2026-10-23)
+
+The S4f loan charges list and the S4h add-charge form are **deleted** from this module —
+`charges/`, `chargeform/`, their ViewModel and UI tests, `LoanChargesRoute`, `LoanChargeFormRoute`,
+the two `LoanModule` bindings, the S4f/S4h strings, and `LoanRepository.loanChargesStream` /
+`loanChargeTemplate` (+ `provideLoanChargeStore`). One charge module now serves clients, loans and
+savings; see `feature/charge/MIGRATION.md`.
+
+- Profile "Charges" row and Summary overflow "Charges" → `navigateToCharges(ChargeResource.LOAN, loanId)`.
+- What carried over: the add form's option filter (disbursement / installment / specified-due-date,
+  flat only), the due-date field shown only for a specified-due-date charge, submit-time amount
+  validation, and the four labelled detail rows (now `ChargeDetailScreen`).
+- What the loan gains: Edit (`PUT loans/{id}/charges/{chargeId}`) and Delete, which the original
+  loan screens never offered.
+- The `Charges` table is re-keyed `(resourceType, resourceId, id)`, so a loan charge no longer
+  overwrites the client charge that shares its id (schema 15 → 16).
+
+`feature/loan` now depends on `feature/charge` (one-directional).
+

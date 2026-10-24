@@ -11,6 +11,7 @@
 <resources>
     <string name="feature_client_title">Clients</string>
     <string name="feature_client_search_hint">Search clients</string>
+    <string name="feature_client_search_records_cd">Search records</string>
     <string name="feature_client_empty">No clients in this office yet</string>
     <string name="feature_client_create">Create client</string>
     <string name="feature_client_sort_name">Name</string>
@@ -22,13 +23,8 @@
     <string name="feature_client_savings">Savings accounts</string>
     <string name="feature_client_no_accounts">No accounts yet</string>
     <string name="feature_client_tab">Clients</string>
-    <string name="feature_client_charges_title">Charges</string>
     <!-- Notes drill-down (S5). The original reached this from two call sites on client detail. -->
     <string name="feature_client_notes_title">Notes</string>
-    <!-- Its OWN string. The original reused the SAVINGS string here, so a charges screen
-         rendered "3 Savings Account" above a list of charges. -->
-    <string name="feature_client_charges_count">%1$d charges</string>
-    <string name="feature_client_charges_outstanding">Outstanding %1$s</string>
     <!-- S3c clientStaff. Values verbatim from `6b66e8a43:feature/client/.../strings.xml`; only
          the KEYS are re-prefixed, because the original's bare `btn_back` / `dialog_continue`
          collide across feature modules in a shared resource namespace. -->
@@ -357,7 +353,7 @@
     <string name="feature_client_createnew_gallery">Gallery</string>
     <string name="feature_client_createnew_camera">Camera</string>
     <string name="feature_client_createnew_remove_photo">Remove photo</string>
-    <string name="feature_client_createnew_uploading_photo">Uploading client\'s picture…</string>
+    <string name="feature_client_createnew_uploading_photo">Uploading client's picture…</string>
     <string name="feature_client_createnew_created_title">Client created</string>
     <string name="feature_client_createnew_created_message">Client created successfully</string>
     <string name="feature_client_createnew_created_photo_failed_message">Client created successfully, but the photo could not be uploaded.</string>
@@ -412,6 +408,9 @@
     <string name="feature_client_addidentifier_skip_document">Skip</string>
     <string name="feature_client_addidentifier_created_note">Identifier created. Attaching a scan is optional.</string>
     <string name="feature_client_addidentifier_error_type_required">Document type is required</string>
+    <string name="feature_client_addidentifier_error_status_required">Status is required</string>
+    <string name="feature_client_addidentifier_status_active">Active</string>
+    <string name="feature_client_addidentifier_status_inactive">Inactive</string>
     <string name="feature_client_addidentifier_error_key_required">Unique ID is required</string>
     <string name="feature_client_addidentifier_error_create_failed">Could not create the identifier.</string>
     <string name="feature_client_addidentifier_error_upload_failed">The identifier was created, but its document could not be uploaded.</string>
@@ -463,4 +462,9 @@
     <string name="feature_client_fdapp_error_failed">Could not submit the fixed deposit application.</string>
     <!-- Shared add-affordance label (accessibility) -->
     <string name="feature_client_add_record">Add</string>
+
+    <!-- Document preview -->
+    <string name="feature_client_document_preview_title">Document</string>
+    <string name="feature_client_document_preview_failed">Could not load this document. Check your connection and try again.</string>
+    <string name="feature_client_document_preview_none">No document is attached to this identifier.</string>
 </resources>

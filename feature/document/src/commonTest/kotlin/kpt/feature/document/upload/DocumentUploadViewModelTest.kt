@@ -10,7 +10,6 @@
 package kpt.feature.document.upload
 
 import androidx.lifecycle.SavedStateHandle
-import io.ktor.client.request.forms.MultiPartFormDataContent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -18,6 +17,8 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.data.document.DocumentCommandRepository
+import kpt.core.model.objects.noncoreobjects.DocumentUpload
+import kpt.core.model.objects.responses.SaveResponse
 import kpt.core.model.shared.GenericResponse
 import kpt.feature.document.navigation.DocumentUploadRoute
 import kotlin.test.AfterTest
@@ -48,17 +49,17 @@ class DocumentUploadViewModelTest {
         override suspend fun createDocument(
             entityType: String,
             entityId: Int,
-            request: MultiPartFormDataContent,
-        ): MutationResult<GenericResponse> {
+            upload: DocumentUpload,
+        ): MutationResult<SaveResponse> {
             created += entityType to entityId
-            return MutationResult.Applied(GenericResponse(), synced = true)
+            return MutationResult.Applied(SaveResponse(), synced = true)
         }
 
         override suspend fun updateDocument(
             entityType: String,
             entityId: Int,
             documentId: Int,
-            request: MultiPartFormDataContent,
+            upload: DocumentUpload,
         ): MutationResult<GenericResponse> {
             updated += Triple(entityType, entityId, documentId)
             return MutationResult.Applied(GenericResponse(), synced = true)

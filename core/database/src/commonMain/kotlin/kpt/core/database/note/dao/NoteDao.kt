@@ -13,6 +13,7 @@ import androidx.room3.Dao
 import androidx.room3.Insert
 import androidx.room3.OnConflictStrategy
 import androidx.room3.Query
+import androidx.room3.Transaction
 import kotlinx.coroutines.flow.Flow
 import kpt.core.base.database.annotation.DbDao
 import kpt.core.database.note.entity.NoteEntity
@@ -34,6 +35,25 @@ interface NoteDao {
     @Query("SELECT * FROM Note WHERE clientId = :clientId ORDER BY createdOn DESC")
     fun getNotesForClient(clientId: Long): Flow<List<NoteEntity>>
 
+    @Query("SELECT * FROM Note WHERE id = :id LIMIT 1")
+    fun observeById(id: Long): Flow<NoteEntity?>
+
+    @Query("DELETE FROM Note WHERE id = :id")
+    suspend fun deleteById(id: Long)
+
     @Query("DELETE FROM Note WHERE clientId = :clientId")
     suspend fun deleteNotesForClient(clientId: Long)
+
+    @Query("DELETE FROM Note")
+    suspend fun deleteAll()
+
+    /**
+     * Make the client's rows EXACTLY the server's list. The store's writer used [insertNotes]
+     * alone, so a note deleted on the server (or on another device) stayed in the table forever.
+     */
+    @Transaction
+    suspend fun replaceForClient(clientId: Long, notes: List<NoteEntity>) {
+        deleteNotesForClient(clientId)
+        insertNotes(notes)
+    }
 }

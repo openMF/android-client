@@ -20,8 +20,8 @@ import kpt.core.base.store.screen.combineContent
 import kpt.core.base.store.screen.emptyIfContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.data.client.ClientRepository
-import kpt.core.database.savings.entity.SavingAccountDepositTypeEntity
-import kpt.core.database.savings.entity.SavingsAccountEntity
+import kpt.core.model.savings.SavingAccountDepositType
+import kpt.core.model.savings.SavingsAccount
 
 /**
  * A client's deposit accounts of ONE kind — savings, fixed deposit, or recurring deposit.
@@ -35,7 +35,7 @@ import kpt.core.database.savings.entity.SavingsAccountEntity
  *
  * The three originals are the same screen. Each reads the SAME field —
  * `clientAccounts.savingsAccounts` — applies the SAME `status?.closed == false` guard, and differs
- * only in which `SavingAccountDepositTypeEntity.ServerTypes` it keeps. Fineract models all three as
+ * only in which `SavingAccountDepositType.ServerTypes` it keeps. Fineract models all three as
  * deposit accounts on one list; the split exists in the UI layer alone.
  *
  * Porting them as three files would reproduce ~1,300 lines whose only distinct token is an enum
@@ -102,7 +102,7 @@ internal class ClientDepositAccountsViewModel(
      * AFTER the query so an over-narrow search shows the Empty state rather than a header counting
      * zero above nothing.
      */
-    val accounts: StateFlow<ScreenState<List<SavingsAccountEntity>>> = stream.state
+    val accounts: StateFlow<ScreenState<List<SavingsAccount>>> = stream.state
         .combineContent(stateFlow) { clientAccounts, ui, _ ->
             clientAccounts.savingsAccounts.ofKind(ui.kind).matching(ui.searchText)
         }
@@ -171,11 +171,11 @@ internal class ClientDepositAccountsViewModel(
  * differed between them.
  */
 enum class DepositAccountKind(
-    val serverType: SavingAccountDepositTypeEntity.ServerTypes,
+    val serverType: SavingAccountDepositType.ServerTypes,
 ) {
-    SAVINGS(SavingAccountDepositTypeEntity.ServerTypes.SAVINGS),
-    FIXED(SavingAccountDepositTypeEntity.ServerTypes.FIXED),
-    RECURRING(SavingAccountDepositTypeEntity.ServerTypes.RECURRING),
+    SAVINGS(SavingAccountDepositType.ServerTypes.SAVINGS),
+    FIXED(SavingAccountDepositType.ServerTypes.FIXED),
+    RECURRING(SavingAccountDepositType.ServerTypes.RECURRING),
 }
 
 /**
@@ -186,7 +186,7 @@ enum class DepositAccountKind(
  * account the server returned without a status block rather than showing it as unknown. Kept
  * because changing which accounts an officer can see is a product decision, and logged as a gap.
  */
-private fun List<SavingsAccountEntity>.ofKind(kind: DepositAccountKind): List<SavingsAccountEntity> =
+private fun List<SavingsAccount>.ofKind(kind: DepositAccountKind): List<SavingsAccount> =
     filter { it.depositType?.serverType == kind.serverType && it.status?.closed == false }
 
 /**
@@ -197,7 +197,7 @@ private fun List<SavingsAccountEntity>.ofKind(kind: DepositAccountKind): List<Sa
  * decision. Unlike the originals this is case-insensitive, because Fineract account numbers can
  * carry a letter prefix and a case-sensitive match on one is a search that silently finds nothing.
  */
-private fun List<SavingsAccountEntity>.matching(query: String): List<SavingsAccountEntity> {
+private fun List<SavingsAccount>.matching(query: String): List<SavingsAccount> {
     val q = query.trim()
     return if (q.isEmpty()) this else filter { it.accountNo?.contains(q, ignoreCase = true) == true }
 }

@@ -10,8 +10,8 @@
 package kpt.core.network.mifos.auth
 
 import kotlinx.serialization.json.Json
-import kpt.core.network.mifos.auth.dto.PostAuthenticationRequest
-import kpt.core.network.mifos.auth.dto.PostAuthenticationResponse
+import kpt.core.model.auth.PostAuthenticationRequest
+import kpt.core.model.auth.PostAuthenticationResponse
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull

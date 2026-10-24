@@ -12,15 +12,16 @@ package kpt.feature.client.documents
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kpt.core.base.store.mutation.BlockReason
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
+import kpt.core.base.store.screen.combineContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.common.utils.Constants
 import kpt.core.data.document.DocumentCommandRepository
@@ -43,12 +44,12 @@ import kpt.core.model.objects.noncoreobjects.Document
  * It was a `Boolean` in the state that nothing ever set back to `false` on the error path. The
  * stream's own `refresh()` drives `PullToRefreshBox` from `ScreenState`'s freshness instead.
  *
- * ## Deliberately NOT ported
+ * ## View opens the in-app preview
  *
- * `ViewDocument` / `OpenExternalPdfViewer` download the file and hand it to a platform PDF viewer
- * (`PlatformFile`, five `expect`/`actual` pairs under `feature/client/utils`). That is the
- * document-preview feature and it is S3d, so the View entry is omitted from the row menu rather
- * than listed and ignored — the original's `onActionClicked` ended in `else -> null`.
+ * The original's `ViewDocument` downloaded the file HERE and then forked: a PDF went to an external
+ * app (`OpenExternalPdfViewer`, five `expect`/`actual` pairs under `feature/client/utils`), an image
+ * to `DocumentPreviewScreen`. Downloading is the preview screen's job now and both kinds render in
+ * place, so this ViewModel only names the row — see `ClientDocumentPreviewViewModel`.
  */
 internal class ClientDocumentsViewModel(
     repository: DocumentRepository,
@@ -70,13 +71,21 @@ internal class ClientDocumentsViewModel(
     private val appliedQuery = MutableStateFlow("")
 
     val documents: StateFlow<ScreenState<List<Document>>> =
-        combine(stream.state, appliedQuery) { data, query -> data.applyQuery(query) }
+        stream.state.applyQuery(appliedQuery)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STATE_TIMEOUT_MS), ScreenState.Loading)
 
     override fun handleAction(action: ClientDocumentsAction) {
         when (action) {
             ClientDocumentsAction.NavigateBack -> sendEvent(ClientDocumentsEvent.NavigateBack)
             ClientDocumentsAction.AddDocument -> sendEvent(ClientDocumentsEvent.AddDocument(clientId))
+
+            is ClientDocumentsAction.ViewDocument -> sendEvent(
+                ClientDocumentsEvent.ViewDocument(
+                    clientId = clientId,
+                    documentId = action.document.id,
+                    title = action.document.name ?: action.document.fileName.orEmpty(),
+                ),
+            )
             ClientDocumentsAction.Refresh -> stream.refresh()
 
             ClientDocumentsAction.ToggleSearch -> {
@@ -158,19 +167,12 @@ internal class ClientDocumentsViewModel(
 /**
  * Applies the committed search query to the rows.
  *
- * A `ScreenState` extension rather than `mapContent`, matching `ClientListViewModel.applyFilters`
- * — a non-Content state passes through untouched, so a filter never turns an Error into an
- * apparently-empty list.
+ * Built on `combineContent`, as `ClientListViewModel.applyFilters` is: a non-Content state passes
+ * through untouched, so a filter never turns an Error into an apparently-empty list, and Content
+ * keeps its `fetchedAt` / freshness signal without this file rebuilding it.
  */
-internal fun ScreenState<List<Document>>.applyQuery(query: String): ScreenState<List<Document>> {
-    if (this !is ScreenState.Content) return this
-    if (query.isBlank()) return this
-    return ScreenState.Content(
-        data = data.filter { it.matches(query) },
-        fetchedAt = fetchedAt,
-        freshnessSignal = freshnessSignal,
-    )
-}
+internal fun Flow<ScreenState<List<Document>>>.applyQuery(query: Flow<String>): Flow<ScreenState<List<Document>>> =
+    combineContent(query) { rows, q, _ -> rows.filter { it.matches(q) } }
 
 /**
  * Matches a document against a search query.
@@ -202,6 +204,7 @@ internal enum class DocumentWriteError { Offline, Failed }
 internal sealed interface ClientDocumentsEvent {
     data object NavigateBack : ClientDocumentsEvent
     data class AddDocument(val clientId: Int) : ClientDocumentsEvent
+    data class ViewDocument(val clientId: Int, val documentId: Int, val title: String) : ClientDocumentsEvent
 }
 
 internal sealed interface ClientDocumentsAction {
@@ -214,4 +217,5 @@ internal sealed interface ClientDocumentsAction {
     data class UpdateSearchQuery(val query: String) : ClientDocumentsAction
     data class DeleteDocument(val documentName: String, val documentId: Int) : ClientDocumentsAction
     data class ConfirmDeleteDocument(val documentId: Int) : ClientDocumentsAction
+    data class ViewDocument(val document: Document) : ClientDocumentsAction
 }

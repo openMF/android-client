@@ -9,6 +9,8 @@
  */
 package kpt.core.store.loan
 
+import kpt.core.model.charge.Charges
+import kpt.core.store.mapping.toModel
 import kpt.core.base.store.annotation.CacheKey
 import kpt.core.base.store.annotation.StoreProvider
 import kpt.core.database.cache.dao.ApiResponseCacheDao
@@ -29,7 +31,7 @@ import org.mobilenativefoundation.store.store5.Store
 fun provideGetListOfLoanChargesStore(
     loanApi: LoanApi,
     cache: ApiResponseCacheDao,
-): Store<Int, List<ChargesEntity>> = cachedRead(
+): Store<Int, List<Charges>> = cachedRead(
     dao = cache,
     keyOf = { key -> AppCacheKeys.LoanGetListOfLoanCharges.forKey(key.toString()) },
     fetch = { key -> loanApi.getListOfLoanCharges(loanId = key) },
@@ -40,7 +42,7 @@ fun provideGetListOfLoanChargesStore(
 fun provideGetListOfChargesStore(
     loanApi: LoanApi,
     cache: ApiResponseCacheDao,
-): Store<Int, Page<ChargesEntity>> = cachedRead(
+): Store<Int, Page<Charges>> = cachedRead(
     dao = cache,
     keyOf = { key -> AppCacheKeys.LoanGetListOfCharges.forKey(key.toString()) },
     fetch = { key -> loanApi.getListOfCharges(clientId = key) },

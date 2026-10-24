@@ -9,11 +9,13 @@
  */
 package kpt.core.model.objects.collectionsheets
 
+import kotlinx.serialization.Serializable
 import kpt.core.model.utils.DateConstants
 
 /**
  * Created by Tarun on 25-07-2017.
  */
+@Serializable
 data class CollectionSheetRequestPayload(
     var calendarId: Int? = null,
 

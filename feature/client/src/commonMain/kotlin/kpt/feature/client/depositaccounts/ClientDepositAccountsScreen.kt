@@ -38,7 +38,7 @@ import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.effects.EventsEffect
 import kpt.core.base.ui.screen.RefreshableScreenContent
 import kpt.core.common.utils.DateHelper
-import kpt.core.database.savings.entity.SavingsAccountEntity
+import kpt.core.model.savings.SavingsAccount
 import kpt.core.designsystem.component.AppScaffold
 import kpt.core.designsystem.component.FloatingActionButtonContent
 import kpt.core.designsystem.icon.AppIcons
@@ -160,7 +160,7 @@ internal fun ClientDepositAccountsScreen(
 @Composable
 internal fun ClientDepositAccountsContent(
     state: ClientDepositAccountsState,
-    accounts: ScreenState<List<SavingsAccountEntity>>,
+    accounts: ScreenState<List<SavingsAccount>>,
     onAction: (ClientDepositAccountsAction) -> Unit,
     modifier: Modifier = Modifier,
     totalCount: Int = 0,
@@ -239,7 +239,7 @@ internal fun ClientDepositAccountsContent(
 
 @Composable
 private fun DepositAccountList(
-    accounts: List<SavingsAccountEntity>,
+    accounts: List<SavingsAccount>,
     kind: DepositAccountKind,
     canViewAccount: Boolean,
     canApproveAccount: Boolean,

@@ -9,6 +9,14 @@
  */
 package kpt.core.store.queue
 
+import kpt.core.model.savings.SavingsAccountTransactionRequest
+import kotlinx.coroutines.flow.map
+import kpt.core.model.center.CenterPayload
+import kpt.core.model.client.ClientPayload
+import kpt.core.model.group.GroupPayload
+import kpt.core.model.loan.LoanRepaymentRequest
+import kpt.core.store.mapping.toEntity
+import kpt.core.store.mapping.toModel
 import kpt.core.base.store.annotation.CacheKey
 import kpt.core.base.store.annotation.StoreProvider
 import kpt.core.base.store.infra.StoreFactory
@@ -39,9 +47,13 @@ import org.mobilenativefoundation.store.store5.Store
  * outside the `Store` hierarchy, so `StoreCacheManager.register(store: Store<*, *>)` cannot take
  * one — and because the generated registration block is `createdAtStart = true`, leaving the
  * default `logout = true` makes Koin miss the binding and the app die on launch, not on logout.
- * The rows still get purged: each queue shares its table with the paired `pending*` read store
- * below, which IS registered. That pairing is what makes `logout = false` safe here — a queued
- * payload belongs to the officer who captured it and must not survive into another session.
+ * WHEN THEY ARE PURGED (decided 2026-10-23). The sign-out dialog offers two choices:
+ *  - "Sign out only" keeps everything, queued captures included — a capture made with no signal is
+ *    work the officer has not been able to send yet, and the next sign-in must still have it.
+ *  - "Sign out and clear data" runs `StoreCacheManager.clearAll()`, which reaches each table ONLY
+ *    through a store's SourceOfTruth `deleteAll`. So every `pending*` read store below declares one,
+ *    and the queued rows go with everything else. The dialog says so before the officer confirms.
+ * Before this, neither happened: `clearAll()` had no caller, and no `pending*` store had `deleteAll`.
  *
  * Keys are the queue row's own id, so a repository can address one pending item to retry or discard
  * it. `core/data` drives these through `MutationGateway.upsert(...)`; it must never touch the DAO
@@ -52,10 +64,10 @@ import org.mobilenativefoundation.store.store5.Store
 @CacheKey(fn = "byId", key = "clientPayloadQueue:{id}", params = ["id:Int"])
 fun provideClientPayloadQueueStore(
     dao: ClientDao,
-): MutableStore<Int, ClientPayloadEntity> = StoreFactory.createOfflineMutableStore(
+): MutableStore<Int, ClientPayload> = StoreFactory.createOfflineMutableStore(
     sourceOfTruth = SourceOfTruth.of(
-        reader = { id: Int -> dao.observeClientPayload(id) },
-        writer = { _: Int, payload: ClientPayloadEntity -> dao.insertClientPayload(payload) },
+        reader = { id: Int -> dao.observeClientPayload(id).map { it?.toModel() } },
+        writer = { _: Int, payload: ClientPayload -> dao.insertClientPayload(payload.toEntity()) },
         delete = { id: Int -> dao.deleteClientPayloadById(id) },
     ),
 )
@@ -64,10 +76,10 @@ fun provideClientPayloadQueueStore(
 @CacheKey(fn = "byId", key = "centerPayloadQueue:{id}", params = ["id:Int"])
 fun provideCenterPayloadQueueStore(
     dao: CenterDao,
-): MutableStore<Int, CenterPayloadEntity> = StoreFactory.createOfflineMutableStore(
+): MutableStore<Int, CenterPayload> = StoreFactory.createOfflineMutableStore(
     sourceOfTruth = SourceOfTruth.of(
-        reader = { id: Int -> dao.observeCenterPayload(id) },
-        writer = { _: Int, payload: CenterPayloadEntity -> dao.saveCenterPayload(payload) },
+        reader = { id: Int -> dao.observeCenterPayload(id).map { it?.toModel() } },
+        writer = { _: Int, payload: CenterPayload -> dao.saveCenterPayload(payload.toEntity()) },
         delete = { id: Int -> dao.deleteCenterPayloadById(id) },
     ),
 )
@@ -76,10 +88,10 @@ fun provideCenterPayloadQueueStore(
 @CacheKey(fn = "byId", key = "groupPayloadQueue:{id}", params = ["id:Int"])
 fun provideGroupPayloadQueueStore(
     dao: GroupsDao,
-): MutableStore<Int, GroupPayloadEntity> = StoreFactory.createOfflineMutableStore(
+): MutableStore<Int, GroupPayload> = StoreFactory.createOfflineMutableStore(
     sourceOfTruth = SourceOfTruth.of(
-        reader = { id: Int -> dao.observeGroupPayload(id) },
-        writer = { _: Int, payload: GroupPayloadEntity -> dao.insertGroupPayload(payload) },
+        reader = { id: Int -> dao.observeGroupPayload(id).map { it?.toModel() } },
+        writer = { _: Int, payload: GroupPayload -> dao.insertGroupPayload(payload.toEntity()) },
         delete = { id: Int -> dao.deleteGroupPayloadById(id) },
     ),
 )
@@ -89,13 +101,13 @@ fun provideGroupPayloadQueueStore(
 @CacheKey(fn = "byLoan", key = "loanRepaymentQueue:{loanId}", params = ["loanId:Int"])
 fun provideLoanRepaymentQueueStore(
     dao: LoanDao,
-): MutableStore<Int, LoanRepaymentRequestEntity> = StoreFactory.createOfflineMutableStore(
+): MutableStore<Int, LoanRepaymentRequest> = StoreFactory.createOfflineMutableStore(
     sourceOfTruth = SourceOfTruth.of(
-        reader = { loanId: Int -> dao.observeLoanRepaymentRequest(loanId) },
-        writer = { loanId: Int, request: LoanRepaymentRequestEntity ->
-            dao.saveLoanRepaymentTransaction(loanId, request)
+        reader = { loanId: Int -> dao.observeLoanRepaymentRequest(loanId).map { it?.toModel() } },
+        writer = { loanId: Int, request: LoanRepaymentRequest ->
+            dao.saveLoanRepaymentTransaction(loanId, request.toEntity())
         },
-        delete = { loanId: Int -> dao.deleteLoanRepaymentByLoanId(loanId) },
+        delete = { loanId: Int -> dao.deleteLoanRepaymentRequestByLoanId(loanId) },
     ),
 )
 
@@ -103,11 +115,11 @@ fun provideLoanRepaymentQueueStore(
 @CacheKey(fn = "byAccount", key = "savingsTransactionQueue:{accountId}", params = ["accountId:Int"])
 fun provideSavingsTransactionQueueStore(
     dao: SavingsDao,
-): MutableStore<Int, SavingsAccountTransactionRequestEntity> = StoreFactory.createOfflineMutableStore(
+): MutableStore<Int, SavingsAccountTransactionRequest> = StoreFactory.createOfflineMutableStore(
     sourceOfTruth = SourceOfTruth.of(
-        reader = { accountId: Int -> dao.getSavingsAccountTransactionRequest(accountId) },
-        writer = { _: Int, request: SavingsAccountTransactionRequestEntity ->
-            dao.insertSavingsAccountTransactionRequest(request)
+        reader = { accountId: Int -> dao.getSavingsAccountTransactionRequest(accountId).map { it?.toModel() } },
+        writer = { _: Int, request: SavingsAccountTransactionRequest ->
+            dao.insertSavingsAccountTransactionRequest(request.toEntity())
         },
         delete = { accountId: Int -> dao.deleteSavingsAccountTransactionRequest(accountId) },
     ),
@@ -123,10 +135,11 @@ fun provideSavingsTransactionQueueStore(
 @CacheKey(name = "LIST", key = "pendingClientPayloads")
 fun providePendingClientPayloadsStore(
     dao: ClientDao,
-): Store<Unit, List<ClientPayloadEntity>> = StoreFactory.createOfflineStore(
+): Store<Unit, List<ClientPayload>> = StoreFactory.createOfflineStore(
     sourceOfTruth = SourceOfTruth.of(
-        reader = { _: Unit -> dao.getAllClientPayload() },
-        writer = { _: Unit, _: List<ClientPayloadEntity> -> Unit },
+        reader = { _: Unit -> dao.getAllClientPayload().map { rows -> rows.map { it.toModel() } } },
+        writer = { _: Unit, _: List<ClientPayload> -> Unit },
+        deleteAll = { dao.deleteAllClientPayloads() },
     ),
 )
 
@@ -134,10 +147,11 @@ fun providePendingClientPayloadsStore(
 @CacheKey(name = "LIST", key = "pendingCenterPayloads")
 fun providePendingCenterPayloadsStore(
     dao: CenterDao,
-): Store<Unit, List<CenterPayloadEntity>> = StoreFactory.createOfflineStore(
+): Store<Unit, List<CenterPayload>> = StoreFactory.createOfflineStore(
     sourceOfTruth = SourceOfTruth.of(
-        reader = { _: Unit -> dao.readAllCenterPayload() },
-        writer = { _: Unit, _: List<CenterPayloadEntity> -> Unit },
+        reader = { _: Unit -> dao.readAllCenterPayload().map { rows -> rows.map { it.toModel() } } },
+        writer = { _: Unit, _: List<CenterPayload> -> Unit },
+        deleteAll = { dao.deleteAllCenterPayloads() },
     ),
 )
 
@@ -145,10 +159,11 @@ fun providePendingCenterPayloadsStore(
 @CacheKey(name = "LIST", key = "pendingGroupPayloads")
 fun providePendingGroupPayloadsStore(
     dao: GroupsDao,
-): Store<Unit, List<GroupPayloadEntity>> = StoreFactory.createOfflineStore(
+): Store<Unit, List<GroupPayload>> = StoreFactory.createOfflineStore(
     sourceOfTruth = SourceOfTruth.of(
-        reader = { _: Unit -> dao.getAllGroupPayloads() },
-        writer = { _: Unit, _: List<GroupPayloadEntity> -> Unit },
+        reader = { _: Unit -> dao.getAllGroupPayloads().map { rows -> rows.map { it.toModel() } } },
+        writer = { _: Unit, _: List<GroupPayload> -> Unit },
+        deleteAll = { dao.deleteAllGroupPayloads() },
     ),
 )
 
@@ -156,10 +171,11 @@ fun providePendingGroupPayloadsStore(
 @CacheKey(name = "LIST", key = "pendingLoanRepayments")
 fun providePendingLoanRepaymentsStore(
     dao: LoanDao,
-): Store<Unit, List<LoanRepaymentRequestEntity>> = StoreFactory.createOfflineStore(
+): Store<Unit, List<LoanRepaymentRequest>> = StoreFactory.createOfflineStore(
     sourceOfTruth = SourceOfTruth.of(
-        reader = { _: Unit -> dao.readAllLoanRepaymentTransaction() },
-        writer = { _: Unit, _: List<LoanRepaymentRequestEntity> -> Unit },
+        reader = { _: Unit -> dao.readAllLoanRepaymentTransaction().map { rows -> rows.map { it.toModel() } } },
+        writer = { _: Unit, _: List<LoanRepaymentRequest> -> Unit },
+        deleteAll = { dao.deleteAllLoanRepaymentRequests() },
     ),
 )
 
@@ -167,9 +183,10 @@ fun providePendingLoanRepaymentsStore(
 @CacheKey(name = "LIST", key = "pendingSavingsTransactions")
 fun providePendingSavingsTransactionsStore(
     dao: SavingsDao,
-): Store<Unit, List<SavingsAccountTransactionRequestEntity>> = StoreFactory.createOfflineStore(
+): Store<Unit, List<SavingsAccountTransactionRequest>> = StoreFactory.createOfflineStore(
     sourceOfTruth = SourceOfTruth.of(
-        reader = { _: Unit -> dao.getAllSavingsAccountTransactionRequest() },
-        writer = { _: Unit, _: List<SavingsAccountTransactionRequestEntity> -> Unit },
+        reader = { _: Unit -> dao.getAllSavingsAccountTransactionRequest().map { rows -> rows.map { it.toModel() } } },
+        writer = { _: Unit, _: List<SavingsAccountTransactionRequest> -> Unit },
+        deleteAll = { dao.deleteAllSavingsAccountTransactionRequests() },
     ),
 )

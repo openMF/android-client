@@ -46,7 +46,7 @@ import kpt.core.base.designsystem.theme.KptTheme
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.effects.EventsEffect
 import kpt.core.base.ui.screen.RefreshableScreenContent
-import kpt.core.database.loan.entity.LoanAccountEntity
+import kpt.core.model.loan.LoanAccount
 import kpt.core.designsystem.component.AppScaffold
 import kpt.core.designsystem.component.FloatingActionButtonContent
 import kpt.core.designsystem.icon.AppIcons
@@ -159,7 +159,7 @@ internal fun ClientLoanAccountsScreen(
 @Composable
 internal fun ClientLoanAccountsContent(
     state: ClientLoanAccountsState,
-    accounts: ScreenState<List<LoanAccountEntity>>,
+    accounts: ScreenState<List<LoanAccount>>,
     onAction: (ClientLoanAccountsAction) -> Unit,
     modifier: Modifier = Modifier,
     totalCount: Int = 0,
@@ -267,7 +267,7 @@ internal fun ClientLoanAccountsContent(
 
 @Composable
 private fun LoanAccountCard(
-    loan: LoanAccountEntity,
+    loan: LoanAccount,
     canViewAccount: Boolean,
     canMakeRepayment: Boolean,
     onAction: (ClientLoanAccountsAction) -> Unit,
@@ -318,7 +318,7 @@ private fun LoanAccountCard(
  * glued to the words. The symbol belongs only to an actual amount.
  */
 private fun Double?.forPendingAware(
-    loan: LoanAccountEntity,
+    loan: LoanAccount,
     symbol: String,
     notAvailable: String,
 ): String = when {

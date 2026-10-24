@@ -16,8 +16,14 @@ import kpt.core.base.store.screen.FetchPolicy
 import kpt.core.base.store.screen.ScreenDataStream
 import kpt.core.base.store.screen.asScreenStream
 import kpt.core.data.collectionsheet.CollectionSheetRepository
-import kpt.core.database.collectionsheet.entity.CenterDetail
+import kpt.core.data.util.freshOrCached
+import kpt.core.model.collectionsheet.CenterDetail
+import kpt.core.model.collectionsheet.CollectionSheetResponse
+import kpt.core.model.collectionsheet.IndividualCollectionSheet
+import kpt.core.model.objects.collectionsheets.CollectionSheetRequestPayload
+import kpt.core.model.collectionsheet.RequestCollectionSheetPayload
 import kpt.core.store.collectionsheet.CollectionSheetKey
+import kpt.core.store.collectionsheet.GeneratedSheetKey
 import kpt.core.store.config.AppCacheKeys
 import kpt.core.store.config.AppStoreIds
 import kpt.core.store.config.AppStoreRegistry
@@ -27,6 +33,12 @@ import org.mobilenativefoundation.store.store5.Store
 internal class CollectionSheetRepositoryImpl(
     @FromStore(AppStoreIds.CollectionSheetCenters)
     private val store: Store<CollectionSheetKey, List<CenterDetail>>,
+    @FromStore(AppStoreIds.CollectionsheetIndividual)
+    private val individualStore: Store<RequestCollectionSheetPayload, IndividualCollectionSheet>,
+    @FromStore(AppStoreIds.CollectionsheetProductive)
+    private val productiveStore: Store<GeneratedSheetKey, CollectionSheetResponse>,
+    @FromStore(AppStoreIds.CollectionsheetGroup)
+    private val groupStore: Store<GeneratedSheetKey, CollectionSheetResponse>,
 ) : CollectionSheetRepository {
 
     override fun centerDetailsStream(
@@ -39,8 +51,21 @@ internal class CollectionSheetRepositoryImpl(
             key = CollectionSheetKey(officeId = officeId, staffId = staffId, meetingDate = meetingDate),
             cacheKey = AppCacheKeys.CollectionSheetCenters.forQuery(officeId, staffId, meetingDate),
             scope = scope,
-            isEmpty = { it.isEmpty() },
+            // No `isEmpty`: an empty list is real content (see ChargeRepositoryImpl.chargesStream).
             fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
             ttl = AppStoreRegistry.Ttl.COLLECTION_SHEET_CENTERS,
         )
+
+    // Through the sheet stores, never `CollectionSheetApi` directly: `fresh` writes the generated
+    // sheet through the read cache, and offline `get` answers from it. Each key is a COPY — the
+    // request types are mutable, and a store key must not change after it is used.
+
+    override suspend fun individualCollectionSheet(request: RequestCollectionSheetPayload) =
+        individualStore.freshOrCached(request.copy())
+
+    override suspend fun productiveSheet(centerId: Int, request: CollectionSheetRequestPayload) =
+        productiveStore.freshOrCached(GeneratedSheetKey(centerId, request.copy()))
+
+    override suspend fun groupCollectionSheet(groupId: Int, request: CollectionSheetRequestPayload) =
+        groupStore.freshOrCached(GeneratedSheetKey(groupId, request.copy()))
 }

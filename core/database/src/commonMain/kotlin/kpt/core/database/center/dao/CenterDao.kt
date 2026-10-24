@@ -98,4 +98,19 @@ interface CenterDao {
     /** One queued offline center, for the write store's source of truth. */
     @Query("SELECT * FROM CenterPayload WHERE id = :id LIMIT 1")
     fun observeCenterPayload(id: Int): Flow<CenterPayloadEntity?>
+
+    /** One center row, for the local write store (`centerItem`) over this table. */
+    @Query("SELECT * FROM Center WHERE id = :id LIMIT 1")
+    fun observeCenter(id: Int): Flow<CenterEntity?>
+
+    @Query("DELETE FROM Center WHERE id = :id")
+    suspend fun deleteCenterById(id: Int)
+
+    /** What the `centers` store's `deleteAll` runs at logout — the rows must not outlive the session. */
+    @Query("DELETE FROM Center")
+    suspend fun deleteAllCenters()
+
+    /** The logout purge for the offline centre queue. */
+    @Query("DELETE FROM CenterPayload")
+    suspend fun deleteAllCenterPayloads()
 }

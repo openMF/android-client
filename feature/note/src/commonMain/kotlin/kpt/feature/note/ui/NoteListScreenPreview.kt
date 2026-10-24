@@ -12,7 +12,7 @@ package kpt.feature.note.ui
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import kpt.core.base.store.screen.ScreenState
-import kpt.core.database.note.entity.NoteEntity
+import kpt.core.model.objects.note.Note
 import kpt.core.designsystem.theme.KptTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -34,7 +34,7 @@ internal fun previewNote(
     // i18n:skip — preview fixture, never rendered in the app
     content: String = "Visited the shop. Stock is low but takings are steady; follow up next cycle.",
     author: String? = "fieldofficer",
-) = NoteEntity(
+) = Note(
     id = id,
     clientId = 42,
     noteContent = content,

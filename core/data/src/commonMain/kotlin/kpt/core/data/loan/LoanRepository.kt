@@ -11,16 +11,14 @@ package kpt.core.data.loan
 
 import kotlinx.coroutines.CoroutineScope
 import kpt.core.base.store.screen.ScreenDataStream
-import kpt.core.database.charge.entity.ChargesEntity
-import kpt.core.database.loan.entity.LoanRepaymentTemplateEntity
-import kpt.core.database.loan.entity.LoanTemplate
+import kpt.core.model.loan.LoanRepaymentTemplate
+import kpt.core.model.loan.LoanTemplate
 import kpt.core.model.objects.account.loan.loanDisburse.LoanDisburseTemplate
 import kpt.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import kpt.core.model.objects.account.loan.reschedules.LoanRescheduleResponse
 import kpt.core.model.objects.account.loan.reschedules.LoanRescheduleTemplate
 import kpt.core.model.objects.account.loan.transfer.AccountTransferTemplate
 import kpt.core.model.objects.organisations.LoanProducts
-import kpt.core.model.objects.template.client.ChargeTemplate
 import kpt.core.model.objects.template.loan.GroupLoanTemplate
 
 interface LoanRepository {
@@ -36,7 +34,7 @@ interface LoanRepository {
     fun loanTemplateStream(clientId: Int, productId: Int?, scope: CoroutineScope): ScreenDataStream<LoanTemplate>
 
     /** Payment-type options a repayment form needs, per loan. */
-    fun repaymentTemplateStream(loanId: Int, scope: CoroutineScope): ScreenDataStream<LoanRepaymentTemplateEntity>
+    fun repaymentTemplateStream(loanId: Int, scope: CoroutineScope): ScreenDataStream<LoanRepaymentTemplate>
 
     /** Expected amounts, payment types and dates for a disbursement, per loan. */
     fun disburseTemplateStream(loanId: Int, scope: CoroutineScope): ScreenDataStream<LoanDisburseTemplate>
@@ -107,20 +105,4 @@ interface LoanRepository {
      * A suspend one-shot like the other two templates: the propose form asks once when it opens.
      */
     suspend fun loanRescheduleReasons(): LoanRescheduleTemplate?
-
-    /**
-     * Which charges the tenant allows on a loan, and their default amounts.
-     *
-     * A suspend one-shot, like [accountTransferTemplate]: the add-charge sheet asks once when it
-     * opens and the answer does not change while it is open. Returns null on failure.
-     */
-    suspend fun loanChargeTemplate(loanId: Int): ChargeTemplate?
-
-    /**
-     * Charges levied on one loan.
-     *
-     * A LOAN charge, not a client charge — different endpoint, different Room column, its own
-     * store. See `provideLoanChargeStore`.
-     */
-    fun loanChargesStream(loanId: Int, scope: CoroutineScope): ScreenDataStream<List<ChargesEntity>>
 }

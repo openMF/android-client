@@ -9,6 +9,8 @@
  */
 package kpt.core.store.survey
 
+import kpt.core.model.survey.Survey
+import kpt.core.store.mapping.toModel
 import kpt.core.base.store.annotation.CacheKey
 import kpt.core.base.store.annotation.StoreProvider
 import kpt.core.database.cache.dao.ApiResponseCacheDao
@@ -28,7 +30,7 @@ import org.mobilenativefoundation.store.store5.Store
 fun provideGetSurveyStore(
     surveyApi: SurveyApi,
     cache: ApiResponseCacheDao,
-): Store<Int, SurveyEntity> = cachedRead(
+): Store<Int, Survey> = cachedRead(
     dao = cache,
     keyOf = { key -> AppCacheKeys.SurveyGetSurvey.forKey(key.toString()) },
     fetch = { key -> surveyApi.getSurvey(surveyId = key) },

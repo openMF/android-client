@@ -20,9 +20,10 @@ import kpt.core.base.store.mutation.BlockReason
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kpt.core.model.objects.error.serverErrorMessage
 import kpt.core.data.client.ClientCommandRepository
 import kpt.core.data.office.OfficeRepository
-import kpt.core.database.office.entity.OfficeEntity
+import kpt.core.model.office.Office
 import kpt.core.model.objects.clients.ProposeTransferRequest
 import kpt.core.model.utils.ApiDateFormatter
 import kpt.core.ui.components.ResultStatus
@@ -60,7 +61,7 @@ internal class ClientTransferViewModel(
     private val stream = offices.officesStream(viewModelScope)
 
     /** Destination offices. A tenant-level catalog, shared across clients. */
-    val offices: StateFlow<ScreenState<List<OfficeEntity>>> = stream.state
+    val offices: StateFlow<ScreenState<List<Office>>> = stream.state
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STATE_TIMEOUT_MS), ScreenState.Loading)
 
     override fun handleAction(action: ClientTransferAction) {
@@ -122,7 +123,7 @@ internal class ClientTransferViewModel(
                         isSubmitting = false,
                         dialogState = ClientTransferState.DialogState.ShowStatusDialog(
                             status = ResultStatus.FAILURE,
-                            msg = result.cause.message ?: FAILED_MSG,
+                            msg = result.cause.serverErrorMessage() ?: FAILED_MSG,
                         ),
                     )
                 }

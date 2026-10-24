@@ -29,4 +29,15 @@ interface DocumentRepository {
      * to render around it.
      */
     suspend fun downloadDocument(entityType: String, entityId: Int, documentId: Int): ByteArray?
+
+    /**
+     * The entity's documents as the SERVER has them now — fetched through the store, so the
+     * database is updated first — falling back to the cached list offline; `null` only when
+     * neither is available.
+     *
+     * For a one-shot LOOKUP, not a screen — use [documentsStream] to render a list. The stream's
+     * first emission can be the cached list, which is the wrong answer for "is the scan I may have
+     * just uploaded there?" (found on device 2026-10-23: a scan uploaded, then "no document attached").
+     */
+    suspend fun fetchDocuments(entityType: String, entityId: Int): List<Document>?
 }

@@ -10,14 +10,16 @@
 package kpt.feature.client.list
 
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kpt.core.base.store.screen.ScreenState
+import kpt.core.base.store.screen.combineContent
+import kpt.core.base.store.screen.emptyIfContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.data.client.ClientRepository
-import kpt.core.database.client.entity.ClientEntity
+import kpt.core.model.client.Client
 
 /**
  * The client list — ported from `6b66e8a43:feature/client/clientsList/ClientListViewModel.kt`.
@@ -51,8 +53,8 @@ internal class ClientListViewModel(
      * collected for the ViewModel's whole lifetime, so the Clients tab kept its Store subscription
      * and background refreshes alive while the user was on another tab.
      */
-    val screenState: StateFlow<ScreenState<List<ClientEntity>>> =
-        combine(stream.state, stateFlow) { data, ui -> data.applyFilters(ui) }
+    val screenState: StateFlow<ScreenState<List<Client>>> =
+        stream.state.applyFilters(stateFlow)
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STATE_TIMEOUT_MS), ScreenState.Loading)
 
     /** Re-run the read. Wired to `ScreenContent`'s retry. */
@@ -93,6 +95,10 @@ internal class ClientListViewModel(
                 sendEvent(ClientListEvent.CreateClient)
 
             ClientListAction.Retry -> onRetry()
+            // Pull-to-refresh: a FORCED fetch. Cache-first alone would re-serve the list until its TTL
+            // ran out, so a client deleted on the server stayed listed (and opened, and 404'd on
+            // every write) with no way for the officer to see the server's truth.
+            ClientListAction.Refresh -> stream.refresh(forceFresh = true)
         }
     }
 
@@ -124,19 +130,22 @@ internal data class ClientListState(
  * cannot drift. A filter matching nothing is [ScreenState.Empty], not a Content of zero rows:
  * otherwise "no match" renders identically to "this officer has no clients".
  */
-internal fun ScreenState<List<ClientEntity>>.applyFilters(
-    ui: ClientListState,
-): ScreenState<List<ClientEntity>> {
-    if (this !is ScreenState.Content) return this
-    val rows = data
-        .filter { client ->
-            val statusOk = ui.selectedStatuses.isEmpty() || client.status?.value in ui.selectedStatuses
-            val officeOk = ui.selectedOffices.isEmpty() || client.officeName in ui.selectedOffices
-            val queryOk = ui.query.isBlank() ||
-                client.displayName?.contains(ui.query, ignoreCase = true) == true ||
-                client.accountNo?.contains(ui.query, ignoreCase = true) == true
-            statusOk && officeOk && queryOk
-        }
+internal fun Flow<ScreenState<List<Client>>>.applyFilters(
+    ui: Flow<ClientListState>,
+): Flow<ScreenState<List<Client>>> =
+    combineContent(ui) { rows, filters, _ -> rows.filteredFor(filters) }
+        .emptyIfContent { it.isEmpty() }
+
+/** The rows [ui] keeps, in [ui]'s order. Loading/Error never reach here — [combineContent] passes them through. */
+internal fun List<Client>.filteredFor(ui: ClientListState): List<Client> =
+    filter { client ->
+        val statusOk = ui.selectedStatuses.isEmpty() || client.status?.value in ui.selectedStatuses
+        val officeOk = ui.selectedOffices.isEmpty() || client.officeName in ui.selectedOffices
+        val queryOk = ui.query.isBlank() ||
+            client.displayName?.contains(ui.query, ignoreCase = true) == true ||
+            client.accountNo?.contains(ui.query, ignoreCase = true) == true
+        statusOk && officeOk && queryOk
+    }
         .let { filtered ->
             when (ui.sort) {
                 ClientSort.Name -> filtered.sortedBy { it.displayName?.lowercase() }
@@ -145,12 +154,12 @@ internal fun ScreenState<List<ClientEntity>>.applyFilters(
                 null -> filtered
             }
         }
-    return if (rows.isEmpty()) ScreenState.Empty else ScreenState.Content(rows, fetchedAt, freshnessSignal)
-}
 
 internal enum class ClientSort { Name, AccountNumber, ExternalId }
 
 internal sealed interface ClientListAction {
+    /** The pull gesture — the original's `refreshClientList`. */
+    data object Refresh : ClientListAction
     data class QueryChanged(val value: String) : ClientListAction
     data class SortChanged(val value: ClientSort?) : ClientListAction
     data class StatusFilterToggled(val value: String) : ClientListAction

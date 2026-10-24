@@ -18,11 +18,11 @@ import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.screenDataStreamForTesting
 import kpt.core.data.sync.OfflineQueueRepository
-import kpt.core.database.center.entity.CenterPayloadEntity
-import kpt.core.database.client.entity.ClientPayloadEntity
-import kpt.core.database.group.entity.GroupPayloadEntity
-import kpt.core.database.loan.entity.LoanRepaymentRequestEntity
-import kpt.core.database.savings.entity.SavingsAccountTransactionRequestEntity
+import kpt.core.model.center.CenterPayload
+import kpt.core.model.client.ClientPayload
+import kpt.core.model.group.GroupPayload
+import kpt.core.model.loan.LoanRepaymentRequest
+import kpt.core.model.savings.SavingsAccountTransactionRequest
 
 /**
  * Test double for [OfflineQueueRepository], beside the interface it fakes — same reasoning as
@@ -37,14 +37,14 @@ import kpt.core.database.savings.entity.SavingsAccountTransactionRequestEntity
  */
 @ExperimentalDataTestingApi
 class FakeOfflineQueueRepository(
-    private val pendingLoanRepayments: MutableStateFlow<ScreenState<List<LoanRepaymentRequestEntity>>> =
+    private val pendingLoanRepayments: MutableStateFlow<ScreenState<List<LoanRepaymentRequest>>> =
         MutableStateFlow(ScreenState.Content(emptyList())),
-    private val enqueueResult: (LoanRepaymentRequestEntity) -> MutationResult<LoanRepaymentRequestEntity> =
+    private val enqueueResult: (LoanRepaymentRequest) -> MutationResult<LoanRepaymentRequest> =
         { MutationResult.Applied(it, synced = false) },
 ) : OfflineQueueRepository {
 
     /** Every repayment handed to the queue, in order — a test asserts WHAT was saved. */
-    val enqueued: MutableList<Pair<Int, LoanRepaymentRequestEntity>> = mutableListOf()
+    val enqueued: MutableList<Pair<Int, LoanRepaymentRequest>> = mutableListOf()
 
     val refreshes: MutableSharedFlow<Unit> = MutableSharedFlow(extraBufferCapacity = 8)
 
@@ -53,8 +53,8 @@ class FakeOfflineQueueRepository(
 
     override suspend fun enqueueLoanRepayment(
         loanId: Int,
-        request: LoanRepaymentRequestEntity,
-    ): MutationResult<LoanRepaymentRequestEntity> {
+        request: LoanRepaymentRequest,
+    ): MutationResult<LoanRepaymentRequest> {
         enqueued += loanId to request
         return enqueueResult(request)
     }
@@ -66,12 +66,12 @@ class FakeOfflineQueueRepository(
     override fun pendingGroupsStream(scope: CoroutineScope) = unused()
     override fun pendingSavingsTransactionsStream(scope: CoroutineScope) = unused()
 
-    override suspend fun enqueueClient(id: Int, payload: ClientPayloadEntity) = unused()
-    override suspend fun enqueueCenter(id: Int, payload: CenterPayloadEntity) = unused()
-    override suspend fun enqueueGroup(id: Int, payload: GroupPayloadEntity) = unused()
+    override suspend fun enqueueClient(id: Int, payload: ClientPayload) = unused()
+    override suspend fun enqueueCenter(id: Int, payload: CenterPayload) = unused()
+    override suspend fun enqueueGroup(id: Int, payload: GroupPayload) = unused()
     override suspend fun enqueueSavingsTransaction(
         accountId: Int,
-        request: SavingsAccountTransactionRequestEntity,
+        request: SavingsAccountTransactionRequest,
     ) = unused()
 
     override suspend fun discardClient(id: Int) = unused()

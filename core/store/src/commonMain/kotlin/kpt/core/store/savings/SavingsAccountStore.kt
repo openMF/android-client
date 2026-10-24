@@ -9,6 +9,10 @@
  */
 package kpt.core.store.savings
 
+import kpt.core.store.mapping.toEntity
+import kotlinx.coroutines.flow.map
+import kpt.core.model.savings.SavingsAccountWithAssociations
+import kpt.core.store.mapping.toModel
 import kpt.core.base.store.annotation.CacheKey
 import kpt.core.base.store.annotation.StoreProvider
 import kpt.core.base.store.infra.StoreFactory
@@ -39,7 +43,7 @@ data class SavingsAccountKey(
 fun provideSavingsAccountStore(
     service: SavingsAccountApi,
     dao: SavingsDao,
-): Store<SavingsAccountKey, SavingsAccountWithAssociationsEntity> = StoreFactory.createStore(
+): Store<SavingsAccountKey, SavingsAccountWithAssociations> = StoreFactory.createStore(
     fetcher = Fetcher.of { key: SavingsAccountKey ->
         service.getSavingsAccountWithAssociations(
             savingsAccountType = key.savingsAccountType,
@@ -48,9 +52,13 @@ fun provideSavingsAccountStore(
         )
     },
     sourceOfTruth = SourceOfTruth.of(
-        reader = { key: SavingsAccountKey -> dao.getSavingsAccountWithAssociations(key.savingsAccountId) },
-        writer = { _: SavingsAccountKey, account: SavingsAccountWithAssociationsEntity ->
-            dao.insertSavingsAccountWithAssociations(account)
+        reader = { key: SavingsAccountKey -> dao.getSavingsAccountWithAssociations(key.savingsAccountId).map { it?.toModel() } },
+        writer = { _: SavingsAccountKey, account: SavingsAccountWithAssociations ->
+            dao.insertSavingsAccountWithAssociations(account.toEntity())
         },
+        delete = { key: SavingsAccountKey -> dao.deleteSavingsAccountWithAssociations(key.savingsAccountId) },
+        // What the logout purge (`Store.clear()`) reaches the database through; without it an
+        // officer's account balances and transactions outlived the session that loaded them.
+        deleteAll = { dao.deleteAllSavingsAccountsWithAssociations() },
     ),
 )

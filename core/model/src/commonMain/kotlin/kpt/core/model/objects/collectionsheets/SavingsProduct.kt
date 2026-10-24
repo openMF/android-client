@@ -9,9 +9,12 @@
  */
 package kpt.core.model.objects.collectionsheets
 
+import kotlinx.serialization.Serializable
+
 /**
  * Created by Tarun on 31-07-17.
  */
+@Serializable
 data class SavingsProduct(
     var isAllowOverdraft: Boolean = false,
 

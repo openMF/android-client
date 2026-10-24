@@ -28,6 +28,7 @@ import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.data.testing.FakeClientCommandRepository
 import kpt.core.data.testing.FakeClientRepository
+import kpt.core.model.objects.noncoreobjects.DocumentType
 import kpt.core.model.objects.noncoreobjects.Identifier
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -159,5 +160,33 @@ class ClientIdentifiersViewModelTest {
         assertEquals(IdentifierWriteError.Offline, vm.stateFlow.value.writeError)
         // `isDeleting` must clear, or the row stays un-deletable forever with no indication why.
         assertFalse(vm.stateFlow.value.isDeleting)
+    }
+
+    // ---- View document ----
+
+    @Test
+    fun viewDocumentNamesTheScanByTheKeyTheUploadWrote() = runTest(dispatcher) {
+        val vm = viewModel(clientId = 7)
+        val row = Identifier(
+            id = 3,
+            documentKey = "A1234",
+            documentType = DocumentType(name = "Passport"),
+            // Fineract's status code — mapped through getClientIdentifierStatus, as the list does.
+            status = "clientIdentifierStatusType.active",
+        )
+
+        vm.eventFlow.test {
+            vm.trySendAction(ClientIdentifiersAction.ViewDocument(row))
+            assertEquals(
+                ClientIdentifiersEvent.ViewDocument(
+                    // The scan is keyed by the CLIENT, not the identifier — the original's convention.
+                    clientId = 7,
+                    matchKey = "PassportA1234Active",
+                    matchPrefix = "PassportA1234",
+                    title = "A1234",
+                ),
+                awaitItem(),
+            )
+        }
     }
 }

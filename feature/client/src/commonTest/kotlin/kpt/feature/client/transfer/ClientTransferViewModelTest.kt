@@ -31,7 +31,7 @@ import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.screenDataStreamForTesting
 import kpt.core.data.office.OfficeRepository
 import kpt.core.data.testing.FakeClientCommandRepository
-import kpt.core.database.office.entity.OfficeEntity
+import kpt.core.model.office.Office
 import kpt.core.model.utils.ApiDateFormatter
 import kpt.core.ui.components.ResultStatus
 import kotlin.test.AfterTest
@@ -50,7 +50,7 @@ class ClientTransferViewModelTest {
 
     @AfterTest fun tearDown() = Dispatchers.resetMain()
 
-    private val officesState = MutableStateFlow<ScreenState<List<OfficeEntity>>>(ScreenState.Loading)
+    private val officesState = MutableStateFlow<ScreenState<List<Office>>>(ScreenState.Loading)
     private val refreshes = MutableSharedFlow<Unit>(extraBufferCapacity = 4)
 
     /**
@@ -58,7 +58,7 @@ class ClientTransferViewModelTest {
      * `core/data` — there is nothing for the interface to grow into that would break this.
      */
     private val offices = object : OfficeRepository {
-        override fun officesStream(scope: CoroutineScope): ScreenDataStream<List<OfficeEntity>> =
+        override fun officesStream(scope: CoroutineScope): ScreenDataStream<List<Office>> =
             screenDataStreamForTesting(officesState, refreshTrigger = refreshes)
     }
 
@@ -67,7 +67,7 @@ class ClientTransferViewModelTest {
         clientId: Int = 42,
     ) = ClientTransferViewModel(offices, commands, SavedStateHandle(mapOf("clientId" to clientId)))
 
-    private fun office(id: Int, name: String) = OfficeEntity(id = id, name = name)
+    private fun office(id: Int, name: String) = Office(id = id, name = name)
 
     @Test
     fun theOfficeListComesFromTheOfficeRepositoryNotTheGroupFeatures() = runTest(dispatcher) {
@@ -76,7 +76,7 @@ class ClientTransferViewModelTest {
 
         vm.offices.test {
             assertIs<ScreenState.Loading>(awaitItem())
-            val content = assertIs<ScreenState.Content<List<OfficeEntity>>>(awaitItem())
+            val content = assertIs<ScreenState.Content<List<Office>>>(awaitItem())
             // The original borrowed `CreateNewGroupRepository.offices()` for this — the GROUP
             // feature's repository, for office data.
             assertEquals(listOf("Head Office", "Branch A"), content.data.map { it.name })

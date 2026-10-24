@@ -34,7 +34,7 @@ import kpt.core.base.designsystem.theme.KptTheme
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.effects.EventsEffect
 import kpt.core.base.ui.screen.ScreenContent
-import kpt.core.database.client.entity.ClientEntity
+import kpt.core.model.client.Client
 import kpt.core.designsystem.component.AppScaffold
 import kpt.core.designsystem.component.AppSweetError
 import kpt.core.designsystem.icon.AppIcons
@@ -123,7 +123,7 @@ internal fun ClientApplyNewScreen(
 /** Stateless half — rendered in tests and previews without Koin or a nav controller. */
 @Composable
 internal fun ClientApplyNewContent(
-    client: ScreenState<ClientEntity>,
+    client: ScreenState<Client>,
     available: List<ApplyNewItem>,
     onAction: (ClientApplyNewAction) -> Unit,
     modifier: Modifier = Modifier,

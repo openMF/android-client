@@ -9,6 +9,7 @@
  */
 package kpt.core.store.search
 
+import kpt.core.model.search.SearchResourcesKey
 import kpt.core.base.store.annotation.CacheKey
 import kpt.core.base.store.annotation.StoreProvider
 import kpt.core.database.cache.dao.ApiResponseCacheDao
@@ -22,13 +23,6 @@ import org.mobilenativefoundation.store.store5.Store
  * Keyed reads for search with no table of their own — cached through the shared read cache so the
  * last-known answer still renders with no signal.
  */
-
-/** Addresses one `searchResources` read. */
-data class SearchResourcesKey(
-    val query: String,
-    val resource: String?,
-    val exactMatch: Boolean?,
-)
 
 @StoreProvider(id = "searchSearchResources", ttl = "12h")
 @CacheKey(fn = "forKey", key = "searchSearchResources:{key}", params = ["key:String"])

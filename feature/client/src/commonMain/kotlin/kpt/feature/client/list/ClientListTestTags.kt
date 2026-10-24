@@ -14,6 +14,7 @@ object ClientListTestTags {
     const val SCREEN = "client-list:screen"
     const val SEARCH = "client-list:search"
     const val LIST = "client-list:list"
+    const val REFRESH = "client-list:refresh"
     const val CREATE = "client-list:create"
     const val FILTER_TOGGLE = "client-list:filter-toggle"
     const val FILTERS = "client-list:filters"

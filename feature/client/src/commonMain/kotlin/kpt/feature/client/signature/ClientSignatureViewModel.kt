@@ -37,7 +37,7 @@ import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.common.utils.Constants
 import kpt.core.data.document.DocumentCommandRepository
 import kpt.core.data.document.DocumentRepository
-import kpt.core.ui.util.multipartRequestBody
+import kpt.core.ui.util.documentUpload
 
 /**
  * The client's signature — ported from
@@ -161,7 +161,7 @@ internal class ClientSignatureViewModel(
         if (state.isSubmitting) return
         mutableStateFlow.value = state.copy(isSubmitting = true, dialogState = null, writeError = null)
 
-        val body = multipartRequestBody(
+        val body = documentUpload(
             file = bitmap.encodeToByteArray(ImageFormat.PNG),
             name = SIGNATURE_NAME,
             extension = ImageFormat.PNG.name,

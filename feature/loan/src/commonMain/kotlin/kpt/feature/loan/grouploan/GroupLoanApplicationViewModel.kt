@@ -22,6 +22,7 @@ import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.emptyIfContent
 import kpt.core.base.store.screen.mapContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kpt.core.model.objects.error.serverErrorMessage
 import kpt.core.data.loan.LoanCommandRepository
 import kpt.core.data.loan.LoanRepository
 import kpt.core.model.objects.payloads.GroupLoanPayload
@@ -291,7 +292,7 @@ internal class GroupLoanApplicationViewModel(
                     mutableStateFlow.value = state.copy(
                         isSubmitting = false,
                         dialogState = GroupLoanApplicationState.DialogState.Failed(
-                            result.cause.message ?: FAILED_MSG,
+                            result.cause.serverErrorMessage() ?: FAILED_MSG,
                         ),
                     )
                 }

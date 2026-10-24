@@ -22,9 +22,10 @@ import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.emptyIfContent
 import kpt.core.base.store.screen.mapContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kpt.core.model.objects.error.serverErrorMessage
 import kpt.core.data.savings.SavingsAccountRepository
 import kpt.core.data.savings.SavingsCommandRepository
-import kpt.core.database.savings.entity.SavingProductsTemplate
+import kpt.core.model.savings.SavingProductsTemplate
 import kpt.core.model.objects.account.saving.SavingsApplicationInput
 import kpt.core.model.objects.account.saving.SavingsChargeInput
 import kpt.core.model.utils.ApiDateFormatter
@@ -288,7 +289,7 @@ internal class SavingsApplicationViewModel(
                         isSubmitting = false,
                         dialogState = ApplicationDialog.Failed(
                             offline = false,
-                            msg = result.cause.message,
+                            msg = result.cause.serverErrorMessage(),
                         ),
                     )
                 }

@@ -9,13 +9,13 @@
  */
 package kpt.core.network.mifos.client.mapper
 
-import kpt.core.database.client.entity.ClientAccounts
-import kpt.core.database.loan.entity.LoanAccountEntity
-import kpt.core.database.loan.entity.LoanTypeEntity
-import kpt.core.database.savings.entity.SavingAccountCurrencyEntity
-import kpt.core.database.savings.entity.SavingAccountDepositTypeEntity
-import kpt.core.database.savings.entity.SavingsAccountEntity
-import kpt.core.database.savings.entity.SavingsAccountStatusEntity
+import kpt.core.model.client.ClientAccounts
+import kpt.core.model.loan.LoanAccount
+import kpt.core.model.loan.LoanAccountType
+import kpt.core.model.savings.SavingAccountCurrency
+import kpt.core.model.savings.SavingAccountDepositType
+import kpt.core.model.savings.SavingsAccount
+import kpt.core.model.savings.SavingsAccountStatus
 import kpt.core.model.objects.account.share.ShareAccounts
 import kpt.core.model.objects.account.share.ShareAccountsStatus
 import kpt.core.network.data.AbstractMapper
@@ -38,7 +38,7 @@ object GetClientsClientIdAccountMapper :
     override fun mapFromEntity(entity: GetClientsClientIdAccountsResponse): ClientAccounts {
         return ClientAccounts(
             savingsAccounts = entity.savingsAccounts?.map {
-                SavingsAccountEntity(
+                SavingsAccount(
                     id = it.id?.toInt(),
                     accountNo = it.accountNo,
                     accountBalance = it.accountBalance,
@@ -46,14 +46,14 @@ object GetClientsClientIdAccountMapper :
                     shortProductName = it.shortProductName,
                     productName = it.productName,
                     depositType = it.depositType?.let { deposit ->
-                        SavingAccountDepositTypeEntity(
+                        SavingAccountDepositType(
                             id = deposit.id?.toInt(),
                             code = deposit.code,
                             value = deposit.value,
                         )
                     },
                     status = it.status?.let { status ->
-                        SavingsAccountStatusEntity(
+                        SavingsAccountStatus(
                             id = status.id?.toInt(),
                             code = status.code,
                             value = status.value,
@@ -66,7 +66,7 @@ object GetClientsClientIdAccountMapper :
                         )
                     },
                     currency = it.currency?.let { currency ->
-                        SavingAccountCurrencyEntity(
+                        SavingAccountCurrency(
                             code = currency.code,
                             name = currency.name,
                             nameCode = currency.nameCode,
@@ -79,14 +79,14 @@ object GetClientsClientIdAccountMapper :
             } ?: emptyList(),
 
             loanAccounts = entity.loanAccounts?.map {
-                LoanAccountEntity(
+                LoanAccount(
                     id = it.id?.toInt(),
                     accountNo = it.accountNo,
                     externalId = it.externalId ?: "",
                     productId = it.productId?.toInt(),
                     productName = it.productName,
                     status = it.status?.let { status ->
-                        kpt.core.database.loan.entity.LoanStatusEntity(
+                        kpt.core.model.loan.LoanStatus(
                             id = status.id?.toInt(),
                             code = status.code,
                             value = status.value,
@@ -101,7 +101,7 @@ object GetClientsClientIdAccountMapper :
                         )
                     },
                     loanType = it.loanType?.let { loanType ->
-                        LoanTypeEntity(
+                        LoanAccountType(
                             id = loanType.id?.toInt(),
                             code = loanType.code,
                             value = loanType.value,

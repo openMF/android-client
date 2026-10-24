@@ -19,7 +19,7 @@ import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.screenDataStreamForTesting
 import kpt.core.data.search.SearchRepository
 import kpt.core.model.objects.SearchedEntity
-import kpt.core.store.search.SearchResourcesKey
+import kpt.core.model.search.SearchResourcesKey
 
 /**
  * Test double for [SearchRepository], owned by the module that owns the CONTRACT.
@@ -55,10 +55,9 @@ class FakeSearchRepository : SearchRepository {
         return screenDataStreamForTesting(stateFor(key), refreshTrigger = refreshes)
     }
 
-    /** Answer [key] with [found] — or with Empty when nothing is passed. */
+    /** Answer [key] with [found] — an empty Content when nothing is passed, as the real stream does. */
     fun resolve(key: SearchResourcesKey, vararg found: SearchedEntity) {
-        stateFor(key).value =
-            if (found.isEmpty()) ScreenState.Empty else ScreenState.Content(found.toList())
+        stateFor(key).value = ScreenState.Content(found.toList())
     }
 
     private fun stateFor(key: SearchResourcesKey) =

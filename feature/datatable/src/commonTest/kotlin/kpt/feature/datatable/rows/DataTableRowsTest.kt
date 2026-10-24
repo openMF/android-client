@@ -189,7 +189,24 @@ class DataTableRowsTest {
     }
 
     @Test
-    fun aSuccessfulDeleteReReadsTheRows() = runTest(dispatcher) {
+    fun deletingTheLastRowIsEmptyNotTheDeletedRow() = runTest(dispatcher) {
+        // The stream reports "no rows" as an empty Content (no `isEmpty` predicate); the ViewModel's
+        // `emptyIfContent` turns it into Empty. With the predicate the deleted row stayed on screen.
+        val vm = viewModel()
+        vm.rows.test {
+            assertIs<ScreenState.Loading>(awaitItem())
+            rowsState.value = ScreenState.Content(json("""[{"id":3,"Notes":"a"}]"""))
+            assertIs<ScreenState.Content<List<DataTableRow>>>(awaitItem())
+            rowsState.value = ScreenState.Content(json("[]"))
+            assertEquals(ScreenState.Empty, awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun aSuccessfulDeleteNeedsNoReRead() = runTest(dispatcher) {
+        // The command records the delete through the rows' store (DataTableRepositoryTest), so the
+        // stream drops the row by itself; a forced re-read here would be a second fetch for nothing.
         val commands = FakeCommands()
         val vm = viewModel(commands)
         testScheduler.advanceUntilIdle()
@@ -199,7 +216,7 @@ class DataTableRowsTest {
             testScheduler.advanceUntilIdle()
 
             assertEquals(listOf(Triple("client_extra", 42, 3)), commands.deleted.toList())
-            expectMostRecentItem()
+            expectNoEvents()
             cancelAndIgnoreRemainingEvents()
         }
         assertEquals(RowNotice.Deleted, vm.stateFlow.value.notice)

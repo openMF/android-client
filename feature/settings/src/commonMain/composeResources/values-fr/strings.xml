@@ -35,7 +35,7 @@
     <string name="feature_settings_language_preference">Langue</string>
     <string name="feature_settings_dev_tools_title">Outils de développement</string>
     <string name="feature_settings_dev_transition_gallery">Galerie de transitions</string>
-    <string name="feature_settings_dev_state_gallery">Galerie d\'états</string>
+    <string name="feature_settings_dev_state_gallery">Galerie d'états</string>
     <string name="feature_settings_dev_close">Fermer</string>
     <string name="feature_settings_notifications_empty_title">Aucune notification pour le moment</string>
     <string name="feature_settings_notifications_empty_message">Vous verrez ici les rappels de factures et les alertes de taux.</string>
@@ -60,7 +60,7 @@
     <string name="feature_settings_sync_drafts_discard_confirm_cancel">Annuler</string>
     <string name="feature_settings_conflicts_title">Conflits de synchronisation</string>
     <string name="feature_settings_conflicts_empty_title">Aucun conflit</string>
-    <string name="feature_settings_conflicts_empty_message">Lorsqu\'une de vos modifications entre en conflit avec une version plus récente sur le serveur, elle apparaît ici pour que vous conserviez celle du serveur ou réessayiez la vôtre.</string>
+    <string name="feature_settings_conflicts_empty_message">Lorsqu'une de vos modifications entre en conflit avec une version plus récente sur le serveur, elle apparaît ici pour que vous conserviez celle du serveur ou réessayiez la vôtre.</string>
     <string name="feature_settings_conflicts_row_label">Conflit</string>
     <string name="feature_settings_conflicts_accept_server">Conserver le serveur</string>
     <string name="feature_settings_conflicts_retry_local">Réessayer la mienne</string>

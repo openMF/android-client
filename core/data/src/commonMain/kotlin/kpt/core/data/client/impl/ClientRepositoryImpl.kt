@@ -9,7 +9,7 @@
  */
 package kpt.core.data.client.impl
 
-import io.ktor.client.statement.bodyAsText
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kpt.core.base.data.annotation.FromStore
 import kpt.core.base.data.annotation.RepositoryBinding
@@ -17,30 +17,30 @@ import kpt.core.base.store.screen.FetchPolicy
 import kpt.core.base.store.screen.ScreenDataStream
 import kpt.core.base.store.screen.asScreenStream
 import kpt.core.data.client.ClientRepository
-import kpt.core.database.client.entity.AddressConfiguration
-import kpt.core.database.client.entity.AddressTemplate
-import kpt.core.database.client.entity.ClientsTemplateEntity
-import kpt.core.database.client.entity.ClientAccounts
-import kpt.core.database.client.entity.ClientAddressEntity
-import kpt.core.database.client.entity.ClientEntity
+import kpt.core.model.client.AddressConfiguration
+import kpt.core.model.client.AddressTemplate
+import kpt.core.model.client.ClientAccounts
+import kpt.core.model.client.Client
+import kpt.core.model.client.ClientsTemplate
 import kpt.core.model.client.ClientCloseTemplateResponse
 import kpt.core.model.client.ClientTemplateOptions
+import kpt.core.model.objects.clients.ClientAddressEntity
 import kpt.core.model.objects.clients.ClientAddressResponse
 import kpt.core.model.objects.noncoreobjects.Identifier
 import kpt.core.model.objects.noncoreobjects.IdentifierTemplate
 import kpt.core.model.shared.CollateralItem
 import kpt.core.model.shared.CollateralItemResult
-import kpt.core.network.mifos.client.api.ClientApi
 import kpt.core.store.config.AppCacheKeys
 import kpt.core.store.config.AppStoreIds
 import kpt.core.store.config.AppStoreRegistry
 import org.mobilenativefoundation.store.store5.Store
+import org.mobilenativefoundation.store.store5.impl.extensions.fresh
+import org.mobilenativefoundation.store.store5.impl.extensions.get
 
 @RepositoryBinding(binds = ClientRepository::class)
 internal class ClientRepositoryImpl(
-    private val clientApi: ClientApi,
-    @FromStore(AppStoreIds.Clients) private val store: Store<Unit, List<ClientEntity>>,
-    @FromStore(AppStoreIds.ClientGetClient) private val clientStore: Store<Int, ClientEntity>,
+    @FromStore(AppStoreIds.Clients) private val store: Store<Unit, List<Client>>,
+    @FromStore(AppStoreIds.ClientGetClient) private val clientStore: Store<Int, Client>,
     @FromStore(AppStoreIds.ClientGetClientAccounts) private val accountsStore: Store<Int, ClientAccounts>,
     @FromStore(AppStoreIds.ClientGetClientIdentifierTemplate)
     private val identifierTemplateStore: Store<Long, IdentifierTemplate>,
@@ -61,9 +61,11 @@ internal class ClientRepositoryImpl(
     @FromStore(AppStoreIds.AddressTemplate)
     private val addressTemplateStore: Store<Unit, AddressTemplate>,
     @FromStore(AppStoreIds.ClientsTemplate)
-    private val clientsTemplateStore: Store<Unit, ClientsTemplateEntity>,
+    private val clientsTemplateStore: Store<Unit, ClientsTemplate>,
     @FromStore(AppStoreIds.AddressConfiguration)
     private val addressConfigurationStore: Store<Unit, AddressConfiguration>,
+    @FromStore(AppStoreIds.ClientImage)
+    private val imageStore: Store<Int, String>,
 ) : ClientRepository {
 
     // NETWORK_WITH_CACHE, not the CACHE_FIRST_SWR default.
@@ -78,17 +80,17 @@ internal class ClientRepositoryImpl(
     //
     // The ttl stays the declared freshness bound: it drives the "updated N ago" indicator, never
     // whether cache is served.
-    override fun clientsStream(scope: CoroutineScope): ScreenDataStream<List<ClientEntity>> =
+    override fun clientsStream(scope: CoroutineScope): ScreenDataStream<List<Client>> =
         store.asScreenStream(
             key = Unit,
             cacheKey = AppCacheKeys.Clients.LIST,
             scope = scope,
-            isEmpty = { it.isEmpty() },
+            // No `isEmpty`: an empty list is real content (see ChargeRepositoryImpl.chargesStream).
             fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
             ttl = AppStoreRegistry.Ttl.CLIENTS,
         )
 
-    override fun clientStream(clientId: Int, scope: CoroutineScope): ScreenDataStream<ClientEntity> =
+    override fun clientStream(clientId: Int, scope: CoroutineScope): ScreenDataStream<Client> =
         clientStore.asScreenStream(
             key = clientId,
             cacheKey = AppCacheKeys.ClientGetClient.forKey(clientId.toString()),
@@ -135,7 +137,7 @@ internal class ClientRepositoryImpl(
         key = clientId,
         cacheKey = AppCacheKeys.ClientGetClientPinpointLocations.forKey(clientId.toString()),
         scope = scope,
-        isEmpty = { it.isEmpty() },
+        // No `isEmpty`: an empty list is real content (see ChargeRepositoryImpl.chargesStream).
         fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
         ttl = AppStoreRegistry.Ttl.CLIENT_GET_CLIENT_PINPOINT_LOCATIONS,
     )
@@ -147,7 +149,7 @@ internal class ClientRepositoryImpl(
         key = clientId,
         cacheKey = AppCacheKeys.ClientGetClientCollateralItems.forKey(clientId.toString()),
         scope = scope,
-        isEmpty = { it.isEmpty() },
+        // No `isEmpty`: an empty list is real content (see ChargeRepositoryImpl.chargesStream).
         fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
         ttl = AppStoreRegistry.Ttl.CLIENT_GET_CLIENT_COLLATERAL_ITEMS,
     )
@@ -187,16 +189,25 @@ internal class ClientRepositoryImpl(
 
     /**
      * Fineract answers `GET clients/{id}/images` with a `data:image/png;base64,<payload>` STRING,
-     * not binary — hence `bodyAsText()`. The `data:` prefix is left ON: `imageToByteArray` strips
-     * it itself, and stripping it twice would cut into the payload of any photo whose base64
-     * happens to contain a comma.
+     * not binary. The `data:` prefix is left ON: `imageToByteArray` strips it itself, and stripping
+     * it twice would cut into the payload of any photo whose base64 happens to contain a comma.
      *
-     * `getOrNull()` because every failure here means one thing to the screen: no photo. A 404
-     * (never uploaded) is the common case and is not an error.
+     * Through the `clientImage` store, not `ClientApi` — the original's call went straight to the
+     * network from here and cached nothing. `fresh` first, so a photo changed elsewhere shows; offline
+     * it falls back to the source of truth, so a photo seen once still renders in the field. The
+     * store caches "no photo" as `""` (a 404, the common case), which reads as `null` here, as does
+     * any failure: an unreachable photo must not turn the profile into an error screen.
      */
-    override suspend fun clientImage(clientId: Int): String? = runCatching {
-        clientApi.getClientImage(clientId).bodyAsText()
-    }.getOrNull()
+    override suspend fun clientImage(clientId: Int): String? =
+        (orNull { imageStore.fresh(clientId) } ?: orNull { imageStore.get(clientId) })?.takeIf { it.isNotEmpty() }
+
+    private inline fun <T> orNull(block: () -> T): T? = try {
+        block()
+    } catch (cancellation: CancellationException) {
+        throw cancellation
+    } catch (_: Exception) {
+        null
+    }
 
     override fun clientAddressesStream(
         clientId: Int,
@@ -205,7 +216,7 @@ internal class ClientRepositoryImpl(
         key = clientId,
         cacheKey = AppCacheKeys.ClientGetClientAddresses.forKey(clientId.toString()),
         scope = scope,
-        isEmpty = { it.isEmpty() },
+        // No `isEmpty`: an empty list is real content (see ChargeRepositoryImpl.chargesStream).
         fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
         ttl = AppStoreRegistry.Ttl.CLIENT_GET_CLIENT_ADDRESSES,
     )
@@ -223,7 +234,7 @@ internal class ClientRepositoryImpl(
     // not an empty state. The same reasoning as `collateralItemsStream` above — a form that shows
     // "nothing to see here" when the tenant forgot to configure genders sends the officer looking
     // for data that was never going to arrive.
-    override fun clientsTemplateStream(scope: CoroutineScope): ScreenDataStream<ClientsTemplateEntity> =
+    override fun clientsTemplateStream(scope: CoroutineScope): ScreenDataStream<ClientsTemplate> =
         clientsTemplateStore.asScreenStream(
             key = Unit,
             cacheKey = AppCacheKeys.ClientsTemplate.LIST,

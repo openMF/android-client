@@ -25,6 +25,7 @@ import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.data.testing.FakeLoanCommandRepository
 import kpt.core.data.testing.FakeLoanRepository
+import kpt.core.data.testing.fineractRejection
 import kpt.core.model.objects.account.loan.reschedules.LoanRescheduleResponse
 import kpt.core.model.objects.account.loan.reschedules.RescheduleReasonOption
 import kpt.core.model.objects.account.loan.reschedules.RescheduleStatus
@@ -272,7 +273,7 @@ class LoanReschedulesViewModelTest {
     }
 
     @Test
-    fun aSuccessfulActionReReadsTheList() = runTest(dispatcher) {
+    fun aSuccessfulActionDoesNotReReadTheList() = runTest(dispatcher) {
         val repository = FakeLoanRepository(loanReschedules = historyState)
         val commands = FakeLoanCommandRepository()
         val vm = viewModel(commands, repository)
@@ -282,8 +283,9 @@ class LoanReschedulesViewModelTest {
         repository.refreshes.test {
             vm.actionChannel.trySend(LoanReschedulesAction.ConfirmApprove(1))
             testScheduler.advanceUntilIdle()
-            // The row's status just changed, and the list is this screen's subject.
-            awaitItem()
+            // The command records the new status through the reschedules store, which this
+            // list observes — a re-read here is the post-write refresh the write door replaced.
+            expectNoEvents()
             cancelAndIgnoreRemainingEvents()
         }
         assertNull(vm.stateFlow.value.actingOn)
@@ -333,7 +335,7 @@ class LoanReschedulesViewModelTest {
         val commands = FakeLoanCommandRepository(
             rescheduleResult = {
                 MutationResult.Failed(
-                    IllegalStateException("loan is not active"),
+                    fineractRejection("loan is not active"),
                     rolledBack = false,
                 )
             },

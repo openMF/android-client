@@ -9,21 +9,21 @@
  */
 package kpt.core.network.mifos.client.mapper
 
-import kpt.core.database.client.entity.ClientEntity
+import kpt.core.model.client.Client
 import kpt.core.model.objects.clients.Page
 import kpt.core.network.data.AbstractMapper
 import kpt.core.network.mifos.client.dto.GetClientsResponse
 
-object GetClientResponseMapper : AbstractMapper<GetClientsResponse, Page<ClientEntity>>() {
+object GetClientResponseMapper : AbstractMapper<GetClientsResponse, Page<Client>>() {
 
-    override fun mapFromEntity(entity: GetClientsResponse): Page<ClientEntity> {
-        return Page<ClientEntity>().apply {
+    override fun mapFromEntity(entity: GetClientsResponse): Page<Client> {
+        return Page<Client>().apply {
             totalFilteredRecords = entity.totalFilteredRecords!!
             pageItems = ClientMapper.mapFromEntityList(entity.pageItems!!.toList())
         }
     }
 
-    override fun mapToEntity(domainModel: Page<ClientEntity>): GetClientsResponse {
+    override fun mapToEntity(domainModel: Page<Client>): GetClientsResponse {
         return GetClientsResponse(
             totalFilteredRecords = domainModel.totalFilteredRecords,
             pageItems = ClientMapper.mapToEntityList(domainModel.pageItems).toSet(),

@@ -14,6 +14,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import kotlinx.serialization.Serializable
 import kpt.core.base.ui.nav.composableWithStayTransitions
+import kpt.feature.signin.ui.SignInScreen
 
 @Serializable
 data object SignInRoute

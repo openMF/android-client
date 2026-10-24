@@ -12,7 +12,7 @@ package kpt.core.network.mifos.office.api
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.Query
 import kpt.core.base.network.annotation.ApiBinding
-import kpt.core.database.office.entity.OfficeEntity
+import kpt.core.model.office.Office
 import kpt.core.network.mifos.office.dto.GetOfficesResponse
 
 @ApiBinding("mifos")
@@ -42,5 +42,5 @@ interface OfficeApi {
      * @param listOfOfficesCallback
      */
     @GET("offices")
-    suspend fun allOffices(): List<OfficeEntity>
+    suspend fun allOffices(): List<Office>
 }

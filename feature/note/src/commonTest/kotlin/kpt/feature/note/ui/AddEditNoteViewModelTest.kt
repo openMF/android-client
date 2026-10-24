@@ -21,7 +21,7 @@ import kpt.core.base.store.submit.SubmitOutboxStatus
 import kpt.core.common.utils.Constants
 import kpt.core.data.note.NOTE_FORM_KEY
 import kpt.core.data.note.NoteSubmitException
-import kpt.core.database.note.entity.NoteEntity
+import kpt.core.model.objects.note.Note
 import kpt.feature.note.testing.FakeNoteCommandRepository
 import kpt.feature.note.testing.FakeNoteRepository
 import kpt.feature.note.testing.FakeSubmitOutbox
@@ -51,7 +51,7 @@ class AddEditNoteViewModelTest {
 
     @AfterTest fun tearDown() = Dispatchers.resetMain()
 
-    private fun note(id: Long, text: String) = NoteEntity(id = id, clientId = 7, noteContent = text)
+    private fun note(id: Long, text: String) = Note(id = id, clientId = 7, noteContent = text)
 
     private fun viewModel(clientId: Int = 7, noteId: Long? = null): AddEditNoteViewModel {
         val handle = SavedStateHandle(

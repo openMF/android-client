@@ -59,5 +59,8 @@ fun provideRecurringDepositTemplateStore(
                 ),
             )
         },
+        delete = { clientId: Int -> dao.deleteForClient(clientId) },
+        // The logout purge (`Store.clear()`) reaches the table only through this.
+        deleteAll = { dao.deleteAll() },
     ),
 )

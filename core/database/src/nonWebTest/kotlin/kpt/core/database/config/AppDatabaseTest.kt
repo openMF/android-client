@@ -62,7 +62,10 @@ class AppDatabaseTest {
         // fail with SQLite 787, so the offline cache could never be written (see
         // `app-profile/migration-ledger.yaml`). Update this constant when bumping
         // `AppDatabase.VERSION` so the guardrail stays meaningful.
-        assertEquals(14, AppDatabase.VERSION)
+        // 15: added `document_contents` (document file bytes) — an additive AutoMigration.
+        // 16: `Charges` re-keyed to (resourceType, resourceId, id) so client / loan / savings
+        // charges sharing an id coexist (a plain AutoMigration recreate).
+        assertEquals(16, AppDatabase.VERSION)
     }
 
     @Test

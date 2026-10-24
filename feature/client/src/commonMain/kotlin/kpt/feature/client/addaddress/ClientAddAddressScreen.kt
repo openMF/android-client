@@ -33,8 +33,8 @@ import kpt.core.base.designsystem.theme.KptTheme
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.effects.EventsEffect
 import kpt.core.base.ui.screen.ScreenContent
-import kpt.core.database.client.entity.AddressTemplate
-import kpt.core.database.client.entity.OptionsEntity
+import kpt.core.model.client.AddressTemplate
+import kpt.core.model.client.Options
 import kpt.core.designsystem.component.AppOutlinedButton
 import kpt.core.designsystem.component.AppOutlinedTextField
 import kpt.core.designsystem.component.AppScaffold
@@ -288,7 +288,7 @@ private fun AddressForm(
 private fun OptionDropdown(
     value: String,
     label: String,
-    options: List<OptionsEntity>,
+    options: List<Options>,
     error: String?,
     onSelected: (id: Int, label: String) -> Unit,
     tag: String,

@@ -24,6 +24,7 @@ import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.mapContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kpt.core.model.objects.error.serverErrorMessage
 import kpt.core.data.loan.LoanCommandRepository
 import kpt.core.data.loan.LoanRepository
 import kpt.core.model.objects.account.loan.LoanApproval
@@ -169,10 +170,8 @@ internal class LoanApprovalViewModel(
 
             when (val result = commands.approveLoanApplication(state.loanId, approval)) {
                 is MutationResult.Applied -> {
-                    // The loan's status just changed from pendingApproval to approved, and the
-                    // profile behind this screen is showing the old one. Re-read so going back
-                    // shows an approved loan rather than a stale Approve button.
-                    stream.refresh(forceFresh = true)
+                    // No re-read: the command ingests the approved loan through the `loans` store,
+                    // so the profile behind this screen already shows it approved.
                     mutableStateFlow.value = state.copy(
                         isSubmitting = false,
                         dialogState = LoanApprovalState.DialogState.ShowStatusDialog(ResultStatus.SUCCESS),
@@ -195,7 +194,7 @@ internal class LoanApprovalViewModel(
                             status = ResultStatus.FAILURE,
                             // Fineract's own reason is the useful part — "approved amount exceeds
                             // proposed principal" tells the officer exactly what to change.
-                            msg = result.cause.message ?: FAILED_MSG,
+                            msg = result.cause.serverErrorMessage() ?: FAILED_MSG,
                         ),
                     )
                 }

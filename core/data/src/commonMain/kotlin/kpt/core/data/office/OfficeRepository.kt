@@ -11,9 +11,9 @@ package kpt.core.data.office
 
 import kotlinx.coroutines.CoroutineScope
 import kpt.core.base.store.screen.ScreenDataStream
-import kpt.core.database.office.entity.OfficeEntity
+import kpt.core.model.office.Office
 
 interface OfficeRepository {
     /** Every office in the tenant. Reference data — the officer's whole hierarchy picker depends on it. */
-    fun officesStream(scope: CoroutineScope): ScreenDataStream<List<OfficeEntity>>
+    fun officesStream(scope: CoroutineScope): ScreenDataStream<List<Office>>
 }

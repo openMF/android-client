@@ -10,20 +10,19 @@
 package kpt.core.data.savings.impl
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.filterNot
-import kotlinx.coroutines.flow.first
 import kpt.core.base.data.annotation.FromStore
 import kpt.core.base.data.annotation.RepositoryBinding
 import kpt.core.base.store.screen.FetchPolicy
 import kpt.core.base.store.screen.ScreenDataStream
 import kpt.core.base.store.screen.asScreenStream
 import kpt.core.data.savings.SavingsAccountRepository
-import kpt.core.database.savings.entity.SavingProductsTemplate
-import kpt.core.database.savings.entity.SavingsAccountTransactionTemplateEntity
-import kpt.core.database.savings.entity.SavingsAccountWithAssociationsEntity
+import kpt.core.data.util.freshOrCached
+import kpt.core.model.savings.SavingProductsTemplate
+import kpt.core.model.savings.SavingsAccountTransactionTemplate
+import kpt.core.model.savings.SavingsAccountWithAssociations
 import kpt.core.model.objects.organisations.ProductSavings
-import kpt.core.network.mifos.savings.dto.FixedDepositTemplate
-import kpt.core.network.mifos.savings.dto.ShareTemplate
+import kpt.core.model.savings.FixedDepositTemplate
+import kpt.core.model.savings.ShareTemplate
 import kpt.core.store.config.AppCacheKeys
 import kpt.core.store.config.AppStoreIds
 import kpt.core.store.config.AppStoreRegistry
@@ -34,17 +33,15 @@ import kpt.core.store.savings.GetSavingsAccountTransactionTemplateKey
 import kpt.core.store.savings.SavingsAccountKey
 import kpt.core.store.savings.ShareProductTemplateKey
 import org.mobilenativefoundation.store.store5.Store
-import org.mobilenativefoundation.store.store5.StoreReadRequest
-import org.mobilenativefoundation.store.store5.StoreReadResponse
 
 @RepositoryBinding(binds = SavingsAccountRepository::class)
 internal class SavingsAccountRepositoryImpl(
     @FromStore(AppStoreIds.SavingsAccounts)
-    private val store: Store<SavingsAccountKey, SavingsAccountWithAssociationsEntity>,
+    private val store: Store<SavingsAccountKey, SavingsAccountWithAssociations>,
     @FromStore(AppStoreIds.SavingsGetSavingsAccountTransactionTemplate)
     private val transactionTemplateStore: Store<
         GetSavingsAccountTransactionTemplateKey,
-        SavingsAccountTransactionTemplateEntity,
+        SavingsAccountTransactionTemplate,
         >,
     @FromStore(AppStoreIds.SavingsProducts)
     private val productsStore: Store<Unit, List<ProductSavings>>,
@@ -68,7 +65,7 @@ internal class SavingsAccountRepositoryImpl(
         savingsAccountType: String,
         savingsAccountId: Int,
         scope: CoroutineScope,
-    ): ScreenDataStream<SavingsAccountWithAssociationsEntity> =
+    ): ScreenDataStream<SavingsAccountWithAssociations> =
         store.asScreenStream(
             key = SavingsAccountKey(savingsAccountType, savingsAccountId),
             cacheKey = AppCacheKeys.SavingsAccounts.forAccount(savingsAccountType, savingsAccountId),
@@ -81,26 +78,13 @@ internal class SavingsAccountRepositoryImpl(
         savingsAccountType: String,
         savingsAccountId: Int,
         transactionType: String,
-    ): SavingsAccountTransactionTemplateEntity? = runCatching {
-        transactionTemplateStore
-            .stream(
-                StoreReadRequest.cached(
-                    GetSavingsAccountTransactionTemplateKey(
-                        savingsAccountType = savingsAccountType,
-                        savingsAccountId = savingsAccountId,
-                        transactionType = transactionType,
-                    ),
-                    refresh = false,
-                ),
-            )
-            .filterNot {
-                it is StoreReadResponse.Loading ||
-                    it is StoreReadResponse.NoNewData ||
-                    it is StoreReadResponse.Initial
-            }
-            .first()
-            .requireData()
-    }.getOrNull()
+    ): SavingsAccountTransactionTemplate? = transactionTemplateStore.freshOrCached(
+        GetSavingsAccountTransactionTemplateKey(
+            savingsAccountType = savingsAccountType,
+            savingsAccountId = savingsAccountId,
+            transactionType = transactionType,
+        ),
+    )
 
     override fun savingsProductsStream(scope: CoroutineScope): ScreenDataStream<List<ProductSavings>> =
         productsStore.asScreenStream(
@@ -115,34 +99,18 @@ internal class SavingsAccountRepositoryImpl(
         ownerId: Int,
         productId: Int,
         isGroup: Boolean,
-    ): SavingProductsTemplate? = runCatching {
+    ): SavingProductsTemplate? =
         // The owner decides the ENDPOINT, not just a payload field — Fineract has a separate
         // group template, and the original's wizard read neither.
-        val responses = if (isGroup) {
-            groupApplicationTemplateStore.stream(
-                StoreReadRequest.cached(
-                    GetGroupSavingsAccountTemplateByProductKey(groupId = ownerId, productId = productId),
-                    refresh = false,
-                ),
+        if (isGroup) {
+            groupApplicationTemplateStore.freshOrCached(
+                GetGroupSavingsAccountTemplateByProductKey(groupId = ownerId, productId = productId),
             )
         } else {
-            clientApplicationTemplateStore.stream(
-                StoreReadRequest.cached(
-                    GetClientSavingsAccountTemplateByProductKey(clientId = ownerId, productId = productId),
-                    refresh = false,
-                ),
+            clientApplicationTemplateStore.freshOrCached(
+                GetClientSavingsAccountTemplateByProductKey(clientId = ownerId, productId = productId),
             )
         }
-
-        responses
-            .filterNot {
-                it is StoreReadResponse.Loading ||
-                    it is StoreReadResponse.NoNewData ||
-                    it is StoreReadResponse.Initial
-            }
-            .first()
-            .requireData()
-    }.getOrNull()
 
     override fun shareTemplateStream(
         clientId: Int,

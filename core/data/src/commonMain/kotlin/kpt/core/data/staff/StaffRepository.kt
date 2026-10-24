@@ -11,9 +11,9 @@ package kpt.core.data.staff
 
 import kotlinx.coroutines.CoroutineScope
 import kpt.core.base.store.screen.ScreenDataStream
-import kpt.core.database.staff.entity.StaffEntity
+import kpt.core.model.staff.Staff
 
 interface StaffRepository {
     /** Loan officers attached to one office. */
-    fun staffStream(officeId: Int, scope: CoroutineScope): ScreenDataStream<List<StaffEntity>>
+    fun staffStream(officeId: Int, scope: CoroutineScope): ScreenDataStream<List<Staff>>
 }

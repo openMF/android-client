@@ -17,7 +17,6 @@ import kpt.core.database.loan.dao.LoanDao
 import kpt.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import kpt.core.network.mifos.loan.api.LoanApi
 import kpt.core.network.mifos.loan.dto.LoanWithAssociationsDto
-import kpt.core.network.mifos.loan.mapper.LoanAccountMapper
 import kpt.core.network.mifos.loan.mapper.toDomain
 import org.mobilenativefoundation.store.store5.Fetcher
 import org.mobilenativefoundation.store.store5.SourceOfTruth
@@ -43,5 +42,9 @@ fun provideLoanStore(
         writer = { _: Int, dto: LoanWithAssociationsDto ->
             dao.saveLoanWithAssociations(LoanAccountMapper.mapToEntity(dto.toDomain()))
         },
+        delete = { loanId: Int -> dao.deleteLoanById(loanId) },
+        // The logout purge (`Store.clear()`) reaches the database only through this; without it a
+        // signed-out officer's loans stayed in the table for the next one to read.
+        deleteAll = { dao.deleteAllLoans() },
     ),
 )

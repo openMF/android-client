@@ -71,15 +71,15 @@ import org.koin.compose.viewmodel.koinViewModel
  * and one `AppActionsClientDocumentListingComponent` per document with the original's
  * single-expanded-row behaviour held in local `remember` state.
  *
- * §6a's three adaptations: read states through [ScreenContent]; actions unchanged; the View entry
- * is omitted from the row menu and the "+" is absent — the document preview and the add-document
- * form are both S3d. See the ViewModel's header.
+ * §6a's adaptations: read states through [ScreenContent]; actions unchanged; View opens the in-app
+ * preview instead of an external app. See the ViewModel's header.
  */
 @Composable
 internal fun ClientDocumentsScreen(
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     onAddDocument: ((Int) -> Unit)? = null,
+    onViewDocument: ((ClientDocumentsEvent.ViewDocument) -> Unit)? = null,
     viewModel: ClientDocumentsViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -89,6 +89,7 @@ internal fun ClientDocumentsScreen(
         when (event) {
             ClientDocumentsEvent.NavigateBack -> onNavigateBack()
             is ClientDocumentsEvent.AddDocument -> onAddDocument?.invoke(event.clientId)
+            is ClientDocumentsEvent.ViewDocument -> onViewDocument?.invoke(event)
         }
     }
 
@@ -120,6 +121,7 @@ internal fun ClientDocumentsScreen(
             onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
             modifier = modifier,
             scaffoldPadding = scaffoldPadding,
+            canViewDocument = onViewDocument != null,
         )
     }
 }
@@ -140,6 +142,7 @@ internal fun ClientDocumentsContent(
      * back affordance (which is why their `NavigateBack` action had no dispatcher).
      */
     scaffoldPadding: PaddingValues = PaddingValues(),
+    canViewDocument: Boolean = false,
 ) {
     // The host scaffold's insets, folded into the modifier this half already receives so
     // the screen's own root layout places them.
@@ -197,17 +200,24 @@ internal fun ClientDocumentsContent(
                             onClick = {
                                 expandedId = if (expandedId == document.id) -1 else document.id
                             },
-                            // Delete only — View needs the document-preview feature (S3d). The
-                            // original listed it and ended its handler in `else -> null`.
-                            menuList = listOf(Actions.DeleteDocument()),
+                            // View is listed only when the host wired the preview destination.
+                            menuList = listOfNotNull(
+                                Actions.ViewDocument().takeIf { canViewDocument },
+                                Actions.DeleteDocument(),
+                            ),
                             onActionClicked = { action ->
-                                if (action is Actions.DeleteDocument) {
-                                    onAction(
+                                when (action) {
+                                    is Actions.ViewDocument ->
+                                        onAction(ClientDocumentsAction.ViewDocument(document))
+
+                                    is Actions.DeleteDocument -> onAction(
                                         ClientDocumentsAction.DeleteDocument(
                                             documentName = document.fileName ?: "",
                                             documentId = document.id,
                                         ),
                                     )
+
+                                    else -> Unit
                                 }
                             },
                         )

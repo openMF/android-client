@@ -16,6 +16,7 @@ import io.ktor.client.request.forms.formData
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
 import io.ktor.utils.io.InternalAPI
+import kpt.core.model.objects.noncoreobjects.DocumentUpload
 import kotlin.text.substringBeforeLast
 
 @OptIn(InternalAPI::class)
@@ -42,6 +43,23 @@ fun multipartRequestBody(
         },
     )
 }
+
+/**
+ * What the officer picked, as a [DocumentUpload] — the document write path's input. The multipart
+ * encoding lives in `core/network` now; the UI only names the file it chose.
+ */
+fun documentUpload(
+    file: ByteArray,
+    name: String,
+    extension: String,
+    description: String? = null,
+): DocumentUpload = DocumentUpload(
+    name = name,
+    fileName = "${name.substringBeforeLast(".")}.${extension.lowercase()}",
+    mimeType = getMimeTypeFromPlatformFile(extension),
+    bytes = file,
+    description = description,
+)
 
 fun getMimeTypeFromPlatformFile(extension: String): String {
     return when (extension.lowercase()) {

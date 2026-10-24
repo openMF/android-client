@@ -10,8 +10,6 @@
 package kpt.feature.loan.di
 
 import kpt.feature.loan.approval.LoanApprovalViewModel
-import kpt.feature.loan.chargeform.LoanChargeFormViewModel
-import kpt.feature.loan.charges.LoanChargesViewModel
 import kpt.feature.loan.disbursement.LoanDisbursementViewModel
 import kpt.feature.loan.grouploan.GroupLoanApplicationViewModel
 import kpt.feature.loan.newloan.NewLoanApplicationViewModel
@@ -38,9 +36,7 @@ val LoanModule = module {
     viewModelOf(::LoanRepaymentViewModel)
     viewModelOf(::LoanSummaryViewModel)
     viewModelOf(::LoanDisbursementViewModel)
-    viewModelOf(::LoanChargesViewModel)
     viewModelOf(::LoanTransferViewModel)
-    viewModelOf(::LoanChargeFormViewModel)
     viewModelOf(::LoanReschedulesViewModel)
     viewModelOf(::LoanRescheduleFormViewModel)
     viewModelOf(::GroupLoanApplicationViewModel)

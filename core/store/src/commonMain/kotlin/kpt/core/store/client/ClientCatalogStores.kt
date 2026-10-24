@@ -9,6 +9,10 @@
  */
 package kpt.core.store.client
 
+import kpt.core.model.client.AddressConfiguration as AddressConfigurationModel
+import kpt.core.model.client.AddressTemplate as AddressTemplateModel
+import kpt.core.model.client.ClientsTemplate
+import kpt.core.store.mapping.toModel
 import kpt.core.base.store.annotation.CacheKey
 import kpt.core.base.store.annotation.StoreProvider
 import kpt.core.database.cache.dao.ApiResponseCacheDao
@@ -32,7 +36,7 @@ import org.mobilenativefoundation.store.store5.Store
 fun provideAddressConfigurationStore(
     clientApi: ClientApi,
     cache: ApiResponseCacheDao,
-): Store<Unit, AddressConfiguration> = cachedRead(
+): Store<Unit, AddressConfigurationModel> = cachedRead(
     dao = cache,
     keyOf = { AppCacheKeys.AddressConfiguration.LIST },
     fetch = { clientApi.getAddressConfiguration() },
@@ -56,7 +60,7 @@ fun provideAddressConfigurationStore(
 fun provideClientsTemplateStore(
     clientApi: ClientApi,
     cache: ApiResponseCacheDao,
-): Store<Unit, ClientsTemplateEntity> = cachedRead(
+): Store<Unit, ClientsTemplate> = cachedRead(
     dao = cache,
     keyOf = { AppCacheKeys.ClientsTemplate.LIST },
     fetch = { clientApi.getClientTemplate() },
@@ -67,7 +71,7 @@ fun provideClientsTemplateStore(
 fun provideAddressTemplateStore(
     clientApi: ClientApi,
     cache: ApiResponseCacheDao,
-): Store<Unit, AddressTemplate> = cachedRead(
+): Store<Unit, AddressTemplateModel> = cachedRead(
     dao = cache,
     keyOf = { AppCacheKeys.AddressTemplate.LIST },
     fetch = { clientApi.getAddressTemplate() },

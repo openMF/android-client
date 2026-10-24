@@ -12,7 +12,7 @@ package kpt.core.network.mifos.staff.api
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.Query
 import kpt.core.base.network.annotation.ApiBinding
-import kpt.core.database.staff.entity.StaffEntity
+import kpt.core.model.staff.Staff
 import kpt.core.model.shared.RetrieveOneResponse
 
 @ApiBinding("mifos")
@@ -39,11 +39,11 @@ interface StaffApi {
     ): List<RetrieveOneResponse>
 
     @GET("staff?status=all")
-    suspend fun getStaffForOffice(@Query("officeId") officeId: Int): List<StaffEntity>
+    suspend fun getStaffForOffice(@Query("officeId") officeId: Int): List<Staff>
 
     @GET("staff")
-    suspend fun allStaff(): List<StaffEntity>
+    suspend fun allStaff(): List<Staff>
 
     @GET("staff?isLoanOfficer=true")
-    suspend fun fieldStaffForOffice(): List<StaffEntity>
+    suspend fun fieldStaffForOffice(): List<Staff>
 }

@@ -18,16 +18,14 @@ import kpt.core.base.store.screen.ScreenDataStream
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.screenDataStreamForTesting
 import kpt.core.data.loan.LoanRepository
-import kpt.core.database.charge.entity.ChargesEntity
-import kpt.core.database.loan.entity.LoanRepaymentTemplateEntity
-import kpt.core.database.loan.entity.LoanTemplate
+import kpt.core.model.loan.LoanRepaymentTemplate
+import kpt.core.model.loan.LoanTemplate
 import kpt.core.model.objects.account.loan.loanDisburse.LoanDisburseTemplate
 import kpt.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import kpt.core.model.objects.account.loan.reschedules.LoanRescheduleResponse
 import kpt.core.model.objects.account.loan.reschedules.LoanRescheduleTemplate
 import kpt.core.model.objects.account.loan.transfer.AccountTransferTemplate
 import kpt.core.model.objects.organisations.LoanProducts
-import kpt.core.model.objects.template.client.ChargeTemplate
 import kpt.core.model.objects.template.loan.GroupLoanTemplate
 
 /**
@@ -45,9 +43,8 @@ import kpt.core.model.objects.template.loan.GroupLoanTemplate
 class FakeLoanRepository(
     private val loan: MutableStateFlow<ScreenState<LoanWithAssociations>>? = null,
     private val loanTemplate: MutableStateFlow<ScreenState<LoanTemplate>>? = null,
-    private val repaymentTemplate: MutableStateFlow<ScreenState<LoanRepaymentTemplateEntity>>? = null,
+    private val repaymentTemplate: MutableStateFlow<ScreenState<LoanRepaymentTemplate>>? = null,
     private val disburseTemplate: MutableStateFlow<ScreenState<LoanDisburseTemplate>>? = null,
-    private val loanCharges: MutableStateFlow<ScreenState<List<ChargesEntity>>>? = null,
     /**
      * Answers the cascading template question. Receives the three TO-side values so a test can
      * model the cascade narrowing — or return null to model the read failing.
@@ -57,8 +54,6 @@ class FakeLoanRepository(
         toClientId: Int?,
         toAccountType: Int?,
     ) -> AccountTransferTemplate? = { _, _, _ -> null },
-    /** Answers the add-charge sheet's template question; null models the read failing. */
-    private val chargeTemplate: () -> ChargeTemplate? = { null },
     private val loanReschedules: MutableStateFlow<ScreenState<List<LoanRescheduleResponse>>>? = null,
     /** Answers the propose form's reason-catalog question; null models the read failing. */
     private val rescheduleReasons: () -> LoanRescheduleTemplate? = { null },
@@ -110,9 +105,6 @@ class FakeLoanRepository(
     override fun disburseTemplateStream(loanId: Int, scope: CoroutineScope) =
         stream("disburseTemplate", loanId, disburseTemplate)
 
-    override fun loanChargesStream(loanId: Int, scope: CoroutineScope) =
-        stream("loanCharges", loanId, loanCharges)
-
     override fun loanReschedulesStream(loanId: Int, scope: CoroutineScope) =
         stream("loanReschedules", loanId, loanReschedules)
 
@@ -142,14 +134,6 @@ class FakeLoanRepository(
     override suspend fun loanRescheduleReasons(): LoanRescheduleTemplate? {
         rescheduleReasonQueries++
         return rescheduleReasons()
-    }
-
-    /** Every loan id the charge template was asked for. */
-    val chargeTemplateQueries: MutableList<Int> = mutableListOf()
-
-    override suspend fun loanChargeTemplate(loanId: Int): ChargeTemplate? {
-        chargeTemplateQueries += loanId
-        return chargeTemplate()
     }
 
     /** Every template question asked, in order — a test asserts the CASCADE narrowed correctly. */

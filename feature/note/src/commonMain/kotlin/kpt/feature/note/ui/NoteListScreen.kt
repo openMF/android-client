@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.screen.ScreenContent
-import kpt.core.database.note.entity.NoteEntity
+import kpt.core.model.objects.note.Note
 import kpt.core.designsystem.icon.AppIcons
 import kpt.feature.note.generated.resources.Res
 import kpt.feature.note.generated.resources.feature_note_add_item
@@ -64,36 +64,11 @@ internal fun NoteListScreen(
     onBackClick: () -> Unit,
     onAddNote: (Int) -> Unit,
     onEditNote: (Int, Long) -> Unit,
-    /** Set by the add/edit destination on its way back -- see `noteDestinations`. */
-    refreshSignal: Boolean,
-    onRefreshHandled: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: NoteListViewModel = koinViewModel(),
 ) {
     val notes by viewModel.notes.collectAsStateWithLifecycle()
     val ui by viewModel.stateFlow.collectAsStateWithLifecycle()
-
-    /*
-     * Re-read when a write happened while we were away.
-     *
-     * A write does NOT invalidate the read. `NoteCommandRepository` is cache-free by contract
-     * ("these are commands, so they carry no Store and no cache"), so adding a note leaves
-     * `AppCacheKeys.ClientNotes` holding the pre-write list. An earlier version of this file
-     * asserted the opposite and, on that false premise, dropped the original's
-     * `popUpTo(inclusive) + launchSingleTop` -- the only thing that had forced a re-fetch.
-     *
-     * The signal is an explicit nav result rather than a lifecycle callback. Observing
-     * `LocalLifecycleOwner` was tried first and does NOT work here: inside a NavHost it resolves to
-     * the ACTIVITY, which never leaves RESUMED on a back-navigation, so ON_RESUME never fires.
-     * Measured on device 2026-10-20 -- the note reached the server (id=73, verified by GET) and no
-     * re-read request was issued at all.
-     */
-    LaunchedEffect(refreshSignal) {
-        if (refreshSignal) {
-            viewModel.trySendAction(NoteListAction.Refresh)
-            onRefreshHandled()
-        }
-    }
 
     LaunchedEffect(Unit) {
         viewModel.eventFlow.collect { event ->
@@ -117,7 +92,7 @@ internal fun NoteListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun NoteListContent(
-    notes: ScreenState<List<NoteEntity>>,
+    notes: ScreenState<List<Note>>,
     ui: NoteListState,
     onAction: (NoteListAction) -> Unit,
     modifier: Modifier = Modifier,
@@ -207,7 +182,7 @@ internal fun NoteListContent(
  */
 @Composable
 internal fun NoteRow(
-    note: NoteEntity,
+    note: Note,
     expanded: Boolean,
     onToggle: () -> Unit,
     onEdit: () -> Unit,

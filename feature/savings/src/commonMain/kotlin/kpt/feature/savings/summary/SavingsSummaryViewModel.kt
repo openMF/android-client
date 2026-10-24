@@ -19,10 +19,10 @@ import kpt.core.base.store.screen.mapContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.common.utils.DateHelper
 import kpt.core.data.savings.SavingsAccountRepository
-import kpt.core.database.savings.entity.SavingAccountDepositTypeEntity
-import kpt.core.database.savings.entity.SavingsAccountStatusEntity
-import kpt.core.database.savings.entity.SavingsAccountTransactionEntity
-import kpt.core.database.savings.entity.SavingsAccountWithAssociationsEntity
+import kpt.core.model.savings.SavingAccountDepositType
+import kpt.core.model.savings.SavingsAccountStatus
+import kpt.core.model.savings.SavingsAccountTransaction
+import kpt.core.model.savings.SavingsAccountWithAssociations
 import kpt.feature.savings.transaction.TransactionKind
 
 /**
@@ -97,6 +97,9 @@ internal class SavingsSummaryViewModel(
             SavingsSummaryAction.DocumentsClicked ->
                 sendEvent(SavingsSummaryEvent.OpenDocuments(accountId))
 
+            SavingsSummaryAction.ChargesClicked ->
+                sendEvent(SavingsSummaryEvent.OpenCharges(accountId))
+
             is SavingsSummaryAction.TransactionClicked ->
                 sendEvent(SavingsSummaryEvent.ShowTransaction(action.transaction))
         }
@@ -111,7 +114,7 @@ internal class SavingsSummaryViewModel(
          * id -> endpoint mapping for all three deposit kinds rather than a second literal.
          */
         val DEFAULT_ACCOUNT_TYPE: String =
-            SavingAccountDepositTypeEntity.ServerTypes.SAVINGS.endpoint
+            SavingAccountDepositType.ServerTypes.SAVINGS.endpoint
         const val STATE_TIMEOUT_MS = 5_000L
     }
 }
@@ -182,7 +185,7 @@ internal enum class SavingsAction {
  * Order matters and is the original's: pending-approval wins over everything, then not-yet-active,
  * then active. `closed`/`rejected`/`withdrawnByApplicant` all fall to [SavingsAction.NONE].
  */
-internal fun SavingsAccountStatusEntity?.toAvailableAction(): SavingsAction = when {
+internal fun SavingsAccountStatus?.toAvailableAction(): SavingsAction = when {
     this == null -> SavingsAction.NONE
     submittedAndPendingApproval == true -> SavingsAction.APPROVE
     closed == true || rejected == true || withdrawnByApplicant == true -> SavingsAction.NONE
@@ -193,7 +196,7 @@ internal fun SavingsAccountStatusEntity?.toAvailableAction(): SavingsAction = wh
     else -> SavingsAction.NONE
 }
 
-private fun SavingsAccountWithAssociationsEntity.toSummary(): SavingsSummary {
+private fun SavingsAccountWithAssociations.toSummary(): SavingsSummary {
     // The ACCOUNT's currency, used for every figure on the screen including the four totals. The
     // original read `summary.currency` for the totals and the account's for the rows.
     val code = currency?.code.orEmpty()
@@ -241,7 +244,7 @@ private fun SavingsAccountWithAssociationsEntity.toSummary(): SavingsSummary {
  * Blank is the right fallback — a transaction with no usable date is still a real transaction whose
  * amount and running balance the officer needs to see.
  */
-private fun transactionDate(tx: SavingsAccountTransactionEntity): String {
+private fun transactionDate(tx: SavingsAccountTransaction): String {
     tx.savingsTransactionDate?.let { d ->
         val year = d.year
         val month = d.month
@@ -276,6 +279,9 @@ internal sealed interface SavingsSummaryEvent {
     /** The generic document list, scoped to this savings account. */
     data class OpenDocuments(val accountId: Int) : SavingsSummaryEvent
 
+    /** The ONE charge module (`feature/charge`), scoped to this savings account. */
+    data class OpenCharges(val accountId: Int) : SavingsSummaryEvent
+
     /** The transaction detail dialog — the original's `DialogBoxRowItem` sheet. */
     data class ShowTransaction(val transaction: SavingsTransactionRow) : SavingsSummaryEvent
 }
@@ -288,5 +294,6 @@ internal sealed interface SavingsSummaryAction {
     data object ApproveClicked : SavingsSummaryAction
     data object ActivateClicked : SavingsSummaryAction
     data object DocumentsClicked : SavingsSummaryAction
+    data object ChargesClicked : SavingsSummaryAction
     data class TransactionClicked(val transaction: SavingsTransactionRow) : SavingsSummaryAction
 }

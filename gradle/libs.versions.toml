@@ -135,6 +135,9 @@ fileKit = "0.14.2"
 # (core/ui MifosImageCropperDialog / MifosSignatureDrawDialog).
 krop = "0.2.0"
 composeSignature = "1.0.1"
+# In-app PDF viewer (PDFium, every target incl. web) — core/ui AppDocumentViewer, the client
+# document preview. Replaces the original's five per-platform PdfPreview actuals + PDFBox.
+pdfViewer = "0.3.0"
 uiBackhandler = "1.11.1"
 wire = "6.2.0"
 compottie = "2.2.4"
@@ -158,6 +161,10 @@ store = "5.1.0-alpha10"
 room = "3.1.0-alpha01"
 sqliteBundled = "2.7.0"
 sqliteWeb = "2.7.0"
+# SQLCipher's androidx.sqlite driver (net.zetetic...driver.SQLCipherDriver) — Android at-rest DB
+# encryption, fork-owned (core/database encryption/). 4.19.1's POM pins androidx.sqlite 2.7.0, i.e.
+# exactly sqliteBundled above, so no sqlite bump is needed.
+sqlcipherAndroid = "4.19.1"
 
 # worker-kmp — single-API background + foreground worker scheduling across
 # Android / iOS / Desktop / Web. See https://github.com/MobileByteLabs/worker-kmp.
@@ -227,6 +234,7 @@ androidx-room-compiler = { module = "androidx.room3:room3-compiler", version.ref
 androidx-room-runtime = { module = "androidx.room3:room3-runtime", version.ref = "room" }
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqliteBundled" }
 androidx-sqlite-web = { module = "androidx.sqlite:sqlite-web", version.ref = "sqliteWeb" }
+sqlcipher-android = { module = "net.zetetic:sqlcipher-android", version.ref = "sqlcipherAndroid" }
 
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 androidx-tracing-ktx = { group = "androidx.tracing", name = "tracing-ktx", version.ref = "androidxTracing" }
@@ -369,6 +377,7 @@ filekit-dialog-compose = { module = "io.github.vinceglb:filekit-dialogs", versio
 filekit-coil = { module = "io.github.vinceglb:filekit-coil", version.ref = "fileKit" }
 crop-krop-ui = { module = "com.attafitamim.krop:ui", version.ref = "krop" }
 compose-signature = { module = "io.github.niyajali:compose-signature", version.ref = "composeSignature" }
+pdf-viewer = { module = "io.github.limuyang2:pdf-viewer", version.ref = "pdfViewer" }
 
 kermit-logging = { group = "co.touchlab", name = "kermit", version.ref = "kermit" }
 kermit-simple = { group = "co.touchlab", name = "kermit-simple", version.ref = "kermit" }

@@ -16,7 +16,9 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.kermit.logging)
             implementation(projects.core.data)
-            implementation(projects.core.database)
+            // Utilities (date helpers, constants) — core/common is not a data layer, so it is declared here
+            // rather than reached through core/network or core/database as it used to be.
+            implementation(projects.core.common)
             implementation(projects.core.model)
             // For `PostClientAddressRequest`, which the add-address form must construct.
             //
@@ -27,14 +29,17 @@ kotlin {
             // `feature/{activate,note,signin}` already carry the same dependency for the same
             // reason. Moving the two address DTOs to core/model is the real fix — 11 references
             // across 6 files — and is tracked as `address-dtos-live-in-core-network`.
-            implementation(projects.core.network)
-            implementation(projects.core.store)
             // NavigationItem + @FeatureTab + toObjectNavigationRoute — the tab declaration seam.
             implementation(projects.core.ui)
             // Client is the hub that navigates into its drill-down features. The original declared
             // the same edge (`6b66e8a43:feature/client/build.gradle.kts` → projects.feature.note,
             // plus dataTable/savings/loan/document/recurringDeposit/groups as those slices land).
             implementation(projects.feature.note)
+            // Record search over cached addresses / identifiers — opened from, and returning to,
+            // client screens, so the client graph registers it (the note pattern above).
+            implementation(projects.feature.searchrecord)
+            // feature/charge — "Upcoming Charges" and "Add Charge" open the ONE charge module.
+            implementation(projects.feature.charge)
             // feature/loan — the client's loan-accounts list opens the loan PROFILE and the
             // REPAYMENT form directly, which is the same edge the original had
             // (`6b66e8a43:feature/client/.../ClientNavigation.kt` imports

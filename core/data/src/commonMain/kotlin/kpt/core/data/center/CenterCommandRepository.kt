@@ -10,15 +10,13 @@
 package kpt.core.data.center
 
 import kpt.core.base.store.mutation.MutationResult
-import kpt.core.database.center.entity.CenterPayloadEntity
+import kpt.core.model.center.CenterPayload
 import kpt.core.model.objects.clients.ActivatePayload
-import kpt.core.model.objects.databaseobjects.CollectionSheet
 import kpt.core.model.objects.responses.SaveResponse
 import kpt.core.model.shared.GenericResponse
-import kpt.core.model.shared.Payload
-import kpt.core.network.mifos.center.dto.PostCentersCenterIdRequest
-import kpt.core.network.mifos.center.dto.PostCentersCenterIdResponse
-import kpt.core.network.mifos.collectionsheet.dto.CollectionSheetPayload
+import kpt.core.model.center.PostCentersCenterIdRequest
+import kpt.core.model.center.PostCentersCenterIdResponse
+import kpt.core.model.collectionsheet.payload.CollectionSheetPayload
 
 /**
  * Every center write, as an explicit outcome.
@@ -27,21 +25,21 @@ import kpt.core.network.mifos.collectionsheet.dto.CollectionSheetPayload
  * change reached the server, was refused because the device is offline, or failed — a distinction
  * that cannot be reconstructed above this layer.
  *
- * These are commands, so they carry no Store and no cache. Offline CAPTURE is a different
- * operation with its own explicit queue ([kpt.core.data.sync.OfflineQueueRepository]); it is never
- * a silent fallback from here.
+ * They run online-only, and a write the server accepts is recorded locally through the center
+ * stores, so the reads see it. Offline CAPTURE is a different operation with its own explicit queue
+ * ([kpt.core.data.sync.OfflineQueueRepository]); it is never a silent fallback from here.
+ *
+ * Generating a collection sheet is a READ, so it lives on [CenterRepository.collectionSheet].
  */
 interface CenterCommandRepository {
 
     suspend fun activate2(centerId: Long, postCentersCenterIdRequest: PostCentersCenterIdRequest, command: String? = null): MutationResult<PostCentersCenterIdResponse>
 
-    suspend fun getCollectionSheet(centerId: Long, payload: Payload?): MutationResult<CollectionSheet>
-
     suspend fun saveCollectionSheet(centerId: Int, collectionSheetPayload: CollectionSheetPayload?): MutationResult<SaveResponse>
 
     suspend fun saveCollectionSheetAsync(centerId: Int, collectionSheetPayload: CollectionSheetPayload?): MutationResult<SaveResponse>
 
-    suspend fun createCenter(centerPayload: CenterPayloadEntity?): MutationResult<SaveResponse>
+    suspend fun createCenter(centerPayload: CenterPayload?): MutationResult<SaveResponse>
 
     suspend fun activateCenter(centerId: Int, activatePayload: ActivatePayload?): MutationResult<GenericResponse>
 }

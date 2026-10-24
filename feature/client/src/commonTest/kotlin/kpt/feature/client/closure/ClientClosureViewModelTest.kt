@@ -28,6 +28,7 @@ import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.data.testing.FakeClientCommandRepository
 import kpt.core.data.testing.FakeClientRepository
+import kpt.core.data.testing.fineractRejection
 import kpt.core.model.client.ClientCloseTemplateResponse
 import kpt.core.model.client.Narration
 import kpt.core.model.utils.ApiDateFormatter
@@ -158,7 +159,7 @@ class ClientClosureViewModelTest {
     fun aRejectionKeepsFineractsReason() = runTest(dispatcher) {
         val commands = FakeClientCommandRepository(
             unitResult = {
-                MutationResult.Failed(IllegalStateException("client has active loans"), rolledBack = false)
+                MutationResult.Failed(fineractRejection("client has active loans"), rolledBack = false)
             },
         )
         val vm = viewModel(commands)

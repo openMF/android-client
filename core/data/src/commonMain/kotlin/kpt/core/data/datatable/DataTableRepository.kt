@@ -12,11 +12,11 @@ package kpt.core.data.datatable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.json.JsonArray
 import kpt.core.base.store.screen.ScreenDataStream
-import kpt.core.database.datatable.entity.DataTableEntity
+import kpt.core.model.datatable.DataTable
 
 interface DataTableRepository {
     /** Registered datatables for one application table (m_client, m_loan, ...). */
-    fun dataTablesStream(appTable: String, scope: CoroutineScope): ScreenDataStream<List<DataTableEntity>>
+    fun dataTablesStream(appTable: String, scope: CoroutineScope): ScreenDataStream<List<DataTable>>
 
     /**
      * One datatable's ROWS for one entity.

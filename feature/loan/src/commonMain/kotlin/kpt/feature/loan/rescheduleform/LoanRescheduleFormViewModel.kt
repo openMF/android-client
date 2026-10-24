@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import kpt.core.base.store.mutation.BlockReason
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kpt.core.model.objects.error.serverErrorMessage
 import kpt.core.data.loan.LoanCommandRepository
 import kpt.core.data.loan.LoanRepository
 import kpt.core.model.objects.account.loan.reschedules.LoanRescheduleRequest
@@ -246,7 +247,7 @@ internal class LoanRescheduleFormViewModel(
                         dialogState = LoanRescheduleFormState.DialogState.Failed(
                             // "loan reschedule request date should be after the last repayment" is
                             // the common one.
-                            msg = result.cause.message ?: FAILED_MSG,
+                            msg = result.cause.serverErrorMessage() ?: FAILED_MSG,
                             retryable = true,
                         ),
                     )

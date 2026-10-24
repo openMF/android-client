@@ -23,6 +23,7 @@ import kpt.core.base.store.mutation.BlockReason
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.data.testing.FakeLoanCommandRepository
 import kpt.core.data.testing.FakeLoanRepository
+import kpt.core.data.testing.fineractRejection
 import kpt.core.model.objects.account.loan.reschedules.LoanRescheduleTemplate
 import kpt.core.model.objects.account.loan.reschedules.RescheduleReasonOption
 import kpt.core.model.utils.ApiDateFormatter
@@ -472,7 +473,7 @@ class LoanRescheduleFormViewModelTest {
         val commands = FakeLoanCommandRepository(
             rescheduleResult = {
                 MutationResult.Failed(
-                    IllegalStateException("reschedule date should be after the last repayment"),
+                    fineractRejection("reschedule date should be after the last repayment"),
                     rolledBack = false,
                 )
             },

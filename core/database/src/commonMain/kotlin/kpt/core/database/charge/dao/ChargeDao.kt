@@ -13,60 +13,60 @@ import androidx.room3.Dao
 import androidx.room3.Insert
 import androidx.room3.OnConflictStrategy
 import androidx.room3.Query
+import androidx.room3.Transaction
 import kotlinx.coroutines.flow.Flow
 import kpt.core.base.database.annotation.DbDao
 import kpt.core.database.charge.entity.ChargesEntity
-import kpt.core.database.client.entity.ClientDateEntity
 
 /**
- * Created by Pronay Sarker on 14/02/2025 (3:32 PM)
+ * Created by Pronay Sarker on 14/02/2025 (3:32 PM)
+ *
+ * Every query is scoped by the OWNER (`resourceType` + `resourceId`), which is also the leading half
+ * of the table's primary key — see [ChargesEntity]. The per-owner `clientId` / `loanId` queries this
+ * replaced could not cover savings at all, and keyed on `id` they let one owner's row overwrite
+ * another's.
  */
 @DbDao
 @Dao
 interface ChargeDao {
 
-    @Query("SELECT * FROM Charges where clientId = :clientId")
-    fun getClientCharges(clientId: Int): Flow<List<ChargesEntity>>
+    @Query("SELECT * FROM Charges WHERE resourceType = :resourceType AND resourceId = :resourceId")
+    fun observeCharges(resourceType: String, resourceId: Int): Flow<List<ChargesEntity>>
 
-    /**
-     * Charges levied on one LOAN.
-     *
-     * A separate query rather than a shared one keyed by resource, because `Charges` carries both
-     * `clientId` and `loanId` and a charge belongs to exactly one of them — a single
-     * `where clientId = :id OR loanId = :id` would serve a client's charges to a loan whose id
-     * happened to match a client's.
-     */
-    @Query("SELECT * FROM Charges where loanId = :loanId")
-    fun getLoanCharges(loanId: Int): Flow<List<ChargesEntity>>
+    @Query(
+        "SELECT * FROM Charges WHERE resourceType = :resourceType AND resourceId = :resourceId " +
+            "AND id = :chargeId LIMIT 1",
+    )
+    fun observeCharge(resourceType: String, resourceId: Int, chargeId: Int): Flow<ChargesEntity?>
 
     @Insert(entity = ChargesEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllCharges(charges: List<ChargesEntity>)
 
+    @Query("DELETE FROM Charges WHERE resourceType = :resourceType AND resourceId = :resourceId")
+    suspend fun deleteCharges(resourceType: String, resourceId: Int)
+
+    @Query(
+        "DELETE FROM Charges WHERE resourceType = :resourceType AND resourceId = :resourceId " +
+            "AND id = :chargeId",
+    )
+    suspend fun deleteCharge(resourceType: String, resourceId: Int, chargeId: Int)
+
+    /** What the logout purge reaches through the charge store's `deleteAll`. */
+    @Query("DELETE FROM Charges")
+    suspend fun deleteAllCharges()
+
     /**
-     * Persist a client's charges, stamping the owning client and splitting `dueDate` into columns.
-     *
-     * Was `ChargeDaoHelper.saveClientCharges`. Note this one maps semantically — `dueDate` is
-     * Fineract's [year, month, day], so day/month/year land in the matching columns — unlike the
-     * client/group/center `activationDate` path, which is positional. Both round-trip; they simply
-     * disagree about what the columns mean.
+     * A fetch is the server's WHOLE list for the owner, so a row it no longer contains was deleted
+     * and must leave the table — an upsert-only write kept a waived or deleted charge on screen.
+     * Stamps the owner, because the list endpoints do not echo it (loans send no `loanId`).
      */
-    suspend fun saveClientCharges(charges: List<ChargesEntity>, resourceId: Int) {
-        insertAllCharges(
-            charges.map { charge ->
-                val parts = charge.dueDate.orEmpty()
-                val due = if (parts.size == 3) {
-                    ClientDateEntity(
-                        clientId = 0,
-                        chargeId = charge.id.toLong(),
-                        day = parts[2] ?: 0,
-                        month = parts[1] ?: 0,
-                        year = parts[0] ?: 0,
-                    )
-                } else {
-                    null
-                }
-                charge.copy(clientId = resourceId, chargeDueDate = due)
-            },
-        )
+    @Transaction
+    suspend fun replaceCharges(resourceType: String, resourceId: Int, charges: List<ChargesEntity>) {
+        deleteCharges(resourceType, resourceId)
+        insertAllCharges(charges.map { it.copy(resourceType = resourceType, resourceId = resourceId) })
     }
+
+    /** One charge, stamped with its owner. */
+    suspend fun upsertCharge(resourceType: String, resourceId: Int, charge: ChargesEntity) =
+        insertAllCharges(listOf(charge.copy(resourceType = resourceType, resourceId = resourceId)))
 }

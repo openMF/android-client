@@ -22,7 +22,7 @@
     <string name="screenstate_nonet_message">Riproveremo quando tornerai online.</string>
     <string name="screenstate_nonet_retry">Riprova ora</string>
     <string name="screenstate_captive_title">Accedi al Wi-Fi</string>
-    <string name="screenstate_captive_message">La tua rete richiede l\'accesso prima di connetterti.</string>
+    <string name="screenstate_captive_message">La tua rete richiede l'accesso prima di connetterti.</string>
     <string name="screenstate_captive_action">Apri pagina di accesso</string>
     <string name="error_category_network">Impossibile raggiungere il server. Controlla la connessione.</string>
     <string name="error_category_auth">La tua sessione è scaduta. Accedi di nuovo.</string>

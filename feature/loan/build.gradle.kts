@@ -17,7 +17,6 @@ kotlin {
             implementation(libs.kermit.logging)
             implementation(projects.core.common)
             implementation(projects.core.data)
-            implementation(projects.core.database)
             implementation(projects.core.model)
             implementation(projects.core.ui)
             // feature/document — the loan profile's "Loan Documents" row opens the GENERIC
@@ -27,6 +26,9 @@ kotlin {
             //
             // One-directional: `feature/document` knows nothing about loans.
             implementation(projects.feature.document)
+            // feature/charge — the profile's "Charges" row and the summary's "Charges" menu entry
+            // open the ONE charge module, scoped to the loan. One-directional, like document.
+            implementation(projects.feature.charge)
             implementation(libs.koin.compose.navigation)
             implementation(compose.ui)
             implementation(compose.foundation)
@@ -36,7 +38,6 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(projects.coreBase.store)
-            implementation(projects.core.database)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.turbine)
         }

@@ -20,6 +20,7 @@ import kpt.core.base.store.mutation.BlockReason
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kpt.core.model.objects.error.serverErrorMessage
 import kpt.core.data.client.ClientCommandRepository
 import kpt.core.data.client.ClientRepository
 import kpt.core.model.objects.clients.CollateralPayload
@@ -134,7 +135,7 @@ internal class ClientCollateralViewModel(
                         isOverlayLoading = false,
                         dialogState = ClientCollateralState.DialogState.ShowStatusDialog(
                             status = ResultStatus.FAILURE,
-                            msg = result.cause.message ?: FAILED_MSG,
+                            msg = result.cause.serverErrorMessage() ?: FAILED_MSG,
                         ),
                     )
                 }

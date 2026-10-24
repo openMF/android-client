@@ -27,7 +27,7 @@ import kpt.core.base.designsystem.theme.KptTheme
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.effects.EventsEffect
 import kpt.core.base.ui.screen.ScreenContent
-import kpt.core.database.datatable.entity.DataTableEntity
+import kpt.core.model.datatable.DataTable
 import kpt.core.designsystem.component.AppScaffold
 import kpt.core.designsystem.theme.DesignToken
 import kpt.core.ui.components.AppEmptyUi
@@ -72,7 +72,7 @@ internal fun DataTableListScreen(
 /** Stateless half — rendered in tests and previews without Koin. */
 @Composable
 internal fun DataTableListContent(
-    dataTables: ScreenState<List<DataTableEntity>>,
+    dataTables: ScreenState<List<DataTable>>,
     onAction: (DataTableListAction) -> Unit,
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
@@ -109,7 +109,7 @@ internal fun DataTableListContent(
 }
 
 @Composable
-private fun DataTableRow(table: DataTableEntity, onClick: () -> Unit) {
+private fun DataTableRow(table: DataTable, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()

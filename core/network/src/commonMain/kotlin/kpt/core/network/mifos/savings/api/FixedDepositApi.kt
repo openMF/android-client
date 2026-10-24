@@ -15,8 +15,8 @@ import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.Query
 import io.ktor.client.statement.HttpResponse
 import kpt.core.base.network.annotation.ApiBinding
-import kpt.core.network.mifos.savings.dto.FixedDepositPayload
-import kpt.core.network.mifos.savings.dto.FixedDepositTemplate
+import kpt.core.model.savings.FixedDepositPayload
+import kpt.core.model.savings.FixedDepositTemplate
 
 @ApiBinding("mifos")
 interface FixedDepositApi {

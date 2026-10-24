@@ -21,6 +21,7 @@ import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.mapContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kpt.core.model.objects.error.serverErrorMessage
 import kpt.core.data.recurringdeposit.RecurringDepositCommandRepository
 import kpt.core.data.recurringdeposit.RecurringDepositRepository
 import kpt.core.model.recurringdeposit.RecurringDepositAccountTemplate
@@ -234,7 +235,7 @@ internal class RecurringDepositViewModel(
                     Logger.e(tag = TAG, throwable = result.cause) { "create recurring deposit failed" }
                     state.copy(
                         isSubmitting = false,
-                        dialogState = RecurringDialog.Failed(offline = false, msg = result.cause.message),
+                        dialogState = RecurringDialog.Failed(offline = false, msg = result.cause.serverErrorMessage()),
                     )
                 }
 

@@ -9,7 +9,7 @@
  */
 package kpt.feature.activate.di
 
-import kpt.feature.activate.ActivateViewModel
+import kpt.feature.activate.ui.ActivateViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 

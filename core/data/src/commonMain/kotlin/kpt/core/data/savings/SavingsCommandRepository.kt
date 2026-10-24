@@ -17,8 +17,8 @@ import kpt.core.model.objects.account.saving.SavingsApplicationInput
 import kpt.core.model.objects.account.saving.SavingsApprovalInput
 import kpt.core.model.objects.account.saving.SavingsTransactionInput
 import kpt.core.model.shared.GenericResponse
-import kpt.core.network.mifos.savings.dto.FixedDepositPayload
-import kpt.core.network.mifos.savings.dto.ShareAccountPayload
+import kpt.core.model.savings.FixedDepositPayload
+import kpt.core.model.savings.ShareAccountPayload
 
 /**
  * Every savings write, as an explicit outcome.
@@ -27,9 +27,10 @@ import kpt.core.network.mifos.savings.dto.ShareAccountPayload
  * change reached the server, was refused because the device is offline, or failed — a distinction
  * that cannot be reconstructed above this layer.
  *
- * These are commands, so they carry no Store and no cache. Offline CAPTURE is a different
- * operation with its own explicit queue ([kpt.core.data.sync.OfflineQueueRepository]); it is never
- * a silent fallback from here.
+ * Online-required commands: once the server accepts one, the implementation records the outcome
+ * through the stores the reads observe, so no caller refreshes anything. Offline CAPTURE is a
+ * different operation with its own explicit queue ([kpt.core.data.sync.OfflineQueueRepository]); it
+ * is never a silent fallback from here.
  */
 interface SavingsCommandRepository {
 

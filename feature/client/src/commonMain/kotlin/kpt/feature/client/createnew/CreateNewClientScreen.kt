@@ -242,7 +242,7 @@ internal fun CreateNewClientContent(
                 onAction = onAction,
             )
 
-            ActivationFields(state = state, onAction = onAction)
+            ActivationFields(state = state, activationDate = state.activationDateOr(options), onAction = onAction)
 
             // Absent, not empty: a tenant with the address module off never sees the heading.
             if (address != null) {
@@ -285,7 +285,12 @@ internal fun CreateNewClientContent(
     }
 
     state.openDatePicker?.let { field ->
-        ClientDatePicker(field = field, state = state, onAction = onAction)
+        ClientDatePicker(
+            field = field,
+            state = state,
+            activationDate = state.activationDateOr(form.dataOrNull),
+            onAction = onAction,
+        )
     }
 
     Dialogs(state = state, cropper = cropper, onAction = onAction)
@@ -433,6 +438,7 @@ private fun OptionFields(
 @Composable
 private fun ActivationFields(
     state: CreateNewClientState,
+    activationDate: Long,
     onAction: (CreateNewClientAction) -> Unit,
 ) {
     FieldGap()
@@ -451,7 +457,7 @@ private fun ActivationFields(
         Column {
             FieldGap()
             AppDatePickerTextField(
-                value = DateHelper.getDateAsStringFromLong(state.activationDate),
+                value = DateHelper.getDateAsStringFromLong(activationDate),
                 // The original labelled this `feature_client_center_submission_date` — "Center
                 // Submission Date" — on a CLIENT activation field. Wrong copy, not a wrong field:
                 // the value goes to `ClientPayload.activationDate`.
@@ -610,13 +616,14 @@ private fun ClientDropdown(
 private fun ClientDatePicker(
     field: ClientDateField,
     state: CreateNewClientState,
+    activationDate: Long,
     onAction: (CreateNewClientAction) -> Unit,
 ) {
     // Keyed on the field: `rememberDatePickerState` saves through `rememberSaveable`, which
     // restores by position in the composition, so without this the date-of-birth picker would
     // reopen holding the activation date the officer picked a moment earlier. The original dodged
     // this by holding two separate picker states and choosing between them inside one dialog.
-    val pickerState = key(field) { rememberDatePickerStateFor(field, state) }
+    val pickerState = key(field) { rememberDatePickerStateFor(field, state, activationDate) }
 
     DatePickerDialog(
         onDismissRequest = { onAction(CreateNewClientAction.CloseDatePicker) },
@@ -651,9 +658,10 @@ private fun ClientDatePicker(
 private fun rememberDatePickerStateFor(
     field: ClientDateField,
     state: CreateNewClientState,
+    activationDate: Long,
 ) = rememberDatePickerState(
     initialSelectedDateMillis = when (field) {
-        ClientDateField.ACTIVATION -> state.activationDate
+        ClientDateField.ACTIVATION -> activationDate
         ClientDateField.DATE_OF_BIRTH -> state.dateOfBirth
     },
     selectableDates = NotInTheFuture,

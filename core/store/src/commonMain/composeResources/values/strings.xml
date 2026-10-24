@@ -29,7 +29,7 @@
          so a user who exhausted a quota was told "too many requests" in every locale. -->
     <string name="error_category_timeout_connect">Connection timed out. Check your connection and try again.</string>
     <string name="error_category_timeout_read">Server took too long to respond. Please try again shortly.</string>
-    <string name="error_category_quota">You\'ve reached your quota. Upgrade or wait to continue.</string>
+    <string name="error_category_quota">You've reached your quota. Upgrade or wait to continue.</string>
     <string name="error_category_client">Request failed. Please try again.</string>
     <string name="error_category_generic">Something went wrong</string>
 </resources>

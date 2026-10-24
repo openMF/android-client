@@ -21,6 +21,7 @@ import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.mapContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kpt.core.model.objects.error.serverErrorMessage
 import kpt.core.data.loan.LoanCommandRepository
 import kpt.core.data.loan.LoanRepository
 import kpt.core.model.objects.account.loan.loanDisburse.LoanDisburseInput
@@ -171,7 +172,7 @@ internal class LoanDisbursementViewModel(
                             status = ResultStatus.FAILURE,
                             // "Disbursement date cannot be before the approval date" is the common
                             // one and names exactly what to change.
-                            msg = result.cause.message ?: FAILED_MSG,
+                            msg = result.cause.serverErrorMessage() ?: FAILED_MSG,
                         ),
                     )
                 }

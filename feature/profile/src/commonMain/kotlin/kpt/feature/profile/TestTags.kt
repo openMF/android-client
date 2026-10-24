@@ -27,5 +27,8 @@ object TestTags {
         const val SERVER: String = "profile.server"
         const val SIGN_OUT: String = "profile.sign_out"
         const val SIGN_OUT_CONFIRM: String = "profile.sign_out.confirm"
+        const val SIGN_OUT_KEEP_DATA: String = "profile.sign_out.keep_data"
+        const val SIGN_OUT_CLEAR_DATA: String = "profile.sign_out.clear_data"
+        const val SIGN_OUT_FAILED: String = "profile.sign_out.failed"
     }
 }

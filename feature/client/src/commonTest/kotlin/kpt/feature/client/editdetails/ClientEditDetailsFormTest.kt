@@ -10,9 +10,9 @@
 package kpt.feature.client.editdetails
 
 import kpt.core.common.utils.DateFormatPattern
-import kpt.core.database.client.entity.ClientEntity
-import kpt.core.database.client.entity.ClientGenderEntity
-import kpt.core.database.client.entity.ClientStatusEntity
+import kpt.core.model.client.Client
+import kpt.core.model.client.ClientGender
+import kpt.core.model.client.ClientStatus
 import kpt.core.model.shared.Timeline
 import kpt.core.model.utils.ApiDateFormatter
 import kotlin.test.Test
@@ -173,7 +173,7 @@ class ClientEditDetailsFormTest {
 
     @Test
     fun theClientPrefillsTheFormAndIdZeroMeansUnset() {
-        val prefilled = ClientEntity(
+        val prefilled = Client(
             id = 42,
             firstname = "Ada",
             lastname = "Lovelace",
@@ -183,8 +183,8 @@ class ClientEditDetailsFormTest {
             staffId = 7,
             // A code value Fineract never sent: the entity's own default is id 0, which is not a
             // code value, and the original turned it into `genderId = 0` on the next save.
-            gender = ClientGenderEntity(id = 0, name = null),
-            legalForm = ClientStatusEntity(id = 1, value = "PERSON"),
+            gender = ClientGender(id = 0, name = null),
+            legalForm = ClientStatus(id = 1, value = "PERSON"),
             dateOfBirth = listOf(1815, 12, 10),
             timeline = Timeline(submittedOnDate = listOf(2026, 1, 9)),
         ).asPrefill()
@@ -209,8 +209,8 @@ class ClientEditDetailsFormTest {
 
     @Test
     fun anUnassignedStaffIsNotCarriedThroughAsIdZero() {
-        // `ClientEntity.staffId` is a non-nullable `Int = 0`, so "unassigned" and "staff 0" are
+        // `Client.staffId` is a non-nullable `Int = 0`, so "unassigned" and "staff 0" are
         // the same value on the wire unless it is filtered here.
-        assertNull(ClientEntity(id = 42, staffId = 0).asPrefill().staffId)
+        assertNull(Client(id = 42, staffId = 0).asPrefill().staffId)
     }
 }

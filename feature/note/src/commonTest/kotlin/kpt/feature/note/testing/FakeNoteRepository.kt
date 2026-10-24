@@ -21,12 +21,12 @@ import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.screenDataStreamForTesting
 import kpt.core.data.note.NoteCommandRepository
 import kpt.core.data.note.NoteRepository
-import kpt.core.database.note.entity.NoteEntity
+import kpt.core.model.objects.note.Note
 import kpt.core.model.note.NoteDraft
-import kpt.core.network.mifos.note.dto.CreateNoteResponseDto
-import kpt.core.network.mifos.note.dto.DeleteNoteResponseDto
-import kpt.core.network.mifos.note.dto.NoteRequestDto
-import kpt.core.network.mifos.note.dto.UpdateNoteResponseDto
+import kpt.core.model.objects.note.CreateNoteResponseDto
+import kpt.core.model.objects.note.DeleteNoteResponseDto
+import kpt.core.model.objects.note.NoteRequestDto
+import kpt.core.model.objects.note.UpdateNoteResponseDto
 
 /**
  * In-memory [NoteRepository] for ViewModel- and screen-level tests.
@@ -36,19 +36,18 @@ import kpt.core.network.mifos.note.dto.UpdateNoteResponseDto
  * Content / Empty / Error transitions production does.
  */
 internal class FakeNoteRepository(
-    initial: ScreenState<List<NoteEntity>> = ScreenState.Loading,
+    initial: ScreenState<List<Note>> = ScreenState.Loading,
 ) : NoteRepository {
 
     val state = MutableStateFlow(initial)
     private val refreshes = MutableSharedFlow<Unit>(extraBufferCapacity = 4)
 
     /**
-     * The stream's force-fresh channel, exposed so a test can assert the screen RE-READ after a
-     * write.
+     * The stream's force-fresh channel, exposed so a test can assert whether the screen re-read
+     * after a write.
      *
-     * It has to be asserted rather than assumed: `NoteCommandRepository` is cache-free, so a write
-     * does NOT invalidate the read. Believing otherwise is what left a deleted note on screen and
-     * was reported as "delete note is not working".
+     * A write now lands in the table the read observes, so the ViewModel must NOT force one —
+     * asserted as no emission here.
      */
     val forceFreshes = MutableSharedFlow<Unit>(extraBufferCapacity = 4)
 
@@ -56,14 +55,15 @@ internal class FakeNoteRepository(
     val requestedIds = mutableListOf<Long>()
 
     /** Convenience: put the stream into Content with these rows. */
-    fun emit(vararg notes: NoteEntity) {
-        state.value = if (notes.isEmpty()) ScreenState.Empty else ScreenState.Content(notes.toList())
+    fun emit(vararg notes: Note) {
+        // An empty list is Content, as the real stream emits it (see ChargeRepositoryImpl).
+        state.value = ScreenState.Content(notes.toList())
     }
 
     override fun notesStream(
         resourceId: Long,
         scope: CoroutineScope,
-    ): ScreenDataStream<List<NoteEntity>> {
+    ): ScreenDataStream<List<Note>> {
         requestedIds += resourceId
         return screenDataStreamForTesting(
             state,

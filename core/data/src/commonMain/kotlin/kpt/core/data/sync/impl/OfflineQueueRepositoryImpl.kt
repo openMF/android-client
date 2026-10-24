@@ -18,11 +18,11 @@ import kpt.core.base.store.screen.FetchPolicy
 import kpt.core.base.store.screen.ScreenDataStream
 import kpt.core.base.store.screen.asScreenStream
 import kpt.core.data.sync.OfflineQueueRepository
-import kpt.core.database.center.entity.CenterPayloadEntity
-import kpt.core.database.client.entity.ClientPayloadEntity
-import kpt.core.database.group.entity.GroupPayloadEntity
-import kpt.core.database.loan.entity.LoanRepaymentRequestEntity
-import kpt.core.database.savings.entity.SavingsAccountTransactionRequestEntity
+import kpt.core.model.center.CenterPayload
+import kpt.core.model.client.ClientPayload
+import kpt.core.model.group.GroupPayload
+import kpt.core.model.loan.LoanRepaymentRequest
+import kpt.core.model.savings.SavingsAccountTransactionRequest
 import kpt.core.store.config.AppCacheKeys
 import kpt.core.store.config.AppStoreIds
 import org.mobilenativefoundation.store.store5.MutableStore
@@ -30,16 +30,16 @@ import org.mobilenativefoundation.store.store5.Store
 
 @RepositoryBinding(binds = OfflineQueueRepository::class)
 internal class OfflineQueueRepositoryImpl(
-    @FromStore(AppStoreIds.PendingClientPayloads) private val pendingClients: Store<Unit, List<ClientPayloadEntity>>,
-    @FromStore(AppStoreIds.PendingCenterPayloads) private val pendingCenters: Store<Unit, List<CenterPayloadEntity>>,
-    @FromStore(AppStoreIds.PendingGroupPayloads) private val pendingGroups: Store<Unit, List<GroupPayloadEntity>>,
-    @FromStore(AppStoreIds.PendingLoanRepayments) private val pendingLoanRepayments: Store<Unit, List<LoanRepaymentRequestEntity>>,
-    @FromStore(AppStoreIds.PendingSavingsTransactions) private val pendingSavings: Store<Unit, List<SavingsAccountTransactionRequestEntity>>,
-    @FromStore(AppStoreIds.ClientPayloadQueue) private val clientQueue: MutableStore<Int, ClientPayloadEntity>,
-    @FromStore(AppStoreIds.CenterPayloadQueue) private val centerQueue: MutableStore<Int, CenterPayloadEntity>,
-    @FromStore(AppStoreIds.GroupPayloadQueue) private val groupQueue: MutableStore<Int, GroupPayloadEntity>,
-    @FromStore(AppStoreIds.LoanRepaymentQueue) private val loanRepaymentQueue: MutableStore<Int, LoanRepaymentRequestEntity>,
-    @FromStore(AppStoreIds.SavingsTransactionQueue) private val savingsQueue: MutableStore<Int, SavingsAccountTransactionRequestEntity>,
+    @FromStore(AppStoreIds.PendingClientPayloads) private val pendingClients: Store<Unit, List<ClientPayload>>,
+    @FromStore(AppStoreIds.PendingCenterPayloads) private val pendingCenters: Store<Unit, List<CenterPayload>>,
+    @FromStore(AppStoreIds.PendingGroupPayloads) private val pendingGroups: Store<Unit, List<GroupPayload>>,
+    @FromStore(AppStoreIds.PendingLoanRepayments) private val pendingLoanRepayments: Store<Unit, List<LoanRepaymentRequest>>,
+    @FromStore(AppStoreIds.PendingSavingsTransactions) private val pendingSavings: Store<Unit, List<SavingsAccountTransactionRequest>>,
+    @FromStore(AppStoreIds.ClientPayloadQueue) private val clientQueue: MutableStore<Int, ClientPayload>,
+    @FromStore(AppStoreIds.CenterPayloadQueue) private val centerQueue: MutableStore<Int, CenterPayload>,
+    @FromStore(AppStoreIds.GroupPayloadQueue) private val groupQueue: MutableStore<Int, GroupPayload>,
+    @FromStore(AppStoreIds.LoanRepaymentQueue) private val loanRepaymentQueue: MutableStore<Int, LoanRepaymentRequest>,
+    @FromStore(AppStoreIds.SavingsTransactionQueue) private val savingsQueue: MutableStore<Int, SavingsAccountTransactionRequest>,
     private val gateway: MutationGateway,
 ) : OfflineQueueRepository {
 
@@ -61,21 +61,21 @@ internal class OfflineQueueRepositoryImpl(
     override fun pendingSavingsTransactionsStream(scope: CoroutineScope) =
         pendingSavings.queueStream(AppCacheKeys.PendingSavingsTransactions.LIST, scope)
 
-    override suspend fun enqueueClient(id: Int, payload: ClientPayloadEntity) =
+    override suspend fun enqueueClient(id: Int, payload: ClientPayload) =
         gateway.upsert(clientQueue, id, payload, MutationPolicy.Optimistic)
 
-    override suspend fun enqueueCenter(id: Int, payload: CenterPayloadEntity) =
+    override suspend fun enqueueCenter(id: Int, payload: CenterPayload) =
         gateway.upsert(centerQueue, id, payload, MutationPolicy.Optimistic)
 
-    override suspend fun enqueueGroup(id: Int, payload: GroupPayloadEntity) =
+    override suspend fun enqueueGroup(id: Int, payload: GroupPayload) =
         gateway.upsert(groupQueue, id, payload, MutationPolicy.Optimistic)
 
-    override suspend fun enqueueLoanRepayment(loanId: Int, request: LoanRepaymentRequestEntity) =
+    override suspend fun enqueueLoanRepayment(loanId: Int, request: LoanRepaymentRequest) =
         gateway.upsert(loanRepaymentQueue, loanId, request, MutationPolicy.Optimistic)
 
     override suspend fun enqueueSavingsTransaction(
         accountId: Int,
-        request: SavingsAccountTransactionRequestEntity,
+        request: SavingsAccountTransactionRequest,
     ) = gateway.upsert(savingsQueue, accountId, request, MutationPolicy.Optimistic)
 
     override suspend fun discardClient(id: Int) = clientQueue.clear(id)
@@ -91,7 +91,7 @@ internal class OfflineQueueRepositoryImpl(
         key = Unit,
         cacheKey = cacheKey,
         scope = scope,
-        isEmpty = { it.isEmpty() },
+        // No `isEmpty`: an empty list is real content (see ChargeRepositoryImpl.chargesStream).
         fetchPolicy = FetchPolicy.CACHE_ONLY,
     )
 }

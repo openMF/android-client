@@ -43,7 +43,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kpt.core.base.designsystem.theme.KptTheme
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.screen.ScreenContent
-import kpt.core.database.center.entity.CenterEntity
+import kpt.core.model.center.Center
 import kpt.core.designsystem.component.AppOutlinedTextField
 import kpt.core.designsystem.icon.AppIcons
 import kpt.core.designsystem.theme.DesignToken
@@ -91,7 +91,7 @@ internal fun CenterListScreen(
 @Composable
 internal fun CenterListContent(
     ui: CenterListState,
-    rows: ScreenState<List<CenterEntity>>,
+    rows: ScreenState<List<Center>>,
     onAction: (CenterListAction) -> Unit,
     modifier: Modifier = Modifier,
     /**
@@ -219,7 +219,7 @@ internal fun CenterListContent(
  */
 @Composable
 internal fun CenterCard(
-    center: CenterEntity,
+    center: Center,
     onClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
@@ -272,7 +272,7 @@ internal fun CenterCard(
 }
 
 /** Offices present in the loaded rows — the filter's options. Empty until content arrives. */
-private fun officeNames(rows: ScreenState<List<CenterEntity>>): List<String> =
+private fun officeNames(rows: ScreenState<List<Center>>): List<String> =
     (rows as? ScreenState.Content)?.data?.mapNotNull { it.officeName }?.distinct()?.sorted().orEmpty()
 
 private fun CenterSort.labelRes() = when (this) {

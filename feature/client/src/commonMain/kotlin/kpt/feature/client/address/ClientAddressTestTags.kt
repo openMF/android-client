@@ -16,4 +16,5 @@ internal object ClientAddressTestTags {
     const val COUNT = "clientAddress:count"
     const val ADD = "clientAddress:add"
     const val EMPTY = "clientAddress:empty"
+    const val SEARCH = "clientAddress:search"
 }

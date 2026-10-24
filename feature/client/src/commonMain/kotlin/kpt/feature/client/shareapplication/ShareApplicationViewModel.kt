@@ -20,12 +20,13 @@ import kpt.core.base.store.mutation.BlockReason
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kpt.core.model.objects.error.serverErrorMessage
 import kpt.core.common.utils.DateFormatPattern
 import kpt.core.data.savings.SavingsAccountRepository
 import kpt.core.data.savings.SavingsCommandRepository
 import kpt.core.model.utils.ApiDateFormatter
-import kpt.core.network.mifos.savings.dto.ShareAccountPayload
-import kpt.core.network.mifos.savings.dto.ShareTemplate
+import kpt.core.model.savings.ShareAccountPayload
+import kpt.core.model.savings.ShareTemplate
 
 /**
  * Open a SHARE account for a client — ported from
@@ -195,7 +196,7 @@ internal class ShareApplicationViewModel(
                     mutableStateFlow.value = state.copy(
                         isSubmitting = false,
                         error = ShareApplicationError.Failed,
-                        serverMessage = result.cause?.message,
+                        serverMessage = result.cause.serverErrorMessage(),
                     )
                 }
 

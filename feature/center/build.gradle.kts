@@ -16,9 +16,7 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.kermit.logging)
             implementation(projects.core.data)
-            implementation(projects.core.database)
             implementation(projects.core.model)
-            implementation(projects.core.store)
             // NavigationItem + @FeatureTab + toObjectNavigationRoute — the tab declaration seam.
             implementation(projects.core.ui)
             // The shared activate screen (client / centre / group all reach it).

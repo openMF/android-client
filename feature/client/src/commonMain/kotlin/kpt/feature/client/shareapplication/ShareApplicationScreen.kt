@@ -37,7 +37,7 @@ import kpt.core.designsystem.component.AppOutlinedTextField
 import kpt.core.designsystem.component.AppScaffold
 import kpt.core.designsystem.component.AppTextFieldDropdown
 import kpt.core.designsystem.theme.AppTypography
-import kpt.core.network.mifos.savings.dto.ShareTemplate
+import kpt.core.model.savings.ShareTemplate
 import kpt.core.ui.components.AppTwoButtonRow
 import kpt.feature.client.generated.resources.Res
 import kpt.feature.client.generated.resources.feature_client_btn_back

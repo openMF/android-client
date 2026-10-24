@@ -9,6 +9,10 @@
  */
 package kpt.core.store.office
 
+import kpt.core.store.mapping.toEntity
+import kotlinx.coroutines.flow.map
+import kpt.core.model.office.Office
+import kpt.core.store.mapping.toModel
 import kpt.core.base.store.annotation.CacheKey
 import kpt.core.base.store.annotation.StoreProvider
 import kpt.core.base.store.infra.StoreFactory
@@ -37,10 +41,13 @@ import org.mobilenativefoundation.store.store5.Store
 fun provideOfficeStore(
     service: OfficeApi,
     dao: OfficeDao,
-): Store<Unit, List<OfficeEntity>> = StoreFactory.createStore(
+): Store<Unit, List<Office>> = StoreFactory.createStore(
     fetcher = Fetcher.of { _: Unit -> service.allOffices() },
     sourceOfTruth = SourceOfTruth.of(
-        reader = { _: Unit -> dao.getAllOffices() },
-        writer = { _: Unit, offices: List<OfficeEntity> -> dao.insertOffices(offices) },
+        reader = { _: Unit -> dao.getAllOffices().map { rows -> rows.map { it.toModel() } } },
+        writer = { _: Unit, offices: List<Office> -> dao.insertOffices(offices.map { it.toEntity() }) },
+        delete = { _: Unit -> dao.deleteAll() },
+        // What the logout purge (`Store.clear()`) calls; without it the rows outlived the session.
+        deleteAll = { dao.deleteAll() },
     ),
 )

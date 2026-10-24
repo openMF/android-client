@@ -11,14 +11,14 @@ package kpt.core.data.client
 
 import kotlinx.coroutines.CoroutineScope
 import kpt.core.base.store.screen.ScreenDataStream
-import kpt.core.database.client.entity.AddressConfiguration
-import kpt.core.database.client.entity.AddressTemplate
-import kpt.core.database.client.entity.ClientsTemplateEntity
-import kpt.core.database.client.entity.ClientAccounts
-import kpt.core.database.client.entity.ClientAddressEntity
-import kpt.core.database.client.entity.ClientEntity
+import kpt.core.model.client.AddressConfiguration
+import kpt.core.model.client.AddressTemplate
+import kpt.core.model.client.ClientAccounts
+import kpt.core.model.client.Client
+import kpt.core.model.client.ClientsTemplate
 import kpt.core.model.client.ClientCloseTemplateResponse
 import kpt.core.model.client.ClientTemplateOptions
+import kpt.core.model.objects.clients.ClientAddressEntity
 import kpt.core.model.objects.clients.ClientAddressResponse
 import kpt.core.model.objects.noncoreobjects.Identifier
 import kpt.core.model.objects.noncoreobjects.IdentifierTemplate
@@ -27,10 +27,10 @@ import kpt.core.model.shared.CollateralItemResult
 
 interface ClientRepository {
     /** The officer's client roster. */
-    fun clientsStream(scope: CoroutineScope): ScreenDataStream<List<ClientEntity>>
+    fun clientsStream(scope: CoroutineScope): ScreenDataStream<List<Client>>
 
     /** One client, by id — backs the detail screen. */
-    fun clientStream(clientId: Int, scope: CoroutineScope): ScreenDataStream<ClientEntity>
+    fun clientStream(clientId: Int, scope: CoroutineScope): ScreenDataStream<Client>
 
     /**
      * A client's loan and savings accounts.
@@ -89,11 +89,11 @@ interface ClientRepository {
      * edit-details forms both need this one; it is keyed by nothing because it is identical for
      * every client in the tenant.
      *
-     * Named for the API that supplies it (`clients/template` -> `ClientsTemplateEntity`). The
+     * Named for the API that supplies it (`clients/template` -> `ClientsTemplate`). The
      * create form and the edit form were ported independently and asked for this under two
      * different names; there is one read, so there is one method.
      */
-    fun clientsTemplateStream(scope: CoroutineScope): ScreenDataStream<ClientsTemplateEntity>
+    fun clientsTemplateStream(scope: CoroutineScope): ScreenDataStream<ClientsTemplate>
 
     /**
      * Whether this tenant collects client ADDRESSES at all, and how.

@@ -9,6 +9,10 @@
  */
 package kpt.feature.client.identifiers
 
+import kpt.feature.client.generated.resources.feature_client_search_records_cd
+import kpt.feature.client.generated.resources.search
+import org.jetbrains.compose.resources.painterResource
+import androidx.compose.material3.IconButton
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -65,7 +69,8 @@ import org.koin.compose.viewmodel.koinViewModel
  *
  * Header (title + "N item" + add icon), `AppEmptyCard` when empty, and one
  * [AppActionsIdentifierListingComponent] per identifier with its expanding action menu — the
- * original's, including the `reversed()` ordering and the composite `uniqueKeyForHandleDocument`.
+ * original's, including the `reversed()` ordering. The original's composite
+ * `uniqueKeyForHandleDocument` is built by `identifierDocumentKey`, shared with the add form.
  *
  * ## §6a's three adaptations
  *
@@ -73,21 +78,22 @@ import org.koin.compose.viewmodel.koinViewModel
  *    DeletedSuccessfully / DeleteConfirmation) collapse to [ScreenState] plus the ONE that is
  *    genuinely a dialog. See the ViewModel's header.
  * 2. **Action dispatch** — unchanged; already `trySendAction`.
- * 3. **Unported destinations** — `ViewDocument` and `UploadAgain` route into `feature/document`
- *    (S3d), so they are omitted from `menuList` rather than listed and ignored. The original's
- *    `onActionClicked` had an `else -> {}` that swallowed them; a menu entry that does nothing is
- *    the dead control that rule exists to prevent.
+ * 3. **Unported destinations** — `UploadAgain` has no destination yet, so it is omitted from
+ *    `menuList` rather than listed and ignored. The original's `onActionClicked` had an
+ *    `else -> {}` that swallowed unwired entries; a menu entry that does nothing is the dead
+ *    control that rule exists to prevent. `ViewDocument` is live (2026-10-23).
  *
- * The header's SEARCH icon is also absent: its destination (`SearchRoute`) lives in
- * `cmp-navigation`, which a feature module cannot depend on, and the generated destination
- * signature is fixed at `NavGraphBuilder.(NavController) -> Unit` so it cannot be threaded in. The
- * dashboard toolbar's magnifier reaches the same screen from here. Tracked in CAPABILITY_GAPS.
+ * The header's SEARCH icon is back (2026-10-24): it opens feature/searchrecord, which the client
+ * graph registers — the original routed it through the app shell, which a feature cannot reach.
  */
 @Composable
 internal fun ClientIdentifiersScreen(
     onBackPress: () -> Unit,
     modifier: Modifier = Modifier,
     onAddNewIdentifier: ((Long) -> Unit)? = null,
+    onViewDocument: ((ClientIdentifiersEvent.ViewDocument) -> Unit)? = null,
+    /** Identifier search. Null draws no search icon — an icon with nowhere to go is a dead control. */
+    onNavigateToSearch: (() -> Unit)? = null,
     viewModel: ClientIdentifiersViewModel = koinViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
@@ -97,6 +103,8 @@ internal fun ClientIdentifiersScreen(
         when (event) {
             ClientIdentifiersEvent.NavigateBack -> onBackPress()
             is ClientIdentifiersEvent.AddIdentifier -> onAddNewIdentifier?.invoke(event.clientId)
+            is ClientIdentifiersEvent.ViewDocument -> onViewDocument?.invoke(event)
+            ClientIdentifiersEvent.NavigateToSearch -> onNavigateToSearch?.invoke()
         }
     }
 
@@ -128,6 +136,8 @@ internal fun ClientIdentifiersScreen(
             onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
             modifier = modifier,
             scaffoldPadding = scaffoldPadding,
+            canViewDocument = onViewDocument != null,
+            canSearch = onNavigateToSearch != null,
         )
     }
 }
@@ -148,6 +158,9 @@ internal fun ClientIdentifiersContent(
      * back affordance (which is why their `NavigateBack` action had no dispatcher).
      */
     scaffoldPadding: PaddingValues = PaddingValues(),
+    canViewDocument: Boolean = false,
+    /** Whether the header offers search — see [ClientIdentifiersScreen]'s `onNavigateToSearch`. */
+    canSearch: Boolean = false,
 ) {
     // The host scaffold's insets, folded into the modifier this half already receives so
     // the screen's own root layout places them.
@@ -167,6 +180,7 @@ internal fun ClientIdentifiersContent(
             // and it is 0 until content arrives rather than a stale count from a previous client.
             totalItem = ((identifiers as? ScreenState.Content)?.data?.size ?: 0).toString(),
             onAction = onAction,
+            canSearch = canSearch,
         )
 
         Spacer(modifier = Modifier.height(KptTheme.spacing.lg))
@@ -192,13 +206,6 @@ internal fun ClientIdentifiersContent(
                     list.reversed().forEachIndexed { index, identifier ->
                         val status = getClientIdentifierStatus(identifier.status)
 
-                        /**
-                         * The original's composite key: document type + key + status. It exists to
-                         * address the DOCUMENT operations (view / upload-again / delete), which are
-                         * S3d. Built here so the structure is in place when they land.
-                         */
-                        val uniqueKey = identifier.documentType?.name + identifier.documentKey + status
-
                         AppActionsIdentifierListingComponent(
                             type = identifier.documentType?.name ?: notAvailable,
                             id = identifier.id?.toString() ?: notAvailable,
@@ -208,13 +215,22 @@ internal fun ClientIdentifiersContent(
                             // The original's own TODO: "check what is identifyDocuments, couldnot
                             // find in the api" — it passed the type again. Kept.
                             identifyDocuments = identifier.documentType?.name ?: notAvailable,
-                            // Delete only. ViewDocument and UploadAgain need `feature/document`.
-                            menuList = listOf(Actions.DeleteDocument()),
+                            // UploadAgain stays absent — see the ViewModel's header. View is
+                            // listed only when the host wired the preview destination.
+                            menuList = listOfNotNull(
+                                Actions.ViewDocument().takeIf { canViewDocument },
+                                Actions.DeleteDocument(),
+                            ),
                             onActionClicked = { action ->
-                                if (action is Actions.DeleteDocument) {
-                                    identifier.id?.let {
+                                when (action) {
+                                    is Actions.ViewDocument ->
+                                        onAction(ClientIdentifiersAction.ViewDocument(identifier))
+
+                                    is Actions.DeleteDocument -> identifier.id?.let {
                                         onAction(ClientIdentifiersAction.ShowDeleteConfirmation(it.toLong()))
                                     }
+
+                                    else -> Unit
                                 }
                             },
                             onClick = { onAction(ClientIdentifiersAction.ToggleShowMenu(index)) },
@@ -235,6 +251,7 @@ internal fun ClientIdentifiersContent(
 private fun Header(
     totalItem: String,
     onAction: (ClientIdentifiersAction) -> Unit,
+    canSearch: Boolean,
 ) {
     Row(modifier = Modifier.fillMaxWidth()) {
         Column {
@@ -251,7 +268,18 @@ private fun Header(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // The search icon of the original is not drawn — see this file's header.
+        // The original's search icon, with a description (it passed "") and only when wired.
+        if (canSearch) {
+            IconButton(
+                onClick = { onAction(ClientIdentifiersAction.NavigateToSearch) },
+                modifier = Modifier.testTag(ClientIdentifiersTestTags.SEARCH),
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.search),
+                    contentDescription = stringResource(Res.string.feature_client_search_records_cd),
+                )
+            }
+        }
     }
 }
 

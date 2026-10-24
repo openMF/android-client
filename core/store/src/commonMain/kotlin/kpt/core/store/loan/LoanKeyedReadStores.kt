@@ -9,6 +9,7 @@
  */
 package kpt.core.store.loan
 
+import kpt.core.model.loan.LoanTransactionTemplate as LoanTransactionTemplateModel
 import kpt.core.base.store.annotation.CacheKey
 import kpt.core.base.store.annotation.StoreProvider
 import kpt.core.database.cache.dao.ApiResponseCacheDao
@@ -121,7 +122,7 @@ fun provideGetGuarantorAccountTemplateStore(
 fun provideGetLoanTransactionTemplateStore(
     loanApi: LoanApi,
     cache: ApiResponseCacheDao,
-): Store<GetLoanTransactionTemplateKey, LoanTransactionTemplate> = cachedRead(
+): Store<GetLoanTransactionTemplateKey, LoanTransactionTemplateModel> = cachedRead(
     dao = cache,
     keyOf = { key -> AppCacheKeys.LoanGetLoanTransactionTemplate.forKey("${key.loanId}:${key.command}") },
     fetch = { key -> loanApi.getLoanTransactionTemplate(loanId = key.loanId, command = key.command) },

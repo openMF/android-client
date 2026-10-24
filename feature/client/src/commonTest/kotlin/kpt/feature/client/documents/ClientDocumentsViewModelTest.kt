@@ -13,12 +13,13 @@ package kpt.feature.client.documents
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import io.ktor.client.request.forms.MultiPartFormDataContent
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -31,6 +32,7 @@ import kpt.core.base.store.screen.screenDataStreamForTesting
 import kpt.core.data.document.DocumentCommandRepository
 import kpt.core.data.document.DocumentRepository
 import kpt.core.model.objects.noncoreobjects.Document
+import kpt.core.model.objects.noncoreobjects.DocumentUpload
 import kpt.core.model.shared.GenericResponse
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -67,6 +69,9 @@ class ClientDocumentsViewModelTest {
         // like a missing file.
         override suspend fun downloadDocument(entityType: String, entityId: Int, documentId: Int) =
             error("downloadDocument is not used by the documents list")
+
+        override suspend fun fetchDocuments(entityType: String, entityId: Int) =
+            error("fetchDocuments is not used by the documents list")
     }
 
     private class FakeCommands(
@@ -89,14 +94,14 @@ class ClientDocumentsViewModelTest {
         override suspend fun createDocument(
             entityType: String,
             entityId: Int,
-            request: MultiPartFormDataContent,
+            upload: DocumentUpload,
         ) = error("not used here")
 
         override suspend fun updateDocument(
             entityType: String,
             entityId: Int,
             documentId: Int,
-            request: MultiPartFormDataContent,
+            upload: DocumentUpload,
         ) = error("not used here")
     }
 
@@ -126,12 +131,12 @@ class ClientDocumentsViewModelTest {
     }
 
     @Test
-    fun theFilterPassesNonContentStatesThrough() {
+    fun theFilterPassesNonContentStatesThrough() = runTest(dispatcher) {
         // A filter must never turn an Error into an apparently-empty list.
-        assertIs<ScreenState.Error>(
-            ScreenState.Error(RuntimeException("boom")).applyQuery("anything"),
-        )
-        assertIs<ScreenState.Loading>(ScreenState.Loading.applyQuery("anything"))
+        val error: ScreenState<List<Document>> = ScreenState.Error(RuntimeException("boom"))
+        val loading: ScreenState<List<Document>> = ScreenState.Loading
+        assertIs<ScreenState.Error>(flowOf(error).applyQuery(flowOf("anything")).first())
+        assertIs<ScreenState.Loading>(flowOf(loading).applyQuery(flowOf("anything")).first())
     }
 
     @Test
@@ -222,6 +227,24 @@ class ClientDocumentsViewModelTest {
     }
 
     @Test
+    fun deletingTheLastDocumentLeavesAnEmptyListNotTheDeletedRow() = runTest(dispatcher) {
+        // The stream reports "no documents" as an empty Content (no `isEmpty` predicate) and the
+        // screen draws its AppEmptyCard from it. With the predicate the deleted row stayed on
+        // screen (device, Nadia Islam's documents).
+        val vm = viewModel()
+        vm.documents.test {
+            docsState.value = ScreenState.Content(listOf(doc(1, "Passport")))
+            testScheduler.advanceUntilIdle()
+            docsState.value = ScreenState.Content(emptyList())
+            testScheduler.advanceUntilIdle()
+
+            val last = assertIs<ScreenState.Content<List<Document>>>(expectMostRecentItem())
+            assertTrue(last.data.isEmpty())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
     fun aSecondDeleteInsideTheInFlightWindowIsDropped() = runTest(dispatcher) {
         val gate = CompletableDeferred<Unit>()
         val commands = FakeCommands(gate = gate)
@@ -263,5 +286,29 @@ class ClientDocumentsViewModelTest {
         val dialog = assertIs<ClientDocumentsState.DialogState.ConfirmDeletion>(vm.stateFlow.value.dialogState)
         assertEquals("scan-2024.pdf", dialog.documentName)
         assertEquals(1, dialog.documentId)
+    }
+
+    // ---- View ----
+
+    @Test
+    fun viewNamesTheRowAndLeavesTheDownloadToThePreview() = runTest(dispatcher) {
+        // `downloadDocument` errors in this fake: the list must NOT fetch the file itself any more
+        // (the original did, then forked to an external app).
+        val vm = viewModel(clientId = 42)
+
+        vm.eventFlow.test {
+            vm.trySendAction(ClientDocumentsAction.ViewDocument(doc(5, "Deed", file = "deed.pdf")))
+            assertEquals(ClientDocumentsEvent.ViewDocument(clientId = 42, documentId = 5, title = "Deed"), awaitItem())
+        }
+    }
+
+    @Test
+    fun viewFallsBackToTheFileNameForAnUnnamedDocument() = runTest(dispatcher) {
+        val vm = viewModel()
+
+        vm.eventFlow.test {
+            vm.trySendAction(ClientDocumentsAction.ViewDocument(Document(id = 6, fileName = "scan.jpg")))
+            assertEquals("scan.jpg", assertIs<ClientDocumentsEvent.ViewDocument>(awaitItem()).title)
+        }
     }
 }

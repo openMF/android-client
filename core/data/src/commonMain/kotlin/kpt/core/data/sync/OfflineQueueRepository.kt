@@ -12,11 +12,11 @@ package kpt.core.data.sync
 import kotlinx.coroutines.CoroutineScope
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenDataStream
-import kpt.core.database.center.entity.CenterPayloadEntity
-import kpt.core.database.client.entity.ClientPayloadEntity
-import kpt.core.database.group.entity.GroupPayloadEntity
-import kpt.core.database.loan.entity.LoanRepaymentRequestEntity
-import kpt.core.database.savings.entity.SavingsAccountTransactionRequestEntity
+import kpt.core.model.center.CenterPayload
+import kpt.core.model.client.ClientPayload
+import kpt.core.model.group.GroupPayload
+import kpt.core.model.loan.LoanRepaymentRequest
+import kpt.core.model.savings.SavingsAccountTransactionRequest
 
 /**
  * Work captured with no connectivity, and the queue the sync screen drains.
@@ -31,17 +31,17 @@ import kpt.core.database.savings.entity.SavingsAccountTransactionRequestEntity
  */
 interface OfflineQueueRepository {
 
-    fun pendingClientsStream(scope: CoroutineScope): ScreenDataStream<List<ClientPayloadEntity>>
-    fun pendingCentersStream(scope: CoroutineScope): ScreenDataStream<List<CenterPayloadEntity>>
-    fun pendingGroupsStream(scope: CoroutineScope): ScreenDataStream<List<GroupPayloadEntity>>
-    fun pendingLoanRepaymentsStream(scope: CoroutineScope): ScreenDataStream<List<LoanRepaymentRequestEntity>>
-    fun pendingSavingsTransactionsStream(scope: CoroutineScope): ScreenDataStream<List<SavingsAccountTransactionRequestEntity>>
+    fun pendingClientsStream(scope: CoroutineScope): ScreenDataStream<List<ClientPayload>>
+    fun pendingCentersStream(scope: CoroutineScope): ScreenDataStream<List<CenterPayload>>
+    fun pendingGroupsStream(scope: CoroutineScope): ScreenDataStream<List<GroupPayload>>
+    fun pendingLoanRepaymentsStream(scope: CoroutineScope): ScreenDataStream<List<LoanRepaymentRequest>>
+    fun pendingSavingsTransactionsStream(scope: CoroutineScope): ScreenDataStream<List<SavingsAccountTransactionRequest>>
 
-    suspend fun enqueueClient(id: Int, payload: ClientPayloadEntity): MutationResult<ClientPayloadEntity>
-    suspend fun enqueueCenter(id: Int, payload: CenterPayloadEntity): MutationResult<CenterPayloadEntity>
-    suspend fun enqueueGroup(id: Int, payload: GroupPayloadEntity): MutationResult<GroupPayloadEntity>
-    suspend fun enqueueLoanRepayment(loanId: Int, request: LoanRepaymentRequestEntity): MutationResult<LoanRepaymentRequestEntity>
-    suspend fun enqueueSavingsTransaction(accountId: Int, request: SavingsAccountTransactionRequestEntity): MutationResult<SavingsAccountTransactionRequestEntity>
+    suspend fun enqueueClient(id: Int, payload: ClientPayload): MutationResult<ClientPayload>
+    suspend fun enqueueCenter(id: Int, payload: CenterPayload): MutationResult<CenterPayload>
+    suspend fun enqueueGroup(id: Int, payload: GroupPayload): MutationResult<GroupPayload>
+    suspend fun enqueueLoanRepayment(loanId: Int, request: LoanRepaymentRequest): MutationResult<LoanRepaymentRequest>
+    suspend fun enqueueSavingsTransaction(accountId: Int, request: SavingsAccountTransactionRequest): MutationResult<SavingsAccountTransactionRequest>
 
     /** Drop a queued row — the sync accepted it, or the officer discarded it. */
     suspend fun discardClient(id: Int)

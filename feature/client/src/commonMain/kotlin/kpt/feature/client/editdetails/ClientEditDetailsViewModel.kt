@@ -25,12 +25,13 @@ import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.combineScreenStates
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kpt.core.model.objects.error.serverErrorMessage
 import kpt.core.common.utils.DateFormatPattern
 import kpt.core.data.client.ClientCommandRepository
 import kpt.core.data.client.ClientRepository
-import kpt.core.database.client.entity.ClientEntity
-import kpt.core.database.client.entity.ClientPayloadEntity
-import kpt.core.database.client.entity.ClientsTemplateEntity
+import kpt.core.model.client.Client
+import kpt.core.model.client.ClientPayload
+import kpt.core.model.client.ClientsTemplate
 import kpt.core.model.utils.ApiDateFormatter
 import kotlin.time.ExperimentalTime
 
@@ -84,7 +85,7 @@ import kotlin.time.ExperimentalTime
  *     }
  * ```
  *
- * `ClientEntity.dateOfBirth` is `List<Int?>` and empty for a client with no DOB on file — the
+ * `Client.dateOfBirth` is `List<Int?>` and empty for a client with no DOB on file — the
  * common case for a client created without one. The original turned that into NOW, rendered it in
  * the field as if the server had sent it, and posted it on the next save. A silent write of a
  * wrong date of birth, every time such a client's phone number was corrected.
@@ -253,7 +254,7 @@ internal class ClientEditDetailsViewModel(
                         isSubmitting = false,
                         // Fineract's own reason is the useful half — "mobile number already in
                         // use" tells the officer what to change.
-                        dialogState = EditDialog.Failed(offline = false, msg = result.cause.message),
+                        dialogState = EditDialog.Failed(offline = false, msg = result.cause.serverErrorMessage()),
                     )
                 }
 
@@ -412,7 +413,7 @@ private fun nameError(name: String, required: Boolean): FieldError? = when {
  *
  * ## Why [locale] and [dateFormat] are required and non-defaulted
  *
- * `ClientPayloadEntity` declares all twenty-odd members `= null`, so omitting the pair compiles
+ * `ClientPayload` declares all twenty-odd members `= null`, so omitting the pair compiles
  * and produces a payload with a date and no instruction for parsing it. Eight screens in this
  * migration shipped a date that contradicted its own declared format, or raw epoch millis, for
  * that reason. Here they are parameters with no defaults — a caller cannot forget them — and
@@ -440,7 +441,7 @@ private fun nameError(name: String, required: Boolean): FieldError? = when {
 internal fun ClientEditDetailsForm.toPayload(
     locale: String,
     dateFormat: DateFormatPattern,
-): ClientPayloadEntity = ClientPayloadEntity(
+): ClientPayload = ClientPayload(
     // Mandatory, and validated above.
     firstname = firstName.trim(),
     lastname = lastName.trim(),
@@ -463,7 +464,7 @@ internal fun ClientEditDetailsForm.toPayload(
 )
 
 /** The client's current values, as what the form opens with. */
-internal fun ClientEntity.asPrefill(): ClientEditDetailsForm = ClientEditDetailsForm(
+internal fun Client.asPrefill(): ClientEditDetailsForm = ClientEditDetailsForm(
     firstName = firstname.orEmpty(),
     middleName = middlename.orEmpty(),
     lastName = lastname.orEmpty(),
@@ -488,7 +489,7 @@ internal fun ClientEntity.asPrefill(): ClientEditDetailsForm = ClientEditDetails
 )
 
 /** The tenant's option sets, with unusable rows dropped rather than offered. */
-internal fun ClientsTemplateEntity.asOptions(): ClientEditDetailsOptions = ClientEditDetailsOptions(
+internal fun ClientsTemplate.asOptions(): ClientEditDetailsOptions = ClientEditDetailsOptions(
     genders = genderOptions.orEmpty().mapNotNull { o ->
         o.id.takeIf { it > 0 }?.let { EditOption(it, o.name) }
     },

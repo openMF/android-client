@@ -17,10 +17,10 @@ import kpt.core.base.ui.nav.FeatureDestination
 import kpt.core.base.ui.nav.composableWithPushTransitions
 import kpt.core.base.ui.nav.popBackStackSafely
 import kpt.core.common.utils.Constants
+import kpt.core.model.objects.charge.ChargeResource
+import kpt.feature.charge.navigation.navigateToCharges
 import kpt.feature.document.navigation.navigateToDocumentList
 import kpt.feature.loan.approval.LoanApprovalScreen
-import kpt.feature.loan.chargeform.LoanChargeFormScreen
-import kpt.feature.loan.charges.LoanChargesScreen
 import kpt.feature.loan.disbursement.LoanDisbursementScreen
 import kpt.feature.loan.grouploan.GroupLoanApplicationScreen
 import kpt.feature.loan.newloan.NewLoanApplicationScreen
@@ -100,15 +100,6 @@ data class LoanSummaryRoute(val loanId: Int)
 data class LoanDisbursementRoute(val loanId: Int)
 
 /**
- * The charges levied on a loan.
- *
- * Reached from BOTH loan detail screens — the summary's overflow menu and the profile's "Charges"
- * row — which is why it is a top-level route here rather than nested under either.
- */
-@Serializable
-data class LoanChargesRoute(val loanId: Int)
-
-/**
  * Transfer funds out of a loan.
  *
  * `loanId` only, where the original's route carried FIVE fields — client id, office id, account
@@ -118,16 +109,6 @@ data class LoanChargesRoute(val loanId: Int)
  */
 @Serializable
 data class LoanTransferRoute(val loanId: Int)
-
-/**
- * Add a charge to a loan.
- *
- * Its own destination, where the original composed it as a `ModalBottomSheet` INSIDE the charges
- * list behind a boolean that list owned — see
- * [kpt.feature.loan.chargeform.LoanChargeFormViewModel].
- */
-@Serializable
-data class LoanChargeFormRoute(val loanId: Int)
 
 /** Every reschedule proposed on a loan, with approve and reject. */
 @Serializable
@@ -193,8 +174,9 @@ fun NavGraphBuilder.loanDestinations(navController: NavController) {
                         navController.navigate(LoanScheduleRoute(loanId))
                     LoanProfileActionItem.Transactions ->
                         navController.navigate(LoanTransactionsRoute(loanId))
+                    // The ONE charge module, scoped to this loan — list, add, edit, delete.
                     LoanProfileActionItem.Charges ->
-                        navController.navigate(LoanChargesRoute(loanId))
+                        navController.navigateToCharges(ChargeResource.LOAN, loanId)
                     LoanProfileActionItem.Reschedules ->
                         navController.navigate(LoanReschedulesRoute(loanId))
                     // The GENERIC document list, which is entity-agnostic and already ported —
@@ -245,17 +227,6 @@ fun NavGraphBuilder.loanDestinations(navController: NavController) {
         LoanTransferScreen(onBackPressed = navController::popBackStackSafely)
     }
 
-    composableWithPushTransitions<LoanChargesRoute> {
-        LoanChargesScreen(
-            onBackPressed = navController::popBackStackSafely,
-            onAddCharge = { loanId -> navController.navigate(LoanChargeFormRoute(loanId)) },
-        )
-    }
-
-    composableWithPushTransitions<LoanChargeFormRoute> {
-        LoanChargeFormScreen(onBackPressed = navController::popBackStackSafely)
-    }
-
     composableWithPushTransitions<LoanReschedulesRoute> {
         LoanReschedulesScreen(
             onBackPressed = navController::popBackStackSafely,
@@ -285,7 +256,7 @@ fun NavGraphBuilder.loanDestinations(navController: NavController) {
                     LoanSummaryMenuItem.RepaymentSchedule ->
                         navController.navigate(LoanScheduleRoute(loanId))
                     LoanSummaryMenuItem.Charges ->
-                        navController.navigate(LoanChargesRoute(loanId))
+                        navController.navigateToCharges(ChargeResource.LOAN, loanId)
                     LoanSummaryMenuItem.Documents ->
                         navController.navigateToDocumentList(Constants.ENTITY_TYPE_LOANS, loanId)
                     // Unreachable: only `SUMMARY_MENU_ITEMS` entries are drawn. `MoreInfo` needs

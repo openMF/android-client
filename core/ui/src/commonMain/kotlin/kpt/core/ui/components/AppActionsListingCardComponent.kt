@@ -89,6 +89,7 @@ import kpt.core.ui.generated.resources.core_ui_total_value
 import kpt.core.ui.generated.resources.core_ui_type
 import kpt.core.ui.generated.resources.core_ui_upload_again
 import kpt.core.ui.generated.resources.core_ui_view_account
+import kpt.core.ui.generated.resources.core_ui_view_details
 import kpt.core.ui.generated.resources.core_ui_view_document
 import kpt.core.ui.generated.resources.core_ui_waived
 import kpt.core.ui.generated.resources.listing_component_identifier_not_available
@@ -826,6 +827,10 @@ sealed class Actions(open val icon: ImageVector, open val text: StringResource) 
         Actions(icon, Res.string.core_ui_edit)
     data class Delete(override val icon: ImageVector = AppIcons.DeleteDocument) :
         Actions(icon, Res.string.core_ui_delete)
+
+    /** Open a row's detail screen — the charge list's first action. */
+    data class ViewDetails(override val icon: ImageVector = AppIcons.Info) :
+        Actions(icon, Res.string.core_ui_view_details)
 }
 
 @Composable

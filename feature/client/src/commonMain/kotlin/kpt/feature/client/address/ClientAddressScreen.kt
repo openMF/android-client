@@ -9,6 +9,10 @@
  */
 package kpt.feature.client.address
 
+import kpt.feature.client.generated.resources.feature_client_search_records_cd
+import kpt.feature.client.generated.resources.search
+import org.jetbrains.compose.resources.painterResource
+import androidx.compose.material3.IconButton
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -33,13 +37,13 @@ import kpt.core.base.designsystem.theme.KptTheme
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.effects.EventsEffect
 import kpt.core.base.ui.screen.ScreenContent
-import kpt.core.database.client.entity.ClientAddressEntity
 import kpt.core.designsystem.component.AppScaffold
 import kpt.core.designsystem.component.FloatingActionButtonContent
 import kpt.core.designsystem.icon.AppIcons
 import kpt.core.designsystem.theme.AppColors
 import kpt.core.designsystem.theme.AppTypography
 import kpt.core.designsystem.theme.DesignToken
+import kpt.core.model.objects.clients.ClientAddressEntity
 import kpt.core.ui.components.AppAddressCard
 import kpt.feature.client.generated.resources.Res
 import kpt.feature.client.generated.resources.feature_client_add_record
@@ -64,15 +68,17 @@ import org.koin.compose.viewmodel.koinViewModel
  * original's seven labelled rows in the original's order.
  *
  * §6a's three adaptations: `AddressListScreenState` becomes [ScreenState] through [ScreenContent]
- * (see the ViewModel for what that deletes); actions unchanged; the add-address "+" and the search
- * icon are `null`/absent — the add form is a 610-line screen that is not ported, and `SearchRoute`
- * is unreachable from a feature module.
+ * (see the ViewModel for what that deletes); actions unchanged; the add-address "+" is `null`/absent
+ * — the add form is a 610-line screen that is not ported. The search icon is back (2026-10-24): it
+ * opens feature/searchrecord, registered by the client graph.
  */
 @Composable
 internal fun ClientAddressScreen(
     onNavigateBack: () -> Unit,
     modifier: Modifier = Modifier,
     onAddAddress: ((Int) -> Unit)? = null,
+    /** Address search. Null draws no search icon — an icon with nowhere to go is a dead control. */
+    onNavigateToSearch: (() -> Unit)? = null,
     viewModel: ClientAddressViewModel = koinViewModel(),
 ) {
     val addresses by viewModel.addresses.collectAsStateWithLifecycle()
@@ -81,6 +87,7 @@ internal fun ClientAddressScreen(
         when (event) {
             ClientAddressEvent.NavigateBack -> onNavigateBack()
             is ClientAddressEvent.ShowAddressForm -> onAddAddress?.invoke(event.clientId)
+            ClientAddressEvent.NavigateToSearch -> onNavigateToSearch?.invoke()
         }
     }
 
@@ -111,6 +118,7 @@ internal fun ClientAddressScreen(
             onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
             modifier = modifier,
             scaffoldPadding = scaffoldPadding,
+            canSearch = onNavigateToSearch != null,
         )
     }
 }
@@ -130,6 +138,8 @@ internal fun ClientAddressContent(
      * back affordance (which is why their `NavigateBack` action had no dispatcher).
      */
     scaffoldPadding: PaddingValues = PaddingValues(),
+    /** Whether the header offers search — see [ClientAddressScreen]'s `onNavigateToSearch`. */
+    canSearch: Boolean = false,
 ) {
     // The host scaffold's insets, folded into the modifier this half already receives so
     // the screen's own root layout places them.
@@ -146,6 +156,7 @@ internal fun ClientAddressContent(
             // Derived from the same state the list renders, so it cannot disagree with it.
             totalItem = ((addresses as? ScreenState.Content)?.data?.size ?: 0).toString(),
             onAction = onAction,
+            canSearch = canSearch,
         )
         Spacer(modifier = Modifier.height(KptTheme.spacing.md))
 
@@ -187,6 +198,7 @@ internal fun ClientAddressContent(
 private fun Header(
     totalItem: String,
     onAction: (ClientAddressAction) -> Unit,
+    canSearch: Boolean,
 ) {
     Row(modifier = Modifier.fillMaxWidth()) {
         Column {
@@ -203,7 +215,18 @@ private fun Header(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // Search icon omitted — unreachable from a feature module, see the file header.
+        // The original's search icon, with a description (it passed "") and only when wired.
+        if (canSearch) {
+            IconButton(
+                onClick = { onAction(ClientAddressAction.NavigateToSearch) },
+                modifier = Modifier.testTag(ClientAddressTestTags.SEARCH),
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.search),
+                    contentDescription = stringResource(Res.string.feature_client_search_records_cd),
+                )
+            }
+        }
     }
 }
 

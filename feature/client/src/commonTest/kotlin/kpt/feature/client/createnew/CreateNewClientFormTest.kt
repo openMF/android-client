@@ -233,5 +233,22 @@ class CreateNewClientFormTest {
     private companion object {
         /** 1990-06-15T00:00:00Z — any fixed instant; the assertions never read the rendered text. */
         const val DOB_MILLIS = 645_321_600_000L
+
+        /** 2026-10-23T12:00Z — `toPickerMillis` of the template's `[2026, 10, 23]`. */
+        const val SERVER_DAY_NOON_UTC = 1_792_756_800_000L
+    }
+
+    @Test
+    fun activationDefaultsToTheServersBusinessDateNotTheDeviceClock() {
+        // Device 2026-10-24 (IST) vs a server still on the 23rd — the template's date is the default.
+        val serverDay = CreateClientForm(serverActivationDate = SERVER_DAY_NOON_UTC)
+        val unpicked = filled().copy(isActive = true)
+        assertEquals(SERVER_DAY_NOON_UTC, unpicked.activationDateOr(serverDay))
+        assertEquals(
+            ApiDateFormatter.formatForApi(SERVER_DAY_NOON_UTC),
+            unpicked.toPayload(serverDay, hasAddressBlock = false).activationDate,
+        )
+        // The officer's own pick always wins over the default.
+        assertEquals(DOB_MILLIS, unpicked.copy(activationDate = DOB_MILLIS).activationDateOr(serverDay))
     }
 }

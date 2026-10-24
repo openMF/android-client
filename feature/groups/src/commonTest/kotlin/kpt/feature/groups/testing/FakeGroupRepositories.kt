@@ -21,8 +21,8 @@ import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.screenDataStreamForTesting
 import kpt.core.data.group.GroupCommandRepository
 import kpt.core.data.group.GroupRepository
-import kpt.core.database.group.entity.GroupEntity
-import kpt.core.database.group.entity.GroupPayloadEntity
+import kpt.core.model.group.Group
+import kpt.core.model.group.GroupPayload
 import kpt.core.model.objects.clients.ActivatePayload
 import kpt.core.model.objects.responses.SaveResponse
 
@@ -31,17 +31,17 @@ import kpt.core.model.objects.responses.SaveResponse
  * sanctioned `screenDataStreamForTesting` factory, so tests exercise production's own transitions.
  */
 internal class FakeGroupRepository(
-    initial: ScreenState<List<GroupEntity>> = ScreenState.Loading,
+    initial: ScreenState<List<Group>> = ScreenState.Loading,
 ) : GroupRepository {
     val state = MutableStateFlow(initial)
     private val refreshes = MutableSharedFlow<Unit>(extraBufferCapacity = 4)
 
-    fun emit(vararg groups: GroupEntity) {
-        state.value =
-            if (groups.isEmpty()) ScreenState.Empty else ScreenState.Content(groups.toList())
+    fun emit(vararg groups: Group) {
+        // An empty list is Content, as the real stream emits it (see ChargeRepositoryImpl).
+        state.value = ScreenState.Content(groups.toList())
     }
 
-    override fun groupsStream(scope: CoroutineScope): ScreenDataStream<List<GroupEntity>> =
+    override fun groupsStream(scope: CoroutineScope): ScreenDataStream<List<Group>> =
         screenDataStreamForTesting(state, refreshTrigger = refreshes)
 }
 
@@ -60,7 +60,7 @@ internal class FakeGroupCommandRepository(
 
     val activations = mutableListOf<Int>()
 
-    override suspend fun createGroup(groupPayload: GroupPayloadEntity?): MutationResult<SaveResponse> =
+    override suspend fun createGroup(groupPayload: GroupPayload?): MutationResult<SaveResponse> =
         error("not used by these tests")
 
     override suspend fun activateGroup(
@@ -80,7 +80,7 @@ internal fun group(
     centerId: Int? = null,
     officeName: String? = "Head Office",
     accountNo: String? = "G$id",
-) = GroupEntity(
+) = Group(
     id = id,
     name = name,
     active = active,

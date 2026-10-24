@@ -9,6 +9,8 @@
  */
 package kpt.core.store.charge
 
+import kpt.core.model.charge.Charges
+import kpt.core.store.mapping.toModel
 import kpt.core.base.store.annotation.CacheKey
 import kpt.core.base.store.annotation.StoreProvider
 import kpt.core.database.cache.dao.ApiResponseCacheDao
@@ -50,7 +52,7 @@ data class GetChargeKey(
 fun provideGetListOfPagingChargesStore(
     chargeApi: ChargeApi,
     cache: ApiResponseCacheDao,
-): Store<GetListOfPagingChargesKey, Page<ChargesEntity>> = cachedRead(
+): Store<GetListOfPagingChargesKey, Page<Charges>> = cachedRead(
     dao = cache,
     keyOf = { key -> AppCacheKeys.ChargeGetListOfPagingCharges.forKey("${key.resourceType}:${key.resourceId}:${key.offset}:${key.limit}") },
     fetch = { key -> chargeApi.getListOfPagingCharges(resourceType = key.resourceType, resourceId = key.resourceId, offset = key.offset, limit = key.limit) },
@@ -61,7 +63,7 @@ fun provideGetListOfPagingChargesStore(
 fun provideGetListOfOtherAccountChargeStore(
     chargeApi: ChargeApi,
     cache: ApiResponseCacheDao,
-): Store<GetListOfOtherAccountChargeKey, List<ChargesEntity>> = cachedRead(
+): Store<GetListOfOtherAccountChargeKey, List<Charges>> = cachedRead(
     dao = cache,
     keyOf = { key -> AppCacheKeys.ChargeGetListOfOtherAccountCharge.forKey("${key.resourceType}:${key.resourceId}") },
     fetch = { key -> chargeApi.getListOfOtherAccountCharge(resourceType = key.resourceType, resourceId = key.resourceId) },
@@ -72,7 +74,7 @@ fun provideGetListOfOtherAccountChargeStore(
 fun provideGetChargeStore(
     chargeApi: ChargeApi,
     cache: ApiResponseCacheDao,
-): Store<GetChargeKey, ChargesEntity> = cachedRead(
+): Store<GetChargeKey, Charges> = cachedRead(
     dao = cache,
     keyOf = { key -> AppCacheKeys.ChargeGetCharge.forKey("${key.resourceType}:${key.resourceId}:${key.chargeId}") },
     fetch = { key -> chargeApi.getCharge(resourceType = key.resourceType, resourceId = key.resourceId, chargeId = key.chargeId) },

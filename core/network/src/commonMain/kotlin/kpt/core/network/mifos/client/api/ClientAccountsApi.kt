@@ -12,7 +12,7 @@ package kpt.core.network.mifos.client.api
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.Path
 import kpt.core.base.network.annotation.ApiBinding
-import kpt.core.database.client.entity.ClientAccounts
+import kpt.core.model.client.ClientAccounts
 
 /**
  * @author fomenkoo

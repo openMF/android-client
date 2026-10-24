@@ -9,9 +9,12 @@
  */
 package kpt.core.database.collectionsheet.entity
 
+import kotlinx.serialization.Serializable
+
 /**
  * Created by Tarun on 25-07-2017.
  */
+@Serializable
 data class CenterDetail(
     var staffId: Int = 0,
 

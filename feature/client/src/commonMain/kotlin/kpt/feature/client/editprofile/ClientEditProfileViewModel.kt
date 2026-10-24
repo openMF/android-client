@@ -34,8 +34,9 @@ import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.common.utils.FileKitUtil
 import kpt.core.data.client.ClientCommandRepository
 import kpt.core.data.client.ClientRepository
+import kpt.core.model.objects.noncoreobjects.DocumentUpload
 import kpt.core.ui.util.imageToByteArray
-import kpt.core.ui.util.multipartRequestBody
+import kpt.core.ui.util.getMimeTypeFromPlatformFile
 
 /**
  * The client's PROFILE PHOTO — ported from `6b66e8a43:feature/client/clientEditProfile/`
@@ -217,10 +218,13 @@ internal class ClientEditProfileViewModel(
 
         val result = commands.uploadClientImage(
             clientId,
-            multipartRequestBody(
-                file = bitmap.encodeToByteArray(ImageFormat.PNG),
+            // The same parts multipartRequestBody produced — the name, `<base>.png`, its MIME type and
+            // the bytes — as a core/model value; core/data does the HTTP encoding.
+            DocumentUpload(
                 name = fileName,
-                extension = ImageFormat.PNG.name,
+                fileName = "${fileName.substringBeforeLast(".")}.${ImageFormat.PNG.name.lowercase()}",
+                mimeType = getMimeTypeFromPlatformFile(ImageFormat.PNG.name),
+                bytes = bitmap.encodeToByteArray(ImageFormat.PNG),
             ),
         )
         finish(result) {

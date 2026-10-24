@@ -25,6 +25,7 @@ import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.data.testing.FakeLoanCommandRepository
 import kpt.core.data.testing.FakeLoanRepository
+import kpt.core.data.testing.fineractRejection
 import kpt.core.model.objects.account.loan.loanWithAssociations.LoanTimeline
 import kpt.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import kpt.core.model.utils.ApiDateFormatter
@@ -269,9 +270,9 @@ class LoanApprovalViewModelTest {
     // ---- the outcome ----
 
     @Test
-    fun successShowsTheDialogAndReReadsTheLoan() = runTest(dispatcher) {
-        // The loan's status has just changed from pendingApproval to approved, and the profile
-        // behind this screen is still showing the old one with its Approve button.
+    fun successShowsTheDialogWithoutReReadingTheLoan() = runTest(dispatcher) {
+        // The command ingests the approved loan through the `loans` store, so the profile behind
+        // this screen re-emits on its own — the ViewModel must not re-read after the write.
         val repository = FakeLoanRepository(loan = loanState)
         val commands = FakeLoanCommandRepository()
         val vm = viewModel(commands, repository)
@@ -280,7 +281,7 @@ class LoanApprovalViewModelTest {
             vm.actionChannel.trySend(LoanApprovalAction.UpdateApprovedAmount("5000"))
             vm.actionChannel.trySend(LoanApprovalAction.OnSubmit)
             testScheduler.advanceUntilIdle()
-            awaitItem()
+            expectNoEvents()
             cancelAndIgnoreRemainingEvents()
         }
 
@@ -318,7 +319,7 @@ class LoanApprovalViewModelTest {
         val commands = FakeLoanCommandRepository(
             result = {
                 MutationResult.Failed(
-                    cause = IllegalStateException("approved amount exceeds the proposed principal"),
+                    cause = fineractRejection("approved amount exceeds the proposed principal"),
                     // An OnlineRequired write never applied anything locally, so there is nothing
                     // to roll back — the gateway reports the same.
                     rolledBack = false,

@@ -14,7 +14,7 @@ import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.Path
 import kpt.core.base.network.annotation.ApiBinding
-import kpt.core.database.survey.entity.SurveyEntity
+import kpt.core.model.survey.Survey
 import kpt.core.model.objects.surveys.Scorecard
 
 /**
@@ -23,10 +23,10 @@ import kpt.core.model.objects.surveys.Scorecard
 @ApiBinding("mifos")
 interface SurveyApi {
     @GET("surveys")
-    suspend fun allSurveys(): List<SurveyEntity>
+    suspend fun allSurveys(): List<Survey>
 
     @GET("surveys/{surveyId}")
-    suspend fun getSurvey(@Path("surveyId") surveyId: Int): SurveyEntity
+    suspend fun getSurvey(@Path("surveyId") surveyId: Int): Survey
 
     @POST("surveys/{surveyId}/scorecards")
     suspend fun submitScore(

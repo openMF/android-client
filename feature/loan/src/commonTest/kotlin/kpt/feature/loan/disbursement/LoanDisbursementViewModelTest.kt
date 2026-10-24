@@ -25,6 +25,7 @@ import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.data.testing.FakeLoanCommandRepository
 import kpt.core.data.testing.FakeLoanRepository
+import kpt.core.data.testing.fineractRejection
 import kpt.core.model.objects.account.loan.Currency
 import kpt.core.model.objects.account.loan.PaymentType
 import kpt.core.model.objects.account.loan.loanDisburse.LoanDisburseTemplate
@@ -302,7 +303,7 @@ class LoanDisbursementViewModelTest {
         val commands = FakeLoanCommandRepository(
             disburseResult = {
                 MutationResult.Failed(
-                    IllegalStateException("disbursement date cannot be before the approval date"),
+                    fineractRejection("disbursement date cannot be before the approval date"),
                     rolledBack = false,
                 )
             },

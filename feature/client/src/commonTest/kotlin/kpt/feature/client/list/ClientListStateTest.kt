@@ -9,9 +9,12 @@
  */
 package kpt.feature.client.list
 
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runTest
 import kpt.core.base.store.screen.ScreenState
-import kpt.core.database.client.entity.ClientEntity
-import kpt.core.database.client.entity.ClientStatusEntity
+import kpt.core.model.client.Client
+import kpt.core.model.client.ClientStatus
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -31,23 +34,27 @@ class ClientListStateTest {
         account: String? = null,
         office: String? = "Head Office",
         status: String? = "Active",
-    ) = ClientEntity(
+    ) = Client(
         id = id,
         displayName = name,
         accountNo = account,
         officeName = office,
-        status = ClientStatusEntity(value = status),
+        status = ClientStatus(value = status),
     )
 
-    private fun loaded(vararg clients: ClientEntity): ScreenState<List<ClientEntity>> =
+    private fun loaded(vararg clients: Client): ScreenState<List<Client>> =
         ScreenState.Content(clients.toList())
 
     /** The rendered rows for a given filter state — the pure half of the screen's logic. */
-    private fun ScreenState<List<ClientEntity>>.visible(ui: ClientListState = ClientListState()) =
-        (applyFilters(ui) as? ScreenState.Content)?.data.orEmpty()
+    private fun ScreenState<List<Client>>.visible(ui: ClientListState = ClientListState()) =
+        (this as? ScreenState.Content)?.data?.filteredFor(ui).orEmpty()
+
+    /** The state the screen renders: the ViewModel's exact Flow pipeline, over one emission. */
+    private suspend fun ScreenState<List<Client>>.rendered(ui: ClientListState) =
+        flowOf(this).applyFilters(flowOf(ui)).first()
 
     /** Office names offered by the filter, derived from the loaded rows exactly as the screen does. */
-    private fun ScreenState<List<ClientEntity>>.officeNames(): List<String> =
+    private fun ScreenState<List<Client>>.officeNames(): List<String> =
         (this as? ScreenState.Content)?.data?.mapNotNull { it.officeName }?.distinct()?.sorted().orEmpty()
 
     @Test
@@ -65,13 +72,13 @@ class ClientListStateTest {
     }
 
     @Test
-    fun aFilterThatMatchesNothingIsEmptyNotAnEmptyList() {
+    fun aFilterThatMatchesNothingIsEmptyNotAnEmptyList() = runTest {
         val state = loaded(client(1, "Zara"))
         val ui = ClientListState(selectedOffices = setOf("Nowhere"))
         // Empty RESULT and empty DATASET must not render identically — the original showed a bare
         // list for both, so "no clients in this office" and "your filter excluded everyone" looked
         // the same.
-        assertTrue(state.applyFilters(ui) is ScreenState.Empty)
+        assertTrue(state.rendered(ui) is ScreenState.Empty)
         assertTrue(state.visible(ui).isEmpty())
     }
 
@@ -104,15 +111,15 @@ class ClientListStateTest {
     }
 
     @Test
-    fun loadingAndErrorPassThroughUntouchedByFilters() {
+    fun loadingAndErrorPassThroughUntouchedByFilters() = runTest {
         // A filter must not turn a failed load into "Empty" — that would hide the failure.
-        val error: ScreenState<List<ClientEntity>> = ScreenState.Error(RuntimeException("boom"))
+        val error: ScreenState<List<Client>> = ScreenState.Error(RuntimeException("boom"))
         val ui = ClientListState(selectedOffices = setOf("Branch A"))
-        assertTrue(error.applyFilters(ui) is ScreenState.Error)
+        assertTrue(error.rendered(ui) is ScreenState.Error)
 
-        val loading: ScreenState<List<ClientEntity>> = ScreenState.Loading
+        val loading: ScreenState<List<Client>> = ScreenState.Loading
         // A query must not turn a still-loading read into Empty — the filter applies to CONTENT.
-        assertTrue(loading.applyFilters(ClientListState(query = "x")) is ScreenState.Loading)
+        assertTrue(loading.rendered(ClientListState(query = "x")) is ScreenState.Loading)
     }
 
     @Test

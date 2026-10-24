@@ -21,7 +21,7 @@ import kpt.core.base.store.screen.mapContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.data.group.GroupCommandRepository
 import kpt.core.data.group.GroupRepository
-import kpt.core.database.group.entity.GroupEntity
+import kpt.core.model.group.Group
 
 /**
  * Group detail — ported from `6b66e8a43:feature/groups/groupDetails/GroupDetailsViewModel.kt`.
@@ -65,7 +65,7 @@ internal class GroupsDetailViewModel(
      * rather than as a detail page of blank fields. `mapContent` carries `fetchedAt` and
      * `freshnessSignal` through, which a hand-rolled `when` over the states would drop.
      */
-    val group: StateFlow<ScreenState<GroupEntity>> = stream.state
+    val group: StateFlow<ScreenState<Group>> = stream.state
         .mapContent { groups, _ -> groups.filter { it.id == groupId } }
         .emptyIfContent { it.isEmpty() }
         .mapContent { matches, _ -> matches.first() }

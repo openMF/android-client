@@ -10,36 +10,46 @@
 package kpt.core.data.charge
 
 import kpt.core.base.store.mutation.MutationResult
+import kpt.core.model.objects.charge.ChargeResource
 import kpt.core.model.objects.payloads.ChargesPayload
 
 /**
- * Every charge write, as an explicit outcome.
+ * Every charge write, for any [ChargeResource], as an explicit outcome.
  *
  * Each returns [MutationResult] rather than `Unit`: a field officer has to be told whether the
  * change reached the server, was refused because the device is offline, or failed — a distinction
  * that cannot be reconstructed above this layer.
  *
- * These are commands, so they carry no Store and no cache. Offline CAPTURE is a different
- * operation with its own explicit queue ([kpt.core.data.sync.OfflineQueueRepository]); it is never
- * a silent fallback from here.
+ * Once the server accepts one, its outcome is recorded through the charge stores, so the charge list
+ * of that resource re-emits without a caller re-reading. Offline CAPTURE is a different operation
+ * with its own explicit queue ([kpt.core.data.sync.OfflineQueueRepository]); it is never a silent
+ * fallback from here.
  */
 interface ChargeCommandRepository {
 
     /**
-     * Levy a charge on a client or a loan.
+     * Levy a charge on a resource.
      *
      * `Unit`, not `HttpResponse`: the endpoint's Ktorfit signature returns a raw response, and a
-     * FEATURE cannot name a Ktor type — `feature/loan` must not depend on `core:network`. The
-     * gateway already turns a non-2xx into [MutationResult.Failed], which is the only distinction
-     * a screen renders. Same change as the seven client commands and the loan transfer.
+     * FEATURE cannot name a Ktor type. The gateway already turns a non-2xx into
+     * [MutationResult.Failed], which is the only distinction a screen renders.
      */
-    suspend fun createCharges(
-        resourceType: String,
+    suspend fun createCharge(
+        resource: ChargeResource,
         resourceId: Int,
-        chargesPayload: ChargesPayload,
+        payload: ChargesPayload,
     ): MutationResult<Unit>
 
-    suspend fun deleteCharge(resourceType: String, resourceId: Int, chargeId: Int): MutationResult<Unit>
+    suspend fun deleteCharge(resource: ChargeResource, resourceId: Int, chargeId: Int): MutationResult<Unit>
 
-    suspend fun updateCharge(resourceType: String, resourceId: Int, chargeId: Int, payload: ChargesPayload): MutationResult<Unit>
+    /**
+     * Edit a levied charge. Only where [ChargeResource.canUpdate] — Fineract has no PUT for a client
+     * charge, so for [ChargeResource.CLIENT] the server refuses it and this reports `Failed`.
+     */
+    suspend fun updateCharge(
+        resource: ChargeResource,
+        resourceId: Int,
+        chargeId: Int,
+        payload: ChargesPayload,
+    ): MutationResult<Unit>
 }

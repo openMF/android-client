@@ -21,8 +21,8 @@ import kpt.core.base.store.screen.mapContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.data.center.CenterRepository
 import kpt.core.data.group.GroupRepository
-import kpt.core.database.center.entity.CenterEntity
-import kpt.core.database.group.entity.GroupEntity
+import kpt.core.model.center.Center
+import kpt.core.model.group.Group
 
 /**
  * Center detail — ports BOTH `6b66e8a43:feature/center/centerDetails/CenterDetailsViewModel.kt` and
@@ -86,7 +86,7 @@ internal class CenterDetailViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STATE_TIMEOUT_MS), false)
 
-    val center: StateFlow<ScreenState<CenterEntity>> = centerStream.state
+    val center: StateFlow<ScreenState<Center>> = centerStream.state
         .mapContent { centers, _ -> centers.filter { it.id == centerId } }
         .emptyIfContent { it.isEmpty() }
         .mapContent { matches, _ -> matches.first() }
@@ -97,7 +97,7 @@ internal class CenterDetailViewModel(
      * two screens could be folded into one. A groups failure must not blank the center's details,
      * and `CenterDetailViewModelTest` asserts that in both directions.
      */
-    val groups: StateFlow<ScreenState<List<GroupEntity>>> = groupStream.state
+    val groups: StateFlow<ScreenState<List<Group>>> = groupStream.state
         .mapContent { groups, _ -> groups.filter { it.centerId == centerId } }
         .emptyIfContent { it.isEmpty() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STATE_TIMEOUT_MS), ScreenState.Loading)

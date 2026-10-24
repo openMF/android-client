@@ -21,9 +21,9 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.data.testing.FakeClientRepository
-import kpt.core.database.client.entity.ClientAccounts
-import kpt.core.database.loan.entity.LoanAccountEntity
-import kpt.core.database.loan.entity.LoanStatusEntity
+import kpt.core.model.client.ClientAccounts
+import kpt.core.model.loan.LoanAccount
+import kpt.core.model.loan.LoanStatus
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -46,15 +46,15 @@ class ClientLoanAccountsViewModelTest {
     private fun loan(
         id: Int,
         accountNo: String,
-        status: LoanStatusEntity = LoanStatusEntity(active = true),
-    ) = LoanAccountEntity(id = id, accountNo = accountNo, productName = "Group Loan", status = status)
+        status: LoanStatus = LoanStatus(active = true),
+    ) = LoanAccount(id = id, accountNo = accountNo, productName = "Group Loan", status = status)
 
     private val allAccounts = listOf(
-        loan(1, "LN0001", LoanStatusEntity(active = true)),
-        loan(2, "LN0002", LoanStatusEntity(pendingApproval = true)),
-        loan(3, "AB0003", LoanStatusEntity(closedObligationsMet = true)),
-        loan(4, "LN0004", LoanStatusEntity(overpaid = true)),
-        loan(5, "LN0005", LoanStatusEntity(waitingForDisbursal = true)),
+        loan(1, "LN0001", LoanStatus(active = true)),
+        loan(2, "LN0002", LoanStatus(pendingApproval = true)),
+        loan(3, "AB0003", LoanStatus(closedObligationsMet = true)),
+        loan(4, "LN0004", LoanStatus(overpaid = true)),
+        loan(5, "LN0005", LoanStatus(waitingForDisbursal = true)),
     )
 
     private val accountsState = MutableStateFlow<ScreenState<ClientAccounts>>(
@@ -193,7 +193,7 @@ class ClientLoanAccountsViewModelTest {
 
     @Test
     fun anAwaitingDisbursalLoanMatchesNONEOfTheFourFilters() = runTest(dispatcher) {
-        // Carried over deliberately: the four buckets do not partition `LoanStatusEntity`, so an
+        // Carried over deliberately: the four buckets do not partition `LoanStatus`, so an
         // approved-but-undisbursed loan disappears under ANY active filter. Adding a fifth bucket
         // is a product decision; logged as
         // `client-loan-accounts-filters-do-not-cover-awaiting-disbursal`.
@@ -221,7 +221,7 @@ class ClientLoanAccountsViewModelTest {
     @Test
     fun aLoanWithNoStatusMatchesNoFilterButSHOWSWithNoneSelected() = runTest(dispatcher) {
         accountsState.value = ScreenState.Content(
-            ClientAccounts(loanAccounts = listOf(LoanAccountEntity(id = 9, accountNo = "LN0009"))),
+            ClientAccounts(loanAccounts = listOf(LoanAccount(id = 9, accountNo = "LN0009"))),
         )
         val vm = viewModel()
         assertEquals(listOf(9), visible(vm))

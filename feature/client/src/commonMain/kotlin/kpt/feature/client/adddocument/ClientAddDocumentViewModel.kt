@@ -24,7 +24,7 @@ import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.common.utils.FileKitUtil
 import kpt.core.data.document.DocumentCommandRepository
-import kpt.core.ui.util.multipartRequestBody
+import kpt.core.ui.util.documentUpload
 
 /**
  * Attach a document to a client — ported from
@@ -129,7 +129,7 @@ internal class ClientAddDocumentViewModel(
 
         mutableStateFlow.value = state.copy(isSubmitting = true, error = null)
         viewModelScope.launch {
-            val body = multipartRequestBody(
+            val body = documentUpload(
                 file = file.readBytes(),
                 name = state.name.trim(),
                 extension = file.extension,

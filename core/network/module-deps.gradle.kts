@@ -16,7 +16,8 @@ import org.gradle.accessors.dm.LibrariesForLibs
 val libs = the<LibrariesForLibs>()
 
 dependencies {
-    "commonMainApi"(project(":core:database"))
+    // No core:database. The network layer speaks core/model (api, via build.gradle.kts): DTOs in,
+    // models out. Rows are core/store's concern — it maps models to entities on the way into Room.
     "commonMainApi"(project(":core:datastore"))
     "commonMainApi"(libs.kotlinx.datetime)
 }

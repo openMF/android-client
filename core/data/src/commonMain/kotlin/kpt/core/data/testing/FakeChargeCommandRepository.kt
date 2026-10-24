@@ -12,13 +12,12 @@ package kpt.core.data.testing
 import kotlinx.coroutines.CompletableDeferred
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.data.charge.ChargeCommandRepository
+import kpt.core.model.objects.charge.ChargeResource
 import kpt.core.model.objects.payloads.ChargesPayload
 
 /**
  * Test double for [ChargeCommandRepository] — beside the interface it fakes, same reasoning as
- * [FakeClientCommandRepository].
- *
- * Only [createCharges] is implemented; delete and update THROW until a screen exercises them.
+ * [FakeClientCommandRepository]. RECORDS every write and replays one scripted outcome.
  */
 @ExperimentalDataTestingApi
 class FakeChargeCommandRepository(
@@ -26,29 +25,34 @@ class FakeChargeCommandRepository(
     private val result: () -> MutationResult<Unit> = { MutationResult.Applied(Unit, synced = true) },
 ) : ChargeCommandRepository {
 
-    /** Every charge created, with the resource it was levied on — a test asserts the payload. */
-    val created: MutableList<Triple<String, Int, ChargesPayload>> = mutableListOf()
+    /** One recorded write — a test asserts the resource it addressed and what it sent. */
+    data class Write(
+        val resource: ChargeResource,
+        val resourceId: Int,
+        val chargeId: Int? = null,
+        val payload: ChargesPayload? = null,
+    )
 
-    override suspend fun createCharges(
-        resourceType: String,
-        resourceId: Int,
-        chargesPayload: ChargesPayload,
-    ): MutationResult<Unit> {
-        created += Triple(resourceType, resourceId, chargesPayload)
-        gate?.await()
-        return result()
-    }
+    val created: MutableList<Write> = mutableListOf()
+    val updated: MutableList<Write> = mutableListOf()
+    val deleted: MutableList<Write> = mutableListOf()
 
-    override suspend fun deleteCharge(resourceType: String, resourceId: Int, chargeId: Int) =
-        unused()
+    override suspend fun createCharge(resource: ChargeResource, resourceId: Int, payload: ChargesPayload) =
+        record(created, Write(resource, resourceId, payload = payload))
+
+    override suspend fun deleteCharge(resource: ChargeResource, resourceId: Int, chargeId: Int) =
+        record(deleted, Write(resource, resourceId, chargeId))
 
     override suspend fun updateCharge(
-        resourceType: String,
+        resource: ChargeResource,
         resourceId: Int,
         chargeId: Int,
         payload: ChargesPayload,
-    ) = unused()
+    ) = record(updated, Write(resource, resourceId, chargeId, payload))
 
-    private fun unused(): Nothing =
-        error("FakeChargeCommandRepository: only createCharges is exercised by a ported screen")
+    private suspend fun record(into: MutableList<Write>, write: Write): MutationResult<Unit> {
+        into += write
+        gate?.await()
+        return result()
+    }
 }

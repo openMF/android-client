@@ -313,3 +313,10 @@ caller. See `feature/client/MIGRATION.md#s5e`.
 ## Still to come in S5
 
 `savingsAccountTransactionReceipt` — a multiplatform PDF viewer with four platform actuals.
+
+## Charges entry on the summary (2026-10-23)
+
+The summary's overflow menu gains **Charges**, opening the ONE charge module (`feature/charge`) for
+`savingsaccounts/{accountId}/charges` — list, detail, add, edit, delete. The original had no
+levied-charge screen for savings at all. The application wizard's Charges PAGE is unrelated (charges
+chosen before the account exists) and is unchanged. See `feature/charge/MIGRATION.md`.

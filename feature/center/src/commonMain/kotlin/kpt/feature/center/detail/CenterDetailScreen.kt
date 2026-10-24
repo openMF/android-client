@@ -36,8 +36,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.screen.ScreenContent
-import kpt.core.database.center.entity.CenterEntity
-import kpt.core.database.group.entity.GroupEntity
+import kpt.core.model.center.Center
+import kpt.core.model.group.Group
 import kpt.core.designsystem.component.AppButton
 import kpt.core.designsystem.icon.AppIcons
 import kpt.feature.center.generated.resources.Res
@@ -100,8 +100,8 @@ internal fun CenterDetailScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun CenterDetailContent(
-    center: ScreenState<CenterEntity>,
-    groups: ScreenState<List<GroupEntity>>,
+    center: ScreenState<Center>,
+    groups: ScreenState<List<Group>>,
     onAction: (CenterDetailAction) -> Unit,
     modifier: Modifier = Modifier,
     groupsClickable: Boolean = true,
@@ -184,7 +184,7 @@ internal fun CenterDetailContent(
 }
 
 @Composable
-private fun CenterFields(center: CenterEntity) {
+private fun CenterFields(center: Center) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(
             text = center.name ?: stringResource(Res.string.feature_center_unnamed),
@@ -220,7 +220,7 @@ private fun Field(label: String, value: String) {
 }
 
 @Composable
-private fun GroupRow(group: GroupEntity, onClick: (() -> Unit)?) {
+private fun GroupRow(group: Group, onClick: (() -> Unit)?) {
     Column(
         modifier = Modifier
             .fillMaxWidth()

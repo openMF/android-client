@@ -9,6 +9,9 @@
  */
 package kpt.core.store.savings
 
+import kpt.core.model.savings.SavingProductsTemplate as SavingProductsTemplateModel
+import kpt.core.model.savings.SavingsAccountTransactionTemplate
+import kpt.core.store.mapping.toModel
 import kpt.core.base.store.annotation.CacheKey
 import kpt.core.base.store.annotation.StoreProvider
 import kpt.core.database.cache.dao.ApiResponseCacheDao
@@ -17,8 +20,8 @@ import kpt.core.database.savings.entity.SavingsAccountTransactionTemplateEntity
 import kpt.core.network.mifos.savings.api.FixedDepositApi
 import kpt.core.network.mifos.savings.api.SavingsAccountApi
 import kpt.core.network.mifos.savings.api.ShareAccountApi
-import kpt.core.network.mifos.savings.dto.FixedDepositTemplate
-import kpt.core.network.mifos.savings.dto.ShareTemplate
+import kpt.core.model.savings.FixedDepositTemplate
+import kpt.core.model.savings.ShareTemplate
 import kpt.core.store.cache.cachedRead
 import kpt.core.store.config.AppCacheKeys
 import org.mobilenativefoundation.store.store5.Store
@@ -68,7 +71,7 @@ fun provideFixedDepositProductTemplateStore(
 fun provideGetClientSavingsAccountTemplateByProductStore(
     savingsAccountApi: SavingsAccountApi,
     cache: ApiResponseCacheDao,
-): Store<GetClientSavingsAccountTemplateByProductKey, SavingProductsTemplate> = cachedRead(
+): Store<GetClientSavingsAccountTemplateByProductKey, SavingProductsTemplateModel> = cachedRead(
     dao = cache,
     keyOf = { key -> AppCacheKeys.SavingsGetClientSavingsAccountTemplateByProduct.forKey("${key.clientId}:${key.productId}") },
     fetch = { key -> savingsAccountApi.getClientSavingsAccountTemplateByProduct(clientId = key.clientId, productId = key.productId) },
@@ -79,7 +82,7 @@ fun provideGetClientSavingsAccountTemplateByProductStore(
 fun provideGetGroupSavingsAccountTemplateByProductStore(
     savingsAccountApi: SavingsAccountApi,
     cache: ApiResponseCacheDao,
-): Store<GetGroupSavingsAccountTemplateByProductKey, SavingProductsTemplate> = cachedRead(
+): Store<GetGroupSavingsAccountTemplateByProductKey, SavingProductsTemplateModel> = cachedRead(
     dao = cache,
     keyOf = { key -> AppCacheKeys.SavingsGetGroupSavingsAccountTemplateByProduct.forKey("${key.groupId}:${key.productId}") },
     fetch = { key -> savingsAccountApi.getGroupSavingsAccountTemplateByProduct(groupId = key.groupId, productId = key.productId) },
@@ -108,7 +111,7 @@ data class GetSavingsAccountTransactionTemplateKey(
 fun provideGetSavingsAccountTransactionTemplateStore(
     savingsAccountApi: SavingsAccountApi,
     cache: ApiResponseCacheDao,
-): Store<GetSavingsAccountTransactionTemplateKey, SavingsAccountTransactionTemplateEntity> = cachedRead(
+): Store<GetSavingsAccountTransactionTemplateKey, SavingsAccountTransactionTemplate> = cachedRead(
     dao = cache,
     keyOf = { key -> AppCacheKeys.SavingsGetSavingsAccountTransactionTemplate.forKey("${key.savingsAccountType}:${key.savingsAccountId}:${key.transactionType}") },
     fetch = { key -> savingsAccountApi.getSavingsAccountTransactionTemplate(savingsAccountType = key.savingsAccountType, savingsAccountId = key.savingsAccountId, transactionType = key.transactionType) },

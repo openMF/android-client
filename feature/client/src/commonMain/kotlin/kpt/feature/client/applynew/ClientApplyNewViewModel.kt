@@ -17,8 +17,8 @@ import kotlinx.coroutines.flow.stateIn
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.data.client.ClientRepository
-import kpt.core.database.client.entity.ClientEntity
-import kpt.core.database.client.entity.ClientStatusEntity
+import kpt.core.model.client.Client
+import kpt.core.model.client.ClientStatus
 
 /**
  * "Apply for a new account" — the client-side chooser, ported from
@@ -38,7 +38,7 @@ import kpt.core.database.client.entity.ClientStatusEntity
  * ## The status is READ, not passed as a nav argument
  *
  * The original's route carried it: `ClientApplyNewApplicationRoute(clientId, status, accountNo)`,
- * compared as `state.status == ClientStatusEntity.STATUS_ACTIVE`. A status in a nav argument is a
+ * compared as `state.status == ClientStatus.STATUS_ACTIVE`. A status in a nav argument is a
  * SNAPSHOT — activate the client on another screen, come back, and the argument still says
  * pending, so the gate refuses an application the server would now accept. The client is read from
  * [ClientRepository] instead, so this gate and the client screen cannot disagree. Same reasoning
@@ -65,7 +65,7 @@ internal class ClientApplyNewViewModel(
      * defect that bit this migration four times (see
      * `while-subscribed-read-off-the-composition-path`).
      */
-    val client: StateFlow<ScreenState<ClientEntity>> = stream.state
+    val client: StateFlow<ScreenState<Client>> = stream.state
         .stateIn(viewModelScope, SharingStarted.Eagerly, ScreenState.Loading)
 
     override fun handleAction(action: ClientApplyNewAction) {
@@ -99,8 +99,8 @@ internal data class ClientApplyNewState(val clientId: Int = -1)
  * `== STATUS_ACTIVE` on the client's OWN status, so an unreadable or unrecognised one falls to
  * "not active" — the safe direction.
  */
-internal fun ClientEntity.canApplyForNewAccount(): Boolean =
-    status?.value == ClientStatusEntity.STATUS_ACTIVE
+internal fun Client.canApplyForNewAccount(): Boolean =
+    status?.value == ClientStatus.STATUS_ACTIVE
 
 internal sealed interface ClientApplyNewEvent {
     data object NavigateBack : ClientApplyNewEvent

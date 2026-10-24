@@ -9,6 +9,9 @@
  */
 package kpt.core.store.collectionsheet
 
+import kpt.core.store.mapping.toEntity
+import kpt.core.model.collectionsheet.CenterDetail as CenterDetailModel
+import kpt.core.store.mapping.toModel
 import kotlinx.coroutines.flow.map
 import kpt.core.base.store.annotation.CacheKey
 import kpt.core.base.store.annotation.StoreProvider
@@ -43,7 +46,7 @@ data class CollectionSheetKey(
 fun provideCollectionSheetStore(
     service: CollectionSheetApi,
     dao: CollectionSheetDao,
-): Store<CollectionSheetKey, List<CenterDetail>> = StoreFactory.createStore(
+): Store<CollectionSheetKey, List<CenterDetailModel>> = StoreFactory.createStore(
     fetcher = Fetcher.of { key: CollectionSheetKey ->
         service.fetchCenterDetails(
             format = key.dateFormat,
@@ -57,10 +60,13 @@ fun provideCollectionSheetStore(
         // Read back only the keyed staff's row: the table is keyed by staffId, so observeAll()
         // would leak other officers' cached sheets into this key's stream.
         reader = { key: CollectionSheetKey ->
-            dao.observeForStaff(key.staffId).map { row -> listOfNotNull(row?.toDomain()) }
+            dao.observeForStaff(key.staffId).map { row -> listOfNotNull(row?.toDomain()?.toModel()) }
         },
-        writer = { _: CollectionSheetKey, details: List<CenterDetail> ->
-            dao.upsertAll(details.map { it.toEntity() })
+        writer = { _: CollectionSheetKey, details: List<CenterDetailModel> ->
+            dao.upsertAll(details.map { it.toEntity() }.map { it.toEntity() })
         },
+        delete = { key: CollectionSheetKey -> dao.deleteForStaff(key.staffId) },
+        // What the logout purge (`Store.clear()`) calls — another officer's roster must not survive it.
+        deleteAll = { dao.deleteAll() },
     ),
 )

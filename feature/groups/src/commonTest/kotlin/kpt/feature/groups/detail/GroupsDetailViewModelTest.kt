@@ -17,7 +17,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kpt.core.base.store.screen.ScreenState
-import kpt.core.database.group.entity.GroupEntity
+import kpt.core.model.group.Group
 import kpt.feature.groups.testing.FakeGroupCommandRepository
 import kpt.feature.groups.testing.FakeGroupRepository
 import kpt.feature.groups.testing.group
@@ -51,7 +51,7 @@ class GroupsDetailViewModelTest {
 
         vm.group.test {
             assertIs<ScreenState.Loading>(awaitItem())
-            val content = assertIs<ScreenState.Content<GroupEntity>>(awaitItem())
+            val content = assertIs<ScreenState.Content<Group>>(awaitItem())
             assertEquals("Target", content.data.name)
             cancelAndIgnoreRemainingEvents()
         }

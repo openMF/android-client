@@ -16,10 +16,10 @@ import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
 import io.ktor.client.statement.HttpResponse
 import kpt.core.base.network.annotation.ApiBinding
-import kpt.core.database.savings.entity.SavingProductsTemplate
-import kpt.core.database.savings.entity.SavingsAccountTransactionRequestEntity
-import kpt.core.database.savings.entity.SavingsAccountTransactionTemplateEntity
-import kpt.core.database.savings.entity.SavingsAccountWithAssociationsEntity
+import kpt.core.model.savings.SavingProductsTemplate
+import kpt.core.model.savings.SavingsAccountTransactionRequest
+import kpt.core.model.savings.SavingsAccountTransactionTemplate
+import kpt.core.model.savings.SavingsAccountWithAssociations
 import kpt.core.model.objects.account.loan.SavingsApproval
 import kpt.core.model.objects.account.saving.SavingsAccountTransactionResponse
 import kpt.core.model.objects.organisations.ProductSavings
@@ -52,7 +52,7 @@ interface SavingsAccountApi {
         @Path("savingsAccountType") savingsAccountType: String,
         @Path("savingsAccountId") savingsAccountId: Int,
         @Query("associations") association: String?,
-    ): SavingsAccountWithAssociationsEntity
+    ): SavingsAccountWithAssociations
 
     /**
      * This Method for Retrieving Savings Account Transaction Template from REST API
@@ -69,7 +69,7 @@ interface SavingsAccountApi {
         @Path("savingsAccountType") savingsAccountType: String,
         @Path("savingsAccountId") savingsAccountId: Int,
         @Query("command") transactionType: String?,
-    ): SavingsAccountTransactionTemplateEntity
+    ): SavingsAccountTransactionTemplate
 
     /**
      * This Service making POST Request to the REST API :
@@ -87,7 +87,7 @@ interface SavingsAccountApi {
         @Path("savingsAccountType") savingsAccountType: String,
         @Path("savingsAccountId") savingsAccountId: Int,
         @Query("command") transactionType: String?,
-        @Body savingsAccountTransactionRequest: SavingsAccountTransactionRequestEntity?,
+        @Body savingsAccountTransactionRequest: SavingsAccountTransactionRequest?,
     ): SavingsAccountTransactionResponse
 
     @POST("savingsaccounts/{savingsAccountId}/?command=activate")

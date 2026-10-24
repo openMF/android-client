@@ -9,6 +9,10 @@
  */
 package kpt.core.store.group
 
+import kpt.core.model.group.GroupAccounts as GroupAccountsModel
+import kpt.core.model.group.GroupWithAssociations as GroupWithAssociationsModel
+import kpt.core.model.group.Group
+import kpt.core.store.mapping.toModel
 import kpt.core.base.store.annotation.CacheKey
 import kpt.core.base.store.annotation.StoreProvider
 import kpt.core.database.cache.dao.ApiResponseCacheDao
@@ -36,7 +40,7 @@ data class GetAllGroupsInOfficeKey(
 fun provideGetGroupWithAssociationsStore(
     groupApi: GroupApi,
     cache: ApiResponseCacheDao,
-): Store<Int, GroupWithAssociations> = cachedRead(
+): Store<Int, GroupWithAssociationsModel> = cachedRead(
     dao = cache,
     keyOf = { key -> AppCacheKeys.GroupGetGroupWithAssociations.forKey(key.toString()) },
     fetch = { key -> groupApi.getGroupWithAssociations(groupId = key) },
@@ -47,7 +51,7 @@ fun provideGetGroupWithAssociationsStore(
 fun provideGetAllGroupsInOfficeStore(
     groupApi: GroupApi,
     cache: ApiResponseCacheDao,
-): Store<GetAllGroupsInOfficeKey, List<GroupEntity>> = cachedRead(
+): Store<GetAllGroupsInOfficeKey, List<Group>> = cachedRead(
     dao = cache,
     keyOf = { key -> AppCacheKeys.GroupGetAllGroupsInOffice.forKey("${key.officeId}:${key.params}") },
     fetch = { key -> groupApi.getAllGroupsInOffice(officeId = key.officeId, params = key.params) },
@@ -58,7 +62,7 @@ fun provideGetAllGroupsInOfficeStore(
 fun provideGetGroupStore(
     groupApi: GroupApi,
     cache: ApiResponseCacheDao,
-): Store<Int, GroupEntity> = cachedRead(
+): Store<Int, Group> = cachedRead(
     dao = cache,
     keyOf = { key -> AppCacheKeys.GroupGetGroup.forKey(key.toString()) },
     fetch = { key -> groupApi.getGroup(groupId = key) },
@@ -69,7 +73,7 @@ fun provideGetGroupStore(
 fun provideGetGroupAccountsStore(
     groupApi: GroupApi,
     cache: ApiResponseCacheDao,
-): Store<Int, GroupAccounts> = cachedRead(
+): Store<Int, GroupAccountsModel> = cachedRead(
     dao = cache,
     keyOf = { key -> AppCacheKeys.GroupGetGroupAccounts.forKey(key.toString()) },
     fetch = { key -> groupApi.getGroupAccounts(groupId = key) },

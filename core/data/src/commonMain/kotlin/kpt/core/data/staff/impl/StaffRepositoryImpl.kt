@@ -16,7 +16,7 @@ import kpt.core.base.store.screen.FetchPolicy
 import kpt.core.base.store.screen.ScreenDataStream
 import kpt.core.base.store.screen.asScreenStream
 import kpt.core.data.staff.StaffRepository
-import kpt.core.database.staff.entity.StaffEntity
+import kpt.core.model.staff.Staff
 import kpt.core.store.config.AppCacheKeys
 import kpt.core.store.config.AppStoreIds
 import kpt.core.store.config.AppStoreRegistry
@@ -24,7 +24,7 @@ import org.mobilenativefoundation.store.store5.Store
 
 @RepositoryBinding(binds = StaffRepository::class)
 internal class StaffRepositoryImpl(
-    @FromStore(AppStoreIds.Staff) private val store: Store<Int, List<StaffEntity>>,
+    @FromStore(AppStoreIds.Staff) private val store: Store<Int, List<Staff>>,
 ) : StaffRepository {
 
     // NETWORK_WITH_CACHE, not the CACHE_FIRST_SWR default: SWR's read path is
@@ -32,12 +32,12 @@ internal class StaffRepositoryImpl(
     // until something HAS been fetched, so on a clean install nothing ever loads. Room is still
     // served first, so the offline-first behaviour is unchanged. The ttl stays the declared
     // freshness bound — it drives the "updated N ago" indicator, never whether cache is served.
-    override fun staffStream(officeId: Int, scope: CoroutineScope): ScreenDataStream<List<StaffEntity>> =
+    override fun staffStream(officeId: Int, scope: CoroutineScope): ScreenDataStream<List<Staff>> =
         store.asScreenStream(
             key = officeId,
             cacheKey = AppCacheKeys.Staff.forOffice(officeId),
             scope = scope,
-            isEmpty = { it.isEmpty() },
+            // No `isEmpty`: an empty list is real content (see ChargeRepositoryImpl.chargesStream).
             fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
             ttl = AppStoreRegistry.Ttl.STAFF,
         )

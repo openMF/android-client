@@ -44,7 +44,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kpt.core.base.designsystem.theme.KptTheme
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.screen.ScreenContent
-import kpt.core.database.group.entity.GroupEntity
+import kpt.core.model.group.Group
 import kpt.core.designsystem.component.AppOutlinedTextField
 import kpt.core.designsystem.icon.AppIcons
 import kpt.core.designsystem.theme.DesignToken
@@ -101,7 +101,7 @@ internal fun GroupsListScreen(
 @Composable
 internal fun GroupsListContent(
     ui: GroupsListState,
-    rows: ScreenState<List<GroupEntity>>,
+    rows: ScreenState<List<Group>>,
     onAction: (GroupsListAction) -> Unit,
     modifier: Modifier = Modifier,
     /**
@@ -248,7 +248,7 @@ internal fun GroupsListContent(
  */
 @Composable
 internal fun GroupsCard(
-    group: GroupEntity,
+    group: Group,
     onClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
@@ -301,7 +301,7 @@ internal fun GroupsCard(
 }
 
 /** Offices present in the loaded rows — the filter's options. Empty until content arrives. */
-private fun officeNames(rows: ScreenState<List<GroupEntity>>): List<String> =
+private fun officeNames(rows: ScreenState<List<Group>>): List<String> =
     (rows as? ScreenState.Content)?.data?.mapNotNull { it.officeName }?.distinct()?.sorted().orEmpty()
 
 private fun GroupsSort.labelRes() = when (this) {

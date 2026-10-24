@@ -18,12 +18,13 @@ import kotlinx.coroutines.launch
 import kpt.core.base.store.mutation.BlockReason
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
+import kpt.core.base.store.screen.emptyIfContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.common.utils.DateFormatPattern
 import kpt.core.data.group.GroupCommandRepository
 import kpt.core.data.office.OfficeRepository
-import kpt.core.database.group.entity.GroupPayloadEntity
-import kpt.core.database.office.entity.OfficeEntity
+import kpt.core.model.group.GroupPayload
+import kpt.core.model.office.Office
 import kpt.core.model.utils.ApiDateFormatter
 
 /**
@@ -72,8 +73,10 @@ internal class CreateGroupViewModel(
 ) : BaseViewModel<CreateGroupState, CreateGroupEvent, CreateGroupAction>(CreateGroupState()) {
 
     /** The offices a group may be opened in. */
-    val offices: StateFlow<ScreenState<List<OfficeEntity>>> =
+    val offices: StateFlow<ScreenState<List<Office>>> =
         officeRepository.officesStream(viewModelScope).state
+            // No offices is Empty (the screen's empty slot); the stream reports it as empty Content.
+            .emptyIfContent { it.isEmpty() }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STATE_TIMEOUT_MS), ScreenState.Loading)
 
     override fun handleAction(action: CreateGroupAction) {
@@ -142,8 +145,9 @@ internal class CreateGroupViewModel(
                         state.copy(isSubmitting = false, error = CreateGroupError.Failed)
                 }
 
-                is MutationResult.Conflicted -> mutableStateFlow.value =
-                    state.copy(isSubmitting = false, error = CreateGroupError.Failed)
+                is MutationResult.Conflicted ->
+                    mutableStateFlow.value =
+                        state.copy(isSubmitting = false, error = CreateGroupError.Failed)
             }
         }
     }
@@ -178,7 +182,7 @@ internal fun CreateGroupState.validate(): CreateGroupFieldErrors = CreateGroupFi
     office = office == null,
 )
 
-internal fun CreateGroupState.toPayload(): GroupPayloadEntity = GroupPayloadEntity(
+internal fun CreateGroupState.toPayload(): GroupPayload = GroupPayload(
     name = name.trim(),
     officeId = office?.id ?: 0,
     externalId = externalId.trim().ifEmpty { null },

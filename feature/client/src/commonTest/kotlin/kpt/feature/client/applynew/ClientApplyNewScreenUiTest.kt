@@ -15,8 +15,8 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runComposeUiTest
 import kpt.core.base.store.screen.ScreenState
-import kpt.core.database.client.entity.ClientEntity
-import kpt.core.database.client.entity.ClientStatusEntity
+import kpt.core.model.client.Client
+import kpt.core.model.client.ClientStatus
 import kpt.core.designsystem.theme.AppTheme
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -24,11 +24,11 @@ import kotlin.test.assertEquals
 @OptIn(ExperimentalTestApi::class)
 class ClientApplyNewScreenUiTest {
 
-    private fun client(status: String? = ClientStatusEntity.STATUS_ACTIVE) = ScreenState.Content(
-        ClientEntity(
+    private fun client(status: String? = ClientStatus.STATUS_ACTIVE) = ScreenState.Content(
+        Client(
             id = 55,
             displayName = "Ankit Sharma",
-            status = status?.let { ClientStatusEntity(value = it) },
+            status = status?.let { ClientStatus(value = it) },
         ),
     )
 

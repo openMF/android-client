@@ -19,8 +19,10 @@ import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.screenDataStreamForTesting
 import kpt.core.data.center.CenterRepository
 import kpt.core.data.group.GroupRepository
-import kpt.core.database.center.entity.CenterEntity
-import kpt.core.database.group.entity.GroupEntity
+import kpt.core.model.center.Center
+import kpt.core.model.group.Group
+import kpt.core.model.objects.databaseobjects.CollectionSheet
+import kpt.core.model.shared.Payload
 
 /**
  * In-memory repositories for ViewModel- and screen-level tests.
@@ -30,32 +32,34 @@ import kpt.core.database.group.entity.GroupEntity
  * Content / Empty / Error transitions production does. Mirrors `FakeNoteRepository`.
  */
 internal class FakeCenterRepository(
-    initial: ScreenState<List<CenterEntity>> = ScreenState.Loading,
+    initial: ScreenState<List<Center>> = ScreenState.Loading,
 ) : CenterRepository {
     val state = MutableStateFlow(initial)
     private val refreshes = MutableSharedFlow<Unit>(extraBufferCapacity = 4)
 
-    fun emit(vararg centers: CenterEntity) {
-        state.value =
-            if (centers.isEmpty()) ScreenState.Empty else ScreenState.Content(centers.toList())
+    fun emit(vararg centers: Center) {
+        // An empty list is Content, as the real stream emits it (see ChargeRepositoryImpl).
+        state.value = ScreenState.Content(centers.toList())
     }
 
-    override fun centersStream(scope: CoroutineScope): ScreenDataStream<List<CenterEntity>> =
+    override fun centersStream(scope: CoroutineScope): ScreenDataStream<List<Center>> =
         screenDataStreamForTesting(state, refreshTrigger = refreshes)
+
+    override suspend fun collectionSheet(centerId: Long, payload: Payload): CollectionSheet? = null
 }
 
 internal class FakeGroupRepository(
-    initial: ScreenState<List<GroupEntity>> = ScreenState.Loading,
+    initial: ScreenState<List<Group>> = ScreenState.Loading,
 ) : GroupRepository {
     val state = MutableStateFlow(initial)
     private val refreshes = MutableSharedFlow<Unit>(extraBufferCapacity = 4)
 
-    fun emit(vararg groups: GroupEntity) {
-        state.value =
-            if (groups.isEmpty()) ScreenState.Empty else ScreenState.Content(groups.toList())
+    fun emit(vararg groups: Group) {
+        // An empty list is Content, as the real stream emits it (see ChargeRepositoryImpl).
+        state.value = ScreenState.Content(groups.toList())
     }
 
-    override fun groupsStream(scope: CoroutineScope): ScreenDataStream<List<GroupEntity>> =
+    override fun groupsStream(scope: CoroutineScope): ScreenDataStream<List<Group>> =
         screenDataStreamForTesting(state, refreshTrigger = refreshes)
 }
 
@@ -65,7 +69,7 @@ internal fun center(
     accountNo: String? = "C$id",
     officeName: String? = "Head Office",
     active: Boolean? = true,
-) = CenterEntity(
+) = Center(
     id = id,
     name = name,
     accountNo = accountNo,
@@ -77,4 +81,4 @@ internal fun group(
     id: Int,
     centerId: Int?,
     name: String? = "Group $id",
-) = GroupEntity(id = id, centerId = centerId, name = name, accountNo = "G$id")
+) = Group(id = id, centerId = centerId, name = name, accountNo = "G$id")

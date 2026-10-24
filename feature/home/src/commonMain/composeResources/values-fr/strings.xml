@@ -40,7 +40,7 @@
     <string name="screens_home_see_all">Tout voir</string>
     <string name="screens_home_tool_emi_title">Calculateur de mensualité</string>
     <string name="screens_home_tool_emi_subtitle">Mensualité pour tout prêt</string>
-    <string name="screens_home_tool_affordability_title">Capacité d\'emprunt</string>
+    <string name="screens_home_tool_affordability_title">Capacité d'emprunt</string>
     <string name="screens_home_tool_affordability_subtitle">Combien puis-je emprunter sans risque ?</string>
     <string name="screens_home_tool_amortization_title">Amortissement</string>
     <string name="screens_home_tool_amortization_subtitle">Échéancier complet</string>

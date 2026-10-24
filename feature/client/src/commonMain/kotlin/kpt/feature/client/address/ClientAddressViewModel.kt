@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.stateIn
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.data.client.ClientRepository
-import kpt.core.database.client.entity.ClientAddressEntity
+import kpt.core.model.objects.clients.ClientAddressEntity
 
 /**
  * The client's postal addresses — ported from
@@ -65,6 +65,7 @@ internal class ClientAddressViewModel(
             ClientAddressAction.NavigateBack -> sendEvent(ClientAddressEvent.NavigateBack)
             ClientAddressAction.ShowAddressForm -> sendEvent(ClientAddressEvent.ShowAddressForm(clientId))
             ClientAddressAction.OnRetry -> stream.retry()
+            ClientAddressAction.NavigateToSearch -> sendEvent(ClientAddressEvent.NavigateToSearch)
         }
     }
 
@@ -77,10 +78,14 @@ internal class ClientAddressViewModel(
 internal sealed interface ClientAddressEvent {
     data object NavigateBack : ClientAddressEvent
     data class ShowAddressForm(val clientId: Int) : ClientAddressEvent
+    data object NavigateToSearch : ClientAddressEvent
 }
 
 internal sealed interface ClientAddressAction {
     data object NavigateBack : ClientAddressAction
     data object ShowAddressForm : ClientAddressAction
     data object OnRetry : ClientAddressAction
+
+    /** The header's search icon — every cached address, across clients (feature/searchrecord). */
+    data object NavigateToSearch : ClientAddressAction
 }

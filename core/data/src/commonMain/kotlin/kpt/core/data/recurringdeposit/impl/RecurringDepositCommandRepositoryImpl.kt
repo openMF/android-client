@@ -9,46 +9,55 @@
  */
 package kpt.core.data.recurringdeposit.impl
 
+import kpt.core.base.data.annotation.FromStore
 import kpt.core.base.data.annotation.RepositoryBinding
 import kpt.core.base.store.mutation.CommandSpec
 import kpt.core.base.store.mutation.MutationGateway
 import kpt.core.base.store.mutation.MutationPolicy
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.data.recurringdeposit.RecurringDepositCommandRepository
+import kpt.core.data.savings.impl.ingest
+import kpt.core.model.client.ClientAccounts
 import kpt.core.model.objects.payloads.ChargeItem
 import kpt.core.model.objects.payloads.RecurringDepositAccountPayload
 import kpt.core.model.recurringdeposit.RecurringDepositApplicationInput
 import kpt.core.network.mifos.recurringdeposit.api.RecurringAccountApi
+import kpt.core.store.config.AppStoreIds
+import org.mobilenativefoundation.store.store5.Store
+import org.mobilenativefoundation.store.store5.impl.extensions.fresh
 
+/**
+ * The recurring-deposit application, through the single write door ([MutationGateway.command]).
+ *
+ * The new account shows up in the client's accounts list with a number and status Fineract
+ * assigns, so [CommandSpec.localApply] ingests that list through its store rather than composing a
+ * row it cannot know; the list's read stream re-emits on its own. It used to end at the endpoint
+ * with `payload = Unit` and no local side, leaving the application missing from the client until
+ * something refetched.
+ *
+ * `OnlineRequired`: offline it is `Blocked` and writes nothing.
+ */
 @RepositoryBinding(binds = RecurringDepositCommandRepository::class)
 internal class RecurringDepositCommandRepositoryImpl(
     private val recurringAccountApi: RecurringAccountApi,
     private val gateway: MutationGateway,
+    @FromStore(AppStoreIds.ClientGetClientAccounts)
+    private val clientAccountsStore: Store<Int, ClientAccounts>,
 ) : RecurringDepositCommandRepository {
 
     override suspend fun createRecurringDepositAccount(
         input: RecurringDepositApplicationInput,
-    ): MutationResult<Unit> = online {
-        recurringAccountApi.createRecurringDepositAccount(
-            recurringDepositAccountPayload = input.toPayload(),
-        )
-        Unit
-    }
-
-    /**
-     * Commands run [MutationPolicy.OnlineRequired]: they await the server and write nothing
-     * offline, yielding `Blocked(OFFLINE)` rather than a local success the officer would act on.
-     *
-     * The call is closed over rather than threaded through [CommandSpec.payload]: the payload hook
-     * exists for `localApply` / `rollback` / `conflictOf`, none of which apply to a write that never
-     * lands locally. It also keeps the 28 endpoints whose body is nullable usable, which
-     * `CommandSpec<P : Any>` would otherwise reject.
-     */
-    private suspend fun <R : Any> online(endpoint: suspend () -> R): MutationResult<R> =
-        gateway.command(
-            CommandSpec(payload = Unit, endpoint = { endpoint() }),
-            policy = MutationPolicy.OnlineRequired,
-        )
+    ): MutationResult<Unit> = gateway.command(
+        CommandSpec(
+            payload = input,
+            endpoint = {
+                recurringAccountApi.createRecurringDepositAccount(recurringDepositAccountPayload = it.toPayload())
+                Unit
+            },
+            localApply = { response -> if (response != null) ingest { clientAccountsStore.fresh(input.clientId) } },
+        ),
+        policy = MutationPolicy.OnlineRequired,
+    )
 }
 
 /**

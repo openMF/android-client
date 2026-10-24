@@ -37,7 +37,7 @@ internal class CheckerInboxRepositoryImpl(
             key = Unit,
             cacheKey = AppCacheKeys.CheckerTasks.LIST,
             scope = scope,
-            isEmpty = { it.isEmpty() },
+            // No `isEmpty`: an empty list is real content (see ChargeRepositoryImpl.chargesStream).
             fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
             ttl = AppStoreRegistry.Ttl.CHECKER_TASKS,
         )

@@ -17,8 +17,8 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kpt.core.base.store.screen.ScreenState
-import kpt.core.database.center.entity.CenterEntity
-import kpt.core.database.group.entity.GroupEntity
+import kpt.core.model.center.Center
+import kpt.core.model.group.Group
 import kpt.feature.center.testing.FakeCenterRepository
 import kpt.feature.center.testing.FakeGroupRepository
 import kpt.feature.center.testing.center
@@ -56,7 +56,7 @@ class CenterDetailViewModelTest {
 
         vm.center.test {
             assertIs<ScreenState.Loading>(awaitItem())
-            val content = assertIs<ScreenState.Content<CenterEntity>>(awaitItem())
+            val content = assertIs<ScreenState.Content<Center>>(awaitItem())
             assertEquals("Target", content.data.name)
             cancelAndIgnoreRemainingEvents()
         }
@@ -85,7 +85,7 @@ class CenterDetailViewModelTest {
 
         vm.groups.test {
             assertIs<ScreenState.Loading>(awaitItem())
-            val content = assertIs<ScreenState.Content<List<GroupEntity>>>(awaitItem())
+            val content = assertIs<ScreenState.Content<List<Group>>>(awaitItem())
             assertEquals(listOf(1, 3), content.data.map { it.id })
             cancelAndIgnoreRemainingEvents()
         }
@@ -119,7 +119,7 @@ class CenterDetailViewModelTest {
 
         vm.center.test {
             assertIs<ScreenState.Loading>(awaitItem())
-            assertIs<ScreenState.Content<CenterEntity>>(awaitItem())
+            assertIs<ScreenState.Content<Center>>(awaitItem())
 
             groups.state.value = ScreenState.Error(RuntimeException("groups boom"))
             testScheduler.advanceUntilIdle()
@@ -142,7 +142,7 @@ class CenterDetailViewModelTest {
 
         vm.groups.test {
             assertIs<ScreenState.Loading>(awaitItem())
-            assertIs<ScreenState.Content<List<GroupEntity>>>(awaitItem())
+            assertIs<ScreenState.Content<List<Group>>>(awaitItem())
 
             centers.state.value = ScreenState.Error(RuntimeException("center boom"))
             testScheduler.advanceUntilIdle()

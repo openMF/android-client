@@ -9,6 +9,7 @@
  */
 package kpt.core.database.collectionsheet.entity
 
+import kotlinx.serialization.Serializable
 import kpt.core.database.payment.entity.PaymentTypeOptionEntity
 import kpt.core.model.objects.collectionsheets.AttendanceTypeOption
 import kpt.core.model.objects.collectionsheets.SavingsProduct
@@ -16,6 +17,7 @@ import kpt.core.model.objects.collectionsheets.SavingsProduct
 /**
  * Created by Tarun on 25-07-2017.
  */
+@Serializable
 data class CollectionSheetResponse(
     var attendanceTypeOptions: List<AttendanceTypeOption> = ArrayList(),
 

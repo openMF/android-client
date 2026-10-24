@@ -22,3 +22,11 @@
 //     }
 //
 // Empty on the template — this is yours to fill.
+
+import org.gradle.accessors.dm.LibrariesForLibs
+val libs = the<LibrariesForLibs>()
+
+dependencies {
+    // ServerErrorMessageTest — the shared Fineract error parser.
+    "commonTestImplementation"(libs.kotlin.test)
+}

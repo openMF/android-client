@@ -9,12 +9,18 @@
  */
 package kpt.core.store.center
 
+import kpt.core.model.center.CenterAccounts as CenterAccountsModel
+import kpt.core.model.center.CenterWithAssociations as CenterWithAssociationsModel
+import kpt.core.model.center.Center
+import kpt.core.store.mapping.toModel
 import kpt.core.base.store.annotation.CacheKey
 import kpt.core.base.store.annotation.StoreProvider
 import kpt.core.database.cache.dao.ApiResponseCacheDao
 import kpt.core.database.center.entity.CenterAccounts
 import kpt.core.database.center.entity.CenterEntity
 import kpt.core.database.center.entity.CenterWithAssociations
+import kpt.core.model.objects.databaseobjects.CollectionSheet
+import kpt.core.model.shared.Payload
 import kpt.core.network.mifos.center.api.CenterApi
 import kpt.core.store.cache.cachedRead
 import kpt.core.store.config.AppCacheKeys
@@ -30,7 +36,7 @@ import org.mobilenativefoundation.store.store5.Store
 fun provideGetCenterAccountsStore(
     centerApi: CenterApi,
     cache: ApiResponseCacheDao,
-): Store<Int, CenterAccounts> = cachedRead(
+): Store<Int, CenterAccountsModel> = cachedRead(
     dao = cache,
     keyOf = { key -> AppCacheKeys.CenterGetCenterAccounts.forKey(key.toString()) },
     fetch = { key -> centerApi.getCenterAccounts(centerId = key) },
@@ -41,7 +47,7 @@ fun provideGetCenterAccountsStore(
 fun provideGetCenterWithGroupMembersAndCollectionMeetingCalendarStore(
     centerApi: CenterApi,
     cache: ApiResponseCacheDao,
-): Store<Int, CenterWithAssociations> = cachedRead(
+): Store<Int, CenterWithAssociationsModel> = cachedRead(
     dao = cache,
     keyOf = { key -> AppCacheKeys.CenterGetCenterWithGroupMembersAndCollectionMeetingCalendar.forKey(key.toString()) },
     fetch = { key -> centerApi.getCenterWithGroupMembersAndCollectionMeetingCalendar(centerId = key) },
@@ -52,7 +58,7 @@ fun provideGetCenterWithGroupMembersAndCollectionMeetingCalendarStore(
 fun provideGetAllGroupsForCenterStore(
     centerApi: CenterApi,
     cache: ApiResponseCacheDao,
-): Store<Int, CenterWithAssociations> = cachedRead(
+): Store<Int, CenterWithAssociationsModel> = cachedRead(
     dao = cache,
     keyOf = { key -> AppCacheKeys.CenterGetAllGroupsForCenter.forKey(key.toString()) },
     fetch = { key -> centerApi.getAllGroupsForCenter(centerId = key) },
@@ -69,8 +75,57 @@ data class GetAllCentersInOfficeKey(
 fun provideGetAllCentersInOfficeStore(
     centerApi: CenterApi,
     cache: ApiResponseCacheDao,
-): Store<GetAllCentersInOfficeKey, List<CenterEntity>> = cachedRead(
+): Store<GetAllCentersInOfficeKey, List<Center>> = cachedRead(
     dao = cache,
     keyOf = { key -> AppCacheKeys.CenterGetAllCentersInOffice.forKey("${key.officeId}:${key.additionalParams}") },
     fetch = { key -> centerApi.getAllCentersInOffice(officeId = key.officeId, additionalParams = key.additionalParams) },
+)
+
+/**
+ * Addresses one generated center collection sheet — every field Fineract's
+ * `?command=generateCollectionSheet` body carries, so a different meeting or date is a different
+ * sheet rather than the previous one served back.
+ */
+data class CenterCollectionSheetKey(
+    val centerId: Long,
+    val calendarId: Long,
+    val transactionDate: String?,
+    val dateFormat: String,
+    val locale: String,
+) {
+    companion object {
+        /** The key of the sheet [payload] generates — or, for a save body, the sheet it saved. */
+        fun of(centerId: Long, payload: Payload) = CenterCollectionSheetKey(
+            centerId = centerId,
+            calendarId = payload.calendarId,
+            transactionDate = payload.transactionDate,
+            dateFormat = payload.dateFormat,
+            locale = payload.locale,
+        )
+    }
+}
+
+/**
+ * A generated center sheet. POST-shaped, but a READ: the body only selects which sheet. Cached so
+ * `CenterCommandRepository` can record a saved sheet's outcome against the same row.
+ */
+@StoreProvider(id = "centerCollectionSheet", ttl = "12h")
+@CacheKey(fn = "forKey", key = "centerCollectionSheet:{key}", params = ["key:String"])
+fun provideCenterCollectionSheetStore(
+    centerApi: CenterApi,
+    cache: ApiResponseCacheDao,
+): Store<CenterCollectionSheetKey, CollectionSheet> = cachedRead(
+    dao = cache,
+    keyOf = { key -> AppCacheKeys.CenterCollectionSheet.forKey(key.toString()) },
+    fetch = { key ->
+        centerApi.getCollectionSheet(
+            centerId = key.centerId,
+            payload = Payload().apply {
+                calendarId = key.calendarId
+                transactionDate = key.transactionDate
+                dateFormat = key.dateFormat
+                locale = key.locale
+            },
+        )
+    },
 )

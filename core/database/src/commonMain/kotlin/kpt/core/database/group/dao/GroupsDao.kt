@@ -111,4 +111,22 @@ interface GroupsDao {
     /** One queued offline group, for the write store's source of truth. */
     @Query("SELECT * FROM GroupPayload WHERE id = :id LIMIT 1")
     fun observeGroupPayload(id: Int): Flow<GroupPayloadEntity?>
+
+    /**
+     * One group row, nullable — [getGroupById] declares a non-null row and so cannot say "absent",
+     * which a write store's reader has to.
+     */
+    @Query("SELECT * FROM GroupTable WHERE id = :id LIMIT 1")
+    fun observeGroup(id: Int): Flow<GroupEntity?>
+
+    @Query("DELETE FROM GroupTable WHERE id = :id")
+    suspend fun deleteGroupById(id: Int)
+
+    /** What the `groups` store's `deleteAll` runs at logout — the rows must not outlive the session. */
+    @Query("DELETE FROM GroupTable")
+    suspend fun deleteAllGroups()
+
+    /** The logout purge for the offline group queue. */
+    @Query("DELETE FROM GroupPayload")
+    suspend fun deleteAllGroupPayloads()
 }

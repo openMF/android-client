@@ -24,7 +24,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.data.testing.FakeClientRepository
-import kpt.core.database.client.entity.ClientEntity
+import kpt.core.model.client.Client
 import kpt.feature.client.profile.components.ClientProfileActionItem
 import kpt.feature.client.profile.components.clientsActionItems
 import kotlin.test.AfterTest
@@ -50,7 +50,7 @@ class ClientProfileViewModelTest {
 
     @AfterTest fun tearDown() = Dispatchers.resetMain()
 
-    private val clientState = MutableStateFlow<ScreenState<ClientEntity>>(ScreenState.Loading)
+    private val clientState = MutableStateFlow<ScreenState<Client>>(ScreenState.Loading)
 
     private fun repository(image: String? = null) =
         FakeClientRepository(client = clientState, image = image)
@@ -60,7 +60,7 @@ class ClientProfileViewModelTest {
         clientId: Int = 42,
     ) = ClientProfileViewModel(repo, SavedStateHandle(mapOf("clientId" to clientId)))
 
-    private fun client(id: Int = 42) = ClientEntity(
+    private fun client(id: Int = 42) = Client(
         id = id,
         displayName = "Asha Devi",
         accountNo = "000000042",
@@ -88,7 +88,7 @@ class ClientProfileViewModelTest {
 
         vm.client.test {
             assertIs<ScreenState.Loading>(awaitItem())
-            val content = assertIs<ScreenState.Content<ClientEntity>>(awaitItem())
+            val content = assertIs<ScreenState.Content<Client>>(awaitItem())
             assertEquals("Asha Devi", content.data.displayName)
             cancelAndIgnoreRemainingEvents()
         }

@@ -37,7 +37,7 @@ internal class ReportRepositoryImpl(
             key = Unit,
             cacheKey = AppCacheKeys.ReportTypes.LIST,
             scope = scope,
-            isEmpty = { it.isEmpty() },
+            // No `isEmpty`: an empty list is real content (see ChargeRepositoryImpl.chargesStream).
             fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
             ttl = AppStoreRegistry.Ttl.REPORT_TYPES,
         )

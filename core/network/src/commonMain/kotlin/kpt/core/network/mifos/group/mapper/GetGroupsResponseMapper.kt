@@ -9,21 +9,21 @@
  */
 package kpt.core.network.mifos.group.mapper
 
-import kpt.core.database.group.entity.GroupEntity
+import kpt.core.model.group.Group
 import kpt.core.model.objects.clients.Page
 import kpt.core.network.data.AbstractMapper
 import kpt.core.network.mifos.group.dto.GetGroupsResponse
 
-object GetGroupsResponseMapper : AbstractMapper<GetGroupsResponse, Page<GroupEntity>>() {
+object GetGroupsResponseMapper : AbstractMapper<GetGroupsResponse, Page<Group>>() {
 
-    override fun mapFromEntity(entity: GetGroupsResponse): Page<GroupEntity> {
-        return Page<GroupEntity>().apply {
+    override fun mapFromEntity(entity: GetGroupsResponse): Page<Group> {
+        return Page<Group>().apply {
             totalFilteredRecords = entity.totalFilteredRecords!!
             pageItems = GroupMapper.mapFromEntityList(entity.pageItems!!.toList())
         }
     }
 
-    override fun mapToEntity(domainModel: Page<GroupEntity>): GetGroupsResponse {
+    override fun mapToEntity(domainModel: Page<Group>): GetGroupsResponse {
         return GetGroupsResponse(
             totalFilteredRecords = domainModel.totalFilteredRecords,
             pageItems = GroupMapper.mapToEntityList(domainModel.pageItems).toSet(),

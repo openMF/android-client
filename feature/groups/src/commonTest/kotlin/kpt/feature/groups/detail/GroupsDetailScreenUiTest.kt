@@ -16,7 +16,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.v2.runComposeUiTest
 import kpt.core.base.store.screen.ScreenState
-import kpt.core.database.group.entity.GroupEntity
+import kpt.core.model.group.Group
 import kpt.core.designsystem.theme.KptTheme
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -30,7 +30,7 @@ import kotlin.test.assertEquals
 class GroupsDetailScreenUiTest {
 
     private val group = ScreenState.Content(
-        GroupEntity(id = 31, name = "Ankit", accountNo = "000000031", active = true),
+        Group(id = 31, name = "Ankit", accountNo = "000000031", active = true),
     )
 
     @Test

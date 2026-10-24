@@ -54,6 +54,10 @@ interface SavingsDao {
     @Query("DELETE FROM SavingsAccountTransactionRequest where savingAccountId = :savingsAccountId")
     suspend fun deleteSavingsAccountTransactionRequest(savingsAccountId: Int)
 
+    /** The logout purge for the offline savings-transaction queue. */
+    @Query("DELETE FROM SavingsAccountTransactionRequest")
+    suspend fun deleteAllSavingsAccountTransactionRequests()
+
     @Query("SELECT * FROM SavingsAccountTransactionRequest")
     fun getAllSavingsAccountTransactionRequest(): Flow<List<SavingsAccountTransactionRequestEntity>>
 
@@ -65,6 +69,14 @@ interface SavingsDao {
 
     @Query("SELECT * FROM SavingsAccountWithAssociations where id = :savingsAccountId")
     fun getSavingsAccountWithAssociations(savingsAccountId: Int): Flow<SavingsAccountWithAssociationsEntity?>
+
+    /** Per-key clear for `savingsAccounts`' source of truth (`Store.clear(key)`). */
+    @Query("DELETE FROM SavingsAccountWithAssociations WHERE id = :savingsAccountId")
+    suspend fun deleteSavingsAccountWithAssociations(savingsAccountId: Int)
+
+    /** What the logout purge reaches through `savingsAccounts`' `deleteAll`. */
+    @Query("DELETE FROM SavingsAccountWithAssociations")
+    suspend fun deleteAllSavingsAccountsWithAssociations()
 
     @Query("SELECT * FROM PaymentTypeOption")
     fun getAllPaymentTypeOption(): Flow<List<PaymentTypeOptionEntity>>

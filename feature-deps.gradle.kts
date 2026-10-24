@@ -68,6 +68,11 @@ dependencies {
     // profile opens — the original ships both and the two have different callers.
     "commonMainImplementation"(project(":feature:document"))
 
+    // feature/charge — the ONE charge module (list / detail / add / edit / delete) for clients,
+    // loans and savings, keyed by `resourceType` + `resourceId`. `@FeatureDestination` for the same
+    // reason as document: three parent graphs open it, so it has no single parent to nest under.
+    "commonMainImplementation"(project(":feature:charge"))
+
     // feature/datatable — the datatable list + a table's rows, for any entity. `@FeatureDestination`
     // for the same reason as document and activate: group detail opens it today and client will
     // once create-client lands, so it has no single parent graph to nest under.
@@ -90,4 +95,5 @@ dependencies {
     // `@FeatureDestination` for the same reason as the other shared drill-downs: the client's
     // savings list, group detail and the shell's search all open into it.
     "commonMainImplementation"(project(":feature:savings"))
+    "commonMainImplementation"(project(":feature:searchrecord"))
 }

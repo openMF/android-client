@@ -36,25 +36,31 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kpt.core.base.store.mutation.BlockReason
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenDataStream
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.combineScreenStates
 import kpt.core.base.store.screen.dataOrNull
+import kpt.core.base.store.screen.emptyIfContent
 import kpt.core.base.store.screen.mapContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kpt.core.model.objects.error.serverErrorMessage
 import kpt.core.common.utils.FileKitUtil
 import kpt.core.data.client.ClientCommandRepository
+import kpt.core.model.objects.noncoreobjects.DocumentUpload
 import kpt.core.data.client.ClientRepository
 import kpt.core.data.office.OfficeRepository
 import kpt.core.data.staff.StaffRepository
-import kpt.core.database.client.entity.ClientPayloadEntity
-import kpt.core.database.client.entity.OptionsEntity
-import kpt.core.database.staff.entity.StaffEntity
+import kpt.core.model.client.ClientPayload
+import kpt.core.model.client.Options
+import kpt.core.model.staff.Staff
 import kpt.core.model.objects.clients.Address
 import kpt.core.model.utils.ApiDateFormatter
-import kpt.core.ui.util.multipartRequestBody
+import kpt.core.ui.util.getMimeTypeFromPlatformFile
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
@@ -229,6 +235,7 @@ internal class CreateNewClientViewModel(
             genders = template.genderOptions.orEmpty().toOptions(sorted = false),
             clientTypes = template.clientTypeOptions.orEmpty().toOptions(),
             classifications = template.clientClassificationOptions.orEmpty().toOptions(),
+            serverActivationDate = template.activationDate.toPickerMillis(),
             offices = officeList
                 .map { ClientOption(id = it.id, label = it.name.orEmpty()) }
                 .sortedBy { it.label },
@@ -279,9 +286,9 @@ internal class CreateNewClientViewModel(
      * per selection would accumulate live collectors for the lifetime of the screen. Re-selecting
      * an office also then shows its staff immediately.
      */
-    private val staffStreams = mutableMapOf<Int, ScreenDataStream<List<StaffEntity>>>()
+    private val staffStreams = mutableMapOf<Int, ScreenDataStream<List<Staff>>>()
 
-    private fun staffStreamFor(officeId: Int): ScreenDataStream<List<StaffEntity>> =
+    private fun staffStreamFor(officeId: Int): ScreenDataStream<List<Staff>> =
         staffStreams.getOrPut(officeId) { staff.staffStream(officeId, viewModelScope) }
 
     /**
@@ -505,7 +512,7 @@ internal class CreateNewClientViewModel(
                         // field; it is a dismissable dialog here and the form is still behind it.
                         dialog = CreateClientDialog.Failed(
                             offline = false,
-                            message = result.cause.message,
+                            message = result.cause.serverErrorMessage(),
                         ),
                     )
                 }
@@ -547,10 +554,11 @@ internal class CreateNewClientViewModel(
         mutableStateFlow.value = state.copy(isUploadingPhoto = true)
         val upload = commands.uploadClientImage(
             clientId,
-            multipartRequestBody(
-                file = photo.bytes,
+            DocumentUpload(
                 name = photo.fileName,
-                extension = ImageFormat.PNG.name,
+                fileName = "${photo.fileName.substringBeforeLast(".")}.${ImageFormat.PNG.name.lowercase()}",
+                mimeType = getMimeTypeFromPlatformFile(ImageFormat.PNG.name),
+                bytes = photo.bytes,
             ),
         )
         if (upload !is MutationResult.Applied) {
@@ -573,7 +581,7 @@ internal class CreateNewClientViewModel(
 }
 
 /** `{id, name}` option rows as selectable options, alphabetically unless told otherwise. */
-private fun List<OptionsEntity>.toOptions(sorted: Boolean = true): List<ClientOption> {
+private fun List<Options>.toOptions(sorted: Boolean = true): List<ClientOption> {
     val options = map { ClientOption(id = it.id, label = it.name) }
     return if (sorted) options.sortedBy { it.label } else options
 }
@@ -637,6 +645,13 @@ internal data class CreateClientForm(
     val clientTypes: List<ClientOption> = emptyList(),
     val classifications: List<ClientOption> = emptyList(),
     val offices: List<ClientOption> = emptyList(),
+    /**
+     * The SERVER's business date from the template — the activation default. The device clock is
+     * wrong for this: Fineract rejects a date ahead of its own ("Activation date cannot be in the
+     * future"), and a device east of the server's timezone is a day ahead every evening (measured
+     * 2026-10-24: IST device on the 24th, server on the 23rd — "Client Active" failed every time).
+     */
+    val serverActivationDate: Long? = null,
 )
 
 /** The address block's option sets. Present only on tenants that enable addresses. */
@@ -683,7 +698,8 @@ internal data class CreateNewClientState(
     val choices: Map<CreateClientField, ClientOption> = emptyMap(),
     val errors: Map<CreateClientField, CreateClientFieldError> = emptyMap(),
     val isActive: Boolean = false,
-    val activationDate: Long = Clock.System.now().toEpochMilliseconds(),
+    /** The officer's PICK; null until they choose one — read through [activationDateOr]. */
+    val activationDate: Long? = null,
     val dateOfBirth: Long? = null,
     val isAddressActive: Boolean = false,
     val openDatePicker: ClientDateField? = null,
@@ -710,7 +726,7 @@ internal data class CreateNewClientState(
  * first failure, which is what lets the screen mark every bad field rather than one.
  *
  * Two rules are ADDED, each turning a silent loss into a visible refusal:
- *  - OFFICE, because `officeId` is mandatory on [ClientPayloadEntity] and the original defaulted it
+ *  - OFFICE, because `officeId` is mandatory on [ClientPayload] and the original defaulted it
  *    to `0`; submitting without touching the dropdown posted office zero and the server's refusal
  *    then replaced the form, losing every typed field.
  *  - MOBILE_NO, because a number failing the phone rule was dropped from the payload in silence.
@@ -757,7 +773,7 @@ private fun MutableMap<CreateClientField, CreateClientFieldError>.alphabetic(
 }
 
 /**
- * The form as a [ClientPayloadEntity].
+ * The form as a [ClientPayload].
  *
  * Field-for-field the original's `createClientPayload`, including the shape of its optional-field
  * guards: a value reaches the payload only when the tenant offers that option set AND something was
@@ -771,11 +787,11 @@ private fun MutableMap<CreateClientField, CreateClientFieldError>.alphabetic(
 internal fun CreateNewClientState.toPayload(
     form: CreateClientForm,
     hasAddressBlock: Boolean,
-): ClientPayloadEntity {
-    val activationDate = if (isActive) ApiDateFormatter.formatForApi(activationDate) else null
+): ClientPayload {
+    val activationDate = if (isActive) ApiDateFormatter.formatForApi(activationDateOr(form)) else null
     val dateOfBirth = dateOfBirth?.let { ApiDateFormatter.formatForApi(it) }
 
-    return ClientPayloadEntity(
+    return ClientPayload(
         firstname = text(CreateClientField.FIRST_NAME).trim(),
         lastname = text(CreateClientField.LAST_NAME).trim(),
         middlename = text(CreateClientField.MIDDLE_NAME).trim().takeIf { it.isNotEmpty() },
@@ -858,3 +874,26 @@ internal sealed interface CreateNewClientAction {
     data class OpenDatePicker(val field: ClientDateField) : CreateNewClientAction
     data class OnDatePicked(val field: ClientDateField, val millis: Long) : CreateNewClientAction
 }
+
+/**
+ * Fineract's `[year, month, day]` as picker millis: NOON UTC, so the same calendar day formats back
+ * in every timezone from UTC-12 to UTC+12 (midnight UTC is the previous day west of Greenwich).
+ */
+@OptIn(ExperimentalTime::class)
+private fun List<Int>.toPickerMillis(): Long? {
+    if (size < DATE_PARTS) return null
+    val date = runCatching { LocalDate(this[0], this[1], this[2]) }.getOrNull() ?: return null
+    return date.atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds() + NOON_OFFSET_MS
+}
+
+private const val DATE_PARTS = 3
+private const val NOON_OFFSET_MS = 12 * 60 * 60 * 1000L
+
+/**
+ * The activation date to show and send: the officer's pick, else the server's business date, else
+ * (template not loaded) the device's today. Derived on read — never written back into state, so a
+ * late template can never overwrite a pick.
+ */
+@OptIn(ExperimentalTime::class)
+internal fun CreateNewClientState.activationDateOr(form: CreateClientForm?): Long =
+    activationDate ?: form?.serverActivationDate ?: Clock.System.now().toEpochMilliseconds()

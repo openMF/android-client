@@ -20,7 +20,7 @@ import kpt.core.model.objects.SearchedEntity
 import kpt.core.store.config.AppCacheKeys
 import kpt.core.store.config.AppStoreIds
 import kpt.core.store.config.AppStoreRegistry
-import kpt.core.store.search.SearchResourcesKey
+import kpt.core.model.search.SearchResourcesKey
 import org.mobilenativefoundation.store.store5.Store
 
 @RepositoryBinding(binds = SearchRepository::class)
@@ -38,7 +38,7 @@ internal class SearchRepositoryImpl(
             "${key.query}:${key.resource}:${key.exactMatch}",
         ),
         scope = scope,
-        isEmpty = { it.isEmpty() },
+        // No `isEmpty`: an empty list is real content (see ChargeRepositoryImpl.chargesStream).
         fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
         ttl = AppStoreRegistry.Ttl.SEARCH_SEARCH_RESOURCES,
     )

@@ -12,7 +12,7 @@ package kpt.core.data.datatable
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.model.objects.users.UserLocation
 import kpt.core.model.shared.GenericResponse
-import kpt.core.network.mifos.datatable.dto.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
+import kpt.core.model.datatable.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 
 /**
  * Every datatable write, as an explicit outcome.
@@ -21,9 +21,10 @@ import kpt.core.network.mifos.datatable.dto.DeleteDataTablesDatatableAppTableIdD
  * change reached the server, was refused because the device is offline, or failed — a distinction
  * that cannot be reconstructed above this layer.
  *
- * These are commands, so they carry no Store and no cache. Offline CAPTURE is a different
- * operation with its own explicit queue ([kpt.core.data.sync.OfflineQueueRepository]); it is never
- * a silent fallback from here.
+ * Writes go the same way reads do — network → store → database: the command reaches Fineract, and
+ * the server's acceptance is recorded through the datatable stores, so every datatable stream already shows it
+ * when the call returns. Offline CAPTURE is a different operation with its own explicit queue
+ * ([kpt.core.data.sync.OfflineQueueRepository]); it is never a silent fallback from here.
  */
 interface DataTableCommandRepository {
 

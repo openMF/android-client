@@ -12,7 +12,7 @@ package kpt.core.data.search
 import kotlinx.coroutines.CoroutineScope
 import kpt.core.base.store.screen.ScreenDataStream
 import kpt.core.model.objects.SearchedEntity
-import kpt.core.store.search.SearchResourcesKey
+import kpt.core.model.search.SearchResourcesKey
 
 /**
  * Fineract resource search — the read behind the Home tab.

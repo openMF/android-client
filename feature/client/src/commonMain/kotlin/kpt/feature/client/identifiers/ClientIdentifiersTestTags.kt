@@ -15,6 +15,7 @@ internal object ClientIdentifiersTestTags {
     const val LIST = "clientIdentifiers:list"
     const val COUNT = "clientIdentifiers:count"
     const val ADD = "clientIdentifiers:add"
+    const val SEARCH = "clientIdentifiers:search"
     const val EMPTY = "clientIdentifiers:empty"
     const val DELETE_DIALOG = "clientIdentifiers:deleteDialog"
     const val WRITE_ERROR_DIALOG = "clientIdentifiers:writeError"

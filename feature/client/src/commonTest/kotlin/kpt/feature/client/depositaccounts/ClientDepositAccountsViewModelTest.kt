@@ -19,10 +19,10 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.data.testing.FakeClientRepository
-import kpt.core.database.client.entity.ClientAccounts
-import kpt.core.database.savings.entity.SavingAccountDepositTypeEntity
-import kpt.core.database.savings.entity.SavingsAccountEntity
-import kpt.core.database.savings.entity.SavingsAccountStatusEntity
+import kpt.core.model.client.ClientAccounts
+import kpt.core.model.savings.SavingAccountDepositType
+import kpt.core.model.savings.SavingsAccount
+import kpt.core.model.savings.SavingsAccountStatus
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -47,26 +47,26 @@ class ClientDepositAccountsViewModelTest {
     private fun account(
         id: Int,
         accountNo: String,
-        serverType: SavingAccountDepositTypeEntity.ServerTypes,
+        serverType: SavingAccountDepositType.ServerTypes,
         closed: Boolean = false,
         pending: Boolean = false,
-    ) = SavingsAccountEntity(
+    ) = SavingsAccount(
         id = id,
         accountNo = accountNo,
         productName = "Product $id",
-        depositType = SavingAccountDepositTypeEntity(id = serverType.id, code = serverType.code),
-        status = SavingsAccountStatusEntity(
+        depositType = SavingAccountDepositType(id = serverType.id, code = serverType.code),
+        status = SavingsAccountStatus(
             closed = closed,
             submittedAndPendingApproval = pending,
         ),
     )
 
     private val accounts = listOf(
-        account(1, "S-001", SavingAccountDepositTypeEntity.ServerTypes.SAVINGS),
-        account(2, "S-002", SavingAccountDepositTypeEntity.ServerTypes.SAVINGS, pending = true),
-        account(3, "S-003", SavingAccountDepositTypeEntity.ServerTypes.SAVINGS, closed = true),
-        account(4, "F-001", SavingAccountDepositTypeEntity.ServerTypes.FIXED),
-        account(5, "R-001", SavingAccountDepositTypeEntity.ServerTypes.RECURRING),
+        account(1, "S-001", SavingAccountDepositType.ServerTypes.SAVINGS),
+        account(2, "S-002", SavingAccountDepositType.ServerTypes.SAVINGS, pending = true),
+        account(3, "S-003", SavingAccountDepositType.ServerTypes.SAVINGS, closed = true),
+        account(4, "F-001", SavingAccountDepositType.ServerTypes.FIXED),
+        account(5, "R-001", SavingAccountDepositType.ServerTypes.RECURRING),
     )
 
     private val accountsState = MutableStateFlow<ScreenState<ClientAccounts>>(
@@ -86,8 +86,8 @@ class ClientDepositAccountsViewModelTest {
         ),
     )
 
-    private suspend fun contentOf(vm: ClientDepositAccountsViewModel): List<SavingsAccountEntity> {
-        var result: List<SavingsAccountEntity> = emptyList()
+    private suspend fun contentOf(vm: ClientDepositAccountsViewModel): List<SavingsAccount> {
+        var result: List<SavingsAccount> = emptyList()
         vm.accounts.test {
             var item = awaitItem()
             while (item is ScreenState.Loading) item = awaitItem()
@@ -201,7 +201,7 @@ class ClientDepositAccountsViewModelTest {
                 ClientDepositAccountsAction.ViewAccount(
                     accountId = 5,
                     accountEndpoint =
-                    SavingAccountDepositTypeEntity.ServerTypes.RECURRING.endpoint,
+                    SavingAccountDepositType.ServerTypes.RECURRING.endpoint,
                 ),
             )
             assertEquals(

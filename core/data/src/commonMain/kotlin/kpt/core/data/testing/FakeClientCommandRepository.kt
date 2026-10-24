@@ -9,12 +9,12 @@
  */
 package kpt.core.data.testing
 
-import io.ktor.client.request.forms.MultiPartFormDataContent
+import kpt.core.model.objects.noncoreobjects.DocumentUpload
 import kotlinx.coroutines.CompletableDeferred
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.data.client.ClientCommandRepository
-import kpt.core.database.client.entity.ClientEntity
-import kpt.core.database.client.entity.ClientPayloadEntity
+import kpt.core.model.client.Client
+import kpt.core.model.client.ClientPayload
 import kpt.core.model.objects.clients.ActivatePayload
 import kpt.core.model.objects.clients.AssignStaffRequest
 import kpt.core.model.objects.clients.ClientAddressRequest
@@ -25,10 +25,10 @@ import kpt.core.model.objects.clients.UpdateSavingsAccountRequest
 import kpt.core.model.objects.noncoreobjects.IdentifierPayload
 import kpt.core.model.shared.GenericResponse
 import kpt.core.model.shared.PinpointLocationActionResponse
-import kpt.core.network.mifos.client.dto.PostClientAddressRequest
-import kpt.core.network.mifos.client.dto.PostClientAddressResponse
-import kpt.core.network.mifos.client.dto.PostClientsClientIdRequest
-import kpt.core.network.mifos.client.dto.PostClientsClientIdResponse
+import kpt.core.model.client.PostClientAddressRequest
+import kpt.core.model.client.PostClientAddressResponse
+import kpt.core.model.client.PostClientsClientIdRequest
+import kpt.core.model.client.PostClientsClientIdResponse
 
 /**
  * Test double for [ClientCommandRepository], owned by the module that owns the CONTRACT.
@@ -80,8 +80,8 @@ class FakeClientCommandRepository(
      * trailing lambda at several call sites, and a parameter added after it would silently capture
      * them.
      */
-    private val clientResult: () -> MutationResult<ClientEntity> =
-        { MutationResult.Applied(ClientEntity(), synced = true) },
+    private val clientResult: () -> MutationResult<Client> =
+        { MutationResult.Applied(Client(), synced = true) },
     private val result: () -> MutationResult<GenericResponse> =
         { MutationResult.Applied(GenericResponse(), synced = true) },
 ) : ClientCommandRepository {
@@ -101,13 +101,13 @@ class FakeClientCommandRepository(
     override suspend fun activate1(clientId: Long, postClientsClientIdRequest: PostClientsClientIdRequest, command: String?): MutationResult<PostClientsClientIdResponse> =
         error("activate1 is not faked — add it when a test needs it")
 
-    /** Client ids whose photo was uploaded, in order. The BODY is not recorded — a
-     *  `MultiPartFormDataContent` cannot be compared, and what a test needs to know is that the
-     *  upload was attempted for the right client and how many times. */
+    /** Client ids whose photo was uploaded, in order, and the image each upload carried. */
     val uploadedImages = mutableListOf<Int>()
+    val uploadedImageFiles = mutableListOf<DocumentUpload>()
 
-    override suspend fun uploadClientImage(clientId: Int, body: MultiPartFormDataContent): MutationResult<Unit> {
+    override suspend fun uploadClientImage(clientId: Int, image: DocumentUpload): MutationResult<Unit> {
         uploadedImages += clientId
+        uploadedImageFiles += image
         gate?.await()
         return unitResult()
     }
@@ -122,18 +122,18 @@ class FakeClientCommandRepository(
     }
 
     /** Payloads passed to create, in order — a test asserts WHAT was sent, not merely that it was. */
-    val createdClients = mutableListOf<ClientPayloadEntity?>()
+    val createdClients = mutableListOf<ClientPayload?>()
 
-    override suspend fun createClient(clientPayload: ClientPayloadEntity?): MutationResult<ClientEntity> {
+    override suspend fun createClient(clientPayload: ClientPayload?): MutationResult<Client> {
         createdClients += clientPayload
         gate?.await()
         return clientResult()
     }
 
     /** (clientId, payload) per update — the pair matters: an edit form must target the client it read. */
-    val updatedClients = mutableListOf<Pair<Int, ClientPayloadEntity?>>()
+    val updatedClients = mutableListOf<Pair<Int, ClientPayload?>>()
 
-    override suspend fun updateClient(clientId: Int, clientPayload: ClientPayloadEntity?): MutationResult<ClientEntity> {
+    override suspend fun updateClient(clientId: Int, clientPayload: ClientPayload?): MutationResult<Client> {
         updatedClients += clientId to clientPayload
         gate?.await()
         return clientResult()

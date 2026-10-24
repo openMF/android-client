@@ -18,8 +18,8 @@ import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.mapContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.data.client.ClientRepository
-import kpt.core.database.client.entity.ClientAccounts
-import kpt.core.database.savings.entity.SavingAccountDepositTypeEntity
+import kpt.core.model.client.ClientAccounts
+import kpt.core.model.savings.SavingAccountDepositType
 import kpt.feature.client.general.components.ClientGeneralActionItem
 
 /**
@@ -133,7 +133,7 @@ internal fun performanceHistory(accounts: ClientAccounts): PerformanceHistory {
         totalSaving = savings
             .filter {
                 it.status?.active == true &&
-                    it.depositType?.serverType != SavingAccountDepositTypeEntity.ServerTypes.RECURRING &&
+                    it.depositType?.serverType != SavingAccountDepositType.ServerTypes.RECURRING &&
                     it.status?.closed == false
             }
             .sumOf { it.accountBalance ?: 0.0 },

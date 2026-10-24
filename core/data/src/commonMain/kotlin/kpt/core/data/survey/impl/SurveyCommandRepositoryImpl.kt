@@ -24,21 +24,18 @@ internal class SurveyCommandRepositoryImpl(
     private val gateway: MutationGateway,
 ) : SurveyCommandRepository {
 
-    override suspend fun submitScore(surveyId: Int, scorecardPayload: Scorecard?) =
-        online { surveyApi.submitScore(surveyId = surveyId, scorecardPayload = scorecardPayload) }
-
     /**
-     * Commands run [MutationPolicy.OnlineRequired]: they await the server and write nothing
-     * offline, yielding `Blocked(OFFLINE)` rather than a local success the officer would act on.
-     *
-     * The call is closed over rather than threaded through [CommandSpec.payload]: the payload hook
-     * exists for `localApply` / `rollback` / `conflictOf`, none of which apply to a write that never
-     * lands locally. It also keeps the 28 endpoints whose body is nullable usable, which
-     * `CommandSpec<P : Any>` would otherwise reject.
+     * The one write in this codebase with NO local side, and deliberately so: nothing reads a
+     * scorecard back. There is no scorecard table, no scorecard read endpoint in `SurveyApi`, and
+     * the `surveys` store holds definitions, which a submission does not change. Recording it would
+     * need a new table (a schema change) for a read no screen makes; add `localApply` with that read.
      */
-    private suspend fun <R : Any> online(endpoint: suspend () -> R): MutationResult<R> =
+    override suspend fun submitScore(surveyId: Int, scorecardPayload: Scorecard?): MutationResult<Scorecard> =
         gateway.command(
-            CommandSpec(payload = Unit, endpoint = { endpoint() }),
+            CommandSpec(
+                payload = surveyId,
+                endpoint = { surveyApi.submitScore(surveyId = it, scorecardPayload = scorecardPayload) },
+            ),
             policy = MutationPolicy.OnlineRequired,
         )
 }

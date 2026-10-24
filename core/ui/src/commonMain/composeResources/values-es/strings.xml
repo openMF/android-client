@@ -108,4 +108,8 @@
     <string name="client_share_accounts_share_product">Producto de acciones</string>
     <string name="client_share_accounts_pending_for_approval_shares">Acciones pendientes de aprobación</string>
     <string name="client_share_accounts_approved_shares">Acciones aprobadas</string>
+
+    <string name="core_ui_document_viewer_open_failed">No se pudo abrir este PDF.</string>
+    <string name="core_ui_document_viewer_unsupported">Este tipo de archivo no se puede previsualizar. Use Compartir para abrirlo en otra aplicación.</string>
+    <string name="core_ui_document_viewer_image_description">Imagen del documento</string>
 </resources>

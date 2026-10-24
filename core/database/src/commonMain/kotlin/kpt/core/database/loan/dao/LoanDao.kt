@@ -38,6 +38,14 @@ interface LoanDao {
     @Query("SELECT * FROM LoanWithAssociations WHERE id = :loanId LIMIT 1")
     fun getLoanById(loanId: Int): Flow<LoanWithAssociationsEntity?>
 
+    /** Per-key clear for the `loans` store (`Store.clear(loanId)`). */
+    @Query("DELETE FROM LoanWithAssociations WHERE id = :loanId")
+    suspend fun deleteLoanById(loanId: Int)
+
+    /** What the logout purge reaches through the `loans` store's `deleteAll`. */
+    @Query("DELETE FROM LoanWithAssociations")
+    suspend fun deleteAllLoans()
+
     @Insert(entity = LoanRepaymentRequestEntity::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLoanRepaymentTransaction(request: LoanRepaymentRequestEntity)
 
@@ -64,6 +72,9 @@ interface LoanDao {
 
     @Query("DELETE FROM LoanRepaymentTemplate WHERE loanId = :loanId")
     suspend fun deleteLoanRepaymentByLoanId(loanId: Int)
+
+    @Query("DELETE FROM LoanRepaymentTemplate")
+    suspend fun deleteAllLoanRepaymentTemplates()
 
     /**
      * Persist a loan, stamping its id onto the summary and timeline rows and splitting the
@@ -165,9 +176,27 @@ interface LoanDao {
     @Upsert
     suspend fun upsertLoanDisburseTemplate(template: LoanDisburseTemplateCacheEntity)
 
+    @Query("DELETE FROM loan_application_templates WHERE clientId = :clientId AND productId = :productId")
+    suspend fun deleteLoanTemplate(clientId: Int, productId: Int)
+
     @Query("DELETE FROM loan_application_templates")
     suspend fun deleteAllLoanTemplates()
 
+    @Query("DELETE FROM loan_disburse_templates WHERE loanId = :loanId")
+    suspend fun deleteLoanDisburseTemplate(loanId: Int)
+
     @Query("DELETE FROM loan_disburse_templates")
     suspend fun deleteAllLoanDisburseTemplates()
+
+    /**
+     * Drop a QUEUED repayment. The queue store used `deleteLoanRepaymentByLoanId`, which deletes
+     * from `LoanRepaymentTemplate` — the cached form template — so clearing a synced or discarded
+     * repayment left the request queued (to be sent again) and wiped the template instead.
+     */
+    @Query("DELETE FROM LoanRepaymentRequestEntity WHERE loanId = :loanId")
+    suspend fun deleteLoanRepaymentRequestByLoanId(loanId: Int)
+
+    /** The logout purge for the offline repayment queue. */
+    @Query("DELETE FROM LoanRepaymentRequestEntity")
+    suspend fun deleteAllLoanRepaymentRequests()
 }

@@ -9,6 +9,10 @@
  */
 package kpt.core.store.staff
 
+import kpt.core.store.mapping.toEntity
+import kotlinx.coroutines.flow.map
+import kpt.core.model.staff.Staff
+import kpt.core.store.mapping.toModel
 import kpt.core.base.store.annotation.CacheKey
 import kpt.core.base.store.annotation.StoreProvider
 import kpt.core.base.store.infra.StoreFactory
@@ -32,10 +36,13 @@ import org.mobilenativefoundation.store.store5.Store
 fun provideStaffStore(
     service: StaffApi,
     dao: StaffDao,
-): Store<Int, List<StaffEntity>> = StoreFactory.createStore(
+): Store<Int, List<Staff>> = StoreFactory.createStore(
     fetcher = Fetcher.of { officeId: Int -> service.getStaffForOffice(officeId) },
     sourceOfTruth = SourceOfTruth.of(
-        reader = { officeId: Int -> dao.getAllStaff(officeId) },
-        writer = { _: Int, staff: List<StaffEntity> -> dao.insertStaffs(staff) },
+        reader = { officeId: Int -> dao.getAllStaff(officeId).map { rows -> rows.map { it.toModel() } } },
+        writer = { _: Int, staff: List<Staff> -> dao.insertStaffs(staff.map { it.toEntity() }) },
+        delete = { officeId: Int -> dao.deleteForOffice(officeId) },
+        // What the logout purge (`Store.clear()`) calls; without it the rows outlived the session.
+        deleteAll = { dao.deleteAll() },
     ),
 )

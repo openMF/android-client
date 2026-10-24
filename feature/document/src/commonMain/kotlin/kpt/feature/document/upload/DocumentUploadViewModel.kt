@@ -24,7 +24,7 @@ import kpt.core.base.store.mutation.BlockReason
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.data.document.DocumentCommandRepository
-import kpt.core.ui.util.multipartRequestBody
+import kpt.core.ui.util.documentUpload
 
 /**
  * Upload or replace a document — ported from
@@ -102,7 +102,7 @@ internal class DocumentUploadViewModel(
         mutableStateFlow.value = validated.copy(isSubmitting = true, error = null)
 
         viewModelScope.launch {
-            val body = multipartRequestBody(
+            val body = documentUpload(
                 file = file.readBytes(),
                 name = validated.name,
                 extension = file.extension,

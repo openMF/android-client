@@ -33,6 +33,9 @@ interface CollectionSheetDao {
     @Upsert
     suspend fun upsertAll(details: List<CenterDetailEntity>)
 
+    @Query("DELETE FROM collection_sheet_center_details WHERE staffId = :staffId")
+    suspend fun deleteForStaff(staffId: Int)
+
     @Query("DELETE FROM collection_sheet_center_details")
     suspend fun deleteAll()
 }

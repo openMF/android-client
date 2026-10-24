@@ -13,7 +13,6 @@ package kpt.feature.document.list
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import io.ktor.client.request.forms.MultiPartFormDataContent
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +30,7 @@ import kpt.core.base.store.screen.screenDataStreamForTesting
 import kpt.core.data.document.DocumentCommandRepository
 import kpt.core.data.document.DocumentRepository
 import kpt.core.model.objects.noncoreobjects.Document
+import kpt.core.model.objects.noncoreobjects.DocumentUpload
 import kpt.core.model.shared.GenericResponse
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -72,6 +72,9 @@ class DocumentListViewModelTest {
             downloaded += Triple(entityType, entityId, documentId)
             return downloadBytes
         }
+
+        override suspend fun fetchDocuments(entityType: String, entityId: Int) =
+            error("fetchDocuments is not used by the document list")
     }
 
     private class FakeCommands(
@@ -94,14 +97,14 @@ class DocumentListViewModelTest {
         override suspend fun createDocument(
             entityType: String,
             entityId: Int,
-            request: MultiPartFormDataContent,
+            upload: DocumentUpload,
         ) = error("not used here")
 
         override suspend fun updateDocument(
             entityType: String,
             entityId: Int,
             documentId: Int,
-            request: MultiPartFormDataContent,
+            upload: DocumentUpload,
         ) = error("not used here")
     }
 
@@ -157,6 +160,23 @@ class DocumentListViewModelTest {
             cancelAndIgnoreRemainingEvents()
         }
         assertEquals(DocumentNotice.Removed, vm.stateFlow.value.notice)
+    }
+
+    @Test
+    fun removingTheLastDocumentLeavesAnEmptyListNotTheRemovedRow() = runTest(dispatcher) {
+        // The stream reports "no documents" as an empty Content (no `isEmpty` predicate); the
+        // screen draws its AppEmptyUi from it. With the predicate the removed row stayed on screen.
+        val vm = viewModel()
+        vm.documentList.test {
+            docsState.value = ScreenState.Content(listOf(doc(1)))
+            testScheduler.advanceUntilIdle()
+            docsState.value = ScreenState.Content(emptyList())
+            testScheduler.advanceUntilIdle()
+
+            val last = assertIs<ScreenState.Content<List<Document>>>(expectMostRecentItem())
+            assertTrue(last.data.isEmpty())
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test

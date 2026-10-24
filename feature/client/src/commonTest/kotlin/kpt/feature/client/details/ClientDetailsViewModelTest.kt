@@ -27,7 +27,7 @@ import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.data.testing.FakeClientCommandRepository
 import kpt.core.data.testing.FakeClientRepository
-import kpt.core.database.client.entity.ClientEntity
+import kpt.core.model.client.Client
 import kpt.core.ui.components.ResultStatus
 import kpt.feature.client.details.components.ClientDetailsActionItem
 import kpt.feature.client.details.components.clientDetailsActionItems
@@ -51,7 +51,7 @@ class ClientDetailsViewModelTest {
 
     @AfterTest fun tearDown() = Dispatchers.resetMain()
 
-    private val clientState = MutableStateFlow<ScreenState<ClientEntity>>(ScreenState.Loading)
+    private val clientState = MutableStateFlow<ScreenState<Client>>(ScreenState.Loading)
 
     private fun repository(image: String? = null) =
         FakeClientRepository(client = clientState, image = image)

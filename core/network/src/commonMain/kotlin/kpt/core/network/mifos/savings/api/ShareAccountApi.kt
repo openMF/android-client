@@ -15,8 +15,8 @@ import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.Query
 import io.ktor.client.statement.HttpResponse
 import kpt.core.base.network.annotation.ApiBinding
-import kpt.core.network.mifos.savings.dto.ShareAccountPayload
-import kpt.core.network.mifos.savings.dto.ShareTemplate
+import kpt.core.model.savings.ShareAccountPayload
+import kpt.core.model.savings.ShareTemplate
 
 @ApiBinding("mifos")
 interface ShareAccountApi {

@@ -11,6 +11,7 @@ package kpt.core.database.checkerinbox.dao
 
 import androidx.room3.Dao
 import androidx.room3.Query
+import androidx.room3.Transaction
 import androidx.room3.Upsert
 import kotlinx.coroutines.flow.Flow
 import kpt.core.base.database.annotation.DbDao
@@ -41,4 +42,14 @@ interface CheckerInboxDao {
 
     @Query("DELETE FROM checker_tasks")
     suspend fun deleteAll()
+
+    /**
+     * Make the table EXACTLY the server's pending queue. The store's writer used [upsertAll] alone,
+     * so a task decided elsewhere (the web app, another checker) stayed pending here for good.
+     */
+    @Transaction
+    suspend fun replaceAll(tasks: List<CheckerTaskEntity>) {
+        deleteAll()
+        upsertAll(tasks)
+    }
 }

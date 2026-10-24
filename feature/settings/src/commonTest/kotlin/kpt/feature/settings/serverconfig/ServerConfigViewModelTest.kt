@@ -9,21 +9,16 @@
  */
 package kpt.feature.settings.serverconfig
 
-import com.russhwolf.settings.MapSettings
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.MainCoroutineDispatcher
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kpt.core.base.common.manager.DispatcherManager
-import kpt.core.datastore.prefs.ProjectPreferencesRepository
-import kpt.core.datastore.prefs.ProjectPreferencesRepositoryImpl
-import kpt.core.datastore.prefs.UserPreferencesRepositoryImpl
+import kpt.core.data.testing.ExperimentalDataTestingApi
+import kpt.core.data.testing.FakeServerConfigRepository
 import kpt.core.domain.validation.ValidationFailure
 import kpt.core.model.utils.ServerConfig
 import kotlin.test.AfterTest
@@ -39,7 +34,7 @@ import kotlin.test.assertTrue
  * and had no combined view of validity — so nothing stopped `UpdateServerConfig` from writing while
  * a field was invalid. The submit-path tests below are the ones that would have caught that.
  */
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, ExperimentalDataTestingApi::class)
 class ServerConfigViewModelTest {
 
     private val dispatcher = StandardTestDispatcher()
@@ -48,28 +43,13 @@ class ServerConfigViewModelTest {
 
     @AfterTest fun tearDown() = Dispatchers.resetMain()
 
-    private val dispatchers = object : DispatcherManager {
-        override val default: CoroutineDispatcher = Dispatchers.Unconfined
-        override val main: MainCoroutineDispatcher = Dispatchers.Main
-        override val io: CoroutineDispatcher = Dispatchers.Unconfined
-        override val unconfined: CoroutineDispatcher = Dispatchers.Unconfined
-        override val appScope: CoroutineScope = CoroutineScope(Dispatchers.Unconfined)
-    }
-
-    private fun preferences(): ProjectPreferencesRepository {
-        val plain = MapSettings()
-        val secure = MapSettings()
-        return ProjectPreferencesRepositoryImpl(
-            delegate = UserPreferencesRepositoryImpl(plain, secure, dispatchers),
-            plainSettings = plain,
-            secureSettings = secure,
-            dispatcher = dispatchers,
-        )
-    }
+    /** A model whose one-shot hydrate from the stream has already run. */
+    private fun kotlinx.coroutines.test.TestScope.newModel(repository: FakeServerConfigRepository = FakeServerConfigRepository()) =
+        ServerConfigViewModel(repository).also { runCurrent() }
 
     @Test
     fun theDefaultConfigIsValid() = runTest(dispatcher) {
-        val model = ServerConfigViewModel(preferences())
+        val model = newModel()
         model.actionChannel.trySend(ServerConfigAction.UseDefaults)
         runCurrent()
         assertEquals(emptyMap(), model.stateFlow.value.failures, "ServerConfig.DEFAULT must pass its own rules")
@@ -78,7 +58,7 @@ class ServerConfigViewModelTest {
 
     @Test
     fun theLocalhostPresetIsAlsoValid() = runTest(dispatcher) {
-        val model = ServerConfigViewModel(preferences())
+        val model = newModel()
         model.actionChannel.trySend(ServerConfigAction.UseLocalhost)
         runCurrent()
         assertEquals(emptyMap(), model.stateFlow.value.failures, "ServerConfig.LOCALHOST must pass its own rules")
@@ -86,7 +66,7 @@ class ServerConfigViewModelTest {
 
     @Test
     fun aHostNameWithASchemeIsRejectedOnTheEndpointField() = runTest(dispatcher) {
-        val model = ServerConfigViewModel(preferences())
+        val model = newModel()
         model.actionChannel.trySend(ServerConfigAction.EndPointChanged("https://demo.mifos.org"))
         runCurrent()
         // The scheme belongs in the protocol field; attributing it to Endpoint is what tells the user where.
@@ -98,7 +78,7 @@ class ServerConfigViewModelTest {
 
     @Test
     fun anOutOfRangePortIsAttributedToThePortField() = runTest(dispatcher) {
-        val model = ServerConfigViewModel(preferences())
+        val model = newModel()
         model.actionChannel.trySend(ServerConfigAction.PortChanged("70000"))
         runCurrent()
         val failure = model.stateFlow.value.failures[ServerConfigField.Port]
@@ -107,7 +87,7 @@ class ServerConfigViewModelTest {
 
     @Test
     fun anApiPathMissingItsTrailingSlashIsDistinguishedFromAMissingLeadingSlash() = runTest(dispatcher) {
-        val model = ServerConfigViewModel(preferences())
+        val model = newModel()
 
         model.actionChannel.trySend(ServerConfigAction.ApiPathChanged("/fineract-provider/api/v1"))
         runCurrent()
@@ -132,15 +112,15 @@ class ServerConfigViewModelTest {
      */
     @Test
     fun submitWithAnInvalidFieldDoesNotPersistAnything() = runTest(dispatcher) {
-        val prefs = preferences()
-        val before = prefs.serverConfig.value
-        val model = ServerConfigViewModel(prefs)
+        val prefs = FakeServerConfigRepository()
+        val before = prefs.saved.value
+        val model = newModel(prefs)
 
         model.actionChannel.trySend(ServerConfigAction.TenantChanged("not valid!"))
         model.actionChannel.trySend(ServerConfigAction.Submit)
         runCurrent()
 
-        assertEquals(before, prefs.serverConfig.value, "an invalid config must not be persisted")
+        assertEquals(before, prefs.saved.value, "an invalid config must not be persisted")
         assertEquals(
             ValidationFailure.MalformedTenant,
             model.stateFlow.value.failures[ServerConfigField.Tenant],
@@ -149,14 +129,14 @@ class ServerConfigViewModelTest {
 
     @Test
     fun submitWithAValidConfigPersistsIt() = runTest(dispatcher) {
-        val prefs = preferences()
-        val model = ServerConfigViewModel(prefs)
+        val prefs = FakeServerConfigRepository()
+        val model = newModel(prefs)
 
         model.actionChannel.trySend(ServerConfigAction.UseLocalhost)
         model.actionChannel.trySend(ServerConfigAction.Submit)
         runCurrent()
 
-        assertEquals(ServerConfig.LOCALHOST, prefs.serverConfig.value)
+        assertEquals(ServerConfig.LOCALHOST, prefs.saved.value)
     }
 
     /**
@@ -167,11 +147,7 @@ class ServerConfigViewModelTest {
      */
     @Test
     fun submitRepublishesFailuresEvenWhenNoFieldWasEdited() = runTest(dispatcher) {
-        val prefs = preferences()
-        prefs.updateServerConfig(ServerConfig.DEFAULT.copy(port = "0"))
-        runCurrent()
-
-        val model = ServerConfigViewModel(prefs)
+        val model = newModel(FakeServerConfigRepository(initial = ServerConfig.DEFAULT.copy(port = "0")))
         assertEquals(emptyMap(), model.stateFlow.value.failures, "nothing validated yet")
 
         model.actionChannel.trySend(ServerConfigAction.Submit)
@@ -181,5 +157,24 @@ class ServerConfigViewModelTest {
             model.stateFlow.value.failures[ServerConfigField.Port] is ValidationFailure.PortOutOfRange,
             "submit must publish the failure it refused on",
         )
+    }
+
+    @Test
+    fun theFieldsAreSeededWithTheStoredConfig() = runTest(dispatcher) {
+        val stored = ServerConfig.DEFAULT.copy(endPoint = "branch.example.org", tenant = "branch")
+        assertEquals(stored, newModel(FakeServerConfigRepository(initial = stored)).stateFlow.value.config)
+    }
+
+    @Test
+    fun aFailedSaveIsReportedNotClaimedAsSaved() = runTest(dispatcher) {
+        val prefs = FakeServerConfigRepository().apply { failSaves = true }
+        val model = newModel(prefs)
+
+        model.actionChannel.trySend(ServerConfigAction.UseLocalhost)
+        model.actionChannel.trySend(ServerConfigAction.Submit)
+        runCurrent()
+
+        assertEquals(ServerConfigEvent.SaveFailed, model.eventFlow.first())
+        assertEquals(ServerConfig.DEFAULT, prefs.saved.value)
     }
 }

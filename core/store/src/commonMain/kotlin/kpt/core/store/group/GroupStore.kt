@@ -9,6 +9,10 @@
  */
 package kpt.core.store.group
 
+import kotlinx.coroutines.flow.map
+import kpt.core.model.group.Group
+import kpt.core.store.mapping.toEntity
+import kpt.core.store.mapping.toModel
 import kpt.core.base.store.annotation.CacheKey
 import kpt.core.base.store.annotation.StoreProvider
 import kpt.core.base.store.infra.StoreFactory
@@ -16,6 +20,7 @@ import kpt.core.database.group.dao.GroupsDao
 import kpt.core.database.group.entity.GroupEntity
 import kpt.core.network.mifos.group.api.GroupApi
 import org.mobilenativefoundation.store.store5.Fetcher
+import org.mobilenativefoundation.store.store5.MutableStore
 import org.mobilenativefoundation.store.store5.SourceOfTruth
 import org.mobilenativefoundation.store.store5.Store
 
@@ -28,13 +33,40 @@ import org.mobilenativefoundation.store.store5.Store
 fun provideGroupStore(
     service: GroupApi,
     dao: GroupsDao,
-): Store<Unit, List<GroupEntity>> = StoreFactory.createStore(
+): Store<Unit, List<Group>> = StoreFactory.createStore(
     fetcher = Fetcher.of { _: Unit ->
         service.getGroups(b = true, offset = 0, limit = GROUP_PAGE_LIMIT).pageItems
     },
     sourceOfTruth = SourceOfTruth.of(
-        reader = { _: Unit -> dao.getAllGroups() },
-        writer = { _: Unit, groups: List<GroupEntity> -> groups.forEach { dao.insertGroup(it) } },
+        reader = { _: Unit -> dao.getAllGroups().map { rows -> rows.map { it.toModel() } } },
+        writer = { _: Unit, groups: List<Group> -> groups.map { it.toEntity() }.forEach { dao.insertGroup(it) } },
+        // The list IS the table, so clearing its one key and the logout purge (`Store.clear()`) both
+        // empty it. Without these the purge cleared memory and left every group for the next officer.
+        delete = { _: Unit -> dao.deleteAllGroups() },
+        deleteAll = { dao.deleteAllGroups() },
+    ),
+)
+
+/**
+ * The WRITE half for groups: one row of `GroupTable`, keyed by group id.
+ *
+ * `GroupCommandRepository` records an accepted create / activate by writing THROUGH this store —
+ * never a DAO call in `core/data` (S5-1). It shares the table with [provideGroupStore], so the group
+ * list and detail re-emit with no refresh.
+ *
+ * Local-only (`createOfflineMutableStore`): the command already ran the network leg. `logout = false`
+ * because Store5 keeps `MutableStore` outside the purged `Store` hierarchy; the rows are still purged
+ * by the paired `groups` store's `deleteAll` (same pairing as `document/DocumentStore.kt`).
+ */
+@StoreProvider(id = "groupItem", logout = false)
+@CacheKey(fn = "item", key = "groupItem:{id}", params = ["id:Int"])
+fun provideGroupItemStore(
+    dao: GroupsDao,
+): MutableStore<Int, Group> = StoreFactory.createOfflineMutableStore(
+    sourceOfTruth = SourceOfTruth.of(
+        reader = { id: Int -> dao.observeGroup(id).map { it?.toModel() } },
+        writer = { _: Int, group: Group -> dao.insertGroup(group.toEntity()) },
+        delete = { id: Int -> dao.deleteGroupById(id) },
     ),
 )
 

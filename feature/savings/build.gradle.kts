@@ -17,7 +17,6 @@ kotlin {
             implementation(libs.kermit.logging)
             implementation(projects.core.common)
             implementation(projects.core.data)
-            implementation(projects.core.database)
             implementation(projects.core.model)
             implementation(projects.core.ui)
             // feature/document — the summary's "Documents" row opens the GENERIC document list
@@ -26,6 +25,9 @@ kotlin {
             // wiring edge rather than a new screen. One-directional: document knows nothing about
             // savings.
             implementation(projects.feature.document)
+            // feature/charge — the summary's "Charges" entry opens the ONE charge module, scoped
+            // to the account. One-directional, like document.
+            implementation(projects.feature.charge)
             implementation(libs.koin.compose.navigation)
             implementation(compose.ui)
             implementation(compose.foundation)
@@ -35,7 +37,6 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(projects.coreBase.store)
-            implementation(projects.core.database)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.turbine)
         }

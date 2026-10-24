@@ -11,6 +11,7 @@ package kpt.core.database.document.dao
 
 import androidx.room3.Dao
 import androidx.room3.Query
+import androidx.room3.Transaction
 import androidx.room3.Upsert
 import kotlinx.coroutines.flow.Flow
 import kpt.core.base.database.annotation.DbDao
@@ -43,4 +44,15 @@ interface DocumentDao {
 
     @Query("DELETE FROM documents")
     suspend fun deleteAll()
+
+    /**
+     * Make the entity's rows EXACTLY the server's list. The store's writer used [upsertAll] alone,
+     * so a document deleted on the server (or through this app) stayed in the table forever and
+     * kept showing in the list after its own delete.
+     */
+    @Transaction
+    suspend fun replaceForEntity(entityType: String, entityId: Int, documents: List<DocumentEntity>) {
+        deleteForEntity(entityType, entityId)
+        upsertAll(documents)
+    }
 }

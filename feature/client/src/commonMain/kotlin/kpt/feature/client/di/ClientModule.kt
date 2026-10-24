@@ -14,7 +14,6 @@ import kpt.feature.client.adddocument.ClientAddDocumentViewModel
 import kpt.feature.client.addidentifier.ClientAddIdentifierViewModel
 import kpt.feature.client.address.ClientAddressViewModel
 import kpt.feature.client.applynew.ClientApplyNewViewModel
-import kpt.feature.client.charges.ClientChargesViewModel
 import kpt.feature.client.closure.ClientClosureViewModel
 import kpt.feature.client.collateral.ClientCollateralViewModel
 import kpt.feature.client.collateraldetails.ClientCollateralDetailsViewModel
@@ -22,6 +21,7 @@ import kpt.feature.client.createnew.CreateNewClientViewModel
 import kpt.feature.client.defaultaccount.ClientDefaultAccountViewModel
 import kpt.feature.client.depositaccounts.ClientDepositAccountsViewModel
 import kpt.feature.client.details.ClientDetailsViewModel
+import kpt.feature.client.documentpreview.ClientDocumentPreviewViewModel
 import kpt.feature.client.documents.ClientDocumentsViewModel
 import kpt.feature.client.editdetails.ClientEditDetailsViewModel
 import kpt.feature.client.editprofile.ClientEditProfileViewModel
@@ -47,7 +47,6 @@ val ClientModule = module {
     viewModelOf(::ClientApplyNewViewModel)
     viewModelOf(::ClientListViewModel)
     viewModelOf(::ClientProfileViewModel)
-    viewModelOf(::ClientChargesViewModel)
     viewModelOf(::ClientIdentifiersViewModel)
     viewModelOf(::ClientStaffViewModel)
     viewModelOf(::ClientClosureViewModel)
@@ -57,6 +56,7 @@ val ClientModule = module {
     viewModelOf(::ClientDetailsViewModel)
     viewModelOf(::ClientAddressViewModel)
     viewModelOf(::ClientDocumentsViewModel)
+    viewModelOf(::ClientDocumentPreviewViewModel)
     viewModelOf(::ClientCollateralDetailsViewModel)
     viewModelOf(::ClientSignatureViewModel)
     viewModelOf(::ClientLoanAccountsViewModel)

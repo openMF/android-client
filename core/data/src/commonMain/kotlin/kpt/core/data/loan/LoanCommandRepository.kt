@@ -10,9 +10,9 @@
 package kpt.core.data.loan
 
 import kpt.core.base.store.mutation.MutationResult
-import kpt.core.database.loan.entity.Loan
-import kpt.core.database.loan.entity.LoanRepaymentRequestEntity
-import kpt.core.database.loan.entity.LoanRepaymentResponseEntity
+import kpt.core.model.loan.Loan
+import kpt.core.model.loan.LoanRepaymentRequest
+import kpt.core.model.loan.LoanRepaymentResponse
 import kpt.core.model.objects.account.loan.LoanApplicationInput
 import kpt.core.model.objects.account.loan.LoanApproval
 import kpt.core.model.objects.account.loan.RepaymentSchedule
@@ -23,14 +23,14 @@ import kpt.core.model.objects.account.loan.reschedules.LoanRescheduleRequest
 import kpt.core.model.objects.account.loan.transfer.AccountTransferRequest
 import kpt.core.model.objects.payloads.GroupLoanPayload
 import kpt.core.model.shared.GenericResponse
-import kpt.core.network.mifos.loan.dto.AssignLoanOfficerRequestDto
-import kpt.core.network.mifos.loan.dto.AssignLoanOfficerResponseDto
-import kpt.core.network.mifos.loan.dto.CreateGuarantorResponseDto
-import kpt.core.network.mifos.loan.dto.GuarantorRequestDto
-import kpt.core.network.mifos.loan.dto.LoanChargeOffRequestDto
-import kpt.core.network.mifos.loan.dto.LoanChargeOffResponseDto
-import kpt.core.network.mifos.loan.dto.RejectLoanRequestDto
-import kpt.core.network.mifos.loan.dto.RejectLoanResponseDto
+import kpt.core.model.loan.AssignLoanOfficerRequestDto
+import kpt.core.model.loan.AssignLoanOfficerResponseDto
+import kpt.core.model.loan.CreateGuarantorResponseDto
+import kpt.core.model.loan.GuarantorRequestDto
+import kpt.core.model.loan.LoanChargeOffRequestDto
+import kpt.core.model.loan.LoanChargeOffResponseDto
+import kpt.core.model.loan.RejectLoanRequestDto
+import kpt.core.model.loan.RejectLoanResponseDto
 /**
  * Every loan write, as an explicit outcome.
  *
@@ -49,6 +49,13 @@ import kpt.core.network.mifos.loan.dto.RejectLoanResponseDto
  * Offline CAPTURE of a repayment is a different operation and lives on
  * [kpt.core.data.sync.OfflineQueueRepository]: it queues the intent locally and is explicit that
  * nothing has been sent. [submitPayment] here is the online, immediate path.
+ *
+ * ## The local side
+ *
+ * A command lands locally by ingesting the server's record THROUGH the loan's read store inside the
+ * gateway (`CommandSpec.localApply`) — Fineract computes the balances, schedules and statuses a loan
+ * write changes, so the request cannot be replayed onto the cached row. A caller never re-reads after
+ * a write: the streams over those rows have already re-emitted.
  *
  * Commands take the API's request DTO rather than a parallel domain type. A command payload has no
  * cached domain form — it exists only to be sent — so a second shape would be a copy with nothing
@@ -72,8 +79,8 @@ interface LoanCommandRepository {
 
     suspend fun submitPayment(
         loanId: Int,
-        request: LoanRepaymentRequestEntity,
-    ): MutationResult<LoanRepaymentResponseEntity>
+        request: LoanRepaymentRequest,
+    ): MutationResult<LoanRepaymentResponse>
 
     suspend fun chargeOff(loanId: Int, request: LoanChargeOffRequestDto): MutationResult<LoanChargeOffResponseDto>
 
@@ -116,7 +123,13 @@ interface LoanCommandRepository {
      */
     suspend fun submitLoanReschedule(request: LoanRescheduleRequest): MutationResult<Unit>
 
+    /**
+     * Approve a proposed reschedule. [loanId] is the loan it belongs to: the wire command is keyed by
+     * the reschedule alone, but its outcome — the reschedule's status and the loan's new schedule —
+     * is recorded under the loan.
+     */
     suspend fun approveLoanReschedule(
+        loanId: Int,
         scheduleId: Int,
         request: LoanRescheduleApprovalRequest,
     ): MutationResult<Unit>
@@ -130,6 +143,7 @@ interface LoanCommandRepository {
      * not a deletion. Named for what it does. See `loan-reschedule-delete-is-really-reject`.
      */
     suspend fun rejectLoanReschedule(
+        loanId: Int,
         scheduleId: Int,
         request: LoanRescheduleRejectionRequest,
     ): MutationResult<Unit>

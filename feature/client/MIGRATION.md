@@ -38,11 +38,41 @@ has chosen not to write yet:
 | `syncClientDialog` | **no caller** in the original |
 | `clientSurveyList` / `…Question` / `…Submit` | route REGISTERED but never navigated to — all three unreachable |
 | `clientList` | **dead duplicate** of `clientsList`; the graph opens the latter, so "38" overstates by one |
-| `documentPreviewScreen` | reachable, two real callers — **blocked on a multiplatform image+PDF viewer** (`core/platform`, six source sets), the same capability `savingsAccountTransactionReceipt` needs |
+| ~~`documentPreviewScreen`~~ | **LANDED 2026-10-23** — see "Document preview" below |
 
 Porting any of the first six would land a screen nothing opens. See
-`client-vertical-remaining-screens-classified` and
-`document-preview-needs-a-multiplatform-viewer`.
+`client-vertical-remaining-screens-classified`. **With the preview in, every reachable client
+screen of the original is ported.**
+
+### Document preview + identifier VIEW_DOCUMENT (2026-10-23)
+
+| what | where | note |
+|---|---|---|
+| shared viewer | `core/ui/components/AppDocumentViewer.kt` | PDF via `pdf-viewer-kmp` 0.3.0 (PDFium, every target), image via Coil, else "unsupported". Kind by file SIGNATURE first. Replaces the 5 `PdfPreview` actuals + `MifosViewPdf` (deleted `AppViewPdf`, zero callers) |
+| preview screen | `documentpreview/` | by id (documents list "View") or by match key (identifiers list "View Document" — the original form's `VIEW_DOCUMENT` phase) |
+| §6a deviation | — | the original sent PDFs to an EXTERNAL app; both kinds render in place now (operator decision) |
+| not ported | — | the UPLOAD half of `DocumentPreviewScreen` (pick → Submit/Reject): the add-document form owns its file. In-app **Share**: `cmp-share` byte payloads are image-only on iOS/desktop — needs a KmpToolkit bytes payload first |
+
+**Defects found and fixed on the way:**
+
+- **Identifier scans were unfindable.** The add-identifier upload wrote the officer's free-text
+  description into the document's `description`, which is the slot the list searches for its key.
+  Both sides now use `identifierDocumentKey` (byte-compatible with the original), and the lookup
+  also accepts the status-free prefix, so an identifier whose status changed still finds its scan.
+- **Documents bypassed the layering (operator rule: network → database → store → data → VM).**
+  `downloadDocument` called `DocumentApi` from `core/data` and cached nothing. Now:
+  `document_contents` table (schema 14 → 15, AutoMigration) → `documentContent` store →
+  repository — a viewed scan reopens offline (device-verified in airplane mode).
+- **Writes never reached the store.** `DocumentCommandRepository` ended at the endpoint, so a
+  scan uploaded seconds earlier read as missing (device finding). Every write now reconciles
+  through the store; the list writer REPLACES rows (deletes used to linger); both document stores
+  declare `deleteAll`, without which the logout purge left every row in the database.
+- **`migration-ledger.yaml#baseline_units`** had ids fused by spaces, so `syncForkConfig`
+  appended four bogus migrations the moment a real row existed. Fixed and re-run idempotently.
+
+Device evidence (OnePlus CPH2423, md5-matched APK, force-stopped): image + 3-page PDF from the
+documents list, identifier scan after upload, the same scan offline, 14 → 15 upgrade kept
+pre-existing rows.
 
 ### Landed in S6-B (2026-10-22)
 
@@ -119,7 +149,7 @@ now reads `kpt.core.domain.validation` (spec §2).
 | client list | `ClientListRepository` + manual DB/API branch | `ClientRepository.clientsStream(scope)` |
 | client detail | `ClientDetailsRepository` | `ClientRepository` + `ClientLiveReadRepository` **(deleted in S0b)** → the entity-returning `getClient` store |
 | writes | 26 use-cases | `ClientCommandRepository` (already wired, `MutationGateway`) |
-| charges | `charges/**` | `ClientChargeRepository` + `ChargeCommandRepository` |
+| charges | `charges/**` | ~~`ClientChargeRepository`~~ → moved to `feature/charge` (`ChargeRepository` + `ChargeCommandRepository`), 2026-10-23 |
 | notes · documents · data-tables | feature-local + use-cases | `NoteRepository` · `DocumentRepository`/`DocumentCommandRepository` · `DataTableRepository` |
 | identifiers, pinpoint, signature, collateral, survey | use-cases | `ClientCommandRepository`, `SurveyRepository` |
 
@@ -621,7 +651,7 @@ match, so two identical addresses collide and LazyColumn mis-recycles) to `addre
 **The search filter destroyed the list it filtered.** The original overwrote `clientDocuments` in
 the state with the filtered result, so the unfiltered set was gone — clearing the query could not
 restore it and `Refresh` was the only way back. The rows stay the stream's here and the committed
-query combines over them (`applyQuery`, the same `ScreenState`-extension shape as
+query combines over them (`applyQuery`, built on core-base `combineContent` as is
 `ClientListViewModel.applyFilters`), so closing the search bar restores everything. Pinned by
 `closingTheSearchBarRestoresTheWholeList`.
 
@@ -919,3 +949,20 @@ applies per *path*, not per screen.
 
 `onApplyNewApplication` on client details went from `null` to live — the row was already gated and
 waiting.
+
+## Charges moved to `feature/charge` (2026-10-23)
+
+`charges/ClientChargesScreen.kt` + `ClientChargesViewModel.kt` (and `ClientChargesViewModelTest`),
+`ClientChargesRoute`, `navigateToClientCharges` and the three `feature_client_charges_*` strings are
+**deleted** — the client, loan and savings charge screens are now ONE module keyed by
+`(resourceType, resourceId)`. See `feature/charge/MIGRATION.md`.
+
+- "Upcoming Charges" (client General) → `navigateToCharges(ChargeResource.CLIENT, clientId)`.
+- "Add Charge" (client Details) went from `null` (row absent — there was no client-charge create) to
+  `navigateToAddCharge(ChargeResource.CLIENT, clientId)`, which is where the original's
+  `navigateToChargesRoute(it, clients)` landed: on the add form.
+- Edit is not offered on a client charge: Fineract has no `PUT clients/{id}/charges/{chargeId}`
+  (the original offered it and then refused it).
+
+`feature/client` now depends on `feature/charge` (one-directional).
+

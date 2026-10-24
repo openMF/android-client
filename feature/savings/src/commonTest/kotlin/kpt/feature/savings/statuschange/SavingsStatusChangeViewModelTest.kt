@@ -22,6 +22,7 @@ import kotlinx.coroutines.test.setMain
 import kpt.core.base.store.mutation.BlockReason
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.data.testing.FakeSavingsCommandRepository
+import kpt.core.data.testing.fineractRejection
 import kpt.core.model.utils.ApiDateFormatter
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -154,7 +155,7 @@ class SavingsStatusChangeViewModelTest {
             FakeSavingsCommandRepository(
                 approvalResult = {
                     MutationResult.Failed(
-                        IllegalStateException("approval date cannot be before submission"),
+                        fineractRejection("approval date cannot be before submission"),
                         rolledBack = false,
                     )
                 },

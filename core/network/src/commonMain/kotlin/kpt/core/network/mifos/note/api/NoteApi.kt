@@ -17,11 +17,11 @@ import de.jensklingenberg.ktorfit.http.POST
 import de.jensklingenberg.ktorfit.http.PUT
 import de.jensklingenberg.ktorfit.http.Path
 import kpt.core.base.network.annotation.ApiBinding
-import kpt.core.network.mifos.note.dto.CreateNoteResponseDto
-import kpt.core.network.mifos.note.dto.DeleteNoteResponseDto
+import kpt.core.model.objects.note.CreateNoteResponseDto
+import kpt.core.model.objects.note.DeleteNoteResponseDto
 import kpt.core.network.mifos.note.dto.NoteDto
-import kpt.core.network.mifos.note.dto.NoteRequestDto
-import kpt.core.network.mifos.note.dto.UpdateNoteResponseDto
+import kpt.core.model.objects.note.NoteRequestDto
+import kpt.core.model.objects.note.UpdateNoteResponseDto
 
 @ApiBinding("mifos")
 interface NoteApi {

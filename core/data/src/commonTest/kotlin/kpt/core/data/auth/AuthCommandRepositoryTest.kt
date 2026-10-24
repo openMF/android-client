@@ -9,116 +9,174 @@
  */
 package kpt.core.data.auth
 
+import com.russhwolf.settings.MapSettings
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainCoroutineDispatcher
 import kotlinx.coroutines.test.runTest
-import kpt.core.base.store.mutation.BlockReason
+import kpt.core.base.common.manager.DispatcherManager
+import kpt.core.base.store.infra.StoreCacheManager
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.data.auth.impl.AuthCommandRepositoryImpl
 import kpt.core.data.infra.testMutationGateway
+import kpt.core.datastore.prefs.ProjectPreferencesRepositoryImpl
+import kpt.core.datastore.prefs.UserPreferencesRepositoryImpl
 import kpt.core.network.mifos.auth.api.AuthApi
-import kpt.core.network.mifos.auth.dto.PostAuthenticationRequest
-import kpt.core.network.mifos.auth.dto.PostAuthenticationResponse
+import kpt.core.model.auth.PostAuthenticationRequest
+import kpt.core.model.auth.PostAuthenticationResponse
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertIs
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 /**
- * LAYER 3 of the sign-in vertical (core/network → core/data → feature).
+ * Sign-in writes the session into `core/datastore` as the command's own local effect — the REAL
+ * preferences over in-memory settings, so what is asserted is what the app persists.
  *
- * This layer had NO test. It is the layer that decides the single most consequential property of
- * authentication — that it is `OnlineRequired` and can never be queued — and nothing asserted it.
- * A future edit flipping the policy to `Optimistic` would compile, pass every other test in the
- * repository, and admit users the server never agreed to.
+ * These assertions moved here from `SignInViewModelTest` when the write moved out of the ViewModel.
  */
 class AuthCommandRepositoryTest {
 
-    private class FakeAuthApi(
-        private val response: PostAuthenticationResponse = PostAuthenticationResponse(authenticated = true),
-        private val throws: Throwable? = null,
-    ) : AuthApi {
-        var calls = 0
-            private set
-        var lastRequest: PostAuthenticationRequest? = null
-            private set
+    private val dispatchers = object : DispatcherManager {
+        override val default: CoroutineDispatcher = Dispatchers.Unconfined
+        override val main: MainCoroutineDispatcher = Dispatchers.Main
+        override val io: CoroutineDispatcher = Dispatchers.Unconfined
+        override val unconfined: CoroutineDispatcher = Dispatchers.Unconfined
+        override val appScope: CoroutineScope = CoroutineScope(Dispatchers.Unconfined)
+    }
 
-        override suspend fun authenticate(
-            postAuthenticationRequest: PostAuthenticationRequest,
-        ): PostAuthenticationResponse {
-            calls++
-            lastRequest = postAuthenticationRequest
-            throws?.let { throw it }
-            return response
+    private val preferences = run {
+        val plain = MapSettings()
+        val secure = MapSettings()
+        ProjectPreferencesRepositoryImpl(
+            delegate = UserPreferencesRepositoryImpl(plain, secure, dispatchers),
+            plainSettings = plain,
+            secureSettings = secure,
+            dispatcher = dispatchers,
+        )
+    }
+
+    private fun api(authenticated: Boolean) = object : AuthApi {
+        override suspend fun authenticate(postAuthenticationRequest: PostAuthenticationRequest) =
+            PostAuthenticationResponse(
+                authenticated = authenticated,
+                username = postAuthenticationRequest.username,
+                userId = 7,
+                base64EncodedAuthenticationKey = "a2V5",
+                officeId = 1,
+                officeName = "Head Office",
+            )
+    }
+
+    // Records what sign-out purged. The real one clears every registered store through its
+    // SourceOfTruth `deleteAll` — that half is store-level and covered by each store's DAO tests.
+    private class FakeCacheManager(private val fail: Boolean = false) : StoreCacheManager {
+        var cleared = 0
+        override suspend fun clearAll() {
+            if (fail) error("disk full")
+            cleared++
         }
+        override suspend fun pruneExpiredDrafts(maxAgeMs: Long) = Unit
     }
 
-    private val credentials = PostAuthenticationRequest(username = "fieldofficer", password = "secret")
+    private val cache = FakeCacheManager()
+
+    private fun repository(authenticated: Boolean = true, online: Boolean = true, cacheManager: StoreCacheManager = cache) =
+        AuthCommandRepositoryImpl(api(authenticated), testMutationGateway(isOnline = online), preferences, cacheManager)
+
+    private val request = PostAuthenticationRequest(username = "officer", password = "s3cret!")
 
     @Test
-    fun onlineSuccessAppliesAndIsMarkedSynced() = runTest {
-        val api = FakeAuthApi(PostAuthenticationResponse(authenticated = true, username = "fieldofficer"))
-        val repo = AuthCommandRepositoryImpl(api, testMutationGateway(isOnline = true))
+    fun aGrantedSignInIsPersistedWhenTheCommandReturns() = runTest {
+        assertIs<MutationResult.Applied<PostAuthenticationResponse>>(repository().authenticate(request))
 
-        val result = repo.authenticate(credentials)
-
-        val applied = assertIs<MutationResult.Applied<PostAuthenticationResponse>>(result)
-        assertEquals("fieldofficer", applied.value.username)
-        // A credential check has no local leg — it is synced or it did not happen.
-        assertTrue(applied.synced)
-        assertEquals(1, api.calls)
-    }
-
-    @Test
-    fun offlineIsBlockedAndTheEndpointIsNeverCalled() = runTest {
-        val api = FakeAuthApi()
-        val repo = AuthCommandRepositoryImpl(api, testMutationGateway(isOnline = false))
-
-        val result = repo.authenticate(credentials)
-
-        val blocked = assertIs<MutationResult.Blocked>(result)
-        assertEquals(BlockReason.OFFLINE, blocked.reason)
-        // THE POINT OF THE POLICY: an authentication must never be queued for later replay. A
-        // credential check that "succeeds" locally and syncs afterwards would admit a user the
-        // server never agreed to. Zero calls proves the gateway short-circuited rather than
-        // attempting and failing.
-        assertEquals(0, api.calls)
+        val user = preferences.fineractUser.value
+        assertEquals("officer", user.username)
+        assertEquals("a2V5", user.base64EncodedAuthenticationKey)
+        assertTrue(user.isAuthenticated)
+        // The token the network layer reads is the RAW credential, not a pre-formatted header —
+        // a stored "Basic …" produced `Authorization: Basic Basic <token>` and 401'd every call.
+        assertEquals("a2V5", preferences.authToken)
     }
 
     @Test
-    fun aTransportFailureIsFailedNotAppliedWithNull() = runTest {
-        val api = FakeAuthApi(throws = IllegalStateException("connection reset"))
-        val repo = AuthCommandRepositoryImpl(api, testMutationGateway(isOnline = true))
-
-        val result = repo.authenticate(credentials)
-
-        val failed = assertIs<MutationResult.Failed>(result)
-        assertTrue(failed.cause is IllegalStateException)
-        // Nothing to roll back — there is no local write to undo.
-        assertTrue(!failed.rolledBack)
+    fun theRawPasswordIsNeverPersisted() = runTest {
+        // Cited as the lock in the original port's comment, but it never existed until now.
+        repository().authenticate(request)
+        assertNull(preferences.fineractUser.value.password)
     }
 
     @Test
-    fun theCredentialReachesTheEndpointUnmodified() = runTest {
-        val api = FakeAuthApi()
-        val repo = AuthCommandRepositoryImpl(api, testMutationGateway(isOnline = true))
-
-        repo.authenticate(credentials)
-
-        // The repository is a pass-through: no trimming, no case-folding, no re-encoding. A
-        // password silently transformed here would fail against a server that accepts it.
-        assertEquals("fieldofficer", api.lastRequest?.username)
-        assertEquals("secret", api.lastRequest?.password)
+    fun aRefusedCredentialPersistsNoSession() = runTest {
+        // Fineract answers 200 with authenticated=false for a bad credential.
+        repository(authenticated = false).authenticate(request)
+        assertFalse(preferences.fineractUser.value.isAuthenticated)
+        assertNull(preferences.fineractUser.value.base64EncodedAuthenticationKey)
     }
 
     @Test
-    fun authenticatedFalseStillReachesTheCallerAsApplied() = runTest {
-        // Deliberate division of responsibility: the HTTP call SUCCEEDED, so the repository reports
-        // Applied. Deciding that `authenticated == false` means "rejected" belongs to the caller,
-        // which is where the user-facing message lives. This test pins that split so nobody
-        // "helpfully" converts it to Failed here and leaves the ViewModel's check unreachable.
-        val api = FakeAuthApi(PostAuthenticationResponse(authenticated = false))
-        val repo = AuthCommandRepositoryImpl(api, testMutationGateway(isOnline = true))
+    fun offlineSignInIsBlockedAndPersistsNothing() = runTest {
+        assertIs<MutationResult.Blocked>(repository(online = false).authenticate(request))
+        assertNull(preferences.fineractUser.value.base64EncodedAuthenticationKey)
+    }
 
-        val applied = assertIs<MutationResult.Applied<PostAuthenticationResponse>>(repo.authenticate(credentials))
-        assertEquals(false, applied.value.authenticated)
+    @Test
+    fun resumingTheStoredSessionMarksItAuthenticated() = runTest {
+        repository().authenticate(request)
+        preferences.updateFineractUser(preferences.fineractUser.value.copy(isAuthenticated = false))
+
+        repository().resumeStoredSession()
+
+        assertTrue(preferences.fineractUser.value.isAuthenticated)
+        assertEquals("a2V5", preferences.fineractUser.value.base64EncodedAuthenticationKey)
+    }
+
+    // ---- sign-out ----
+
+    @Test
+    fun signOutClearsBothHalvesOfTheSession() = runTest {
+        // `RootNavViewModel` gates on the framework's `isAuthenticated`; clearing only the Fineract
+        // half would leave the shell believing the officer is signed in.
+        repository().authenticate(request)
+
+        assertIs<MutationResult.Applied<Unit>>(repository().signOut(clearLocalData = false))
+
+        assertNull(preferences.fineractUser.value.base64EncodedAuthenticationKey)
+        assertFalse(preferences.userData.value.isAuthenticated)
+    }
+
+    @Test
+    fun signOutOnlyKeepsTheData() = runTest {
+        repository().signOut(clearLocalData = false)
+        assertEquals(0, cache.cleared)
+    }
+
+    @Test
+    fun signOutAndClearPurgesEveryStore() = runTest {
+        repository().signOut(clearLocalData = true)
+        assertEquals(1, cache.cleared)
+    }
+
+    @Test
+    fun signOutNeedsNoNetwork() = runTest {
+        // An officer who cannot sign out without signal is stranded.
+        repository().authenticate(request)
+        assertIs<MutationResult.Applied<Unit>>(repository(online = false).signOut(clearLocalData = true))
+        assertNull(preferences.fineractUser.value.base64EncodedAuthenticationKey)
+    }
+
+    @Test
+    fun aFailedPurgeLeavesTheOfficerSignedIn() = runTest {
+        // Data first, then the session: never "signed out, but the data you asked to remove is
+        // still here".
+        repository().authenticate(request)
+
+        val result = repository(cacheManager = FakeCacheManager(fail = true)).signOut(clearLocalData = true)
+
+        assertIs<MutationResult.Failed>(result)
+        assertEquals("a2V5", preferences.fineractUser.value.base64EncodedAuthenticationKey)
     }
 }

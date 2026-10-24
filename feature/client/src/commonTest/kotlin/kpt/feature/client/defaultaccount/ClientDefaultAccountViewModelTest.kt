@@ -28,7 +28,8 @@ import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.data.testing.FakeClientCommandRepository
 import kpt.core.data.testing.FakeClientRepository
-import kpt.core.database.client.entity.ClientEntity
+import kpt.core.data.testing.fineractRejection
+import kpt.core.model.client.Client
 import kpt.core.model.client.ClientTemplateOptions
 import kpt.core.model.client.SavingAccountOption
 import kpt.core.ui.components.ResultStatus
@@ -53,7 +54,7 @@ class ClientDefaultAccountViewModelTest {
     @AfterTest fun tearDown() = Dispatchers.resetMain()
 
     private val template = MutableStateFlow<ScreenState<ClientTemplateOptions>>(ScreenState.Loading)
-    private val client = MutableStateFlow<ScreenState<ClientEntity>>(ScreenState.Loading)
+    private val client = MutableStateFlow<ScreenState<Client>>(ScreenState.Loading)
 
     private val repository = FakeClientRepository(template = template, client = client)
 
@@ -99,7 +100,7 @@ class ClientDefaultAccountViewModelTest {
     @Test
     fun theClientsCurrentDefaultIsPreSelected() = runTest(dispatcher) {
         val vm = viewModel()
-        client.value = ScreenState.Content(ClientEntity(id = 42, savingsAccountId = 22L))
+        client.value = ScreenState.Content(Client(id = 42, savingsAccountId = 22L))
 
         vm.defaultAccountId.test {
             assertNull(awaitItem())
@@ -260,7 +261,7 @@ class ClientDefaultAccountViewModelTest {
         val commands = FakeClientCommandRepository(
             unitResult = {
                 MutationResult.Failed(
-                    IllegalStateException("savings account is not active"),
+                    fineractRejection("savings account is not active"),
                     rolledBack = false,
                 )
             },

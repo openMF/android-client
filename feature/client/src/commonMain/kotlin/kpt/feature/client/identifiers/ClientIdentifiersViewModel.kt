@@ -23,6 +23,7 @@ import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.data.client.ClientCommandRepository
 import kpt.core.data.client.ClientRepository
 import kpt.core.model.objects.noncoreobjects.Identifier
+import kpt.core.ui.utils.getClientIdentifierStatus
 
 /**
  * The client's identity documents — ported from
@@ -51,13 +52,13 @@ import kpt.core.model.objects.noncoreobjects.Identifier
  * `clientIdentifiersStream` + `deleteClientIdentifier`. `core/domain` is deleted on this substrate
  * (§2 of the migration spec); the use-case layer was a pass-through.
  *
- * ## Deliberately NOT ported in this slice
+ * ## The row menu
  *
- * The original's `UploadAgain` / `ViewDocument` / `DeleteDocument` actions route into the DOCUMENT
- * feature (`Feature.ADD_UPDATE_DOCUMENT`, `Feature.VIEW_DOCUMENT`), which is S3d and not yet
- * migrated. They are omitted rather than stubbed, and the screen passes `null` for those callbacks
- * so the menu entries are ABSENT rather than inert (RULE-IMPL-DEAD-CLICKABLE-001). Tracked in
- * CAPABILITY_GAPS; they return with `feature/document`.
+ * `ViewDocument` is ported (2026-10-23): it opens the in-app document preview, which finds the
+ * identifier's scan by [identifierDocumentKey]. `UploadAgain` (the original's
+ * `Feature.ADD_UPDATE_DOCUMENT` re-entry into the add form) is still NOT — the add form has no
+ * entry point for an EXISTING identifier — so it is absent from the menu rather than inert
+ * (RULE-IMPL-DEAD-CLICKABLE-001).
  */
 internal class ClientIdentifiersViewModel(
     repository: ClientRepository,
@@ -87,6 +88,23 @@ internal class ClientIdentifiersViewModel(
             ClientIdentifiersAction.AddIdentifierClicked ->
                 sendEvent(ClientIdentifiersEvent.AddIdentifier(clientId))
 
+            is ClientIdentifiersAction.ViewDocument -> {
+                val identifier = action.identifier
+                val typeName = identifier.documentType?.name
+                sendEvent(
+                    ClientIdentifiersEvent.ViewDocument(
+                        clientId = clientId.toInt(),
+                        matchKey = identifierDocumentKey(
+                            typeName,
+                            identifier.documentKey,
+                            getClientIdentifierStatus(identifier.status),
+                        ),
+                        matchPrefix = identifierDocumentKeyPrefix(typeName, identifier.documentKey),
+                        title = identifier.documentKey ?: typeName.orEmpty(),
+                    ),
+                )
+            }
+
             is ClientIdentifiersAction.ToggleShowMenu ->
                 mutableStateFlow.value = state.copy(
                     currentExpandedItem = action.index,
@@ -106,6 +124,8 @@ internal class ClientIdentifiersViewModel(
             // Retry re-runs the READ. The original had no retry at all — a failed load left its
             // error dialog with only a dismiss, and dismissing returned to an empty list.
             ClientIdentifiersAction.Retry -> stream.retry()
+
+            ClientIdentifiersAction.NavigateToSearch -> sendEvent(ClientIdentifiersEvent.NavigateToSearch)
         }
     }
 
@@ -192,9 +212,22 @@ internal sealed interface ClientIdentifiersAction {
     data class ConfirmDelete(val identifierId: Long) : ClientIdentifiersAction
     data object CloseDialog : ClientIdentifiersAction
     data object Retry : ClientIdentifiersAction
+    data class ViewDocument(val identifier: Identifier) : ClientIdentifiersAction
+
+    /** The header's search icon — every cached identifier, across clients (feature/searchrecord). */
+    data object NavigateToSearch : ClientIdentifiersAction
 }
 
 internal sealed interface ClientIdentifiersEvent {
     data object NavigateBack : ClientIdentifiersEvent
     data class AddIdentifier(val clientId: Long) : ClientIdentifiersEvent
+    data object NavigateToSearch : ClientIdentifiersEvent
+
+    /** Open the identifier's scan. The match pair is explained on `findIdentifierDocument`. */
+    data class ViewDocument(
+        val clientId: Int,
+        val matchKey: String,
+        val matchPrefix: String,
+        val title: String,
+    ) : ClientIdentifiersEvent
 }

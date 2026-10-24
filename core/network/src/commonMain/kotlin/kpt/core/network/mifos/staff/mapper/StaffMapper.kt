@@ -9,13 +9,13 @@
  */
 package kpt.core.network.mifos.staff.mapper
 
-import kpt.core.database.staff.entity.StaffEntity
+import kpt.core.model.staff.Staff
 import kpt.core.model.shared.RetrieveOneResponse
 import kpt.core.network.data.AbstractMapper
 
-object StaffMapper : AbstractMapper<RetrieveOneResponse, StaffEntity>() {
-    override fun mapFromEntity(entity: RetrieveOneResponse): StaffEntity {
-        return StaffEntity(
+object StaffMapper : AbstractMapper<RetrieveOneResponse, Staff>() {
+    override fun mapFromEntity(entity: RetrieveOneResponse): Staff {
+        return Staff(
             id = entity.id!!.toInt(),
             firstname = entity.firstname,
             lastname = entity.lastname,
@@ -27,7 +27,7 @@ object StaffMapper : AbstractMapper<RetrieveOneResponse, StaffEntity>() {
         )
     }
 
-    override fun mapToEntity(domainModel: StaffEntity): RetrieveOneResponse {
+    override fun mapToEntity(domainModel: Staff): RetrieveOneResponse {
         return RetrieveOneResponse(
             id = domainModel.id?.toLong(),
             firstname = domainModel.firstname,

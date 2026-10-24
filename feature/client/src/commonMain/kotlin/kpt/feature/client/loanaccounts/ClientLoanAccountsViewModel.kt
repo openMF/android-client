@@ -20,8 +20,8 @@ import kpt.core.base.store.screen.combineContent
 import kpt.core.base.store.screen.emptyIfContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.data.client.ClientRepository
-import kpt.core.database.loan.entity.LoanAccountEntity
-import kpt.core.database.loan.entity.LoanStatusEntity
+import kpt.core.model.loan.LoanAccount
+import kpt.core.model.loan.LoanStatus
 
 /**
  * A client's loan accounts — ported from
@@ -83,7 +83,7 @@ internal class ClientLoanAccountsViewModel(
      * `emptyIfContent` AFTER filtering, so an over-narrow filter shows the Empty state rather than
      * a header reading "0 items" above nothing.
      */
-    val accounts: StateFlow<ScreenState<List<LoanAccountEntity>>> = stream.state
+    val accounts: StateFlow<ScreenState<List<LoanAccount>>> = stream.state
         // `combineContent` is the substrate's own filter/sort seam — "Combines ScreenState with a
         // local state flow for reactive filter/sort/preferences" — so Loading, NoNetwork, Error and
         // Unauthenticated pass through untouched and only Content is filtered.
@@ -161,7 +161,7 @@ private fun <T> Set<T>.toggle(value: T): Set<T> = if (value in this) this - valu
  * name is a product decision, not a porting one — logged as
  * `client-loan-accounts-search-is-account-no-only`.
  */
-internal fun List<LoanAccountEntity>.filtered(ui: ClientLoanAccountsState): List<LoanAccountEntity> {
+internal fun List<LoanAccount>.filtered(ui: ClientLoanAccountsState): List<LoanAccount> {
     val query = ui.searchText.trim()
     return asSequence()
         .filter { query.isEmpty() || it.accountNo?.contains(query, ignoreCase = true) == true }
@@ -177,7 +177,7 @@ internal fun List<LoanAccountEntity>.filtered(ui: ClientLoanAccountsState): List
 /**
  * The four status buckets the filter sheet offers, with the original's predicates.
  *
- * Note that these do NOT partition `LoanStatusEntity`: `waitingForDisbursal` matches none of the
+ * Note that these do NOT partition `LoanStatus`: `waitingForDisbursal` matches none of the
  * four, so an approved-but-undisbursed loan disappears from the list under ANY active filter. That
  * is the original's behaviour and it is kept — adding a fifth bucket is a product decision. Logged
  * as `client-loan-accounts-filters-do-not-cover-awaiting-disbursal`.
@@ -189,7 +189,7 @@ internal enum class LoanStatusFilter {
     OVERPAID,
     ;
 
-    fun matches(status: LoanStatusEntity?): Boolean {
+    fun matches(status: LoanStatus?): Boolean {
         status ?: return false
         return when (this) {
             ACTIVE -> status.active == true

@@ -10,26 +10,22 @@
 package kpt.core.data.loan.impl
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.filterNot
-import kotlinx.coroutines.flow.first
 import kpt.core.base.data.annotation.FromStore
 import kpt.core.base.data.annotation.RepositoryBinding
 import kpt.core.base.store.screen.FetchPolicy
 import kpt.core.base.store.screen.ScreenDataStream
 import kpt.core.base.store.screen.asScreenStream
 import kpt.core.data.loan.LoanRepository
-import kpt.core.database.charge.entity.ChargesEntity
-import kpt.core.database.loan.entity.LoanRepaymentTemplateEntity
-import kpt.core.database.loan.entity.LoanTemplate
+import kpt.core.data.util.freshOrCached
+import kpt.core.model.loan.LoanRepaymentTemplate
+import kpt.core.model.loan.LoanTemplate
 import kpt.core.model.objects.account.loan.loanDisburse.LoanDisburseTemplate
 import kpt.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import kpt.core.model.objects.account.loan.reschedules.LoanRescheduleResponse
 import kpt.core.model.objects.account.loan.reschedules.LoanRescheduleTemplate
 import kpt.core.model.objects.account.loan.transfer.AccountTransferTemplate
 import kpt.core.model.objects.organisations.LoanProducts
-import kpt.core.model.objects.template.client.ChargeTemplate
 import kpt.core.model.objects.template.loan.GroupLoanTemplate
-import kpt.core.store.charge.GetChargeTemplateKey
 import kpt.core.store.config.AppCacheKeys
 import kpt.core.store.config.AppStoreIds
 import kpt.core.store.config.AppStoreRegistry
@@ -37,20 +33,15 @@ import kpt.core.store.loan.GetAccountTransferTemplateKey
 import kpt.core.store.loan.GetGroupLoansAccountTemplateKey
 import kpt.core.store.loan.LoanTemplateKey
 import org.mobilenativefoundation.store.store5.Store
-import org.mobilenativefoundation.store.store5.StoreReadRequest
-import org.mobilenativefoundation.store.store5.StoreReadResponse
 
 @RepositoryBinding(binds = LoanRepository::class)
 internal class LoanRepositoryImpl(
     @FromStore(AppStoreIds.Loans) private val store: Store<Int, LoanWithAssociations>,
     @FromStore(AppStoreIds.LoanTemplates) private val templateStore: Store<LoanTemplateKey, LoanTemplate>,
-    @FromStore(AppStoreIds.LoanRepaymentTemplates) private val repaymentTemplateStore: Store<Int, LoanRepaymentTemplateEntity>,
+    @FromStore(AppStoreIds.LoanRepaymentTemplates) private val repaymentTemplateStore: Store<Int, LoanRepaymentTemplate>,
     @FromStore(AppStoreIds.LoanDisburseTemplates) private val disburseTemplateStore: Store<Int, LoanDisburseTemplate>,
-    @FromStore(AppStoreIds.LoanCharges) private val chargeStore: Store<Int, List<ChargesEntity>>,
     @FromStore(AppStoreIds.LoanGetAccountTransferTemplate)
     private val transferTemplateStore: Store<GetAccountTransferTemplateKey, AccountTransferTemplate>,
-    @FromStore(AppStoreIds.ChargeGetChargeTemplate)
-    private val chargeTemplateStore: Store<GetChargeTemplateKey, ChargeTemplate>,
     @FromStore(AppStoreIds.LoanGetLoanReschedules)
     private val reschedulesStore: Store<Int, List<LoanRescheduleResponse>>,
     @FromStore(AppStoreIds.LoanRescheduleTemplate)
@@ -90,7 +81,7 @@ internal class LoanRepositoryImpl(
     override fun repaymentTemplateStream(
         loanId: Int,
         scope: CoroutineScope,
-    ): ScreenDataStream<LoanRepaymentTemplateEntity> =
+    ): ScreenDataStream<LoanRepaymentTemplate> =
         repaymentTemplateStore.asScreenStream(
             key = loanId,
             cacheKey = AppCacheKeys.LoanRepaymentTemplates.forLoan(loanId),
@@ -119,7 +110,7 @@ internal class LoanRepositoryImpl(
         toOfficeId: Int?,
         toClientId: Int?,
         toAccountType: Int?,
-    ): AccountTransferTemplate? = runCatching {
+    ): AccountTransferTemplate? {
         val key = GetAccountTransferTemplateKey(
             fromClientId = fromClientId,
             fromAccountType = fromAccountType,
@@ -129,20 +120,11 @@ internal class LoanRepositoryImpl(
             toClientId = toClientId,
             toAccountType = toAccountType,
         )
-        // `cached(refresh = false)`: each distinct cascade step is its OWN store key, so stepping
-        // back up the cascade — reopening a client dropdown after changing the account type — is
-        // served from cache rather than re-asking the server the same question. The intermediate
-        // responses are filtered out so `first()` cannot short-circuit on Loading.
-        transferTemplateStore
-            .stream(StoreReadRequest.cached(key, refresh = false))
-            .filterNot {
-                it is StoreReadResponse.Loading ||
-                    it is StoreReadResponse.NoNewData ||
-                    it is StoreReadResponse.Initial
-            }
-            .first()
-            .requireData()
-    }.getOrNull()
+        // Each cascade step is its OWN store key. Stepping back up the cascade re-asks the server
+        // rather than replaying a cached answer: the cache is persistent, so "served from cache"
+        // also meant "never refreshed again, across restarts". Offline still answers from it.
+        return transferTemplateStore.freshOrCached(key)
+    }
 
     override fun loanProductsStream(scope: CoroutineScope): ScreenDataStream<List<LoanProducts>> =
         loanProductsStore.asScreenStream(
@@ -154,40 +136,12 @@ internal class LoanRepositoryImpl(
         )
 
     override suspend fun groupLoanTemplate(groupId: Int, productId: Int): GroupLoanTemplate? =
-        runCatching {
-            groupLoanTemplateStore
-                .stream(
-                    StoreReadRequest.cached(
-                        GetGroupLoansAccountTemplateKey(groupId = groupId, productId = productId),
-                        refresh = false,
-                    ),
-                )
-                .filterNot {
-                    it is StoreReadResponse.Loading ||
-                        it is StoreReadResponse.NoNewData ||
-                        it is StoreReadResponse.Initial
-                }
-                .first()
-                .requireData()
-        }.getOrNull()
+        groupLoanTemplateStore.freshOrCached(
+            GetGroupLoansAccountTemplateKey(groupId = groupId, productId = productId),
+        )
 
     override suspend fun loanTemplate(clientId: Int, productId: Int): LoanTemplate? =
-        runCatching {
-            templateStore
-                .stream(
-                    StoreReadRequest.cached(
-                        LoanTemplateKey(clientId = clientId, productId = productId),
-                        refresh = false,
-                    ),
-                )
-                .filterNot {
-                    it is StoreReadResponse.Loading ||
-                        it is StoreReadResponse.NoNewData ||
-                        it is StoreReadResponse.Initial
-                }
-                .first()
-                .requireData()
-        }.getOrNull()
+        templateStore.freshOrCached(LoanTemplateKey(clientId = clientId, productId = productId))
 
     override fun loanReschedulesStream(
         loanId: Int,
@@ -203,55 +157,11 @@ internal class LoanRepositoryImpl(
         ttl = AppStoreRegistry.Ttl.LOAN_GET_LOAN_RESCHEDULES,
     )
 
-    override suspend fun loanRescheduleReasons(): LoanRescheduleTemplate? = runCatching {
-        rescheduleTemplateStore
-            .stream(StoreReadRequest.cached(Unit, refresh = false))
-            .filterNot {
-                it is StoreReadResponse.Loading ||
-                    it is StoreReadResponse.NoNewData ||
-                    it is StoreReadResponse.Initial
-            }
-            .first()
-            .requireData()
-    }.getOrNull()
-
-    override suspend fun loanChargeTemplate(loanId: Int): ChargeTemplate? = runCatching {
-        chargeTemplateStore
-            .stream(
-                StoreReadRequest.cached(
-                    GetChargeTemplateKey(resourceType = LOAN_RESOURCE, resourceId = loanId),
-                    refresh = false,
-                ),
-            )
-            .filterNot {
-                it is StoreReadResponse.Loading ||
-                    it is StoreReadResponse.NoNewData ||
-                    it is StoreReadResponse.Initial
-            }
-            .first()
-            .requireData()
-    }.getOrNull()
-
-    override fun loanChargesStream(
-        loanId: Int,
-        scope: CoroutineScope,
-    ): ScreenDataStream<List<ChargesEntity>> =
-        chargeStore.asScreenStream(
-            key = loanId,
-            cacheKey = AppCacheKeys.LoanCharges.forLoan(loanId),
-            scope = scope,
-            fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
-            ttl = AppStoreRegistry.Ttl.LOAN_CHARGES,
-        )
+    override suspend fun loanRescheduleReasons(): LoanRescheduleTemplate? =
+        rescheduleTemplateStore.freshOrCached(Unit)
 
     private companion object {
         /** Mirrors the store's sentinel for "no product chosen yet". */
         const val NO_PRODUCT = -1
-
-        /**
-         * The charge endpoints are shared across resource types; this repository is the LOAN one.
-         * A client charge read lives on `ClientChargeRepository` with its own literal.
-         */
-        const val LOAN_RESOURCE = "loans"
     }
 }

@@ -21,6 +21,7 @@ import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.mapContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kpt.core.model.objects.error.serverErrorMessage
 import kpt.core.data.client.ClientCommandRepository
 import kpt.core.data.client.ClientRepository
 import kpt.core.model.client.Narration
@@ -133,7 +134,7 @@ internal class ClientClosureViewModel(
                             status = ResultStatus.FAILURE,
                             // Fineract's reason is the useful part — "client has active loans" is
                             // the common one and tells the officer exactly what to do next.
-                            msg = result.cause.message ?: FAILED_MSG,
+                            msg = result.cause.serverErrorMessage() ?: FAILED_MSG,
                         ),
                     )
                 }

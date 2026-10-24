@@ -19,8 +19,9 @@ import cmp.navigation.utils.toObjectNavigationRoute
 import kotlinx.serialization.serializer
 import kpt.core.common.utils.Constants
 import kpt.feature.activate.navigation.ActivateRoute
+import kpt.feature.charge.navigation.ChargeDetailRoute
+import kpt.feature.charge.navigation.ChargeListRoute
 import kpt.feature.client.navigation.ClientAddressRoute
-import kpt.feature.client.navigation.ClientChargesRoute
 import kpt.feature.client.navigation.ClientClosureRoute
 import kpt.feature.client.navigation.ClientCollateralDetailsRoute
 import kpt.feature.client.navigation.ClientCollateralRoute
@@ -106,7 +107,8 @@ class NavigationGraphSmokeTest {
         ClientIdentifiersRoute(clientId = 1),
         ClientAddressRoute(clientId = 1),
         ClientDocumentsRoute(clientId = 1),
-        ClientChargesRoute(clientId = 1),
+        ChargeListRoute(resourceType = "clients", resourceId = 1),
+        ChargeDetailRoute(resourceType = "loans", resourceId = 1, chargeId = 1),
         ClientStaffRoute(clientId = 1),
         ClientClosureRoute(clientId = 1),
         ClientTransferRoute(clientId = 1),

@@ -17,7 +17,7 @@ import kpt.core.base.store.screen.FetchPolicy
 import kpt.core.base.store.screen.ScreenDataStream
 import kpt.core.base.store.screen.asScreenStream
 import kpt.core.data.datatable.DataTableRepository
-import kpt.core.database.datatable.entity.DataTableEntity
+import kpt.core.model.datatable.DataTable
 import kpt.core.store.config.AppCacheKeys
 import kpt.core.store.config.AppStoreIds
 import kpt.core.store.config.AppStoreRegistry
@@ -26,7 +26,7 @@ import org.mobilenativefoundation.store.store5.Store
 
 @RepositoryBinding(binds = DataTableRepository::class)
 internal class DataTableRepositoryImpl(
-    @FromStore(AppStoreIds.DataTables) private val store: Store<String, List<DataTableEntity>>,
+    @FromStore(AppStoreIds.DataTables) private val store: Store<String, List<DataTable>>,
     @FromStore(AppStoreIds.DatatableGetDataOfDataTable)
     private val dataStore: Store<DataTableDataKey, JsonArray>,
 ) : DataTableRepository {
@@ -36,12 +36,12 @@ internal class DataTableRepositoryImpl(
     // until something HAS been fetched, so on a clean install nothing ever loads. Room is still
     // served first, so the offline-first behaviour is unchanged. The ttl stays the declared
     // freshness bound — it drives the "updated N ago" indicator, never whether cache is served.
-    override fun dataTablesStream(appTable: String, scope: CoroutineScope): ScreenDataStream<List<DataTableEntity>> =
+    override fun dataTablesStream(appTable: String, scope: CoroutineScope): ScreenDataStream<List<DataTable>> =
         store.asScreenStream(
             key = appTable,
             cacheKey = AppCacheKeys.DataTables.forAppTable(appTable),
             scope = scope,
-            isEmpty = { it.isEmpty() },
+            // No `isEmpty`: an empty list is real content (see ChargeRepositoryImpl.chargesStream).
             fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
             ttl = AppStoreRegistry.Ttl.DATA_TABLES,
         )
@@ -56,7 +56,7 @@ internal class DataTableRepositoryImpl(
         scope = scope,
         // An entity with no rows in this datatable is the common case — the officer has simply not
         // filled it in — so it is an EMPTY state, not an error.
-        isEmpty = { it.isEmpty() },
+        // No `isEmpty`: an empty list is real content (see ChargeRepositoryImpl.chargesStream).
         fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
         ttl = AppStoreRegistry.Ttl.DATATABLE_GET_DATA_OF_DATA_TABLE,
     )

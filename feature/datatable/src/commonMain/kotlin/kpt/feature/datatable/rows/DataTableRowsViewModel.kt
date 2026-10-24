@@ -99,11 +99,9 @@ internal class DataTableRowsViewModel(
                 dataTableRowId = rowId,
             )
             mutableStateFlow.value = when (result) {
-                is MutationResult.Applied -> {
-                    // The row is the stream's and the command repository is cache-free.
-                    stream.refresh(forceFresh = true)
-                    state.copy(isDeleting = false, notice = RowNotice.Deleted)
-                }
+                // No re-read: the command records the delete through the rows' own store, so the
+                // stream has already dropped the row. (It used to be cache-free and forced one here.)
+                is MutationResult.Applied -> state.copy(isDeleting = false, notice = RowNotice.Deleted)
 
                 is MutationResult.Blocked -> state.copy(
                     isDeleting = false,

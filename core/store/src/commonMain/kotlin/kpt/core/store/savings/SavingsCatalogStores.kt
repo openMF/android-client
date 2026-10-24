@@ -9,6 +9,8 @@
  */
 package kpt.core.store.savings
 
+import kpt.core.model.savings.SavingProductsTemplate as SavingProductsTemplateModel
+import kpt.core.store.mapping.toModel
 import kpt.core.base.store.annotation.CacheKey
 import kpt.core.base.store.annotation.StoreProvider
 import kpt.core.database.cache.dao.ApiResponseCacheDao
@@ -40,7 +42,7 @@ fun provideSavingsProductsStore(
 fun provideSavingsProductTemplateStore(
     savingsAccountApi: SavingsAccountApi,
     cache: ApiResponseCacheDao,
-): Store<Unit, SavingProductsTemplate> = cachedRead(
+): Store<Unit, SavingProductsTemplateModel> = cachedRead(
     dao = cache,
     keyOf = { AppCacheKeys.SavingsProductTemplate.LIST },
     fetch = { savingsAccountApi.savingsAccountTemplate() },

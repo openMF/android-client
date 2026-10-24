@@ -19,9 +19,10 @@ import kpt.core.model.shared.GenericResponse
  * change reached the server, was refused because the device is offline, or failed — a distinction
  * that cannot be reconstructed above this layer.
  *
- * These are commands, so they carry no Store and no cache. Offline CAPTURE is a different
- * operation with its own explicit queue ([kpt.core.data.sync.OfflineQueueRepository]); it is never
- * a silent fallback from here.
+ * Writes go the same way reads do — network → store → database: the command reaches Fineract, and
+ * the server's acceptance is recorded through the checker-inbox stores, so every checker-inbox stream already shows it
+ * when the call returns. Offline CAPTURE is a different operation with its own explicit queue
+ * ([kpt.core.data.sync.OfflineQueueRepository]); it is never a silent fallback from here.
  */
 interface CheckerInboxCommandRepository {
 

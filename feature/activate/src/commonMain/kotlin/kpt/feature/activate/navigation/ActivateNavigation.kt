@@ -17,7 +17,7 @@ import kpt.core.base.ui.nav.FeatureDestination
 import kpt.core.base.ui.nav.composableWithPushTransitions
 import kpt.core.base.ui.nav.popBackStackSafely
 import kpt.core.common.utils.Constants
-import kpt.feature.activate.ActivateScreen
+import kpt.feature.activate.ui.ActivateScreen
 
 /**
  * Activate a client, centre or group.

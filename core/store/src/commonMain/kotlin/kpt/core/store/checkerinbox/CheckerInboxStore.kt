@@ -19,6 +19,7 @@ import kpt.core.database.checkerinbox.mapper.toEntity
 import kpt.core.model.objects.checkerinboxtask.CheckerTask
 import kpt.core.network.mifos.checkerinbox.api.CheckerInboxApi
 import org.mobilenativefoundation.store.store5.Fetcher
+import org.mobilenativefoundation.store.store5.MutableStore
 import org.mobilenativefoundation.store.store5.SourceOfTruth
 import org.mobilenativefoundation.store.store5.Store
 
@@ -35,7 +36,36 @@ fun provideCheckerInboxStore(
 ): Store<Unit, List<CheckerTask>> = StoreFactory.createStore(
     fetcher = Fetcher.of { _: Unit -> service.getCheckerList() },
     sourceOfTruth = SourceOfTruth.of(
+        // `[]` for no rows, not null-for-empty: Store5 emits NOTHING when a reader goes from rows
+        // to null (measured 2026-10-23), so deciding the last task would leave it on screen.
         reader = { _: Unit -> dao.observeAll().map { rows -> rows.map { it.toDomain() } } },
-        writer = { _: Unit, tasks: List<CheckerTask> -> dao.upsertAll(tasks.map { it.toEntity() }) },
+        // REPLACE, not upsert: the fetch is the server's whole pending queue, so a task it no longer
+        // contains has been decided and must leave the table.
+        writer = { _: Unit, tasks: List<CheckerTask> -> dao.replaceAll(tasks.map { it.toEntity() }) },
+        delete = { _: Unit -> dao.deleteAll() },
+        // What the logout purge (`Store.clear()`) calls. Without it the purge cleared the in-memory
+        // cache and left the queue — another user's approvals — in the database.
+        deleteAll = { dao.deleteAll() },
+    ),
+)
+
+/**
+ * The WRITE half. Approve, reject and delete all take a task OUT of the pending queue; once the
+ * server accepts one, `CheckerInboxCommandRepository` clears the row THROUGH this store — never a
+ * DAO call in `core/data` (S5-1). It shares `checker_tasks` with [provideCheckerInboxStore], so the
+ * inbox re-emits with no refresh.
+ *
+ * Local-only (`createOfflineMutableStore`): the network leg already ran in the command.
+ * `logout = false`: the rows are purged by the paired read store's `deleteAll`.
+ */
+@StoreProvider(id = "checkerTask", logout = false)
+@CacheKey(fn = "item", key = "checkerTask:{auditId}", params = ["auditId:Int"])
+fun provideCheckerTaskStore(
+    dao: CheckerInboxDao,
+): MutableStore<Int, CheckerTask> = StoreFactory.createOfflineMutableStore(
+    sourceOfTruth = SourceOfTruth.of(
+        reader = { auditId: Int -> dao.observeById(auditId).map { it?.toDomain() } },
+        writer = { _: Int, task: CheckerTask -> dao.upsertAll(listOf(task.toEntity())) },
+        delete = { auditId: Int -> dao.deleteById(auditId) },
     ),
 )

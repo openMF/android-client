@@ -9,15 +9,15 @@
  */
 package kpt.core.network.mifos.note.mapper
 
-import kpt.core.database.note.entity.NoteEntity
+import kpt.core.model.objects.note.Note
 import kpt.core.network.mifos.note.dto.NoteDto
 
 /**
- * Wire → Room. `NoteDto.note` is the body text; `NoteEntity` names the same column
+ * Wire → model. `NoteDto.note` is the body text; `Note` names the same column
  * `noteContent`, which is the one field whose name differs across the boundary.
  * `noteType` is dropped: it is Fineract classification metadata the app never reads.
  */
-fun NoteDto.toEntity(): NoteEntity = NoteEntity(
+fun NoteDto.toModel(): Note = Note(
     id = id,
     clientId = clientId,
     noteContent = note,

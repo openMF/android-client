@@ -10,15 +10,14 @@
 package kpt.core.data.note
 
 import kotlinx.coroutines.test.runTest
-import kpt.core.data.infra.testMutationGateway
 import kpt.core.data.note.impl.NoteCommandRepositoryImpl
 import kpt.core.model.note.NoteDraft
 import kpt.core.network.mifos.note.api.NoteApi
-import kpt.core.network.mifos.note.dto.CreateNoteResponseDto
-import kpt.core.network.mifos.note.dto.DeleteNoteResponseDto
+import kpt.core.model.objects.note.CreateNoteResponseDto
+import kpt.core.model.objects.note.DeleteNoteResponseDto
 import kpt.core.network.mifos.note.dto.NoteDto
-import kpt.core.network.mifos.note.dto.NoteRequestDto
-import kpt.core.network.mifos.note.dto.UpdateNoteResponseDto
+import kpt.core.model.objects.note.NoteRequestDto
+import kpt.core.model.objects.note.UpdateNoteResponseDto
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -72,7 +71,8 @@ class NoteDraftReplayTest {
             NoteDto()
     }
 
-    private fun repo(api: NoteApi) = NoteCommandRepositoryImpl(api, testMutationGateway())
+    // The duplicate check reads through the notes store now, so the repo runs over real stores.
+    private fun repo(api: NoteApi) = NoteTestStores(api).commands(api)
 
     private fun draft(text: String, noteId: Long? = null) = NoteDraft(
         resourceId = 7L,

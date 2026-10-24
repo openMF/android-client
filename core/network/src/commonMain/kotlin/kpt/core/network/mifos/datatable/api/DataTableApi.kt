@@ -17,10 +17,10 @@ import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
 import kotlinx.serialization.json.JsonArray
 import kpt.core.base.network.annotation.ApiBinding
-import kpt.core.database.datatable.entity.DataTableEntity
+import kpt.core.model.datatable.DataTable
 import kpt.core.model.objects.users.UserLocation
 import kpt.core.model.shared.GenericResponse
-import kpt.core.network.mifos.datatable.dto.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
+import kpt.core.model.datatable.DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 import kpt.core.network.mifos.datatable.dto.GetDataTablesResponse
 
 @ApiBinding("mifos")
@@ -57,7 +57,7 @@ interface DataTableApi {
     ): DeleteDataTablesDatatableAppTableIdDatatableIdResponse
 
     @GET("datatables")
-    suspend fun getTableOf(@Query("apptable") table: String?): List<DataTableEntity>
+    suspend fun getTableOf(@Query("apptable") table: String?): List<DataTable>
 
     @GET("datatables/{dataTableName}/{entityId}/")
     suspend fun getDataOfDataTable(

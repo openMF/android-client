@@ -27,5 +27,5 @@ package kpt.core.database.config
  * slot. Same unit, different version per fork, no collision.
  */
 object ForkDatabaseConfig {
-    const val VERSION = 14
+    const val VERSION = 16
 }

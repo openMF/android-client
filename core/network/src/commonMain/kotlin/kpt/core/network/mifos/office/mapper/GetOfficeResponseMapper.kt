@@ -9,14 +9,14 @@
  */
 package kpt.core.network.mifos.office.mapper
 
-import kpt.core.database.office.entity.OfficeEntity
+import kpt.core.model.office.Office
 import kpt.core.network.data.AbstractMapper
 import kpt.core.network.mifos.office.dto.GetOfficesResponse
 
-object GetOfficeResponseMapper : AbstractMapper<GetOfficesResponse, OfficeEntity>() {
+object GetOfficeResponseMapper : AbstractMapper<GetOfficesResponse, Office>() {
 
-    override fun mapFromEntity(entity: GetOfficesResponse): OfficeEntity {
-        return OfficeEntity(
+    override fun mapFromEntity(entity: GetOfficesResponse): Office {
+        return Office(
             id = entity.id?.toInt()!!,
             externalId = entity.externalId,
             name = entity.name,
@@ -26,7 +26,7 @@ object GetOfficeResponseMapper : AbstractMapper<GetOfficesResponse, OfficeEntity
         )
     }
 
-    override fun mapToEntity(domainModel: OfficeEntity): GetOfficesResponse {
+    override fun mapToEntity(domainModel: Office): GetOfficesResponse {
         return GetOfficesResponse(
             id = domainModel.id.toLong(),
             name = domainModel.name,

@@ -18,10 +18,11 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import kpt.core.base.store.screen.ScreenState
+import kpt.core.base.store.screen.emptyIfContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.data.search.SearchRepository
 import kpt.core.model.objects.SearchedEntity
-import kpt.core.store.search.SearchResourcesKey
+import kpt.core.model.search.SearchResourcesKey
 
 /**
  * Fineract resource search — the Home tab's content.
@@ -61,7 +62,8 @@ class SearchViewModel(
             if (key == null) {
                 flowOf(ScreenState.Empty)
             } else {
-                repository.searchStream(key, viewModelScope).state
+                // No hits is Empty — the stream reports it as an empty Content.
+                repository.searchStream(key, viewModelScope).state.emptyIfContent { it.isEmpty() }
             }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STATE_TIMEOUT_MS), ScreenState.Empty)

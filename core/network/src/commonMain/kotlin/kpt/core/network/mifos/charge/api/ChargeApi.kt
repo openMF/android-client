@@ -18,7 +18,7 @@ import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
 import io.ktor.client.statement.HttpResponse
 import kpt.core.base.network.annotation.ApiBinding
-import kpt.core.database.charge.entity.ChargesEntity
+import kpt.core.model.charge.Charges
 import kpt.core.model.objects.clients.ChargeCreationResponse
 import kpt.core.model.objects.clients.Page
 import kpt.core.model.objects.payloads.ChargesPayload
@@ -72,7 +72,7 @@ interface ChargeApi {
      * @param resourceId The unique ID of the resource.
      * @param offset The page offset (zero-based index).
      * @param limit The maximum number of items to return.
-     * @return [Flow] emitting a [Page] of [ChargesEntity] objects.
+     * @return [Flow] emitting a [Page] of [Charges] objects.
      */
     @GET("{resourceType}/{resourceId}/charges")
     suspend fun getListOfPagingCharges(
@@ -80,7 +80,7 @@ interface ChargeApi {
         @Path("resourceId") resourceId: Int,
         @Query("offset") offset: Int,
         @Query("limit") limit: Int,
-    ): Page<ChargesEntity>
+    ): Page<Charges>
 
     /**
      * Retrieves all client-specific charges.
@@ -89,13 +89,13 @@ interface ChargeApi {
      *
      * @param resourceType The resource type (e.g. `"clients"`).
      * @param resourceId The client ID.
-     * @return [Flow] emitting a [Page] of [ChargesEntity] objects.
+     * @return [Flow] emitting a [Page] of [Charges] objects.
      */
     @GET("{resourceType}/{resourceId}/charges?offset=0&limit=0")
     suspend fun getListOfClientCharges(
         @Path("resourceType") resourceType: String,
         @Path("resourceId") resourceId: Int,
-    ): Page<ChargesEntity>
+    ): Page<Charges>
 
     /**
      * Retrieves charges for other account types (e.g. loans, savings).
@@ -104,13 +104,13 @@ interface ChargeApi {
      *
      * @param resourceType The resource type (e.g. `"loans"`, `"savings"`).
      * @param resourceId The account ID.
-     * @return [Flow] emitting a [List] of [ChargesEntity].
+     * @return [Flow] emitting a [List] of [Charges].
      */
     @GET("{resourceType}/{resourceId}/charges")
     suspend fun getListOfOtherAccountCharge(
         @Path("resourceType") resourceType: String,
         @Path("resourceId") resourceId: Int,
-    ): List<ChargesEntity>
+    ): List<Charges>
 
     /**
      * Retrieves a single charge by its ID.
@@ -120,14 +120,14 @@ interface ChargeApi {
      * @param resourceType The resource type (e.g. `"clients"`, `"loans"`, `"savings"`).
      * @param resourceId The ID of the resource.
      * @param chargeId The ID of the charge.
-     * @return [Flow] emitting a [ChargesEntity] representing the charge.
+     * @return [Flow] emitting a [Charges] representing the charge.
      */
     @GET("{resourceType}/{resourceId}/charges/{chargeId}")
     suspend fun getCharge(
         @Path("resourceType") resourceType: String,
         @Path("resourceId") resourceId: Int,
         @Path("chargeId") chargeId: Int,
-    ): ChargesEntity
+    ): Charges
 
     /**
      * Creates a new charge for the given resource type and ID.

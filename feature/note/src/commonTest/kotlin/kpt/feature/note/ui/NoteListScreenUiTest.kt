@@ -14,7 +14,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.v2.runComposeUiTest
 import kpt.core.base.store.screen.ScreenState
-import kpt.core.database.note.entity.NoteEntity
+import kpt.core.model.objects.note.Note
 import kpt.core.designsystem.theme.KptTheme
 import kotlin.test.Test
 
@@ -31,7 +31,7 @@ import kotlin.test.Test
 @OptIn(ExperimentalTestApi::class)
 class NoteListScreenUiTest {
 
-    private fun note(id: Long, text: String) = NoteEntity(id = id, clientId = 42, noteContent = text)
+    private fun note(id: Long, text: String) = Note(id = id, clientId = 42, noteContent = text)
 
     @Test
     fun theAddAffordanceIsAlwaysReachable() = runComposeUiTest {

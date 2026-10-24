@@ -16,13 +16,12 @@ import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
 import io.ktor.client.statement.HttpResponse
 import kpt.core.base.network.annotation.ApiBinding
-import kpt.core.database.charge.entity.ChargesEntity
-import kpt.core.database.loan.entity.Loan
-import kpt.core.database.loan.entity.LoanRepaymentRequestEntity
-import kpt.core.database.loan.entity.LoanRepaymentResponseEntity
-import kpt.core.database.loan.entity.LoanRepaymentTemplateEntity
-import kpt.core.database.loan.entity.LoanTemplate
-import kpt.core.database.loan.entity.LoanTransactionTemplate
+import kpt.core.model.charge.Charges
+import kpt.core.model.loan.LoanRepaymentRequest
+import kpt.core.model.loan.LoanRepaymentResponse
+import kpt.core.model.loan.LoanRepaymentTemplate
+import kpt.core.model.loan.LoanTemplate
+import kpt.core.model.loan.LoanTransactionTemplate
 import kpt.core.model.objects.account.loan.LoanApproval
 import kpt.core.model.objects.account.loan.RepaymentSchedule
 import kpt.core.model.objects.account.loan.reschedules.LoanRescheduleApprovalRequest
@@ -35,16 +34,17 @@ import kpt.core.model.objects.account.loan.transfer.AccountTransferTemplate
 import kpt.core.model.objects.clients.Page
 import kpt.core.model.objects.organisations.LoanProducts
 import kpt.core.model.objects.payloads.GroupLoanPayload
+import kpt.core.model.objects.responses.SaveResponse
 import kpt.core.model.objects.template.loan.GroupLoanTemplate
 import kpt.core.model.shared.GenericResponse
-import kpt.core.network.mifos.loan.dto.AssignLoanOfficerRequestDto
-import kpt.core.network.mifos.loan.dto.AssignLoanOfficerResponseDto
-import kpt.core.network.mifos.loan.dto.CreateGuarantorResponseDto
+import kpt.core.model.loan.AssignLoanOfficerRequestDto
+import kpt.core.model.loan.AssignLoanOfficerResponseDto
+import kpt.core.model.loan.CreateGuarantorResponseDto
 import kpt.core.network.mifos.loan.dto.GuarantorAccountTemplateDto
-import kpt.core.network.mifos.loan.dto.GuarantorRequestDto
+import kpt.core.model.loan.GuarantorRequestDto
 import kpt.core.network.mifos.loan.dto.GuarantorTemplateDto
-import kpt.core.network.mifos.loan.dto.LoanChargeOffRequestDto
-import kpt.core.network.mifos.loan.dto.LoanChargeOffResponseDto
+import kpt.core.model.loan.LoanChargeOffRequestDto
+import kpt.core.model.loan.LoanChargeOffResponseDto
 import kpt.core.network.mifos.loan.dto.LoanChargeOffTemplateDto
 import kpt.core.network.mifos.loan.dto.LoanDisburseRequestDto
 import kpt.core.network.mifos.loan.dto.LoanDisburseResponseDto
@@ -52,8 +52,8 @@ import kpt.core.network.mifos.loan.dto.LoanDisburseTemplateDto
 import kpt.core.network.mifos.loan.dto.LoanOfficerOptionsTemplateDto
 import kpt.core.network.mifos.loan.dto.LoanWithAssociationsDto
 import kpt.core.network.mifos.loan.dto.LoansPayload
-import kpt.core.network.mifos.loan.dto.RejectLoanRequestDto
-import kpt.core.network.mifos.loan.dto.RejectLoanResponseDto
+import kpt.core.model.loan.RejectLoanRequestDto
+import kpt.core.model.loan.RejectLoanResponseDto
 
 /**
  * @author fomenkoo
@@ -64,7 +64,7 @@ interface LoanApi {
     suspend fun getLoanByIdWithAllAssociations(@Path("loanId") loanId: Int): LoanWithAssociationsDto
 
     @GET("loans/{loanId}/transactions/template?command=repayment")
-    suspend fun getLoanRepaymentTemplate(@Path("loanId") loanId: Int): LoanRepaymentTemplateEntity
+    suspend fun getLoanRepaymentTemplate(@Path("loanId") loanId: Int): LoanRepaymentTemplate
 
     //  Mandatory Fields
     //  1. String approvedOnDate
@@ -77,8 +77,8 @@ interface LoanApi {
     @POST("loans/{loanId}/transactions?command=repayment")
     suspend fun submitPayment(
         @Path("loanId") loanId: Int,
-        @Body loanRepaymentRequest: LoanRepaymentRequestEntity?,
-    ): LoanRepaymentResponseEntity
+        @Body loanRepaymentRequest: LoanRepaymentRequest?,
+    ): LoanRepaymentResponse
 
     @GET("loans/{loanId}/transactions/template?command=charge-off")
     suspend fun getChargeOffTemplate(
@@ -121,8 +121,12 @@ interface LoanApi {
     @GET("loanproducts")
     suspend fun getAllLoans(): List<LoanProducts>
 
+    /**
+     * Typed as [SaveResponse], not `HttpResponse`: Fineract answers `{"loanId": N, "resourceId": N,
+     * ...}`, and the new id is what the command repository ingests the created loan by.
+     */
     @POST("loans")
-    suspend fun createLoansAccount(@Body loansPayload: LoansPayload?): HttpResponse
+    suspend fun createLoansAccount(@Body loansPayload: LoansPayload?): SaveResponse
 
     /**
      * Calculate loan repayment schedule without creating the loan.
@@ -156,8 +160,12 @@ interface LoanApi {
         @Query("command") command: String?,
     ): LoanTransactionTemplate
 
+    /**
+     * [SaveResponse], not `Loan`: the body is Fineract's command result, whose new id is
+     * `resourceId`. Decoded as a `Loan` it had no `id` key, so the created loan's id was always null.
+     */
     @POST("loans")
-    suspend fun createGroupLoansAccount(@Body loansPayload: GroupLoanPayload?): Loan
+    suspend fun createGroupLoansAccount(@Body loansPayload: GroupLoanPayload?): SaveResponse
 
     @GET("loans/template?templateType=group")
     suspend fun getGroupLoansAccountTemplate(
@@ -166,10 +174,10 @@ interface LoanApi {
     ): GroupLoanTemplate
 
     @GET("loans/{loanId}/charges")
-    suspend fun getListOfLoanCharges(@Path("loanId") loanId: Int): List<ChargesEntity>
+    suspend fun getListOfLoanCharges(@Path("loanId") loanId: Int): List<Charges>
 
     @GET("clients/{clientId}/charges")
-    suspend fun getListOfCharges(@Path("clientId") clientId: Int): Page<ChargesEntity>
+    suspend fun getListOfCharges(@Path("clientId") clientId: Int): Page<Charges>
 
     /**
      * Account Transfer API Endpoints

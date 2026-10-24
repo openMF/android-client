@@ -9,6 +9,10 @@
  */
 package kpt.core.store.datatable
 
+import kpt.core.store.mapping.toEntity
+import kotlinx.coroutines.flow.map
+import kpt.core.model.datatable.DataTable
+import kpt.core.store.mapping.toModel
 import kpt.core.base.store.annotation.CacheKey
 import kpt.core.base.store.annotation.StoreProvider
 import kpt.core.base.store.infra.StoreFactory
@@ -29,17 +33,21 @@ import org.mobilenativefoundation.store.store5.Store
 fun provideDataTableStore(
     service: DataTableApi,
     dao: DataTableDao,
-): Store<String, List<DataTableEntity>> = StoreFactory.createStore(
+): Store<String, List<DataTable>> = StoreFactory.createStore(
     fetcher = Fetcher.of { appTable: String -> service.getTableOf(appTable) },
     sourceOfTruth = SourceOfTruth.of(
-        reader = { appTable: String -> dao.observeForAppTable(appTable) },
-        writer = { appTable: String, tables: List<DataTableEntity> ->
+        reader = { appTable: String -> dao.observeForAppTable(appTable).map { rows -> rows.map { it.toModel() } } },
+        writer = { appTable: String, tables: List<DataTable> ->
             dao.replaceForAppTable(
                 appTable = appTable,
                 // id = 0 lets Room assign a fresh rowid; carrying the fetched id would collide
                 // with the row it is meant to replace.
-                tables = tables.map { it.copy(id = 0, applicationTableName = appTable) },
+                tables = tables.map { it.toEntity() }.map { it.copy(id = 0, applicationTableName = appTable) },
             )
         },
+        delete = { appTable: String -> dao.deleteForAppTable(appTable) },
+        // What the logout purge (`Store.clear()`) calls. Without it the purge cleared the in-memory
+        // cache and left every row in the database.
+        deleteAll = { dao.deleteAll() },
     ),
 )

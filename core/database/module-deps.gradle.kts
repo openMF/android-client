@@ -18,4 +18,12 @@ val libs = the<LibrariesForLibs>()
 dependencies {
     "commonMainApi"(project(":core:common"))
     "commonMainApi"(project(":core:model"))
+
+    // Android at-rest encryption (kpt.core.database.encryption). SQLCipher's androidx.sqlite driver
+    // plus the `Settings` type of the Keystore-backed `named("secure")` store the passphrase lives in.
+    // Catalog lookup by name so versions stay in libs.versions.toml (type-safe `libs.` accessors are
+    // not generated for an applied script plugin; `findLibrary` is).
+    val catalog = project.extensions.getByType(VersionCatalogsExtension::class.java).named("libs")
+    "androidMainImplementation"(catalog.findLibrary("sqlcipher-android").get())
+    "androidMainImplementation"(catalog.findLibrary("multiplatform-settings").get())
 }

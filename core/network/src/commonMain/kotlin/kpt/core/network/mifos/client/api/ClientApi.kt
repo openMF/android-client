@@ -19,12 +19,12 @@ import de.jensklingenberg.ktorfit.http.Query
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.statement.HttpResponse
 import kpt.core.base.network.annotation.ApiBinding
-import kpt.core.database.client.entity.AddressConfiguration
-import kpt.core.database.client.entity.AddressTemplate
-import kpt.core.database.client.entity.ClientAccounts
-import kpt.core.database.client.entity.ClientEntity
-import kpt.core.database.client.entity.ClientPayloadEntity
-import kpt.core.database.client.entity.ClientsTemplateEntity
+import kpt.core.model.client.AddressConfiguration
+import kpt.core.model.client.AddressTemplate
+import kpt.core.model.client.ClientAccounts
+import kpt.core.model.client.Client
+import kpt.core.model.client.ClientPayload
+import kpt.core.model.client.ClientsTemplate
 import kpt.core.model.client.ClientCloseTemplateResponse
 import kpt.core.model.objects.clients.ActivatePayload
 import kpt.core.model.objects.clients.AssignStaffRequest
@@ -43,10 +43,10 @@ import kpt.core.model.shared.PinpointLocationActionResponse
 import kpt.core.network.mifos.client.dto.GetClientsClientIdAccountsResponse
 import kpt.core.network.mifos.client.dto.GetClientsPageItemsResponse
 import kpt.core.network.mifos.client.dto.GetClientsResponse
-import kpt.core.network.mifos.client.dto.PostClientAddressRequest
-import kpt.core.network.mifos.client.dto.PostClientAddressResponse
-import kpt.core.network.mifos.client.dto.PostClientsClientIdRequest
-import kpt.core.network.mifos.client.dto.PostClientsClientIdResponse
+import kpt.core.model.client.PostClientAddressRequest
+import kpt.core.model.client.PostClientAddressResponse
+import kpt.core.model.client.PostClientsClientIdRequest
+import kpt.core.model.client.PostClientsClientIdResponse
 
 @ApiBinding("mifos")
 interface ClientApi {
@@ -129,10 +129,10 @@ interface ClientApi {
         @Query("paged") b: Boolean,
         @Query("offset") offset: Int,
         @Query("limit") limit: Int,
-    ): Page<ClientEntity>
+    ): Page<Client>
 
     @GET("clients/{clientId}")
-    suspend fun getClient(@Path("clientId") clientId: Int): ClientEntity
+    suspend fun getClient(@Path("clientId") clientId: Int): Client
 
     @POST("clients/{clientId}/images")
     suspend fun uploadClientImage(
@@ -147,16 +147,16 @@ interface ClientApi {
     suspend fun getClientImage(@Path("clientId") clientId: Int): HttpResponse
 
     @POST("clients")
-    suspend fun createClient(@Body clientPayload: ClientPayloadEntity?): ClientEntity?
+    suspend fun createClient(@Body clientPayload: ClientPayload?): Client?
 
     @PUT("clients/{clientId}")
     suspend fun updateClient(
         @Path("clientId") clientId: Int,
-        @Body clientPayload: ClientPayloadEntity?,
-    ): ClientEntity?
+        @Body clientPayload: ClientPayload?,
+    ): Client?
 
     @GET("clients/template")
-    suspend fun getClientTemplate(): ClientsTemplateEntity
+    suspend fun getClientTemplate(): ClientsTemplate
 
     @GET("clients/{clientId}/accounts")
     suspend fun getClientAccounts(@Path("clientId") clientId: Int): ClientAccounts

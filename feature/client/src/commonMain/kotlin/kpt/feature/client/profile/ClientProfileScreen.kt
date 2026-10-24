@@ -29,7 +29,7 @@ import kpt.core.base.designsystem.theme.KptTheme
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.effects.EventsEffect
 import kpt.core.base.ui.screen.ScreenContent
-import kpt.core.database.client.entity.ClientEntity
+import kpt.core.model.client.Client
 import kpt.core.designsystem.component.AppScaffold
 import kpt.core.designsystem.theme.AppTypography
 import kpt.core.designsystem.theme.DesignToken
@@ -163,7 +163,7 @@ internal fun ClientProfileScreen(
 @Composable
 internal fun ClientProfileContent(
     state: ClientProfileState,
-    client: ScreenState<ClientEntity>,
+    client: ScreenState<Client>,
     onAction: (ClientProfileAction) -> Unit,
     availableActions: List<ClientProfileActionItem>,
     modifier: Modifier = Modifier,

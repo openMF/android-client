@@ -21,13 +21,13 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.data.testing.FakeSavingsAccountRepository
-import kpt.core.database.savings.entity.SavingAccountCurrencyEntity
-import kpt.core.database.savings.entity.SavingsAccountStatusEntity
-import kpt.core.database.savings.entity.SavingsAccountSummaryEntity
-import kpt.core.database.savings.entity.SavingsAccountTransactionEntity
-import kpt.core.database.savings.entity.SavingsAccountWithAssociationsEntity
-import kpt.core.database.savings.entity.SavingsTransactionDateEntity
-import kpt.core.database.savings.entity.SavingsTransactionTypeEntity
+import kpt.core.model.savings.SavingAccountCurrency
+import kpt.core.model.savings.SavingsAccountStatus
+import kpt.core.model.savings.SavingsAccountSummary
+import kpt.core.model.savings.SavingsAccountTransaction
+import kpt.core.model.savings.SavingsAccountWithAssociations
+import kpt.core.model.savings.SavingsTransactionDate
+import kpt.core.model.savings.SavingsTransactionType
 import kpt.feature.savings.transaction.TransactionKind
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -50,16 +50,16 @@ class SavingsSummaryViewModelTest {
     @AfterTest fun tearDown() = Dispatchers.resetMain()
 
     private fun account(
-        status: SavingsAccountStatusEntity? = SavingsAccountStatusEntity(active = true),
-        transactions: List<SavingsAccountTransactionEntity> = emptyList(),
-    ) = SavingsAccountWithAssociationsEntity(
+        status: SavingsAccountStatus? = SavingsAccountStatus(active = true),
+        transactions: List<SavingsAccountTransaction> = emptyList(),
+    ) = SavingsAccountWithAssociations(
         id = 55,
         accountNo = "000000055",
         clientName = "Ankit Sharma",
         savingsProductName = "Passbook Savings",
         status = status,
-        currency = SavingAccountCurrencyEntity(code = "USD", decimalPlaces = 2),
-        summary = SavingsAccountSummaryEntity(
+        currency = SavingAccountCurrency(code = "USD", decimalPlaces = 2),
+        summary = SavingsAccountSummary(
             accountBalance = 1_250.0,
             totalDeposits = 2_000.0,
             totalWithdrawals = 750.0,
@@ -78,7 +78,7 @@ class SavingsSummaryViewModelTest {
         ),
     )
 
-    private fun repo(account: SavingsAccountWithAssociationsEntity) =
+    private fun repo(account: SavingsAccountWithAssociations) =
         FakeSavingsAccountRepository(account = MutableStateFlow(ScreenState.Content(account)))
 
     @Test
@@ -97,7 +97,7 @@ class SavingsSummaryViewModelTest {
     fun `a never-activated account offers ACTIVATE instead of crashing`() = runTest(dispatcher) {
         // `active` omitted entirely — what Fineract sends for an approved-but-not-active account,
         // and what the original's `!status?.active!!` threw on at four sites in the composition.
-        val repo = repo(account(status = SavingsAccountStatusEntity(approved = true)))
+        val repo = repo(account(status = SavingsAccountStatus(approved = true)))
 
         viewModel(repo).account.test {
             awaitItem()
@@ -109,7 +109,7 @@ class SavingsSummaryViewModelTest {
 
     @Test
     fun `a status with every flag null offers nothing rather than crashing`() = runTest(dispatcher) {
-        val repo = repo(account(status = SavingsAccountStatusEntity()))
+        val repo = repo(account(status = SavingsAccountStatus()))
 
         viewModel(repo).account.test {
             awaitItem()
@@ -125,7 +125,7 @@ class SavingsSummaryViewModelTest {
         // the original's order is kept, because approving is the step the officer must take.
         val repo = repo(
             account(
-                status = SavingsAccountStatusEntity(
+                status = SavingsAccountStatus(
                     submittedAndPendingApproval = true,
                     approved = true,
                 ),
@@ -145,7 +145,7 @@ class SavingsSummaryViewModelTest {
     @Test
     fun `a closed account offers nothing, not a button that does nothing`() = runTest(dispatcher) {
         // The original drew an enabled Button labelled "Savings account closed" with `onClick = { }`.
-        val repo = repo(account(status = SavingsAccountStatusEntity(closed = true, active = true)))
+        val repo = repo(account(status = SavingsAccountStatus(closed = true, active = true)))
 
         viewModel(repo).account.test {
             awaitItem()
@@ -160,8 +160,8 @@ class SavingsSummaryViewModelTest {
     @Test
     fun `a rejected or withdrawn account offers nothing`() = runTest(dispatcher) {
         listOf(
-            SavingsAccountStatusEntity(rejected = true),
-            SavingsAccountStatusEntity(withdrawnByApplicant = true),
+            SavingsAccountStatus(rejected = true),
+            SavingsAccountStatus(withdrawnByApplicant = true),
         ).forEach { status ->
             val repo = repo(account(status = status))
             viewModel(repo).account.test {
@@ -192,18 +192,18 @@ class SavingsSummaryViewModelTest {
         val repo = repo(
             account(
                 transactions = listOf(
-                    SavingsAccountTransactionEntity(
+                    SavingsAccountTransaction(
                         id = 9,
                         // What the savings endpoint actually sends — and it leaves `date` EMPTY,
                         // which is this entity's default and what the original cast to
                         // `List<Int>` before indexing `[2]`.
-                        savingsTransactionDate = SavingsTransactionDateEntity(
+                        savingsTransactionDate = SavingsTransactionDate(
                             year = 2026,
                             month = 10,
                             day = 21,
                         ),
                         amount = 500.0,
-                        transactionType = SavingsTransactionTypeEntity(deposit = true, value = "Deposit"),
+                        transactionType = SavingsTransactionType(deposit = true, value = "Deposit"),
                     ),
                 ),
             ),
@@ -225,9 +225,9 @@ class SavingsSummaryViewModelTest {
             account(
                 transactions = listOf(
                     // Neither source populated — the row still has an amount the officer needs.
-                    SavingsAccountTransactionEntity(id = 9, amount = 500.0),
+                    SavingsAccountTransaction(id = 9, amount = 500.0),
                     // A PARTIAL array: the original's cast passed and the row shifted by a position.
-                    SavingsAccountTransactionEntity(id = 10, amount = 20.0, date = listOf(2026, null)),
+                    SavingsAccountTransaction(id = 10, amount = 20.0, date = listOf(2026, null)),
                 ),
             ),
         )
@@ -261,16 +261,16 @@ class SavingsSummaryViewModelTest {
         val repo = repo(
             account(
                 transactions = listOf(
-                    SavingsAccountTransactionEntity(
+                    SavingsAccountTransaction(
                         id = 1,
                         amount = 100.0,
-                        transactionType = SavingsTransactionTypeEntity(withdrawal = true),
+                        transactionType = SavingsTransactionType(withdrawal = true),
                     ),
-                    SavingsAccountTransactionEntity(
+                    SavingsAccountTransaction(
                         id = 2,
                         amount = 100.0,
                         reversed = true,
-                        transactionType = SavingsTransactionTypeEntity(deposit = true),
+                        transactionType = SavingsTransactionType(deposit = true),
                     ),
                 ),
             ),
@@ -298,6 +298,16 @@ class SavingsSummaryViewModelTest {
             vm.trySendAction(SavingsSummaryAction.WithdrawClicked)
             val withdraw = assertIs<SavingsSummaryEvent.OpenTransaction>(awaitItem())
             assertEquals(TransactionKind.WITHDRAWAL, withdraw.kind)
+        }
+    }
+
+    @Test
+    fun `charges opens the charge module for THIS account`() = runTest(dispatcher) {
+        val vm = viewModel(repo(account()))
+
+        vm.eventFlow.test {
+            vm.trySendAction(SavingsSummaryAction.ChargesClicked)
+            assertEquals(SavingsSummaryEvent.OpenCharges(55), awaitItem())
         }
     }
 

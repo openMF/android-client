@@ -27,7 +27,7 @@ import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.data.testing.FakeSavingsAccountRepository
 import kpt.core.data.testing.FakeSavingsCommandRepository
-import kpt.core.database.savings.entity.SavingProductsTemplate
+import kpt.core.model.savings.SavingProductsTemplate
 import kpt.core.model.objects.commonfiles.InterestType
 import kpt.core.model.objects.organisations.ProductSavings
 import kpt.core.model.objects.template.client.ChargeOptions

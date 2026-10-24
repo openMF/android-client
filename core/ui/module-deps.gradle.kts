@@ -34,4 +34,12 @@ dependencies {
     // core/platform (and its sharing half largely duplicates core-base/platform's ShareManager).
     // Declared here to unblock the baseline; relocated in the slice that owns `about`/`settings`.
     "androidMainImplementation"("com.google.android.gms:play-services-oss-licenses:17.5.1")
+
+    // AppDocumentViewer — in-app PDF rendering (PDFium) on every target. Resolved through the
+    // catalog by name so the version lives in ONE place (`pdfViewer` in libs.versions.toml); the
+    // type-safe `libs.` accessor is not generated for an applied script plugin, `findLibrary` is.
+    "commonMainImplementation"(
+        project.extensions.getByType(VersionCatalogsExtension::class.java)
+            .named("libs").findLibrary("pdf-viewer").get(),
+    )
 }

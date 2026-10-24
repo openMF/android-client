@@ -25,6 +25,7 @@ import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.data.testing.FakeLoanCommandRepository
 import kpt.core.data.testing.FakeLoanRepository
+import kpt.core.data.testing.fineractRejection
 import kpt.core.model.objects.account.loan.loanWithAssociations.LoanWithAssociations
 import kpt.core.model.objects.account.loan.loanWithAssociations.SavingAccountCurrency
 import kpt.core.model.objects.account.loan.transfer.AccountOption
@@ -464,7 +465,7 @@ class LoanTransferViewModelTest {
         val commands = FakeLoanCommandRepository(
             transferResult = {
                 MutationResult.Failed(
-                    IllegalStateException("insufficient balance on the source account"),
+                    fineractRejection("insufficient balance on the source account"),
                     rolledBack = false,
                 )
             },

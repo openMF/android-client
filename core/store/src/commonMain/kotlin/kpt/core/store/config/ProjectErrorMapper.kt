@@ -9,6 +9,8 @@
  */
 package kpt.core.store.config
 
+import kpt.core.model.objects.error.serverErrorMessage
+
 /**
  * THE FORK'S domain-error copy. Neutral on the template — this is yours to fill.
  *
@@ -47,4 +49,12 @@ package kpt.core.store.config
  * check — two streams could silently share a key, share a fetched-at stamp, and one screen would
  * stop refetching. Declare the key on its store instead.
  */
-object ProjectErrorMapper : ErrorMessageOverrides
+object ProjectErrorMapper : ErrorMessageOverrides {
+    /**
+     * Fineract's own sentence when the failure carries one ("Client with identifier 2 does not
+     * exist"), so a read error says what the server said rather than the category's generic copy.
+     * Null for everything else — no network, timeouts, a 500 without a Fineract body — and the
+     * framework's categorised message shows. One parser for reads and writes: `ServerErrorParser`.
+     */
+    override fun message(error: Throwable): String? = error.serverErrorMessage()
+}

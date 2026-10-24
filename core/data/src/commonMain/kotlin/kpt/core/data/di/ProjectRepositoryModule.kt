@@ -9,6 +9,9 @@
  */
 package kpt.core.data.di
 
+import kpt.core.datastore.prefs.ProjectPreferencesRepository
+import kpt.core.store.serverconfig.ServerConfigSource
+import kpt.core.store.session.SessionSource
 import org.koin.dsl.module
 
 /**
@@ -24,5 +27,8 @@ import org.koin.dsl.module
  * ```
  */
 val ProjectRepositoryModule = module {
-    // Intentionally empty on the template — a fork adds its own bindings here.
+    // The read PORT `core/store`'s server-config store declares (it cannot depend on
+    // core/datastore) — supplied here, as `DataModule` supplies `UserDataSource`.
+    single<ServerConfigSource> { ServerConfigSource { get<ProjectPreferencesRepository>().serverConfig } }
+    single<SessionSource> { SessionSource { get<ProjectPreferencesRepository>().fineractUser } }
 }

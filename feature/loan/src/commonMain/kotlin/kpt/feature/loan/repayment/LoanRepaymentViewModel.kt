@@ -22,11 +22,12 @@ import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.combineScreenStates
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kpt.core.model.objects.error.serverErrorMessage
 import kpt.core.common.utils.DateHelper
 import kpt.core.data.loan.LoanCommandRepository
 import kpt.core.data.loan.LoanRepository
 import kpt.core.data.sync.OfflineQueueRepository
-import kpt.core.database.loan.entity.LoanRepaymentRequestEntity
+import kpt.core.model.loan.LoanRepaymentRequest
 import kotlin.math.round
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
@@ -204,7 +205,7 @@ internal class LoanRepaymentViewModel(
                 return@launch
             }
 
-            val request = LoanRepaymentRequestEntity(
+            val request = LoanRepaymentRequest(
                 loanId = state.loanId,
                 // From the eagerly-shared projection of the loan — see [accountNumber]. Keeping a
                 // copy in the editable state would be a second source that could go stale against
@@ -221,9 +222,8 @@ internal class LoanRepaymentViewModel(
 
             when (val result = commands.submitPayment(state.loanId, request)) {
                 is MutationResult.Applied -> {
-                    // The loan's balance and its transaction list have both changed, and the
-                    // profile plus both detail screens read the same cached loan.
-                    loanStream.refresh(forceFresh = true)
+                    // No re-read: the command ingests the repaid loan — new balance, new
+                    // transaction — through the `loans` store the profile and details observe.
                     mutableStateFlow.value = state.copy(
                         isSubmitting = false,
                         dialogState = LoanRepaymentState.DialogState.Submitted(
@@ -252,7 +252,7 @@ internal class LoanRepaymentViewModel(
                     mutableStateFlow.value = state.copy(
                         isSubmitting = false,
                         dialogState = LoanRepaymentState.DialogState.Failed(
-                            result.cause.message ?: FAILED_MSG,
+                            result.cause.serverErrorMessage() ?: FAILED_MSG,
                         ),
                     )
                 }
@@ -265,7 +265,7 @@ internal class LoanRepaymentViewModel(
         }
     }
 
-    private suspend fun enqueue(request: LoanRepaymentRequestEntity) {
+    private suspend fun enqueue(request: LoanRepaymentRequest) {
         val queued = queue.enqueueLoanRepayment(state.loanId, request)
         mutableStateFlow.value = state.copy(
             isSubmitting = false,

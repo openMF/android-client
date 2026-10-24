@@ -20,7 +20,12 @@
     <string name="feature_profile_office">Office: %1$s</string>
     <string name="feature_profile_server">Server: %1$s</string>
     <string name="feature_profile_sign_out">Sign out</string>
-    <string name="feature_profile_sign_out_prompt">You will need your credentials to sign back in. Unsynced work stays on this device.</string>
+    <string name="feature_profile_sign_out_keep_data">Sign out only</string>
+    <string name="feature_profile_sign_out_keep_data_detail">Your session ends. Cached clients, loans and documents, and any work not yet synced, stay on this device for your next sign-in.</string>
+    <string name="feature_profile_sign_out_clear_data">Sign out and clear data</string>
+    <string name="feature_profile_sign_out_clear_data_detail">Also deletes everything this app stored on this device, including work not yet synced. Use this before handing the device to someone else.</string>
+    <string name="feature_profile_sign_out_failed">Could not clear the data on this device. You are still signed in; try again.</string>
     <string name="feature_profile_sign_out_confirm">Sign out</string>
+    <string name="feature_profile_sign_out_confirm_clear">Sign out and clear</string>
     <string name="feature_profile_sign_out_cancel">Cancel</string>
 </resources>

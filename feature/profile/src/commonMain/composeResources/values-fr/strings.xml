@@ -10,5 +10,5 @@
 -->
 <resources>
     <string name="screens_profile_local_title">Profil local</string>
-    <string name="screens_profile_local_message">%1$s fonctionne entièrement sur l\'appareil. Aucun compte requis.</string>
+    <string name="screens_profile_local_message">%1$s fonctionne entièrement sur l'appareil. Aucun compte requis.</string>
 </resources>

@@ -16,7 +16,7 @@ import kpt.core.base.store.screen.FetchPolicy
 import kpt.core.base.store.screen.ScreenDataStream
 import kpt.core.base.store.screen.asScreenStream
 import kpt.core.data.office.OfficeRepository
-import kpt.core.database.office.entity.OfficeEntity
+import kpt.core.model.office.Office
 import kpt.core.store.config.AppCacheKeys
 import kpt.core.store.config.AppStoreIds
 import kpt.core.store.config.AppStoreRegistry
@@ -24,7 +24,7 @@ import org.mobilenativefoundation.store.store5.Store
 
 @RepositoryBinding(binds = OfficeRepository::class)
 internal class OfficeRepositoryImpl(
-    @FromStore(AppStoreIds.Offices) private val store: Store<Unit, List<OfficeEntity>>,
+    @FromStore(AppStoreIds.Offices) private val store: Store<Unit, List<Office>>,
 ) : OfficeRepository {
 
     // NETWORK_WITH_CACHE, not the CACHE_FIRST_SWR default: SWR's read path is
@@ -32,12 +32,12 @@ internal class OfficeRepositoryImpl(
     // until something HAS been fetched, so on a clean install nothing ever loads. Room is still
     // served first, so the offline-first behaviour is unchanged. The ttl stays the declared
     // freshness bound — it drives the "updated N ago" indicator, never whether cache is served.
-    override fun officesStream(scope: CoroutineScope): ScreenDataStream<List<OfficeEntity>> =
+    override fun officesStream(scope: CoroutineScope): ScreenDataStream<List<Office>> =
         store.asScreenStream(
             key = Unit,
             cacheKey = AppCacheKeys.Offices.LIST,
             scope = scope,
-            isEmpty = { it.isEmpty() },
+            // No `isEmpty`: an empty list is real content (see ChargeRepositoryImpl.chargesStream).
             fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
             ttl = AppStoreRegistry.Ttl.OFFICES,
         )

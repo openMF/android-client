@@ -17,7 +17,9 @@ import kpt.core.base.ui.nav.FeatureDestination
 import kpt.core.base.ui.nav.composableWithPushTransitions
 import kpt.core.base.ui.nav.popBackStackSafely
 import kpt.core.common.utils.Constants
-import kpt.core.database.savings.entity.SavingAccountDepositTypeEntity
+import kpt.core.model.savings.SavingAccountDepositType
+import kpt.core.model.objects.charge.ChargeResource
+import kpt.feature.charge.navigation.navigateToCharges
 import kpt.feature.document.navigation.navigateToDocumentList
 import kpt.feature.savings.application.SavingsApplicationScreen
 import kpt.feature.savings.recurring.RecurringDepositScreen
@@ -98,7 +100,7 @@ data class SavingsTransactionRoute(
  * Open one savings account's summary.
  *
  * [accountType] defaults to the plain-savings endpoint via
- * [SavingAccountDepositTypeEntity.ServerTypes], which already owns the id -> path-segment mapping
+ * [SavingAccountDepositType.ServerTypes], which already owns the id -> path-segment mapping
  * for all three deposit kinds. NOT `Constants.SAVINGS_ACCOUNT_TYPE` — despite the name that is a
  * SavedStateHandle KEY (`"savingsAccountType"`), not a Fineract path segment, and passing it would
  * request `/savingsAccountType/{id}`.
@@ -108,7 +110,7 @@ data class SavingsTransactionRoute(
  */
 fun NavController.navigateToSavingsSummary(
     accountId: Int,
-    accountType: String = SavingAccountDepositTypeEntity.ServerTypes.SAVINGS.endpoint,
+    accountType: String = SavingAccountDepositType.ServerTypes.SAVINGS.endpoint,
     navOptions: NavOptions? = null,
 ) = navigate(SavingsSummaryRoute(accountType, accountId), navOptions)
 
@@ -139,6 +141,9 @@ fun NavGraphBuilder.savingsDestination(navController: NavController) {
             onDocuments = { accountId ->
                 navController.navigateToDocumentList(Constants.ENTITY_TYPE_SAVINGS, accountId)
             },
+            // The ONE charge module, scoped to this account — `savingsaccounts/{id}/charges`,
+            // which deposit accounts share (they are savings accounts underneath in Fineract).
+            onCharges = { accountId -> navController.navigateToCharges(ChargeResource.SAVINGS, accountId) },
             onApprove = navController::navigateToSavingsApproval,
             onActivate = navController::navigateToSavingsActivation,
             onTransaction = { accountType, accountId, kind ->

@@ -25,6 +25,7 @@ import kpt.core.base.store.mutation.BlockReason
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kpt.core.model.objects.error.serverErrorMessage
 import kpt.core.common.utils.Constants
 import kpt.core.common.utils.FileKitUtil
 import kpt.core.data.client.ClientCommandRepository
@@ -32,7 +33,9 @@ import kpt.core.data.client.ClientRepository
 import kpt.core.data.document.DocumentCommandRepository
 import kpt.core.model.objects.noncoreobjects.IdentifierPayload
 import kpt.core.model.objects.noncoreobjects.IdentifierTemplate
-import kpt.core.ui.util.multipartRequestBody
+import kpt.core.ui.util.documentUpload
+import kpt.core.ui.utils.getClientIdentifierStatus
+import kpt.feature.client.identifiers.identifierDocumentKey
 
 /**
  * Add an identity document to a client — ported from
@@ -42,17 +45,14 @@ import kpt.core.ui.util.multipartRequestBody
  * Reached from the client IDENTIFIERS screen's "+", which was `null`-gated (so not drawn) until
  * this landed.
  *
- * ## Two of the original's three phases
+ * ## The original's three phases
  *
  * The original is a phase machine over `Feature`: `ADD_IDENTIFIER` creates the identifier, then
  * `ADD_UPDATE_DOCUMENT` attaches a scan to it, and `VIEW_DOCUMENT` previews an existing one.
  *
- * The first two are ported. **`VIEW_DOCUMENT` is not, because it has no caller here**: in the
- * original it is opened by the identifiers LIST (`ClientIdentifiersListViewModel` sets
- * `feature = Feature.VIEW_DOCUMENT`), and the ported list carries only `onAddNewIdentifier` — no
- * document affordance at all. Porting it would land a screen nothing opens, which is what the
- * spec's "identify the screen by its CALLER" rule exists to prevent. Tracked as
- * `identifier-document-preview-has-no-caller`.
+ * The first two are here. `VIEW_DOCUMENT` was only ever opened from the identifiers LIST, so it
+ * landed as that list's "View document" → the shared `ClientDocumentPreviewScreen` (2026-10-23),
+ * not as a third phase of this form.
  *
  * ## The phases are SEQUENTIAL, and the first one is already committed when the second runs
  *
@@ -110,7 +110,7 @@ internal class ClientAddIdentifierViewModel(
                     state.copy(documentKey = action.value, documentKeyError = false)
 
             is ClientAddIdentifierAction.UpdateStatus ->
-                mutableStateFlow.value = state.copy(status = action.value)
+                mutableStateFlow.value = state.copy(status = action.value, statusError = false)
 
             is ClientAddIdentifierAction.UpdateDescription ->
                 mutableStateFlow.value = state.copy(description = action.value)
@@ -140,9 +140,13 @@ internal class ClientAddIdentifierViewModel(
     private fun createIdentifier() {
         val typeMissing = state.documentTypeId <= 0
         val keyMissing = state.documentKey.isBlank()
-        if (typeMissing || keyMissing) {
-            mutableStateFlow.value =
-                state.copy(documentTypeError = typeMissing, documentKeyError = keyMissing)
+        val statusMissing = state.status !in IdentifierStatus.values
+        if (typeMissing || keyMissing || statusMissing) {
+            mutableStateFlow.value = state.copy(
+                documentTypeError = typeMissing,
+                documentKeyError = keyMissing,
+                statusError = statusMissing,
+            )
             return
         }
         if (state.isSubmitting) return
@@ -152,7 +156,7 @@ internal class ClientAddIdentifierViewModel(
             val payload = IdentifierPayload(
                 documentTypeId = state.documentTypeId,
                 documentKey = state.documentKey.trim(),
-                status = state.status.trim().ifEmpty { null },
+                status = state.status,
                 description = state.description.trim().ifEmpty { null },
             )
             when (val result = commands.createClientIdentifier(state.clientId, payload)) {
@@ -178,7 +182,7 @@ internal class ClientAddIdentifierViewModel(
                         isSubmitting = false,
                         error = IdentifierError.CreateFailed,
                         // Shown AS RECEIVED — see the class KDoc on the original's rewriting.
-                        serverMessage = result.cause?.message,
+                        serverMessage = result.cause.serverErrorMessage(),
                     )
                 }
 
@@ -210,18 +214,25 @@ internal class ClientAddIdentifierViewModel(
 
         mutableStateFlow.value = state.copy(isSubmitting = true, error = null, serverMessage = null)
         viewModelScope.launch {
-            val body = multipartRequestBody(
+            val body = documentUpload(
                 file = file.readBytes(),
                 name = state.documentKey.trim().ifEmpty { file.name },
                 extension = file.extension,
-                description = state.description.trim(),
+                // NOT the officer's description — that already went on the identifier itself in
+                // step one. The document's description is how the identifiers list FINDS this scan
+                // again (`identifierDocumentKey`); writing anything else here stranded it.
+                description = identifierDocumentKey(
+                    documentTypeName = state.documentTypeLabel,
+                    documentKey = state.documentKey.trim(),
+                    status = getClientIdentifierStatus(state.status.trim().ifEmpty { null }),
+                ),
             )
             val result = documents.createDocument(
                 entityType = Constants.ENTITY_TYPE_CLIENT_IDENTIFIERS,
                 // The IDENTIFIER's entity id is the client's here, which is what the original
                 // passed (`createDocument(ENTITY_TYPE_CLIENT_IDENTIFIERS, route.clientId)`).
                 entityId = state.clientId.toInt(),
-                request = body,
+                upload = body,
             )
             when (result) {
                 is MutationResult.Applied -> {
@@ -278,6 +289,7 @@ internal data class ClientAddIdentifierState(
     val status: String = "",
     val description: String = "",
     val documentTypeError: Boolean = false,
+    val statusError: Boolean = false,
     val documentKeyError: Boolean = false,
     /** True once the first write lands. From here the identifier exists and only the doc is left. */
     val identifierCreated: Boolean = false,
@@ -291,7 +303,8 @@ internal data class ClientAddIdentifierState(
     val fileName: String? get() = file?.name
 
     /** The create button: a type and a key, and no write already running. */
-    val canCreate: Boolean get() = documentTypeId > 0 && documentKey.isNotBlank() && !isSubmitting
+    val canCreate: Boolean get() =
+        documentTypeId > 0 && documentKey.isNotBlank() && status in IdentifierStatus.values && !isSubmitting
 
     /** The upload button: a chosen file, and no write already running. */
     val canUpload: Boolean get() = file != null && !isSubmitting
@@ -316,6 +329,19 @@ internal sealed interface ClientAddIdentifierAction {
     data object DismissError : ClientAddIdentifierAction
     data class UpdateDocumentType(val id: Int, val label: String) : ClientAddIdentifierAction
     data class UpdateDocumentKey(val value: String) : ClientAddIdentifierAction
+    /** [value] is one of [IdentifierStatus.values] — the wire value, not the displayed label. */
     data class UpdateStatus(val value: String) : ClientAddIdentifierAction
     data class UpdateDescription(val value: String) : ClientAddIdentifierAction
+}
+
+/**
+ * Fineract's identifier statuses, as sent. REQUIRED, as in the original's dropdown
+ * (`statusList = listOf(Inactive, Active)`, Submit disabled until one was chosen): the server
+ * dereferences `status` on create, so leaving it out is a 500 rather than a validation error
+ * (measured on the sandbox 2026-10-24). The port had made it an optional free-text field.
+ */
+internal object IdentifierStatus {
+    const val ACTIVE = "Active"
+    const val INACTIVE = "Inactive"
+    val values = listOf(INACTIVE, ACTIVE)
 }

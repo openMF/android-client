@@ -16,9 +16,10 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.kermit.logging)
             implementation(projects.core.data)
-            implementation(projects.core.database)
+            // Utilities (date helpers, constants) — core/common is not a data layer, so it is declared here
+            // rather than reached through core/network or core/database as it used to be.
+            implementation(projects.core.common)
             implementation(projects.core.model)
-            implementation(projects.core.store)
             // NavigationItem + @FeatureTab + toObjectNavigationRoute — the tab declaration seam.
             implementation(projects.core.ui)
             // The shared activate screen (client / centre / group all reach it). Same

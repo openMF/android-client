@@ -9,6 +9,9 @@
  */
 package kpt.core.store.client
 
+import kpt.core.model.client.Client
+import kpt.core.model.client.ClientAccounts as ClientAccountsModel
+import kpt.core.store.mapping.toModel
 import kpt.core.base.store.annotation.CacheKey
 import kpt.core.base.store.annotation.StoreProvider
 import kpt.core.database.cache.dao.ApiResponseCacheDao
@@ -56,7 +59,7 @@ fun provideRetrieveAssociatedAccountsStore(
 fun provideGetClientStore(
     clientApi: ClientApi,
     cache: ApiResponseCacheDao,
-): Store<Int, ClientEntity> = cachedRead(
+): Store<Int, Client> = cachedRead(
     dao = cache,
     keyOf = { key -> AppCacheKeys.ClientGetClient.forKey(key.toString()) },
     fetch = { key -> clientApi.getClient(clientId = key) },
@@ -148,7 +151,7 @@ fun provideGetClientIdentifierTemplateStore(
 fun provideGetAllAccountsOfClientStore(
     clientAccountsApi: ClientAccountsApi,
     cache: ApiResponseCacheDao,
-): Store<Int, ClientAccounts> = cachedRead(
+): Store<Int, ClientAccountsModel> = cachedRead(
     dao = cache,
     keyOf = { key -> AppCacheKeys.ClientGetAllAccountsOfClient.forKey(key.toString()) },
     fetch = { key -> clientAccountsApi.getAllAccountsOfClient(clientId = key) },
@@ -159,7 +162,7 @@ fun provideGetAllAccountsOfClientStore(
 fun provideGetClientAccountsStore(
     clientApi: ClientApi,
     cache: ApiResponseCacheDao,
-): Store<Int, ClientAccounts> = cachedRead(
+): Store<Int, ClientAccountsModel> = cachedRead(
     dao = cache,
     keyOf = { key -> AppCacheKeys.ClientGetClientAccounts.forKey(key.toString()) },
     fetch = { key -> clientApi.getClientAccounts(clientId = key) },

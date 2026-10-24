@@ -23,6 +23,7 @@ import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.emptyIfContent
 import kpt.core.base.store.screen.mapContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kpt.core.model.objects.error.serverErrorMessage
 import kpt.core.common.utils.DateHelper
 import kpt.core.data.loan.LoanCommandRepository
 import kpt.core.data.loan.LoanRepository
@@ -156,6 +157,7 @@ internal class LoanReschedulesViewModel(
             val today = ApiDateFormatter.formatForApi(Clock.System.now().toEpochMilliseconds())
             val result = when (what) {
                 Act.APPROVE -> commands.approveLoanReschedule(
+                    state.loanId,
                     rescheduleId,
                     LoanRescheduleApprovalRequest(
                         approvedOnDate = today,
@@ -165,6 +167,7 @@ internal class LoanReschedulesViewModel(
                 )
 
                 Act.REJECT -> commands.rejectLoanReschedule(
+                    state.loanId,
                     rescheduleId,
                     LoanRescheduleRejectionRequest(
                         rejectedOnDate = today,
@@ -175,11 +178,9 @@ internal class LoanReschedulesViewModel(
             }
 
             when (result) {
-                is MutationResult.Applied -> {
-                    // The row's status just changed, and the list is this screen's subject.
-                    stream.refresh(forceFresh = true)
-                    mutableStateFlow.value = state.copy(actingOn = null, dialogState = null)
-                }
+                // No re-read here: the command records the row's new status through the
+                // reschedules store, so the list this screen observes has already re-emitted.
+                is MutationResult.Applied -> mutableStateFlow.value = state.copy(actingOn = null, dialogState = null)
 
                 is MutationResult.Blocked -> mutableStateFlow.value = state.copy(
                     actingOn = null,
@@ -195,7 +196,7 @@ internal class LoanReschedulesViewModel(
                         dialogState = LoanReschedulesState.DialogState.Failed(
                             // Fineract's reason is the useful part — "loan is not active" is the
                             // common one. The original showed one fixed string per action.
-                            result.cause.message ?: failedMsg(what),
+                            result.cause.serverErrorMessage() ?: failedMsg(what),
                         ),
                     )
                 }

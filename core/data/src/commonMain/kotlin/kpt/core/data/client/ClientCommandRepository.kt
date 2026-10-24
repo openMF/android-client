@@ -9,10 +9,10 @@
  */
 package kpt.core.data.client
 
-import io.ktor.client.request.forms.MultiPartFormDataContent
+import kpt.core.model.objects.noncoreobjects.DocumentUpload
 import kpt.core.base.store.mutation.MutationResult
-import kpt.core.database.client.entity.ClientEntity
-import kpt.core.database.client.entity.ClientPayloadEntity
+import kpt.core.model.client.Client
+import kpt.core.model.client.ClientPayload
 import kpt.core.model.objects.clients.ActivatePayload
 import kpt.core.model.objects.clients.AssignStaffRequest
 import kpt.core.model.objects.clients.ClientAddressRequest
@@ -23,10 +23,10 @@ import kpt.core.model.objects.clients.UpdateSavingsAccountRequest
 import kpt.core.model.objects.noncoreobjects.IdentifierPayload
 import kpt.core.model.shared.GenericResponse
 import kpt.core.model.shared.PinpointLocationActionResponse
-import kpt.core.network.mifos.client.dto.PostClientAddressRequest
-import kpt.core.network.mifos.client.dto.PostClientAddressResponse
-import kpt.core.network.mifos.client.dto.PostClientsClientIdRequest
-import kpt.core.network.mifos.client.dto.PostClientsClientIdResponse
+import kpt.core.model.client.PostClientAddressRequest
+import kpt.core.model.client.PostClientAddressResponse
+import kpt.core.model.client.PostClientsClientIdRequest
+import kpt.core.model.client.PostClientsClientIdResponse
 
 /**
  * Every client write, as an explicit outcome.
@@ -56,13 +56,14 @@ interface ClientCommandRepository {
 
     suspend fun activate1(clientId: Long, postClientsClientIdRequest: PostClientsClientIdRequest, command: String? = null): MutationResult<PostClientsClientIdResponse>
 
-    suspend fun uploadClientImage(clientId: Int, body: MultiPartFormDataContent): MutationResult<Unit>
+    /** The photo as bytes + name + MIME type; the multipart encoding is core/data's job, not the caller's. */
+    suspend fun uploadClientImage(clientId: Int, image: DocumentUpload): MutationResult<Unit>
 
     suspend fun deleteClientImage(clientId: Int): MutationResult<Unit>
 
-    suspend fun createClient(clientPayload: ClientPayloadEntity?): MutationResult<ClientEntity>
+    suspend fun createClient(clientPayload: ClientPayload?): MutationResult<Client>
 
-    suspend fun updateClient(clientId: Int, clientPayload: ClientPayloadEntity?): MutationResult<ClientEntity>
+    suspend fun updateClient(clientId: Int, clientPayload: ClientPayload?): MutationResult<Client>
 
     suspend fun addClientPinpointLocation(clientId: Int, clientAddressRequest: ClientAddressRequest?): MutationResult<PinpointLocationActionResponse>
 

@@ -13,7 +13,6 @@ package kpt.feature.client.signature
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import io.ktor.client.request.forms.MultiPartFormDataContent
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +30,8 @@ import kpt.core.base.store.screen.screenDataStreamForTesting
 import kpt.core.data.document.DocumentCommandRepository
 import kpt.core.data.document.DocumentRepository
 import kpt.core.model.objects.noncoreobjects.Document
+import kpt.core.model.objects.noncoreobjects.DocumentUpload
+import kpt.core.model.objects.responses.SaveResponse
 import kpt.core.model.shared.GenericResponse
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -76,6 +77,9 @@ class ClientSignatureViewModelTest {
             downloaded += Triple(entityType, entityId, documentId)
             return downloadBytes
         }
+
+        override suspend fun fetchDocuments(entityType: String, entityId: Int) =
+            error("fetchDocuments is not used by the signature screen")
     }
 
     private class FakeCommands(
@@ -90,18 +94,18 @@ class ClientSignatureViewModelTest {
         override suspend fun createDocument(
             entityType: String,
             entityId: Int,
-            request: MultiPartFormDataContent,
-        ): MutationResult<GenericResponse> {
+            upload: DocumentUpload,
+        ): MutationResult<SaveResponse> {
             created += entityType to entityId
             gate?.await()
-            return result()
+            return result().asSaveResponse()
         }
 
         override suspend fun updateDocument(
             entityType: String,
             entityId: Int,
             documentId: Int,
-            request: MultiPartFormDataContent,
+            upload: DocumentUpload,
         ): MutationResult<GenericResponse> {
             updated += Triple(entityType, entityId, documentId)
             gate?.await()
@@ -270,4 +274,12 @@ class ClientSignatureViewModelTest {
         assertEquals(a, b)
         assertEquals(a.hashCode(), b.hashCode())
     }
+}
+
+/** The create endpoint answers [SaveResponse] (it carries the new id); every other arm passes through. */
+private fun MutationResult<GenericResponse>.asSaveResponse(): MutationResult<SaveResponse> = when (this) {
+    is MutationResult.Applied -> MutationResult.Applied(SaveResponse(), synced)
+    is MutationResult.Conflicted -> MutationResult.Conflicted(conflictId, SaveResponse())
+    is MutationResult.Blocked -> this
+    is MutationResult.Failed -> this
 }

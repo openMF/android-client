@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.screen.ScreenContent
-import kpt.core.database.group.entity.GroupEntity
+import kpt.core.model.group.Group
 import kpt.core.designsystem.component.AppMenuDropDownItem
 import kpt.core.designsystem.icon.AppIcons
 import kpt.feature.groups.generated.resources.Res
@@ -119,7 +119,7 @@ internal fun GroupsDetailScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun GroupsDetailContent(
-    group: ScreenState<GroupEntity>,
+    group: ScreenState<Group>,
     canActivate: Boolean,
     canOpenDocuments: Boolean = false,
     canOpenDataTables: Boolean = false,
@@ -281,7 +281,7 @@ private fun OverflowMenu(
 }
 
 @Composable
-private fun GroupFields(group: GroupEntity) {
+private fun GroupFields(group: Group) {
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         Text(
             text = group.name ?: stringResource(Res.string.feature_groups_unnamed),

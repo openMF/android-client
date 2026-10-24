@@ -10,7 +10,7 @@
 package kpt.core.data.group
 
 import kpt.core.base.store.mutation.MutationResult
-import kpt.core.database.group.entity.GroupPayloadEntity
+import kpt.core.model.group.GroupPayload
 import kpt.core.model.objects.clients.ActivatePayload
 import kpt.core.model.objects.responses.SaveResponse
 
@@ -21,13 +21,13 @@ import kpt.core.model.objects.responses.SaveResponse
  * change reached the server, was refused because the device is offline, or failed — a distinction
  * that cannot be reconstructed above this layer.
  *
- * These are commands, so they carry no Store and no cache. Offline CAPTURE is a different
- * operation with its own explicit queue ([kpt.core.data.sync.OfflineQueueRepository]); it is never
- * a silent fallback from here.
+ * They run online-only, and a write the server accepts is recorded locally through the group
+ * stores, so the reads see it. Offline CAPTURE is a different operation with its own explicit queue
+ * ([kpt.core.data.sync.OfflineQueueRepository]); it is never a silent fallback from here.
  */
 interface GroupCommandRepository {
 
-    suspend fun createGroup(groupPayload: GroupPayloadEntity?): MutationResult<SaveResponse>
+    suspend fun createGroup(groupPayload: GroupPayload?): MutationResult<SaveResponse>
 
     suspend fun activateGroup(groupId: Int, activatePayload: ActivatePayload): MutationResult<Unit>
 }

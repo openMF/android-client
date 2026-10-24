@@ -22,8 +22,8 @@ import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.data.client.ClientCommandRepository
 import kpt.core.data.client.ClientRepository
-import kpt.core.database.client.entity.AddressTemplate
-import kpt.core.network.mifos.client.dto.PostClientAddressRequest
+import kpt.core.model.client.AddressTemplate
+import kpt.core.model.client.PostClientAddressRequest
 
 /**
  * Add a postal address to a client — ported from

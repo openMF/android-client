@@ -16,8 +16,8 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runComposeUiTest
 import kpt.core.base.store.screen.ScreenState
-import kpt.core.database.loan.entity.LoanAccountEntity
-import kpt.core.database.loan.entity.LoanStatusEntity
+import kpt.core.model.loan.LoanAccount
+import kpt.core.model.loan.LoanStatus
 import kpt.core.designsystem.theme.KptTheme
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -25,21 +25,21 @@ import kotlin.test.assertEquals
 @OptIn(ExperimentalTestApi::class)
 class ClientLoanAccountsScreenUiTest {
 
-    private val active = LoanAccountEntity(
+    private val active = LoanAccount(
         id = 1,
         accountNo = "LN0001",
         productName = "Group Loan",
-        status = LoanStatusEntity(active = true, value = "Active"),
+        status = LoanStatus(active = true, value = "Active"),
         originalLoan = 10_000.0,
         amountPaid = 4_000.0,
         loanBalance = 6_000.0,
     )
 
-    private val pending = LoanAccountEntity(
+    private val pending = LoanAccount(
         id = 2,
         accountNo = "LN0002",
         productName = "Group Loan",
-        status = LoanStatusEntity(pendingApproval = true, value = "Pending Approval"),
+        status = LoanStatus(pendingApproval = true, value = "Pending Approval"),
         originalLoan = 5_000.0,
     )
 

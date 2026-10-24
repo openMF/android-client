@@ -20,12 +20,13 @@ import kpt.core.base.store.mutation.BlockReason
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kpt.core.model.objects.error.serverErrorMessage
 import kpt.core.common.utils.DateFormatPattern
 import kpt.core.data.savings.SavingsAccountRepository
 import kpt.core.data.savings.SavingsCommandRepository
 import kpt.core.model.utils.ApiDateFormatter
-import kpt.core.network.mifos.savings.dto.FixedDepositPayload
-import kpt.core.network.mifos.savings.dto.FixedDepositTemplate
+import kpt.core.model.savings.FixedDepositPayload
+import kpt.core.model.savings.FixedDepositTemplate
 
 /**
  * Open a FIXED DEPOSIT account for a client — ported from
@@ -201,7 +202,7 @@ internal class FixedDepositApplicationViewModel(
                     mutableStateFlow.value = state.copy(
                         isSubmitting = false,
                         error = FixedDepositError.Failed,
-                        serverMessage = result.cause?.message,
+                        serverMessage = result.cause.serverErrorMessage(),
                     )
                 }
 

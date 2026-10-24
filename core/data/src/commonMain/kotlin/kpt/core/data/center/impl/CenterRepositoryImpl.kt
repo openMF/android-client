@@ -9,6 +9,7 @@
  */
 package kpt.core.data.center.impl
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kpt.core.base.data.annotation.FromStore
 import kpt.core.base.data.annotation.RepositoryBinding
@@ -16,15 +17,22 @@ import kpt.core.base.store.screen.FetchPolicy
 import kpt.core.base.store.screen.ScreenDataStream
 import kpt.core.base.store.screen.asScreenStream
 import kpt.core.data.center.CenterRepository
-import kpt.core.database.center.entity.CenterEntity
+import kpt.core.model.center.Center
+import kpt.core.model.objects.databaseobjects.CollectionSheet
+import kpt.core.model.shared.Payload
+import kpt.core.store.center.CenterCollectionSheetKey
 import kpt.core.store.config.AppCacheKeys
 import kpt.core.store.config.AppStoreIds
 import kpt.core.store.config.AppStoreRegistry
 import org.mobilenativefoundation.store.store5.Store
+import org.mobilenativefoundation.store.store5.impl.extensions.fresh
+import org.mobilenativefoundation.store.store5.impl.extensions.get
 
 @RepositoryBinding(binds = CenterRepository::class)
 internal class CenterRepositoryImpl(
-    @FromStore(AppStoreIds.Centers) private val store: Store<Unit, List<CenterEntity>>,
+    @FromStore(AppStoreIds.Centers) private val store: Store<Unit, List<Center>>,
+    @FromStore(AppStoreIds.CenterCollectionSheet)
+    private val sheetStore: Store<CenterCollectionSheetKey, CollectionSheet>,
 ) : CenterRepository {
 
     // NETWORK_WITH_CACHE, not the CACHE_FIRST_SWR default: SWR's read path is
@@ -32,13 +40,31 @@ internal class CenterRepositoryImpl(
     // until something HAS been fetched, so on a clean install nothing ever loads. Room is still
     // served first, so the offline-first behaviour is unchanged. The ttl stays the declared
     // freshness bound — it drives the "updated N ago" indicator, never whether cache is served.
-    override fun centersStream(scope: CoroutineScope): ScreenDataStream<List<CenterEntity>> =
+    override fun centersStream(scope: CoroutineScope): ScreenDataStream<List<Center>> =
         store.asScreenStream(
             key = Unit,
             cacheKey = AppCacheKeys.Centers.LIST,
             scope = scope,
-            isEmpty = { it.isEmpty() },
+            // No `isEmpty`: an empty list is real content (see ChargeRepositoryImpl.chargesStream).
             fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
             ttl = AppStoreRegistry.Ttl.CENTERS,
         )
+
+    /**
+     * Through [sheetStore], never `CenterApi` directly: `fresh` writes the generated sheet through
+     * the read cache, and offline `get` answers from it. A sheet the officer SAVED is re-read into
+     * that row by the save itself, so the cached answer is never the pre-save one.
+     */
+    override suspend fun collectionSheet(centerId: Long, payload: Payload): CollectionSheet? {
+        val key = CenterCollectionSheetKey.of(centerId, payload)
+        return orNull { sheetStore.fresh(key) } ?: orNull { sheetStore.get(key) }
+    }
+
+    private inline fun <T> orNull(block: () -> T): T? = try {
+        block()
+    } catch (cancellation: CancellationException) {
+        throw cancellation
+    } catch (_: Exception) {
+        null
+    }
 }

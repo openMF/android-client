@@ -37,8 +37,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kpt.core.base.store.screen.ScreenState
-import kpt.core.base.ui.screen.ScreenContent
-import kpt.core.database.client.entity.ClientEntity
+import kpt.core.base.ui.screen.DefaultErrorContent
+import kpt.core.base.ui.screen.RefreshableScreenContent
+import kpt.core.model.client.Client
 import kpt.core.designsystem.component.AppOutlinedTextField
 import kpt.core.designsystem.icon.AppIcons
 import kpt.feature.client.generated.resources.Res
@@ -88,7 +89,7 @@ internal fun ClientListScreen(
 @Composable
 internal fun ClientListContent(
     ui: ClientListState,
-    rows: ScreenState<List<ClientEntity>>,
+    rows: ScreenState<List<Client>>,
     onAction: (ClientListAction) -> Unit,
     modifier: Modifier = Modifier,
     /**
@@ -181,18 +182,22 @@ internal fun ClientListContent(
                 }
             }
 
-            ScreenContent(
+            val retry = {
+                if (ui.query.isNotBlank() || ui.selectedOffices.isNotEmpty() ||
+                    ui.selectedStatuses.isNotEmpty()
+                ) {
+                    onAction(ClientListAction.FiltersCleared)
+                } else {
+                    onAction(ClientListAction.Retry)
+                }
+            }
+            // Pull-to-refresh, as in the original (`PullToRefreshBox` → `refreshClientList`). The
+            // pull always refetches; the error state's button keeps its clear-filters-first retry.
+            RefreshableScreenContent(
                 state = rows,
-                onRetry = {
-                    if (ui.query.isNotBlank() || ui.selectedOffices.isNotEmpty() ||
-                        ui.selectedStatuses.isNotEmpty()
-                    ) {
-                        onAction(ClientListAction.FiltersCleared)
-                    } else {
-                        onAction(ClientListAction.Retry)
-                    }
-                },
-                modifier = Modifier.fillMaxSize(),
+                onRefresh = { onAction(ClientListAction.Refresh) },
+                error = { DefaultErrorContent(it, retry) },
+                modifier = Modifier.fillMaxSize().testTag(ClientListTestTags.REFRESH),
             ) { clients, _ ->
                 LazyColumn(modifier = Modifier.testTag(ClientListTestTags.LIST)) {
                     items(clients) { client ->
@@ -213,7 +218,7 @@ internal fun ClientListContent(
 }
 
 @Composable
-private fun ClientRow(client: ClientEntity, onClick: (() -> Unit)?) {
+private fun ClientRow(client: Client, onClick: (() -> Unit)?) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -232,7 +237,7 @@ private fun ClientRow(client: ClientEntity, onClick: (() -> Unit)?) {
 }
 
 /** Offices present in the loaded rows — the filter's options. Empty until content arrives. */
-private fun officeNames(rows: ScreenState<List<ClientEntity>>): List<String> =
+private fun officeNames(rows: ScreenState<List<Client>>): List<String> =
     (rows as? ScreenState.Content)?.data?.mapNotNull { it.officeName }?.distinct()?.sorted().orEmpty()
 
 private fun ClientSort.labelRes() = when (this) {

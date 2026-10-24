@@ -86,6 +86,7 @@
     <string name="core_ui_pay_outstanding_amount">Pay Outstanding Amount</string>
     <string name="core_ui_edit">Edit</string>
     <string name="core_ui_delete">Delete</string>
+    <string name="core_ui_view_details">View Details</string>
 
     <!-- Note -->
     <string name="core_ui_note_createdBy">Created By:</string>
@@ -122,4 +123,8 @@
     <string name="client_share_accounts_share_product">Share Product</string>
     <string name="client_share_accounts_pending_for_approval_shares">Pending For Approval Shares</string>
     <string name="client_share_accounts_approved_shares">Approved Shares</string>
+
+    <string name="core_ui_document_viewer_open_failed">This PDF could not be opened.</string>
+    <string name="core_ui_document_viewer_unsupported">This file type cannot be previewed. Use Share to open it in another app.</string>
+    <string name="core_ui_document_viewer_image_description">Document image</string>
 </resources>

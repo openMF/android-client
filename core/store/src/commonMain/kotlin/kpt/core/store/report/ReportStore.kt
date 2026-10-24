@@ -43,5 +43,8 @@ fun provideReportStore(
         writer = { _: Unit, reports: List<ClientReportTypeItem> ->
             dao.upsertAll(reports.mapNotNull { it.toEntityOrNull() })
         },
+        delete = { _: Unit -> dao.deleteAll() },
+        // What the logout purge (`Store.clear()`) calls; without it the rows outlived the session.
+        deleteAll = { dao.deleteAll() },
     ),
 )

@@ -10,7 +10,7 @@
 -->
 <resources>
     <string name="screenstate_empty_title">Тут поки нічого немає</string>
-    <string name="screenstate_empty_message">Коли з\'являться дані, вони відображатимуться тут.</string>
+    <string name="screenstate_empty_message">Коли з'являться дані, вони відображатимуться тут.</string>
     <string name="screenstate_error_title">Щось пішло не так</string>
     <string name="screenstate_error_retry">Спробувати ще раз</string>
     <string name="screenstate_nonet_title">Ви офлайн</string>
@@ -23,7 +23,7 @@
     <string name="error_category_auth">Термін сеансу минув. Увійдіть ще раз.</string>
     <string name="error_category_ratelimit">Забагато запитів. Зачекайте та спробуйте ще раз.</string>
     <string name="error_category_server">На наших серверах тимчасовий збій. Спробуйте трохи згодом.</string>
-    <string name="error_category_timeout_connect">Час очікування з\'єднання вичерпано. Перевірте з\'єднання та повторіть спробу.</string>
+    <string name="error_category_timeout_connect">Час очікування з'єднання вичерпано. Перевірте з'єднання та повторіть спробу.</string>
     <string name="error_category_timeout_read">Сервер відповідав задовго. Повторіть спробу трохи згодом.</string>
     <string name="error_category_quota">Квоту вичерпано. Оновіть план або зачекайте.</string>
     <string name="error_category_client">Не вдалося виконати запит. Повторіть спробу.</string>

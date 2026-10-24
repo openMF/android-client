@@ -16,10 +16,10 @@ import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
 import de.jensklingenberg.ktorfit.http.QueryMap
 import kpt.core.base.network.annotation.ApiBinding
-import kpt.core.database.center.entity.CenterAccounts
-import kpt.core.database.center.entity.CenterEntity
-import kpt.core.database.center.entity.CenterPayloadEntity
-import kpt.core.database.center.entity.CenterWithAssociations
+import kpt.core.model.center.CenterAccounts
+import kpt.core.model.center.Center
+import kpt.core.model.center.CenterPayload
+import kpt.core.model.center.CenterWithAssociations
 import kpt.core.model.objects.clients.ActivatePayload
 import kpt.core.model.objects.clients.Page
 import kpt.core.model.objects.databaseobjects.CollectionSheet
@@ -28,9 +28,9 @@ import kpt.core.model.objects.responses.SaveResponse
 import kpt.core.model.shared.GenericResponse
 import kpt.core.model.shared.Payload
 import kpt.core.network.mifos.center.dto.GetCentersResponse
-import kpt.core.network.mifos.center.dto.PostCentersCenterIdRequest
-import kpt.core.network.mifos.center.dto.PostCentersCenterIdResponse
-import kpt.core.network.mifos.collectionsheet.dto.CollectionSheetPayload
+import kpt.core.model.center.PostCentersCenterIdRequest
+import kpt.core.model.center.PostCentersCenterIdResponse
+import kpt.core.model.collectionsheet.payload.CollectionSheetPayload
 
 @ApiBinding("mifos")
 interface CenterApi {
@@ -96,7 +96,7 @@ interface CenterApi {
         @Query("paged") b: Boolean,
         @Query("offset") offset: Int,
         @Query("limit") limit: Int,
-    ): Page<CenterEntity>
+    ): Page<Center>
 
     @GET("centers/{centerId}/accounts")
     suspend fun getCenterAccounts(@Path("centerId") centerId: Int): CenterAccounts
@@ -110,7 +110,7 @@ interface CenterApi {
     suspend fun getAllCentersInOffice(
         @Query("officeId") officeId: Int,
         @QueryMap additionalParams: Map<String, String>,
-    ): List<CenterEntity>
+    ): List<Center>
 
     @GET("centers/{centerId}?associations=groupMembers")
     suspend fun getAllGroupsForCenter(@Path("centerId") centerId: Int): CenterWithAssociations
@@ -136,7 +136,7 @@ interface CenterApi {
     /*@POST("clients")
     void uploadNewClientDetails();*/
     @POST("centers")
-    suspend fun createCenter(@Body centerPayload: CenterPayloadEntity?): SaveResponse
+    suspend fun createCenter(@Body centerPayload: CenterPayload?): SaveResponse
 
     @GET("centers")
     suspend fun getCenterList(

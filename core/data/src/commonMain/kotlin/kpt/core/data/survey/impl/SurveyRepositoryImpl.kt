@@ -16,7 +16,7 @@ import kpt.core.base.store.screen.FetchPolicy
 import kpt.core.base.store.screen.ScreenDataStream
 import kpt.core.base.store.screen.asScreenStream
 import kpt.core.data.survey.SurveyRepository
-import kpt.core.database.survey.entity.SurveyEntity
+import kpt.core.model.survey.Survey
 import kpt.core.store.config.AppCacheKeys
 import kpt.core.store.config.AppStoreIds
 import kpt.core.store.config.AppStoreRegistry
@@ -24,7 +24,7 @@ import org.mobilenativefoundation.store.store5.Store
 
 @RepositoryBinding(binds = SurveyRepository::class)
 internal class SurveyRepositoryImpl(
-    @FromStore(AppStoreIds.Surveys) private val store: Store<Unit, List<SurveyEntity>>,
+    @FromStore(AppStoreIds.Surveys) private val store: Store<Unit, List<Survey>>,
 ) : SurveyRepository {
 
     // NETWORK_WITH_CACHE, not the CACHE_FIRST_SWR default: SWR's read path is
@@ -32,12 +32,12 @@ internal class SurveyRepositoryImpl(
     // until something HAS been fetched, so on a clean install nothing ever loads. Room is still
     // served first, so the offline-first behaviour is unchanged. The ttl stays the declared
     // freshness bound — it drives the "updated N ago" indicator, never whether cache is served.
-    override fun surveysStream(scope: CoroutineScope): ScreenDataStream<List<SurveyEntity>> =
+    override fun surveysStream(scope: CoroutineScope): ScreenDataStream<List<Survey>> =
         store.asScreenStream(
             key = Unit,
             cacheKey = AppCacheKeys.Surveys.LIST,
             scope = scope,
-            isEmpty = { it.isEmpty() },
+            // No `isEmpty`: an empty list is real content (see ChargeRepositoryImpl.chargesStream).
             fetchPolicy = FetchPolicy.NETWORK_WITH_CACHE,
             ttl = AppStoreRegistry.Ttl.SURVEYS,
         )

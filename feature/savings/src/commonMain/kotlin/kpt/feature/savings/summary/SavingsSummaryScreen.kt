@@ -48,6 +48,7 @@ import kpt.feature.savings.generated.resources.Res
 import kpt.feature.savings.generated.resources.feature_savings_account_balance
 import kpt.feature.savings.generated.resources.feature_savings_activate
 import kpt.feature.savings.generated.resources.feature_savings_approve
+import kpt.feature.savings.generated.resources.feature_savings_charges
 import kpt.feature.savings.generated.resources.feature_savings_client_name_unknown
 import kpt.feature.savings.generated.resources.feature_savings_closed
 import kpt.feature.savings.generated.resources.feature_savings_deposit
@@ -100,6 +101,7 @@ internal fun SavingsSummaryScreen(
     onApprove: ((Int) -> Unit)? = null,
     onActivate: ((Int) -> Unit)? = null,
     onDocuments: ((Int) -> Unit)? = null,
+    onCharges: ((Int) -> Unit)? = null,
     viewModel: SavingsSummaryViewModel = koinViewModel(),
 ) {
     val account by viewModel.account.collectAsStateWithLifecycle()
@@ -113,6 +115,7 @@ internal fun SavingsSummaryScreen(
             is SavingsSummaryEvent.OpenApproval -> onApprove?.invoke(event.accountId)
             is SavingsSummaryEvent.OpenActivation -> onActivate?.invoke(event.accountId)
             is SavingsSummaryEvent.OpenDocuments -> onDocuments?.invoke(event.accountId)
+            is SavingsSummaryEvent.OpenCharges -> onCharges?.invoke(event.accountId)
             is SavingsSummaryEvent.ShowTransaction -> detail = event.transaction
         }
     }
@@ -124,6 +127,7 @@ internal fun SavingsSummaryScreen(
         canApprove = onApprove != null,
         canActivate = onActivate != null,
         canOpenDocuments = onDocuments != null,
+        canOpenCharges = onCharges != null,
         onAction = remember(viewModel) { { viewModel.trySendAction(it) } },
         modifier = modifier,
     )
@@ -148,6 +152,7 @@ internal fun SavingsSummaryContent(
     canApprove: Boolean = false,
     canActivate: Boolean = false,
     canOpenDocuments: Boolean = false,
+    canOpenCharges: Boolean = false,
 ) {
     AppScaffold(
         title = stringResource(Res.string.feature_savings_summary_title),
@@ -167,7 +172,7 @@ internal fun SavingsSummaryContent(
                 .testTag(SavingsSummaryTestTags.CONTENT),
         ) { summary, _ ->
             Column(Modifier.fillMaxSize().padding(horizontal = KptTheme.spacing.md)) {
-                AccountHeader(summary, canOpenDocuments, onAction)
+                AccountHeader(summary, canOpenDocuments, canOpenCharges, onAction)
 
                 // `weight(1f)`, so the action row below is always reachable. The original stacked
                 // the buttons in a `Box(align = BottomStart)` OVER a `fillMaxSize` column, which
@@ -194,6 +199,7 @@ internal fun SavingsSummaryContent(
 private fun AccountHeader(
     summary: SavingsSummary,
     canOpenDocuments: Boolean,
+    canOpenCharges: Boolean,
     onAction: (SavingsSummaryAction) -> Unit,
 ) {
     Row(
@@ -215,9 +221,10 @@ private fun AccountHeader(
         }
 
         // The original's two-item overflow menu. "More savings account info" opened a datatable
-        // screen that needs the savings datatable name, which is not ported — so only Documents
-        // is offered, and the icon is absent when even that has no destination.
-        if (canOpenDocuments) {
+        // screen that needs the savings datatable name, which is not ported — so Documents is
+        // offered, plus Charges (feature/charge; the original had no savings charge screen at
+        // all). Each entry needs a destination, and the icon is absent when none has one.
+        if (canOpenDocuments || canOpenCharges) {
             var expanded by remember { mutableStateOf(false) }
             IconButton(
                 onClick = { expanded = !expanded },
@@ -229,14 +236,26 @@ private fun AccountHeader(
                 )
             }
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                AppMenuDropDownItem(
-                    option = stringResource(Res.string.feature_savings_documents),
-                    onClick = {
-                        expanded = false
-                        onAction(SavingsSummaryAction.DocumentsClicked)
-                    },
-                    modifier = Modifier.testTag(SavingsSummaryTestTags.DOCUMENTS),
-                )
+                if (canOpenDocuments) {
+                    AppMenuDropDownItem(
+                        option = stringResource(Res.string.feature_savings_documents),
+                        onClick = {
+                            expanded = false
+                            onAction(SavingsSummaryAction.DocumentsClicked)
+                        },
+                        modifier = Modifier.testTag(SavingsSummaryTestTags.DOCUMENTS),
+                    )
+                }
+                if (canOpenCharges) {
+                    AppMenuDropDownItem(
+                        option = stringResource(Res.string.feature_savings_charges),
+                        onClick = {
+                            expanded = false
+                            onAction(SavingsSummaryAction.ChargesClicked)
+                        },
+                        modifier = Modifier.testTag(SavingsSummaryTestTags.CHARGES),
+                    )
+                }
             }
         }
     }
@@ -424,6 +443,7 @@ internal object SavingsSummaryTestTags {
     const val CLOSED_NOTICE = "savingsSummary:closedNotice"
     const val OVERFLOW = "savingsSummary:overflow"
     const val DOCUMENTS = "savingsSummary:documents"
+    const val CHARGES = "savingsSummary:charges"
     const val DETAIL_DIALOG = "savingsSummary:detailDialog"
     fun transaction(id: Int?): String = "savingsSummary:transaction:$id"
 }

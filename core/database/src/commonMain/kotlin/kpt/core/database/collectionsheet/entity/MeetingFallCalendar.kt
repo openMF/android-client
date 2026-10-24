@@ -9,17 +9,23 @@
  */
 package kpt.core.database.collectionsheet.entity
 
+import kotlinx.serialization.Serializable
 import kpt.core.database.loan.entity.LoanStatusEntity
 import kpt.core.model.objects.collectionsheets.CollectionMeetingCalendar
 
 /**
  * Created by Tarun on 25-07-2017.
+ *
+ * `@Serializable` because it is both the wire shape of `GET centers?meetingDate=` and the JSON the
+ * `meetingFallCenters` column holds. Without it the roster could neither be decoded nor written:
+ * `CollectionSheetTypeConverters` threw on every insert, even of an empty list.
  */
+@Serializable
 data class MeetingFallCalendar(
     // It's not a mistake. This AccountNo field DOES expect a String.
     val accountNo: String? = null,
 
-    val activationDate: List<Int>,
+    val activationDate: List<Int> = emptyList(),
 
     val isActive: Boolean = false,
     val collectionMeetingCalendar: CollectionMeetingCalendar? = null,

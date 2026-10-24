@@ -13,6 +13,7 @@ import androidx.room3.Dao
 import androidx.room3.Insert
 import androidx.room3.OnConflictStrategy
 import androidx.room3.Query
+import androidx.room3.Transaction
 import kotlinx.coroutines.flow.Flow
 import kpt.core.base.database.annotation.DbDao
 import kpt.core.database.survey.entity.QuestionDatasEntity
@@ -37,6 +38,19 @@ interface SurveyDao {
 
     @Query("SELECT * FROM Survey")
     fun getAllSurveys(): Flow<List<SurveyEntity>>
+
+    @Query("DELETE FROM Survey")
+    suspend fun deleteAllSurveys()
+
+    /**
+     * Make the table EXACTLY the server's survey list. The store's writer inserted one by one, so
+     * a survey retired on the server stayed offered in the field.
+     */
+    @Transaction
+    suspend fun replaceAllSurveys(surveys: List<SurveyEntity>) {
+        deleteAllSurveys()
+        surveys.forEach { insertSurvey(it) }
+    }
 
     @Query("SELECT * FROM QuestionDatas WHERE surveyId = :surveyId ORDER BY sequenceNo ASC")
     fun getQuestionDatas(surveyId: Int): Flow<List<QuestionDatasEntity>>

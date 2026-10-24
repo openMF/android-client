@@ -9,15 +9,26 @@
  */
 package kpt.core.database.charge.entity
 
+import androidx.room3.ColumnInfo
 import androidx.room3.Entity
 import androidx.room3.Ignore
-import androidx.room3.PrimaryKey
 import kotlinx.serialization.Serializable
 import kpt.core.base.database.annotation.DbEntity
 import kpt.core.database.client.entity.ClientDateEntity
 
 /**
  * Created by nellyk on 2/15/2016.
+ *
+ * ## Keyed by OWNER + id, not by id
+ *
+ * Client, loan and savings charges are three different Fineract tables (`m_client_charge`,
+ * `m_loan_charge`, `m_savings_account_charge`), so their ids coincide freely. Keyed on `id` alone a
+ * loan charge 5 REPLACED client charge 5 on insert — one owner's list silently lost a row whenever
+ * the other was fetched (found 2026-10-23). [resourceType] + [resourceId] + [id] is the identity
+ * the API itself uses (`/{resourceType}/{resourceId}/charges/{id}`), and the owner is STAMPED by the
+ * store on write because the list endpoints do not echo it consistently (loans send no `loanId`).
+ *
+ * `clientId` / `loanId` stay: they are what Fineract sends, and other readers deserialise them.
  */
 @Serializable
 @DbEntity
@@ -25,18 +36,26 @@ import kpt.core.database.client.entity.ClientDateEntity
     tableName = "Charges",
     indices = [],
     inheritSuperIndices = false,
-    primaryKeys = [],
+    primaryKeys = ["resourceType", "resourceId", "id"],
     ignoredColumns = [],
     foreignKeys = [],
 )
 data class ChargesEntity(
-    @PrimaryKey(autoGenerate = true)
+    /** The Fineract path segment of the owner — `clients`, `loans` or `savingsaccounts`. */
+    @ColumnInfo(defaultValue = "''")
+    val resourceType: String = "",
+
+    @ColumnInfo(defaultValue = "0")
+    val resourceId: Int = 0,
+
+    /** This levied instance's id, unique only within its owner. */
     val id: Int = 0,
 
     val clientId: Int? = null,
 
     val loanId: Int? = null,
 
+    /** The charge DEFINITION's id — which charge this is, repeated across every owner levying it. */
     val chargeId: Int? = null,
 
     val name: String? = null,

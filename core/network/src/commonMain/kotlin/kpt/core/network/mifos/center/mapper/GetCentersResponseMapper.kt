@@ -9,21 +9,21 @@
  */
 package kpt.core.network.mifos.center.mapper
 
-import kpt.core.database.center.entity.CenterEntity
+import kpt.core.model.center.Center
 import kpt.core.model.objects.clients.Page
 import kpt.core.network.data.AbstractMapper
 import kpt.core.network.mifos.center.dto.GetCentersResponse
 
-object GetCentersResponseMapper : AbstractMapper<GetCentersResponse, Page<CenterEntity>>() {
+object GetCentersResponseMapper : AbstractMapper<GetCentersResponse, Page<Center>>() {
 
-    override fun mapFromEntity(entity: GetCentersResponse): Page<CenterEntity> {
-        return Page<CenterEntity>().apply {
+    override fun mapFromEntity(entity: GetCentersResponse): Page<Center> {
+        return Page<Center>().apply {
             totalFilteredRecords = entity.totalFilteredRecords!!
             pageItems = CenterMapper.mapFromEntityList(entity.pageItems!!.toList())
         }
     }
 
-    override fun mapToEntity(domainModel: Page<CenterEntity>): GetCentersResponse {
+    override fun mapToEntity(domainModel: Page<Center>): GetCentersResponse {
         return GetCentersResponse(
             totalFilteredRecords = domainModel.totalFilteredRecords,
             pageItems = CenterMapper.mapToEntityList(domainModel.pageItems).toSet(),

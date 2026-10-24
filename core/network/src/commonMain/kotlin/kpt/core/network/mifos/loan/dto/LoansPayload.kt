@@ -10,7 +10,7 @@
 package kpt.core.network.mifos.loan.dto
 
 import kotlinx.serialization.Serializable
-import kpt.core.database.datatable.entity.DataTablePayload
+import kpt.core.model.datatable.DataTablePayload
 
 /**
  * Created by nellyk on 2/20/2016.

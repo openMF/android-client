@@ -35,7 +35,7 @@ import kpt.core.base.designsystem.theme.KptTheme
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.effects.EventsEffect
 import kpt.core.base.ui.screen.ScreenContent
-import kpt.core.database.client.entity.ClientEntity
+import kpt.core.model.client.Client
 import kpt.core.designsystem.component.AppBasicDialog
 import kpt.core.designsystem.component.AppScaffold
 import kpt.core.designsystem.component.AppTextButton
@@ -195,7 +195,7 @@ internal fun ClientDetailsScreen(
 @Composable
 internal fun ClientDetailsContent(
     state: ClientDetailsState,
-    client: ScreenState<ClientEntity>,
+    client: ScreenState<Client>,
     onAction: (ClientDetailsAction) -> Unit,
     availableActions: List<ClientDetailsActionItem>,
     modifier: Modifier = Modifier,
@@ -384,7 +384,7 @@ internal fun ClientDetailsContent(
  * fallback for every blank value.
  */
 @Composable
-private fun detailCards(client: ClientEntity, notAvailable: String): List<Map<org.jetbrains.compose.resources.StringResource, String>> {
+private fun detailCards(client: Client, notAvailable: String): List<Map<org.jetbrains.compose.resources.StringResource, String>> {
     fun String?.orNa() = this?.takeIf { it.isNotBlank() } ?: notAvailable
 
     val personal = mapOf(

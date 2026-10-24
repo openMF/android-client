@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import kpt.core.base.store.mutation.BlockReason
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kpt.core.model.objects.error.serverErrorMessage
 import kpt.core.data.savings.SavingsAccountRepository
 import kpt.core.data.savings.SavingsCommandRepository
 import kpt.core.model.objects.account.saving.SavingsTransactionInput
@@ -196,7 +197,7 @@ internal class SavingsTransactionViewModel(
                         isSubmitting = false,
                         dialogState = TransactionDialog.Failed(
                             offline = false,
-                            msg = result.cause.message,
+                            msg = result.cause.serverErrorMessage(),
                         ),
                     )
                 }

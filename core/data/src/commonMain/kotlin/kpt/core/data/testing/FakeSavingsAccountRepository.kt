@@ -16,12 +16,12 @@ import kpt.core.base.store.screen.ScreenDataStream
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.screenDataStreamForTesting
 import kpt.core.data.savings.SavingsAccountRepository
-import kpt.core.database.savings.entity.SavingProductsTemplate
-import kpt.core.database.savings.entity.SavingsAccountTransactionTemplateEntity
-import kpt.core.database.savings.entity.SavingsAccountWithAssociationsEntity
+import kpt.core.model.savings.SavingProductsTemplate
+import kpt.core.model.savings.SavingsAccountTransactionTemplate
+import kpt.core.model.savings.SavingsAccountWithAssociations
 import kpt.core.model.objects.organisations.ProductSavings
-import kpt.core.network.mifos.savings.dto.FixedDepositTemplate
-import kpt.core.network.mifos.savings.dto.ShareTemplate
+import kpt.core.model.savings.FixedDepositTemplate
+import kpt.core.model.savings.ShareTemplate
 
 /**
  * Test double for [SavingsAccountRepository] — the savings-side twin of [FakeLoanRepository].
@@ -32,9 +32,9 @@ import kpt.core.network.mifos.savings.dto.ShareTemplate
  */
 @ExperimentalDataTestingApi
 class FakeSavingsAccountRepository(
-    private val account: MutableStateFlow<ScreenState<SavingsAccountWithAssociationsEntity>>? = null,
+    private val account: MutableStateFlow<ScreenState<SavingsAccountWithAssociations>>? = null,
     /** Answers the transaction-template question; null models the read failing. */
-    private val transactionTemplate: () -> SavingsAccountTransactionTemplateEntity? = { null },
+    private val transactionTemplate: () -> SavingsAccountTransactionTemplate? = { null },
     private val savingsProducts: MutableStateFlow<ScreenState<List<ProductSavings>>>? = null,
     /** Answers the application-template question, per PRODUCT; null models the read failing. */
     private val applicationTemplate: (productId: Int) -> SavingProductsTemplate? = { null },
@@ -51,7 +51,7 @@ class FakeSavingsAccountRepository(
         savingsAccountType: String,
         savingsAccountId: Int,
         scope: CoroutineScope,
-    ): ScreenDataStream<SavingsAccountWithAssociationsEntity> {
+    ): ScreenDataStream<SavingsAccountWithAssociations> {
         requestedKeys += savingsAccountType to savingsAccountId
         val source = requireNotNull(account) {
             "FakeSavingsAccountRepository: savingsAccountStream was read but no state flow " +
@@ -99,7 +99,7 @@ class FakeSavingsAccountRepository(
         savingsAccountType: String,
         savingsAccountId: Int,
         transactionType: String,
-    ): SavingsAccountTransactionTemplateEntity? {
+    ): SavingsAccountTransactionTemplate? {
         templateQueries += Triple(savingsAccountType, savingsAccountId, transactionType)
         return transactionTemplate()
     }

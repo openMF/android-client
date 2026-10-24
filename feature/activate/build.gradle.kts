@@ -28,8 +28,6 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(projects.coreBase.store)
-            implementation(projects.core.database)
-            implementation(projects.core.network)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.turbine)
         }

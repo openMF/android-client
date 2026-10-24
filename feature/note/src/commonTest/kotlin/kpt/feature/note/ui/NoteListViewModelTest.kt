@@ -21,7 +21,7 @@ import kpt.core.base.store.mutation.BlockReason
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ExperimentalScreenDataStreamTestingApi
 import kpt.core.base.store.screen.ScreenState
-import kpt.core.database.note.entity.NoteEntity
+import kpt.core.model.objects.note.Note
 import kpt.feature.note.testing.FakeNoteCommandRepository
 import kpt.feature.note.testing.FakeNoteRepository
 import kotlin.test.AfterTest
@@ -56,7 +56,7 @@ class NoteListViewModelTest {
         ) to commands
     }
 
-    private fun note(id: Long, text: String) = NoteEntity(id = id, clientId = 42, noteContent = text)
+    private fun note(id: Long, text: String) = Note(id = id, clientId = 42, noteContent = text)
 
     @BeforeTest
     fun setUp() = Dispatchers.setMain(Dispatchers.Unconfined)
@@ -83,8 +83,25 @@ class NoteListViewModelTest {
         runCurrent()
 
         vm.notes.test {
-            val content = assertIs<ScreenState.Content<List<NoteEntity>>>(expectMostRecentItem())
+            val content = assertIs<ScreenState.Content<List<Note>>>(expectMostRecentItem())
             assertEquals(2, content.data.size)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun deletingTheLastNoteLeavesAnEmptyListNotTheDeletedRow() = runTest {
+        // The stream now reports "no notes" as an empty Content (no `isEmpty` predicate), which
+        // the screen draws as EmptyNotes. With the predicate the deleted row stayed on screen.
+        val (vm, _) = viewModel()
+        repository.emit(note(1, "only"))
+        runCurrent()
+        repository.emit()
+        runCurrent()
+
+        vm.notes.test {
+            val content = assertIs<ScreenState.Content<List<Note>>>(expectMostRecentItem())
+            assertTrue(content.data.isEmpty())
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -148,7 +165,7 @@ class NoteListViewModelTest {
         assertEquals(NoteWriteError.Offline, vm.stateFlow.value.writeError)
         // …and the notes are STILL THERE. That is the half the regression is about.
         vm.notes.test {
-            val content = assertIs<ScreenState.Content<List<NoteEntity>>>(expectMostRecentItem())
+            val content = assertIs<ScreenState.Content<List<Note>>>(expectMostRecentItem())
             assertEquals(1, content.data.size)
             cancelAndIgnoreRemainingEvents()
         }
@@ -201,14 +218,11 @@ class NoteListViewModelTest {
     }
 
     @Test
-    fun aSuccessfulDeleteReREADsTheListSoTheRowDisappears() = runTest {
-        // REPORTED ON DEVICE as "delete note is not working". The server DID delete the note and
-        // the client was told `Applied` — but `NoteCommandRepository` is cache-free, so nothing
-        // invalidated the read and the row stayed on screen. Indistinguishable from a delete that
-        // silently failed.
-        //
-        // Asserts the force-fresh specifically: a plain refresh could be served from the cache
-        // that still contains the row we just deleted.
+    fun aSuccessfulDeleteNeedsNoReRead() = runTest {
+        // Device report "delete note is not working" was a cache-free command leaving the row on
+        // screen; this ViewModel used to force a re-read to hide it. The command now clears the row
+        // through the note store (NoteRepositoryTest), so a forced re-read would be a second fetch
+        // for nothing.
         val (vm, _) = viewModel()
         repository.state.value = ScreenState.Content(listOf(note(1, "doomed")))
         runCurrent()
@@ -219,8 +233,9 @@ class NoteListViewModelTest {
             vm.trySendAction(NoteListAction.ConfirmDelete)
             runCurrent()
 
-            awaitItem() // the re-read; absent before the fix
+            expectNoEvents()
             cancelAndIgnoreRemainingEvents()
         }
+        assertNull(vm.stateFlow.value.expandedNoteId)
     }
 }

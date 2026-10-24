@@ -9,11 +9,11 @@
  */
 package kpt.core.network.mifos.client.mapper
 
-import kpt.core.database.client.entity.ClientClassificationEntity
-import kpt.core.database.client.entity.ClientEntity
-import kpt.core.database.client.entity.ClientGenderEntity
-import kpt.core.database.client.entity.ClientStatusEntity
-import kpt.core.database.client.entity.ClientTypeEntity
+import kpt.core.model.client.ClientClassification
+import kpt.core.model.client.Client
+import kpt.core.model.client.ClientGender
+import kpt.core.model.client.ClientStatus
+import kpt.core.model.client.ClientType
 import kpt.core.network.data.AbstractMapper
 import kpt.core.network.mifos.client.dto.GetClientClassificationOptions
 import kpt.core.network.mifos.client.dto.GetClientStatus
@@ -21,10 +21,10 @@ import kpt.core.network.mifos.client.dto.GetClientTypeOptions
 import kpt.core.network.mifos.client.dto.GetClientsPageItemsResponse
 import kpt.core.network.mifos.client.dto.GetGenderOptions
 
-object ClientMapper : AbstractMapper<GetClientsPageItemsResponse, ClientEntity>() {
+object ClientMapper : AbstractMapper<GetClientsPageItemsResponse, Client>() {
 
-    override fun mapFromEntity(entity: GetClientsPageItemsResponse): ClientEntity {
-        return ClientEntity(
+    override fun mapFromEntity(entity: GetClientsPageItemsResponse): Client {
+        return Client(
             id = entity.id!!.toInt(),
             accountNo = entity.accountNo,
             fullname = entity.fullName,
@@ -37,33 +37,33 @@ object ClientMapper : AbstractMapper<GetClientsPageItemsResponse, ClientEntity>(
             groupId = entity.groupId,
             groupName = entity.groupName,
             active = entity.active!!,
-            status = ClientStatusEntity(
+            status = ClientStatus(
                 id = entity.status?.id!!.toInt(),
                 code = entity.status.code,
                 value = entity.status.value,
             ),
             externalId = entity.externalId,
             emailAddress = entity.emailAddress,
-            legalForm = ClientStatusEntity(
+            legalForm = ClientStatus(
                 id = entity.legalForm?.id?.toInt() ?: -1,
                 code = entity.legalForm?.code,
                 value = entity.legalForm?.value,
             ),
             dateOfBirth = entity.dateOfBirth ?: emptyList(),
             gender = entity.gender?.let {
-                ClientGenderEntity(
+                ClientGender(
                     id = it.id?.toInt() ?: -1,
                     name = it.name,
                 )
             },
             clientType = entity.clientType?.let {
-                ClientTypeEntity(
+                ClientType(
                     id = it.id?.toInt() ?: -1,
                     name = it.name,
                 )
             },
             clientClassification = entity.clientClassification?.let {
-                ClientClassificationEntity(
+                ClientClassification(
                     id = it.id?.toInt() ?: -1,
                     name = it.name,
                 )
@@ -71,7 +71,7 @@ object ClientMapper : AbstractMapper<GetClientsPageItemsResponse, ClientEntity>(
         )
     }
 
-    override fun mapToEntity(domainModel: ClientEntity): GetClientsPageItemsResponse {
+    override fun mapToEntity(domainModel: Client): GetClientsPageItemsResponse {
         return GetClientsPageItemsResponse(
             id = domainModel.id.toLong(),
             accountNo = domainModel.accountNo,

@@ -18,7 +18,7 @@ import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.emptyIfContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.data.datatable.DataTableRepository
-import kpt.core.database.datatable.entity.DataTableEntity
+import kpt.core.model.datatable.DataTable
 
 /**
  * The datatables registered against one application table — ported from
@@ -56,7 +56,7 @@ internal class DataTableListViewModel(
 
     private val stream = repository.dataTablesStream(appTable, viewModelScope)
 
-    val dataTables: StateFlow<ScreenState<List<DataTableEntity>>> = stream.state
+    val dataTables: StateFlow<ScreenState<List<DataTable>>> = stream.state
         // An empty list must be marked Empty, or the `empty = { ... }` slot the screen supplies
         // is unreachable and the officer gets a BLANK body under a "Refreshing…" banner. Found on
         // device 2026-10-23: "More Group Info" fetched `datatables?apptable=m_group` → 200 with no

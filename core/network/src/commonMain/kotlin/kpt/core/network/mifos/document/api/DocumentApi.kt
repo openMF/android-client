@@ -20,6 +20,7 @@ import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.statement.HttpResponse
 import kpt.core.base.network.annotation.ApiBinding
 import kpt.core.model.objects.noncoreobjects.Document
+import kpt.core.model.objects.responses.SaveResponse
 import kpt.core.model.shared.GenericResponse
 
 @ApiBinding("mifos")
@@ -37,13 +38,17 @@ interface DocumentApi {
      * @param nameOfDocument          - Document Name
      * @param description             - Mandatory - Document Description
      * @param typedFile               - Mandatory
+     *
+     * Typed [SaveResponse], not [GenericResponse]: Fineract answers `{"resourceId": 3, …}` at the
+     * TOP level, and `GenericResponse` only has a `responseFields` map, so the new document's id
+     * deserialized to nothing and could never be recorded locally.
      */
     @POST("{entityType}/{entityId}/documents")
     suspend fun createDocument(
         @Path("entityType") entityType: String,
         @Path("entityId") entityId: Int,
         @Body request: MultiPartFormDataContent,
-    ): GenericResponse
+    ): SaveResponse
 
     /**
      * This Service is for downloading the Document with EntityType and EntityId and Document Id

@@ -34,7 +34,7 @@ import kpt.core.base.designsystem.theme.KptTheme
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.effects.EventsEffect
 import kpt.core.base.ui.screen.ScreenContent
-import kpt.core.database.office.entity.OfficeEntity
+import kpt.core.model.office.Office
 import kpt.core.designsystem.component.AppOutlinedButton
 import kpt.core.designsystem.component.AppOutlinedTextField
 import kpt.core.designsystem.component.AppScaffold
@@ -115,7 +115,7 @@ internal fun CreateGroupScreen(
 @Composable
 internal fun CreateGroupContent(
     state: CreateGroupState,
-    offices: ScreenState<List<OfficeEntity>>,
+    offices: ScreenState<List<Office>>,
     onAction: (CreateGroupAction) -> Unit,
     modifier: Modifier = Modifier,
     scaffoldPadding: PaddingValues = PaddingValues(),

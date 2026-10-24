@@ -11,7 +11,6 @@ package kpt.feature.client.adddocument
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import io.ktor.client.request.forms.MultiPartFormDataContent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -19,6 +18,8 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.data.document.DocumentCommandRepository
+import kpt.core.model.objects.noncoreobjects.DocumentUpload
+import kpt.core.model.objects.responses.SaveResponse
 import kpt.core.model.shared.GenericResponse
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -60,17 +61,17 @@ class ClientAddDocumentViewModelTest {
         override suspend fun createDocument(
             entityType: String,
             entityId: Int,
-            request: MultiPartFormDataContent,
-        ): MutationResult<GenericResponse> {
+            upload: DocumentUpload,
+        ): MutationResult<SaveResponse> {
             created += entityType to entityId
-            return outcome()
+            return outcome().asSaveResponse()
         }
 
         override suspend fun updateDocument(
             entityType: String,
             entityId: Int,
             documentId: Int,
-            request: MultiPartFormDataContent,
+            upload: DocumentUpload,
         ) = error("the client add form never updates")
 
         override suspend fun removeDocument(entityType: String, entityId: Int, documentId: Int) =
@@ -192,4 +193,12 @@ class ClientAddDocumentViewModelTest {
             cancelAndIgnoreRemainingEvents()
         }
     }
+}
+
+/** The create endpoint answers [SaveResponse] (it carries the new id); every other arm passes through. */
+private fun MutationResult<GenericResponse>.asSaveResponse(): MutationResult<SaveResponse> = when (this) {
+    is MutationResult.Applied -> MutationResult.Applied(SaveResponse(), synced)
+    is MutationResult.Conflicted -> MutationResult.Conflicted(conflictId, SaveResponse())
+    is MutationResult.Blocked -> this
+    is MutationResult.Failed -> this
 }

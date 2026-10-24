@@ -22,9 +22,10 @@ import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.store.screen.emptyIfContent
 import kpt.core.base.store.screen.mapContent
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kpt.core.model.objects.error.serverErrorMessage
 import kpt.core.data.loan.LoanCommandRepository
 import kpt.core.data.loan.LoanRepository
-import kpt.core.database.loan.entity.LoanTemplate
+import kpt.core.model.loan.LoanTemplate
 import kpt.core.model.objects.account.loan.LoanApplicationInput
 import kpt.core.model.objects.account.loan.RepaymentSchedule
 import kpt.core.model.utils.ApiDateFormatter
@@ -246,7 +247,7 @@ internal class NewLoanApplicationViewModel(
                         // The server REJECTED these terms, which is information the officer needs
                         // on the Terms step — not a replaced screen. The original swapped the
                         // whole wizard for an error page, losing a form four pages deep.
-                        scheduleError = ScheduleError.Rejected(result.cause.message),
+                        scheduleError = ScheduleError.Rejected(result.cause.serverErrorMessage()),
                     )
                 }
 
@@ -293,7 +294,7 @@ internal class NewLoanApplicationViewModel(
                     mutableStateFlow.value = state.copy(
                         isSubmitting = false,
                         dialogState = NewLoanApplicationState.DialogState.Failed(
-                            result.cause.message ?: FAILED_MSG,
+                            result.cause.serverErrorMessage() ?: FAILED_MSG,
                         ),
                     )
                 }

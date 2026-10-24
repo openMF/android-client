@@ -21,7 +21,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.data.testing.FakeClientRepository
-import kpt.core.database.client.entity.ClientEntity
+import kpt.core.model.client.Client
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -43,14 +43,30 @@ class ClientListViewModelTest {
 
     @AfterTest fun tearDown() = Dispatchers.resetMain()
 
-    private val clients = MutableStateFlow<ScreenState<List<ClientEntity>>>(ScreenState.Loading)
+    private val clients = MutableStateFlow<ScreenState<List<Client>>>(ScreenState.Loading)
     private val refreshes = MutableSharedFlow<Unit>(extraBufferCapacity = 4)
 
     /** The shared fake from `core/data`, supplied only the roster stream. */
     private val repository = FakeClientRepository(clients = clients)
 
     private fun client(id: Int, name: String, office: String? = "Branch A") =
-        ClientEntity(id = id, displayName = name, officeName = office, accountNo = "C$id")
+        Client(id = id, displayName = name, officeName = office, accountNo = "C$id")
+
+    @Test
+    fun pullingToRefreshAsksTheStreamToRefetch() = runTest(dispatcher) {
+        val vm = ClientListViewModel(repository)
+        vm.screenState.test {
+            clients.value = ScreenState.Content(listOf(client(1, "Asha")))
+            repository.refreshes.test {
+                vm.trySendAction(ClientListAction.Refresh)
+                // The original's pull (`refreshClientList`) — without it a client deleted on the
+                // server stayed listed until the cache TTL ran out.
+                awaitItem()
+                cancelAndIgnoreRemainingEvents()
+            }
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
 
     @Test
     fun theStreamIsSubscribedOnlyWhileSomethingCollects() = runTest(dispatcher) {
@@ -64,7 +80,7 @@ class ClientListViewModelTest {
 
         vm.screenState.test {
             assertIs<ScreenState.Loading>(awaitItem())
-            val content = assertIs<ScreenState.Content<List<ClientEntity>>>(awaitItem())
+            val content = assertIs<ScreenState.Content<List<Client>>>(awaitItem())
             assertEquals(2, content.data.size)
             cancelAndIgnoreRemainingEvents()
         }
@@ -77,11 +93,11 @@ class ClientListViewModelTest {
 
         vm.screenState.test {
             assertIs<ScreenState.Loading>(awaitItem())
-            assertIs<ScreenState.Content<List<ClientEntity>>>(awaitItem())
+            assertIs<ScreenState.Content<List<Client>>>(awaitItem())
 
             vm.trySendAction(ClientListAction.QueryChanged("bim"))
             // The combine re-emits on a filter change WITHOUT re-reading the stream.
-            val filtered = assertIs<ScreenState.Content<List<ClientEntity>>>(awaitItem())
+            val filtered = assertIs<ScreenState.Content<List<Client>>>(awaitItem())
             assertEquals("Bimal", filtered.data.single().displayName)
             cancelAndIgnoreRemainingEvents()
         }

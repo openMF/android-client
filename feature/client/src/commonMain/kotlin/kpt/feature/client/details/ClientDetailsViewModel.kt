@@ -20,9 +20,10 @@ import kpt.core.base.store.mutation.BlockReason
 import kpt.core.base.store.mutation.MutationResult
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.viewmodel.BaseViewModel
+import kpt.core.model.objects.error.serverErrorMessage
 import kpt.core.data.client.ClientCommandRepository
 import kpt.core.data.client.ClientRepository
-import kpt.core.database.client.entity.ClientEntity
+import kpt.core.model.client.Client
 import kpt.core.model.objects.clients.AssignStaffRequest
 import kpt.core.ui.components.ResultStatus
 import kpt.core.ui.util.imageToByteArray
@@ -71,7 +72,7 @@ internal class ClientDetailsViewModel(
 
     private val stream = repository.clientStream(clientId, viewModelScope)
 
-    val client: StateFlow<ScreenState<ClientEntity>> = stream.state
+    val client: StateFlow<ScreenState<Client>> = stream.state
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STATE_TIMEOUT_MS), ScreenState.Loading)
 
     init {
@@ -154,7 +155,7 @@ internal class ClientDetailsViewModel(
                         isSubmitting = false,
                         dialogState = ClientDetailsState.DialogState.ShowStatusDialog(
                             status = ResultStatus.FAILURE,
-                            msg = result.cause.message ?: FAILED_MSG,
+                            msg = result.cause.serverErrorMessage() ?: FAILED_MSG,
                         ),
                     )
                 }

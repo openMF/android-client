@@ -9,6 +9,9 @@
  */
 package kpt.feature.center.list
 
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runTest
 import kpt.core.base.store.screen.ScreenState
 import kpt.feature.center.testing.center
 import kotlin.test.Test
@@ -22,7 +25,7 @@ import kotlin.test.assertTrue
  */
 class CenterListStateTest {
 
-    private val rows: ScreenState<List<kpt.core.database.center.entity.CenterEntity>> =
+    private val rows: ScreenState<List<kpt.core.model.center.Center>> =
         ScreenState.Content(
             listOf(
                 center(1, name = "Zeta", accountNo = "C9", officeName = "Branch A"),
@@ -33,7 +36,11 @@ class CenterListStateTest {
 
     /** The filter state is now UI-only; the rows arrive from the stream. */
     private fun visible(ui: CenterListState) =
-        (rows.applyFilters(ui) as? ScreenState.Content)?.data.orEmpty()
+        (rows as? ScreenState.Content)?.data?.filteredFor(ui).orEmpty()
+
+    /** The state the screen renders: the ViewModel's exact Flow pipeline, over one emission. */
+    private suspend fun ScreenState<List<kpt.core.model.center.Center>>.rendered(ui: CenterListState) =
+        flowOf(this).applyFilters(flowOf(ui)).first()
 
     @Test
     fun sortByNameIsCaseInsensitive() {
@@ -57,20 +64,20 @@ class CenterListStateTest {
     }
 
     @Test
-    fun aFilterMatchingNothingIsEmptyNotAnEmptyContent() {
+    fun aFilterMatchingNothingIsEmptyNotAnEmptyContent() = runTest {
         // THE distinction this state class exists for. Content(emptyList()) renders as a blank list
         // indistinguishable from "this officer services no centers"; Empty renders the empty state,
         // whose retry clears the filters. Getting this wrong is invisible until a user is stuck.
-        assertIs<ScreenState.Empty>(rows.applyFilters(CenterListState(query = "no-such-center")))
+        assertIs<ScreenState.Empty>(rows.rendered(CenterListState(query = "no-such-center")))
     }
 
     @Test
-    fun loadingAndErrorPassThroughUntouched() {
+    fun loadingAndErrorPassThroughUntouched() = runTest {
         val ui = CenterListState()
-        assertIs<ScreenState.Loading>(ScreenState.Loading.applyFilters(ui))
-        val boom = ScreenState.Error(RuntimeException("boom"))
+        assertIs<ScreenState.Loading>((ScreenState.Loading as ScreenState<List<kpt.core.model.center.Center>>).rendered(ui))
+        val boom: ScreenState<List<kpt.core.model.center.Center>> = ScreenState.Error(RuntimeException("boom"))
         // Identity, not equality: a non-Content state must pass through UNTOUCHED, keeping its
         // cause and its freshness metadata.
-        assertTrue(boom.applyFilters(ui) === boom)
+        assertTrue(boom.rendered(ui) === boom)
     }
 }

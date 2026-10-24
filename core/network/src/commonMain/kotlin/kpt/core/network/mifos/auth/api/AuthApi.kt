@@ -12,8 +12,8 @@ package kpt.core.network.mifos.auth.api
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.POST
 import kpt.core.base.network.annotation.ApiBinding
-import kpt.core.network.mifos.auth.dto.PostAuthenticationRequest
-import kpt.core.network.mifos.auth.dto.PostAuthenticationResponse
+import kpt.core.model.auth.PostAuthenticationRequest
+import kpt.core.model.auth.PostAuthenticationResponse
 
 /**
  * Fineract authentication.

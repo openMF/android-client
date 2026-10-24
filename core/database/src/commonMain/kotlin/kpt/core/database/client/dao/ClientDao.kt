@@ -52,6 +52,14 @@ interface ClientDao {
     @Query("SELECT * FROM Client WHERE id = :clientId LIMIT 1")
     fun getClientByClientId(clientId: Int): Flow<ClientEntity?>
 
+    /** Per-key clear for the `clientRow` write store. */
+    @Query("DELETE FROM Client WHERE id = :clientId")
+    suspend fun deleteClientById(clientId: Int)
+
+    /** The roster store's `deleteAll` — what the logout purge reaches the `Client` table through. */
+    @Query("DELETE FROM Client")
+    suspend fun deleteAllClients()
+
     @Insert(onConflict = OnConflictStrategy.REPLACE, entity = LoanAccountEntity::class)
     suspend fun insertLoanAccount(loanAccount: LoanAccountEntity)
 
@@ -320,4 +328,8 @@ interface ClientDao {
     /** One queued offline client, for the write store's source of truth. */
     @Query("SELECT * FROM ClientPayload WHERE id = :id LIMIT 1")
     fun observeClientPayload(id: Int): Flow<ClientPayloadEntity?>
+
+    /** The logout purge for the offline client queue — a capture must not outlive its officer. */
+    @Query("DELETE FROM ClientPayload")
+    suspend fun deleteAllClientPayloads()
 }

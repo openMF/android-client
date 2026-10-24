@@ -39,7 +39,7 @@ import kpt.core.base.store.screen.ScreenState
 import kpt.core.base.ui.effects.EventsEffect
 import kpt.core.base.ui.screen.ScreenContent
 import kpt.core.common.utils.DateHelper
-import kpt.core.database.office.entity.OfficeEntity
+import kpt.core.model.office.Office
 import kpt.core.designsystem.component.AppDatePickerTextField
 import kpt.core.designsystem.component.AppOutlinedButton
 import kpt.core.designsystem.component.AppOutlinedTextField
@@ -121,7 +121,7 @@ internal fun ClientTransferScreen(
 @Composable
 internal fun ClientTransferContent(
     state: ClientTransferState,
-    offices: ScreenState<List<OfficeEntity>>,
+    offices: ScreenState<List<Office>>,
     onAction: (ClientTransferAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {

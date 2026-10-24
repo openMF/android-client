@@ -17,10 +17,10 @@ import de.jensklingenberg.ktorfit.http.Query
 import de.jensklingenberg.ktorfit.http.QueryMap
 import io.ktor.client.statement.HttpResponse
 import kpt.core.base.network.annotation.ApiBinding
-import kpt.core.database.group.entity.GroupAccounts
-import kpt.core.database.group.entity.GroupEntity
-import kpt.core.database.group.entity.GroupPayloadEntity
-import kpt.core.database.group.entity.GroupWithAssociations
+import kpt.core.model.group.GroupAccounts
+import kpt.core.model.group.Group
+import kpt.core.model.group.GroupPayload
+import kpt.core.model.group.GroupWithAssociations
 import kpt.core.model.objects.clients.ActivatePayload
 import kpt.core.model.objects.clients.Page
 import kpt.core.model.objects.responses.SaveResponse
@@ -68,7 +68,7 @@ interface GroupApi {
         @Query("paged") b: Boolean,
         @Query("offset") offset: Int,
         @Query("limit") limit: Int,
-    ): Page<GroupEntity>
+    ): Page<Group>
 
     @GET("groups/{groupId}?associations=all")
     suspend fun getGroupWithAssociations(@Path("groupId") groupId: Int): GroupWithAssociations
@@ -77,13 +77,13 @@ interface GroupApi {
     suspend fun getAllGroupsInOffice(
         @Query("officeId") officeId: Int,
         @QueryMap params: Map<String, String>,
-    ): List<GroupEntity>
+    ): List<Group>
 
     @POST("groups")
-    suspend fun createGroup(@Body groupPayload: GroupPayloadEntity?): SaveResponse
+    suspend fun createGroup(@Body groupPayload: GroupPayload?): SaveResponse
 
     @GET("groups/{groupId}")
-    suspend fun getGroup(@Path("groupId") groupId: Int): GroupEntity
+    suspend fun getGroup(@Path("groupId") groupId: Int): Group
 
     @GET("groups/{groupId}/accounts")
     suspend fun getGroupAccounts(@Path("groupId") groupId: Int): GroupAccounts

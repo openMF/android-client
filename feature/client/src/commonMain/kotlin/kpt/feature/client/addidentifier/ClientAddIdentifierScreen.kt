@@ -49,12 +49,15 @@ import kpt.feature.client.generated.resources.feature_client_addidentifier_error
 import kpt.feature.client.generated.resources.feature_client_addidentifier_error_key_required
 import kpt.feature.client.generated.resources.feature_client_addidentifier_error_offline
 import kpt.feature.client.generated.resources.feature_client_addidentifier_error_pick_failed
+import kpt.feature.client.generated.resources.feature_client_addidentifier_error_status_required
 import kpt.feature.client.generated.resources.feature_client_addidentifier_error_type_required
 import kpt.feature.client.generated.resources.feature_client_addidentifier_error_upload_failed
 import kpt.feature.client.generated.resources.feature_client_addidentifier_no_file
 import kpt.feature.client.generated.resources.feature_client_addidentifier_pick
 import kpt.feature.client.generated.resources.feature_client_addidentifier_skip_document
 import kpt.feature.client.generated.resources.feature_client_addidentifier_status
+import kpt.feature.client.generated.resources.feature_client_addidentifier_status_active
+import kpt.feature.client.generated.resources.feature_client_addidentifier_status_inactive
 import kpt.feature.client.generated.resources.feature_client_addidentifier_title
 import kpt.feature.client.generated.resources.feature_client_addidentifier_upload
 import kpt.feature.client.generated.resources.feature_client_btn_back
@@ -222,12 +225,24 @@ private fun IdentifierFields(
         modifier = Modifier.fillMaxWidth().testTag(ClientAddIdentifierTestTags.DOCUMENT_KEY),
     )
 
-    AppOutlinedTextField(
-        value = state.status,
-        onValueChange = { onAction(ClientAddIdentifierAction.UpdateStatus(it)) },
+    // A dropdown, as in the original: the server accepts exactly these values, so a free-text
+    // field could only produce a rejected write.
+    val statusLabels = IdentifierStatus.values.map { identifierStatusLabel(it) }
+    AppTextFieldDropdown(
+        value = IdentifierStatus.values.indexOf(state.status).let { statusLabels.getOrNull(it) }.orEmpty(),
+        onValueChanged = { },
+        onOptionSelected = { index, _ ->
+            IdentifierStatus.values.getOrNull(index)?.let { onAction(ClientAddIdentifierAction.UpdateStatus(it)) }
+        },
+        options = statusLabels,
         label = stringResource(Res.string.feature_client_addidentifier_status),
+        errorMessage = if (state.statusError) {
+            stringResource(Res.string.feature_client_addidentifier_error_status_required)
+        } else {
+            null
+        },
         enabled = !state.identifierCreated,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().testTag(ClientAddIdentifierTestTags.STATUS),
     )
 
     AppOutlinedTextField(
@@ -336,6 +351,7 @@ internal object ClientAddIdentifierTestTags {
     const val SCREEN = "ClientAddIdentifierScreen"
     const val DOCUMENT_TYPE = "ClientAddIdentifierDocumentType"
     const val DOCUMENT_KEY = "ClientAddIdentifierDocumentKey"
+    const val STATUS = "ClientAddIdentifierStatus"
     const val CREATED_NOTE = "ClientAddIdentifierCreatedNote"
     const val FILE_ROW = "ClientAddIdentifierFileRow"
     const val ERROR = "ClientAddIdentifierError"
@@ -343,3 +359,12 @@ internal object ClientAddIdentifierTestTags {
     const val SECONDARY = "ClientAddIdentifierSecondary"
     const val PRIMARY = "ClientAddIdentifierPrimary"
 }
+
+@Composable
+private fun identifierStatusLabel(status: String): String = stringResource(
+    if (status == IdentifierStatus.ACTIVE) {
+        Res.string.feature_client_addidentifier_status_active
+    } else {
+        Res.string.feature_client_addidentifier_status_inactive
+    },
+)

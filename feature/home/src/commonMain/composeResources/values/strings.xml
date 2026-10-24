@@ -47,7 +47,7 @@
     <string name="screens_home_bills_empty">No bills due in the next 7 days.</string>
 
     <!-- ===== HomeScreen — RatesQuickCard ===== -->
-    <string name="screens_home_rates_card_title">Today\'s Rates</string>
+    <string name="screens_home_rates_card_title">Today's Rates</string>
     <string name="screens_home_rates_fed_funds_label">Federal Funds</string>
     <string name="screens_home_rates_mortgage_30y_label">30Y Mortgage</string>
     <string name="screens_home_rates_value_format">%1$s%%</string>

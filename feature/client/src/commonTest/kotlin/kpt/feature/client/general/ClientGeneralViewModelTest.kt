@@ -24,13 +24,13 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kpt.core.base.store.screen.ScreenState
 import kpt.core.data.testing.FakeClientRepository
-import kpt.core.database.client.entity.ClientAccounts
-import kpt.core.database.loan.entity.LoanAccountEntity
-import kpt.core.database.loan.entity.LoanStatusEntity
-import kpt.core.database.savings.entity.SavingAccountCurrencyEntity
-import kpt.core.database.savings.entity.SavingAccountDepositTypeEntity
-import kpt.core.database.savings.entity.SavingsAccountEntity
-import kpt.core.database.savings.entity.SavingsAccountStatusEntity
+import kpt.core.model.client.ClientAccounts
+import kpt.core.model.loan.LoanAccount
+import kpt.core.model.loan.LoanStatus
+import kpt.core.model.savings.SavingAccountCurrency
+import kpt.core.model.savings.SavingAccountDepositType
+import kpt.core.model.savings.SavingsAccount
+import kpt.core.model.savings.SavingsAccountStatus
 import kpt.feature.client.general.components.ClientGeneralActionItem
 import kpt.feature.client.general.components.clientGeneralActions
 import kotlin.test.AfterTest
@@ -58,10 +58,10 @@ class ClientGeneralViewModelTest {
     private fun viewModel(clientId: Int = 42) =
         ClientGeneralViewModel(repository, SavedStateHandle(mapOf("clientId" to clientId)))
 
-    private fun loan(active: Boolean, cycle: Int) = LoanAccountEntity(
+    private fun loan(active: Boolean, cycle: Int) = LoanAccount(
         id = 1,
         loanCycle = cycle,
-        status = LoanStatusEntity(active = active),
+        status = LoanStatus(active = active),
     )
 
     private fun savings(
@@ -70,18 +70,18 @@ class ClientGeneralViewModelTest {
         closed: Boolean = false,
         recurring: Boolean = false,
         symbol: String? = null,
-    ) = SavingsAccountEntity(
+    ) = SavingsAccount(
         id = 1,
         accountBalance = balance,
-        status = SavingsAccountStatusEntity(active = active, closed = closed),
-        depositType = SavingAccountDepositTypeEntity(
+        status = SavingsAccountStatus(active = active, closed = closed),
+        depositType = SavingAccountDepositType(
             id = if (recurring) {
-                SavingAccountDepositTypeEntity.ServerTypes.RECURRING.id
+                SavingAccountDepositType.ServerTypes.RECURRING.id
             } else {
-                SavingAccountDepositTypeEntity.ServerTypes.SAVINGS.id
+                SavingAccountDepositType.ServerTypes.SAVINGS.id
             },
         ),
-        currency = symbol?.let { SavingAccountCurrencyEntity(displaySymbol = it) },
+        currency = symbol?.let { SavingAccountCurrency(displaySymbol = it) },
     )
 
     // ---- the arithmetic ----

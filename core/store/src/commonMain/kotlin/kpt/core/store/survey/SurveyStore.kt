@@ -9,6 +9,10 @@
  */
 package kpt.core.store.survey
 
+import kpt.core.store.mapping.toEntity
+import kotlinx.coroutines.flow.map
+import kpt.core.model.survey.Survey
+import kpt.core.store.mapping.toModel
 import kpt.core.base.store.annotation.CacheKey
 import kpt.core.base.store.annotation.StoreProvider
 import kpt.core.base.store.infra.StoreFactory
@@ -32,10 +36,14 @@ import org.mobilenativefoundation.store.store5.Store
 fun provideSurveyStore(
     service: SurveyApi,
     dao: SurveyDao,
-): Store<Unit, List<SurveyEntity>> = StoreFactory.createStore(
+): Store<Unit, List<Survey>> = StoreFactory.createStore(
     fetcher = Fetcher.of { _: Unit -> service.allSurveys() },
     sourceOfTruth = SourceOfTruth.of(
-        reader = { _: Unit -> dao.getAllSurveys() },
-        writer = { _: Unit, surveys: List<SurveyEntity> -> surveys.forEach { dao.insertSurvey(it) } },
+        reader = { _: Unit -> dao.getAllSurveys().map { rows -> rows.map { it.toModel() } } },
+        // REPLACE: the fetch is the server's whole list, so a survey it no longer has must go.
+        writer = { _: Unit, surveys: List<Survey> -> dao.replaceAllSurveys(surveys.map { it.toEntity() }) },
+        delete = { _: Unit -> dao.deleteAllSurveys() },
+        // What the logout purge (`Store.clear()`) calls; without it the rows outlived the session.
+        deleteAll = { dao.deleteAllSurveys() },
     ),
 )

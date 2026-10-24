@@ -23,7 +23,7 @@ import kpt.core.base.ui.viewmodel.BaseViewModel
 import kpt.core.common.utils.Constants
 import kpt.core.data.note.NoteCommandRepository
 import kpt.core.data.note.NoteRepository
-import kpt.core.database.note.entity.NoteEntity
+import kpt.core.model.objects.note.Note
 
 /**
  * Notes attached to one client — ported from
@@ -71,7 +71,7 @@ internal class NoteListViewModel(
      * latter kept collecting for the ViewModel's whole lifetime, so a notes screen left on the back
      * stack went on refreshing. See `ClientListViewModel.screenState`.
      */
-    val notes: StateFlow<ScreenState<List<NoteEntity>>> = notesStream.state
+    val notes: StateFlow<ScreenState<List<Note>>> = notesStream.state
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STATE_TIMEOUT_MS), ScreenState.Loading)
 
     override fun handleAction(action: NoteListAction) {
@@ -109,19 +109,12 @@ internal class NoteListViewModel(
      * re-fetch AND a second network-observer coroutine every time, so the collectors accumulated
      * for the life of the screen. Only the second half of that was wrong: the re-subscribe.
      *
-     * ## The re-READ is required, and dropping it is why delete looked broken
+     * ## No re-read after a delete
      *
-     * An earlier version of this comment claimed "the Store invalidates on a successful write and
-     * the list updates itself". It does not. `NoteCommandRepository` is CACHE-FREE — it writes
-     * through `MutationGateway.command`, which touches no store — so nothing invalidates the read.
-     * `feature/note/MIGRATION.md` §7 records the same fact for the ADD path, where it was already
-     * worked around with an explicit nav result.
-     *
-     * The consequence on device: the server deleted the note, the client was told `Applied`, and
-     * the row stayed on screen. Indistinguishable from a delete that silently failed — reported as
-     * "delete note is not working".
-     *
-     * So: refresh the stream the row came from, and only that. One re-read, no new collector.
+     * An earlier version force-refreshed the stream here, because `NoteCommandRepository` was
+     * cache-free: the server deleted the note, the client was told `Applied`, and the row stayed
+     * on screen — reported as "delete note is not working". The command now clears the row through
+     * the note store, in the `Note` table this stream observes, so the list drops it by itself.
      */
     private fun confirmDelete() {
         val id = state.expandedNoteId ?: return
@@ -133,13 +126,8 @@ internal class NoteListViewModel(
                 noteId = id,
             )
             mutableStateFlow.value = when (result) {
-                is MutationResult.Applied -> {
-                    // The row is owned by the stream and the write does not invalidate it, so the
-                    // list must be re-read or the deleted note stays on screen. `forceFresh`
-                    // because a cached re-read would serve the row we just deleted.
-                    notesStream.refresh(forceFresh = true)
+                is MutationResult.Applied ->
                     state.copy(isDeleting = false, expandedNoteId = null, writeError = null)
-                }
 
                 // Offline is NOT a failure the user caused, and it is recoverable by moving. The
                 // original rendered every non-success as "Unexpected error", which told a field
